@@ -26,7 +26,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.surface)
-                ) { Text("Hello world!") }
+                ) { Text(
+                    "Hello world!",
+                    style = MaterialTheme.typography.displayMedium,
+                ) }
             }
         }
     }
