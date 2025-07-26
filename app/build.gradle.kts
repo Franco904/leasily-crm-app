@@ -6,8 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    alias(libs.plugins.google.services)
-    alias(libs.plugins.crashlytics)
 }
 
 android {
@@ -95,6 +93,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
 
+    // Coil (Image loading)
+    implementation(libs.coil.compose)
+
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
@@ -102,20 +103,33 @@ dependencies {
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+    implementation(libs.koin.workmanager)
 
-    // Serialization
-    implementation(libs.kotlin.serialization.json)
+    // DataStore (Preferences file)
+    implementation(libs.androidx.datastore)
 
     // Room database
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    // Firebase
-    implementation(platform(libs.firebase.bom))
+    // HTTP Client
+    implementation(libs.ktor.core)
+    implementation(libs.ktor.engine)
+    implementation(libs.ktor.content.negotiation)
+    implementation(libs.ktor.serialization)
+    implementation(libs.ktor.logging)
 
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
+    // Auth
+    implementation(libs.credentials.core)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.google.identity)
+
+    // Serialization
+    implementation(libs.kotlin.serialization.json)
+
+    // Background work
+    implementation(libs.workmanager.runtime)
 
     // Testing
     androidTestImplementation(libs.androidx.test.runner)
@@ -126,7 +140,6 @@ dependencies {
     testImplementation(libs.kluent)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
-    testImplementation(libs.faker)
 
     // Other
     debugImplementation(libs.androidx.ui.tooling)
