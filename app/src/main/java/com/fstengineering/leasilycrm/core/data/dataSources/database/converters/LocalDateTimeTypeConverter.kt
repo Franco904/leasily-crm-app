@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.converters
 
 import androidx.room.TypeConverter
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 class LocalDateTimeTypeConverter {

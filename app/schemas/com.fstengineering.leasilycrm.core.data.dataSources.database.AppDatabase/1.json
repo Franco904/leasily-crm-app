@@ -1,0 +1,1551 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "a052e34eda77a090ee08b8f983466752",
+    "entities": [
+      {
+        "tableName": "assistances",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `contact_date` TEXT, `searched_start_date` TEXT, `searched_end_date` TEXT, `has_flexibility_for_period` INTEGER NOT NULL, `max_accepted_nightly_rate` REAL, `qt_adult_guests` INTEGER NOT NULL, `qt_kid_guests` INTEGER NOT NULL, `qt_baby_guests` INTEGER NOT NULL, `qt_animal_guests` INTEGER NOT NULL, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `observations` TEXT, `tenant_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contactDate",
+            "columnName": "contact_date",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "searchedStartDate",
+            "columnName": "searched_start_date",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "searchedEndDate",
+            "columnName": "searched_end_date",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hasFlexibilityForPeriod",
+            "columnName": "has_flexibility_for_period",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxAcceptedNightlyRate",
+            "columnName": "max_accepted_nightly_rate",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "qtAdultGuests",
+            "columnName": "qt_adult_guests",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtKidGuests",
+            "columnName": "qt_kid_guests",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtBabyGuests",
+            "columnName": "qt_baby_guests",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtAnimalGuests",
+            "columnName": "qt_animal_guests",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtBedrooms",
+            "columnName": "qt_bedrooms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtEnSuites",
+            "columnName": "qt_en_suites",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtDoubleBeds",
+            "columnName": "qt_double_beds",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtSingleBeds",
+            "columnName": "qt_single_beds",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtBathrooms",
+            "columnName": "qt_bathrooms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtParkingSpots",
+            "columnName": "qt_parking_spots",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "observations",
+            "columnName": "observations",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertySeaProximityTypeId",
+            "columnName": "property_sea_proximity_type_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_assistances_tenant_id",
+            "unique": false,
+            "columnNames": [
+              "tenant_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistances_tenant_id` ON `${TABLE_NAME}` (`tenant_id`)"
+          },
+          {
+            "name": "index_assistances_property_sea_proximity_type_id",
+            "unique": false,
+            "columnNames": [
+              "property_sea_proximity_type_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistances_property_sea_proximity_type_id` ON `${TABLE_NAME}` (`property_sea_proximity_type_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tenants",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tenant_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "property_sea_proximity_types",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_sea_proximity_type_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "assistance_characteristics",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "assistance_characteristics_assistances",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assistance_id` INTEGER NOT NULL, `assistance_characteristic_id` INTEGER NOT NULL, PRIMARY KEY(`assistance_id`, `assistance_characteristic_id`), FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`assistance_characteristic_id`) REFERENCES `assistance_characteristics`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "assistanceId",
+            "columnName": "assistance_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "assistanceCharacteristicId",
+            "columnName": "assistance_characteristic_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "assistance_id",
+            "assistance_characteristic_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_assistance_characteristics_assistances_assistance_id",
+            "unique": false,
+            "columnNames": [
+              "assistance_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_characteristics_assistances_assistance_id` ON `${TABLE_NAME}` (`assistance_id`)"
+          },
+          {
+            "name": "index_assistance_characteristics_assistances_assistance_characteristic_id",
+            "unique": false,
+            "columnNames": [
+              "assistance_characteristic_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_characteristics_assistances_assistance_characteristic_id` ON `${TABLE_NAME}` (`assistance_characteristic_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "assistances",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "assistance_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "assistance_characteristics",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "assistance_characteristic_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "assistance_interactions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `interaction_date` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `assistance_id` INTEGER NOT NULL, FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interactionDate",
+            "columnName": "interaction_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "assistanceId",
+            "columnName": "assistance_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_assistance_interactions_assistance_id",
+            "unique": false,
+            "columnNames": [
+              "assistance_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_interactions_assistance_id` ON `${TABLE_NAME}` (`assistance_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "assistances",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "assistance_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "assistance_searched_neighborhoods",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `neighborhood` TEXT NOT NULL, `assistance_id` INTEGER NOT NULL, FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "neighborhood",
+            "columnName": "neighborhood",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "assistanceId",
+            "columnName": "assistance_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_assistance_searched_neighborhoods_assistance_id",
+            "unique": false,
+            "columnNames": [
+              "assistance_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_searched_neighborhoods_assistance_id` ON `${TABLE_NAME}` (`assistance_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "assistances",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "assistance_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "assistance_sent_properties",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assistance_id` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, PRIMARY KEY(`assistance_id`, `property_id`), FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "assistanceId",
+            "columnName": "assistance_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyId",
+            "columnName": "property_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "assistance_id",
+            "property_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_assistance_sent_properties_assistance_id",
+            "unique": false,
+            "columnNames": [
+              "assistance_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_sent_properties_assistance_id` ON `${TABLE_NAME}` (`assistance_id`)"
+          },
+          {
+            "name": "index_assistance_sent_properties_property_id",
+            "unique": false,
+            "columnNames": [
+              "property_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_sent_properties_property_id` ON `${TABLE_NAME}` (`property_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "assistances",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "assistance_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "properties",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "customer_segments",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `customer_segment_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_type_id`) REFERENCES `customer_segment_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "customerSegmentTypeId",
+            "columnName": "customer_segment_type_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_customer_segments_customer_segment_type_id",
+            "unique": false,
+            "columnNames": [
+              "customer_segment_type_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_customer_segments_customer_segment_type_id` ON `${TABLE_NAME}` (`customer_segment_type_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "customer_segment_types",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "customer_segment_type_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "customer_segment_types",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "properties",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `register_date` TEXT NOT NULL, `neighborhood` TEXT NOT NULL, `street_address` TEXT NOT NULL, `cep_postal_code` TEXT, `number` INTEGER, `address_line_2` TEXT, `parking_spot_number` TEXT, `parking_basement_level_number` TEXT, `hobby_box_number` TEXT, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `qt_air_conditioners` INTEGER NOT NULL, `qt_max_guests` INTEGER NOT NULL, `included_items` TEXT, `has_included_items` INTEGER NOT NULL, `cleaning_service_tax` REAL, `has_cleaning_service_included` INTEGER NOT NULL, `observations` TEXT, `property_owner_id` INTEGER NOT NULL, `property_type_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_type_id`) REFERENCES `property_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "registerDate",
+            "columnName": "register_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "neighborhood",
+            "columnName": "neighborhood",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "streetAddress",
+            "columnName": "street_address",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cepPostalCode",
+            "columnName": "cep_postal_code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "number",
+            "columnName": "number",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "addressLine2",
+            "columnName": "address_line_2",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "parkingSpotNumber",
+            "columnName": "parking_spot_number",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "parkingBasementLevelNumber",
+            "columnName": "parking_basement_level_number",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hobbyBoxNumber",
+            "columnName": "hobby_box_number",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "qtBedrooms",
+            "columnName": "qt_bedrooms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtEnSuites",
+            "columnName": "qt_en_suites",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtDoubleBeds",
+            "columnName": "qt_double_beds",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtSingleBeds",
+            "columnName": "qt_single_beds",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtBathrooms",
+            "columnName": "qt_bathrooms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtParkingSpots",
+            "columnName": "qt_parking_spots",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtAirConditioners",
+            "columnName": "qt_air_conditioners",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtMaxGuests",
+            "columnName": "qt_max_guests",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "includedItems",
+            "columnName": "included_items",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hasIncludedItems",
+            "columnName": "has_included_items",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cleaningServiceTax",
+            "columnName": "cleaning_service_tax",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "hasCleaningServiceIncluded",
+            "columnName": "has_cleaning_service_included",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "observations",
+            "columnName": "observations",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "propertyOwnerId",
+            "columnName": "property_owner_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyTypeId",
+            "columnName": "property_type_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertySeaProximityType",
+            "columnName": "property_sea_proximity_type_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_properties_property_owner_id",
+            "unique": false,
+            "columnNames": [
+              "property_owner_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_properties_property_owner_id` ON `${TABLE_NAME}` (`property_owner_id`)"
+          },
+          {
+            "name": "index_properties_property_type_id",
+            "unique": false,
+            "columnNames": [
+              "property_type_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_properties_property_type_id` ON `${TABLE_NAME}` (`property_type_id`)"
+          },
+          {
+            "name": "index_properties_property_sea_proximity_type_id",
+            "unique": false,
+            "columnNames": [
+              "property_sea_proximity_type_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_properties_property_sea_proximity_type_id` ON `${TABLE_NAME}` (`property_sea_proximity_type_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "property_owners",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_owner_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "property_types",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_type_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "property_sea_proximity_types",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_sea_proximity_type_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "property_characteristics",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "property_characteristics_properties",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`property_id` INTEGER NOT NULL, `property_characteristic_id` INTEGER NOT NULL, PRIMARY KEY(`property_id`, `property_characteristic_id`), FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_characteristic_id`) REFERENCES `property_characteristics`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "propertyId",
+            "columnName": "property_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyCharacteristicId",
+            "columnName": "property_characteristic_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "property_id",
+            "property_characteristic_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_property_characteristics_properties_property_id",
+            "unique": false,
+            "columnNames": [
+              "property_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_property_characteristics_properties_property_id` ON `${TABLE_NAME}` (`property_id`)"
+          },
+          {
+            "name": "index_property_characteristics_properties_property_characteristic_id",
+            "unique": false,
+            "columnNames": [
+              "property_characteristic_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_property_characteristics_properties_property_characteristic_id` ON `${TABLE_NAME}` (`property_characteristic_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "properties",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "property_characteristics",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_characteristic_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "property_files",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `property_file_uri` TEXT NOT NULL, `property_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyFileUri",
+            "columnName": "property_file_uri",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyId",
+            "columnName": "property_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_property_files_property_id",
+            "unique": false,
+            "columnNames": [
+              "property_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_property_files_property_id` ON `${TABLE_NAME}` (`property_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "properties",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "property_owners",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `phone` TEXT, `email` TEXT, `payment_key` TEXT, `customer_segment_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "paymentKey",
+            "columnName": "payment_key",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "customerSegmentId",
+            "columnName": "customer_segment_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_property_owners_customer_segment_id",
+            "unique": false,
+            "columnNames": [
+              "customer_segment_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_property_owners_customer_segment_id` ON `${TABLE_NAME}` (`customer_segment_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "customer_segments",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "customer_segment_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "property_owner_files",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `property_owner_file_uri` TEXT NOT NULL, `property_owner_id` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyOwnerFileUri",
+            "columnName": "property_owner_file_uri",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyOwnerId",
+            "columnName": "property_owner_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_property_owner_files_property_owner_id",
+            "unique": false,
+            "columnNames": [
+              "property_owner_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_property_owner_files_property_owner_id` ON `${TABLE_NAME}` (`property_owner_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "property_owners",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_owner_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "property_prices",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `start_date` TEXT NOT NULL, `end_date` TEXT NOT NULL, `price` REAL NOT NULL, `property_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "start_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "end_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "price",
+            "columnName": "price",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyId",
+            "columnName": "property_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_property_prices_property_id",
+            "unique": false,
+            "columnNames": [
+              "property_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_property_prices_property_id` ON `${TABLE_NAME}` (`property_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "properties",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "property_sea_proximity_types",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `distance_to_beach` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "distanceToBeach",
+            "columnName": "distance_to_beach",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "property_types",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "stays",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `is_from_other_realtor` INTEGER NOT NULL, `qt_guests` INTEGER NOT NULL, `total_price` REAL NOT NULL, `start_datetime` TEXT NOT NULL, `end_datetime` TEXT NOT NULL, `commission` REAL, `observations` TEXT, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFromOtherRealtor",
+            "columnName": "is_from_other_realtor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "qtGuests",
+            "columnName": "qt_guests",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalPrice",
+            "columnName": "total_price",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startDatetime",
+            "columnName": "start_datetime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endDatetime",
+            "columnName": "end_datetime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "commission",
+            "columnName": "commission",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "observations",
+            "columnName": "observations",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "propertyId",
+            "columnName": "property_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_stays_property_id",
+            "unique": false,
+            "columnNames": [
+              "property_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stays_property_id` ON `${TABLE_NAME}` (`property_id`)"
+          },
+          {
+            "name": "index_stays_tenant_id",
+            "unique": false,
+            "columnNames": [
+              "tenant_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stays_tenant_id` ON `${TABLE_NAME}` (`tenant_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "properties",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "property_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "tenants",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tenant_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "stay_files",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `stay_file_uri` TEXT NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stayFileUri",
+            "columnName": "stay_file_uri",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stayId",
+            "columnName": "stay_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_stay_files_stay_id",
+            "unique": false,
+            "columnNames": [
+              "stay_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stay_files_stay_id` ON `${TABLE_NAME}` (`stay_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stays",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "stay_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "stay_transfers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transfer_date` TEXT NOT NULL, `transfer_amount` TEXT NOT NULL, `transfer_description` TEXT NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transferDate",
+            "columnName": "transfer_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transferAmount",
+            "columnName": "transfer_amount",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transferDescription",
+            "columnName": "transfer_description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stayId",
+            "columnName": "stay_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_stay_transfers_stay_id",
+            "unique": false,
+            "columnNames": [
+              "stay_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stay_transfers_stay_id` ON `${TABLE_NAME}` (`stay_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stays",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "stay_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "tenants",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `register_date` TEXT NOT NULL, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `is_lead` INTEGER NOT NULL, `customer_segment_id` INTEGER, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "registerDate",
+            "columnName": "register_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "city",
+            "columnName": "city",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "identityDocument",
+            "columnName": "identity_document",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "observations",
+            "columnName": "observations",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "isLead",
+            "columnName": "is_lead",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "customerSegmentId",
+            "columnName": "customer_segment_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "tenantContactOriginTypeId",
+            "columnName": "tenant_contact_origin_type_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_tenants_customer_segment_id",
+            "unique": false,
+            "columnNames": [
+              "customer_segment_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_tenants_customer_segment_id` ON `${TABLE_NAME}` (`customer_segment_id`)"
+          },
+          {
+            "name": "index_tenants_tenant_contact_origin_type_id",
+            "unique": false,
+            "columnNames": [
+              "tenant_contact_origin_type_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_tenants_tenant_contact_origin_type_id` ON `${TABLE_NAME}` (`tenant_contact_origin_type_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "customer_segments",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "customer_segment_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "tenant_contact_origin_types",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tenant_contact_origin_type_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "tenant_contact_origin_types",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a052e34eda77a090ee08b8f983466752')"
+    ]
+  }
+}
