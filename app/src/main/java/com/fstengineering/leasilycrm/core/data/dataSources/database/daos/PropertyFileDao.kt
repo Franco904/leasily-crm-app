@@ -4,13 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyFile
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyFileEntity
 
 @Dao
 interface PropertyFileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdate(propertyFile: PropertyFile): Long
+    suspend fun insertOrUpdate(propertyFile: PropertyFileEntity): Long
 
     @Query("SELECT * FROM property_files WHERE property_id = :propertyId")
-    suspend fun getAllByProperty(propertyId: Int): List<PropertyFile>
+    suspend fun getAllByProperty(propertyId: Int): List<PropertyFileEntity>
 }

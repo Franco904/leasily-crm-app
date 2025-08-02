@@ -6,28 +6,28 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 
 @Entity(
-    tableName = "assistance_sent_properties",
-    primaryKeys = ["assistance_id", "property_id"],
+    tableName = "property_characteristics_properties",
+    primaryKeys = ["property_id", "property_characteristic_id"],
     foreignKeys = [
         ForeignKey(
-            entity = Assistance::class,
-            parentColumns = ["id"],
-            childColumns = ["assistance_id"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-        ForeignKey(
-            entity = Property::class,
+            entity = PropertyEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_id"],
             onDelete = ForeignKey.CASCADE,
         ),
+        ForeignKey(
+            entity = PropertyCharacteristicEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["property_characteristic_id"],
+            onDelete = ForeignKey.CASCADE,
+        )
     ],
     indices = [
-        Index("assistance_id"),
         Index("property_id"),
+        Index("property_characteristic_id"),
     ],
 )
-data class AssistanceSentPropertyCrossRef(
-    @ColumnInfo(name = "assistance_id") val assistanceId: Int,
+data class PropertyCharacteristicPropertyCrossRefEntity(
     @ColumnInfo(name = "property_id") val propertyId: Int,
+    @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Int,
 )

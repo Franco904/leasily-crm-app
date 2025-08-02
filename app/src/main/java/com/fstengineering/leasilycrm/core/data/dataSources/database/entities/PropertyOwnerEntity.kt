@@ -7,20 +7,23 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "customer_segments",
+    tableName = "property_owners",
     foreignKeys = [
         ForeignKey(
-            entity = CustomerSegmentType::class,
+            entity = CustomerSegmentEntity::class,
             parentColumns = ["id"],
-            childColumns = ["customer_segment_type_id"],
+            childColumns = ["customer_segment_id"],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index("customer_segment_type_id")],
+    indices = [Index("customer_segment_id")],
 )
-data class CustomerSegment(
+data class PropertyOwnerEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    @ColumnInfo(name = "customer_segment_type_id") val customerSegmentTypeId: Int,
+    val phone: String?,
+    val email: String?,
+    @ColumnInfo(name = "payment_key") val paymentKey: String?,
+    @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Int?,
     @ColumnInfo(name = "user_id") val userId: Int,
 )

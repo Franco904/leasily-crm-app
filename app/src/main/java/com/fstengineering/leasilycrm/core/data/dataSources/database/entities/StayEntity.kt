@@ -11,13 +11,13 @@ import java.time.LocalDateTime
     tableName = "stays",
     foreignKeys = [
         ForeignKey(
-            entity = Property::class,
+            entity = PropertyEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_id"],
             onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
-            entity = Tenant::class,
+            entity = TenantEntity::class,
             parentColumns = ["id"],
             childColumns = ["tenant_id"],
             onDelete = ForeignKey.CASCADE,
@@ -28,7 +28,7 @@ import java.time.LocalDateTime
         Index("tenant_id"),
     ],
 )
-data class Stay(
+data class StayEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "is_from_other_realtor") val isFromOtherRealtor: Boolean,
     @ColumnInfo(name = "qt_guests") val qtGuests: Int,

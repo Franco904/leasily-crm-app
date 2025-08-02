@@ -4,13 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginType
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginTypeEntity
 
 @Dao
 interface TenantContactOriginTypeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdate(tenantContactOriginType: TenantContactOriginType): Long
+    suspend fun insertOrUpdate(tenantContactOriginType: TenantContactOriginTypeEntity): Long
 
     @Query("SELECT * FROM tenant_contact_origin_types")
-    suspend fun getAll(): List<TenantContactOriginType>
+    suspend fun getAll(): List<TenantContactOriginTypeEntity>
 }

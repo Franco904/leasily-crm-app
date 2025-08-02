@@ -11,13 +11,13 @@ import java.time.LocalDate
     tableName = "tenants",
     foreignKeys = [
         ForeignKey(
-            entity = CustomerSegment::class,
+            entity = CustomerSegmentEntity::class,
             parentColumns = ["id"],
             childColumns = ["customer_segment_id"],
             onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
-            entity = TenantContactOriginType::class,
+            entity = TenantContactOriginTypeEntity::class,
             parentColumns = ["id"],
             childColumns = ["tenant_contact_origin_type_id"],
             onDelete = ForeignKey.CASCADE,
@@ -28,7 +28,7 @@ import java.time.LocalDate
         Index("tenant_contact_origin_type_id"),
     ],
 )
-data class Tenant(
+data class TenantEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "register_date") val registerDate: LocalDate,
     val name: String,

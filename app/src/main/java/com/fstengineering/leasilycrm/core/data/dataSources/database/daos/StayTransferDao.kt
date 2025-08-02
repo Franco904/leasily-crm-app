@@ -4,13 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransfer
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransferEntity
 
 @Dao
 interface StayTransferDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdate(stayTransfer: StayTransfer): Long
+    suspend fun insertOrUpdate(stayTransfer: StayTransferEntity): Long
 
     @Query("SELECT * FROM stay_transfers WHERE stay_id = :stayId")
-    suspend fun getAllByStay(stayId: Int): List<StayTransfer>
+    suspend fun getAllByStay(stayId: Int): List<StayTransferEntity>
 }

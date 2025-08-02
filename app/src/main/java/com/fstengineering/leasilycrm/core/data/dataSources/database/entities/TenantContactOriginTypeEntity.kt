@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "tenant_contact_origin_types")
-data class TenantContactOriginType(
+data class TenantContactOriginTypeEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
 )

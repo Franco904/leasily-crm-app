@@ -11,19 +11,19 @@ import java.time.LocalDate
     tableName = "properties",
     foreignKeys = [
         ForeignKey(
-            entity = PropertyOwner::class,
+            entity = PropertyOwnerEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_owner_id"],
             onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
-            entity = PropertyType::class,
+            entity = PropertyTypeEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_type_id"],
             onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
-            entity = PropertySeaProximityType::class,
+            entity = PropertySeaProximityTypeEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_sea_proximity_type_id"],
             onDelete = ForeignKey.CASCADE,
@@ -35,7 +35,7 @@ import java.time.LocalDate
         Index("property_sea_proximity_type_id"),
     ],
 )
-data class Property(
+data class PropertyEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "register_date") val registerDate: LocalDate,
     val neighborhood: String,

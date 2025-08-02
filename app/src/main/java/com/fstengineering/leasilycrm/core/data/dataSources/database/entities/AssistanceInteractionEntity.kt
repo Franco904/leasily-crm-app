@@ -8,21 +8,21 @@ import androidx.room.PrimaryKey
 import java.time.LocalDate
 
 @Entity(
-    tableName = "property_prices",
+    tableName = "assistance_interactions",
     foreignKeys = [
         ForeignKey(
-            entity = Property::class,
+            entity = AssistanceEntity::class,
             parentColumns = ["id"],
-            childColumns = ["property_id"],
+            childColumns = ["assistance_id"],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index("property_id")],
+    indices = [Index("assistance_id")],
 )
-data class PropertyPrice(
+data class AssistanceInteractionEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "start_date") val startDate: LocalDate,
-    @ColumnInfo(name = "end_date") val endDate: LocalDate,
-    val price: Double,
-    @ColumnInfo(name = "property_id") val propertyId: Int,
+    @ColumnInfo(name = "interaction_date") val interactionDate: LocalDate,
+    val title: String,
+    val description: String?,
+    @ColumnInfo(name = "assistance_id") val assistanceId: Int
 )

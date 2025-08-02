@@ -11,13 +11,13 @@ import java.time.LocalDate
     tableName = "assistances",
     foreignKeys = [
         ForeignKey(
-            entity = Tenant::class,
+            entity = TenantEntity::class,
             parentColumns = ["id"],
             childColumns = ["tenant_id"],
             onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
-            entity = PropertySeaProximityType::class,
+            entity = PropertySeaProximityTypeEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_sea_proximity_type_id"],
             onDelete = ForeignKey.CASCADE,
@@ -28,7 +28,7 @@ import java.time.LocalDate
         Index("property_sea_proximity_type_id"),
     ],
 )
-data class Assistance(
+data class AssistanceEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "contact_date") val contactDate: LocalDate?,
     @ColumnInfo(name = "searched_start_date") val searchedStartDate: LocalDate?,

@@ -29,28 +29,28 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.StayFil
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.StayTransferDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.TenantContactOriginTypeDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.TenantDao
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Assistance
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceCharacteristic
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceCharacteristicAssistanceCrossRef
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceInteraction
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSearchedNeighborhood
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSentPropertyCrossRef
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegment
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentType
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Property
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicPropertyCrossRef
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyFile
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwner
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerFile
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyPrice
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertySeaProximityType
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyType
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Stay
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayFile
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransfer
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Tenant
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginType
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceCharacteristicEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceCharacteristicAssistanceCrossRefEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceInteractionEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentTypeEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyFileEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerFileEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyPriceEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertySeaProximityTypeEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyTypeEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayFileEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransferEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginTypeEntity
 
 @Database(
     /*
@@ -60,28 +60,28 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ten
      * PropertyType and TenantContactOriginType.
      */
     entities = [
-        Assistance::class,
-        AssistanceCharacteristic::class,
-        AssistanceCharacteristicAssistanceCrossRef::class,
-        AssistanceInteraction::class,
-        AssistanceSearchedNeighborhood::class,
-        AssistanceSentPropertyCrossRef::class,
-        CustomerSegment::class,
-        CustomerSegmentType::class,
-        Property::class,
-        PropertyCharacteristic::class,
-        PropertyCharacteristicPropertyCrossRef::class,
-        PropertyFile::class,
-        PropertyOwner::class,
-        PropertyOwnerFile::class,
-        PropertyPrice::class,
-        PropertySeaProximityType::class,
-        PropertyType::class,
-        Stay::class,
-        StayFile::class,
-        StayTransfer::class,
-        Tenant::class,
-        TenantContactOriginType::class,
+        AssistanceEntity::class,
+        AssistanceCharacteristicEntity::class,
+        AssistanceCharacteristicAssistanceCrossRefEntity::class,
+        AssistanceInteractionEntity::class,
+        AssistanceSearchedNeighborhoodEntity::class,
+        AssistanceSentPropertyCrossRefEntity::class,
+        CustomerSegmentEntity::class,
+        CustomerSegmentTypeEntity::class,
+        PropertyEntity::class,
+        PropertyCharacteristicEntity::class,
+        PropertyCharacteristicPropertyCrossRefEntity::class,
+        PropertyFileEntity::class,
+        PropertyOwnerEntity::class,
+        PropertyOwnerFileEntity::class,
+        PropertyPriceEntity::class,
+        PropertySeaProximityTypeEntity::class,
+        PropertyTypeEntity::class,
+        StayEntity::class,
+        StayFileEntity::class,
+        StayTransferEntity::class,
+        TenantEntity::class,
+        TenantContactOriginTypeEntity::class,
     ],
     version = AppDatabase.DB_VERSION,
 )

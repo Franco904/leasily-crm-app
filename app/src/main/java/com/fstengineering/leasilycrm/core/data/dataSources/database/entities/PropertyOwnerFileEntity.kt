@@ -7,19 +7,19 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "stay_files",
+    tableName = "property_owner_files",
     foreignKeys = [
         ForeignKey(
-            entity = Stay::class,
+            entity = PropertyOwnerEntity::class,
             parentColumns = ["id"],
-            childColumns = ["stay_id"],
+            childColumns = ["property_owner_id"],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index("stay_id")],
+    indices = [Index("property_owner_id")],
 )
-data class StayFile(
+data class PropertyOwnerFileEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "stay_file_uri") val stayFileUri: String,
-    @ColumnInfo(name = "stay_id") val stayId: Int
+    @ColumnInfo(name = "property_owner_file_uri") val propertyOwnerFileUri: String,
+    @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Int
 )

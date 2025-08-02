@@ -5,16 +5,16 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegment
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
 
 @Dao
 interface CustomerSegmentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdate(customerSegment: CustomerSegment): Long
+    suspend fun insertOrUpdate(customerSegment: CustomerSegmentEntity): Long
 
     @Delete
-    suspend fun delete(customerSegment: CustomerSegment)
+    suspend fun delete(customerSegment: CustomerSegmentEntity)
 
     @Query("SELECT * FROM customer_segments")
-    suspend fun getAll(): List<CustomerSegment>
+    suspend fun getAll(): List<CustomerSegmentEntity>
 }

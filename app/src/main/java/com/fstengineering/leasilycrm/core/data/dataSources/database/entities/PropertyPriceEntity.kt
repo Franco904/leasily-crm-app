@@ -5,12 +5,13 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.time.LocalDate
 
 @Entity(
-    tableName = "property_files",
+    tableName = "property_prices",
     foreignKeys = [
         ForeignKey(
-            entity = Property::class,
+            entity = PropertyEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_id"],
             onDelete = ForeignKey.CASCADE,
@@ -18,8 +19,10 @@ import androidx.room.PrimaryKey
     ],
     indices = [Index("property_id")],
 )
-data class PropertyFile(
+data class PropertyPriceEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "property_file_uri") val propertyFileUri: String,
+    @ColumnInfo(name = "start_date") val startDate: LocalDate,
+    @ColumnInfo(name = "end_date") val endDate: LocalDate,
+    val price: Double,
     @ColumnInfo(name = "property_id") val propertyId: Int,
 )

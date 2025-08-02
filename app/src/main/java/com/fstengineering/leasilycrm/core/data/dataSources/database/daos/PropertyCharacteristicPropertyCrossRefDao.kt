@@ -4,13 +4,13 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicPropertyCrossRef
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
 
 @Dao
 interface PropertyCharacteristicPropertyCrossRefDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdate(crossRef: PropertyCharacteristicPropertyCrossRef): Long
+    suspend fun insertOrUpdate(crossRef: PropertyCharacteristicPropertyCrossRefEntity): Long
 
     @Delete
-    suspend fun delete(crossRef: PropertyCharacteristicPropertyCrossRef)
+    suspend fun delete(crossRef: PropertyCharacteristicPropertyCrossRefEntity)
 }
