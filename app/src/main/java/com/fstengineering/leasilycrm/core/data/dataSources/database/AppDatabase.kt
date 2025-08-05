@@ -56,8 +56,8 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ten
     /*
      * Domain tables:
      *
-     * AssistanceCharacteristic, CustomerSegmentType, PropertyCharacteristic, PropertySeaProximityType,
-     * PropertyType and TenantContactOriginType.
+     * assistance_characteristics, customer_segment_types, property_characteristics,
+     * property_sea_proximity_types, property_types and tenant_contact_origin_types.
      */
     entities = [
         AssistanceEntity::class,
