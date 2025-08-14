@@ -7,10 +7,12 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import com.fstengineering.leasilycrm.core.data.constants.CLIENT_ID
 import com.fstengineering.leasilycrm.core.data.utils.CryptoUtils
+import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.presentation.exceptions.CredentialManagerException
 import com.fstengineering.leasilycrm.core.presentation.exceptions.asCredentialManagerException
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import io.ktor.utils.io.CancellationException
 
 object AppCredentialManager {
     suspend fun chooseGoogleAccount(
@@ -20,19 +22,12 @@ object AppCredentialManager {
     ): GoogleUserCredentials {
         val credentialManager = CredentialManager.create(activityContext)
 
-        val googleIdOption: GetGoogleIdOption = if (isSignIn) {
-            GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(true)
-                .setServerClientId(CLIENT_ID)
-                .setAutoSelectEnabled(mustEnableAutoSelect)
-                .setNonce(CryptoUtils.generateNonce())
-                .build()
-        } else {
-            GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(CLIENT_ID)
-                .build()
-        }
+        val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
+            .setServerClientId(CLIENT_ID)
+            .setFilterByAuthorizedAccounts(isSignIn)
+            .setAutoSelectEnabled(mustEnableAutoSelect)
+            .setNonce(CryptoUtils.generateNonce())
+            .build()
 
         val credentialRequest: GetCredentialRequest = GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
@@ -60,11 +55,12 @@ object AppCredentialManager {
 
             return GoogleUserCredentials(
                 idToken = googleIdTokenCredential.idToken,
-                displayName = googleIdTokenCredential.displayName,
+                name = googleIdTokenCredential.displayName,
                 profilePictureUrl = googleIdTokenCredential.profilePictureUri?.toString(),
             )
         } catch (e: Exception) {
-            if (e is CredentialManagerException) throw e
+            e.printStackTrace()
+            if (e is CredentialManagerException || e is CancellationException) throw e
 
             throw e.asCredentialManagerException()
         }
@@ -77,7 +73,7 @@ object AppCredentialManager {
         try {
             credentialManager.clearCredentialState(clearCredentialStateRequest)
         } catch (e: Exception) {
-            if (e is CredentialManagerException) throw e
+            if (e is CredentialManagerException || e is CancellationException) throw e
 
             throw e.asCredentialManagerException()
         }
@@ -85,7 +81,12 @@ object AppCredentialManager {
 
     data class GoogleUserCredentials(
         val idToken: String,
-        val displayName: String? = null,
+        val name: String? = null,
         val profilePictureUrl: String? = null,
-    )
+    ) {
+        fun toUser() = User(
+            name = name,
+            profilePictureUrl = profilePictureUrl,
+        )
+    }
 }

@@ -15,13 +15,13 @@ interface UserRepository {
         user: User,
     ): AppResult<Unit, DataSourceError>
 
+    suspend fun getUser(): AppResult<User, DataSourceError>
+
     fun watchUser(): Flow<AppResult<User, DataSourceError>>
 
     suspend fun updateUser(user: User): AppResult<Unit, DataSourceError>
 
     suspend fun retrySendUserUpdate(): AppResult<Unit, DataSourceError>
-
-    suspend fun deleteUser(): AppResult<Unit, DataSourceError>
 
     suspend fun signOutUser(): AppResult<Unit, DataSourceError>
 }

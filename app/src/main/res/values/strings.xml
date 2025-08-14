@@ -1,26 +1,58 @@
 <resources>
     <string name="app_name">Leasily CRM</string>
 
+    <!-- Sign in -->
+    <string name="sign_in_welcome_text">Boas-vindas ao Leasily CRM.</string>
+    <string name="sign_in_welcome_description">Cadastre-se com sua conta Google pelo botão abaixo.</string>
+    <string name="sign_in_await">Aguarde…</string>
+    <string name="sign_in_sign_in_with_google">Entrar com Google</string>
+
+    <!-- Home -->
+    <string name="home_top_app_bar_title">Painel</string>
+
+    <!-- Profile -->
+    <string name="profile_top_app_bar_title">Perfil</string>
+
+    <string name="profile_signout_dialog_headline">Sair do perfil?</string>
+    <string name="profile_signout_dialog_supporting_text">Deseja sair do perfil? O seu perfil será desconectado e será necessário autenticar novamente.</string>
+    <string name="profile_signout_dialog_confirm_button_text">Sair</string>
+    <string name="profile_signout_dialog_dismiss_button_text">Cancelar</string>
+
+    <string name="profile_edit_user_dialog_headline">Editar perfil</string>
+    <string name="profile_edit_user_dialog_name_field_placeholder">Nome</string>
+    <string name="profile_edit_user_dialog_creci_field_placeholder">Número CRECI</string>
+    <string name="profile_edit_user_dialog_required_helper_text">Obrigatório</string>
+    <string name="profile_edit_user_dialog_confirm_button">Editar</string>
+    <string name="profile_edit_user_dialog_dismiss_button">Cancelar</string>
+
+    <string name="profile_creci_blank_body_text">CRECI não informado</string>
+    <string name="profile_signout_button_label_text">Sair</string>
+    <string name="profile_edit_user_button_label_text">Editar</string>
+
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório.</string>
     <string name="inline_user_name_too_big">Deve ter no máximo 75 caracteres.</string>
     <string name="inline_creci_number_too_big">Deve ter no máximo 8 caracteres.</string>
 
+    <!-- Snackbar success -->
+    <string name="snackbar_edit_user_succeeded">Perfil editado com sucesso.</string>
+    <string name="snackbar_edit_user_no_data_changed">Nenhum dado foi editado.</string>
+
     <!-- Snackbar errors -->
     <string name="snackbar_credential_unsupported_type_error">Tipo de credencial inválido. Tente autenticar com a sua conta Google.</string>
     <string name="snackbar_credential_unsupported_api_error">Falha ao verificar as credenciais. Tente reiniciar o aplicativo.</string>
-    <string name="snackbar_credential_no_credentials_found_error">Não há contas Google disponíveis. Tente novamente mais tarde.</string>
+    <string name="snackbar_credential_no_credentials_found_error">Não há contas Google disponíveis neste dispositivo.</string>
 
     <string name="snackbar_preferences_serialization_error">Falha ao carregar os dados. Tente novamente mais tarde.</string>
     <string name="snackbar_preferences_security_error">Falha inesperada na sessão. Tente sair e autenticar novamente.</string>
 
     <string name="snackbar_http_bad_request_error">Dados com formato inválido. Verifique os dados preenchidos.</string>
-    <string name="snackbar_http_unauthorized_error">Sua sessão expirou. Tente sair e autenticar novamente.</string>
-    <string name="snackbar_http_forbidden_error">Sua sessão expirou. Tente sair e autenticar novamente.</string>
-    <string name="snackbar_http_not_found_error">Usuário não encontrado. Tente sair e autenticar novamente.</string>
+    <string name="snackbar_http_unauthorized_error">Sua sessão expirou.</string>
+    <string name="snackbar_http_forbidden_error">Sua sessão expirou.</string>
+    <string name="snackbar_http_not_found_error">Usuário não encontrado.</string>
     <string name="snackbar_http_server_error">Falha inesperada do servidor. Tente novamente mais tarde.</string>
     <string name="snackbar_http_unknown_http_response_error">Resposta inesperada do servidor. Tente novamente mais tarde.</string>
-    <string name="snackbar_http_serialization_error">Sua sessão expirou. Tente sair e autenticar novamente.</string>
+    <string name="snackbar_http_serialization_error">Sua sessão expirou.</string>
     <string name="snackbar_http_timeout_error">A requisição expirou. Verifique a sua conexão com a Internet e tente novamente.</string>
     <string name="snackbar_http_network_internet">Sem conexão com a Internet. Verifique a sua conexão e tente novamente.</string>
 

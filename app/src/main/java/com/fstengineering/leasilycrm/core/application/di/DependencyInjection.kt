@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.application.di.modules.preferencesModu
 import com.fstengineering.leasilycrm.core.application.di.modules.remoteBackendModule
 import com.fstengineering.leasilycrm.core.application.di.modules.repositoryModule
 import com.fstengineering.leasilycrm.core.application.di.modules.validatorModule
+import com.fstengineering.leasilycrm.core.application.di.modules.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -21,6 +22,7 @@ fun Application.configureDependencyInjection() {
             remoteBackendModule,
             repositoryModule,
             validatorModule,
+            viewModelModule,
         )
     }
 }

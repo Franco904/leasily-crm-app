@@ -53,17 +53,6 @@ class UserApiImpl(
             )
     }
 
-    override suspend fun deleteUser(): AppResult<Unit, DataSourceError.RemoteBackendError> {
-        return client.request(
-            url = "$ROUTE/delete",
-            method = HttpMethod.Delete,
-        )
-            .fold(
-                onError = { AppResult.Error(error = it) },
-                onSuccess = { AppResult.Success(data = Unit) },
-            )
-    }
-
     override suspend fun signOutUser(): AppResult<Unit, DataSourceError.RemoteBackendError> {
         return client.request(
             url = "$ROUTE/sign-out",

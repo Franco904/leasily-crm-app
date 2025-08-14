@@ -23,6 +23,9 @@ sealed interface DataSourceError : Error {
         return this in listOf(
             RemoteBackendError.Unauthorized,
             RemoteBackendError.NotFound,
+            RemoteBackendError.ServerError,
+            RemoteBackendError.UnknownHttpRemoteError,
+            RemoteBackendError.UnknownError,
         )
     }
 }

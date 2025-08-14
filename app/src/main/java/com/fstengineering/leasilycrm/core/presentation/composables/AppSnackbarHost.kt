@@ -10,16 +10,12 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun AppSnackbarHost(
     snackbarHostState: SnackbarHostState,
-    snackbarContainerColor: Color,
     modifier: Modifier = Modifier,
 ) {
     SnackbarHost(
         hostState = snackbarHostState,
         snackbar = { data ->
-            Snackbar(
-                snackbarData = data,
-                containerColor = snackbarContainerColor,
-            )
+            Snackbar(snackbarData = data)
         },
         modifier = modifier
     )

@@ -6,9 +6,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
-import com.fstengineering.leasilycrm.core.data.exceptions.toPreferencesException
+import com.fstengineering.leasilycrm.core.data.exceptions.toPreferencesError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.flow.Flow
 
 class EncryptedPreferencesStorage(
@@ -22,14 +23,14 @@ class EncryptedPreferencesStorage(
 
             return AppResult.Success(data = Unit)
         } catch (e: Exception) {
-            val preferencesException = e.toPreferencesException()
+            if (e is CancellationException) throw e
 
             if (BuildConfig.DEBUG) {
-                Log.e(TAG, "savePreferences error - ${preferencesException.message}")
+                Log.e(TAG, "savePreferences error - ${e.message}")
                 e.printStackTrace()
             }
 
-            return AppResult.Error(error = preferencesException.toPreferencesError())
+            return AppResult.Error(error = e.toPreferencesError())
         }
     }
 
@@ -37,14 +38,14 @@ class EncryptedPreferencesStorage(
         try {
             return AppResult.Success(data = dataStore.data)
         } catch (e: Exception) {
-            val preferencesException = e.toPreferencesException()
+            if (e is CancellationException) throw e
 
             if (BuildConfig.DEBUG) {
-                Log.e(TAG, "readPreferences error - ${preferencesException.message}")
+                Log.e(TAG, "readPreferences error - ${e.message}")
                 e.printStackTrace()
             }
 
-            return AppResult.Error(error = preferencesException.toPreferencesError())
+            return AppResult.Error(error = e.toPreferencesError())
         }
     }
 

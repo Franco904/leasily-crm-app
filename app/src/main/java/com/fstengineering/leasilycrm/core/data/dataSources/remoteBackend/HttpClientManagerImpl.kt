@@ -2,8 +2,7 @@ package com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend
 
 import android.util.Log
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.data.exceptions.RemoteBackendException
-import com.fstengineering.leasilycrm.core.data.exceptions.asRemoteBackendException
+import com.fstengineering.leasilycrm.core.data.exceptions.toRemoteBackendError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import io.ktor.client.HttpClient
@@ -11,6 +10,7 @@ import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpMethod
+import io.ktor.utils.io.CancellationException
 
 class HttpClientManagerImpl(
     private val client: HttpClient,
@@ -31,26 +31,17 @@ class HttpClientManagerImpl(
             }
 
             // Handle standard HTTP errors
-            throw response.status.asRemoteBackendException()
+            return AppResult.Error(error = response.status.toRemoteBackendError())
         } catch (e: Exception) {
-            if (e is RemoteBackendException) {
-                if (BuildConfig.DEBUG) {
-                    Log.e(TAG, "request http error - ${e.message}")
-                    e.printStackTrace()
-                }
-
-                return AppResult.Error(error = e.toRemoteBackendError())
-            }
-
-            // Handle Network & Serialization Errors
-            val remoteBackendException = e.asRemoteBackendException()
+            if (e is CancellationException) throw e
 
             if (BuildConfig.DEBUG) {
-                Log.e(TAG, "request error - ${remoteBackendException.message}")
+                Log.e(TAG, "request error - ${e.message}")
                 e.printStackTrace()
             }
 
-            return AppResult.Error(error = remoteBackendException.toRemoteBackendError())
+            // Handle Network & Serialization Errors
+            return AppResult.Error(error = e.toRemoteBackendError())
         }
     }
 

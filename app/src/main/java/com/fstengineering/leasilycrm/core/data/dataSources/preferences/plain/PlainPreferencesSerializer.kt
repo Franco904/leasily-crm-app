@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain
 
 import android.util.Log
 import androidx.datastore.core.Serializer
-import com.fstengineering.leasilycrm.core.data.exceptions.toPreferencesException
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -23,7 +23,9 @@ object PlainPreferencesSerializer : Serializer<PlainPreferences> {
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "${e.toPreferencesException().message}")
+            if (e is CancellationException) throw e
+
+            Log.e(TAG, e.toString())
         }
     }
 
@@ -35,7 +37,9 @@ object PlainPreferencesSerializer : Serializer<PlainPreferences> {
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "${e.toPreferencesException().message}")
+            if (e is CancellationException) throw e
+
+            Log.e(TAG, e.toString())
             defaultValue
         }
     }

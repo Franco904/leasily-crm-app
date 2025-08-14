@@ -83,6 +83,23 @@ class UserRepositoryImpl(
         return AppResult.Success(data = Unit)
     }
 
+    override suspend fun getUser(): AppResult<User, DataSourceError> {
+        return encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    val prefs = prefsFlow.first()
+
+                    if (prefs.sessionCookie == null) {
+                        return AppResult.Error(error = DataSourceError.RemoteBackendError.Unauthorized)
+                    }
+
+                    val cachedUser = prefs.toUser()
+                    return AppResult.Success(data = cachedUser)
+                },
+            )
+    }
+
     override fun watchUser(): Flow<AppResult<User, DataSourceError>> = flow {
         emitCachedUser()
         fetchAndCacheRemoteUser()
@@ -233,23 +250,6 @@ class UserRepositoryImpl(
         encryptedPreferencesStorage.savePreferences {
             it.copy(isUserEditSynced = true)
         }
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
-    }
-
-    override suspend fun deleteUser(): AppResult<Unit, DataSourceError> {
-        userApi.deleteUser()
-            .onError { remoteBackendError ->
-                if (remoteBackendError.isRedirectError()) {
-                    deleteCachedUser()
-                        .onError { return AppResult.Error(error = it) }
-                }
-
-                return AppResult.Error(error = remoteBackendError)
-            }
-
-        deleteCachedUser()
             .onError { return AppResult.Error(error = it) }
 
         return AppResult.Success(data = Unit)

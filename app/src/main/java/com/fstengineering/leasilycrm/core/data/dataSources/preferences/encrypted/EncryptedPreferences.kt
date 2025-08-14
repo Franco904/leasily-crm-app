@@ -15,6 +15,7 @@ data class EncryptedPreferences(
     fun toUser(): User {
         return User(
             name = name,
+            creciNumber = creciNumber,
             profilePictureUrl = profilePictureUrl,
             isUserModifySynced = isUserEditSynced,
         )

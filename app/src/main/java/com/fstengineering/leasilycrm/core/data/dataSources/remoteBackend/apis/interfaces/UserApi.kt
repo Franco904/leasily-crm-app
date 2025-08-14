@@ -17,7 +17,5 @@ interface UserApi {
         updateUserRequestDto: UpdateUserRequestDto,
     ): AppResult<Unit, DataSourceError.RemoteBackendError>
 
-    suspend fun deleteUser(): AppResult<Unit, DataSourceError.RemoteBackendError>
-
     suspend fun signOutUser(): AppResult<Unit, DataSourceError.RemoteBackendError>
 }
