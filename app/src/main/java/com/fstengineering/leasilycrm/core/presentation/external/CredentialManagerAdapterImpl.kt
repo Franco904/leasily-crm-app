@@ -47,7 +47,7 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
                     && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 
             if (!isSupportedCredentialType) {
-                Log.e(TAG, "Unsupported credential type: ${credential.type}")
+                if (BuildConfig.DEBUG) Log.e(TAG, "Unsupported credential type: ${credential.type}")
 
                 return AppResult.Error(error = CredentialsError.UnsupportedCrendentialType)
             }
