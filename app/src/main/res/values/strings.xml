@@ -8,7 +8,16 @@
     <string name="sign_in_sign_in_with_google">Entrar com Google</string>
 
     <!-- Home -->
-    <string name="home_top_app_bar_title">Painel</string>
+    <string name="home_properties_label">Imóveis</string>
+    <string name="home_property_owners_label">Proprietários</string>
+    <string name="home_customer_segments_label">Segmentos de cliente</string>
+
+    <string name="home_dashboard_label">Painel</string>
+    <string name="home_leads_label">Leads</string>
+    <string name="home_tenants_label">Inquilinos</string>
+    <string name="home_stays_label">Estadias</string>
+
+    <!-- Search -->
 
     <!-- Profile -->
     <string name="profile_top_app_bar_title">Perfil</string>
@@ -28,6 +37,13 @@
     <string name="profile_creci_blank_body_text">CRECI não informado</string>
     <string name="profile_signout_button_label_text">Sair</string>
     <string name="profile_edit_user_button_label_text">Editar</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_my_metrics_title">Minhas métricas</string>
+    <string name="dashboard_monthly_lead_conversion_metric_title">Taxa de conversão de leads por mês</string>
+    <string name="dashboard_monthly_revenue_metric_title">Taxa de conversão de leads por mês</string>
+    <string name="dashboard_lead_contact_channels_metric_title">Canais de contato (leads)</string>
+    <string name="dashboard_last_8_months_body_text">Últimos 8 meses</string>
 
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório.</string>
