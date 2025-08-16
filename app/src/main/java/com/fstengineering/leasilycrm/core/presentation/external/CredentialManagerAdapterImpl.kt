@@ -7,7 +7,6 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.data.constants.CLIENT_ID
 import com.fstengineering.leasilycrm.core.data.utils.CryptoUtils
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.presentation.external.interfaces.CredentialManagerAdapter
@@ -27,7 +26,7 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
         val credentialManager = CredentialManager.create(activityContext)
 
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-            .setServerClientId(CLIENT_ID)
+            .setServerClientId(BuildConfig.CLIENT_ID)
             .setFilterByAuthorizedAccounts(isSignIn)
             .setAutoSelectEnabled(mustEnableAutoSelect)
             .setNonce(CryptoUtils.generateNonce())

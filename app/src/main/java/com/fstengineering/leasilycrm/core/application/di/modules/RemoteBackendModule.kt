@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.core.application.di.modules
 
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.application.di.qualifiers.encryptedPreferencesQualifier
-import com.fstengineering.leasilycrm.core.data.constants.REMOTE_API_URL
 import com.fstengineering.leasilycrm.core.data.dataSources.cookieStorage.AppCookieStorage
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientManager
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientManagerImpl
@@ -35,7 +34,7 @@ val remoteBackendModule = module {
             }
 
             defaultRequest {
-                url(REMOTE_API_URL)
+                url(BuildConfig.REMOTE_API_URL)
                 contentType(ContentType.Application.Json)
             }
 

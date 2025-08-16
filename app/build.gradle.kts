@@ -27,6 +27,10 @@ android {
                 "clearPackageData" to "true" // Revoke permissions and clear app state after each instrumented test
             )
         )
+
+        buildConfigField("String", "REMOTE_API_URL", project.property("REMOTE_API_URL") as String)
+        buildConfigField("String", "CLIENT_ID", project.property("CLIENT_ID") as String)
+        buildConfigField("String", "SESSION_COOKIE_NAME", project.property("SESSION_COOKIE_NAME") as String)
     }
 
     signingConfigs {

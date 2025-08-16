@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.cookieStorage
 
-import com.fstengineering.leasilycrm.core.data.constants.SESSION_COOKIE_NAME
+import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -13,7 +13,7 @@ class AppCookieStorage(
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
 ) : CookiesStorage {
     override suspend fun addCookie(requestUrl: Url, cookie: Cookie) {
-        if (cookie.name == SESSION_COOKIE_NAME) {
+        if (cookie.name == BuildConfig.SESSION_COOKIE_NAME) {
             encryptedPreferencesStorage.savePreferences { prefs ->
                 prefs.copy(sessionCookie = cookie)
             }
