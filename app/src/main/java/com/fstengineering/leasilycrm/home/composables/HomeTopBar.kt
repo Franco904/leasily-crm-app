@@ -1,10 +1,18 @@
 package com.fstengineering.leasilycrm.home.composables
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -15,19 +23,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.models.BottomNavBarDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenTopBar(
+fun HomeTopBar(
+    currentBottomNavDestination: BottomNavBarDestination,
+    hasSearchButton: Boolean,
     userProfilePictureUrl: String?,
+    onSearchSelect: () -> Unit,
     onProfileSelect: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         title = {
             Text(
-                text = stringResource(R.string.home_top_app_bar_title),
+                text = stringResource(currentBottomNavDestination.textId),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
@@ -35,6 +46,20 @@ fun HomeScreenTopBar(
             )
         },
         actions = {
+            if (hasSearchButton) {
+                Row {
+                    IconButton(
+                        onClick = onSearchSelect,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Search,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
+            }
             AsyncImage(
                 model = userProfilePictureUrl,
                 contentDescription = null,
@@ -48,6 +73,7 @@ fun HomeScreenTopBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
+        windowInsets = WindowInsets(0),
         modifier = modifier
     )
 }

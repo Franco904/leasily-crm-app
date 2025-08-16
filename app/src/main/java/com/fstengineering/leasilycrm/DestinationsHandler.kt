@@ -60,6 +60,9 @@ object DestinationsHandler {
                         popUpTo(startDestination) { inclusive = true }
                     }
                 },
+                onPropertiesSelect = {},
+                onPropertyOwnersSelect = {},
+                onCustomerSegmentsSelect = {},
                 showSnackbar = { message -> showSnackbar(message) },
             )
         }
