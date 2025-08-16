@@ -22,8 +22,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RootScreen(
+    viewModel: RootViewModel,
     modifier: Modifier = Modifier,
-    viewModel: RootViewModel = koinViewModel(),
     onNavigateToFirstDestination: (Any) -> Unit = { _ -> },
     showSnackbar: (String, Boolean) -> Unit = { _, _ -> },
 ) {

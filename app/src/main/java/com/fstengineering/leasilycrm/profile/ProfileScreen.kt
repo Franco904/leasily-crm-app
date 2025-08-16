@@ -27,10 +27,11 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
+import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.exceptions.CredentialManagerException
-import com.fstengineering.leasilycrm.core.presentation.external.AppCredentialManager
-import com.fstengineering.leasilycrm.core.presentation.utils.uiConverters.toUiMessage
+import com.fstengineering.leasilycrm.core.presentation.external.interfaces.CredentialManagerAdapter
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.EditUserSuccess
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.RedirectToSignIn
@@ -40,11 +41,13 @@ import com.fstengineering.leasilycrm.profile.composables.ProfileDataSection
 import com.fstengineering.leasilycrm.profile.composables.ProfileScreenTopBar
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun ProfileScreen(
+    viewModel: ProfileViewModel,
+    credentialManager: CredentialManagerAdapter,
     modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = koinViewModel(),
     onBack: () -> Unit = {},
     onSignOutSuccess: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
@@ -141,17 +144,16 @@ fun ProfileScreen(
                         isConfirmingSigningOut = false
 
                         coroutineScope.launch {
-                            try {
-                                AppCredentialManager.clearGoogleCredentialState(
-                                    activityContext = activity,
-                                )
-
-                                viewModel.signOutUser()
-                            } catch (e: CredentialManagerException) {
-                                showSnackbar(context.getString(e.toUiMessage()))
-
-                                isSigningOut = false
-                            }
+                            credentialManager.clearGoogleCredentialState(
+                                activityContext = activity,
+                            )
+                                .onError { e ->
+                                    showSnackbar(context.getString(e.toUiMessage()))
+                                    isSigningOut = false
+                                }
+                                .onSuccess {
+                                    viewModel.signOutUser()
+                                }
                         }
                     },
                     onCancel = { isConfirmingSigningOut = false },
@@ -183,6 +185,8 @@ fun ProfileScreenPreview(
 ) {
     AppTheme {
         ProfileScreen(
+            viewModel = koinViewModel(),
+            credentialManager = koinInject(),
             modifier = modifier
         )
     }

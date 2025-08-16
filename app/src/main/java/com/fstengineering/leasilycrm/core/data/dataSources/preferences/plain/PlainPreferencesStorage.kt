@@ -1,12 +1,11 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
-import com.fstengineering.leasilycrm.core.data.exceptions.toPreferencesError
+import com.fstengineering.leasilycrm.core.data.utils.toPreferencesError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import io.ktor.utils.io.CancellationException
@@ -24,11 +23,7 @@ class PlainPreferencesStorage(
             return AppResult.Success(data = Unit)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-
-            if (BuildConfig.DEBUG) {
-                Log.e(TAG, "savePreferences error - ${e.message}")
-                e.printStackTrace()
-            }
+            if (BuildConfig.DEBUG) e.printStackTrace()
 
             return AppResult.Error(error = e.toPreferencesError())
         }
@@ -39,11 +34,7 @@ class PlainPreferencesStorage(
             return AppResult.Success(data = dataStore.data)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-
-            if (BuildConfig.DEBUG) {
-                Log.e(TAG, "readPreferences error - ${e.message}")
-                e.printStackTrace()
-            }
+            if (BuildConfig.DEBUG) e.printStackTrace()
 
             return AppResult.Error(error = e.toPreferencesError())
         }

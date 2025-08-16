@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.application.di
 
 import android.app.Application
 import com.fstengineering.leasilycrm.core.application.di.modules.databaseModule
+import com.fstengineering.leasilycrm.core.application.di.modules.externalPresentationModule
 import com.fstengineering.leasilycrm.core.application.di.modules.preferencesModule
 import com.fstengineering.leasilycrm.core.application.di.modules.remoteBackendModule
 import com.fstengineering.leasilycrm.core.application.di.modules.repositoryModule
@@ -23,6 +24,7 @@ fun Application.configureDependencyInjection() {
             repositoryModule,
             validatorModule,
             viewModelModule,
+            externalPresentationModule,
         )
     }
 }

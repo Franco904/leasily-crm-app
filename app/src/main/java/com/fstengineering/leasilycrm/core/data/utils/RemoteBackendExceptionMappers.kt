@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.data.exceptions
+package com.fstengineering.leasilycrm.core.data.utils
 
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import io.ktor.client.plugins.HttpRequestTimeoutException
@@ -24,8 +24,9 @@ fun HttpStatusCode.toRemoteBackendError() = when (this) {
 fun Exception.toRemoteBackendError() = when (this) {
     is SerializationException -> DataSourceError.RemoteBackendError.SerializationError
     is HttpRequestTimeoutException -> DataSourceError.RemoteBackendError.Timeout
-    is ConnectException -> DataSourceError.RemoteBackendError.NetworkError
-    is UnknownHostException -> DataSourceError.RemoteBackendError.NetworkError
-    is IOException -> DataSourceError.RemoteBackendError.NetworkError
+    is ConnectException, is UnknownHostException, is IOException -> {
+        DataSourceError.RemoteBackendError.NetworkError
+    }
+
     else -> DataSourceError.RemoteBackendError.UnknownError
 }

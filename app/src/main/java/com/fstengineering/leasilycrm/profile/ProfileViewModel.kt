@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.UserValidator
-import com.fstengineering.leasilycrm.core.presentation.utils.uiConverters.toUiMessage
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import com.fstengineering.leasilycrm.profile.models.UserUiState
 import com.fstengineering.leasilycrm.profile.models.EditUserFormUiState
 import kotlinx.coroutines.channels.Channel

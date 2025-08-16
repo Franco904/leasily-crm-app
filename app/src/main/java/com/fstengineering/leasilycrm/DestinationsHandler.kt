@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm
 
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -13,6 +12,7 @@ import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.signin.SignInScreen
 import com.fstengineering.leasilycrm.signin.SignInViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 object DestinationsHandler {
     fun NavGraphBuilder.destinations(
@@ -36,6 +36,7 @@ object DestinationsHandler {
         composable<Destinations.SignIn> {
             SignInScreen(
                 viewModel = koinViewModel<SignInViewModel>(),
+                credentialManager = koinInject(),
                 onSignInSuccess = {
                     navController.navigate(Destinations.Home) {
                         val startDestination =
@@ -66,6 +67,7 @@ object DestinationsHandler {
         composable<Destinations.Profile> {
             ProfileScreen(
                 viewModel = koinViewModel<ProfileViewModel>(),
+                credentialManager = koinInject(),
                 onBack = {
                     navController.navigateUp()
                 },

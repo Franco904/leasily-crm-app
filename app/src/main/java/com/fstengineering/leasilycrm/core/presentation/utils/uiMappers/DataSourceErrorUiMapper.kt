@@ -1,8 +1,7 @@
-package com.fstengineering.leasilycrm.core.presentation.utils.uiConverters
+package com.fstengineering.leasilycrm.core.presentation.utils.uiMappers
 
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
-import com.fstengineering.leasilycrm.core.presentation.exceptions.CredentialManagerException
 
 fun DataSourceError.toUiMessage() = when (this) {
     DataSourceError.PreferencesError.SerializationError -> {
@@ -50,24 +49,6 @@ fun DataSourceError.toUiMessage() = when (this) {
     }
 
     DataSourceError.RemoteBackendError.UnknownError -> {
-        R.string.snackbar_unknown_error
-    }
-}
-
-fun CredentialManagerException.toUiMessage() = when (this) {
-    is CredentialManagerException.UnsupportedCrendentialTypeException -> {
-        R.string.snackbar_credential_unsupported_type_error
-    }
-
-    is CredentialManagerException.UnsupportedApiException -> {
-        R.string.snackbar_credential_unsupported_api_error
-    }
-
-    is CredentialManagerException.NoCredentialsFoundException -> {
-        R.string.snackbar_credential_no_credentials_found_error
-    }
-
-    is CredentialManagerException.UnknownError -> {
         R.string.snackbar_unknown_error
     }
 }

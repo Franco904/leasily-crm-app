@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.presentation.utils.uiConverters
+package com.fstengineering.leasilycrm.core.presentation.utils.uiMappers
 
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationError

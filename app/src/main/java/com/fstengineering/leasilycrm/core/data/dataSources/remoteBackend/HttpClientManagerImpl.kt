@@ -1,8 +1,7 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend
 
-import android.util.Log
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.data.exceptions.toRemoteBackendError
+import com.fstengineering.leasilycrm.core.data.utils.toRemoteBackendError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import io.ktor.client.HttpClient
@@ -34,11 +33,7 @@ class HttpClientManagerImpl(
             return AppResult.Error(error = response.status.toRemoteBackendError())
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-
-            if (BuildConfig.DEBUG) {
-                Log.e(TAG, "request error - ${e.message}")
-                e.printStackTrace()
-            }
+            if (BuildConfig.DEBUG) e.printStackTrace()
 
             // Handle Network & Serialization Errors
             return AppResult.Error(error = e.toRemoteBackendError())

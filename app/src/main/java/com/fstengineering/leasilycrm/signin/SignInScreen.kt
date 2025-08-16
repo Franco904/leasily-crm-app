@@ -1,7 +1,5 @@
 package com.fstengineering.leasilycrm.signin
 
-import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,21 +42,25 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
-import com.fstengineering.leasilycrm.core.presentation.exceptions.CredentialManagerException
-import com.fstengineering.leasilycrm.core.presentation.external.AppCredentialManager
-import com.fstengineering.leasilycrm.core.presentation.utils.uiConverters.toUiMessage
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.presentation.external.interfaces.CredentialManagerAdapter
+import com.fstengineering.leasilycrm.core.presentation.utils.CredentialsError
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import com.fstengineering.leasilycrm.signin.SignInViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.signin.SignInViewModel.UiEvents.SignInSuccess
 import com.fstengineering.leasilycrm.signin.composables.GoogleSignInButton
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-
-private const val TAG = "SignInScreen"
+import org.koin.compose.koinInject
 
 @Composable
 fun SignInScreen(
+    viewModel: SignInViewModel,
+    credentialManager: CredentialManagerAdapter,
     modifier: Modifier = Modifier,
-    viewModel: SignInViewModel = koinViewModel(),
     onSignInSuccess: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
@@ -127,21 +129,32 @@ fun SignInScreen(
                         coroutineScope.launch {
                             isSigningIn = true
 
-                            try {
-                                // To show Google's sign in dialog
-                                val credentials = getGoogleUserCredentials(
-                                    activityContext = activity,
-                                    didUserExplicitlySignOut = viewModel.didUserExplicitlySignOut,
+                            credentialManager.chooseGoogleAccount(
+                                activityContext = activity,
+                                isSignIn = true,
+                                mustEnableAutoSelect = !viewModel.didUserExplicitlySignOut,
+                            )
+                                .fold(
+                                    onError = { e ->
+                                        if (e == CredentialsError.UserCancellation) {
+                                            return@fold AppResult.Error(error = e)
+                                        }
+
+                                        return@fold credentialManager.chooseGoogleAccount(
+                                            activityContext = activity,
+                                            isSignIn = false,
+                                            mustEnableAutoSelect = false,
+                                        )
+                                    },
+                                    onSuccess = { data -> return@fold AppResult.Success(data = data) }
                                 )
-
-                                viewModel.onSignInUser(credentials = credentials)
-                            } catch (e: CredentialManagerException) {
-                                Log.e(TAG, "${e.message}")
-
-                                isSigningIn = false
-
-                                showSnackbar(context.getString(e.toUiMessage()))
-                            }
+                                .onError { e ->
+                                    showSnackbar(context.getString(e.toUiMessage()))
+                                    isSigningIn = false
+                                }
+                                .onSuccess { credentials ->
+                                    viewModel.onSignInUser(credentials = credentials)
+                                }
                         }
                     }
                 },
@@ -210,25 +223,6 @@ private fun SignInSection(
     }
 }
 
-private suspend fun getGoogleUserCredentials(
-    activityContext: Activity,
-    didUserExplicitlySignOut: Boolean
-): AppCredentialManager.GoogleUserCredentials {
-    return try {
-        AppCredentialManager.chooseGoogleAccount(
-            activityContext = activityContext,
-            isSignIn = true,
-            mustEnableAutoSelect = !didUserExplicitlySignOut,
-        )
-    } catch (_: CredentialManagerException) {
-        AppCredentialManager.chooseGoogleAccount(
-            activityContext = activityContext,
-            isSignIn = false,
-            mustEnableAutoSelect = false,
-        )
-    }
-}
-
 @Preview
 @Composable
 fun SignInScreenPreview(
@@ -236,6 +230,8 @@ fun SignInScreenPreview(
 ) {
     AppTheme {
         SignInScreen(
+            viewModel = koinViewModel(),
+            credentialManager = koinInject(),
             modifier = modifier,
         )
     }

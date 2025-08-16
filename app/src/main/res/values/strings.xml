@@ -39,6 +39,7 @@
     <string name="snackbar_edit_user_no_data_changed">Nenhum dado foi editado.</string>
 
     <!-- Snackbar errors -->
+    <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>
     <string name="snackbar_credential_unsupported_type_error">Tipo de credencial inválido. Tente autenticar com a sua conta Google.</string>
     <string name="snackbar_credential_unsupported_api_error">Falha ao verificar as credenciais. Tente reiniciar o aplicativo.</string>
     <string name="snackbar_credential_no_credentials_found_error">Não há contas Google disponíveis neste dispositivo.</string>

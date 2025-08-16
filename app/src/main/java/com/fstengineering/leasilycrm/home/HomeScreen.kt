@@ -13,16 +13,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.home.composables.HomeScreenTopBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel(),
-    onProfileSelect: () -> Unit,
+    onProfileSelect: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
     val context = LocalContext.current
@@ -61,6 +63,19 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun HomeScreenPreview(
+    modifier: Modifier = Modifier,
+) {
+    AppTheme {
+        HomeScreen(
+            viewModel = koinViewModel(),
+            modifier = modifier
         )
     }
 }
