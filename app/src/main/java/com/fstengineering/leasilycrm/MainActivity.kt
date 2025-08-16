@@ -4,14 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.fstengineering.leasilycrm.DestinationsHandler.destinations
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
+import com.fstengineering.leasilycrm.core.presentation.composables.AppSnackbarHost
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,17 +23,40 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
+        setContent()
+    }
+
+    private fun setContent() {
         setContent {
             AppTheme {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surface)
-                ) { Text(
-                    "Hello world!",
-                    style = MaterialTheme.typography.displayMedium,
-                ) }
+                val coroutineScope = rememberCoroutineScope()
+                val snackbarHostState = remember { SnackbarHostState() }
+                val navController = rememberNavController()
+
+                Scaffold(
+                    snackbarHost = {
+                        AppSnackbarHost(
+                            snackbarHostState = snackbarHostState,
+                        )
+                    },
+                ) { innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = Destinations.Root,
+                        builder = {
+                            destinations(
+                                navController = navController,
+                                showSnackbar = { message ->
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar(message = message)
+                                    }
+                                }
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(innerPadding)
+                    )
+                }
             }
         }
     }

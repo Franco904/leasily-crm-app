@@ -29,17 +29,17 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.StayFil
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.StayTransferDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.TenantContactOriginTypeDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.TenantDao
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceCharacteristicEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceCharacteristicAssistanceCrossRefEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceCharacteristicEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentTypeEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyFileEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerFileEntity
@@ -49,8 +49,8 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransferEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginTypeEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
 
 @Database(
     /*
