@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.Pla
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.SignInRequestDto
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.UpdateUserRequestDto
+import com.fstengineering.leasilycrm.core.data.models.SyncState
 import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -14,14 +15,11 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-
-typealias WatchUserFlowCollector = FlowCollector<AppResult<User, DataSourceError>>
 
 class UserRepositoryImpl(
     private val userApi: UserApi,
@@ -70,43 +68,42 @@ class UserRepositoryImpl(
                 name = user.name,
                 creciNumber = user.creciNumber,
                 profilePictureUrl = user.profilePictureUrl,
-                isUserEditSynced = true,
+                userSyncStateId = SyncState.Clean.id,
             )
         }
             .onError { return AppResult.Error(error = it) }
 
         plainPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(didUserExplicitlySignOut = false)
+            prefs.copy(
+                didUserExplicitlySignOut = false,
+                hasSessionExpired = false,
+            )
         }
             .onError { return AppResult.Error(error = it) }
 
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun getUser(): AppResult<User, DataSourceError> {
-        return encryptedPreferencesStorage.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow ->
-                    val prefs = prefsFlow.first()
-
-                    if (prefs.sessionCookie == null) {
-                        return AppResult.Error(error = DataSourceError.RemoteBackendError.Unauthorized)
+    override suspend fun watchSessionExpiration(): Flow<AppResult<Boolean, DataSourceError>> =
+        flow {
+            plainPreferencesStorage.readPreferences()
+                .onError { emit(AppResult.Error(error = it)) }
+                .onSuccess { prefsFlow ->
+                    val hasSessionExpiredFlow = prefsFlow.map {
+                        AppResult.Success<Boolean, DataSourceError>(data = it.hasSessionExpired == true)
                     }
 
-                    val cachedUser = prefs.toUser()
-                    return AppResult.Success(data = cachedUser)
-                },
-            )
+                    emitAll(hasSessionExpiredFlow)
+                }
+        }
+
+    override suspend fun markSessionAsExpired(): AppResult<Unit, DataSourceError> {
+        return plainPreferencesStorage.savePreferences {
+            it.copy(hasSessionExpired = true)
+        }
     }
 
     override fun watchUser(): Flow<AppResult<User, DataSourceError>> = flow {
-        emitCachedUser()
-        fetchAndCacheRemoteUser()
-        watchCachedUserForUpdates()
-    }
-
-    private suspend fun WatchUserFlowCollector.emitCachedUser() {
         encryptedPreferencesStorage.readPreferences()
             .onError { emit(AppResult.Error(error = it)) }
             .onSuccess { prefsFlow ->
@@ -114,34 +111,24 @@ class UserRepositoryImpl(
 
                 if (prefs.sessionCookie == null) {
                     emit(AppResult.Error(error = DataSourceError.RemoteBackendError.Unauthorized))
-                    return
+                    return@flow
                 }
 
-                val cachedUser = prefs.toUser()
-                emit(AppResult.Success(data = cachedUser))
+                emitAll(
+                    prefsFlow
+                        .map { AppResult.Success<User, DataSourceError>(data = it.toUser()) }
+                        .distinctUntilChanged()
+                )
             }
     }
 
-    private suspend fun WatchUserFlowCollector.fetchAndCacheRemoteUser() {
-        // If the cached logged user isn't synced, don't fetch user
-        encryptedPreferencesStorage.readPreferences()
-            .onError { emit(AppResult.Error(error = it)) }
-            .onSuccess { prefsFlow ->
-                val isUserEditSynced = prefsFlow.first().isUserEditSynced
-                if (!isUserEditSynced) return
-            }
-
-        // Fetch user from remote backend API
+    override suspend fun getRemoteUser(): AppResult<User, DataSourceError> {
         val fetchedUser = userApi.getUser()
             .fold(
-                onError = {
-                    emit(AppResult.Error(error = it))
-                    return
-                },
+                onError = { return AppResult.Error(error = it) },
                 onSuccess = { responseDto -> responseDto.toUser() }
             )
 
-        // Cache the fetched user
         encryptedPreferencesStorage.savePreferences { prefs ->
             prefs.copy(
                 name = fetchedUser.name,
@@ -149,21 +136,9 @@ class UserRepositoryImpl(
                 profilePictureUrl = fetchedUser.profilePictureUrl,
             )
         }
-            .onError { emit(AppResult.Error(error = it)) }
+            .onError { return AppResult.Error(error = it) }
 
-        emit(AppResult.Success(data = fetchedUser))
-    }
-
-    private suspend fun WatchUserFlowCollector.watchCachedUserForUpdates() {
-        encryptedPreferencesStorage.readPreferences()
-            .onError { emit(AppResult.Error(error = it)) }
-            .onSuccess { prefsFlow ->
-                emitAll(
-                    prefsFlow
-                        .map { AppResult.Success<User, DataSourceError>(data = it.toUser()) }
-                        .distinctUntilChanged()
-                )
-            }
+        return AppResult.Success(data = fetchedUser)
     }
 
     override suspend fun updateUser(
@@ -186,28 +161,24 @@ class UserRepositoryImpl(
 
         userApi.updateUser(updateUserRequestDto = updateUserRequestDto)
             .onError { remoteBackendError ->
-                if (remoteBackendError.isRedirectError()) {
-                    deleteCachedUser()
-                        .onError { return AppResult.Error(error = it) }
-                }
-
                 encryptedPreferencesStorage.savePreferences { prefs ->
-                    prefs.copy(isUserEditSynced = false)
+                    prefs.copy(userSyncStateId = SyncState.Dirty.id)
                 }
                     .onError { return AppResult.Error(error = it) }
 
                 return AppResult.Error(error = remoteBackendError)
             }
-
-        encryptedPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(isUserEditSynced = true)
-        }
-            .onError { return AppResult.Error(error = it) }
+            .onSuccess {
+                encryptedPreferencesStorage.savePreferences { prefs ->
+                    prefs.copy(userSyncStateId = SyncState.Clean.id)
+                }
+                    .onError { return AppResult.Error(error = it) }
+            }
 
         return AppResult.Success(data = Unit)
     }
 
-    private suspend fun deleteCachedUser(): AppResult<Unit, DataSourceError> {
+    override suspend fun deleteCachedUser(): AppResult<Unit, DataSourceError> {
         return encryptedPreferencesStorage.savePreferences { prefs ->
             prefs.copy(
                 sessionCookie = null,
@@ -218,20 +189,18 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun retrySendUserUpdate(): AppResult<Unit, DataSourceError> {
+    override suspend fun retryUserRemoteUpdate(): AppResult<Unit, DataSourceError> {
         val prefs = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow -> prefsFlow.first() },
             )
 
-        // Check if should retry syncing local user data
-        if (prefs.sessionCookie == null || prefs.isUserEditSynced) {
-            return AppResult.Success(data = Unit)
+        if (prefs.sessionCookie == null || prefs.userSyncStateId != SyncState.Dirty.id) {
+            return AppResult.Success(data = Unit) // no update needed
         }
 
         val cachedUser = prefs.toUser()
-
         val updateUserRequestDto = UpdateUserRequestDto(
             name = cachedUser.name!!,
             creciNumber = cachedUser.creciNumber,
@@ -239,36 +208,22 @@ class UserRepositoryImpl(
 
         userApi.updateUser(updateUserRequestDto = updateUserRequestDto)
             .onError { remoteBackendError ->
-                if (remoteBackendError.isRedirectError()) {
-                    deleteCachedUser()
-                        .onError { return AppResult.Error(error = it) }
+                encryptedPreferencesStorage.savePreferences { prefs ->
+                    prefs.copy(userSyncStateId = SyncState.Dirty.id)
                 }
+                    .onError { return AppResult.Error(error = it) }
 
                 return AppResult.Error(error = remoteBackendError)
             }
-
-        encryptedPreferencesStorage.savePreferences {
-            it.copy(isUserEditSynced = true)
-        }
-            .onError { return AppResult.Error(error = it) }
+            .onSuccess {
+                encryptedPreferencesStorage.savePreferences { prefs ->
+                    prefs.copy(userSyncStateId = SyncState.Clean.id)
+                }
+                    .onError { return AppResult.Error(error = it) }
+            }
 
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun signOutUser(): AppResult<Unit, DataSourceError> {
-        userApi.signOutUser()
-            .onError { remoteBackendError ->
-                if (remoteBackendError.isRedirectError()) {
-                    deleteCachedUser()
-                        .onError { return AppResult.Error(error = it) }
-                }
-
-                return AppResult.Error(error = remoteBackendError)
-            }
-
-        deleteCachedUser()
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
-    }
+    override suspend fun signOutUser() = userApi.signOutUser()
 }

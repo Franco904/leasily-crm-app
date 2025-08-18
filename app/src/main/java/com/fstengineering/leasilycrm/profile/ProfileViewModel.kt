@@ -42,12 +42,26 @@ class ProfileViewModel(
     fun init() {
         if (isInitialized) return
 
-        loadUser()
+        watchUser()
 
         isInitialized = true
     }
 
-    private fun loadUser() {
+    private fun watchSessionExpiration() {
+        viewModelScope.launch {
+            userRepository.watchSessionExpiration().collect { result ->
+                result
+                    .onError { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+                    .onSuccess { hasSessionExpired ->
+                        if (hasSessionExpired) _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
+            }
+        }
+    }
+
+    private fun watchUser() {
         viewModelScope.launch {
             _isLoadingUser.update { true }
 
@@ -97,7 +111,10 @@ class ProfileViewModel(
 
             userRepository.updateUser(user = editedUser)
                 .onError { error ->
-                    if (error.isRedirectError()) _uiEvents.send(UiEvents.RedirectToSignIn)
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
 
                     _uiEvents.send(
                         UiEvents.DataSourceError(messageId = error.toUiMessage()),
@@ -133,7 +150,10 @@ class ProfileViewModel(
         viewModelScope.launch {
             userRepository.signOutUser()
                 .onError { error ->
-                    if (error.isRedirectError()) _uiEvents.send(UiEvents.RedirectToSignIn)
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
 
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                 }

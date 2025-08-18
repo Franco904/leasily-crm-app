@@ -43,6 +43,7 @@ import com.fstengineering.leasilycrm.home.composables.HomeTopBar
 import com.fstengineering.leasilycrm.home.composables.LeadContactChannelsMetricCard
 import com.fstengineering.leasilycrm.home.composables.MonthlyLeadConversionMetricCard
 import com.fstengineering.leasilycrm.home.composables.MonthlyRevenueMetricCard
+import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.RedirectToSignIn
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -53,6 +54,7 @@ fun HomeScreen(
     onPropertiesSelect: () -> Unit = {},
     onPropertyOwnersSelect: () -> Unit = {},
     onCustomerSegmentsSelect: () -> Unit = {},
+    onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
     val context = LocalContext.current
@@ -75,6 +77,10 @@ fun HomeScreen(
             when (uiEvent) {
                 is DataSourceError -> {
                     showSnackbar(context.getString(uiEvent.messageId))
+                }
+
+                is RedirectToSignIn -> {
+                    onSignOut()
                 }
             }
         }

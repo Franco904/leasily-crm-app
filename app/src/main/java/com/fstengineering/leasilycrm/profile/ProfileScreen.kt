@@ -49,7 +49,7 @@ fun ProfileScreen(
     credentialManager: CredentialManagerAdapter,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
-    onSignOutSuccess: () -> Unit = {},
+    onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
     val context = LocalContext.current
@@ -88,7 +88,7 @@ fun ProfileScreen(
                 }
 
                 is RedirectToSignIn -> {
-                    onSignOutSuccess()
+                    onSignOut()
 
                     isSigningOut = false
                 }

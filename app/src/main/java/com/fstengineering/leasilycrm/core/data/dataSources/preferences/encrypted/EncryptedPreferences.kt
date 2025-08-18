@@ -10,14 +10,14 @@ data class EncryptedPreferences(
     val name: String? = null,
     val creciNumber: String? = null,
     val profilePictureUrl: String? = null,
-    val isUserEditSynced: Boolean = true,
+    val userSyncStateId: Int? = null,
 ) {
     fun toUser(): User {
         return User(
             name = name,
             creciNumber = creciNumber,
             profilePictureUrl = profilePictureUrl,
-            isUserModifySynced = isUserEditSynced,
+            userSyncStateId = userSyncStateId,
         )
     }
 }

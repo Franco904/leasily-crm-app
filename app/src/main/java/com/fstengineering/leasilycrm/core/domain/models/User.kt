@@ -4,7 +4,7 @@ data class User(
     val name: String? = null,
     val creciNumber: String? = null,
     val profilePictureUrl: String? = null,
-    val isUserModifySynced: Boolean? = null,
+    val userSyncStateId: Int? = null,
 ) {
     fun isNull() = this == User(
         name = null,

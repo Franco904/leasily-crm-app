@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -28,24 +29,51 @@ class HomeViewModel(
     fun init() {
         if (isInitialized) return
 
-        loadUserProfilePictureUrl()
+        watchSessionExpiration()
+        watchUserProfilePictureUrl()
 
         isInitialized = true
     }
 
-    fun loadUserProfilePictureUrl() {
+    private fun watchSessionExpiration() {
         viewModelScope.launch {
-            userRepository.getUser()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
-                .onSuccess { user ->
-                    _userProfilePictureUrl.value = user.profilePictureUrl
-                }
+            userRepository.watchSessionExpiration().collect { result ->
+                result
+                    .onError { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+                    .onSuccess { hasSessionExpired ->
+                        if (hasSessionExpired) {
+                            userRepository.deleteCachedUser()
+                            _uiEvents.send(UiEvents.RedirectToSignIn)
+                        }
+                    }
+            }
+        }
+    }
+
+    fun watchUserProfilePictureUrl() {
+        viewModelScope.launch {
+            userRepository.watchUser().collect { result ->
+                result
+                    .onError { error ->
+                        if (error.isRedirectError()) {
+                            userRepository.deleteCachedUser()
+                            _uiEvents.send(UiEvents.RedirectToSignIn)
+                        }
+
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+                    .onSuccess { user ->
+                        _userProfilePictureUrl.value = user.profilePictureUrl
+                    }
+            }
         }
     }
 
     sealed interface UiEvents {
         data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+
+        data object RedirectToSignIn : UiEvents
     }
 }
