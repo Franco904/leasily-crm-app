@@ -150,14 +150,10 @@ class ProfileViewModel(
         viewModelScope.launch {
             userRepository.signOutUser()
                 .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                 }
                 .onSuccess {
+                    userRepository.deleteCachedUser()
                     _uiEvents.send(UiEvents.RedirectToSignIn)
                 }
         }
