@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.utils.hasError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class SessionExpirationWorker(
@@ -14,10 +13,10 @@ class SessionExpirationWorker(
 ) : CoroutineWorker(applicationContext, workerParameters) {
     override suspend fun doWork(): Result {
         userRepository.markSessionAsExpired()
-            .onError { return Result.failure() }
+            .onError { return Result.retry() }
 
         userRepository.deleteCachedUser()
-            .onError { return Result.failure() }
+            .onError { return Result.retry() }
 
         return Result.success()
     }

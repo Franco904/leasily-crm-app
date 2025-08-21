@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
 import com.fstengineering.leasilycrm.DestinationsHandler.destinations
 import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueLazyWritesWorker
+import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueReadsWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueSessionExpirationWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.LazyWritesWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.ReadsWorker
@@ -75,6 +76,7 @@ class MainActivity : ComponentActivity() {
         val workManager = WorkManager.getInstance(this@MainActivity)
 
         workManager.enqueueLazyWritesWorker()
+        workManager.enqueueReadsWorker()
         workManager.enqueueSessionExpirationWorker()
     }
 

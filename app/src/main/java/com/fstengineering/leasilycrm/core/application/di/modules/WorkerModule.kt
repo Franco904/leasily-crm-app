@@ -19,6 +19,7 @@ val workerModule = module {
         ReadsWorker(
             applicationContext = get(),
             workerParameters = get(),
+            domainTablesRepository = get(),
             userRepository = get(),
         )
     }
