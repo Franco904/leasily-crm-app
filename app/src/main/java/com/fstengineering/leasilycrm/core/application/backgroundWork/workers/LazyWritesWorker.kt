@@ -14,7 +14,7 @@ class LazyWritesWorker(
     override suspend fun doWork(): Result {
         val result = userRepository.retryUserRemoteUpdate()
 
-        return if (result.hasError()) Result.failure() else Result.success()
+        return if (result.hasError()) Result.retry() else Result.success()
     }
 
     companion object {

@@ -10,8 +10,8 @@ import androidx.work.WorkManager
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.LazyWritesWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.ReadsWorker
+import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.SessionExpirationWorker
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration.Companion.minutes
 
 fun WorkManager.enqueueLazyWritesWorker() {
     val workerConstraints = Constraints.Builder()
@@ -35,8 +35,6 @@ fun WorkManager.enqueueLazyWritesWorker() {
 
 fun WorkManager.enqueueReadsWorker() {
     val workerConstraints = Constraints.Builder()
-        .setRequiresCharging(true) // only runs when charging
-        .setRequiresBatteryNotLow(true) // only runs when battery is not low
         .setRequiredNetworkType(NetworkType.UNMETERED) // only runs when connected to Wi-Fi
         .build()
 
@@ -52,12 +50,12 @@ fun WorkManager.enqueueReadsWorker() {
 }
 
 fun WorkManager.enqueueSessionExpirationWorker() {
-    val workRequest = OneTimeWorkRequestBuilder<ReadsWorker>()
+    val workRequest = OneTimeWorkRequestBuilder<SessionExpirationWorker>()
         .setInitialDelay(1, TimeUnit.HOURS)
         .build()
 
     enqueueUniqueWork(
-        ReadsWorker.UNIQUE_NAME,
+        SessionExpirationWorker.UNIQUE_NAME,
         ExistingWorkPolicy.REPLACE,
         workRequest,
     )

@@ -4,8 +4,8 @@ import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.SignInRequestDto
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.UpdateUserRequestDto
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInDto
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.data.models.SyncState
 import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
-    private val userApi: UserApi,
+    private val api: UserApi,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
     private val plainPreferencesStorage: PreferencesStorage<PlainPreferences>,
 ) : UserRepository {
@@ -59,8 +59,8 @@ class UserRepositoryImpl(
         idToken: String,
         user: User,
     ): AppResult<Unit, DataSourceError> {
-        val requestDto = SignInRequestDto(idToken = idToken)
-        userApi.signInUser(signInRequestDto = requestDto)
+        val requestDto = SignInDto(idToken = idToken)
+        api.signInUser(signInDto = requestDto)
             .onError { return AppResult.Error(error = it) }
 
         encryptedPreferencesStorage.savePreferences { prefs ->
@@ -123,7 +123,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getRemoteUser(): AppResult<User, DataSourceError> {
-        val fetchedUser = userApi.getUser()
+        val fetchedUser = api.getUser()
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { responseDto -> responseDto.toUser() }
@@ -154,12 +154,12 @@ class UserRepositoryImpl(
             .onError { return AppResult.Error(error = it) }
 
         // Try to send new user name to remote backend API
-        val updateUserRequestDto = UpdateUserRequestDto(
+        val updateUserDto = UpdateUserDto(
             name = user.name!!,
             creciNumber = user.creciNumber,
         )
 
-        userApi.updateUser(updateUserRequestDto = updateUserRequestDto)
+        api.updateUser(updateUserDto = updateUserDto)
             .onError { remoteBackendError ->
                 encryptedPreferencesStorage.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Dirty.id)
@@ -201,12 +201,12 @@ class UserRepositoryImpl(
         }
 
         val cachedUser = prefs.toUser()
-        val updateUserRequestDto = UpdateUserRequestDto(
+        val updateUserDto = UpdateUserDto(
             name = cachedUser.name!!,
             creciNumber = cachedUser.creciNumber,
         )
 
-        userApi.updateUser(updateUserRequestDto = updateUserRequestDto)
+        api.updateUser(updateUserDto = updateUserDto)
             .onError { remoteBackendError ->
                 encryptedPreferencesStorage.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Dirty.id)
@@ -225,5 +225,5 @@ class UserRepositoryImpl(
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun signOutUser() = userApi.signOutUser()
+    override suspend fun signOutUser() = api.signOutUser()
 }
