@@ -37,6 +37,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.models.BottomNavBarDestination
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.home.composables.HomeBottomNavigationBar
 import com.fstengineering.leasilycrm.home.composables.HomeNavCard
 import com.fstengineering.leasilycrm.home.composables.HomeTopBar
@@ -53,6 +54,7 @@ fun HomeScreen(
     onPropertiesSelect: () -> Unit = {},
     onPropertyOwnersSelect: () -> Unit = {},
     onCustomerSegmentsSelect: () -> Unit = {},
+    onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
     val context = LocalContext.current
@@ -75,6 +77,10 @@ fun HomeScreen(
             when (uiEvent) {
                 is DataSourceError -> {
                     showSnackbar(context.getString(uiEvent.messageId))
+                }
+
+                is RedirectToSignIn -> {
+                    onSignOut()
                 }
             }
         }

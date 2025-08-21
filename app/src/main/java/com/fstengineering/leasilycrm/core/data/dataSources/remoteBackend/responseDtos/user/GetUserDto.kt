@@ -1,10 +1,10 @@
-package com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos
+package com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.user
 
 import com.fstengineering.leasilycrm.core.domain.models.User
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetUserResponseDto(
+data class GetUserDto(
     val name: String,
     val creciNumber: String?,
     val profilePictureUrl: String,

@@ -17,6 +17,8 @@ import org.koin.compose.koinInject
 object DestinationsHandler {
     fun NavGraphBuilder.destinations(
         navController: NavController,
+        onSignInSuccess: () -> Unit,
+        onSignOut: () -> Unit,
         showSnackbar: (String) -> Unit,
     ) {
         composable<Destinations.Root> {
@@ -38,6 +40,8 @@ object DestinationsHandler {
                 viewModel = koinViewModel<SignInViewModel>(),
                 credentialManager = koinInject(),
                 onSignInSuccess = {
+                    onSignInSuccess()
+
                     navController.navigate(Destinations.Home) {
                         val startDestination =
                             navController.graph.startDestinationRoute ?: return@navigate
@@ -63,6 +67,16 @@ object DestinationsHandler {
                 onPropertiesSelect = {},
                 onPropertyOwnersSelect = {},
                 onCustomerSegmentsSelect = {},
+                onSignOut = {
+                    onSignOut()
+
+                    navController.navigate(Destinations.SignIn) {
+                        val startDestination =
+                            navController.graph.startDestinationRoute ?: return@navigate
+
+                        popUpTo(startDestination) { inclusive = true }
+                    }
+                },
                 showSnackbar = { message -> showSnackbar(message) },
             )
         }
@@ -74,7 +88,9 @@ object DestinationsHandler {
                 onBack = {
                     navController.navigateUp()
                 },
-                onSignOutSuccess = {
+                onSignOut = {
+                    onSignOut()
+
                     navController.navigate(Destinations.SignIn) {
                         val startDestination =
                             navController.graph.startDestinationRoute ?: return@navigate

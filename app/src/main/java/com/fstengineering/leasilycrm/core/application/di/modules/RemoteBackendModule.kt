@@ -5,7 +5,9 @@ import com.fstengineering.leasilycrm.core.application.di.qualifiers.encryptedPre
 import com.fstengineering.leasilycrm.core.data.dataSources.cookieStorage.AppCookieStorage
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientManager
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientManagerImpl
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.DomainTablesApiImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.UserApiImpl
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.DomainTablesApi
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -63,5 +65,6 @@ val remoteBackendModule = module {
 
     single<HttpClientManager> { HttpClientManagerImpl(client = get()) }
 
+    single<DomainTablesApi> { DomainTablesApiImpl(client = get()) }
     single<UserApi> { UserApiImpl(client = get()) }
 }

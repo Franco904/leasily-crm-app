@@ -5,4 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PlainPreferences(
     val didUserExplicitlySignOut: Boolean? = null,
+    val hasSessionExpired: Boolean? = null,
 )

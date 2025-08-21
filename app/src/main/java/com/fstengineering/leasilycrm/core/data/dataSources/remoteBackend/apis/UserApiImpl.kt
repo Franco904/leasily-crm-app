@@ -2,9 +2,9 @@ package com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis
 
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientManager
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.SignInRequestDto
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.UpdateUserRequestDto
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.GetUserResponseDto
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInDto
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.UpdateUserDto
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.user.GetUserDto
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -15,12 +15,12 @@ class UserApiImpl(
     private val client: HttpClientManager,
 ) : UserApi {
     override suspend fun signInUser(
-        signInRequestDto: SignInRequestDto,
+        signInDto: SignInDto,
     ): AppResult<Unit, DataSourceError.RemoteBackendError> {
         return client.request(
             url = "$ROUTE/sign-in",
             method = HttpMethod.Post,
-            body = signInRequestDto,
+            body = signInDto,
         )
             .fold(
                 onError = { AppResult.Error(error = it) },
@@ -28,7 +28,7 @@ class UserApiImpl(
             )
     }
 
-    override suspend fun getUser(): AppResult<GetUserResponseDto, DataSourceError.RemoteBackendError> {
+    override suspend fun getUser(): AppResult<GetUserDto, DataSourceError.RemoteBackendError> {
         return client.request(
             url = ROUTE,
             method = HttpMethod.Get,
@@ -40,12 +40,12 @@ class UserApiImpl(
     }
 
     override suspend fun updateUser(
-        updateUserRequestDto: UpdateUserRequestDto,
+        updateUserDto: UpdateUserDto,
     ): AppResult<Unit, DataSourceError.RemoteBackendError> {
         return client.request(
             url = "$ROUTE/update",
             method = HttpMethod.Put,
-            body = updateUserRequestDto,
+            body = updateUserDto,
         )
             .fold(
                 onError = { AppResult.Error(error = it) },
