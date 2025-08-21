@@ -37,13 +37,13 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.models.BottomNavBarDestination
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.home.composables.HomeBottomNavigationBar
 import com.fstengineering.leasilycrm.home.composables.HomeNavCard
 import com.fstengineering.leasilycrm.home.composables.HomeTopBar
 import com.fstengineering.leasilycrm.home.composables.LeadContactChannelsMetricCard
 import com.fstengineering.leasilycrm.home.composables.MonthlyLeadConversionMetricCard
 import com.fstengineering.leasilycrm.home.composables.MonthlyRevenueMetricCard
-import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.RedirectToSignIn
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
