@@ -46,7 +46,7 @@ fun ConfirmSignOutUserDialog(
                 Text(
                     text = stringResource(R.string.profile_signout_dialog_dismiss_button_text),
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.labelLarge,
                 )
             }
         },

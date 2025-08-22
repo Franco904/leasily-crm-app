@@ -45,13 +45,6 @@ fun EditUserDialog(
         nameFieldFocusRequester.requestFocus()
     }
 
-//    LaunchedEffect(userUiState) {
-//        currentUserUiState = currentUserUiState.copy(
-//            name = userUiState.name,
-//            creciNumber = userUiState.creciNumber,
-//        )
-//    }
-
     AlertDialog(
         title = {
             Text(
