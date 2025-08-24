@@ -1,12 +1,14 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
 data class User(
+    val remoteId: Int? = null,
     val name: String? = null,
     val creciNumber: String? = null,
     val profilePictureUrl: String? = null,
     val userSyncStateId: Int? = null,
 ) {
     fun isNull() = this == User(
+        remoteId = null,
         name = null,
         creciNumber = null,
         profilePictureUrl = null,

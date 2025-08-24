@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "eb60c6f2d1092df6c70fd4e7a09c625e",
+    "identityHash": "6e0bf280f875059d9ee4a285ef95d011",
     "entities": [
       {
         "tableName": "assistances",
@@ -457,13 +457,12 @@
       },
       {
         "tableName": "customer_segments",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `customer_segment_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_type_id`) REFERENCES `customer_segment_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `customer_segment_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_type_id`) REFERENCES `customer_segment_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "name",
@@ -1534,7 +1533,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eb60c6f2d1092df6c70fd4e7a09c625e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6e0bf280f875059d9ee4a285ef95d011')"
     ]
   }
 }

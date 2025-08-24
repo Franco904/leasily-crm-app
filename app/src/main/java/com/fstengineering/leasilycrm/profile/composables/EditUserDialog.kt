@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
-import com.fstengineering.leasilycrm.profile.models.EditUserFormUiState
+import com.fstengineering.leasilycrm.profile.models.EditUserErrorUiState
 import com.fstengineering.leasilycrm.profile.models.UserUiState
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
@@ -30,7 +30,7 @@ import kotlin.time.Duration.Companion.milliseconds
 fun EditUserDialog(
     userUiState: UserUiState,
     onUserUiStateChange: (UserUiState) -> Unit,
-    editUserFormUiState: EditUserFormUiState,
+    editUserErrorUiState: EditUserErrorUiState,
     onEdit: (UserUiState) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
@@ -64,9 +64,9 @@ fun EditUserDialog(
                         )
                         onUserUiStateChange(userUiState.copy(name = nameInput))
                     },
-                    isInvalid = editUserFormUiState.nameError != null,
+                    isInvalid = editUserErrorUiState.nameError != null,
                     supportingText = stringResource(
-                        editUserFormUiState.nameError
+                        editUserErrorUiState.nameError
                             ?: R.string.profile_edit_user_dialog_required_helper_text,
                     ),
                     maxLength = 75,
@@ -83,9 +83,9 @@ fun EditUserDialog(
                         )
                         onUserUiStateChange(userUiState.copy(creciNumber = creciNumberInput))
                     },
-                    isInvalid = editUserFormUiState.creciNumberError != null,
-                    supportingText = if (editUserFormUiState.creciNumberError != null) {
-                        stringResource(editUserFormUiState.creciNumberError)
+                    isInvalid = editUserErrorUiState.creciNumberError != null,
+                    supportingText = if (editUserErrorUiState.creciNumberError != null) {
+                        stringResource(editUserErrorUiState.creciNumberError)
                     } else null,
                     maxLength = 8,
                     keyboardType = KeyboardType.Number,
@@ -115,6 +115,7 @@ fun EditUserDialog(
             }
         },
         onDismissRequest = {},
+        shape = MaterialTheme.shapes.extraLarge,
         modifier = modifier
             .width(450.dp)
     )

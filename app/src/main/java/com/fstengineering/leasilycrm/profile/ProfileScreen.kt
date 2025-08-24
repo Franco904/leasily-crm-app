@@ -59,8 +59,8 @@ fun ProfileScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val userUiState by viewModel.userUiState.collectAsStateWithLifecycle()
-    val editUserFormUiState by viewModel.editUserFormUiState.collectAsStateWithLifecycle()
+    val userUiState by viewModel.user.collectAsStateWithLifecycle()
+    val editUserFormUiState by viewModel.formErrors.collectAsStateWithLifecycle()
     val isLoadingUser by viewModel.isLoadingUser.collectAsStateWithLifecycle()
 
     var isConfirmingSigningOut by remember { mutableStateOf(false) }
@@ -121,8 +121,8 @@ fun ProfileScreen(
             if (isEditingUserByDialog) {
                 EditUserDialog(
                     userUiState = userUiState,
-                    editUserFormUiState = editUserFormUiState,
-                    onUserUiStateChange = viewModel::onUserUiStateChange,
+                    editUserErrorUiState = editUserFormUiState,
+                    onUserUiStateChange = viewModel::onUserChange,
                     onEdit = { editedUser ->
                         isEditingUser = true
                         isEditingUserByDialog = false

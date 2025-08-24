@@ -3,6 +3,6 @@ package com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.reques
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SignInDto(
+data class SignInRequestDto(
     val idToken: String,
 )

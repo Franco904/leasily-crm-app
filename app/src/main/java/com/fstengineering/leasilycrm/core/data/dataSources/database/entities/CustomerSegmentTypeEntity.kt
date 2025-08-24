@@ -9,10 +9,15 @@ data class CustomerSegmentTypeEntity(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
     val name: String,
 ) {
+    fun toDomain() = CustomerSegmentType(
+        id = id,
+        name = name,
+    )
+
     companion object {
         fun fromDomain(domain: CustomerSegmentType) = CustomerSegmentTypeEntity(
             id = domain.id,
-            name = domain.name,
+            name = domain.name!!,
         )
     }
 }

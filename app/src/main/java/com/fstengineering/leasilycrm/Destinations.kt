@@ -14,4 +14,7 @@ sealed interface Destinations {
 
     @Serializable
     data object Profile
+
+    @Serializable
+    data object CustomerSegments
 }

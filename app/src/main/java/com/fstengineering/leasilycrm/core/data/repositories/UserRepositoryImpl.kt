@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInDto
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.data.models.SyncState
 import com.fstengineering.leasilycrm.core.domain.models.User
@@ -59,12 +59,16 @@ class UserRepositoryImpl(
         idToken: String,
         user: User,
     ): AppResult<Unit, DataSourceError> {
-        val requestDto = SignInDto(idToken = idToken)
-        api.signInUser(signInDto = requestDto)
-            .onError { return AppResult.Error(error = it) }
+        val requestDto = SignInRequestDto(idToken = idToken)
+        val remoteUserId = api.signInUser(signInRequestDto = requestDto)
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { responseDto -> responseDto.id }
+            )
 
         encryptedPreferencesStorage.savePreferences { prefs ->
             prefs.copy(
+                remoteId = remoteUserId,
                 name = user.name,
                 creciNumber = user.creciNumber,
                 profilePictureUrl = user.profilePictureUrl,
@@ -107,13 +111,6 @@ class UserRepositoryImpl(
         encryptedPreferencesStorage.readPreferences()
             .onError { emit(AppResult.Error(error = it)) }
             .onSuccess { prefsFlow ->
-                val prefs = prefsFlow.first()
-
-                if (prefs.sessionCookie == null) {
-                    emit(AppResult.Error(error = DataSourceError.RemoteBackendError.Unauthorized))
-                    return@flow
-                }
-
                 emitAll(
                     prefsFlow
                         .map { AppResult.Success<User, DataSourceError>(data = it.toUser()) }
@@ -182,6 +179,7 @@ class UserRepositoryImpl(
         return encryptedPreferencesStorage.savePreferences { prefs ->
             prefs.copy(
                 sessionCookie = null,
+                remoteId = null,
                 name = null,
                 creciNumber = null,
                 profilePictureUrl = null,
