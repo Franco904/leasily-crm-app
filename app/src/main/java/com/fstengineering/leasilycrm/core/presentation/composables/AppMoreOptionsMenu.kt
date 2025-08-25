@@ -59,7 +59,7 @@ fun AppMoreOptionsMenu(
                         leadingIcon = if (it.icon == null) null else {
                             {
                                 Icon(
-                                    imageVector = Icons.Outlined.Edit,
+                                    imageVector = it.icon,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onSurface,
                                 )
@@ -72,7 +72,10 @@ fun AppMoreOptionsMenu(
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                         },
-                        onClick = it.onClick,
+                        onClick = {
+                            it.onClick()
+                            isMenuExpanded = false
+                        },
                     )
                 }
             }
