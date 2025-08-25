@@ -3,6 +3,8 @@ package com.fstengineering.leasilycrm
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsScreen
+import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.profile.ProfileScreen
@@ -66,7 +68,9 @@ object DestinationsHandler {
                 },
                 onPropertiesSelect = {},
                 onPropertyOwnersSelect = {},
-                onCustomerSegmentsSelect = {},
+                onCustomerSegmentsSelect = {
+                    navController.navigate(Destinations.CustomerSegments)
+                },
                 onSignOut = {
                     onSignOut()
 
@@ -85,6 +89,26 @@ object DestinationsHandler {
             ProfileScreen(
                 viewModel = koinViewModel<ProfileViewModel>(),
                 credentialManager = koinInject(),
+                onBack = {
+                    navController.navigateUp()
+                },
+                onSignOut = {
+                    onSignOut()
+
+                    navController.navigate(Destinations.SignIn) {
+                        val startDestination =
+                            navController.graph.startDestinationRoute ?: return@navigate
+
+                        popUpTo(startDestination) { inclusive = true }
+                    }
+                },
+                showSnackbar = { message -> showSnackbar(message) },
+            )
+        }
+
+        composable<Destinations.CustomerSegments> {
+            CustomerSegmentsScreen(
+                viewModel = koinViewModel<CustomerSegmentsViewModel>(),
                 onBack = {
                     navController.navigateUp()
                 },

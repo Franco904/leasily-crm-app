@@ -7,9 +7,11 @@ import kotlinx.serialization.Serializable
 data class GetTenantContactOriginTypeDto(
     val id: Int,
     val name: String,
+    val isActive: Boolean,
 ) {
     fun toDomain() = TenantContactOriginType(
         id = id,
         name = name,
+        isActive = isActive,
     )
 }

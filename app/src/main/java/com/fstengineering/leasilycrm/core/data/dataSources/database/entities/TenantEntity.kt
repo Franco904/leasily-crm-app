@@ -38,6 +38,7 @@ data class TenantEntity(
     val email: String?,
     val observations: String?,
     @ColumnInfo(name = "is_lead") val isLead: Boolean = true,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Int?,
     @ColumnInfo(name = "tenant_contact_origin_type_id") val tenantContactOriginTypeId: Int?,
     @ColumnInfo(name = "user_id") val userId: Int,

@@ -51,6 +51,7 @@ fun ConfirmSignOutUserDialog(
             }
         },
         onDismissRequest = {},
+        shape = MaterialTheme.shapes.extraLarge,
         modifier = modifier
             .width(450.dp)
     )

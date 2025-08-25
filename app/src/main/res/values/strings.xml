@@ -23,7 +23,7 @@
     <string name="profile_top_app_bar_title">Perfil</string>
 
     <string name="profile_signout_dialog_headline">Sair do perfil?</string>
-    <string name="profile_signout_dialog_supporting_text">Deseja sair do perfil? O seu perfil será desconectado e será necessário autenticar novamente.</string>
+    <string name="profile_signout_dialog_supporting_text">O seu perfil será desconectado e será necessário autenticar novamente.</string>
     <string name="profile_signout_dialog_confirm_button_text">Sair</string>
     <string name="profile_signout_dialog_dismiss_button_text">Cancelar</string>
 
@@ -45,14 +45,43 @@
     <string name="dashboard_lead_contact_channels_metric_title">Canais de contato (leads)</string>
     <string name="dashboard_last_8_months_body_text">Últimos 8 meses</string>
 
+    <!-- Customer segments -->
+    <string name="customer_segments_top_app_bar_title">Segmentos de clientes</string>
+    <string name="customer_segments_property_owners_title">Proprietários</string>
+    <string name="customer_segments_property_owners_empty_text">Nenhum segmento de proprietário registrado.</string>
+    <string name="customer_segments_tenants_title">Inquilinos</string>
+    <string name="customer_segments_tenants_empty_text">Nenhum segmento de inquilino registrado.</string>
+
+    <string name="customer_segment_save_dialog_headline">Novo segmento de cliente</string>
+    <string name="customer_segment_edit_dialog_headline">Editar segmento de cliente</string>
+    <string name="customer_segment_save_edit_dialog_name_placeholder">Nome</string>
+    <string name="customer_segments_save_edit_dialog_type_title">Tipo</string>
+    <string name="customer_segments_save_edit_dialog_confirm_save_button">Salvar</string>
+    <string name="customer_segments_save_edit_dialog_confirm_edit_button">Editar</string>
+    <string name="customer_segments_save_edit_dialog_dismiss_button">Cancelar</string>
+
+    <string name="customer_segment_delete_dialog_headline">Excluir segmento de cliente?</string>
+    <string name="customer_segments_delete_dialog_supporting_text">Se confirmada a exclusão, imóveis e inquilinos com este segmento serão desvinculados dele.</string>
+    <string name="customer_segments_delete_dialog_confirm_button">Excluir</string>
+    <string name="customer_segments_delete_dialog_dismiss_button">Cancelar</string>
+
+    <!-- Menu options -->
+    <string name="menu_option_edit_text">Editar</string>
+    <string name="menu_option_delete_text">Excluir</string>
+
     <!-- Inline errors -->
-    <string name="inline_required">Obrigatório.</string>
-    <string name="inline_user_name_too_big">Deve ter no máximo 75 caracteres.</string>
-    <string name="inline_creci_number_too_big">Deve ter no máximo 8 caracteres.</string>
+    <string name="inline_required">Obrigatório</string>
+    <string name="inline_user_name_too_big_75_chars">Deve ter no máximo 75 caracteres</string>
+    <string name="inline_creci_number_too_big">Deve ter no máximo 8 caracteres</string>
 
     <!-- Snackbar success -->
-    <string name="snackbar_edit_user_succeeded">Perfil editado com sucesso.</string>
-    <string name="snackbar_edit_user_no_data_changed">Nenhum dado foi editado.</string>
+    <string name="snackbar_no_data_changed">Nenhum dado foi editado.</string>
+
+    <string name="snackbar_edit_user_succeeded">Perfil editado.</string>
+
+    <string name="snackbar_create_customer_segment_succeeded">Segmento de cliente criado.</string>
+    <string name="snackbar_edit_customer_segment_succeeded">Segmento de cliente editado.</string>
+    <string name="snackbar_delete_customer_segment_succeeded">Segmento de cliente excluído.</string>
 
     <!-- Snackbar errors -->
     <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>

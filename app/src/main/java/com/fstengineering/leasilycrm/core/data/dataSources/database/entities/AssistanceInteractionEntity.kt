@@ -24,5 +24,6 @@ data class AssistanceInteractionEntity(
     @ColumnInfo(name = "interaction_date") val interactionDate: LocalDate,
     val title: String,
     val description: String?,
-    @ColumnInfo(name = "assistance_id") val assistanceId: Int
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
+    @ColumnInfo(name = "assistance_id") val assistanceId: Int,
 )

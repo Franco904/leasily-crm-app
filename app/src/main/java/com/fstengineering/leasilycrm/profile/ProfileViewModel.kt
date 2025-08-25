@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.UserValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import com.fstengineering.leasilycrm.profile.models.UserUiState
-import com.fstengineering.leasilycrm.profile.models.EditUserFormUiState
+import com.fstengineering.leasilycrm.profile.models.EditUserErrorUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,11 +30,11 @@ class ProfileViewModel(
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _userUiState = MutableStateFlow(UserUiState())
-    val userUiState = _userUiState.asStateFlow()
+    private val _user = MutableStateFlow(UserUiState())
+    val user = _user.asStateFlow()
 
-    private val _editUserFormUiState = MutableStateFlow(EditUserFormUiState())
-    val editUserFormUiState: StateFlow<EditUserFormUiState> = _editUserFormUiState
+    private val _formErrors = MutableStateFlow(EditUserErrorUiState())
+    val formErrors = _formErrors.asStateFlow()
 
     private val _isLoadingUser = MutableStateFlow(true)
     val isLoadingUser = _isLoadingUser.asStateFlow()
@@ -75,7 +75,7 @@ class ProfileViewModel(
                     .onSuccess { user ->
                         if (user.isNull()) return@onSuccess
 
-                        _userUiState.update { UserUiState.fromDomain(user) }
+                        _user.update { UserUiState.fromDomain(user) }
                     }
 
                 _isLoadingUser.update { false }
@@ -85,9 +85,9 @@ class ProfileViewModel(
 
     fun editUser(editedUserState: UserUiState) {
         viewModelScope.launch {
-            if (editedUserState == userUiState.value) {
+            if (editedUserState == user.value) {
                 _uiEvents.send(
-                    UiEvents.EditUserSuccess(messageId = R.string.snackbar_edit_user_no_data_changed)
+                    UiEvents.EditUserSuccess(messageId = R.string.snackbar_no_data_changed)
                 )
                 return@launch
             }
@@ -99,7 +99,7 @@ class ProfileViewModel(
                     val nameError = errors.firstOrNull { it is ValidationError.UserName }
                     val creciNumberError = errors.firstOrNull { it is ValidationError.CreciNumber }
 
-                    _editUserFormUiState.update {
+                    _formErrors.update {
                         it.copy(
                             nameError = nameError?.toUiMessage(),
                             creciNumberError = creciNumberError?.toUiMessage(),
@@ -128,22 +128,22 @@ class ProfileViewModel(
         }
     }
 
-    fun onUserUiStateChange(newUserData: UserUiState) {
-        if (newUserData.name != userUiState.value.name) {
-            _editUserFormUiState.update {
+    fun onUserChange(newUserData: UserUiState) {
+        if (newUserData.name != user.value.name) {
+            _formErrors.update {
                 it.copy(nameError = null)
             }
         }
 
-        if (newUserData.creciNumber != userUiState.value.creciNumber) {
-            _editUserFormUiState.update {
+        if (newUserData.creciNumber != user.value.creciNumber) {
+            _formErrors.update {
                 it.copy(creciNumberError = null)
             }
         }
     }
 
     fun clearErrors() {
-        _editUserFormUiState.update { EditUserFormUiState() }
+        _formErrors.update { EditUserErrorUiState() }
     }
 
     fun signOutUser() {

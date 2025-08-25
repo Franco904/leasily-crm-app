@@ -59,6 +59,7 @@ data class PropertyEntity(
     @ColumnInfo(name = "cleaning_service_tax") val cleaningServiceTax: Double?,
     @ColumnInfo(name = "has_cleaning_service_included") val hasCleaningServiceIncluded: Boolean,
     val observations: String?,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Int,
     @ColumnInfo(name = "property_type_id") val propertyTypeId: Int,
     @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityType: Int,

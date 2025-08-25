@@ -11,6 +11,6 @@ interface CustomerSegmentTypeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdate(customerSegmentType: CustomerSegmentTypeEntity): Long
 
-    @Query("SELECT * FROM customer_segment_types")
+    @Query("SELECT * FROM customer_segment_types WHERE is_active = 1")
     suspend fun getAll(): List<CustomerSegmentTypeEntity>
 }

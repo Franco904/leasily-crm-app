@@ -30,4 +30,5 @@ import androidx.room.Index
 data class AssistanceCharacteristicAssistanceCrossRefEntity(
     @ColumnInfo(name = "assistance_id") val assistanceId: Int,
     @ColumnInfo(name = "assistance_characteristic_id") val assistanceCharacteristicId: Int,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 )

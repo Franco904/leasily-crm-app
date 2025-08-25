@@ -37,6 +37,7 @@ data class StayEntity(
     @ColumnInfo(name = "end_datetime") val endDatetime: LocalDateTime,
     val commission: Double?,
     val observations: String?,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_id") val propertyId: Int,
     @ColumnInfo(name = "tenant_id") val tenantId: Int,
 )

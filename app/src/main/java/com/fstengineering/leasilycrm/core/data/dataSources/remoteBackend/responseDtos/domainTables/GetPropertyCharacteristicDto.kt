@@ -7,9 +7,11 @@ import kotlinx.serialization.Serializable
 data class GetPropertyCharacteristicDto(
     val id: Int,
     val name: String,
+    val isActive: Boolean,
 ) {
     fun toDomain() = PropertyCharacteristic(
         id = id,
         name = name,
+        isActive = isActive,
     )
 }

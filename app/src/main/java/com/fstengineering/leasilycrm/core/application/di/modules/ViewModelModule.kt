@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.application.di.modules
 
+import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.profile.ProfileViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
@@ -30,6 +31,15 @@ val viewModelModule = module {
     viewModel {
         HomeViewModel(
             userRepository = get(),
+        )
+    }
+
+    viewModel {
+        CustomerSegmentsViewModel(
+            customerSegmentRepository = get(),
+            customerSegmentTypeRepository = get(),
+            userRepository = get(),
+            customerSegmentValidator = get(),
         )
     }
 }

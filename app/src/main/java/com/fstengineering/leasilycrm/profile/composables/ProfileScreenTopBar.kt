@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.profile.composables
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -46,6 +47,7 @@ fun ProfileScreenTopBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
+        windowInsets = WindowInsets(0),
         modifier = modifier
     )
 }

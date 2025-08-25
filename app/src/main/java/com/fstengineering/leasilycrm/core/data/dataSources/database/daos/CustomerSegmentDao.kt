@@ -3,18 +3,28 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compound.CustomerSegmentWithType
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CustomerSegmentDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdate(customerSegment: CustomerSegmentEntity): Long
+    @Insert
+    suspend fun insert(customerSegment: CustomerSegmentEntity)
 
-    @Delete
-    suspend fun delete(customerSegment: CustomerSegmentEntity)
+    @Update
+    suspend fun update(customerSegment: CustomerSegmentEntity)
 
-    @Query("SELECT * FROM customer_segments")
-    suspend fun getAll(): List<CustomerSegmentEntity>
+    @Query("UPDATE customer_segments SET is_deleted = 1 WHERE id = :id")
+    suspend fun delete(id: Int)
+
+    @Query("SELECT * FROM customer_segments WHERE id = :id AND is_deleted = 0")
+    suspend fun getById(id: Int): CustomerSegmentEntity
+
+    @Transaction
+    @Query("SELECT * FROM customer_segments WHERE user_id = :userId AND is_deleted = 0")
+    fun watchAll(userId: Int): Flow<List<CustomerSegmentWithType>>
 }

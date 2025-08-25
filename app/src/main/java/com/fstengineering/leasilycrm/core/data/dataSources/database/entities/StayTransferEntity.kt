@@ -24,5 +24,6 @@ data class StayTransferEntity(
     @ColumnInfo(name = "transfer_date") val transferDate: LocalDate,
     @ColumnInfo(name = "transfer_amount") val transferAmount: String,
     @ColumnInfo(name = "transfer_description") val transferDescription: String,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "stay_id") val stayId: Int
 )

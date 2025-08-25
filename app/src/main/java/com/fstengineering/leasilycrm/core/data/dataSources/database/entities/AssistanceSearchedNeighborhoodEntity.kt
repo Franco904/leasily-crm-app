@@ -21,5 +21,6 @@ import androidx.room.PrimaryKey
 data class AssistanceSearchedNeighborhoodEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val neighborhood: String,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "assistance_id") val assistanceId: Int,
 )

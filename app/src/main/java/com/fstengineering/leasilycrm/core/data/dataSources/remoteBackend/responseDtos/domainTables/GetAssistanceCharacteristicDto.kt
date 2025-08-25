@@ -7,9 +7,11 @@ import kotlinx.serialization.Serializable
 data class GetAssistanceCharacteristicDto(
     val id: Int,
     val name: String,
+    val isActive: Boolean,
 ) {
     fun toDomain() = AssistanceCharacteristic(
         id = id,
         name = name,
+        isActive = isActive,
     )
 }

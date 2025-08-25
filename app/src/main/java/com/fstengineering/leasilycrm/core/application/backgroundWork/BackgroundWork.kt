@@ -34,12 +34,7 @@ fun WorkManager.enqueueLazyWritesWorker() {
 }
 
 fun WorkManager.enqueueReadsWorker() {
-    val workerConstraints = Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.UNMETERED) // only runs when connected to Wi-Fi
-        .build()
-
     val workRequest = OneTimeWorkRequestBuilder<ReadsWorker>()
-        .setConstraints(workerConstraints)
         .build()
 
     enqueueUniqueWork(

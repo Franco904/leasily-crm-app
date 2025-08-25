@@ -7,9 +7,11 @@ import kotlinx.serialization.Serializable
 data class GetPropertySeaProximityTypeDto(
     val id: Int,
     val name: String,
+    val isActive: Boolean,
 ) {
     fun toDomain() = PropertySeaProximityType(
         id = id,
         name = name,
+        isActive = isActive,
     )
 }

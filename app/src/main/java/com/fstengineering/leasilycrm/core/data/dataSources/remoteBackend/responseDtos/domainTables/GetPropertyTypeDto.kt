@@ -7,9 +7,11 @@ import kotlinx.serialization.Serializable
 data class GetPropertyTypeDto(
     val id: Int,
     val name: String,
+    val isActive: Boolean,
 ) {
     fun toDomain() = PropertyType(
         id = id,
         name = name,
+        isActive = isActive,
     )
 }

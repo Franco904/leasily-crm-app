@@ -2,9 +2,10 @@ package com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis
 
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientManager
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInDto
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.user.GetUserDto
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.user.SignInUserResponseDto
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -15,16 +16,16 @@ class UserApiImpl(
     private val client: HttpClientManager,
 ) : UserApi {
     override suspend fun signInUser(
-        signInDto: SignInDto,
-    ): AppResult<Unit, DataSourceError.RemoteBackendError> {
+        signInRequestDto: SignInRequestDto,
+    ): AppResult<SignInUserResponseDto, DataSourceError.RemoteBackendError> {
         return client.request(
             url = "$ROUTE/sign-in",
             method = HttpMethod.Post,
-            body = signInDto,
+            body = signInRequestDto,
         )
             .fold(
                 onError = { AppResult.Error(error = it) },
-                onSuccess = { AppResult.Success(data = Unit) },
+                onSuccess = { response -> AppResult.Success(data = response.body()) },
             )
     }
 
@@ -65,6 +66,6 @@ class UserApiImpl(
     }
 
     companion object {
-        private const val ROUTE = "/user"
+        private const val ROUTE = "/users"
     }
 }
