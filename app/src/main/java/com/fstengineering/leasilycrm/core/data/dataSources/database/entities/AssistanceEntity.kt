@@ -46,6 +46,7 @@ data class AssistanceEntity(
     @ColumnInfo(name = "qt_bathrooms") val qtBathrooms: Int,
     @ColumnInfo(name = "qt_parking_spots") val qtParkingSpots: Int,
     val observations: String?,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "tenant_id") val tenantId: Int,
     @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Int,
     @ColumnInfo(name = "user_id") val userId: Int,

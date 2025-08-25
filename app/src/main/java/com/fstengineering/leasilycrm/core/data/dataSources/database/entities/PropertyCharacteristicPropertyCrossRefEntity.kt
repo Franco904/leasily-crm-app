@@ -30,4 +30,5 @@ import androidx.room.Index
 data class PropertyCharacteristicPropertyCrossRefEntity(
     @ColumnInfo(name = "property_id") val propertyId: Int,
     @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Int,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 )

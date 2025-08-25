@@ -24,5 +24,6 @@ data class PropertyPriceEntity(
     @ColumnInfo(name = "start_date") val startDate: LocalDate,
     @ColumnInfo(name = "end_date") val endDate: LocalDate,
     val price: Double,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_id") val propertyId: Int,
 )

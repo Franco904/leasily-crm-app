@@ -21,5 +21,6 @@ import androidx.room.PrimaryKey
 data class StayFileEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "stay_file_uri") val stayFileUri: String,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "stay_id") val stayId: Int
 )

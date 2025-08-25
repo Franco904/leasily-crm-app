@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegmentType
@@ -8,6 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.models.CustomerSegmentType
 data class CustomerSegmentTypeEntity(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
     val name: String,
+    @ColumnInfo(name = "is_active") val isActive: Boolean = true,
 ) {
     fun toDomain() = CustomerSegmentType(
         id = id,
@@ -15,9 +17,14 @@ data class CustomerSegmentTypeEntity(
     )
 
     companion object {
-        fun fromDomain(domain: CustomerSegmentType) = CustomerSegmentTypeEntity(
-            id = domain.id,
-            name = domain.name!!,
-        )
+        fun fromDomain(domain: CustomerSegmentType): CustomerSegmentTypeEntity {
+            requireNotNull(domain.name) { "CustomerSegmentType.name is required" }
+
+            return CustomerSegmentTypeEntity(
+                id = domain.id,
+                name = domain.name,
+                isActive = domain.isActive,
+            )
+        }
     }
 }

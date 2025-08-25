@@ -22,4 +22,5 @@ data class PropertyFileEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "property_file_uri") val propertyFileUri: String,
     @ColumnInfo(name = "property_id") val propertyId: Int,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 )

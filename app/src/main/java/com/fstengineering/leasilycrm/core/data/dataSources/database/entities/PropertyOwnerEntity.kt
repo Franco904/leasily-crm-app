@@ -24,6 +24,7 @@ data class PropertyOwnerEntity(
     val phone: String?,
     val email: String?,
     @ColumnInfo(name = "payment_key") val paymentKey: String?,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Int?,
     @ColumnInfo(name = "user_id") val userId: Int,
 )

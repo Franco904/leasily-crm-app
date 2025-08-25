@@ -19,6 +19,7 @@ data class CustomerSegmentWithType(
     fun toDomain() = CustomerSegment(
         id = customerSegment.id,
         name = customerSegment.name,
+        isDeleted = customerSegment.isDeleted,
         type = CustomerSegmentType(
             id = customerSegmentType.id,
             name = customerSegmentType.name,

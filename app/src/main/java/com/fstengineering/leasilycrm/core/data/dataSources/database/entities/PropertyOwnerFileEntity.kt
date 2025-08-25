@@ -21,5 +21,6 @@ import androidx.room.PrimaryKey
 data class PropertyOwnerFileEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "property_owner_file_uri") val propertyOwnerFileUri: String,
-    @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Int
+    @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Int,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 )

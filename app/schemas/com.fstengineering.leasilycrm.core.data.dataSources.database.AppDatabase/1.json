@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6e0bf280f875059d9ee4a285ef95d011",
+    "identityHash": "138a72e106e60591ad4d7725be4717cd",
     "entities": [
       {
         "tableName": "assistances",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `contact_date` TEXT, `searched_start_date` TEXT, `searched_end_date` TEXT, `has_flexibility_for_period` INTEGER NOT NULL, `max_accepted_nightly_rate` REAL, `qt_adult_guests` INTEGER NOT NULL, `qt_kid_guests` INTEGER NOT NULL, `qt_baby_guests` INTEGER NOT NULL, `qt_animal_guests` INTEGER NOT NULL, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `observations` TEXT, `tenant_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `contact_date` TEXT, `searched_start_date` TEXT, `searched_end_date` TEXT, `has_flexibility_for_period` INTEGER NOT NULL, `max_accepted_nightly_rate` REAL, `qt_adult_guests` INTEGER NOT NULL, `qt_kid_guests` INTEGER NOT NULL, `qt_baby_guests` INTEGER NOT NULL, `qt_animal_guests` INTEGER NOT NULL, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `tenant_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -106,6 +106,12 @@
             "affinity": "TEXT"
           },
           {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "tenantId",
             "columnName": "tenant_id",
             "affinity": "INTEGER",
@@ -177,7 +183,7 @@
       },
       {
         "tableName": "assistance_characteristics",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -188,6 +194,12 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "is_active",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -200,7 +212,7 @@
       },
       {
         "tableName": "assistance_characteristics_assistances",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assistance_id` INTEGER NOT NULL, `assistance_characteristic_id` INTEGER NOT NULL, PRIMARY KEY(`assistance_id`, `assistance_characteristic_id`), FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`assistance_characteristic_id`) REFERENCES `assistance_characteristics`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assistance_id` INTEGER NOT NULL, `assistance_characteristic_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, PRIMARY KEY(`assistance_id`, `assistance_characteristic_id`), FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`assistance_characteristic_id`) REFERENCES `assistance_characteristics`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "assistanceId",
@@ -211,6 +223,12 @@
           {
             "fieldPath": "assistanceCharacteristicId",
             "columnName": "assistance_characteristic_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -269,7 +287,7 @@
       },
       {
         "tableName": "assistance_interactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `interaction_date` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `assistance_id` INTEGER NOT NULL, FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `interaction_date` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `is_deleted` INTEGER NOT NULL, `assistance_id` INTEGER NOT NULL, FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -293,6 +311,12 @@
             "fieldPath": "description",
             "columnName": "description",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "assistanceId",
@@ -334,7 +358,7 @@
       },
       {
         "tableName": "assistance_searched_neighborhoods",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `neighborhood` TEXT NOT NULL, `assistance_id` INTEGER NOT NULL, FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `neighborhood` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `assistance_id` INTEGER NOT NULL, FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -346,6 +370,12 @@
             "fieldPath": "neighborhood",
             "columnName": "neighborhood",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -388,7 +418,7 @@
       },
       {
         "tableName": "assistance_sent_properties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assistance_id` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, PRIMARY KEY(`assistance_id`, `property_id`), FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assistance_id` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, PRIMARY KEY(`assistance_id`, `property_id`), FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "assistanceId",
@@ -399,6 +429,12 @@
           {
             "fieldPath": "propertyId",
             "columnName": "property_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -457,7 +493,7 @@
       },
       {
         "tableName": "customer_segments",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `customer_segment_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_type_id`) REFERENCES `customer_segment_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `customer_segment_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_type_id`) REFERENCES `customer_segment_types`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -481,6 +517,12 @@
             "columnName": "user_id",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -498,12 +540,21 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_customer_segments_customer_segment_type_id` ON `${TABLE_NAME}` (`customer_segment_type_id`)"
+          },
+          {
+            "name": "index_customer_segments_user_id",
+            "unique": false,
+            "columnNames": [
+              "user_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_customer_segments_user_id` ON `${TABLE_NAME}` (`user_id`)"
           }
         ],
         "foreignKeys": [
           {
             "table": "customer_segment_types",
-            "onDelete": "CASCADE",
+            "onDelete": "RESTRICT",
             "onUpdate": "NO ACTION",
             "columns": [
               "customer_segment_type_id"
@@ -516,7 +567,7 @@
       },
       {
         "tableName": "customer_segment_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -527,6 +578,12 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "is_active",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -539,7 +596,7 @@
       },
       {
         "tableName": "properties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `register_date` TEXT NOT NULL, `neighborhood` TEXT NOT NULL, `street_address` TEXT NOT NULL, `cep_postal_code` TEXT, `number` INTEGER, `address_line_2` TEXT, `parking_spot_number` TEXT, `parking_basement_level_number` TEXT, `hobby_box_number` TEXT, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `qt_air_conditioners` INTEGER NOT NULL, `qt_max_guests` INTEGER NOT NULL, `included_items` TEXT, `has_included_items` INTEGER NOT NULL, `cleaning_service_tax` REAL, `has_cleaning_service_included` INTEGER NOT NULL, `observations` TEXT, `property_owner_id` INTEGER NOT NULL, `property_type_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_type_id`) REFERENCES `property_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `register_date` TEXT NOT NULL, `neighborhood` TEXT NOT NULL, `street_address` TEXT NOT NULL, `cep_postal_code` TEXT, `number` INTEGER, `address_line_2` TEXT, `parking_spot_number` TEXT, `parking_basement_level_number` TEXT, `hobby_box_number` TEXT, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `qt_air_conditioners` INTEGER NOT NULL, `qt_max_guests` INTEGER NOT NULL, `included_items` TEXT, `has_included_items` INTEGER NOT NULL, `cleaning_service_tax` REAL, `has_cleaning_service_included` INTEGER NOT NULL, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_owner_id` INTEGER NOT NULL, `property_type_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_type_id`) REFERENCES `property_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -671,6 +728,12 @@
             "affinity": "TEXT"
           },
           {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "propertyOwnerId",
             "columnName": "property_owner_id",
             "affinity": "INTEGER",
@@ -768,7 +831,7 @@
       },
       {
         "tableName": "property_characteristics",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -779,6 +842,12 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "is_active",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -791,7 +860,7 @@
       },
       {
         "tableName": "property_characteristics_properties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`property_id` INTEGER NOT NULL, `property_characteristic_id` INTEGER NOT NULL, PRIMARY KEY(`property_id`, `property_characteristic_id`), FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_characteristic_id`) REFERENCES `property_characteristics`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`property_id` INTEGER NOT NULL, `property_characteristic_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, PRIMARY KEY(`property_id`, `property_characteristic_id`), FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`property_characteristic_id`) REFERENCES `property_characteristics`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "propertyId",
@@ -802,6 +871,12 @@
           {
             "fieldPath": "propertyCharacteristicId",
             "columnName": "property_characteristic_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -860,7 +935,7 @@
       },
       {
         "tableName": "property_files",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `property_file_uri` TEXT NOT NULL, `property_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `property_file_uri` TEXT NOT NULL, `property_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -877,6 +952,12 @@
           {
             "fieldPath": "propertyId",
             "columnName": "property_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -914,7 +995,7 @@
       },
       {
         "tableName": "property_owners",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `phone` TEXT, `email` TEXT, `payment_key` TEXT, `customer_segment_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `phone` TEXT, `email` TEXT, `payment_key` TEXT, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -942,6 +1023,12 @@
             "fieldPath": "paymentKey",
             "columnName": "payment_key",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "customerSegmentId",
@@ -988,7 +1075,7 @@
       },
       {
         "tableName": "property_owner_files",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `property_owner_file_uri` TEXT NOT NULL, `property_owner_id` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `property_owner_file_uri` TEXT NOT NULL, `property_owner_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1005,6 +1092,12 @@
           {
             "fieldPath": "propertyOwnerId",
             "columnName": "property_owner_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1042,7 +1135,7 @@
       },
       {
         "tableName": "property_prices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `start_date` TEXT NOT NULL, `end_date` TEXT NOT NULL, `price` REAL NOT NULL, `property_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `start_date` TEXT NOT NULL, `end_date` TEXT NOT NULL, `price` REAL NOT NULL, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1066,6 +1159,12 @@
             "fieldPath": "price",
             "columnName": "price",
             "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -1108,7 +1207,7 @@
       },
       {
         "tableName": "property_sea_proximity_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1119,6 +1218,12 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "is_active",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -1131,7 +1236,7 @@
       },
       {
         "tableName": "property_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1142,6 +1247,12 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "is_active",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -1154,7 +1265,7 @@
       },
       {
         "tableName": "stays",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `is_from_other_realtor` INTEGER NOT NULL, `qt_guests` INTEGER NOT NULL, `total_price` REAL NOT NULL, `start_datetime` TEXT NOT NULL, `end_datetime` TEXT NOT NULL, `commission` REAL, `observations` TEXT, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `is_from_other_realtor` INTEGER NOT NULL, `qt_guests` INTEGER NOT NULL, `total_price` REAL NOT NULL, `start_datetime` TEXT NOT NULL, `end_datetime` TEXT NOT NULL, `commission` REAL, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1201,6 +1312,12 @@
             "fieldPath": "observations",
             "columnName": "observations",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "propertyId",
@@ -1268,7 +1385,7 @@
       },
       {
         "tableName": "stay_files",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `stay_file_uri` TEXT NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `stay_file_uri` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1280,6 +1397,12 @@
             "fieldPath": "stayFileUri",
             "columnName": "stay_file_uri",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -1322,7 +1445,7 @@
       },
       {
         "tableName": "stay_transfers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transfer_date` TEXT NOT NULL, `transfer_amount` TEXT NOT NULL, `transfer_description` TEXT NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transfer_date` TEXT NOT NULL, `transfer_amount` TEXT NOT NULL, `transfer_description` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1346,6 +1469,12 @@
             "fieldPath": "transferDescription",
             "columnName": "transfer_description",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -1388,7 +1517,7 @@
       },
       {
         "tableName": "tenants",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `register_date` TEXT NOT NULL, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `is_lead` INTEGER NOT NULL, `customer_segment_id` INTEGER, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `register_date` TEXT NOT NULL, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `is_lead` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1436,6 +1565,12 @@
           {
             "fieldPath": "isLead",
             "columnName": "is_lead",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "is_deleted",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1509,7 +1644,7 @@
       },
       {
         "tableName": "tenant_contact_origin_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1520,6 +1655,12 @@
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "is_active",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -1533,7 +1674,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6e0bf280f875059d9ee4a285ef95d011')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '138a72e106e60591ad4d7725be4717cd')"
     ]
   }
 }

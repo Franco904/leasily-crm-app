@@ -7,9 +7,11 @@ import kotlinx.serialization.Serializable
 data class GetCustomerSegmentTypeDto(
     val id: Int,
     val name: String,
+    val isActive: Boolean,
 ) {
     fun toDomain() = CustomerSegmentType(
         id = id,
         name = name,
+        isActive = isActive,
     )
 }

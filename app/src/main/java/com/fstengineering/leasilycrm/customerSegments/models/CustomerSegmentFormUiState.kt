@@ -13,6 +13,7 @@ data class CustomerSegmentFormUiState(
     fun toDomain() = CustomerSegment(
         id = id,
         name = name,
+        isDeleted = false,
         type = CustomerSegmentType(
             id = type?.id,
             name = type?.name,

@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
@@ -17,13 +18,13 @@ interface CustomerSegmentDao {
     @Update
     suspend fun update(customerSegment: CustomerSegmentEntity)
 
-    @Query("DELETE FROM customer_segments WHERE id = :id")
+    @Query("UPDATE customer_segments SET is_deleted = 1 WHERE id = :id")
     suspend fun delete(id: Int)
 
-    @Query("SELECT * FROM customer_segments WHERE id = :id")
+    @Query("SELECT * FROM customer_segments WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Int): CustomerSegmentEntity
 
     @Transaction
-    @Query("SELECT * FROM customer_segments WHERE user_id = :userId")
+    @Query("SELECT * FROM customer_segments WHERE user_id = :userId AND is_deleted = 0")
     fun watchAll(userId: Int): Flow<List<CustomerSegmentWithType>>
 }
