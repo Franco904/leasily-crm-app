@@ -52,27 +52,39 @@
     <string name="customer_segments_tenants_title">Inquilinos</string>
     <string name="customer_segments_tenants_empty_text">Nenhum segmento de inquilino registrado.</string>
 
-    <string name="customer_segment_save_dialog_headline">Novo segmento de cliente</string>
-    <string name="customer_segment_edit_dialog_headline">Editar segmento de cliente</string>
-    <string name="customer_segment_save_edit_dialog_name_placeholder">Nome</string>
+    <string name="customer_segments_save_dialog_headline">Novo segmento de cliente</string>
+    <string name="customer_segments_edit_dialog_headline">Editar segmento de cliente</string>
+    <string name="customer_segments_save_edit_dialog_name_placeholder">Nome</string>
     <string name="customer_segments_save_edit_dialog_type_title">Tipo</string>
-    <string name="customer_segments_save_edit_dialog_confirm_save_button">Salvar</string>
-    <string name="customer_segments_save_edit_dialog_confirm_edit_button">Editar</string>
-    <string name="customer_segments_save_edit_dialog_dismiss_button">Cancelar</string>
 
-    <string name="customer_segment_delete_dialog_headline">Excluir segmento de cliente?</string>
+    <string name="customer_segments_delete_dialog_headline">Excluir segmento de cliente?</string>
     <string name="customer_segments_delete_dialog_supporting_text">Se confirmada a exclusão, imóveis e inquilinos com este segmento serão desvinculados dele.</string>
-    <string name="customer_segments_delete_dialog_confirm_button">Excluir</string>
-    <string name="customer_segments_delete_dialog_dismiss_button">Cancelar</string>
+
+    <!-- Property owners -->
+    <string name="property_owners_top_app_bar_title">Proprietários</string>
+    <string name="property_owners_empty_text">Nenhum proprietário registrado.</string>
+    <string name="property_owners_delete_dialog_headline">Excluir proprietário?</string>
+    <string name="property_owners_delete_dialog_supporting_text">Este proprietário não estará mais disponível.</string>
 
     <!-- Menu options -->
+    <string name="dialog_save_confirm_button">Salvar</string>
+    <string name="dialog_edit_confirm_button">Editar</string>
     <string name="menu_option_edit_text">Editar</string>
     <string name="menu_option_delete_text">Excluir</string>
 
+    <!-- Dialog buttons -->
+    <string name="delete_dialog_confirm_button">Excluir</string>
+    <string name="dialog_cancel_dismiss_button">Cancelar</string>
+
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório</string>
-    <string name="inline_user_name_too_big_75_chars">Deve ter no máximo 75 caracteres</string>
-    <string name="inline_creci_number_too_big">Deve ter no máximo 8 caracteres</string>
+    <string name="inline_too_big_8_chars">Deve ter no máximo 8 caracteres</string>
+    <string name="inline_too_big_20_chars">Deve ter no máximo 20 caracteres</string>
+    <string name="inline_too_big_75_chars">Deve ter no máximo 75 caracteres</string>
+    <string name="inline_too_big_100_chars">Deve ter no máximo 100 caracteres</string>
+    <string name="inline_too_big_120_chars">Deve ter no máximo 120 caracteres</string>
+
+    <string name="inline_invalid_email">Email inválido</string>
 
     <!-- Snackbar success -->
     <string name="snackbar_no_data_changed">Nenhum dado foi editado.</string>
@@ -83,12 +95,17 @@
     <string name="snackbar_edit_customer_segment_succeeded">Segmento de cliente editado.</string>
     <string name="snackbar_delete_customer_segment_succeeded">Segmento de cliente excluído.</string>
 
+    <string name="snackbar_create_property_owner_succeeded">Proprietário criado.</string>
+    <string name="snackbar_edit_property_owner_succeeded">Proprietário editado.</string>
+    <string name="snackbar_delete_property_owner_succeeded">Proprietário excluído.</string>
+
     <!-- Snackbar errors -->
     <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>
     <string name="snackbar_credential_unsupported_type_error">Tipo de credencial inválido. Tente autenticar com a sua conta Google.</string>
     <string name="snackbar_credential_unsupported_api_error">Falha ao verificar as credenciais. Tente reiniciar o aplicativo.</string>
     <string name="snackbar_credential_no_credentials_found_error">Não há contas Google disponíveis neste dispositivo.</string>
 
+    <string name="snackbar_preferences_not_found_error">Usuário não encontrado.</string>
     <string name="snackbar_preferences_serialization_error">Falha ao carregar os dados. Tente novamente mais tarde.</string>
     <string name="snackbar_preferences_security_error">Falha inesperada na sessão. Tente sair e autenticar novamente.</string>
 

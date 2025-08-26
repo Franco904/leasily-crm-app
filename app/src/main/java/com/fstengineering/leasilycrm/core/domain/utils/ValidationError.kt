@@ -10,6 +10,24 @@ sealed interface ValidationError : Error {
         IsNull,
     }
 
+    enum class PropertyOwnerName : ValidationError {
+        IsBlank,
+        LengthIsGreaterThan100Chars,
+    }
+
+    enum class PropertyOwnerPhone : ValidationError {
+        LengthIsGreaterThan20Chars,
+    }
+
+    enum class PropertyOwnerEmail : ValidationError {
+        InvalidFormat,
+        LengthIsGreaterThan120Chars,
+    }
+
+    enum class PropertyOwnerPaymentKey : ValidationError {
+        LengthIsGreaterThan120Chars,
+    }
+
     enum class UserName : ValidationError {
         IsBlank,
         LengthIsGreaterThan75Chars,

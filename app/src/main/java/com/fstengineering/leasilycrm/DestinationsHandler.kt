@@ -9,6 +9,8 @@ import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.profile.ProfileScreen
 import com.fstengineering.leasilycrm.profile.ProfileViewModel
+import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersScreen
+import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.signin.SignInScreen
@@ -67,7 +69,9 @@ object DestinationsHandler {
                     }
                 },
                 onPropertiesSelect = {},
-                onPropertyOwnersSelect = {},
+                onPropertyOwnersSelect = {
+                    navController.navigate(Destinations.PropertyOwners)
+                },
                 onCustomerSegmentsSelect = {
                     navController.navigate(Destinations.CustomerSegments)
                 },
@@ -111,6 +115,29 @@ object DestinationsHandler {
                 viewModel = koinViewModel<CustomerSegmentsViewModel>(),
                 onBack = {
                     navController.navigateUp()
+                },
+                onSignOut = {
+                    onSignOut()
+
+                    navController.navigate(Destinations.SignIn) {
+                        val startDestination =
+                            navController.graph.startDestinationRoute ?: return@navigate
+
+                        popUpTo(startDestination) { inclusive = true }
+                    }
+                },
+                showSnackbar = { message -> showSnackbar(message) },
+            )
+        }
+
+        composable<Destinations.PropertyOwners> {
+            PropertyOwnersScreen(
+                viewModel = koinViewModel<PropertyOwnersViewModel>(),
+                onBack = {
+                    navController.navigateUp()
+                },
+                onPropertyOwnerRegistration = { propertyOwnerId ->
+//                    navController.navigate(Destinations.)
                 },
                 onSignOut = {
                     onSignOut()

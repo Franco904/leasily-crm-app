@@ -1,13 +1,12 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compound.CustomerSegmentWithType
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CustomerSegmentCompound
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -26,5 +25,5 @@ interface CustomerSegmentDao {
 
     @Transaction
     @Query("SELECT * FROM customer_segments WHERE user_id = :userId AND is_deleted = 0")
-    fun watchAll(userId: Int): Flow<List<CustomerSegmentWithType>>
+    fun watchAll(userId: Int): Flow<List<CustomerSegmentCompound>>
 }

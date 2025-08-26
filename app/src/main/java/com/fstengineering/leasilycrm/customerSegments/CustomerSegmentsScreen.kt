@@ -3,11 +3,9 @@ package com.fstengineering.leasilycrm.customerSegments
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,16 +15,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,8 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
-import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel.UiEvents.CustomerSegmentCreateSuccess
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel.UiEvents.CustomerSegmentDeleteSuccess
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel.UiEvents.CustomerSegmentEditSuccess
@@ -60,7 +48,6 @@ import com.fstengineering.leasilycrm.customerSegments.composables.CustomerSegmen
 import com.fstengineering.leasilycrm.customerSegments.composables.PropertyOwnerCustomerSegmentsEmptySection
 import com.fstengineering.leasilycrm.customerSegments.composables.TenantCustomerSegmentsEmptySection
 import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentFormUiState
-import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun CustomerSegmentsScreen(
@@ -105,21 +92,17 @@ fun CustomerSegmentsScreen(
 
                 is CustomerSegmentCreateSuccess -> {
                     isRegisteringNewCustomerSegment = false
-                    viewModel.onCustomerSegmentFormChange(form = null)
 
                     showSnackbar(context.getString(R.string.snackbar_create_customer_segment_succeeded))
                 }
 
                 is CustomerSegmentEditSuccess -> {
                     isRegisteringNewCustomerSegment = false
-                    viewModel.onCustomerSegmentFormChange(form = null)
 
                     showSnackbar(context.getString(uiEvent.messageId))
                 }
 
                 is CustomerSegmentDeleteSuccess -> {
-                    viewModel.onDeleteCustomerSegment(customerSegment = null)
-
                     showSnackbar(context.getString(R.string.snackbar_delete_customer_segment_succeeded))
                 }
             }
@@ -154,10 +137,17 @@ fun CustomerSegmentsScreen(
         modifier = modifier
     ) { innerPadding ->
         if (isLoading) {
-            AppCircularProgressIndicator(
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(64.dp)
-            )
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                AppCircularProgressIndicator(
+                    modifier = Modifier
+                        .size(64.dp)
+                )
+            }
         } else {
             LazyColumn(
                 state = lazyListState,

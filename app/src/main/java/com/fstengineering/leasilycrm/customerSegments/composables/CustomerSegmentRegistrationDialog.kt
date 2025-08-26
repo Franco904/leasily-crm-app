@@ -60,7 +60,7 @@ fun CustomerSegmentRegistrationDialog(
         title = {
             Text(
                 text = stringResource(
-                    if (isEditing) R.string.customer_segment_edit_dialog_headline else R.string.customer_segment_save_dialog_headline
+                    if (isEditing) R.string.customer_segments_edit_dialog_headline else R.string.customer_segments_save_dialog_headline
                 ),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.headlineSmall,
@@ -69,7 +69,7 @@ fun CustomerSegmentRegistrationDialog(
         text = {
             Column {
                 AppTextField(
-                    placeholder = stringResource(R.string.customer_segment_save_edit_dialog_name_placeholder),
+                    placeholder = stringResource(R.string.customer_segments_save_edit_dialog_name_placeholder),
                     value = customerSegmentForm.name ?: "",
                     onValueChange = { nameInput ->
                         onCustomerSegmentFormChange(
@@ -105,8 +105,8 @@ fun CustomerSegmentRegistrationDialog(
             ) {
                 Text(
                     text = stringResource(
-                        if (isEditing) R.string.customer_segments_save_edit_dialog_confirm_edit_button
-                        else R.string.customer_segments_save_edit_dialog_confirm_save_button,
+                        if (isEditing) R.string.dialog_edit_confirm_button
+                        else R.string.dialog_save_confirm_button,
                     ),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
@@ -116,7 +116,7 @@ fun CustomerSegmentRegistrationDialog(
         dismissButton = {
             TextButton(onClick = { onCancel() }) {
                 Text(
-                    text = stringResource(R.string.customer_segments_save_edit_dialog_dismiss_button),
+                    text = stringResource(R.string.dialog_cancel_dismiss_button),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )

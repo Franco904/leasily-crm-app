@@ -20,7 +20,7 @@ fun ConfirmDeleteCustomerSegmentDialog(
     AlertDialog(
         title = {
             Text(
-                text = stringResource(R.string.customer_segment_delete_dialog_headline),
+                text = stringResource(R.string.customer_segments_delete_dialog_headline),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -35,7 +35,7 @@ fun ConfirmDeleteCustomerSegmentDialog(
         confirmButton = {
             TextButton(onClick = onDelete) {
                 Text(
-                    text = stringResource(id = R.string.customer_segments_delete_dialog_confirm_button),
+                    text = stringResource(id = R.string.delete_dialog_confirm_button),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -44,7 +44,7 @@ fun ConfirmDeleteCustomerSegmentDialog(
         dismissButton = {
             TextButton(onClick = onCancel) {
                 Text(
-                    text = stringResource(id = R.string.customer_segments_delete_dialog_dismiss_button),
+                    text = stringResource(id = R.string.dialog_cancel_dismiss_button),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )

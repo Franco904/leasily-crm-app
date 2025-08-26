@@ -10,16 +10,18 @@ data class CustomerSegmentFormUiState(
     val type: CustomerSegmentTypeUiState? = null,
     val userId: Int? = null,
 ) {
-    fun toDomain() = CustomerSegment(
-        id = id,
-        name = name,
-        isDeleted = false,
-        type = CustomerSegmentType(
-            id = type?.id,
-            name = type?.name,
-        ),
-        user = User(remoteId = userId)
-    )
+    fun toDomain(): CustomerSegment {
+        return CustomerSegment(
+            id = id,
+            name = name,
+            isDeleted = false,
+            type = CustomerSegmentType(
+                id = type?.id,
+                name = type?.name,
+            ),
+            userId = userId,
+        )
+    }
 
     companion object {
         fun fromDomain(domain: CustomerSegment) = CustomerSegmentFormUiState(
@@ -29,7 +31,7 @@ data class CustomerSegmentFormUiState(
                 id = domain.type.id,
                 name = domain.type.name,
             ),
-            userId = domain.user.remoteId,
+            userId = domain.userId,
         )
     }
 }

@@ -5,7 +5,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Cus
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
-import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
@@ -30,15 +29,13 @@ class CustomerSegmentRepositoryImpl(
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: run {
-                        return AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound)
-                    }
+                    prefsFlow.first().remoteId ?: return AppResult.Error(
+                        error = DataSourceError.RemoteBackendError.NotFound,
+                    )
                 }
             )
 
-        val customerSegmentWithUser = customerSegment.copy(
-            user = User(remoteId = userRemoteId),
-        )
+        val customerSegmentWithUser = customerSegment.copy(userId = userRemoteId)
         val entity = CustomerSegmentEntity.fromDomain(customerSegmentWithUser)
 
         dao.insert(entity)

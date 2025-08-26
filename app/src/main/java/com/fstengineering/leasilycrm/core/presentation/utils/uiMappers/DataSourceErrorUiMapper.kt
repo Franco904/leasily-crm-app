@@ -4,6 +4,10 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 
 fun DataSourceError.toUiMessage() = when (this) {
+    DataSourceError.PreferencesError.NotFound -> {
+        R.string.snackbar_preferences_not_found_error
+    }
+
     DataSourceError.PreferencesError.SerializationError -> {
         R.string.snackbar_preferences_serialization_error
     }

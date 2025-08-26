@@ -5,10 +5,12 @@ import com.fstengineering.leasilycrm.core.application.di.qualifiers.plainPrefere
 import com.fstengineering.leasilycrm.core.data.repositories.CustomerSegmentRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.CustomerSegmentTypeRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.DomainTablesRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.PropertyOwnerRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.UserRepositoryImpl
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.DomainTablesRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import org.koin.dsl.module
 
@@ -27,6 +29,13 @@ val repositoryModule = module {
 
     single<CustomerSegmentRepository> {
         CustomerSegmentRepositoryImpl(
+            dao = get(),
+            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+        )
+    }
+
+    single<PropertyOwnerRepository> {
+        PropertyOwnerRepositoryImpl(
             dao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
         )

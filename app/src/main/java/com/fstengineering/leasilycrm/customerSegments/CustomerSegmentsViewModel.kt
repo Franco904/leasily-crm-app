@@ -241,6 +241,8 @@ class CustomerSegmentsViewModel(
                 if (isEditing) UiEvents.CustomerSegmentEditSuccess(messageId = R.string.snackbar_edit_customer_segment_succeeded)
                 else UiEvents.CustomerSegmentCreateSuccess,
             )
+
+            onCustomerSegmentFormChange(form = null)
         }
     }
 
@@ -267,6 +269,8 @@ class CustomerSegmentsViewModel(
                 }
 
             _uiEvents.send(UiEvents.CustomerSegmentDeleteSuccess)
+
+            onDeleteCustomerSegment(customerSegment = null)
         }
     }
 

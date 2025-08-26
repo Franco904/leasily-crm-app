@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "138a72e106e60591ad4d7725be4717cd",
+    "identityHash": "8351e295f91524700a6bb9482df4464f",
     "entities": [
       {
         "tableName": "assistances",
@@ -995,7 +995,7 @@
       },
       {
         "tableName": "property_owners",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `phone` TEXT, `email` TEXT, `payment_key` TEXT, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `phone` TEXT, `email` TEXT, `payment_key` TEXT, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1057,12 +1057,21 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_property_owners_customer_segment_id` ON `${TABLE_NAME}` (`customer_segment_id`)"
+          },
+          {
+            "name": "index_property_owners_user_id",
+            "unique": false,
+            "columnNames": [
+              "user_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_property_owners_user_id` ON `${TABLE_NAME}` (`user_id`)"
           }
         ],
         "foreignKeys": [
           {
             "table": "customer_segments",
-            "onDelete": "CASCADE",
+            "onDelete": "RESTRICT",
             "onUpdate": "NO ACTION",
             "columns": [
               "customer_segment_id"
@@ -1674,7 +1683,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '138a72e106e60591ad4d7725be4717cd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8351e295f91524700a6bb9482df4464f')"
     ]
   }
 }
