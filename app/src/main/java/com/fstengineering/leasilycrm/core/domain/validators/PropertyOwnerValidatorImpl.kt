@@ -14,18 +14,22 @@ class PropertyOwnerValidatorImpl : PropertyOwnerValidator {
     ): AppResultCompound<Unit, ValidationError> {
         val errors = mutableListOf<ValidationError>()
 
-        validateName(name = propertyOwner.name).onError { e -> errors.add(e) }
+        validateName(name = propertyOwner.name)
+            .onError { e -> errors.add(e) }
 
         if (propertyOwner.phone != null) {
-            validatePhone(phone = propertyOwner.phone).onError { e -> errors.add(e) }
+            validatePhone(phone = propertyOwner.phone)
+                .onError { e -> errors.add(e) }
         }
 
         if (propertyOwner.email != null) {
-            validateEmail(email = propertyOwner.email).onError { e -> errors.add(e) }
+            validateEmail(email = propertyOwner.email)
+                .onError { e -> errors.add(e) }
         }
 
         if (propertyOwner.paymentKey != null) {
-            validatePaymentKey(paymentKey = propertyOwner.paymentKey).onError { e -> errors.add(e) }
+            validatePaymentKey(paymentKey = propertyOwner.paymentKey)
+                .onError { e -> errors.add(e) }
         }
 
         return if (errors.isEmpty()) {
