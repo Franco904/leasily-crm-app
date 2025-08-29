@@ -176,7 +176,7 @@ fun CustomerSegmentsScreen(
                         items = tenantCustomerSegments,
                         key = { i, segment -> segment.id ?: i },
                         contentType = { _, entryType -> entryType },
-                    ) { i, tenantSegment ->
+                    ) { _, tenantSegment ->
                         CustomerSegmentCard(
                             segment = tenantSegment,
                             onEditSegment = {

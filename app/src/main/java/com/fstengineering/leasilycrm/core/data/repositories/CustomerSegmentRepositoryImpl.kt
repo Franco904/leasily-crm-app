@@ -52,7 +52,7 @@ class CustomerSegmentRepositoryImpl(
 
         val storedUpdated = dao.getById(id = customerSegment.id).copy(
             name = customerSegment.name!!,
-            customerSegmentTypeId = customerSegment.type.id!!,
+            customerSegmentTypeId = customerSegment.type?.id!!,
         )
 
         dao.update(storedUpdated)
@@ -66,7 +66,7 @@ class CustomerSegmentRepositoryImpl(
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataSourceError>> =
+    override fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(

@@ -66,15 +66,25 @@
     <string name="property_owners_delete_dialog_headline">Excluir proprietário?</string>
     <string name="property_owners_delete_dialog_supporting_text">Este proprietário não estará mais disponível.</string>
 
-    <!-- Menu options -->
-    <string name="dialog_save_confirm_button">Salvar</string>
-    <string name="dialog_edit_confirm_button">Editar</string>
-    <string name="menu_option_edit_text">Editar</string>
-    <string name="menu_option_delete_text">Excluir</string>
+    <!-- Property owner registration -->
+    <string name="property_owner_registration_top_app_bar_title_create">Novo proprietário</string>
+    <string name="property_owner_registration_top_app_bar_title_edit">Editar proprietário</string>
+    <string name="property_owner_registration_top_app_bar_save_button_text">Salvar</string>
 
-    <!-- Dialog buttons -->
-    <string name="delete_dialog_confirm_button">Excluir</string>
-    <string name="dialog_cancel_dismiss_button">Cancelar</string>
+    <string name="property_owner_registration_customer_segment_placeholder">Segmento de cliente</string>
+    <string name="property_owner_registration_name_placeholder">Nome</string>
+    <string name="property_owner_registration_phone_placeholder">Telefone</string>
+    <string name="property_owner_registration_email_placeholder">Email</string>
+    <string name="property_owner_registration_payment_key_placeholder">Chave de pagamento (PIX, outro)</string>
+    <string name="property_owner_registration_documents_title">Documentos</string>
+    <string name="property_owner_registration_documents_body_text">Documentos relacionados ao proprietário podem ser, por exemplo, cópia(s) do(s) contrato(s) de administração imobiliária.</string>
+
+    <!-- Action buttons -->
+    <string name="save_action_button_text">Salvar</string>
+    <string name="edit_action_button_text">Editar</string>
+    <string name="add_action_button_text">Adicionar</string>
+    <string name="delete_action_button_text">Excluir</string>
+    <string name="cancel_action_button_text">Cancelar</string>
 
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório</string>

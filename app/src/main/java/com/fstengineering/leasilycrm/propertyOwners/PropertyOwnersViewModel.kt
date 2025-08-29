@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 class PropertyOwnersViewModel(
     private val propertyOwnerRepository: PropertyOwnerRepository,
     private val userRepository: UserRepository,
-    private val propertyOwnerValidator: PropertyOwnerValidator,
 ) : ViewModel() {
     private var isInitialized = false
 

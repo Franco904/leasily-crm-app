@@ -36,7 +36,8 @@ val repositoryModule = module {
 
     single<PropertyOwnerRepository> {
         PropertyOwnerRepositoryImpl(
-            dao = get(),
+            propertyOwnerDao = get(),
+            propertyOwnerFileDao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
         )
     }

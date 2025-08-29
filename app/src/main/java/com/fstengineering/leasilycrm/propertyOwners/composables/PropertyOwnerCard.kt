@@ -48,12 +48,12 @@ fun PropertyOwnerCard(
                 options = persistentListOf(
                     MoreOptionsMenuOption(
                         icon = Icons.Outlined.Edit,
-                        text = stringResource(R.string.menu_option_edit_text),
+                        text = stringResource(R.string.edit_action_button_text),
                         onClick = onEditPropertyOwner,
                     ),
                     MoreOptionsMenuOption(
                         icon = Icons.Outlined.Delete,
-                        text = stringResource(R.string.menu_option_delete_text),
+                        text = stringResource(R.string.delete_action_button_text),
                         onClick = onDeletePropertyOwner,
                     ),
                 ),

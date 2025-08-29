@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.core.application.di.modules
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.profile.ProfileViewModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.signin.SignInViewModel
@@ -46,6 +47,13 @@ val viewModelModule = module {
 
     viewModel {
         PropertyOwnersViewModel(
+            propertyOwnerRepository = get(),
+            userRepository = get(),
+        )
+    }
+
+    viewModel {
+        PropertyOwnerRegistrationViewModel(
             propertyOwnerRepository = get(),
             userRepository = get(),
             propertyOwnerValidator = get(),

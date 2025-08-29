@@ -105,8 +105,8 @@ fun CustomerSegmentRegistrationDialog(
             ) {
                 Text(
                     text = stringResource(
-                        if (isEditing) R.string.dialog_edit_confirm_button
-                        else R.string.dialog_save_confirm_button,
+                        if (isEditing) R.string.edit_action_button_text
+                        else R.string.save_action_button_text,
                     ),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
@@ -116,7 +116,7 @@ fun CustomerSegmentRegistrationDialog(
         dismissButton = {
             TextButton(onClick = { onCancel() }) {
                 Text(
-                    text = stringResource(R.string.dialog_cancel_dismiss_button),
+                    text = stringResource(R.string.cancel_action_button_text),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )

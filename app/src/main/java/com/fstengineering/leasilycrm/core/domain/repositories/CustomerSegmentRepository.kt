@@ -17,5 +17,5 @@ interface CustomerSegmentRepository {
 
     suspend fun delete(id: Int): AppResult<Unit, DataSourceError>
 
-    suspend fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataSourceError>>
+    fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataSourceError>>
 }

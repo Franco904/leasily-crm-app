@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Cus
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import kotlinx.collections.immutable.toImmutableList
 
 data class PropertyOwnerCompound(
     @Embedded val propertyOwner: PropertyOwnerEntity,
@@ -33,7 +34,7 @@ data class PropertyOwnerCompound(
         paymentKey = propertyOwner.paymentKey,
         isDeleted = propertyOwner.isDeleted,
         customerSegment = customerSegment?.toDomain(),
-        files = activeFiles.map { it.toDomain() },
+        files = activeFiles.map { it.toDomain() }.toImmutableList(),
         userId = propertyOwner.userId,
     )
 }

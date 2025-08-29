@@ -35,7 +35,7 @@ fun ConfirmDeletePropertyOwnerDialog(
         confirmButton = {
             TextButton(onClick = onDelete) {
                 Text(
-                    text = stringResource(id = R.string.delete_dialog_confirm_button),
+                    text = stringResource(id = R.string.delete_action_button_text),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -44,7 +44,7 @@ fun ConfirmDeletePropertyOwnerDialog(
         dismissButton = {
             TextButton(onClick = onCancel) {
                 Text(
-                    text = stringResource(id = R.string.dialog_cancel_dismiss_button),
+                    text = stringResource(id = R.string.cancel_action_button_text),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )

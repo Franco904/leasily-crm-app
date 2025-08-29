@@ -1,0 +1,122 @@
+package com.fstengineering.leasilycrm.propertyOwnerRegistration
+
+import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationFormSection
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationTopAppBar
+
+@Composable
+fun PropertyOwnerRegistrationScreen(
+    propertyOwnerId: Int?,
+    viewModel: PropertyOwnerRegistrationViewModel,
+    onBack: () -> Unit,
+    onSignOut: () -> Unit,
+    showSnackbar: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val activity = LocalActivity.current!!
+    val focusManager = LocalFocusManager.current
+
+    val scrollState = rememberScrollState()
+
+    val surfaceColor = MaterialTheme.colorScheme.surface
+
+    val propertyOwnerForm by viewModel.propertyOwnerForm.collectAsStateWithLifecycle()
+    val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
+
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.init(propertyOwnerId = propertyOwnerId)
+
+        viewModel.uiEvents.collect { uiEvent ->
+            when (uiEvent) {
+                is DataSourceError -> {
+                    showSnackbar(context.getString(uiEvent.messageId))
+                }
+
+                is RedirectToSignIn -> {
+                    onSignOut()
+                }
+
+                is PropertyOwnerCreateSuccess -> {
+                    showSnackbar(context.getString(R.string.snackbar_create_property_owner_succeeded))
+                }
+
+                is PropertyOwnerEditSuccess -> {
+                    showSnackbar(context.getString(uiEvent.messageId))
+                }
+            }
+        }
+    }
+
+    SideEffect {
+        activity.window.statusBarColor = surfaceColor.toArgb()
+    }
+
+    Scaffold(
+        topBar = {
+            PropertyOwnerRegistrationTopAppBar(
+                isEditing = propertyOwnerId != null,
+                onBack = onBack,
+                onSavePropertyOwner = viewModel::savePropertyOwner,
+            )
+        },
+        modifier = modifier
+    ) { innerPadding ->
+        if (isLoading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                AppCircularProgressIndicator(
+                    modifier = Modifier
+                        .size(64.dp)
+                )
+            }
+        } else {
+            PropertyOwnerRegistrationFormSection(
+                scrollState = scrollState,
+                propertyOwnerForm = propertyOwnerForm,
+                onPropertyOwnerFormChange = viewModel::onPropertyOwnerFormChange,
+                formErrors = formErrors.errors,
+                onCustomerSegmentFieldTap = {},
+                onAddPropertyOwnerFile = {},
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(24.dp)
+                    .pointerInput(Unit) {
+                        detectTapGestures { focusManager.clearFocus() }
+                    }
+            )
+        }
+    }
+}

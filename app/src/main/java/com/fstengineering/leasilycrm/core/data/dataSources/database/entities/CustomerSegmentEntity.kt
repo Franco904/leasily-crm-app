@@ -31,7 +31,7 @@ data class CustomerSegmentEntity(
 ) {
     companion object {
         fun fromDomain(domain: CustomerSegment): CustomerSegmentEntity {
-            requireNotNull(domain.type.id) { "CustomerSegment.type.id is required" }
+            requireNotNull(domain.type?.id) { "CustomerSegment.type.id is required" }
             requireNotNull(domain.userId) { "CustomerSegment.userId is required" }
             requireNotNull(domain.name) { "CustomerSegment.name is required" }
 

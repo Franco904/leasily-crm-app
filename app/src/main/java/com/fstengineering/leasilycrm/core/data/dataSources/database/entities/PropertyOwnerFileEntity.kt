@@ -20,7 +20,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
     indices = [Index("property_owner_id")],
 )
 data class PropertyOwnerFileEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int?,
     @ColumnInfo(name = "property_owner_file_uri") val propertyOwnerFileUri: String,
     @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Int,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
@@ -34,7 +34,6 @@ data class PropertyOwnerFileEntity(
 
     companion object {
         fun fromDomain(domain: PropertyOwnerFile): PropertyOwnerFileEntity {
-            requireNotNull(domain.id) { "PropertyOwnerFile.id is required" }
             requireNotNull(domain.propertyOwnerFileUri) { "PropertyOwnerFile.propertyOwnerFileUri is required" }
             requireNotNull(domain.propertyOwnerId) { "PropertyOwnerFile.propertyOwnerId is required" }
 

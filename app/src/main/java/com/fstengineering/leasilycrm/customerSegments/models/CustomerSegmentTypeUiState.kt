@@ -6,6 +6,11 @@ data class CustomerSegmentTypeUiState(
     val id: Int? = null,
     val name: String? = null,
 ) {
+    fun toDomain() = CustomerSegmentType(
+        id = id,
+        name = name,
+    )
+
     companion object {
         fun fromDomain(domain: CustomerSegmentType) = CustomerSegmentTypeUiState(
             id = domain.id,

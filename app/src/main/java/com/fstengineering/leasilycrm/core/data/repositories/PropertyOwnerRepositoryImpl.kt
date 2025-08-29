@@ -1,7 +1,9 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyOwnerDao
+import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyOwnerFileDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
@@ -19,7 +21,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class PropertyOwnerRepositoryImpl(
-    private val dao: PropertyOwnerDao,
+    private val propertyOwnerDao: PropertyOwnerDao,
+    private val propertyOwnerFileDao: PropertyOwnerFileDao,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
 ) : PropertyOwnerRepository {
     override suspend fun insertOrUpdate(
@@ -36,20 +39,37 @@ class PropertyOwnerRepositoryImpl(
             )
 
         val propertyOwnerWithUser = propertyOwner.copy(userId = userRemoteId)
-        val entity = PropertyOwnerEntity.fromDomain(propertyOwnerWithUser)
+        val propertyOwnerEntity = PropertyOwnerEntity.fromDomain(propertyOwnerWithUser)
 
-        dao.insertOrUpdate(entity)
+        // TODO: Convert all Int ids to Long in database
+        val id = propertyOwnerDao.insertOrUpdate(propertyOwnerEntity).toInt()
+
+        propertyOwner.files.forEach { file ->
+            val fileEntity = PropertyOwnerFileEntity.fromDomain(
+                domain = file.copy(propertyOwnerId = id),
+            )
+            propertyOwnerFileDao.insertOrUpdate(fileEntity)
+        }
 
         return AppResult.Success(data = Unit)
     }
 
     override suspend fun delete(id: Int): AppResult<Unit, DataSourceError> {
-        dao.delete(id)
+        propertyOwnerDao.delete(id)
 
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataSourceError>> =
+    override suspend fun getById(
+        propertyOwnerId: Int,
+    ): AppResult<PropertyOwner, DataSourceError> {
+        val propertyOwner = propertyOwnerDao.getById(id = propertyOwnerId)
+            .toDomain()
+
+        return AppResult.Success(data = propertyOwner)
+    }
+
+    override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -66,7 +86,7 @@ class PropertyOwnerRepositoryImpl(
                 )
 
             emitAll(
-                dao.watchAll(userId = userRemoteId)
+                propertyOwnerDao.watchAll(userId = userRemoteId)
                     .map {
                         val propertyOwners = it.map { it.toDomain() }.toPersistentList()
                         AppResult.Success<ImmutableList<PropertyOwner>, DataSourceError>(data = propertyOwners)

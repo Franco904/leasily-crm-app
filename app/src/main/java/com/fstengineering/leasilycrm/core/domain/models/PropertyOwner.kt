@@ -1,13 +1,16 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+
 data class PropertyOwner(
-    val id: Int?,
-    val name: String?,
-    val phone: String?,
-    val email: String?,
-    val paymentKey: String?,
+    val id: Int? = null,
+    val name: String? = null,
+    val phone: String? = null,
+    val email: String? = null,
+    val paymentKey: String? = null,
     val isDeleted: Boolean = false,
-    val customerSegment: CustomerSegment?,
-    val files: List<PropertyOwnerFile>,
-    val userId: Int,
+    val customerSegment: CustomerSegment? = null,
+    val files: ImmutableList<PropertyOwnerFile> = persistentListOf(),
+    val userId: Int? = null,
 )

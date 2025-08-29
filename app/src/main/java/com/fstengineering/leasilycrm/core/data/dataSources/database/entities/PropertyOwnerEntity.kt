@@ -23,7 +23,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
     ],
 )
 data class PropertyOwnerEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int?,
     val name: String,
     val phone: String?,
     val email: String?,
@@ -34,8 +34,8 @@ data class PropertyOwnerEntity(
 ) {
     companion object {
         fun fromDomain(domain: PropertyOwner): PropertyOwnerEntity {
-            requireNotNull(domain.id) { "PropertyOwner.id is required" }
             requireNotNull(domain.name) { "PropertyOwner.name is required" }
+            requireNotNull(domain.userId) { "PropertyOwner.userId is required" }
 
             return PropertyOwnerEntity(
                 id = domain.id,
