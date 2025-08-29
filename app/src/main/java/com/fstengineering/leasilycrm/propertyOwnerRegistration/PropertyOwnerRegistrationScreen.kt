@@ -7,29 +7,40 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomsheet
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationFormSection
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationTopAppBar
+import kotlinx.collections.immutable.toPersistentList
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PropertyOwnerRegistrationScreen(
     propertyOwnerId: Int?,
@@ -44,13 +55,18 @@ fun PropertyOwnerRegistrationScreen(
     val focusManager = LocalFocusManager.current
 
     val scrollState = rememberScrollState()
+    val sheetState = rememberModalBottomSheetState()
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val propertyOwnerForm by viewModel.propertyOwnerForm.collectAsStateWithLifecycle()
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
+    val propertyOwnerSegments by viewModel.propertyOwnerSegments.collectAsStateWithLifecycle()
+
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+
+    var mustShowCustomerSegmentComboBottomsheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.init(propertyOwnerId = propertyOwnerId)
@@ -66,10 +82,14 @@ fun PropertyOwnerRegistrationScreen(
                 }
 
                 is PropertyOwnerCreateSuccess -> {
+                    onBack()
+
                     showSnackbar(context.getString(R.string.snackbar_create_property_owner_succeeded))
                 }
 
                 is PropertyOwnerEditSuccess -> {
+                    onBack()
+
                     showSnackbar(context.getString(uiEvent.messageId))
                 }
             }
@@ -89,6 +109,9 @@ fun PropertyOwnerRegistrationScreen(
             )
         },
         modifier = modifier
+            .pointerInput(Unit) {
+                detectTapGestures { focusManager.clearFocus() }
+            }
     ) { innerPadding ->
         if (isLoading) {
             Box(
@@ -108,14 +131,35 @@ fun PropertyOwnerRegistrationScreen(
                 propertyOwnerForm = propertyOwnerForm,
                 onPropertyOwnerFormChange = viewModel::onPropertyOwnerFormChange,
                 formErrors = formErrors.errors,
-                onCustomerSegmentFieldTap = {},
+                onCustomerSegmentFieldTap = {
+                    mustShowCustomerSegmentComboBottomsheet = true
+                },
                 onAddPropertyOwnerFile = {},
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(24.dp)
-                    .pointerInput(Unit) {
-                        detectTapGestures { focusManager.clearFocus() }
-                    }
+            )
+        }
+        if (mustShowCustomerSegmentComboBottomsheet) {
+            AppComboBottomsheet(
+                sheetState = sheetState,
+                options = propertyOwnerSegments.map { it.name ?: "" }.toPersistentList(),
+                onOptionSelect = { customerSegmentName ->
+                    val selectedCustomerSegment =
+                        propertyOwnerSegments.find { it.name == customerSegmentName }
+
+                    viewModel.onPropertyOwnerFormChange(
+                        form = propertyOwnerForm.copy(customerSegment = selectedCustomerSegment)
+                    )
+
+                    focusManager.clearFocus()
+                },
+                onDismissRequest = {
+                    mustShowCustomerSegmentComboBottomsheet = false
+                    focusManager.clearFocus()
+                },
+                emptyOptionsIcon = Icons.Default.BookmarkBorder,
+                emptyOptionsText = stringResource(R.string.property_owner_registration_customer_segment_empty_text),
             )
         }
     }

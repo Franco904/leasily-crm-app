@@ -55,6 +55,7 @@ val viewModelModule = module {
     viewModel {
         PropertyOwnerRegistrationViewModel(
             propertyOwnerRepository = get(),
+            customerSegmentRepository = get(),
             userRepository = get(),
             propertyOwnerValidator = get(),
         )

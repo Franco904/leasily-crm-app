@@ -60,7 +60,7 @@ class PropertyOwnerValidatorImpl : PropertyOwnerValidator {
 
     private fun validateEmail(email: String): AppResult<Unit, ValidationError.PropertyOwnerEmail> {
         return when {
-            email.trim().matches(Regex(EMAIL_REGEX, RegexOption.IGNORE_CASE)) -> {
+            !email.trim().matches(Regex(EMAIL_REGEX, RegexOption.IGNORE_CASE)) -> {
                 AppResult.Error(ValidationError.PropertyOwnerEmail.InvalidFormat)
             }
 

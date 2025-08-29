@@ -4,7 +4,9 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
@@ -32,6 +34,7 @@ import kotlin.collections.set
 
 class PropertyOwnerRegistrationViewModel(
     private val propertyOwnerRepository: PropertyOwnerRepository,
+    private val customerSegmentRepository: CustomerSegmentRepository,
     private val userRepository: UserRepository,
     private val propertyOwnerValidator: PropertyOwnerValidator,
 ) : ViewModel() {
@@ -49,6 +52,9 @@ class PropertyOwnerRegistrationViewModel(
     private val _formErrors = MutableStateFlow(PropertyOwnerErrorUiState())
     val formErrors = _formErrors.asStateFlow()
 
+    private val _propertyOwnerSegments = MutableStateFlow<ImmutableList<CustomerSegment>>(persistentListOf())
+    val propertyOwnerSegments = _propertyOwnerSegments.asStateFlow()
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
@@ -57,6 +63,8 @@ class PropertyOwnerRegistrationViewModel(
 
         watchSessionExpiration()
         if (propertyOwnerId != null) getPropertyOwnerToEdit(propertyOwnerId)
+
+        getPropertyOwnerSegments()
 
         isInitialized = true
     }
@@ -89,6 +97,18 @@ class PropertyOwnerRegistrationViewModel(
                 .onSuccess { storedPropertyOwner ->
                     _propertyOwnerForm.update { storedPropertyOwner }
                     propertyOwnerToEdit = storedPropertyOwner
+                }
+        }
+    }
+
+    private fun getPropertyOwnerSegments() {
+        viewModelScope.launch {
+            customerSegmentRepository.getAllPropertyOwnerType()
+                .onError { error ->
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                }
+                .onSuccess { storedCustomerSegments ->
+                    _propertyOwnerSegments.update { storedCustomerSegments }
                 }
 
             _isLoading.update { false }

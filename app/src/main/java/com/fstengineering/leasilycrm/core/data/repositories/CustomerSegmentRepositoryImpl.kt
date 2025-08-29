@@ -66,6 +66,40 @@ class CustomerSegmentRepositoryImpl(
         return AppResult.Success(data = Unit)
     }
 
+    override suspend fun getAllTenantType(): AppResult<ImmutableList<CustomerSegment>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: run {
+                        return AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound)
+                    }
+                }
+            )
+
+        val customerSegments = dao.getAllTenantType(userId = userRemoteId)
+            .map { it.toDomain() }.toPersistentList()
+
+        return AppResult.Success(data = customerSegments)
+    }
+
+    override suspend fun getAllPropertyOwnerType(): AppResult<ImmutableList<CustomerSegment>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: run {
+                        return AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound)
+                    }
+                }
+            )
+
+        val customerSegments = dao.getAllPropertyOwnerType(userId = userRemoteId)
+            .map { it.toDomain() }.toPersistentList()
+
+        return AppResult.Success(data = customerSegments)
+    }
+
     override fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()

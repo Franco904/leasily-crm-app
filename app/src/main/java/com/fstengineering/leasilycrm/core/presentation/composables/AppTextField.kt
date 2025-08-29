@@ -1,5 +1,7 @@
 package com.fstengineering.leasilycrm.core.presentation.composables
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -12,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -29,9 +32,11 @@ import androidx.compose.ui.unit.dp
 fun AppTextField(
     placeholder: String,
     value: String,
-    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onValueChange: (String) -> Unit = { _ -> },
+    onTap: (() -> Unit)? = null,
     isInvalid: Boolean = false,
+    isReadOnly: Boolean = false,
     suffixIcon: ImageVector? = null,
     supportingText: String? = null,
     maxLength: Int? = null,
@@ -39,7 +44,15 @@ fun AppTextField(
     onDone: KeyboardActionScope.() -> Unit = {},
     fieldFocusRequester: FocusRequester? = null,
 ) {
-    var currentLength by remember { mutableIntStateOf(value.length) }
+    var currentLength by remember(value) { mutableIntStateOf(value.length) }
+
+    val interactionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect {
+            if (it is PressInteraction.Release) onTap?.invoke()
+        }
+    }
 
     OutlinedTextField(
         value = value,
@@ -50,11 +63,11 @@ fun AppTextField(
             }
 
             if (newValue.length <= maxLength) {
-                currentLength = newValue.length
                 onValueChange(newValue)
             }
         },
         isError = isInvalid,
+        readOnly = isReadOnly,
         textStyle = MaterialTheme.typography.bodyLarge,
         placeholder = {
             Text(
@@ -104,6 +117,7 @@ fun AppTextField(
             imeAction = ImeAction.Done,
             keyboardType = keyboardType,
         ),
+        interactionSource = interactionSource,
         modifier = modifier
             .fillMaxWidth()
             .then(

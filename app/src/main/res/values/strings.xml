@@ -71,13 +71,15 @@
     <string name="property_owner_registration_top_app_bar_title_edit">Editar proprietário</string>
     <string name="property_owner_registration_top_app_bar_save_button_text">Salvar</string>
 
-    <string name="property_owner_registration_customer_segment_placeholder">Segmento de cliente</string>
+    <string name="property_owner_registration_customer_segment_placeholder">Segmento de proprietário</string>
     <string name="property_owner_registration_name_placeholder">Nome</string>
     <string name="property_owner_registration_phone_placeholder">Telefone</string>
     <string name="property_owner_registration_email_placeholder">Email</string>
     <string name="property_owner_registration_payment_key_placeholder">Chave de pagamento (PIX, outro)</string>
     <string name="property_owner_registration_documents_title">Documentos</string>
     <string name="property_owner_registration_documents_body_text">Documentos relacionados ao proprietário podem ser, por exemplo, cópia(s) do(s) contrato(s) de administração imobiliária.</string>
+
+    <string name="property_owner_registration_customer_segment_empty_text">Nenhum segmento de proprietário registrado.</string>
 
     <!-- Action buttons -->
     <string name="save_action_button_text">Salvar</string>

@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -20,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,11 +28,8 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
-import com.fstengineering.leasilycrm.customerSegments.composables.CustomerSegmentCard
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun PropertyOwnerRegistrationFormSection(
@@ -60,12 +53,9 @@ fun PropertyOwnerRegistrationFormSection(
         AppTextField(
             placeholder = stringResource(R.string.property_owner_registration_customer_segment_placeholder),
             value = propertyOwnerForm.customerSegment?.name ?: "",
-            onValueChange = {},
+            onTap = onCustomerSegmentFieldTap,
             suffixIcon = Icons.Default.ArrowDropDown,
-            modifier = Modifier
-                .pointerInput(Unit) {
-                    detectTapGestures { onCustomerSegmentFieldTap() }
-                }
+            isReadOnly = true,
         )
         Spacer(modifier = Modifier.height(28.dp))
         AppTextField(
@@ -123,10 +113,10 @@ fun PropertyOwnerRegistrationFormSection(
         Spacer(modifier = Modifier.height(28.dp))
         AppTextField(
             placeholder = stringResource(R.string.property_owner_registration_payment_key_placeholder),
-            value = propertyOwnerForm.email ?: "",
+            value = propertyOwnerForm.paymentKey ?: "",
             onValueChange = { paymentKeyInput ->
                 onPropertyOwnerFormChange(
-                    propertyOwnerForm.copy(email = paymentKeyInput),
+                    propertyOwnerForm.copy(paymentKey = paymentKeyInput),
                 )
             },
             isInvalid = formErrors[PropertyOwnerField.PaymentKey] != null,
@@ -179,5 +169,6 @@ fun PropertyOwnerRegistrationFormSection(
 //                Spacer(modifier = Modifier.height(8.dp))
 //            }
 //        }
+        Spacer(modifier = Modifier.height(240.dp))
     }
 }
