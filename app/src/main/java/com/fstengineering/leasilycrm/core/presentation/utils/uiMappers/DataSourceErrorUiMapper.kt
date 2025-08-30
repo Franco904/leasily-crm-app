@@ -55,4 +55,16 @@ fun DataSourceError.toUiMessage() = when (this) {
     DataSourceError.RemoteBackendError.UnknownError -> {
         R.string.snackbar_unknown_error
     }
+
+    DataSourceError.SharedStorageError.NotFound -> {
+        R.string.snackbar_shared_storage_not_found_error
+    }
+
+    DataSourceError.SharedStorageError.InvalidFile -> {
+        R.string.snackbar_shared_storage_invalid_file_error
+    }
+
+    DataSourceError.SharedStorageError.UnknownError -> {
+        R.string.snackbar_unknown_error
+    }
 }

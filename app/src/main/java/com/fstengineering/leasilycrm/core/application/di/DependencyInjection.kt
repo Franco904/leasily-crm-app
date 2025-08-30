@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.application.di.modules.externalPresent
 import com.fstengineering.leasilycrm.core.application.di.modules.preferencesModule
 import com.fstengineering.leasilycrm.core.application.di.modules.remoteBackendModule
 import com.fstengineering.leasilycrm.core.application.di.modules.repositoryModule
+import com.fstengineering.leasilycrm.core.application.di.modules.sharedStorageModule
 import com.fstengineering.leasilycrm.core.application.di.modules.validatorModule
 import com.fstengineering.leasilycrm.core.application.di.modules.viewModelModule
 import com.fstengineering.leasilycrm.core.application.di.modules.workerModule
@@ -24,6 +25,7 @@ fun Application.configureDependencyInjection() {
             databaseModule,
             preferencesModule,
             remoteBackendModule,
+            sharedStorageModule,
             repositoryModule,
             validatorModule,
             viewModelModule,

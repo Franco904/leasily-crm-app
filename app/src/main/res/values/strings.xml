@@ -74,11 +74,16 @@
 
     <string name="property_owner_registration_customer_segment_empty_text">Nenhum segmento de proprietário registrado.</string>
 
+    <!-- Common dialogs -->
+    <string name="confirm_leave_edition_dialog_headline">Sair da edição?</string>
+    <string name="confirm_leave_edition_dialog_supporting_text">Se confirmado, quaisquer alterações não serão aplicadas.</string>
+
     <!-- Action buttons -->
     <string name="save_action_button_text">Salvar</string>
     <string name="sign_out_action_button_text">Sair</string>
     <string name="edit_action_button_text">Editar</string>
     <string name="add_action_button_text">Adicionar</string>
+    <string name="confirm_action_button_text">Confirmar</string>
     <string name="delete_action_button_text">Excluir</string>
     <string name="cancel_action_button_text">Cancelar</string>
 
@@ -124,6 +129,9 @@
     <string name="snackbar_http_serialization_error">Sua sessão expirou.</string>
     <string name="snackbar_http_timeout_error">A requisição expirou. Verifique a sua conexão com a Internet e tente novamente.</string>
     <string name="snackbar_http_network_internet">Sem conexão com a Internet. Verifique a sua conexão e tente novamente.</string>
+
+    <string name="snackbar_shared_storage_not_found_error">O arquivo não foi encontrado.</string>
+    <string name="snackbar_shared_storage_invalid_file_error">O arquivo tem um formato inválido.</string>
 
     <string name="snackbar_unknown_error">Falha inesperada. Tente reiniciar o aplicativo.</string>
 </resources>

@@ -27,19 +27,19 @@ data class PropertyOwnerFileEntity(
 ) {
     fun toDomain() = PropertyOwnerFile(
         id = id,
-        propertyOwnerFileUri = propertyOwnerFileUri,
+        uriString = propertyOwnerFileUri,
         propertyOwnerId = propertyOwnerId,
         isDeleted = isDeleted,
     )
 
     companion object {
         fun fromDomain(domain: PropertyOwnerFile): PropertyOwnerFileEntity {
-            requireNotNull(domain.propertyOwnerFileUri) { "PropertyOwnerFile.propertyOwnerFileUri is required" }
+            requireNotNull(domain.uriString) { "PropertyOwnerFile.propertyOwnerFileUri is required" }
             requireNotNull(domain.propertyOwnerId) { "PropertyOwnerFile.propertyOwnerId is required" }
 
             return PropertyOwnerFileEntity(
                 id = domain.id,
-                propertyOwnerFileUri = domain.propertyOwnerFileUri,
+                propertyOwnerFileUri = domain.uriString,
                 propertyOwnerId = domain.propertyOwnerId,
                 isDeleted = domain.isDeleted,
             )

@@ -20,6 +20,12 @@ sealed interface DataSourceError : Error {
         UnknownError
     }
 
+    enum class SharedStorageError : DataSourceError {
+        NotFound,
+        InvalidFile,
+        UnknownError,
+    }
+
     fun isRedirectError(): Boolean {
         return this in listOf(
             PreferencesError.NotFound,

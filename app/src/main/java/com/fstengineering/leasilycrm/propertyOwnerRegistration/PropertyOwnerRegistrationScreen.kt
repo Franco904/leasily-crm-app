@@ -1,12 +1,14 @@
 package com.fstengineering.leasilycrm.propertyOwnerRegistration
 
+import android.content.Intent
 import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomsheet
+import com.fstengineering.leasilycrm.core.presentation.composables.ConfirmLeaveEditionDialog
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
@@ -58,7 +61,6 @@ fun PropertyOwnerRegistrationScreen(
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
-    val scrollState = rememberScrollState()
     val sheetState = rememberModalBottomSheetState()
 
     val surfaceColor = MaterialTheme.colorScheme.surface
@@ -72,7 +74,22 @@ fun PropertyOwnerRegistrationScreen(
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
+    var mustShowConfirmLeaveEditionDialog by remember { mutableStateOf(false) }
     var mustShowCustomerSegmentComboBottomsheet by remember { mutableStateOf(false) }
+
+    val openDocumentFile = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = { contentUri ->
+            if (contentUri == null) return@rememberLauncherForActivityResult
+
+            context.contentResolver.takePersistableUriPermission(
+                contentUri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION,
+            )
+
+            viewModel.onPropertyOwnerFilePick(contentUriString = contentUri.toString())
+        }
+    )
 
     LaunchedEffect(Unit) {
         viewModel.init(propertyOwnerId = propertyOwnerId)
@@ -114,7 +131,13 @@ fun PropertyOwnerRegistrationScreen(
         topBar = {
             PropertyOwnerRegistrationTopAppBar(
                 isEditing = propertyOwnerId != null,
-                onBack = onBack,
+                onBack = {
+                    if (propertyOwnerId != null) {
+                        mustShowConfirmLeaveEditionDialog = true
+                    } else {
+                        onBack()
+                    }
+                },
                 onSavePropertyOwner = viewModel::savePropertyOwner,
             )
         },
@@ -140,14 +163,12 @@ fun PropertyOwnerRegistrationScreen(
                 propertyOwnerForm = propertyOwnerForm,
                 onPropertyOwnerFormChange = viewModel::onPropertyOwnerFormChange,
                 formErrors = formErrors.errors,
-                onCustomerSegmentFieldTap = {
-                    mustShowCustomerSegmentComboBottomsheet = true
+                onCustomerSegmentFieldTap = { mustShowCustomerSegmentComboBottomsheet = true },
+                onLastTextFieldDone = { focusManager.clearFocus() },
+                onAddPropertyOwnerFile = {
+                    val acceptedMimeTypes = arrayOf("application/*", "text/*")
+                    openDocumentFile.launch(acceptedMimeTypes)
                 },
-                onLastTextFieldDone = {
-                    focusManager.clearFocus()
-                },
-                onAddPropertyOwnerFile = {},
-                scrollState = scrollState,
                 scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
                 modifier = Modifier
                     .padding(innerPadding)
@@ -174,6 +195,16 @@ fun PropertyOwnerRegistrationScreen(
                 },
                 emptyOptionsIcon = Icons.Default.BookmarkBorder,
                 emptyOptionsText = stringResource(R.string.property_owner_registration_customer_segment_empty_text),
+            )
+        }
+        if (mustShowConfirmLeaveEditionDialog) {
+            ConfirmLeaveEditionDialog(
+                onConfirmLeave = {
+                    mustShowConfirmLeaveEditionDialog = false
+
+                    onBack()
+                },
+                onCancel = { mustShowConfirmLeaveEditionDialog = false }
             )
         }
     }

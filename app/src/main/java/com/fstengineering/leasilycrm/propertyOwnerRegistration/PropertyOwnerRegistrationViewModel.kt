@@ -6,10 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -20,6 +23,7 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOw
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +35,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class PropertyOwnerRegistrationViewModel(
     private val propertyOwnerRepository: PropertyOwnerRepository,
+    private val propertyOwnerFileRepository: PropertyOwnerFileRepository,
     private val customerSegmentRepository: CustomerSegmentRepository,
     private val userRepository: UserRepository,
     private val propertyOwnerValidator: PropertyOwnerValidator,
@@ -116,16 +121,16 @@ class PropertyOwnerRegistrationViewModel(
     fun onPropertyOwnerFormChange(form: PropertyOwner) {
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                if (propertyOwnerForm.value?.name != form?.name) {
+                if (propertyOwnerForm.value.name != form.name) {
                     map[PropertyOwnerField.Name] = null
                 }
-                if (propertyOwnerForm.value?.phone != form?.phone) {
+                if (propertyOwnerForm.value.phone != form.phone) {
                     map[PropertyOwnerField.Phone] = null
                 }
-                if (propertyOwnerForm.value?.email != form?.email) {
+                if (propertyOwnerForm.value.email != form.email) {
                     map[PropertyOwnerField.Email] = null
                 }
-                if (propertyOwnerForm.value?.paymentKey != form?.paymentKey) {
+                if (propertyOwnerForm.value.paymentKey != form.paymentKey) {
                     map[PropertyOwnerField.PaymentKey] = null
                 }
             }
@@ -134,6 +139,25 @@ class PropertyOwnerRegistrationViewModel(
         }
 
         _propertyOwnerForm.update { form }
+    }
+
+    fun onPropertyOwnerFilePick(contentUriString: String) {
+        viewModelScope.launch {
+            val newFile = PropertyOwnerFile(uriString = contentUriString)
+
+            val fileName = propertyOwnerFileRepository.getFileName(file = newFile)
+                .fold(
+                    onError = { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                        return@launch
+                    },
+                    onSuccess = { fileName -> fileName },
+                )
+
+            val newFiles =
+                (propertyOwnerForm.value.files + newFile.copy(name = fileName)).toPersistentList()
+            onPropertyOwnerFormChange(form = propertyOwnerForm.value.copy(files = newFiles))
+        }
     }
 
     fun savePropertyOwner() {
@@ -149,17 +173,20 @@ class PropertyOwnerRegistrationViewModel(
                     return@launch
                 }
 
-            propertyOwnerRepository.insertOrUpdate(propertyOwnerForm.value)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
+            val propertyOwnerId = propertyOwnerRepository.insertOrUpdate(propertyOwnerForm.value)
+                .fold(
+                    onError = { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                        return@launch
+                    },
+                    onSuccess = { propertyOwnerId -> propertyOwnerId },
+                )
 
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-
-                    return@launch
-                }
+            propertyOwnerForm.value.files.forEach { file ->
+                propertyOwnerFileRepository.insertOrUpdate(
+                    file = file.copy(propertyOwnerId = propertyOwnerId),
+                )
+            }
 
             _uiEvents.send(
                 if (propertyOwnerToEdit != null) UiEvents.PropertyOwnerEditSuccess(messageId = R.string.snackbar_edit_property_owner_succeeded)

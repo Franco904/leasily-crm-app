@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface PropertyOwnerRepository {
     suspend fun insertOrUpdate(
         propertyOwner: PropertyOwner,
-    ): AppResult<Unit, DataSourceError>
+    ): AppResult<Int, DataSourceError>
 
     suspend fun delete(id: Int): AppResult<Unit, DataSourceError>
 
