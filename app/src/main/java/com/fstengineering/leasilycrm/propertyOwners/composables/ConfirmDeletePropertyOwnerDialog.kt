@@ -20,14 +20,14 @@ fun ConfirmDeletePropertyOwnerDialog(
     AlertDialog(
         title = {
             Text(
-                text = stringResource(R.string.customer_segments_delete_dialog_headline),
+                text = stringResource(R.string.property_owners_delete_dialog_headline),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
         },
         text = {
             Text(
-                text = stringResource(R.string.customer_segments_delete_dialog_supporting_text),
+                text = stringResource(R.string.property_owners_delete_dialog_supporting_text),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
