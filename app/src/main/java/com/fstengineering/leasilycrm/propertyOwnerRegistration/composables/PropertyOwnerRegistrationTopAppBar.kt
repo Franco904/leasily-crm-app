@@ -70,7 +70,7 @@ fun PropertyOwnerRegistrationTopAppBar(
                 onClick = onSavePropertyOwner,
             ) {
                 Text(
-                    text = stringResource(R.string.property_owner_registration_top_app_bar_save_button_text),
+                    text = stringResource(R.string.save_action_button_text),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

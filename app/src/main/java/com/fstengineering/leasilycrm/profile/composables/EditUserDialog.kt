@@ -99,7 +99,7 @@ fun EditUserDialog(
                 onClick = { onEdit(currentUserUiState) },
             ) {
                 Text(
-                    text = stringResource(R.string.profile_edit_user_dialog_confirm_button),
+                    text = stringResource(R.string.edit_action_button_text),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge,
                 )
@@ -108,7 +108,7 @@ fun EditUserDialog(
         dismissButton = {
             TextButton(onClick = { onCancel() }) {
                 Text(
-                    text = stringResource(R.string.profile_edit_user_dialog_dismiss_button),
+                    text = stringResource(R.string.cancel_action_button_text),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge,
                 )

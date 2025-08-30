@@ -244,7 +244,7 @@ fun CustomerSegmentsScreen(
         }
         if (customerSegmentToDelete != null) {
             ConfirmDeleteCustomerSegmentDialog(
-                onDelete = viewModel::deleteCustomerSegment,
+                onConfirmDelete = viewModel::deleteCustomerSegment,
                 onCancel = {
                     viewModel.onDeleteCustomerSegment(customerSegment = null)
                 },

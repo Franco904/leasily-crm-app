@@ -24,19 +24,13 @@
 
     <string name="profile_signout_dialog_headline">Sair do perfil?</string>
     <string name="profile_signout_dialog_supporting_text">O seu perfil será desconectado e será necessário autenticar novamente.</string>
-    <string name="profile_signout_dialog_confirm_button_text">Sair</string>
-    <string name="profile_signout_dialog_dismiss_button_text">Cancelar</string>
 
     <string name="profile_edit_user_dialog_headline">Editar perfil</string>
     <string name="profile_edit_user_dialog_name_field_placeholder">Nome</string>
     <string name="profile_edit_user_dialog_creci_field_placeholder">Número CRECI</string>
     <string name="profile_edit_user_dialog_required_helper_text">Obrigatório</string>
-    <string name="profile_edit_user_dialog_confirm_button">Editar</string>
-    <string name="profile_edit_user_dialog_dismiss_button">Cancelar</string>
 
     <string name="profile_creci_blank_body_text">CRECI não informado</string>
-    <string name="profile_signout_button_label_text">Sair</string>
-    <string name="profile_edit_user_button_label_text">Editar</string>
 
     <!-- Dashboard -->
     <string name="dashboard_my_metrics_title">Minhas métricas</string>
@@ -64,12 +58,11 @@
     <string name="property_owners_top_app_bar_title">Proprietários</string>
     <string name="property_owners_empty_text">Nenhum proprietário registrado.</string>
     <string name="property_owners_delete_dialog_headline">Excluir proprietário?</string>
-    <string name="property_owners_delete_dialog_supporting_text">Este proprietário não estará mais disponível.</string>
+    <string name="property_owners_delete_dialog_supporting_text">Se confirmada a exclusão, este proprietário não estará mais disponível.</string>
 
     <!-- Property owner registration -->
     <string name="property_owner_registration_top_app_bar_title_create">Novo proprietário</string>
     <string name="property_owner_registration_top_app_bar_title_edit">Editar proprietário</string>
-    <string name="property_owner_registration_top_app_bar_save_button_text">Salvar</string>
 
     <string name="property_owner_registration_customer_segment_placeholder">Segmento de proprietário</string>
     <string name="property_owner_registration_name_placeholder">Nome</string>
@@ -83,6 +76,7 @@
 
     <!-- Action buttons -->
     <string name="save_action_button_text">Salvar</string>
+    <string name="sign_out_action_button_text">Sair</string>
     <string name="edit_action_button_text">Editar</string>
     <string name="add_action_button_text">Adicionar</string>
     <string name="delete_action_button_text">Excluir</string>

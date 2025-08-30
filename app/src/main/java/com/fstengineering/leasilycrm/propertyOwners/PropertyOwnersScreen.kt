@@ -147,7 +147,7 @@ fun PropertyOwnersScreen(
         }
         if (propertyOwnerToDelete != null) {
             ConfirmDeletePropertyOwnerDialog(
-                onDelete = viewModel::deletePropertyOwner,
+                onConfirmDelete = viewModel::deletePropertyOwner,
                 onCancel = {
                     viewModel.onDeletePropertyOwner(propertyOwner = null)
                 },
