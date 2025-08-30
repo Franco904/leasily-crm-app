@@ -24,21 +24,25 @@ interface CustomerSegmentDao {
     suspend fun getById(id: Int): CustomerSegmentEntity
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT * FROM customer_segments
         WHERE user_id = :userId
         AND customer_segment_type_id = 1
         AND is_deleted = 0
-    """)
+    """
+    )
     suspend fun getAllTenantType(userId: Int): List<CustomerSegmentCompound>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT * FROM customer_segments
         WHERE user_id = :userId
         AND customer_segment_type_id = 2
         AND is_deleted = 0
-    """)
+    """
+    )
     suspend fun getAllPropertyOwnerType(userId: Int): List<CustomerSegmentCompound>
 
     @Transaction

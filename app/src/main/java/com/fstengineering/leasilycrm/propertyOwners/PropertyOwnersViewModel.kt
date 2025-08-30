@@ -7,11 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepos
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyOwnerValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
-import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentFormUiState
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentTypeUiState
 import com.fstengineering.leasilycrm.propertyOwners.models.PropertyOwnerUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf

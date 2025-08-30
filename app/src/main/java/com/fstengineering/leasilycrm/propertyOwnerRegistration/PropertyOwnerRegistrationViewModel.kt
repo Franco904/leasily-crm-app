@@ -15,10 +15,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyOwnerValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
-import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentErrorUiState
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentField
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentFormUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerErrorUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
 import kotlinx.collections.immutable.ImmutableList
@@ -31,7 +27,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.collections.set
 import kotlin.time.Duration.Companion.milliseconds
 
 class PropertyOwnerRegistrationViewModel(
@@ -54,7 +49,8 @@ class PropertyOwnerRegistrationViewModel(
     private val _formErrors = MutableStateFlow(PropertyOwnerErrorUiState())
     val formErrors = _formErrors.asStateFlow()
 
-    private val _propertyOwnerSegments = MutableStateFlow<ImmutableList<CustomerSegment>>(persistentListOf())
+    private val _propertyOwnerSegments =
+        MutableStateFlow<ImmutableList<CustomerSegment>>(persistentListOf())
     val propertyOwnerSegments = _propertyOwnerSegments.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
