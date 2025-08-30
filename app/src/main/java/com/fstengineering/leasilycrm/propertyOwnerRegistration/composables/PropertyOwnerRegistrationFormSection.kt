@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.propertyOwnerRegistration.composables
 
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,41 +16,72 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
+import com.fstengineering.leasilycrm.core.presentation.composables.rememberCenterScroller
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.mutate
+import kotlinx.collections.immutable.toPersistentMap
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun PropertyOwnerRegistrationFormSection(
-    scrollState: ScrollState,
     propertyOwnerForm: PropertyOwner,
     onPropertyOwnerFormChange: (PropertyOwner) -> Unit,
     formErrors: ImmutableMap<PropertyOwnerField, Int?>,
     onCustomerSegmentFieldTap: () -> Unit,
+    onLastTextFieldDone: () -> Unit,
     onAddPropertyOwnerFile: () -> Unit,
+    scrollState: ScrollState,
+    scrollToFieldFlow: Flow<PropertyOwnerField>,
     modifier: Modifier = Modifier,
 ) {
+    val centerScrollState = rememberCenterScroller(scrollState)
+
+    var scrollContainerCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var fieldsCoords by remember {
+        mutableStateOf<PersistentMap<PropertyOwnerField, LayoutCoordinates?>>(
+            PropertyOwnerField.entries
+                .associateWith { null }
+                .toPersistentMap(),
+        )
+    }
+
     val nameFieldFocusRequester = remember { FocusRequester() }
     val phoneFieldFocusRequester = remember { FocusRequester() }
     val emailFieldFocusRequester = remember { FocusRequester() }
     val paymentKeyFieldFocusRequester = remember { FocusRequester() }
 
+    LaunchedEffect(Unit) {
+        scrollToFieldFlow.collect { fieldToScroll ->
+            val fieldCoords = fieldsCoords[fieldToScroll]
+            centerScrollState(scrollContainerCoords, fieldCoords)
+        }
+    }
+
     Column(
         modifier = modifier
+            .onGloballyPositioned { coords -> scrollContainerCoords = coords }
             .verticalScroll(scrollState)
     ) {
         AppTextField(
-            placeholder = stringResource(R.string.property_owner_registration_customer_segment_placeholder),
+            label = stringResource(R.string.property_owner_registration_customer_segment_placeholder),
             value = propertyOwnerForm.customerSegment?.name ?: "",
             onTap = onCustomerSegmentFieldTap,
             suffixIcon = Icons.Default.ArrowDropDown,
@@ -59,7 +89,7 @@ fun PropertyOwnerRegistrationFormSection(
         )
         Spacer(modifier = Modifier.height(28.dp))
         AppTextField(
-            placeholder = stringResource(R.string.property_owner_registration_name_placeholder),
+            label = stringResource(R.string.property_owner_registration_name_placeholder),
             value = propertyOwnerForm.name ?: "",
             onValueChange = { nameInput ->
                 onPropertyOwnerFormChange(
@@ -73,10 +103,15 @@ fun PropertyOwnerRegistrationFormSection(
             maxLength = 100,
             onDone = { phoneFieldFocusRequester.requestFocus() },
             fieldFocusRequester = nameFieldFocusRequester,
+            modifier = Modifier.onGloballyPositioned { coords ->
+                fieldsCoords = fieldsCoords.mutate { map ->
+                    map[PropertyOwnerField.Name] = coords
+                }
+            }
         )
         Spacer(modifier = Modifier.height(28.dp))
         AppTextField(
-            placeholder = stringResource(R.string.property_owner_registration_phone_placeholder),
+            label = stringResource(R.string.property_owner_registration_phone_placeholder),
             value = propertyOwnerForm.phone ?: "",
             onValueChange = { phoneInput ->
                 onPropertyOwnerFormChange(
@@ -91,10 +126,15 @@ fun PropertyOwnerRegistrationFormSection(
             maxLength = 20,
             onDone = { emailFieldFocusRequester.requestFocus() },
             fieldFocusRequester = phoneFieldFocusRequester,
+            modifier = Modifier.onGloballyPositioned { coords ->
+                fieldsCoords = fieldsCoords.mutate { map ->
+                    map[PropertyOwnerField.Phone] = coords
+                }
+            }
         )
         Spacer(modifier = Modifier.height(28.dp))
         AppTextField(
-            placeholder = stringResource(R.string.property_owner_registration_email_placeholder),
+            label = stringResource(R.string.property_owner_registration_email_placeholder),
             value = propertyOwnerForm.email ?: "",
             onValueChange = { emailInput ->
                 onPropertyOwnerFormChange(
@@ -109,10 +149,15 @@ fun PropertyOwnerRegistrationFormSection(
             maxLength = 120,
             onDone = { paymentKeyFieldFocusRequester.requestFocus() },
             fieldFocusRequester = emailFieldFocusRequester,
+            modifier = Modifier.onGloballyPositioned { coords ->
+                fieldsCoords = fieldsCoords.mutate { map ->
+                    map[PropertyOwnerField.Email] = coords
+                }
+            }
         )
         Spacer(modifier = Modifier.height(28.dp))
         AppTextField(
-            placeholder = stringResource(R.string.property_owner_registration_payment_key_placeholder),
+            label = stringResource(R.string.property_owner_registration_payment_key_placeholder),
             value = propertyOwnerForm.paymentKey ?: "",
             onValueChange = { paymentKeyInput ->
                 onPropertyOwnerFormChange(
@@ -125,7 +170,13 @@ fun PropertyOwnerRegistrationFormSection(
                 if (emailError != null) stringResource(emailError) else null
             },
             maxLength = 120,
+            onDone = { onLastTextFieldDone() },
             fieldFocusRequester = paymentKeyFieldFocusRequester,
+            modifier = Modifier.onGloballyPositioned { coords ->
+                fieldsCoords = fieldsCoords.mutate { map ->
+                    map[PropertyOwnerField.PaymentKey] = coords
+                }
+            }
         )
         Spacer(modifier = Modifier.height(24.dp))
         HorizontalDivider()

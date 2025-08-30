@@ -25,12 +25,14 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.collections.set
+import kotlin.time.Duration.Companion.milliseconds
 
 class PropertyOwnerRegistrationViewModel(
     private val propertyOwnerRepository: PropertyOwnerRepository,
@@ -170,7 +172,10 @@ class PropertyOwnerRegistrationViewModel(
         }
     }
 
-    private fun setFieldErrors(errors: List<ValidationError>) {
+    private suspend fun setFieldErrors(errors: List<ValidationError>) {
+        _formErrors.update { PropertyOwnerErrorUiState() }
+        delay(150.milliseconds)
+
         val nameError = errors.firstOrNull { it is ValidationError.PropertyOwnerName }
         val phoneError = errors.firstOrNull { it is ValidationError.PropertyOwnerPhone }
         val emailError = errors.firstOrNull { it is ValidationError.PropertyOwnerEmail }
@@ -187,12 +192,17 @@ class PropertyOwnerRegistrationViewModel(
 
             it.copy(errors = newErrors)
         }
+
+        val firstFieldWithError = _formErrors.value.errors.entries.first { it.value != null }.key
+        _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
     }
 
     sealed interface UiEvents {
         data class DataSourceError(@StringRes val messageId: Int) : UiEvents
 
         data object RedirectToSignIn : UiEvents
+
+        data class ScrollToField(val field: PropertyOwnerField) : UiEvents
 
         data object PropertyOwnerCreateSuccess : UiEvents
 

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ fun PropertyOwnerCard(
 ) {
     ElevatedCard(
         shape = MaterialTheme.shapes.medium,
+        elevation = CardDefaults.elevatedCardElevation(2.dp),
         modifier = modifier
             .fillMaxWidth()
     ) {

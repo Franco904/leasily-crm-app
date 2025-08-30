@@ -36,9 +36,13 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegi
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationFormSection
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationTopAppBar
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +68,8 @@ fun PropertyOwnerRegistrationScreen(
 
     val propertyOwnerSegments by viewModel.propertyOwnerSegments.collectAsStateWithLifecycle()
 
+    val scrollToFieldFlow = Channel<PropertyOwnerField>()
+
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     var mustShowCustomerSegmentComboBottomsheet by remember { mutableStateOf(false) }
@@ -79,6 +85,10 @@ fun PropertyOwnerRegistrationScreen(
 
                 is RedirectToSignIn -> {
                     onSignOut()
+                }
+
+                is ScrollToField -> {
+                    scrollToFieldFlow.send(uiEvent.field)
                 }
 
                 is PropertyOwnerCreateSuccess -> {
@@ -127,14 +137,18 @@ fun PropertyOwnerRegistrationScreen(
             }
         } else {
             PropertyOwnerRegistrationFormSection(
-                scrollState = scrollState,
                 propertyOwnerForm = propertyOwnerForm,
                 onPropertyOwnerFormChange = viewModel::onPropertyOwnerFormChange,
                 formErrors = formErrors.errors,
                 onCustomerSegmentFieldTap = {
                     mustShowCustomerSegmentComboBottomsheet = true
                 },
+                onLastTextFieldDone = {
+                    focusManager.clearFocus()
+                },
                 onAddPropertyOwnerFile = {},
+                scrollState = scrollState,
+                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(24.dp)

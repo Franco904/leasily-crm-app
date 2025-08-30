@@ -69,7 +69,7 @@ fun CustomerSegmentRegistrationDialog(
         text = {
             Column {
                 AppTextField(
-                    placeholder = stringResource(R.string.customer_segments_save_edit_dialog_name_placeholder),
+                    label = stringResource(R.string.customer_segments_save_edit_dialog_name_placeholder),
                     value = customerSegmentForm.name ?: "",
                     onValueChange = { nameInput ->
                         onCustomerSegmentFormChange(

@@ -56,7 +56,7 @@ fun EditUserDialog(
         text = {
             Column {
                 AppTextField(
-                    placeholder = stringResource(R.string.profile_edit_user_dialog_name_field_placeholder),
+                    label = stringResource(R.string.profile_edit_user_dialog_name_field_placeholder),
                     value = currentUserUiState.name ?: "",
                     onValueChange = { nameInput ->
                         currentUserUiState = currentUserUiState.copy(
@@ -75,7 +75,7 @@ fun EditUserDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AppTextField(
-                    placeholder = stringResource(R.string.profile_edit_user_dialog_creci_field_placeholder),
+                    label = stringResource(R.string.profile_edit_user_dialog_creci_field_placeholder),
                     value = currentUserUiState.creciNumber ?: "",
                     onValueChange = { creciNumberInput ->
                         currentUserUiState = currentUserUiState.copy(

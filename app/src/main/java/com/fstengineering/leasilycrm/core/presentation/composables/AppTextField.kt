@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AppTextField(
-    placeholder: String,
+    label: String,
     value: String,
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit = { _ -> },
@@ -66,16 +66,15 @@ fun AppTextField(
                 onValueChange(newValue)
             }
         },
+        label = {
+            Text(
+                text = label,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        },
         isError = isInvalid,
         readOnly = isReadOnly,
         textStyle = MaterialTheme.typography.bodyLarge,
-        placeholder = {
-            Text(
-                text = placeholder,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-        },
         suffix = if (suffixIcon == null) null else {
             {
                 Icon(
