@@ -1,8 +1,6 @@
 package com.fstengineering.leasilycrm.customerSegments.models
 
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
-import com.fstengineering.leasilycrm.core.domain.models.CustomerSegmentType
-import com.fstengineering.leasilycrm.core.domain.models.User
 
 data class CustomerSegmentFormUiState(
     val id: Int? = null,
@@ -14,22 +12,16 @@ data class CustomerSegmentFormUiState(
         id = id,
         name = name,
         isDeleted = false,
-        type = CustomerSegmentType(
-            id = type?.id,
-            name = type?.name,
-        ),
-        user = User(remoteId = userId)
+        type = type?.toDomain(),
+        userId = userId,
     )
 
     companion object {
         fun fromDomain(domain: CustomerSegment) = CustomerSegmentFormUiState(
             id = domain.id,
             name = domain.name,
-            type = CustomerSegmentTypeUiState(
-                id = domain.type.id,
-                name = domain.type.name,
-            ),
-            userId = domain.user.remoteId,
+            type = domain.type?.let { CustomerSegmentTypeUiState.fromDomain(domain.type) },
+            userId = domain.userId,
         )
     }
 }

@@ -1,5 +1,7 @@
 package com.fstengineering.leasilycrm.core.presentation.composables
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -7,10 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -18,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -25,18 +30,29 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AppTextField(
-    placeholder: String,
+    label: String,
     value: String,
-    onValueChange: (String) -> Unit,
-    fieldFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
+    onValueChange: (String) -> Unit = { _ -> },
+    onTap: (() -> Unit)? = null,
     isInvalid: Boolean = false,
+    isReadOnly: Boolean = false,
+    suffixIcon: ImageVector? = null,
     supportingText: String? = null,
     maxLength: Int? = null,
     keyboardType: KeyboardType = KeyboardType.Unspecified,
     onDone: KeyboardActionScope.() -> Unit = {},
+    fieldFocusRequester: FocusRequester? = null,
 ) {
-    var currentLength by remember { mutableIntStateOf(value.length) }
+    var currentLength by remember(value) { mutableIntStateOf(value.length) }
+
+    val interactionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect {
+            if (it is PressInteraction.Release) onTap?.invoke()
+        }
+    }
 
     OutlinedTextField(
         value = value,
@@ -47,18 +63,26 @@ fun AppTextField(
             }
 
             if (newValue.length <= maxLength) {
-                currentLength = newValue.length
                 onValueChange(newValue)
             }
         },
-        isError = isInvalid,
-        textStyle = MaterialTheme.typography.bodyLarge,
-        placeholder = {
+        label = {
             Text(
-                text = placeholder,
+                text = label,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodyLarge,
             )
+        },
+        isError = isInvalid,
+        readOnly = isReadOnly,
+        textStyle = MaterialTheme.typography.bodyLarge,
+        suffix = if (suffixIcon == null) null else {
+            {
+                Icon(
+                    imageVector = suffixIcon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         },
         supportingText = {
             Row {
@@ -92,8 +116,11 @@ fun AppTextField(
             imeAction = ImeAction.Done,
             keyboardType = keyboardType,
         ),
+        interactionSource = interactionSource,
         modifier = modifier
             .fillMaxWidth()
-            .focusRequester(fieldFocusRequester)
+            .then(
+                fieldFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier
+            )
     )
 }

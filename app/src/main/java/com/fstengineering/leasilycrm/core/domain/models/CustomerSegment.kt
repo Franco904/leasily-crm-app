@@ -4,6 +4,6 @@ data class CustomerSegment(
     val id: Int?,
     val name: String?,
     val isDeleted: Boolean,
-    val type: CustomerSegmentType,
-    val user: User,
+    val type: CustomerSegmentType?,
+    val userId: Int?,
 )

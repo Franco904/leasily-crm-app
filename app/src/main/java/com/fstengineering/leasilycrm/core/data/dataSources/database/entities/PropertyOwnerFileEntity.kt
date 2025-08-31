@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
 
 @Entity(
     tableName = "property_owner_files",
@@ -19,8 +20,29 @@ import androidx.room.PrimaryKey
     indices = [Index("property_owner_id")],
 )
 data class PropertyOwnerFileEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int?,
     @ColumnInfo(name = "property_owner_file_uri") val propertyOwnerFileUri: String,
     @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Int,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-)
+) {
+    fun toDomain() = PropertyOwnerFile(
+        id = id,
+        uriString = propertyOwnerFileUri,
+        propertyOwnerId = propertyOwnerId,
+        isDeleted = isDeleted,
+    )
+
+    companion object {
+        fun fromDomain(domain: PropertyOwnerFile): PropertyOwnerFileEntity {
+            requireNotNull(domain.uriString) { "PropertyOwnerFile.propertyOwnerFileUri is required" }
+            requireNotNull(domain.propertyOwnerId) { "PropertyOwnerFile.propertyOwnerId is required" }
+
+            return PropertyOwnerFileEntity(
+                id = domain.id,
+                propertyOwnerFileUri = domain.uriString,
+                propertyOwnerId = domain.propertyOwnerId,
+                isDeleted = domain.isDeleted,
+            )
+        }
+    }
+}

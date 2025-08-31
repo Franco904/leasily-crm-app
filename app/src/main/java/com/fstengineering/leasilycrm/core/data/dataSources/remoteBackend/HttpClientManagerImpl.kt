@@ -39,8 +39,4 @@ class HttpClientManagerImpl(
             return AppResult.Error(error = e.toRemoteBackendError())
         }
     }
-
-    companion object {
-        private const val TAG = "HttpClientManagerImpl"
-    }
 }

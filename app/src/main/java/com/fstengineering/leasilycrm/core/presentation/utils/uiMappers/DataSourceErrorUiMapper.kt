@@ -4,6 +4,10 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 
 fun DataSourceError.toUiMessage() = when (this) {
+    DataSourceError.PreferencesError.NotFound -> {
+        R.string.snackbar_preferences_not_found_error
+    }
+
     DataSourceError.PreferencesError.SerializationError -> {
         R.string.snackbar_preferences_serialization_error
     }
@@ -49,6 +53,18 @@ fun DataSourceError.toUiMessage() = when (this) {
     }
 
     DataSourceError.RemoteBackendError.UnknownError -> {
+        R.string.snackbar_unknown_error
+    }
+
+    DataSourceError.SharedStorageError.NotFound -> {
+        R.string.snackbar_shared_storage_not_found_error
+    }
+
+    DataSourceError.SharedStorageError.InvalidFile -> {
+        R.string.snackbar_shared_storage_invalid_file_error
+    }
+
+    DataSourceError.SharedStorageError.UnknownError -> {
         R.string.snackbar_unknown_error
     }
 }

@@ -17,4 +17,13 @@ sealed interface Destinations {
 
     @Serializable
     data object CustomerSegments
+
+    @Serializable
+    data object PropertyOwners
+
+    @Serializable
+    data class PropertyOwnerRegistration(val propertyOwnerId: Int?)
+
+    @Serializable
+    data class PropertyOwnerDetails(val propertyOwnerId: Int)
 }

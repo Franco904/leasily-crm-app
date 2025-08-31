@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compound
+package com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds
 
 import androidx.room.Embedded
 import androidx.room.Relation
@@ -6,9 +6,8 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Cus
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentTypeEntity
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegmentType
-import com.fstengineering.leasilycrm.core.domain.models.User
 
-data class CustomerSegmentWithType(
+data class CustomerSegmentCompound(
     @Embedded val customerSegment: CustomerSegmentEntity,
     @Relation(
         parentColumn = "customer_segment_type_id",
@@ -24,6 +23,6 @@ data class CustomerSegmentWithType(
             id = customerSegmentType.id,
             name = customerSegmentType.name,
         ),
-        user = User(remoteId = customerSegment.userId),
+        userId = customerSegment.userId,
     )
 }

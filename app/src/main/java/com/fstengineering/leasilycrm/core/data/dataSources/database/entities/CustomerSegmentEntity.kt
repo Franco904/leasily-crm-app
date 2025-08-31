@@ -31,16 +31,16 @@ data class CustomerSegmentEntity(
 ) {
     companion object {
         fun fromDomain(domain: CustomerSegment): CustomerSegmentEntity {
-            requireNotNull(domain.type.id) { "CustomerSegment.type.id is required" }
-            requireNotNull(domain.user.remoteId) { "CustomerSegment.user.remoteId is required" }
+            requireNotNull(domain.type?.id) { "CustomerSegment.type.id is required" }
+            requireNotNull(domain.userId) { "CustomerSegment.userId is required" }
             requireNotNull(domain.name) { "CustomerSegment.name is required" }
 
             return CustomerSegmentEntity(
                 id = domain.id,
                 name = domain.name,
                 customerSegmentTypeId = domain.type.id,
-                userId = domain.user.remoteId,
-                isDeleted = false,
+                userId = domain.userId,
+                isDeleted = domain.isDeleted,
             )
         }
     }

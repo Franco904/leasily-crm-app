@@ -56,7 +56,7 @@ fun EditUserDialog(
         text = {
             Column {
                 AppTextField(
-                    placeholder = stringResource(R.string.profile_edit_user_dialog_name_field_placeholder),
+                    label = stringResource(R.string.profile_edit_user_dialog_name_field_placeholder),
                     value = currentUserUiState.name ?: "",
                     onValueChange = { nameInput ->
                         currentUserUiState = currentUserUiState.copy(
@@ -75,7 +75,7 @@ fun EditUserDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AppTextField(
-                    placeholder = stringResource(R.string.profile_edit_user_dialog_creci_field_placeholder),
+                    label = stringResource(R.string.profile_edit_user_dialog_creci_field_placeholder),
                     value = currentUserUiState.creciNumber ?: "",
                     onValueChange = { creciNumberInput ->
                         currentUserUiState = currentUserUiState.copy(
@@ -99,7 +99,7 @@ fun EditUserDialog(
                 onClick = { onEdit(currentUserUiState) },
             ) {
                 Text(
-                    text = stringResource(R.string.profile_edit_user_dialog_confirm_button),
+                    text = stringResource(R.string.edit_action_button_text),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge,
                 )
@@ -108,7 +108,7 @@ fun EditUserDialog(
         dismissButton = {
             TextButton(onClick = { onCancel() }) {
                 Text(
-                    text = stringResource(R.string.profile_edit_user_dialog_dismiss_button),
+                    text = stringResource(R.string.cancel_action_button_text),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge,
                 )

@@ -10,11 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -48,7 +46,9 @@ fun ProfileDataSection(
     )
     Spacer(modifier = Modifier.height(12.dp))
     Text(
-        text = if (userUiState.creciNumber != null) "CRECI - ${userUiState.creciNumber}" else stringResource(R.string.profile_creci_blank_body_text),
+        text = if (userUiState.creciNumber != null) "CRECI - ${userUiState.creciNumber}" else stringResource(
+            R.string.profile_creci_blank_body_text
+        ),
         style = MaterialTheme.typography.bodyMedium.copy(
             color = MaterialTheme.colorScheme.outline,
             fontWeight = FontWeight.Medium,
@@ -65,7 +65,7 @@ fun ProfileDataSection(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                stringResource(R.string.profile_signout_button_label_text),
+                stringResource(R.string.sign_out_action_button_text),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.labelLarge,
             )
@@ -79,7 +79,7 @@ fun ProfileDataSection(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                stringResource(R.string.profile_edit_user_button_label_text),
+                stringResource(R.string.edit_action_button_text),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.labelLarge,
             )

@@ -1,8 +1,6 @@
 package com.fstengineering.leasilycrm.root
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,13 +10,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.DataSourceError
-import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.SignInState
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import org.koin.androidx.compose.koinViewModel
+import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.SignInState
 
 @Composable
 fun RootScreen(

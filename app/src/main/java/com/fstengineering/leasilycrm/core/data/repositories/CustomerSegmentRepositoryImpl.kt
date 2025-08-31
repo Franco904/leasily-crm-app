@@ -5,7 +5,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Cus
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
-import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
@@ -30,15 +29,13 @@ class CustomerSegmentRepositoryImpl(
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: run {
-                        return AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound)
-                    }
+                    prefsFlow.first().remoteId ?: return AppResult.Error(
+                        error = DataSourceError.RemoteBackendError.NotFound,
+                    )
                 }
             )
 
-        val customerSegmentWithUser = customerSegment.copy(
-            user = User(remoteId = userRemoteId),
-        )
+        val customerSegmentWithUser = customerSegment.copy(userId = userRemoteId)
         val entity = CustomerSegmentEntity.fromDomain(customerSegmentWithUser)
 
         dao.insert(entity)
@@ -55,7 +52,7 @@ class CustomerSegmentRepositoryImpl(
 
         val storedUpdated = dao.getById(id = customerSegment.id).copy(
             name = customerSegment.name!!,
-            customerSegmentTypeId = customerSegment.type.id!!,
+            customerSegmentTypeId = customerSegment.type?.id!!,
         )
 
         dao.update(storedUpdated)
@@ -69,7 +66,41 @@ class CustomerSegmentRepositoryImpl(
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataSourceError>> =
+    override suspend fun getAllTenantType(): AppResult<ImmutableList<CustomerSegment>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: run {
+                        return AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound)
+                    }
+                }
+            )
+
+        val customerSegments = dao.getAllTenantType(userId = userRemoteId)
+            .map { it.toDomain() }.toPersistentList()
+
+        return AppResult.Success(data = customerSegments)
+    }
+
+    override suspend fun getAllPropertyOwnerType(): AppResult<ImmutableList<CustomerSegment>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: run {
+                        return AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound)
+                    }
+                }
+            )
+
+        val customerSegments = dao.getAllPropertyOwnerType(userId = userRemoteId)
+            .map { it.toDomain() }.toPersistentList()
+
+        return AppResult.Success(data = customerSegments)
+    }
+
+    override fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(

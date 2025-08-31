@@ -24,24 +24,18 @@
 
     <string name="profile_signout_dialog_headline">Sair do perfil?</string>
     <string name="profile_signout_dialog_supporting_text">O seu perfil será desconectado e será necessário autenticar novamente.</string>
-    <string name="profile_signout_dialog_confirm_button_text">Sair</string>
-    <string name="profile_signout_dialog_dismiss_button_text">Cancelar</string>
 
     <string name="profile_edit_user_dialog_headline">Editar perfil</string>
     <string name="profile_edit_user_dialog_name_field_placeholder">Nome</string>
     <string name="profile_edit_user_dialog_creci_field_placeholder">Número CRECI</string>
     <string name="profile_edit_user_dialog_required_helper_text">Obrigatório</string>
-    <string name="profile_edit_user_dialog_confirm_button">Editar</string>
-    <string name="profile_edit_user_dialog_dismiss_button">Cancelar</string>
 
     <string name="profile_creci_blank_body_text">CRECI não informado</string>
-    <string name="profile_signout_button_label_text">Sair</string>
-    <string name="profile_edit_user_button_label_text">Editar</string>
 
     <!-- Dashboard -->
     <string name="dashboard_my_metrics_title">Minhas métricas</string>
     <string name="dashboard_monthly_lead_conversion_metric_title">Taxa de conversão de leads por mês</string>
-    <string name="dashboard_monthly_revenue_metric_title">Taxa de conversão de leads por mês</string>
+    <string name="dashboard_monthly_revenue_metric_title">Receita por mês</string>
     <string name="dashboard_lead_contact_channels_metric_title">Canais de contato (leads)</string>
     <string name="dashboard_last_8_months_body_text">Últimos 8 meses</string>
 
@@ -52,27 +46,71 @@
     <string name="customer_segments_tenants_title">Inquilinos</string>
     <string name="customer_segments_tenants_empty_text">Nenhum segmento de inquilino registrado.</string>
 
-    <string name="customer_segment_save_dialog_headline">Novo segmento de cliente</string>
-    <string name="customer_segment_edit_dialog_headline">Editar segmento de cliente</string>
-    <string name="customer_segment_save_edit_dialog_name_placeholder">Nome</string>
+    <string name="customer_segments_save_dialog_headline">Novo segmento de cliente</string>
+    <string name="customer_segments_edit_dialog_headline">Editar segmento de cliente</string>
+    <string name="customer_segments_save_edit_dialog_name_placeholder">Nome</string>
     <string name="customer_segments_save_edit_dialog_type_title">Tipo</string>
-    <string name="customer_segments_save_edit_dialog_confirm_save_button">Salvar</string>
-    <string name="customer_segments_save_edit_dialog_confirm_edit_button">Editar</string>
-    <string name="customer_segments_save_edit_dialog_dismiss_button">Cancelar</string>
 
-    <string name="customer_segment_delete_dialog_headline">Excluir segmento de cliente?</string>
+    <string name="customer_segments_delete_dialog_headline">Excluir segmento de cliente?</string>
     <string name="customer_segments_delete_dialog_supporting_text">Se confirmada a exclusão, imóveis e inquilinos com este segmento serão desvinculados dele.</string>
-    <string name="customer_segments_delete_dialog_confirm_button">Excluir</string>
-    <string name="customer_segments_delete_dialog_dismiss_button">Cancelar</string>
 
-    <!-- Menu options -->
-    <string name="menu_option_edit_text">Editar</string>
-    <string name="menu_option_delete_text">Excluir</string>
+    <!-- Property owners -->
+    <string name="property_owners_top_app_bar_title">Proprietários</string>
+    <string name="property_owners_empty_text">Nenhum proprietário registrado.</string>
+    <string name="property_owners_delete_dialog_headline">Excluir proprietário?</string>
+    <string name="property_owners_delete_dialog_supporting_text">Se confirmada a exclusão, este proprietário não estará mais disponível.</string>
+
+    <!-- Property owner registration -->
+    <string name="property_owner_registration_top_app_bar_title_create">Novo proprietário</string>
+    <string name="property_owner_registration_top_app_bar_title_edit">Editar proprietário</string>
+
+    <string name="property_owner_registration_customer_segment_label">Segmento de proprietário</string>
+    <string name="property_owner_registration_name_label">Nome</string>
+    <string name="property_owner_registration_phone_label">Telefone</string>
+    <string name="property_owner_registration_email_label">Email</string>
+    <string name="property_owner_registration_payment_key_label">Chave de pagamento (PIX, outro)</string>
+    <string name="property_owner_registration_documents_title">Documentos</string>
+    <string name="property_owner_registration_documents_body_text">Documentos relacionados ao proprietário podem ser, por exemplo, cópia(s) do(s) contrato(s) de administração imobiliária.</string>
+
+    <string name="property_owner_registration_customer_segment_empty_text">Nenhum segmento de proprietário registrado.</string>
+
+    <!-- Property owner details -->
+    <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
+
+    <!-- Body texts -->
+    <string name="not_registered_info_body_text">Informação não registrada</string>
+    <string name="no_file_registered_body_text">Nenhum arquivo registrado</string>
+    <string name="unnamed_file_text">Arquivo sem nome</string>
+
+    <!-- Common dialogs -->
+    <string name="confirm_leave_edition_dialog_headline">Sair da edição?</string>
+    <string name="confirm_leave_edition_dialog_supporting_text">Se confirmado, quaisquer alterações não serão aplicadas.</string>
+
+    <string name="no_app_to_show_file_content_dialog_headline">Visualização falhou</string>
+    <string name="no_app_to_show_file_content_dialog_supporting_text">Não há nenhum aplicativo para visualizar este arquivo. Tente baixar um apropriado na loja.</string>
+
+    <string name="chooser_open_file_title">Abrir com</string>
+
+    <!-- Action buttons -->
+    <string name="add_action_button_text">Adicionar</string>
+    <string name="cancel_action_button_text">Cancelar</string>
+    <string name="close_action_button_text">Fechar</string>
+    <string name="confirm_action_button_text">Confirmar</string>
+    <string name="delete_action_button_text">Excluir</string>
+    <string name="edit_action_button_text">Editar</string>
+    <string name="save_action_button_text">Salvar</string>
+    <string name="search_action_button_text">Buscar</string>
+    <string name="sign_out_action_button_text">Sair</string>
 
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório</string>
-    <string name="inline_user_name_too_big_75_chars">Deve ter no máximo 75 caracteres</string>
-    <string name="inline_creci_number_too_big">Deve ter no máximo 8 caracteres</string>
+    <string name="inline_too_big_8_chars">Deve ter no máximo 8 caracteres</string>
+    <string name="inline_too_big_20_chars">Deve ter no máximo 20 caracteres</string>
+    <string name="inline_too_big_75_chars">Deve ter no máximo 75 caracteres</string>
+    <string name="inline_too_big_100_chars">Deve ter no máximo 100 caracteres</string>
+    <string name="inline_too_big_120_chars">Deve ter no máximo 120 caracteres</string>
+
+    <string name="inline_invalid_email">Email inválido</string>
 
     <!-- Snackbar success -->
     <string name="snackbar_no_data_changed">Nenhum dado foi editado.</string>
@@ -83,12 +121,17 @@
     <string name="snackbar_edit_customer_segment_succeeded">Segmento de cliente editado.</string>
     <string name="snackbar_delete_customer_segment_succeeded">Segmento de cliente excluído.</string>
 
+    <string name="snackbar_create_property_owner_succeeded">Proprietário criado.</string>
+    <string name="snackbar_edit_property_owner_succeeded">Proprietário editado.</string>
+    <string name="snackbar_delete_property_owner_succeeded">Proprietário excluído.</string>
+
     <!-- Snackbar errors -->
     <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>
     <string name="snackbar_credential_unsupported_type_error">Tipo de credencial inválido. Tente autenticar com a sua conta Google.</string>
     <string name="snackbar_credential_unsupported_api_error">Falha ao verificar as credenciais. Tente reiniciar o aplicativo.</string>
     <string name="snackbar_credential_no_credentials_found_error">Não há contas Google disponíveis neste dispositivo.</string>
 
+    <string name="snackbar_preferences_not_found_error">Usuário não encontrado.</string>
     <string name="snackbar_preferences_serialization_error">Falha ao carregar os dados. Tente novamente mais tarde.</string>
     <string name="snackbar_preferences_security_error">Falha inesperada na sessão. Tente sair e autenticar novamente.</string>
 
@@ -101,6 +144,9 @@
     <string name="snackbar_http_serialization_error">Sua sessão expirou.</string>
     <string name="snackbar_http_timeout_error">A requisição expirou. Verifique a sua conexão com a Internet e tente novamente.</string>
     <string name="snackbar_http_network_internet">Sem conexão com a Internet. Verifique a sua conexão e tente novamente.</string>
+
+    <string name="snackbar_shared_storage_not_found_error">O arquivo não foi encontrado.</string>
+    <string name="snackbar_shared_storage_invalid_file_error">O arquivo tem um formato inválido.</string>
 
     <string name="snackbar_unknown_error">Falha inesperada. Tente reiniciar o aplicativo.</string>
 </resources>

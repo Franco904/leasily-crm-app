@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 
 @Entity(
     tableName = "property_owners",
@@ -13,13 +14,16 @@ import androidx.room.PrimaryKey
             entity = CustomerSegmentEntity::class,
             parentColumns = ["id"],
             childColumns = ["customer_segment_id"],
-            onDelete = ForeignKey.CASCADE,
+            onDelete = ForeignKey.RESTRICT,
         ),
     ],
-    indices = [Index("customer_segment_id")],
+    indices = [
+        Index("customer_segment_id"),
+        Index("user_id"),
+    ],
 )
 data class PropertyOwnerEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int?,
     val name: String,
     val phone: String?,
     val email: String?,
@@ -27,4 +31,21 @@ data class PropertyOwnerEntity(
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Int?,
     @ColumnInfo(name = "user_id") val userId: Int,
-)
+) {
+    companion object {
+        fun fromDomain(domain: PropertyOwner): PropertyOwnerEntity {
+            requireNotNull(domain.name) { "PropertyOwner.name is required" }
+            requireNotNull(domain.userId) { "PropertyOwner.userId is required" }
+
+            return PropertyOwnerEntity(
+                id = domain.id,
+                name = domain.name,
+                phone = domain.phone,
+                email = domain.email,
+                paymentKey = domain.paymentKey,
+                customerSegmentId = domain.customerSegment?.id,
+                userId = domain.userId,
+            )
+        }
+    }
+}

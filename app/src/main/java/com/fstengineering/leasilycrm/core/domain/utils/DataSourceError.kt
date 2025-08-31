@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.domain.utils
 
 sealed interface DataSourceError : Error {
     enum class PreferencesError : DataSourceError {
+        NotFound,
         SerializationError,
         SecurityError,
         UnknownError,
@@ -19,8 +20,15 @@ sealed interface DataSourceError : Error {
         UnknownError
     }
 
+    enum class SharedStorageError : DataSourceError {
+        NotFound,
+        InvalidFile,
+        UnknownError,
+    }
+
     fun isRedirectError(): Boolean {
         return this in listOf(
+            PreferencesError.NotFound,
             RemoteBackendError.Unauthorized,
             RemoteBackendError.NotFound,
             RemoteBackendError.ServerError,

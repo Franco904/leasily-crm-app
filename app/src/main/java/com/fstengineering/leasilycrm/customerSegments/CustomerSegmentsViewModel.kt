@@ -1,10 +1,6 @@
 package com.fstengineering.leasilycrm.customerSegments
 
 import androidx.annotation.StringRes
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
@@ -21,7 +17,6 @@ import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentErro
 import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentField
 import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentFormUiState
 import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentTypeUiState
-import com.fstengineering.leasilycrm.profile.ProfileViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
@@ -32,13 +27,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.internal.toImmutableList
 
 class CustomerSegmentsViewModel(
     private val customerSegmentRepository: CustomerSegmentRepository,
@@ -241,6 +234,8 @@ class CustomerSegmentsViewModel(
                 if (isEditing) UiEvents.CustomerSegmentEditSuccess(messageId = R.string.snackbar_edit_customer_segment_succeeded)
                 else UiEvents.CustomerSegmentCreateSuccess,
             )
+
+            onCustomerSegmentFormChange(form = null)
         }
     }
 
@@ -267,6 +262,8 @@ class CustomerSegmentsViewModel(
                 }
 
             _uiEvents.send(UiEvents.CustomerSegmentDeleteSuccess)
+
+            onDeleteCustomerSegment(customerSegment = null)
         }
     }
 
