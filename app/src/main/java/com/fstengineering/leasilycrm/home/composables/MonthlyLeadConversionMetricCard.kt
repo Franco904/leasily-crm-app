@@ -38,7 +38,7 @@ fun MonthlyLeadConversionMetricCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "+12%",
+                text = "+ 12%",
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.tertiary,
             )
