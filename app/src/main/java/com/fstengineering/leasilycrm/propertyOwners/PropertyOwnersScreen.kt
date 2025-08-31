@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -39,7 +38,6 @@ import com.fstengineering.leasilycrm.propertyOwners.composables.ConfirmDeletePro
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersEmptySection
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersTopAppBar
-import kotlin.collections.component2
 
 @Composable
 fun PropertyOwnersScreen(
@@ -132,7 +130,9 @@ fun PropertyOwnersScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     itemsIndexed(
-                        items = propertyOwners.groupBy { it.name?.first()?.uppercaseChar().toString() },
+                        items = propertyOwners.groupBy {
+                            it.name?.first()?.uppercaseChar().toString()
+                        },
                         key = { _, (nameFirstChar, _) -> nameFirstChar },
                         contentType = { _, entryType -> entryType },
                     ) { _, (nameFirstChar, propertyOwners) ->
