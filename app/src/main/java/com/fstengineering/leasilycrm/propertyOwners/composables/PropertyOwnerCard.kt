@@ -14,20 +14,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
-import com.fstengineering.leasilycrm.propertyOwners.models.PropertyOwnerUiState
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun PropertyOwnerCard(
-    propertyOwner: PropertyOwnerUiState,
+    propertyOwner: PropertyOwner,
     onEditPropertyOwner: () -> Unit,
     onDeletePropertyOwner: () -> Unit,
+    onViewPropertyOwnerDetails: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AppCard(
+        onClick = {
+            if (propertyOwner.id == null) return@AppCard
+            onViewPropertyOwnerDetails(propertyOwner.id)
+        },
         modifier = modifier
             .fillMaxWidth()
     ) {

@@ -7,6 +7,7 @@ import androidx.navigation.toRoute
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsScreen
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.profile.ProfileScreen
+import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsScreen
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationScreen
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersScreen
 import com.fstengineering.leasilycrm.root.RootScreen
@@ -89,9 +90,7 @@ object DestinationsHandler {
             ProfileScreen(
                 viewModel = koinViewModel(),
                 credentialManager = koinInject(),
-                onBack = {
-                    navController.navigateUp()
-                },
+                onBack = { navController.navigateUp() },
                 onSignOut = {
                     onSignOut()
 
@@ -109,9 +108,7 @@ object DestinationsHandler {
         composable<Destinations.CustomerSegments> {
             CustomerSegmentsScreen(
                 viewModel = koinViewModel(),
-                onBack = {
-                    navController.navigateUp()
-                },
+                onBack = { navController.navigateUp() },
                 onSignOut = {
                     onSignOut()
 
@@ -129,12 +126,34 @@ object DestinationsHandler {
         composable<Destinations.PropertyOwners> {
             PropertyOwnersScreen(
                 viewModel = koinViewModel(),
-                onBack = {
-                    navController.navigateUp()
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+
+                    navController.navigate(Destinations.SignIn) {
+                        val startDestination =
+                            navController.graph.startDestinationRoute ?: return@navigate
+
+                        popUpTo(startDestination) { inclusive = true }
+                    }
                 },
-                onPropertyOwnerRegistration = { propertyOwnerId ->
+                onRegisterPropertyOwner = { propertyOwnerId ->
                     navController.navigate(Destinations.PropertyOwnerRegistration(propertyOwnerId))
                 },
+                onViewPropertyOwnerDetails = { propertyOwnerId ->
+                    navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
+                },
+                showSnackbar = { message -> showSnackbar(message) },
+            )
+        }
+
+        composable<Destinations.PropertyOwnerRegistration> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.PropertyOwnerRegistration>()
+
+            PropertyOwnerRegistrationScreen(
+                propertyOwnerId = args.propertyOwnerId,
+                viewModel = koinViewModel(),
+                onBack = { navController.navigateUp() },
                 onSignOut = {
                     onSignOut()
 
@@ -149,15 +168,13 @@ object DestinationsHandler {
             )
         }
 
-        composable<Destinations.PropertyOwnerRegistration> { backStackEntry ->
-            val args = backStackEntry.toRoute<Destinations.PropertyOwnerRegistration>()
+        composable<Destinations.PropertyOwnerDetails> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.PropertyOwnerDetails>()
 
-            PropertyOwnerRegistrationScreen(
+            PropertyOwnerDetailsScreen(
                 propertyOwnerId = args.propertyOwnerId,
                 viewModel = koinViewModel(),
-                onBack = {
-                    navController.navigateUp()
-                },
+                onBack = { navController.navigateUp() },
                 onSignOut = {
                     onSignOut()
 
@@ -167,6 +184,9 @@ object DestinationsHandler {
 
                         popUpTo(startDestination) { inclusive = true }
                     }
+                },
+                onEditPropertyOwner = { propertyOwnerId ->
+                    navController.navigate(Destinations.PropertyOwnerRegistration(propertyOwnerId))
                 },
                 showSnackbar = { message -> showSnackbar(message) },
             )

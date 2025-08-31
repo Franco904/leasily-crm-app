@@ -15,5 +15,7 @@ interface PropertyOwnerRepository {
 
     suspend fun getById(propertyOwnerId: Int): AppResult<PropertyOwner, DataSourceError>
 
+    fun watchById(propertyOwnerId: Int): Flow<AppResult<PropertyOwner, DataSourceError>>
+
     fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataSourceError>>
 }

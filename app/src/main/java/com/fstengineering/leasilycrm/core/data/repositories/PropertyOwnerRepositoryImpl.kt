@@ -72,6 +72,35 @@ class PropertyOwnerRepositoryImpl(
         return AppResult.Success(data = propertyOwner.copy(files = filesWithNames))
     }
 
+    override fun watchById(
+        propertyOwnerId: Int,
+    ): Flow<AppResult<PropertyOwner, DataSourceError>> = flow {
+        emitAll(
+            propertyOwnerDao.watchById(id = propertyOwnerId)
+                .map { propertyOwner ->
+                    val domain = propertyOwner.toDomain()
+
+                    val filesWithNames = domain.files.map { file ->
+                        val fileName = sharedStorage.getFileName(contentUriString = file.uriString ?: "")
+                            .fold(
+                                onError = { error ->
+                                    emit(AppResult.Error(error = error))
+                                    return@map file
+                                },
+                                onSuccess = { fileName -> fileName },
+                            )
+
+                        file.copy(name = fileName)
+                    }.toImmutableList()
+
+                    AppResult.Success<PropertyOwner, DataSourceError>(
+                        data = domain.copy(files = filesWithNames),
+                    )
+                }
+                .distinctUntilChanged()
+        )
+    }
+
     override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()

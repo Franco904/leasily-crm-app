@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.presentation.composables
+package com.fstengineering.leasilycrm.core.presentation.composables.dialogs
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -35,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomsheet
-import com.fstengineering.leasilycrm.core.presentation.composables.ConfirmLeaveEditionDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveEditionDialog
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
@@ -181,7 +181,7 @@ fun PropertyOwnerRegistrationScreen(
                 scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
                 modifier = Modifier
                     .padding(innerPadding)
-                    .padding(24.dp)
+                    .padding(horizontal = 16.dp)
             )
         }
         if (mustShowCustomerSegmentComboBottomsheet) {

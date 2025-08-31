@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -15,15 +12,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.InsertDriveFile
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -34,11 +27,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.DocumentFileCard
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
@@ -88,7 +81,7 @@ fun PropertyOwnerRegistrationFormSection(
     ) {
         item {
             AppTextField(
-                label = stringResource(R.string.property_owner_registration_customer_segment_placeholder),
+                label = stringResource(R.string.property_owner_registration_customer_segment_label),
                 value = propertyOwnerForm.customerSegment?.name ?: "",
                 onTap = onCustomerSegmentFieldTap,
                 suffixIcon = Icons.Default.ArrowDropDown,
@@ -102,7 +95,7 @@ fun PropertyOwnerRegistrationFormSection(
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(PropertyOwnerField.Name))
             ) {
                 AppTextField(
-                    label = stringResource(R.string.property_owner_registration_name_placeholder),
+                    label = stringResource(R.string.property_owner_registration_name_label),
                     value = propertyOwnerForm.name ?: "",
                     onValueChange = { nameInput ->
                         onPropertyOwnerFormChange(
@@ -126,7 +119,7 @@ fun PropertyOwnerRegistrationFormSection(
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(PropertyOwnerField.Phone))
             ) {
                 AppTextField(
-                    label = stringResource(R.string.property_owner_registration_phone_placeholder),
+                    label = stringResource(R.string.property_owner_registration_phone_label),
                     value = propertyOwnerForm.phone ?: "",
                     onValueChange = { phoneInput ->
                         onPropertyOwnerFormChange(
@@ -151,7 +144,7 @@ fun PropertyOwnerRegistrationFormSection(
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(PropertyOwnerField.Email))
             ) {
                 AppTextField(
-                    label = stringResource(R.string.property_owner_registration_email_placeholder),
+                    label = stringResource(R.string.property_owner_registration_email_label),
                     value = propertyOwnerForm.email ?: "",
                     onValueChange = { emailInput ->
                         onPropertyOwnerFormChange(
@@ -176,7 +169,7 @@ fun PropertyOwnerRegistrationFormSection(
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(PropertyOwnerField.PaymentKey))
             ) {
                 AppTextField(
-                    label = stringResource(R.string.property_owner_registration_payment_key_placeholder),
+                    label = stringResource(R.string.property_owner_registration_payment_key_label),
                     value = propertyOwnerForm.paymentKey ?: "",
                     onValueChange = { paymentKeyInput ->
                         onPropertyOwnerFormChange(
@@ -236,9 +229,10 @@ fun PropertyOwnerRegistrationFormSection(
             items = propertyOwnerForm.files.filter { !it.isDeleted },
             key = { i, file -> file.id ?: "${file.name}$i" },
         ) { _, file ->
-            PropertyOwnerFileCard(
+            DocumentFileCard(
                 fileName = file.name,
-                onDeleteFile = {
+                actionIcon = Icons.Filled.Close,
+                onAction = {
                     val newFiles = if (file.id == null) {
                         propertyOwnerForm.files.toPersistentList().remove(file)
                     } else {
@@ -254,56 +248,6 @@ fun PropertyOwnerRegistrationFormSection(
                 },
             )
             Spacer(modifier = Modifier.height(8.dp))
-        }
-    }
-}
-
-@Composable
-fun PropertyOwnerFileCard(
-    fileName: String?,
-    onDeleteFile: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Card(
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.InsertDriveFile,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = fileName ?: "",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .weight(1f)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            IconButton(
-                onClick = onDeleteFile,
-                modifier = Modifier
-                    .size(24.dp),
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
         }
     }
 }

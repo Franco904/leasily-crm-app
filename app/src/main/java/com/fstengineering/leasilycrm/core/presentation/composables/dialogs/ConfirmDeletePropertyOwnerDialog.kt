@@ -1,10 +1,9 @@
-package com.fstengineering.leasilycrm.propertyOwners.composables
+package com.fstengineering.leasilycrm.core.presentation.composables.dialogs
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppTitleAndMessageDialog
 
 @Composable
 fun ConfirmDeletePropertyOwnerDialog(

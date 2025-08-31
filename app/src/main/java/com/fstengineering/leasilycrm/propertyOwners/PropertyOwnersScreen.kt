@@ -34,7 +34,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.PropertyOwnerDeleteSuccess
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.RedirectToSignIn
-import com.fstengineering.leasilycrm.propertyOwners.composables.ConfirmDeletePropertyOwnerDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyOwnerDialog
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersEmptySection
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersTopAppBar
@@ -44,7 +44,8 @@ fun PropertyOwnersScreen(
     viewModel: PropertyOwnersViewModel,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
-    onPropertyOwnerRegistration: (Int?) -> Unit = { _ -> },
+    onRegisterPropertyOwner: (Int?) -> Unit = { _ -> },
+    onViewPropertyOwnerDetails: (Int) -> Unit = { _ -> },
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
@@ -91,7 +92,7 @@ fun PropertyOwnersScreen(
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
-                onClick = { onPropertyOwnerRegistration(null) },
+                onClick = { onRegisterPropertyOwner(null) },
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -147,11 +148,12 @@ fun PropertyOwnersScreen(
                                 PropertyOwnerCard(
                                     propertyOwner = propertyOwner,
                                     onEditPropertyOwner = {
-                                        onPropertyOwnerRegistration(propertyOwner.id)
+                                        onRegisterPropertyOwner(propertyOwner.id)
                                     },
                                     onDeletePropertyOwner = {
                                         viewModel.onDeletePropertyOwner(propertyOwner = propertyOwner)
                                     },
+                                    onViewPropertyOwnerDetails = onViewPropertyOwnerDetails,
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                             }

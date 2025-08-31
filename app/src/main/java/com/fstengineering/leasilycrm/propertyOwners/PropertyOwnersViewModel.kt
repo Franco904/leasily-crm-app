@@ -3,15 +3,14 @@ package com.fstengineering.leasilycrm.propertyOwners
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
-import com.fstengineering.leasilycrm.propertyOwners.models.PropertyOwnerUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,10 +28,10 @@ class PropertyOwnersViewModel(
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _propertyOwners =
-        MutableStateFlow<ImmutableList<PropertyOwnerUiState>>(persistentListOf())
+        MutableStateFlow<ImmutableList<PropertyOwner>>(persistentListOf())
     val propertyOwners = _propertyOwners.asStateFlow()
 
-    private val _propertyOwnerToDelete = MutableStateFlow<PropertyOwnerUiState?>(null)
+    private val _propertyOwnerToDelete = MutableStateFlow<PropertyOwner?>(null)
     val propertyOwnerToDelete = _propertyOwnerToDelete.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
@@ -74,10 +73,7 @@ class PropertyOwnersViewModel(
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                     }
                     .onSuccess { propertyOwners ->
-                        val uiState = propertyOwners
-                            .map { PropertyOwnerUiState.fromDomain(it) }
-                            .toPersistentList()
-                        _propertyOwners.update { uiState }
+                        _propertyOwners.update { propertyOwners }
                     }
 
                 _isLoading.update { false }
@@ -86,7 +82,7 @@ class PropertyOwnersViewModel(
     }
 
     fun onDeletePropertyOwner(
-        propertyOwner: PropertyOwnerUiState?,
+        propertyOwner: PropertyOwner?,
     ) {
         _propertyOwnerToDelete.update { propertyOwner }
     }

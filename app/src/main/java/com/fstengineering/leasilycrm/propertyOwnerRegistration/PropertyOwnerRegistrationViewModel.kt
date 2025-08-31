@@ -45,7 +45,7 @@ class PropertyOwnerRegistrationViewModel(
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _propertyOwnerForm = MutableStateFlow<PropertyOwner>(PropertyOwner())
+    private val _propertyOwnerForm = MutableStateFlow(PropertyOwner())
     val propertyOwnerForm = _propertyOwnerForm.asStateFlow()
 
     var propertyOwnerToEdit: PropertyOwner? = null
