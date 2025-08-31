@@ -21,6 +21,13 @@ interface PropertyOwnerDao {
     suspend fun getById(id: Int): PropertyOwnerCompound
 
     @Transaction
-    @Query("SELECT * FROM property_owners WHERE user_id = :userId AND is_deleted = 0")
+    @Query(
+        """
+        SELECT * FROM property_owners
+        WHERE user_id = :userId
+        AND is_deleted = 0
+        ORDER BY name
+    """
+    )
     fun watchAll(userId: Int): Flow<List<PropertyOwnerCompound>>
 }

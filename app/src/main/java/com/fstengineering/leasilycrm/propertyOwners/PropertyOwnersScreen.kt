@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.propertyOwners
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -16,6 +17,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -24,10 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.PropertyOwnerDeleteSuccess
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.RedirectToSignIn
@@ -35,6 +39,7 @@ import com.fstengineering.leasilycrm.propertyOwners.composables.ConfirmDeletePro
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersEmptySection
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersTopAppBar
+import kotlin.collections.component2
 
 @Composable
 fun PropertyOwnersScreen(
@@ -127,19 +132,30 @@ fun PropertyOwnersScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     itemsIndexed(
-                        items = propertyOwners,
-                        key = { i, propertyOwner -> propertyOwner.id ?: i },
+                        items = propertyOwners.groupBy { it.name?.first()?.uppercaseChar().toString() },
+                        key = { _, (nameFirstChar, _) -> nameFirstChar },
                         contentType = { _, entryType -> entryType },
-                    ) { i, propertyOwner ->
-                        PropertyOwnerCard(
-                            propertyOwner = propertyOwner,
-                            onEditPropertyOwner = {
-                                onPropertyOwnerRegistration(propertyOwner.id)
-                            },
-                            onDeletePropertyOwner = {
-                                viewModel.onDeletePropertyOwner(propertyOwner = propertyOwner)
-                            },
+                    ) { _, (nameFirstChar, propertyOwners) ->
+                        Text(
+                            text = nameFirstChar,
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = MaterialTheme.colorScheme.primary,
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Column {
+                            propertyOwners.forEach { propertyOwner ->
+                                PropertyOwnerCard(
+                                    propertyOwner = propertyOwner,
+                                    onEditPropertyOwner = {
+                                        onPropertyOwnerRegistration(propertyOwner.id)
+                                    },
+                                    onDeletePropertyOwner = {
+                                        viewModel.onDeletePropertyOwner(propertyOwner = propertyOwner)
+                                    },
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                        }
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
