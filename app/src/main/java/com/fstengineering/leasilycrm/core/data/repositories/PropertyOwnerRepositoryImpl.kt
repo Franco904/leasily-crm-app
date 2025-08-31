@@ -81,14 +81,15 @@ class PropertyOwnerRepositoryImpl(
                     val domain = propertyOwner.toDomain()
 
                     val filesWithNames = domain.files.map { file ->
-                        val fileName = sharedStorage.getFileName(contentUriString = file.uriString ?: "")
-                            .fold(
-                                onError = { error ->
-                                    emit(AppResult.Error(error = error))
-                                    return@map file
-                                },
-                                onSuccess = { fileName -> fileName },
-                            )
+                        val fileName =
+                            sharedStorage.getFileName(contentUriString = file.uriString ?: "")
+                                .fold(
+                                    onError = { error ->
+                                        emit(AppResult.Error(error = error))
+                                        return@map file
+                                    },
+                                    onSuccess = { fileName -> fileName },
+                                )
 
                         file.copy(name = fileName)
                     }.toImmutableList()

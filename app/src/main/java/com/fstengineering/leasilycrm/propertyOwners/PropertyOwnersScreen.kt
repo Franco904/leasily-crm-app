@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyOwnerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.PropertyOwnerDeleteSuccess
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.RedirectToSignIn
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyOwnerDialog
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersEmptySection
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersTopAppBar
