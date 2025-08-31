@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.propertyOwnerRegistration
 
 import android.content.Intent
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -125,6 +126,14 @@ fun PropertyOwnerRegistrationScreen(
 
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
+    }
+
+    BackHandler {
+        if (propertyOwnerId != null) {
+            mustShowConfirmLeaveEditionDialog = true
+        } else {
+            onBack()
+        }
     }
 
     Scaffold(
