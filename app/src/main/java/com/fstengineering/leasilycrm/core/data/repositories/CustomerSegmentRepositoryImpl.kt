@@ -30,7 +30,7 @@ class CustomerSegmentRepositoryImpl(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow ->
                     prefsFlow.first().remoteId ?: return AppResult.Error(
-                        error = DataSourceError.RemoteBackendError.NotFound,
+                        error = DataSourceError.PreferencesError.NotFound,
                     )
                 }
             )
@@ -47,7 +47,7 @@ class CustomerSegmentRepositoryImpl(
         customerSegment: CustomerSegment,
     ): AppResult<Unit, DataSourceError> {
         if (customerSegment.id == null) {
-            return AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound)
+            return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
         }
 
         val storedUpdated = dao.getById(id = customerSegment.id).copy(
@@ -72,7 +72,7 @@ class CustomerSegmentRepositoryImpl(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow ->
                     prefsFlow.first().remoteId ?: run {
-                        return AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound)
+                        return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
                     }
                 }
             )
@@ -89,7 +89,7 @@ class CustomerSegmentRepositoryImpl(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow ->
                     prefsFlow.first().remoteId ?: run {
-                        return AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound)
+                        return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
                     }
                 }
             )
@@ -110,7 +110,7 @@ class CustomerSegmentRepositoryImpl(
                     },
                     onSuccess = { prefsFlow ->
                         prefsFlow.first().remoteId ?: run {
-                            emit(AppResult.Error(error = DataSourceError.RemoteBackendError.NotFound))
+                            emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
                             return@flow
                         }
                     }
