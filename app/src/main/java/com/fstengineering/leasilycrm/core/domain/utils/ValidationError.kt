@@ -28,6 +28,30 @@ sealed interface ValidationError : Error {
         LengthIsGreaterThan120Chars,
     }
 
+    enum class PropertyPropertyOwner : ValidationError {
+        IsNull,
+    }
+
+    enum class PropertyType : ValidationError {
+        IsNull,
+    }
+
+    enum class PropertyNeighborhood : ValidationError {
+        IsBlank,
+    }
+
+    enum class PropertyStreetAddress : ValidationError {
+        IsBlank,
+    }
+
+    enum class PropertyPriceDateRange : ValidationError {
+        IsNull,
+    }
+
+    enum class PropertyPriceAmount : ValidationError {
+        IsNull,
+    }
+
     enum class UserName : ValidationError {
         IsBlank,
         LengthIsGreaterThan75Chars,

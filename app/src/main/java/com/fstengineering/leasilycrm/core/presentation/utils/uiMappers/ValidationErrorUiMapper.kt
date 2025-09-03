@@ -51,4 +51,28 @@ fun ValidationError.toUiMessage() = when (this) {
     ValidationError.CreciNumber.LengthIsGreaterThan8Chars -> {
         R.string.inline_too_big_75_chars
     }
+
+    ValidationError.PropertyPropertyOwner.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.PropertyType.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.PropertyNeighborhood.IsBlank -> {
+        R.string.inline_required
+    }
+
+    ValidationError.PropertyStreetAddress.IsBlank -> {
+        R.string.inline_required
+    }
+
+    ValidationError.PropertyPriceDateRange.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.PropertyPriceAmount.IsNull -> {
+        R.string.inline_required
+    }
 }
