@@ -23,6 +23,16 @@ interface PropertyDao {
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Int): PropertyCompound
 
+    @Query(
+        """
+        SELECT neighborhood FROM properties
+        WHERE user_id = :userId
+        AND is_deleted = 0
+        ORDER BY neighborhood
+    """
+    )
+    suspend fun getAllNeighborHoodNames(userId: Int): List<String>
+
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
     fun watchById(id: Int): Flow<PropertyCompound>

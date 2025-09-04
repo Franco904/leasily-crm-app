@@ -26,4 +26,22 @@ sealed interface Destinations {
 
     @Serializable
     data class PropertyOwnerDetails(val propertyOwnerId: Int)
+
+    @Serializable
+    data object Properties
+
+    @Serializable
+    data class PropertyRegistration(val propertyId: Int?) {
+        @Serializable
+        data object PropertyRegistrationStep1
+
+        @Serializable
+        data object PropertyRegistrationStep2
+
+        @Serializable
+        data object PropertyRegistrationStep3
+
+        @Serializable
+        data object PropertyRegistrationStep4
+    }
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
+import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioGroup
 import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentField
@@ -35,6 +36,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -85,9 +87,12 @@ fun CustomerSegmentRegistrationDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AppRadioGroup(
-                    customerSegmentTypes = customerSegmentTypes,
-                    selectedType = customerSegmentForm.type,
-                    onTypeSelected = { type ->
+                    groupTitle = stringResource(R.string.customer_segments_save_edit_dialog_type_title),
+                    radioOptions = customerSegmentTypes.map { it.name ?: "" }.toImmutableList(),
+                    selectedOption = customerSegmentForm.type?.name,
+                    onOptionSelected = { typeName ->
+                        val type = customerSegmentTypes.find { it.name == typeName }
+
                         onCustomerSegmentFormChange(
                             customerSegmentForm.copy(type = type),
                         )
@@ -127,67 +132,6 @@ fun CustomerSegmentRegistrationDialog(
         modifier = modifier
             .width(450.dp)
     )
-}
-
-@Composable
-fun AppRadioGroup(
-    customerSegmentTypes: ImmutableList<CustomerSegmentTypeUiState>,
-    selectedType: CustomerSegmentTypeUiState?,
-    onTypeSelected: (CustomerSegmentTypeUiState) -> Unit,
-    supportingText: String?,
-    modifier: Modifier = Modifier,
-    isInvalid: Boolean = false,
-) {
-    Column(
-        modifier = modifier
-    ) {
-        Text(
-            text = stringResource(R.string.customer_segments_save_edit_dialog_type_title),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-        Column(
-            modifier = Modifier
-                .selectableGroup()
-        ) {
-            customerSegmentTypes.forEach { type ->
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .selectable(
-                            selected = type == selectedType,
-                            onClick = { onTypeSelected(type) },
-                            role = Role.RadioButton,
-                        )
-                ) {
-                    RadioButton(
-                        selected = type == selectedType,
-                        onClick = null,
-                    )
-                    Text(
-                        text = type.name!!,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                    )
-                }
-            }
-            if (supportingText != null) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = supportingText,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = when {
-                        isInvalid -> MaterialTheme.colorScheme.error
-                        else -> MaterialTheme.colorScheme.onSurfaceVariant
-                    },
-                )
-            }
-        }
-    }
 }
 
 @Preview

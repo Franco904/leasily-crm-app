@@ -4,6 +4,8 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.constants.PROPERTY_OWNER_CUSTOMER_SEGMENT_TYPE_ID
+import com.fstengineering.leasilycrm.core.domain.constants.TENANT_CUSTOMER_SEGMENT_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
@@ -281,10 +283,5 @@ class CustomerSegmentsViewModel(
         data class CustomerSegmentEditSuccess(@StringRes val messageId: Int) : UiEvents
 
         data object CustomerSegmentDeleteSuccess : UiEvents
-    }
-
-    private companion object {
-        const val TENANT_CUSTOMER_SEGMENT_TYPE_ID = 1
-        const val PROPERTY_OWNER_CUSTOMER_SEGMENT_TYPE_ID = 2
     }
 }

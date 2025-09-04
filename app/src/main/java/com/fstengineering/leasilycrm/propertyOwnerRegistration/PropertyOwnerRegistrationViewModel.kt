@@ -64,6 +64,8 @@ class PropertyOwnerRegistrationViewModel(
     fun init(propertyOwnerId: Int?) {
         if (isInitialized) return
 
+        _isLoading.update { true }
+
         watchSessionExpiration()
         if (propertyOwnerId != null) getPropertyOwnerToEdit(propertyOwnerId)
 
@@ -90,8 +92,6 @@ class PropertyOwnerRegistrationViewModel(
     }
 
     private fun getPropertyOwnerToEdit(propertyOwnerId: Int) {
-        _isLoading.update { true }
-
         viewModelScope.launch {
             propertyOwnerRepository.getById(propertyOwnerId)
                 .onError { error ->

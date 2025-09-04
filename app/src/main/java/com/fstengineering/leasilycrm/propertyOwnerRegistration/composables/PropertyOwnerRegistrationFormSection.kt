@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
@@ -132,6 +133,7 @@ fun PropertyOwnerRegistrationFormSection(
                         if (phoneError != null) stringResource(phoneError) else null
                     },
                     maxLength = 20,
+                    keyboardType = KeyboardType.Phone,
                     onDone = { emailFieldFocusRequester.requestFocus() },
                     fieldFocusRequester = phoneFieldFocusRequester,
                 )
@@ -157,6 +159,7 @@ fun PropertyOwnerRegistrationFormSection(
                         if (emailError != null) stringResource(emailError) else null
                     },
                     maxLength = 120,
+                    keyboardType = KeyboardType.Email,
                     onDone = { paymentKeyFieldFocusRequester.requestFocus() },
                     fieldFocusRequester = emailFieldFocusRequester,
                 )

@@ -77,14 +77,63 @@
     <!-- Property owner details -->
     <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
 
+    <!-- Property registration -->
+    <string name="property_registration_top_app_bar_title_create">Novo imóvel</string>
+    <string name="property_registration_top_app_bar_title_edit">Editar imóvel</string>
+
+    <string name="property_registration_step_1_title">Identificação</string>
+    <string name="property_registration_step_2_title">Características básicas</string>
+    <string name="property_registration_step_3_title">Financeiro</string>
+    <string name="property_registration_step_4_title">Informações adicionais</string>
+
+    <string name="property_registration_property_owner_title">Proprietário</string>
+    <string name="property_registration_property_type_title">Tipo do imóvel</string>
+    <string name="property_registration_neighborhood_label">Bairro</string>
+    <string name="property_registration_street_address_label">Logradouro</string>
+    <string name="property_registration_cep_postal_code_label">CEP</string>
+    <string name="property_registration_number_label">Número</string>
+    <string name="property_registration_address_line_2_label">Complemento</string>
+    <string name="property_registration_parking_spot_number_label">Vaga de estacionamento (número)</string>
+    <string name="property_registration_parking_basement_level_number_label">Subsolo do estacionamento (número)</string>
+    <string name="property_registration_hobby_box_number_label">Hobby box (número)</string>
+
+    <string name="property_registration_bedrooms_body_text">Dormitórios</string>
+    <string name="property_registration_en_suites_body_text">Suítes</string>
+    <string name="property_registration_double_beds_body_text">Camas de casal</string>
+    <string name="property_registration_single_beds_body_text">Camas de solteiro</string>
+    <string name="property_registration_bathrooms_body_text">Banheiros</string>
+    <string name="property_registration_parking_spots_body_text">Vagas de estacionamento</string>
+    <string name="property_registration_air_conditioners_body_text">Ares condicionados</string>
+    <string name="property_registration_max_guests_body_text">Máximo de pessoas</string>
+    <string name="property_registration_sea_proximity_type_title">Proximidade para o mar</string>
+    <string name="property_registration_distance_to_beach_label">Distância (m)</string>
+    <string name="property_registration_included_items_label">Itens incluídos</string>
+    <string name="property_registration_does_not_include_items_body_text">Não inclui itens</string>
+    <string name="property_registration_other_characteristics_title">Outras características</string>
+
+    <string name="property_registration_cleaning_service_tax_label">Valor da faxina</string>
+    <string name="property_registration_does_not_include_cleaning_service_body_text">Não inclui serviço de faxina</string>
+    <string name="property_registration_daily_price_label">Valores da diária por período</string>
+    <string name="property_registration_new_date_range_price_dialog_title">Novo valor de diária</string>
+    <string name="property_registration_new_date_range_price_dialog_supporting_text">Preencha o valor da diária do aluguel estabelecido pelo proprietário para o período.</string>
+    <string name="property_registration_date_range_label">Período</string>
+    <string name="property_registration_price_amount_label">Valor da diária</string>
+
+    <string name="property_registration_pictures_label">Fotos</string>
+    <string name="property_registration_observations_label">Observações sobre o imóvel</string>
+
+    <string name="property_registration_property_owner_empty_text">Nenhum proprietário registrado.</string>
+
     <!-- Body texts -->
     <string name="not_registered_info_body_text">Informação não registrada</string>
     <string name="no_file_registered_body_text">Nenhum arquivo registrado</string>
     <string name="unnamed_file_text">Arquivo sem nome</string>
 
     <!-- Common dialogs -->
-    <string name="confirm_leave_edition_dialog_headline">Sair da edição?</string>
-    <string name="confirm_leave_edition_dialog_supporting_text">Se confirmado, quaisquer alterações não serão aplicadas.</string>
+    <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>
+    <string name="confirm_leave_registration_dialog_headline_edit">Sair da edição?</string>
+    <string name="confirm_leave_registration_dialog_supporting_text_create">Se confirmado, os dados serão perdidos.</string>
+    <string name="confirm_leave_registration_dialog_supporting_text_edit">Se confirmado, quaisquer alterações não serão aplicadas.</string>
 
     <string name="no_app_to_show_file_content_dialog_headline">Visualização falhou</string>
     <string name="no_app_to_show_file_content_dialog_supporting_text">Não há nenhum aplicativo para visualizar este arquivo. Tente baixar um apropriado na loja.</string>
@@ -93,12 +142,16 @@
 
     <!-- Action buttons -->
     <string name="add_action_button_text">Adicionar</string>
+    <string name="advance_action_button_text">Avançar</string>
+    <string name="back_action_button_text">Voltar</string>
     <string name="cancel_action_button_text">Cancelar</string>
     <string name="close_action_button_text">Fechar</string>
     <string name="confirm_action_button_text">Confirmar</string>
     <string name="delete_action_button_text">Excluir</string>
     <string name="edit_action_button_text">Editar</string>
+    <string name="register_action_button_text">Cadastrar</string>
     <string name="save_action_button_text">Salvar</string>
+    <string name="select_action_button_text">Selecionar</string>
     <string name="search_action_button_text">Buscar</string>
     <string name="sign_out_action_button_text">Sair</string>
 

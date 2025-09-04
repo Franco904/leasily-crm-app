@@ -68,6 +68,23 @@ class PropertyRepositoryImpl(
         return AppResult.Success(data = property.copy(files = filesWithNames))
     }
 
+    override suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: return AppResult.Error(
+                        error = DataSourceError.PreferencesError.NotFound,
+                    )
+                }
+            )
+
+        val neighborHoodNames =
+            dao.getAllNeighborHoodNames(userId = userRemoteId).toPersistentList()
+
+        return AppResult.Success(data = neighborHoodNames)
+    }
+
     override fun watchById(propertyId: Int): Flow<AppResult<Property, DataSourceError>> = flow {
         val propertyFlow = dao.watchById(id = propertyId)
             .map { property ->

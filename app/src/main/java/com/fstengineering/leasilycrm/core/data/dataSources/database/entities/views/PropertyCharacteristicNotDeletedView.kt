@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristic
 
 @DatabaseView(
-    viewName = "property_characteristics_active_view",
+    viewName = "property_characteristics_not_deleted_view",
     value = """
         SELECT *
         FROM property_characteristics pc

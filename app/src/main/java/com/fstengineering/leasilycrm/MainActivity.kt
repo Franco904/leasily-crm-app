@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
 
         workManager.enqueueLazyWritesWorker()
         workManager.enqueueReadsWorker()
-        workManager.enqueueSessionExpirationWorker()
+//        workManager.enqueueSessionExpirationWorker()
     }
 
     private fun cancelAppWorkers() {
