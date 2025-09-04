@@ -63,6 +63,7 @@ fun HomeScreen(
     val scrollState = rememberScrollState()
 
     val surfaceColor = MaterialTheme.colorScheme.surface
+    val surfaceContainerColor = MaterialTheme.colorScheme.surfaceContainer
 
     val userProfilePictureUrl by viewModel.userProfilePictureUrl.collectAsStateWithLifecycle()
 
@@ -88,6 +89,7 @@ fun HomeScreen(
 
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
+        activity.window.navigationBarColor = surfaceContainerColor.toArgb()
     }
 
     Scaffold(

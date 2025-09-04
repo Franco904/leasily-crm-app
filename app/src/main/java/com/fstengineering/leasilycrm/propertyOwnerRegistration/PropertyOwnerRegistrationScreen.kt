@@ -126,6 +126,7 @@ fun PropertyOwnerRegistrationScreen(
 
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
+        activity.window.navigationBarColor = surfaceColor.toArgb()
     }
 
     BackHandler {

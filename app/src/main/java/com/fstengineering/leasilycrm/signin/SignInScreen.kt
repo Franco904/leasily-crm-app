@@ -54,6 +54,7 @@ fun SignInScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val primaryColor = MaterialTheme.colorScheme.primary
+    val surfaceColor = MaterialTheme.colorScheme.surface
 
     var isSigningIn by remember { mutableStateOf(false) }
 
@@ -79,6 +80,7 @@ fun SignInScreen(
 
     SideEffect {
         activity.window.statusBarColor = primaryColor.toArgb()
+        activity.window.navigationBarColor = surfaceColor.toArgb()
     }
 
     Scaffold(
