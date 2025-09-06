@@ -85,7 +85,13 @@ fun PropertyOwnerRegistrationFormSection(
                 label = stringResource(R.string.property_owner_registration_customer_segment_label),
                 value = propertyOwnerForm.customerSegment?.name ?: "",
                 onTap = onCustomerSegmentFieldTap,
-                suffixIcon = Icons.Default.ArrowDropDown,
+                suffix = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                },
                 isReadOnly = true,
             )
         }

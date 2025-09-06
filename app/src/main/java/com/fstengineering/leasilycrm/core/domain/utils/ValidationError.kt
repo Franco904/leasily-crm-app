@@ -44,6 +44,10 @@ sealed interface ValidationError : Error {
         IsBlank,
     }
 
+    enum class PropertyDistanceToSea : ValidationError {
+        IsBlank,
+    }
+
     enum class PropertyPriceDateRange : ValidationError {
         IsNull,
     }

@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity(
@@ -32,10 +33,10 @@ data class StayEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "is_from_other_realtor") val isFromOtherRealtor: Boolean,
     @ColumnInfo(name = "qt_guests") val qtGuests: Int,
-    @ColumnInfo(name = "total_price") val totalPrice: Double,
+    @ColumnInfo(name = "total_price") val totalPrice: BigDecimal,
     @ColumnInfo(name = "start_datetime") val startDatetime: LocalDateTime,
     @ColumnInfo(name = "end_datetime") val endDatetime: LocalDateTime,
-    val commission: Double?,
+    val commission: BigDecimal?,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_id") val propertyId: Int,

@@ -13,6 +13,7 @@ import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsSc
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationScreen
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersScreen
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep1Screen
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep2Screen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.signin.SignInScreen
 import org.koin.androidx.compose.koinViewModel
@@ -137,10 +138,33 @@ object DestinationsHandler {
                     propertyId = args.propertyId,
                     parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                     stepViewModel = koinViewModel(),
-                    onBack = { navController.navigateUp() },
+                    onLeaveRegistration = { navController.navigateUp() },
                     onNext = {
                         navController.navigate(
                             route = Destinations.PropertyRegistration.PropertyRegistrationStep2,
+                        )
+                    },
+                    onSignOut = {
+                        onSignOut()
+                        navController.navigateAndPopAllTo(Destinations.SignIn)
+                    },
+                    showSnackbar = { message -> showSnackbar(message) },
+                )
+            }
+
+            composable<Destinations.PropertyRegistration.PropertyRegistrationStep2> { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<Destinations.PropertyRegistration>()
+                }
+
+                PropertyRegistrationStep2Screen(
+                    parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
+                    stepViewModel = koinViewModel(),
+                    onLeaveRegistration = { navController.navigateUp() },
+                    onBack = { navController.navigateUp() },
+                    onNext = {
+                        navController.navigate(
+                            route = Destinations.PropertyRegistration.PropertyRegistrationStep3,
                         )
                     },
                     onSignOut = {
@@ -192,6 +216,8 @@ object DestinationsHandler {
         navigate(destination) {
             val startDestination = graph.startDestinationRoute ?: return@navigate
             popUpTo(startDestination) { inclusive = true }
+
+            launchSingleTop = true
         }
     }
 }

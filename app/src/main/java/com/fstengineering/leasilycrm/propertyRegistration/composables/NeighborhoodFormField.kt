@@ -35,7 +35,11 @@ fun NeighborhoodFormField(
 
     ExposedDropdownMenuBox(
         expanded = isMenuExpanded,
-        onExpandedChange = { isMenuExpanded = !isMenuExpanded },
+        onExpandedChange = {
+            if (pastNeighborhoods.isNotEmpty()) {
+                isMenuExpanded = !isMenuExpanded
+            }
+        },
         modifier = Modifier
             .fillMaxWidth()
     ) {

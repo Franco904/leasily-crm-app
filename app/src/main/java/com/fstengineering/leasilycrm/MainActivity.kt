@@ -17,7 +17,6 @@ import androidx.work.WorkManager
 import com.fstengineering.leasilycrm.DestinationsHandler.destinations
 import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueLazyWritesWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueReadsWorker
-import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueSessionExpirationWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.LazyWritesWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.ReadsWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.SessionExpirationWorker

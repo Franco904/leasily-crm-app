@@ -8,6 +8,7 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegi
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep1ViewModel
+import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.signin.SignInViewModel
 import org.koin.core.module.dsl.viewModel
@@ -75,6 +76,10 @@ val viewModelModule = module {
     viewModel {
         PropertyRegistrationViewModel(
             propertyRepository = get(),
+            propertyOwnerRepository = get(),
+            propertyTypeRepository = get(),
+            propertySeaProximityTypeRepository = get(),
+            propertyCharacteristicRepository = get(),
             propertyCharacteristicPropertyRepository = get(),
             propertyPriceRepository = get(),
             propertyFileRepository = get(),
@@ -84,9 +89,12 @@ val viewModelModule = module {
 
     viewModel {
         PropertyRegistrationStep1ViewModel(
-            propertyRepository = get(),
-            propertyOwnerRepository = get(),
-            propertyTypeRepository = get(),
+            propertyValidator = get(),
+        )
+    }
+
+    viewModel {
+        PropertyRegistrationStep2ViewModel(
             propertyValidator = get(),
         )
     }

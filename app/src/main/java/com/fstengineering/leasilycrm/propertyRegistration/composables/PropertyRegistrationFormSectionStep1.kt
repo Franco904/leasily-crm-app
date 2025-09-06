@@ -3,16 +3,9 @@ package com.fstengineering.leasilycrm.propertyRegistration.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowForward
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,13 +25,13 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.constants.APARTMENT_PROPERTY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyType
+import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberCenterScroller
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep1Field
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.mutate
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.flow.Flow
@@ -128,8 +121,6 @@ fun PropertyRegistrationFormSectionStep1(
                         hobbyBoxNumber = if (type?.id != APARTMENT_PROPERTY_TYPE_ID) null else propertyForm.hobbyBoxNumber,
                     ),
                 )
-
-                if (propertyForm.neighborhood == null) neighborhoodFieldFocusRequester.requestFocus()
             },
             error = formErrors[PropertyStep1Field.PropertyType],
             modifier = Modifier
@@ -237,28 +228,11 @@ fun PropertyRegistrationFormSectionStep1(
             }
         }
         Spacer(modifier = Modifier.height(28.dp))
-        ElevatedButton(
-            colors = ButtonDefaults.elevatedButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-            ),
-            onClick = onNext,
+        NextStepButton(
+            onNext = onNext,
             modifier = Modifier
                 .align(Alignment.End)
-        ) {
-            Text(
-                text = stringResource(R.string.advance_action_button_text),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onPrimary,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .size(20.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(240.dp))
+        )
+        Spacer(modifier = Modifier.height(120.dp))
     }
 }

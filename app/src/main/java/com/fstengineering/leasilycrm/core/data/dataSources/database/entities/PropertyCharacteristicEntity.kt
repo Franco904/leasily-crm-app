@@ -11,6 +11,11 @@ data class PropertyCharacteristicEntity(
     val name: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean = true,
 ) {
+    fun toDomain() = PropertyCharacteristic(
+        id = id,
+        name = name,
+    )
+
     companion object {
         fun fromDomain(domain: PropertyCharacteristic) = PropertyCharacteristicEntity(
             id = domain.id,

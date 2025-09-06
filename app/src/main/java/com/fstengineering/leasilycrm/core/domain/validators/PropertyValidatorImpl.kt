@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.validators
 
+import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXIMITY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.models.PropertyType
@@ -8,6 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyValidator
+import java.math.BigDecimal
 
 class PropertyValidatorImpl : PropertyValidator {
     override fun validate(
@@ -19,6 +21,11 @@ class PropertyValidatorImpl : PropertyValidator {
         validatePropertyType(property.type).onError { e -> errors.add(e) }
         validateNeighborhood(property.neighborhood).onError { e -> errors.add(e) }
         validateStreetAddress(property.streetAddress).onError { e -> errors.add(e) }
+
+        validateDistanceToSea(
+            seaProximityTypeId = property.seaProximityType?.id,
+            distanceToSea = property.distanceToSea,
+        ).onError { e -> errors.add(e) }
 
         return if (errors.isEmpty()) {
             AppResultCompound.Success(Unit)
@@ -67,6 +74,19 @@ class PropertyValidatorImpl : PropertyValidator {
         return when {
             streetAddress.isNullOrBlank() -> {
                 AppResult.Error(ValidationError.PropertyStreetAddress.IsBlank)
+            }
+
+            else -> AppResult.Success(Unit)
+        }
+    }
+
+    private fun validateDistanceToSea(
+        seaProximityTypeId: Int?,
+        distanceToSea: BigDecimal?,
+    ): AppResult<Unit, ValidationError.PropertyDistanceToSea> {
+        return when {
+            seaProximityTypeId == DISTANCE_TO_SEA_PROXIMITY_TYPE_ID && distanceToSea == null -> {
+                AppResult.Error(ValidationError.PropertyDistanceToSea.IsBlank)
             }
 
             else -> AppResult.Success(Unit)

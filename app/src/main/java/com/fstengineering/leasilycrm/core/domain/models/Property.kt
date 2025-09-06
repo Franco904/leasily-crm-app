@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.domain.models
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import java.math.BigDecimal
 import java.time.LocalDate
 
 data class Property(
@@ -15,17 +16,18 @@ data class Property(
     val parkingSpotNumber: String? = null,
     val parkingBasementLevelNumber: String? = null,
     val hobbyBoxNumber: String? = null,
-    val qtBedrooms: Int? = null,
-    val qtEnSuites: Int? = null,
-    val qtDoubleBeds: Int? = null,
-    val qtSingleBeds: Int? = null,
-    val qtBathrooms: Int? = null,
-    val qtParkingSpots: Int? = null,
-    val qtAirConditioners: Int? = null,
-    val qtMaxGuests: Int? = null,
+    val qtBedrooms: Int = 0,
+    val qtEnSuites: Int = 0,
+    val qtDoubleBeds: Int = 0,
+    val qtSingleBeds: Int = 0,
+    val qtBathrooms: Int = 0,
+    val qtParkingSpots: Int = 0,
+    val qtAirConditioners: Int = 0,
+    val qtMaxGuests: Int = 0,
+    val distanceToSea: BigDecimal? = null,
     val includedItems: String? = null,
     val hasIncludedItems: Boolean? = null,
-    val cleaningServiceTax: Double? = null,
+    val cleaningServiceTax: BigDecimal? = null,
     val hasCleaningServiceIncluded: Boolean? = null,
     val observations: String? = null,
     val isDeleted: Boolean = false,

@@ -106,7 +106,7 @@
     <string name="property_registration_air_conditioners_body_text">Ares condicionados</string>
     <string name="property_registration_max_guests_body_text">Máximo de pessoas</string>
     <string name="property_registration_sea_proximity_type_title">Proximidade para o mar</string>
-    <string name="property_registration_distance_to_beach_label">Distância (m)</string>
+    <string name="property_registration_distance_to_sea_label">Distância</string>
     <string name="property_registration_included_items_label">Itens incluídos</string>
     <string name="property_registration_does_not_include_items_body_text">Não inclui itens</string>
     <string name="property_registration_other_characteristics_title">Outras características</string>

@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.Property
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @Entity(
@@ -56,9 +57,10 @@ data class PropertyEntity(
     @ColumnInfo(name = "qt_parking_spots") val qtParkingSpots: Int,
     @ColumnInfo(name = "qt_air_conditioners") val qtAirConditioners: Int,
     @ColumnInfo(name = "qt_max_guests") val qtMaxGuests: Int,
+    @ColumnInfo(name = "distance_to_sea") val distanceToSea: BigDecimal?,
     @ColumnInfo(name = "included_items") val includedItems: String?,
     @ColumnInfo(name = "has_included_items") val hasIncludedItems: Boolean,
-    @ColumnInfo(name = "cleaning_service_tax") val cleaningServiceTax: Double?,
+    @ColumnInfo(name = "cleaning_service_tax") val cleaningServiceTax: BigDecimal?,
     @ColumnInfo(name = "has_cleaning_service_included") val hasCleaningServiceIncluded: Boolean,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
@@ -106,6 +108,7 @@ data class PropertyEntity(
                 qtParkingSpots = domain.qtParkingSpots,
                 qtAirConditioners = domain.qtAirConditioners,
                 qtMaxGuests = domain.qtMaxGuests,
+                distanceToSea = domain.distanceToSea,
                 includedItems = domain.includedItems,
                 hasIncludedItems = domain.hasIncludedItems,
                 cleaningServiceTax = domain.cleaningServiceTax,

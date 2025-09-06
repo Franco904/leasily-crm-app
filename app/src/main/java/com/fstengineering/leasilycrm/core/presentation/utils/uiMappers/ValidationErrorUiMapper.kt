@@ -68,6 +68,10 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
+    ValidationError.PropertyDistanceToSea.IsBlank -> {
+        R.string.inline_required
+    }
+
     ValidationError.PropertyPriceDateRange.IsNull -> {
         R.string.inline_required
     }

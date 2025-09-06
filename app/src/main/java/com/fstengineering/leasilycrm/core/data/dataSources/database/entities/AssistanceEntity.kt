@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @Entity(
@@ -34,7 +35,7 @@ data class AssistanceEntity(
     @ColumnInfo(name = "searched_start_date") val searchedStartDate: LocalDate?,
     @ColumnInfo(name = "searched_end_date") val searchedEndDate: LocalDate?,
     @ColumnInfo(name = "has_flexibility_for_period") val hasFlexibilityForPeriod: Boolean,
-    @ColumnInfo(name = "max_accepted_nightly_rate") val maxAcceptedNightlyRate: Double?,
+    @ColumnInfo(name = "max_accepted_nightly_rate") val maxAcceptedNightlyRate: BigDecimal?,
     @ColumnInfo(name = "qt_adult_guests") val qtAdultGuests: Int,
     @ColumnInfo(name = "qt_kid_guests") val qtKidGuests: Int,
     @ColumnInfo(name = "qt_baby_guests") val qtBabyGuests: Int,

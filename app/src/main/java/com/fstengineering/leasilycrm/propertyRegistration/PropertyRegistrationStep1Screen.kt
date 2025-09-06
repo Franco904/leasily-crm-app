@@ -52,7 +52,7 @@ fun PropertyRegistrationStep1Screen(
     propertyId: Int?,
     parentViewModel: PropertyRegistrationViewModel,
     stepViewModel: PropertyRegistrationStep1ViewModel,
-    onBack: () -> Unit,
+    onLeaveRegistration: () -> Unit,
     onNext: () -> Unit,
     onSignOut: () -> Unit,
     showSnackbar: (String) -> Unit,
@@ -69,21 +69,19 @@ fun PropertyRegistrationStep1Screen(
     val propertyForm by parentViewModel.propertyForm.collectAsStateWithLifecycle()
     val formErrors by stepViewModel.formErrors.collectAsStateWithLifecycle()
 
-    val propertyOwners by stepViewModel.propertyOwners.collectAsStateWithLifecycle()
-    val propertyTypes by stepViewModel.propertyTypes.collectAsStateWithLifecycle()
-    val pastNeighborhoods by stepViewModel.pastNeighborhoods.collectAsStateWithLifecycle()
+    val propertyOwners by parentViewModel.propertyOwners.collectAsStateWithLifecycle()
+    val propertyTypes by parentViewModel.propertyTypes.collectAsStateWithLifecycle()
+    val pastNeighborhoods by parentViewModel.pastNeighborhoods.collectAsStateWithLifecycle()
 
     val scrollToFieldFlow = Channel<PropertyStep1Field>()
 
     val isLoadingParent by parentViewModel.isLoading.collectAsStateWithLifecycle()
-    val isLoadingStep by stepViewModel.isLoading.collectAsStateWithLifecycle()
 
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
     var mustShowPropertyOwnersComboBottomsheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         parentViewModel.init(propertyId = propertyId)
-        stepViewModel.init()
 
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
@@ -139,7 +137,7 @@ fun PropertyRegistrationStep1Screen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) { innerPadding ->
-        if (isLoadingParent || isLoadingStep) {
+        if (isLoadingParent) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -204,7 +202,7 @@ fun PropertyRegistrationStep1Screen(
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
 
-                    onBack()
+                    onLeaveRegistration()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
             )

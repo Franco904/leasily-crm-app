@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.data.repositories.CustomerSegmentRepos
 import com.fstengineering.leasilycrm.core.data.repositories.CustomerSegmentTypeRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.DomainTablesRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyCharacteristicPropertyRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.PropertyCharacteristicRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyOwnerFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyOwnerRepositoryImpl
@@ -18,6 +19,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRep
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.DomainTablesRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicPropertyRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
@@ -56,6 +58,12 @@ val repositoryModule = module {
 
     single<PropertyCharacteristicPropertyRepository> {
         PropertyCharacteristicPropertyRepositoryImpl(
+            dao = get(),
+        )
+    }
+
+    single<PropertyCharacteristicRepository> {
+        PropertyCharacteristicRepositoryImpl(
             dao = get(),
         )
     }

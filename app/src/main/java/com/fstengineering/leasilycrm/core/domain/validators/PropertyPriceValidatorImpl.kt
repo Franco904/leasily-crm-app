@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyPriceValidator
+import java.math.BigDecimal
 import java.time.LocalDate
 
 class PropertyPriceValidatorImpl : PropertyPriceValidator {
@@ -38,7 +39,7 @@ class PropertyPriceValidatorImpl : PropertyPriceValidator {
     }
 
     private fun validateAmount(
-        amount: Double?,
+        amount: BigDecimal?,
     ): AppResult<Unit, ValidationError.PropertyPriceAmount> {
         return when {
             amount == null -> {

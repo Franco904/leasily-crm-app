@@ -20,12 +20,12 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun AppRadioGroup(
-    radioOptions: ImmutableList<String>,
-    selectedOption: String?,
+    radioOptions: ImmutableList<AppRadioOption>,
+    selectedOptionLabel: String?,
     onOptionSelected: (String) -> Unit,
-    supportingText: String?,
     modifier: Modifier = Modifier,
     groupTitle: String? = null,
+    supportingText: String? = null,
     isInvalid: Boolean = false,
 ) {
     Column(
@@ -50,23 +50,24 @@ fun AppRadioGroup(
                     modifier = Modifier
                         .fillMaxWidth()
                         .selectable(
-                            selected = option == selectedOption,
-                            onClick = { onOptionSelected(option) },
+                            selected = option.label == selectedOptionLabel,
+                            onClick = { onOptionSelected(option.label) },
                             role = Role.RadioButton,
                         )
                 ) {
                     RadioButton(
-                        selected = option == selectedOption,
+                        selected = option.label == selectedOptionLabel,
                         onClick = null,
                     )
                     Text(
-                        text = option,
+                        text = option.label,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .padding(start = 8.dp)
                     )
                 }
+                option.relatedContent?.invoke()
             }
             if (supportingText != null) {
                 Spacer(modifier = Modifier.height(12.dp))
@@ -82,3 +83,8 @@ fun AppRadioGroup(
         }
     }
 }
+
+data class AppRadioOption(
+    val label: String,
+    val relatedContent: (@Composable () -> Unit)? = null,
+)
