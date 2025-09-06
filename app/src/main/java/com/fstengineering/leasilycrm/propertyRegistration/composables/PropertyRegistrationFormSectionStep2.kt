@@ -33,7 +33,8 @@ import com.fstengineering.leasilycrm.core.presentation.composables.Characteristi
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberCenterScroller
-import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.QuantityCharacteristicsField
+import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.IncludedItemsFormField
+import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.QuantityCharacteristicsFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.SeaProximityTypeFormField
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep2Field
 import kotlinx.collections.immutable.ImmutableList
@@ -87,7 +88,7 @@ fun PropertyRegistrationFormSectionStep2(
             color = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(modifier = Modifier.height(24.dp))
-        QuantityCharacteristicsField(
+        QuantityCharacteristicsFormField(
             propertyForm = propertyForm,
             onPropertyFormChange = onPropertyFormChange,
         )

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyRegistration.composables
+package com.fstengineering.leasilycrm.propertyRegistration.composables.fields
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
 
 @Composable
-fun HobbyBoxNumberFormField(
+fun ParkingSpotNumberFormField(
     value: String?,
     onValueChange: (String) -> Unit,
     onDone: () -> Unit,
@@ -16,7 +16,7 @@ fun HobbyBoxNumberFormField(
     modifier: Modifier = Modifier
 ) {
     AppTextField(
-        label = stringResource(R.string.property_registration_hobby_box_number_label),
+        label = stringResource(R.string.property_registration_parking_spot_number_label),
         value = value ?: "",
         onValueChange = onValueChange,
         maxLength = 20,

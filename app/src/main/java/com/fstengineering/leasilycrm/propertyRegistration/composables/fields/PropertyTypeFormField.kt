@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyRegistration.composables
+package com.fstengineering.leasilycrm.propertyRegistration.composables.fields
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

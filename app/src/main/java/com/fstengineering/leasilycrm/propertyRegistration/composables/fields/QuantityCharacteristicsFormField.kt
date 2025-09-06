@@ -17,7 +17,7 @@ import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.presentation.composables.QuantityAnswerCounter
 
 @Composable
-fun QuantityCharacteristicsField(
+fun QuantityCharacteristicsFormField(
     propertyForm: Property,
     onPropertyFormChange: (Property) -> Unit,
     modifier: Modifier = Modifier,

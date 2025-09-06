@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyRegistration.composables
+package com.fstengineering.leasilycrm.propertyRegistration.composables.fields
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
