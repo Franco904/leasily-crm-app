@@ -65,7 +65,7 @@ fun PropertyRegistrationStep2Screen(
 
     val scrollToFieldFlow = Channel<PropertyStep2Field>()
 
-    val isLoadingParent by parentViewModel.isLoading.collectAsStateWithLifecycle()
+    val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
 
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
 
@@ -124,7 +124,7 @@ fun PropertyRegistrationStep2Screen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) { innerPadding ->
-        if (isLoadingParent) {
+        if (isLoading) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier

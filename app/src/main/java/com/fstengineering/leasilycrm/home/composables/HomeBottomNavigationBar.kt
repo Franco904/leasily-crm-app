@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
-import com.fstengineering.leasilycrm.core.presentation.models.BottomNavBarDestination
+import com.fstengineering.leasilycrm.home.models.BottomNavBarDestination
 
 @Composable
 fun HomeBottomNavigationBar(

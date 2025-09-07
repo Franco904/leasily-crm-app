@@ -36,6 +36,7 @@ fun AppTextField(
     isInvalid: Boolean = false,
     isReadOnly: Boolean = false,
     isSingleLine: Boolean = true,
+    prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
     supportingText: String? = null,
     maxLength: Int? = null,
@@ -74,6 +75,7 @@ fun AppTextField(
         isError = isInvalid,
         readOnly = isReadOnly,
         textStyle = MaterialTheme.typography.bodyLarge,
+        prefix = prefix,
         suffix = suffix,
         supportingText = {
             Row {

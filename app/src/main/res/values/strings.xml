@@ -114,15 +114,45 @@
     <string name="property_registration_cleaning_service_tax_label">Valor da faxina</string>
     <string name="property_registration_does_not_include_cleaning_service_body_text">Não inclui serviço de faxina</string>
     <string name="property_registration_daily_price_label">Valores da diária por período</string>
-    <string name="property_registration_new_date_range_price_dialog_title">Novo valor de diária</string>
-    <string name="property_registration_new_date_range_price_dialog_supporting_text">Preencha o valor da diária do aluguel estabelecido pelo proprietário para o período.</string>
+
+    <string name="property_registration_property_price_empty_text">Nenhum valor de diária registrado.</string>
+
+    <string name="property_registration_date_range_price_dialog_title_create">Novo valor de diária</string>
+    <string name="property_registration_date_range_price_dialog_title_edit">Editar valor de diária</string>
+    <string name="property_registration_date_range_price_dialog_supporting_text">Preencha o valor da diária do aluguel estabelecido pelo proprietário para o período.</string>
     <string name="property_registration_date_range_label">Período</string>
+    <string name="property_registration_date_range_value">%1$s/%2$s a %3$s/%4$s</string>
     <string name="property_registration_price_amount_label">Valor da diária</string>
+
+    <string name="property_registration_price_delete_dialog_headline">Excluir valor de diária?</string>
+    <string name="property_registration_price_delete_dialog_supporting_text">Se confirmada a exclusão, este valor de diária não estará mais disponível.</string>
 
     <string name="property_registration_pictures_label">Fotos</string>
     <string name="property_registration_observations_label">Observações sobre o imóvel</string>
 
     <string name="property_registration_property_owner_empty_text">Nenhum proprietário registrado.</string>
+
+    <!-- Base calendar -->
+    <string name="january_label">JANEIRO</string>
+    <string name="february_label">FEVEREIRO</string>
+    <string name="march_label">MARÇO</string>
+    <string name="april_label">ABRIL</string>
+    <string name="may_label">MAIO</string>
+    <string name="june_label">JUNHO</string>
+    <string name="july_label">JULHO</string>
+    <string name="august_label">AGOSTO</string>
+    <string name="september_label">SETEMBRO</string>
+    <string name="october_label">OUTUBRO</string>
+    <string name="november_label">NOVEMBRO</string>
+    <string name="december_label">DEZEMBRO</string>
+
+    <string name="sunday_label">D</string>
+    <string name="monday_label">S</string>
+    <string name="tuesday_label">T</string>
+    <string name="wednesday_label">Q</string>
+    <string name="thursday_label">Q</string>
+    <string name="friday_label">S</string>
+    <string name="saturday_label">S</string>
 
     <!-- Body texts -->
     <string name="not_registered_info_body_text">Informação não registrada</string>
@@ -139,6 +169,10 @@
     <string name="no_app_to_show_file_content_dialog_supporting_text">Não há nenhum aplicativo para visualizar este arquivo. Tente baixar um apropriado na loja.</string>
 
     <string name="chooser_open_file_title">Abrir com</string>
+
+    <string name="date_range_picker_dialog_title">Selecione um período</string>
+    <string name="date_range_picker_dialog_primary_button">OK</string>
+    <string name="date_range_picker_dialog_secondary_button">Cancelar</string>
 
     <!-- Action buttons -->
     <string name="add_action_button_text">Adicionar</string>

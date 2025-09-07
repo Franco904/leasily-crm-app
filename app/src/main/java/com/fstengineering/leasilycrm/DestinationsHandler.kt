@@ -14,6 +14,7 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegi
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersScreen
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep1Screen
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep2Screen
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep3Screen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.signin.SignInScreen
 import org.koin.androidx.compose.koinViewModel
@@ -166,6 +167,29 @@ object DestinationsHandler {
                         navController.navigate(
                             route = Destinations.PropertyRegistration.PropertyRegistrationStep3,
                         )
+                    },
+                    onSignOut = {
+                        onSignOut()
+                        navController.navigateAndPopAllTo(Destinations.SignIn)
+                    },
+                    showSnackbar = { message -> showSnackbar(message) },
+                )
+            }
+
+            composable<Destinations.PropertyRegistration.PropertyRegistrationStep3> { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<Destinations.PropertyRegistration>()
+                }
+
+                PropertyRegistrationStep3Screen(
+                    parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
+                    stepViewModel = koinViewModel(),
+                    onLeaveRegistration = { navController.navigateUp() },
+                    onBack = { navController.navigateUp() },
+                    onNext = {
+//                        navController.navigate(
+//                            route = Destinations.PropertyRegistration.PropertyRegistrationStep4,
+//                        )
                     },
                     onSignOut = {
                         onSignOut()
