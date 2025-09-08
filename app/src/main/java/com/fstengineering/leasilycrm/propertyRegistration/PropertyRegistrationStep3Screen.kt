@@ -177,7 +177,6 @@ fun PropertyRegistrationStep3Screen(
                 },
                 modifier = Modifier
                     .padding(innerPadding)
-                    .padding(horizontal = 16.dp)
             )
         }
         if (propertyPriceForm != null) {

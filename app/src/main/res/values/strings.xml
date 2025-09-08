@@ -164,8 +164,8 @@
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>
     <string name="confirm_leave_registration_dialog_headline_edit">Sair da edição?</string>
-    <string name="confirm_leave_registration_dialog_supporting_text_create">Se confirmado, os dados serão perdidos.</string>
-    <string name="confirm_leave_registration_dialog_supporting_text_edit">Se confirmado, quaisquer alterações não serão aplicadas.</string>
+    <string name="confirm_leave_registration_dialog_supporting_text_create">Se confirmado, os dados inseridos serão perdidos.</string>
+    <string name="confirm_leave_registration_dialog_supporting_text_edit">Se confirmado, alterações não serão aplicadas.</string>
 
     <string name="no_app_to_show_file_content_dialog_headline">Visualização falhou</string>
     <string name="no_app_to_show_file_content_dialog_supporting_text">Não há nenhum aplicativo para visualizar este arquivo. Tente baixar um apropriado na loja.</string>

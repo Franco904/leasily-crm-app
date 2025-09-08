@@ -1,11 +1,13 @@
 package com.fstengineering.leasilycrm.propertyRegistration.composables
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -13,12 +15,15 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -50,114 +55,133 @@ fun PropertyRegistrationFormSectionStep3(
     val calendar = remember { Calendar.getInstance() }
 
     val context = LocalContext.current
+    val outlineColor = MaterialTheme.colorScheme.outline
 
-    LazyColumn(
+    Box(
         modifier = modifier
             .fillMaxSize()
     ) {
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-        item {
-            Text(
-                text = stringResource(R.string.property_registration_step_3_title),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
-        item {
-            CleaningServiceTaxFormField(
-                cleaningServiceTax = propertyForm.cleaningServiceTax,
-                onCleaningServiceTaxChange = {
-                    onPropertyFormChange(
-                        propertyForm.copy(
-                            cleaningServiceTax = it,
-                            hasCleaningServiceIncluded = true,
-                        )
-                    )
-                },
-            )
-        }
-        item {
-            AppCheckbox(
-                label = stringResource(R.string.property_registration_does_not_include_cleaning_service_body_text),
-                isChecked = !(propertyForm.hasCleaningServiceIncluded ?: true),
-                onCheckedChange = { newNotHasCleaningServiceIncluded ->
-                    onPropertyFormChange(
-                        propertyForm.copy(hasCleaningServiceIncluded = !newNotHasCleaningServiceIncluded)
-                    )
-                },
-                isEnabled = propertyForm.cleaningServiceTax?.toString().isNullOrBlank(),
-            )
-        }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
-        item { HorizontalDivider() }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
-        item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+        ) {
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item {
                 Text(
-                    text = stringResource(R.string.property_registration_daily_price_label),
-                    style = MaterialTheme.typography.titleMedium,
+                    text = stringResource(R.string.property_registration_step_3_title),
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .weight(1f)
                 )
-                TextButton(onClick = onAddPropertyPrice) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+            }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+            item {
+                CleaningServiceTaxFormField(
+                    cleaningServiceTax = propertyForm.cleaningServiceTax,
+                    onCleaningServiceTaxChange = {
+                        onPropertyFormChange(
+                            propertyForm.copy(
+                                cleaningServiceTax = it,
+                                hasCleaningServiceIncluded = true,
+                            )
+                        )
+                    },
+                )
+            }
+            item {
+                AppCheckbox(
+                    label = stringResource(R.string.property_registration_does_not_include_cleaning_service_body_text),
+                    isChecked = !(propertyForm.hasCleaningServiceIncluded ?: true),
+                    onCheckedChange = { newNotHasCleaningServiceIncluded ->
+                        onPropertyFormChange(
+                            propertyForm.copy(hasCleaningServiceIncluded = !newNotHasCleaningServiceIncluded)
+                        )
+                    },
+                    isEnabled = propertyForm.cleaningServiceTax?.toString().isNullOrBlank(),
+                )
+            }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+            item { HorizontalDivider() }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Text(
-                        text = stringResource(R.string.add_action_button_text),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
+                        text = stringResource(R.string.property_registration_daily_price_label),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .weight(1f)
+                    )
+                    TextButton(onClick = onAddPropertyPrice) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.add_action_button_text),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
+            }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+            if (propertyForm.prices.isEmpty()) {
+                item { PropertyPricesEmptySection() }
+            } else {
+                itemsIndexed(
+                    items = propertyForm.prices
+                        .groupBy { price ->
+                            CalendarMonthYear(
+                                id = price.startDate!!.monthValue + price.startDate.year,
+                                month = price.startDate.monthValue,
+                                year = price.startDate.year,
+                            )
+                        }
+                        .toImmutableMap(),
+                    key = { _, entry -> entry.key.id },
+                    contentType = { _, entryType -> entryType },
+                ) { i, monthPrices ->
+                    val monthLabel =
+                        context.getMonthLabelByNumber(monthNumber = monthPrices.key.month)
+                    val isCurrentYear = monthPrices.key.year == calendar.get(Calendar.YEAR)
+
+                    val finalMonthLabel =
+                        "$monthLabel ${if (isCurrentYear) "" else monthPrices.key.year}"
+
+                    if (i > 0) Spacer(modifier = Modifier.height(8.dp))
+                    PropertyPriceCard(
+                        monthLabel = finalMonthLabel,
+                        monthPrices = monthPrices.value.toImmutableList(),
+                        onEditPropertyPrice = onEditPropertyPrice,
+                        onDeletePropertyPrice = onDeletePropertyPrice,
                     )
                 }
             }
+            item { Spacer(modifier = Modifier.height(120.dp)) }
         }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
-        if (propertyForm.prices.isEmpty()) {
-            item { PropertyPricesEmptySection() }
-        } else {
-            itemsIndexed(
-                items = propertyForm.prices
-                    .groupBy { price ->
-                        CalendarMonthYear(
-                            id = price.startDate!!.monthValue + price.startDate.year,
-                            month = price.startDate.monthValue,
-                            year = price.startDate.year,
-                        )
-                    }
-                    .toImmutableMap(),
-                key = { _, entry -> entry.key.id },
-                contentType = { _, entryType -> entryType },
-            ) { i, monthPrices ->
-                val monthLabel = context.getMonthLabelByNumber(monthNumber = monthPrices.key.month)
-                val isCurrentYear = monthPrices.key.year == calendar.get(Calendar.YEAR)
-
-                val finalMonthLabel =
-                    "$monthLabel ${if (isCurrentYear) "" else monthPrices.key.year}"
-
-                if (i > 0) Spacer(modifier = Modifier.height(8.dp))
-                PropertyPriceCard(
-                    monthLabel = finalMonthLabel,
-                    monthPrices = monthPrices.value.toImmutableList(),
-                    onEditPropertyPrice = onEditPropertyPrice,
-                    onDeletePropertyPrice = onDeletePropertyPrice,
-                )
-            }
-        }
-        item { Spacer(modifier = Modifier.height(28.dp)) }
-        item {
+        Surface(
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .drawBehind {
+                    drawLine(
+                        color = outlineColor,
+                        start = Offset(x = 0f, y = 0f),
+                        end = Offset(x = size.width, y = 0f),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                }
+        ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
+                Spacer(modifier = Modifier.weight(1f))
                 BackStepButton(onBack = onBack)
                 Spacer(modifier = Modifier.width(8.dp))
                 NextStepButton(onNext = {
@@ -169,6 +193,5 @@ fun PropertyRegistrationFormSectionStep3(
                 })
             }
         }
-        item { Spacer(modifier = Modifier.height(120.dp)) }
     }
 }

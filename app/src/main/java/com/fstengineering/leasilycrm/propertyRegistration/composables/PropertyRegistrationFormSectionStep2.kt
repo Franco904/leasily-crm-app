@@ -1,15 +1,20 @@
 package com.fstengineering.leasilycrm.propertyRegistration.composables
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,6 +24,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
@@ -57,6 +64,8 @@ fun PropertyRegistrationFormSectionStep2(
     onNext: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val outlineColor = MaterialTheme.colorScheme.outline
+
     val scrollState = rememberScrollState()
     val centerScrollState = rememberCenterScroller(scrollState)
 
@@ -76,106 +85,126 @@ fun PropertyRegistrationFormSectionStep2(
         }
     }
 
-    Column(
+    Box(
         modifier = modifier
-            .verticalScroll(scrollState)
-            .onGloballyPositioned { coords -> scrollContainerCoords = coords }
+            .fillMaxSize()
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = stringResource(R.string.property_registration_step_2_title),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        QuantityCharacteristicsFormField(
-            propertyForm = propertyForm,
-            onPropertyFormChange = onPropertyFormChange,
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = stringResource(R.string.property_registration_sea_proximity_type_title),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        SeaProximityTypeFormField(
-            propertyForm = propertyForm,
-            onPropertyFormChange = onPropertyFormChange,
-            onDistanceToSeaPosition = { coords ->
-                fieldsCoords = fieldsCoords.mutate { map ->
-                    map[PropertyStep2Field.DistanceToSea] = coords
-                }
-            },
-            distanceToSeaError = formErrors[PropertyStep2Field.DistanceToSea],
-            seaProximityTypes = seaProximityTypes,
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        HorizontalDivider()
-        Spacer(modifier = Modifier.height(24.dp))
-        IncludedItemsFormField(
-            value = propertyForm.includedItems,
-            onValueChange = {
-                onPropertyFormChange(
-                    propertyForm.copy(
-                        includedItems = it,
-                        hasIncludedItems = true,
-                    )
-                )
-            },
-        )
-        AppCheckbox(
-            label = stringResource(R.string.property_registration_does_not_include_items_body_text),
-            isChecked = !(propertyForm.hasIncludedItems ?: true),
-            onCheckedChange = { newNotHasItems ->
-                onPropertyFormChange(propertyForm.copy(hasIncludedItems = !newNotHasItems))
-            },
-            isEnabled = propertyForm.includedItems.isNullOrBlank(),
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        HorizontalDivider()
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = stringResource(R.string.property_registration_other_characteristics_title),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        FlowRow {
-            propertyCharacteristics.forEach { characteristic ->
-                CharacteristicChip(
-                    label = characteristic.name,
-                    isSelected = characteristic in propertyForm.characteristics.map {
-                        it.propertyCharacteristic
-                    },
-                    onSelect = {
-                        onSelectPropertyCharacteristic(
-                            characteristic = characteristic,
-                            propertyForm = propertyForm,
-                            onPropertyFormChange = onPropertyFormChange,
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .verticalScroll(scrollState)
+                .onGloballyPositioned { coords -> scrollContainerCoords = coords }
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.property_registration_step_2_title),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            QuantityCharacteristicsFormField(
+                propertyForm = propertyForm,
+                onPropertyFormChange = onPropertyFormChange,
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = stringResource(R.string.property_registration_sea_proximity_type_title),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            SeaProximityTypeFormField(
+                propertyForm = propertyForm,
+                onPropertyFormChange = onPropertyFormChange,
+                onDistanceToSeaPosition = { coords ->
+                    fieldsCoords = fieldsCoords.mutate { map ->
+                        map[PropertyStep2Field.DistanceToSea] = coords
+                    }
+                },
+                distanceToSeaError = formErrors[PropertyStep2Field.DistanceToSea],
+                seaProximityTypes = seaProximityTypes,
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(24.dp))
+            IncludedItemsFormField(
+                value = propertyForm.includedItems,
+                onValueChange = {
+                    onPropertyFormChange(
+                        propertyForm.copy(
+                            includedItems = it,
+                            hasIncludedItems = true,
                         )
-                    },
-                )
-                Spacer(modifier = Modifier.width(4.dp))
+                    )
+                },
+            )
+            AppCheckbox(
+                label = stringResource(R.string.property_registration_does_not_include_items_body_text),
+                isChecked = !(propertyForm.hasIncludedItems ?: true),
+                onCheckedChange = { newNotHasItems ->
+                    onPropertyFormChange(propertyForm.copy(hasIncludedItems = !newNotHasItems))
+                },
+                isEnabled = propertyForm.includedItems.isNullOrBlank(),
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = stringResource(R.string.property_registration_other_characteristics_title),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            FlowRow {
+                propertyCharacteristics.forEach { characteristic ->
+                    CharacteristicChip(
+                        label = characteristic.name,
+                        isSelected = characteristic in propertyForm.characteristics.map {
+                            it.propertyCharacteristic
+                        },
+                        onSelect = {
+                            onSelectPropertyCharacteristic(
+                                characteristic = characteristic,
+                                propertyForm = propertyForm,
+                                onPropertyFormChange = onPropertyFormChange,
+                            )
+                        },
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(120.dp))
+        }
+        Surface(
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .drawBehind {
+                    drawLine(
+                        color = outlineColor,
+                        start = Offset(x = 0f, y = 0f),
+                        end = Offset(x = size.width, y = 0f),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                }
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                BackStepButton(onBack = onBack)
+                Spacer(modifier = Modifier.width(8.dp))
+                NextStepButton(onNext = {
+                    if (propertyForm.includedItems.isNullOrBlank()) {
+                        onPropertyFormChange(propertyForm.copy(hasIncludedItems = false))
+                    }
+
+                    onNext()
+                })
             }
         }
-        Spacer(modifier = Modifier.height(28.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .align(Alignment.End)
-        ) {
-            BackStepButton(onBack = onBack)
-            Spacer(modifier = Modifier.width(8.dp))
-            NextStepButton(onNext = {
-                if (propertyForm.includedItems.isNullOrBlank()) {
-                    onPropertyFormChange(propertyForm.copy(hasIncludedItems = false))
-                }
-
-                onNext()
-            })
-        }
-        Spacer(modifier = Modifier.height(120.dp))
     }
 }
 
