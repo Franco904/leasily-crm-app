@@ -133,6 +133,7 @@ fun PropertyRegistrationFormSectionStep3(
             } else {
                 itemsIndexed(
                     items = propertyForm.prices
+                        .sortedBy { it.startDate }
                         .groupBy { price ->
                             CalendarMonthYear(
                                 id = price.startDate!!.monthValue + price.startDate.year,
