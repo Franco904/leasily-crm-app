@@ -23,12 +23,14 @@ data class PropertyFileEntity(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
     @ColumnInfo(name = "property_file_uri") val propertyFileUri: String,
     @ColumnInfo(name = "property_id") val propertyId: Int,
+    @ColumnInfo(name = "is_main_picture") val isMainPicture: Boolean = false,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 ) {
     fun toDomain() = PropertyFile(
         id = id,
         uriString = propertyFileUri,
         propertyId = propertyId,
+        isMainPicture = isMainPicture,
         isDeleted = isDeleted,
     )
 
@@ -41,6 +43,7 @@ data class PropertyFileEntity(
                 id = domain.id,
                 propertyFileUri = domain.uriString,
                 propertyId = domain.propertyId,
+                isMainPicture = domain.isMainPicture,
                 isDeleted = domain.isDeleted,
             )
         }

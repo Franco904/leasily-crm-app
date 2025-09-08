@@ -63,6 +63,10 @@ fun PropertyOwnerRegistrationFormSection(
     val emailFieldFocusRequester = remember { FocusRequester() }
     val paymentKeyFieldFocusRequester = remember { FocusRequester() }
 
+    val propertyOwnerNotDeletedFiles = remember(propertyOwnerForm) {
+        propertyOwnerForm.files.filter { !it.isDeleted }.toPersistentList()
+    }
+
     LaunchedEffect(Unit) {
         scrollToFieldFlow.collect { fieldToScroll ->
             bringIntoViewRequesters[fieldToScroll]?.bringIntoView()
@@ -235,18 +239,17 @@ fun PropertyOwnerRegistrationFormSection(
         }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         itemsIndexed(
-            items = propertyOwnerForm.files.filter { !it.isDeleted },
+            items = propertyOwnerNotDeletedFiles,
             key = { i, file -> file.id ?: "${file.name}$i" },
-        ) { _, file ->
+        ) { i, file ->
             DocumentFileCard(
                 fileName = file.name,
                 actionIcon = Icons.Filled.Close,
                 onAction = {
                     val newFiles = if (file.id == null) {
-                        propertyOwnerForm.files.toPersistentList().remove(file)
+                        propertyOwnerNotDeletedFiles.remove(file)
                     } else {
-                        propertyOwnerForm.files.toPersistentList().mutate {
-                            val i = it.indexOf(file)
+                        propertyOwnerNotDeletedFiles.mutate {
                             it[i] = file.copy(isDeleted = true)
                         }
                     }

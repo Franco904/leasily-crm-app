@@ -15,6 +15,7 @@ import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersScreen
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep1Screen
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep2Screen
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep3Screen
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep4Screen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.signin.SignInScreen
 import org.koin.androidx.compose.koinViewModel
@@ -139,11 +140,13 @@ object DestinationsHandler {
                     propertyId = args.propertyId,
                     parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                     stepViewModel = koinViewModel(),
-                    onLeaveRegistration = { navController.navigateUp() },
+                    onLeaveRegistration = {
+                        navController
+                            .popBackStack<Destinations.PropertyRegistration>(inclusive = true)
+                    },
                     onNext = {
-                        navController.navigate(
-                            route = Destinations.PropertyRegistration.PropertyRegistrationStep2,
-                        )
+                        val nextRoute = Destinations.PropertyRegistration.PropertyRegistrationStep2
+                        navController.navigate(route = nextRoute)
                     },
                     onSignOut = {
                         onSignOut()
@@ -161,12 +164,14 @@ object DestinationsHandler {
                 PropertyRegistrationStep2Screen(
                     parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                     stepViewModel = koinViewModel(),
-                    onLeaveRegistration = { navController.navigateUp() },
+                    onLeaveRegistration = {
+                        navController
+                            .popBackStack<Destinations.PropertyRegistration>(inclusive = true)
+                    },
                     onBack = { navController.navigateUp() },
                     onNext = {
-                        navController.navigate(
-                            route = Destinations.PropertyRegistration.PropertyRegistrationStep3,
-                        )
+                        val nextRoute = Destinations.PropertyRegistration.PropertyRegistrationStep3
+                        navController.navigate(route = nextRoute)
                     },
                     onSignOut = {
                         onSignOut()
@@ -184,13 +189,35 @@ object DestinationsHandler {
                 PropertyRegistrationStep3Screen(
                     parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                     stepViewModel = koinViewModel(),
-                    onLeaveRegistration = { navController.navigateUp() },
+                    onLeaveRegistration = {
+                        navController
+                            .popBackStack<Destinations.PropertyRegistration>(inclusive = true)
+                    },
                     onBack = { navController.navigateUp() },
                     onNext = {
-//                        navController.navigate(
-//                            route = Destinations.PropertyRegistration.PropertyRegistrationStep4,
-//                        )
+                        val nextRoute = Destinations.PropertyRegistration.PropertyRegistrationStep4
+                        navController.navigate(route = nextRoute)
                     },
+                    onSignOut = {
+                        onSignOut()
+                        navController.navigateAndPopAllTo(Destinations.SignIn)
+                    },
+                    showSnackbar = { message -> showSnackbar(message) },
+                )
+            }
+
+            composable<Destinations.PropertyRegistration.PropertyRegistrationStep4> { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<Destinations.PropertyRegistration>()
+                }
+
+                PropertyRegistrationStep4Screen(
+                    parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
+                    onLeaveRegistration = {
+                        navController
+                            .popBackStack<Destinations.PropertyRegistration>(inclusive = true)
+                    },
+                    onBack = { navController.navigateUp() },
                     onSignOut = {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)

@@ -71,7 +71,6 @@ data class PropertyEntity(
 ) {
     companion object {
         fun fromDomain(domain: Property): PropertyEntity {
-            requireNotNull(domain.id) { "Property.id is required" }
             requireNotNull(domain.registerDate) { "Property.registerDate is required" }
             requireNotNull(domain.neighborhood) { "Property.neighborhood is required" }
             requireNotNull(domain.streetAddress) { "Property.streetAddress is required" }

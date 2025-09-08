@@ -38,8 +38,8 @@ class PropertyRegistrationStep3ViewModel(
     fun onPropertyPriceFormChange(form: PropertyPrice?) {
         _priceFormErrors.update {
             val newErrors = it.errors.mutate { map ->
-                val hasDateRangeChanged =
-                    form?.startDate != propertyPriceForm.value?.startDate || form?.endDate != propertyPriceForm.value?.endDate
+                val hasDateRangeChanged = form?.startDate != propertyPriceForm.value?.startDate
+                        || form?.endDate != propertyPriceForm.value?.endDate
                 if (hasDateRangeChanged) {
                     map[PropertyPriceField.DateRange] = null
                 }

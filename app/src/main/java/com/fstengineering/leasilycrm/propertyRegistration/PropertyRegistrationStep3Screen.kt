@@ -85,6 +85,8 @@ fun PropertyRegistrationStep3Screen(
                     is RedirectToSignIn -> {
                         onSignOut()
                     }
+
+                    else -> {}
                 }
             }
         }
@@ -169,7 +171,10 @@ fun PropertyRegistrationStep3Screen(
                 },
                 onDeletePropertyPrice = stepViewModel::onDeletePropertyPrice,
                 onBack = onBack,
-                onNext = { focusManager.clearFocus() },
+                onNext = {
+                    focusManager.clearFocus()
+                    onNext()
+                },
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp)

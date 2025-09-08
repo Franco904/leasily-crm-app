@@ -6,6 +6,4 @@ import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 
 interface PropertyFileRepository {
     suspend fun insertOrUpdate(file: PropertyFile): AppResult<Unit, DataSourceError>
-
-    suspend fun getFileName(file: PropertyFile): AppResult<String, DataSourceError>
 }

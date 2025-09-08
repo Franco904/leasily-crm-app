@@ -80,6 +80,8 @@ fun PropertyRegistrationStep2Screen(
                     is RedirectToSignIn -> {
                         onSignOut()
                     }
+
+                    else -> {}
                 }
             }
         }

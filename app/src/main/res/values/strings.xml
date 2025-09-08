@@ -115,7 +115,6 @@
     <string name="property_registration_does_not_include_cleaning_service_body_text">Não inclui serviço de faxina</string>
     <string name="property_registration_daily_price_label">Valores da diária por período</string>
 
-    <string name="property_registration_property_price_empty_text">Nenhum valor de diária registrado.</string>
 
     <string name="property_registration_date_range_price_dialog_title_create">Novo valor de diária</string>
     <string name="property_registration_date_range_price_dialog_title_edit">Editar valor de diária</string>
@@ -124,10 +123,13 @@
     <string name="property_registration_date_range_value">%1$s/%2$s a %3$s/%4$s</string>
     <string name="property_registration_price_amount_label">Valor da diária</string>
 
+    <string name="property_registration_property_price_empty_text">Nenhum valor de diária registrado.</string>
     <string name="property_registration_price_delete_dialog_headline">Excluir valor de diária?</string>
     <string name="property_registration_price_delete_dialog_supporting_text">Se confirmada a exclusão, este valor de diária não estará mais disponível.</string>
 
     <string name="property_registration_pictures_label">Fotos</string>
+    <string name="property_registration_pictures_empty_text">Nenhuma foto do imóvel adicionada.</string>
+    <string name="property_registration_pictures_main_picture_label">Principal</string>
     <string name="property_registration_observations_label">Observações sobre o imóvel</string>
 
     <string name="property_registration_property_owner_empty_text">Nenhum proprietário registrado.</string>
@@ -211,6 +213,10 @@
     <string name="snackbar_create_property_owner_succeeded">Proprietário criado.</string>
     <string name="snackbar_edit_property_owner_succeeded">Proprietário editado.</string>
     <string name="snackbar_delete_property_owner_succeeded">Proprietário excluído.</string>
+
+    <string name="snackbar_create_property_succeeded">Imóvel criado.</string>
+    <string name="snackbar_edit_property_succeeded">Imóvel editado.</string>
+    <string name="snackbar_delete_property_succeeded">Imóvel excluído.</string>
 
     <!-- Snackbar errors -->
     <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>

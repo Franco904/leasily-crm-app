@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "72f74a2470f26567f9568ff2974483f1",
+    "identityHash": "7087f1b2c03ef11f61d8329bbc60e447",
     "entities": [
       {
         "tableName": "assistances",
@@ -947,7 +947,7 @@
       },
       {
         "tableName": "property_files",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `property_file_uri` TEXT NOT NULL, `property_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `property_file_uri` TEXT NOT NULL, `property_id` INTEGER NOT NULL, `is_main_picture` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -963,6 +963,12 @@
           {
             "fieldPath": "propertyId",
             "columnName": "property_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMainPicture",
+            "columnName": "is_main_picture",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1697,7 +1703,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '72f74a2470f26567f9568ff2974483f1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7087f1b2c03ef11f61d8329bbc60e447')"
     ]
   }
 }

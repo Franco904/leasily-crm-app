@@ -71,7 +71,6 @@ val repositoryModule = module {
     single<PropertyFileRepository> {
         PropertyFileRepositoryImpl(
             dao = get(),
-            sharedStorage = get(),
         )
     }
 
@@ -100,7 +99,6 @@ val repositoryModule = module {
         PropertyRepositoryImpl(
             dao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
-            sharedStorage = get(),
         )
     }
 
