@@ -66,12 +66,16 @@ fun PropertyPicturesRow(
                     val newFiles = if (file.id == null) {
                         propertyNotDeletedFiles.remove(file)
                     } else {
-                        propertyNotDeletedFiles.mutate {
-                            it[i] = file.copy(isDeleted = true)
-                        }
+                        propertyNotDeletedFiles.mutate { it[i] = file.copy(isDeleted = true) }
                     }
 
-                    onPropertyFormChange(propertyForm.copy(files = newFiles))
+                    val hasMainPicture = newFiles.any { !it.isDeleted && it.isMainPicture }
+
+                    val newFilesUpdated = if (newFiles.isNotEmpty() && !hasMainPicture) {
+                        newFiles.mutate { it[0] = it[0].copy(isMainPicture = true) }
+                    } else newFiles
+
+                    onPropertyFormChange(propertyForm.copy(files = newFilesUpdated))
                 },
             )
             Spacer(modifier = Modifier.width(8.dp))
