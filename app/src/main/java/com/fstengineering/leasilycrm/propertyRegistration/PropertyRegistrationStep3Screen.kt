@@ -189,6 +189,8 @@ fun PropertyRegistrationStep3Screen(
                 onSave = stepViewModel::validatePropertyPrice,
                 onCancel = {
                     isRegisteringNewPropertyPrice = false
+                    propertyPriceFormStartDate = null
+
                     stepViewModel.onPropertyPriceFormChange(form = null)
                 },
             )
