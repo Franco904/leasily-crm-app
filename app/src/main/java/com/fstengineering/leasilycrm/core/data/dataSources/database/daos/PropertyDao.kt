@@ -25,7 +25,7 @@ interface PropertyDao {
 
     @Query(
         """
-        SELECT neighborhood FROM properties
+        SELECT DISTINCT(neighborhood) FROM properties
         WHERE user_id = :userId
         AND is_deleted = 0
         ORDER BY neighborhood
