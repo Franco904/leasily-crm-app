@@ -6,14 +6,25 @@ import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
 
 @Composable
-fun ConfirmLeaveEditionDialog(
+fun ConfirmLeaveRegistrationDialog(
+    isEditing: Boolean,
     onConfirmLeave: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AppTitleAndMessageDialog(
-        title = stringResource(R.string.confirm_leave_edition_dialog_headline),
-        message = stringResource(R.string.confirm_leave_edition_dialog_supporting_text),
+        title = stringResource(
+            when {
+                isEditing -> R.string.confirm_leave_registration_dialog_headline_edit
+                else -> R.string.confirm_leave_registration_dialog_headline_create
+            },
+        ),
+        message = stringResource(
+            when {
+                isEditing -> R.string.confirm_leave_registration_dialog_supporting_text_edit
+                else -> R.string.confirm_leave_registration_dialog_supporting_text_create
+            }
+        ),
         confirmButtonText = stringResource(R.string.confirm_action_button_text),
         dismissButtonText = stringResource(R.string.cancel_action_button_text),
         onConfirmButtonClick = onConfirmLeave,

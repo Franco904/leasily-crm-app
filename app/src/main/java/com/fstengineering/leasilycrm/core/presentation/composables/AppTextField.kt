@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -22,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -37,7 +35,9 @@ fun AppTextField(
     onTap: (() -> Unit)? = null,
     isInvalid: Boolean = false,
     isReadOnly: Boolean = false,
-    suffixIcon: ImageVector? = null,
+    isSingleLine: Boolean = true,
+    prefix: @Composable (() -> Unit)? = null,
+    suffix: @Composable (() -> Unit)? = null,
     supportingText: String? = null,
     maxLength: Int? = null,
     keyboardType: KeyboardType = KeyboardType.Unspecified,
@@ -75,15 +75,8 @@ fun AppTextField(
         isError = isInvalid,
         readOnly = isReadOnly,
         textStyle = MaterialTheme.typography.bodyLarge,
-        suffix = if (suffixIcon == null) null else {
-            {
-                Icon(
-                    imageVector = suffixIcon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-        },
+        prefix = prefix,
+        suffix = suffix,
         supportingText = {
             Row {
                 if (supportingText != null) {
@@ -108,7 +101,7 @@ fun AppTextField(
                 }
             }
         },
-        singleLine = true,
+        singleLine = isSingleLine,
         keyboardActions = KeyboardActions(
             onDone = onDone,
         ),

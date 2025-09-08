@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.BigDecimalConverter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.LocalDateTimeTypeConverter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.LocalDateTypeConverter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
@@ -51,6 +52,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Sta
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransferEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginTypeEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.views.PropertyCharacteristicNotDeletedView
 
 @Database(
     /*
@@ -83,10 +85,14 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ten
         TenantEntity::class,
         TenantContactOriginTypeEntity::class,
     ],
+    views = [
+        PropertyCharacteristicNotDeletedView::class,
+    ],
     version = AppDatabase.DB_VERSION,
 )
 @TypeConverters(
     value = [
+        BigDecimalConverter::class,
         LocalDateTimeTypeConverter::class,
         LocalDateTypeConverter::class,
     ]

@@ -1,0 +1,102 @@
+package com.fstengineering.leasilycrm.propertyRegistration.viewModels
+
+import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyPriceValidator
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import com.fstengineering.leasilycrm.propertyRegistration.models.PropertyPriceErrorUiState
+import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyPriceField
+import kotlinx.collections.immutable.mutate
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
+
+class PropertyRegistrationStep3ViewModel(
+    private val propertyPriceValidator: PropertyPriceValidator,
+) : ViewModel() {
+    private val _uiEvents = Channel<UiEvents>()
+    val uiEvents = _uiEvents.receiveAsFlow()
+
+    private val _priceFormErrors = MutableStateFlow(PropertyPriceErrorUiState())
+    val priceFormErrors = _priceFormErrors.asStateFlow()
+
+    private val _propertyPriceForm = MutableStateFlow<PropertyPrice?>(null)
+    val propertyPriceForm = _propertyPriceForm.asStateFlow()
+
+    private val _propertyPriceToDelete = MutableStateFlow<PropertyPrice?>(null)
+    val propertyPriceToDelete = _propertyPriceToDelete.asStateFlow()
+
+    fun onPropertyPriceFormChange(form: PropertyPrice?) {
+        _priceFormErrors.update {
+            val newErrors = it.errors.mutate { map ->
+                val hasDateRangeChanged = form?.startDate != propertyPriceForm.value?.startDate
+                        || form?.endDate != propertyPriceForm.value?.endDate
+                if (hasDateRangeChanged) {
+                    map[PropertyPriceField.DateRange] = null
+                }
+
+                if (form?.price != propertyPriceForm.value?.price) {
+                    map[PropertyPriceField.Amount] = null
+                }
+            }
+
+            it.copy(errors = newErrors)
+        }
+
+        _propertyPriceForm.update { form }
+    }
+
+    fun validatePropertyPrice() {
+        val newPropertyPrice = propertyPriceForm.value ?: return
+
+        viewModelScope.launch {
+            propertyPriceValidator.validate(propertyPrice = newPropertyPrice)
+                .onErrors { errors ->
+                    setFieldErrors(errors)
+                    return@launch
+                }
+
+            _uiEvents.send(UiEvents.PropertyPriceValidateSuccess)
+        }
+    }
+
+    private suspend fun setFieldErrors(errors: List<ValidationError>) {
+        _priceFormErrors.update { PropertyPriceErrorUiState() }
+        delay(150.milliseconds)
+
+        val priceDateRangeError =
+            errors.firstOrNull { it is ValidationError.PropertyPriceDateRange }
+        val priceAmountError =
+            errors.firstOrNull { it is ValidationError.PropertyPriceAmount }
+
+        _priceFormErrors.update {
+            val newErrors = it.errors.mutate { map ->
+                map[PropertyPriceField.DateRange] = priceDateRangeError?.toUiMessage()
+                map[PropertyPriceField.Amount] = priceAmountError?.toUiMessage()
+            }
+
+            it.copy(errors = newErrors)
+        }
+    }
+
+    fun onDeletePropertyPrice(
+        price: PropertyPrice?,
+    ) {
+        _propertyPriceToDelete.update { price }
+    }
+
+    sealed interface UiEvents {
+        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+
+        data object PropertyPriceValidateSuccess : UiEvents
+    }
+}

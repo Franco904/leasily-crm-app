@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.Property
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @Entity(
@@ -33,10 +35,11 @@ import java.time.LocalDate
         Index("property_owner_id"),
         Index("property_type_id"),
         Index("property_sea_proximity_type_id"),
+        Index("user_id"),
     ],
 )
 data class PropertyEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int? = null,
     @ColumnInfo(name = "register_date") val registerDate: LocalDate,
     val neighborhood: String,
     @ColumnInfo(name = "street_address") val streetAddress: String,
@@ -54,14 +57,68 @@ data class PropertyEntity(
     @ColumnInfo(name = "qt_parking_spots") val qtParkingSpots: Int,
     @ColumnInfo(name = "qt_air_conditioners") val qtAirConditioners: Int,
     @ColumnInfo(name = "qt_max_guests") val qtMaxGuests: Int,
+    @ColumnInfo(name = "distance_to_sea") val distanceToSea: BigDecimal?,
     @ColumnInfo(name = "included_items") val includedItems: String?,
     @ColumnInfo(name = "has_included_items") val hasIncludedItems: Boolean,
-    @ColumnInfo(name = "cleaning_service_tax") val cleaningServiceTax: Double?,
+    @ColumnInfo(name = "cleaning_service_tax") val cleaningServiceTax: BigDecimal?,
     @ColumnInfo(name = "has_cleaning_service_included") val hasCleaningServiceIncluded: Boolean,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Int,
     @ColumnInfo(name = "property_type_id") val propertyTypeId: Int,
-    @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityType: Int,
+    @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityType: Int?,
     @ColumnInfo(name = "user_id") val userId: Int,
-)
+) {
+    companion object {
+        fun fromDomain(domain: Property): PropertyEntity {
+            requireNotNull(domain.registerDate) { "Property.registerDate is required" }
+            requireNotNull(domain.neighborhood) { "Property.neighborhood is required" }
+            requireNotNull(domain.streetAddress) { "Property.streetAddress is required" }
+            requireNotNull(domain.qtBedrooms) { "Property.qtBedrooms is required" }
+            requireNotNull(domain.qtEnSuites) { "Property.qtEnSuites is required" }
+            requireNotNull(domain.qtDoubleBeds) { "Property.qtDoubleBeds is required" }
+            requireNotNull(domain.qtSingleBeds) { "Property.qtSingleBeds is required" }
+            requireNotNull(domain.qtBathrooms) { "Property.qtBathrooms is required" }
+            requireNotNull(domain.qtParkingSpots) { "Property.qtParkingSpots is required" }
+            requireNotNull(domain.qtAirConditioners) { "Property.qtAirConditioners is required" }
+            requireNotNull(domain.qtMaxGuests) { "Property.qtMaxGuests is required" }
+            requireNotNull(domain.hasIncludedItems) { "Property.hasIncludedItems is required" }
+            requireNotNull(domain.hasCleaningServiceIncluded) { "Property.hasCleaningServiceIncluded is required" }
+            requireNotNull(domain.owner?.id) { "Property.owner.id is required" }
+            requireNotNull(domain.type?.id) { "Property.type.id is required" }
+            requireNotNull(domain.userId) { "Property.userId is required" }
+
+            return PropertyEntity(
+                id = domain.id,
+                registerDate = domain.registerDate,
+                neighborhood = domain.neighborhood,
+                streetAddress = domain.streetAddress,
+                cepPostalCode = domain.cepPostalCode,
+                number = domain.number,
+                addressLine2 = domain.addressLine2,
+                parkingSpotNumber = domain.parkingSpotNumber,
+                parkingBasementLevelNumber = domain.parkingBasementLevelNumber,
+                hobbyBoxNumber = domain.hobbyBoxNumber,
+                qtBedrooms = domain.qtBedrooms,
+                qtEnSuites = domain.qtEnSuites,
+                qtDoubleBeds = domain.qtDoubleBeds,
+                qtSingleBeds = domain.qtSingleBeds,
+                qtBathrooms = domain.qtBathrooms,
+                qtParkingSpots = domain.qtParkingSpots,
+                qtAirConditioners = domain.qtAirConditioners,
+                qtMaxGuests = domain.qtMaxGuests,
+                distanceToSea = domain.distanceToSea,
+                includedItems = domain.includedItems,
+                hasIncludedItems = domain.hasIncludedItems,
+                cleaningServiceTax = domain.cleaningServiceTax,
+                hasCleaningServiceIncluded = domain.hasCleaningServiceIncluded,
+                observations = domain.observations,
+                isDeleted = domain.isDeleted,
+                propertyOwnerId = domain.owner.id,
+                propertyTypeId = domain.type.id,
+                propertySeaProximityType = domain.seaProximityType?.id,
+                userId = domain.userId,
+            )
+        }
+    }
+}

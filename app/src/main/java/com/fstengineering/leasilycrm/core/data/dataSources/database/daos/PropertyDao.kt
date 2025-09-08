@@ -1,23 +1,50 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.PropertyCompound
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PropertyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdate(property: PropertyEntity): Long
 
-    @Delete
-    suspend fun delete(property: PropertyEntity)
-
-    @Query("SELECT * FROM properties WHERE id = :id")
-    suspend fun getById(id: Int): PropertyEntity?
+    @Query("UPDATE properties SET is_deleted = 1 WHERE id = :id")
+    suspend fun delete(id: Int)
 
     @Query("SELECT * FROM properties")
     suspend fun getAll(): List<PropertyEntity>
+
+    @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
+    suspend fun getById(id: Int): PropertyCompound
+
+    @Query(
+        """
+        SELECT DISTINCT(neighborhood) FROM properties
+        WHERE user_id = :userId
+        AND is_deleted = 0
+        ORDER BY neighborhood
+    """
+    )
+    suspend fun getAllNeighborHoodNames(userId: Int): List<String>
+
+    @Transaction
+    @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
+    fun watchById(id: Int): Flow<PropertyCompound>
+
+    @Transaction
+    @Query(
+        """
+        SELECT * FROM properties
+        WHERE user_id = :userId
+        AND is_deleted = 0
+        ORDER BY register_date DESC
+    """
+    )
+    fun watchAll(userId: Int): Flow<List<PropertyCompound>>
 }

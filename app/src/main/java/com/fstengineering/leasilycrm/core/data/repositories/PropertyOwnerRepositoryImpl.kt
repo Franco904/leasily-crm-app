@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class PropertyOwnerRepositoryImpl(
-    private val propertyOwnerDao: PropertyOwnerDao,
+    private val dao: PropertyOwnerDao,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
     private val sharedStorage: SharedStorage,
 ) : PropertyOwnerRepository {
@@ -33,7 +33,7 @@ class PropertyOwnerRepositoryImpl(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow ->
                     prefsFlow.first().remoteId ?: return AppResult.Error(
-                        error = DataSourceError.RemoteBackendError.NotFound,
+                        error = DataSourceError.PreferencesError.NotFound,
                     )
                 }
             )
@@ -42,13 +42,13 @@ class PropertyOwnerRepositoryImpl(
         val propertyOwnerEntity = PropertyOwnerEntity.fromDomain(propertyOwnerWithUser)
 
         // TODO: Convert all Int ids to Long in database
-        val id = propertyOwnerDao.insertOrUpdate(propertyOwnerEntity).toInt()
+        val id = dao.insertOrUpdate(propertyOwnerEntity).toInt()
 
         return AppResult.Success(data = id)
     }
 
     override suspend fun delete(id: Int): AppResult<Unit, DataSourceError> {
-        propertyOwnerDao.delete(id)
+        dao.delete(id)
 
         return AppResult.Success(data = Unit)
     }
@@ -56,7 +56,7 @@ class PropertyOwnerRepositoryImpl(
     override suspend fun getById(
         propertyOwnerId: Int,
     ): AppResult<PropertyOwner, DataSourceError> {
-        val propertyOwner = propertyOwnerDao.getById(id = propertyOwnerId)
+        val propertyOwner = dao.getById(id = propertyOwnerId)
             .toDomain()
 
         val filesWithNames = propertyOwner.files.map { file ->
@@ -75,31 +75,31 @@ class PropertyOwnerRepositoryImpl(
     override fun watchById(
         propertyOwnerId: Int,
     ): Flow<AppResult<PropertyOwner, DataSourceError>> = flow {
-        emitAll(
-            propertyOwnerDao.watchById(id = propertyOwnerId)
-                .map { propertyOwner ->
-                    val domain = propertyOwner.toDomain()
+        val propertyOwnerFlow = dao.watchById(id = propertyOwnerId)
+            .map { propertyOwner ->
+                val domain = propertyOwner.toDomain()
 
-                    val filesWithNames = domain.files.map { file ->
-                        val fileName =
-                            sharedStorage.getFileName(contentUriString = file.uriString ?: "")
-                                .fold(
-                                    onError = { error ->
-                                        emit(AppResult.Error(error = error))
-                                        return@map file
-                                    },
-                                    onSuccess = { fileName -> fileName },
-                                )
+                val filesWithNames = domain.files.map { file ->
+                    val fileName =
+                        sharedStorage.getFileName(contentUriString = file.uriString ?: "")
+                            .fold(
+                                onError = { error ->
+                                    emit(AppResult.Error(error = error))
+                                    return@map file
+                                },
+                                onSuccess = { fileName -> fileName },
+                            )
 
-                        file.copy(name = fileName)
-                    }.toImmutableList()
+                    file.copy(name = fileName)
+                }.toImmutableList()
 
-                    AppResult.Success<PropertyOwner, DataSourceError>(
-                        data = domain.copy(files = filesWithNames),
-                    )
-                }
-                .distinctUntilChanged()
-        )
+                AppResult.Success<PropertyOwner, DataSourceError>(
+                    data = domain.copy(files = filesWithNames),
+                )
+            }
+            .distinctUntilChanged()
+
+        emitAll(propertyOwnerFlow)
     }
 
     override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataSourceError>> =
@@ -119,7 +119,7 @@ class PropertyOwnerRepositoryImpl(
                 )
 
             emitAll(
-                propertyOwnerDao.watchAll(userId = userRemoteId)
+                dao.watchAll(userId = userRemoteId)
                     .map {
                         val propertyOwners = it.map { owner -> owner.toDomain() }.toPersistentList()
                         AppResult.Success<ImmutableList<PropertyOwner>, DataSourceError>(data = propertyOwners)

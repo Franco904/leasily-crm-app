@@ -83,6 +83,7 @@ fun PropertyOwnersScreen(
 
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
+        activity.window.navigationBarColor = surfaceColor.toArgb()
     }
 
     Scaffold(

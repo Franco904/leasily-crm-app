@@ -5,18 +5,45 @@ import com.fstengineering.leasilycrm.core.application.di.qualifiers.plainPrefere
 import com.fstengineering.leasilycrm.core.data.repositories.CustomerSegmentRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.CustomerSegmentTypeRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.DomainTablesRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.PropertyCharacteristicPropertyRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.PropertyCharacteristicRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.PropertyFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyOwnerFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyOwnerRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.PropertyPriceRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.PropertyRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.PropertySeaProximityRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.PropertyTypeRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.UserRepositoryImpl
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.DomainTablesRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicPropertyRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertyFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertyPriceRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.PropertyTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
+    single<CustomerSegmentRepository> {
+        CustomerSegmentRepositoryImpl(
+            dao = get(),
+            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+        )
+    }
+
+    single<CustomerSegmentTypeRepository> {
+        CustomerSegmentTypeRepositoryImpl(
+            dao = get(),
+        )
+    }
+
     single<DomainTablesRepository> {
         DomainTablesRepositoryImpl(
             api = get(),
@@ -29,30 +56,60 @@ val repositoryModule = module {
         )
     }
 
-    single<CustomerSegmentRepository> {
-        CustomerSegmentRepositoryImpl(
+    single<PropertyCharacteristicPropertyRepository> {
+        PropertyCharacteristicPropertyRepositoryImpl(
             dao = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
         )
     }
 
-    single<PropertyOwnerRepository> {
-        PropertyOwnerRepositoryImpl(
-            propertyOwnerDao = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
-            sharedStorage = get(),
+    single<PropertyCharacteristicRepository> {
+        PropertyCharacteristicRepositoryImpl(
+            dao = get(),
+        )
+    }
+
+    single<PropertyFileRepository> {
+        PropertyFileRepositoryImpl(
+            dao = get(),
         )
     }
 
     single<PropertyOwnerFileRepository> {
         PropertyOwnerFileRepositoryImpl(
-            propertyOwnerFileDao = get(),
+            dao = get(),
             sharedStorage = get(),
         )
     }
 
-    single<CustomerSegmentTypeRepository> {
-        CustomerSegmentTypeRepositoryImpl(
+    single<PropertyOwnerRepository> {
+        PropertyOwnerRepositoryImpl(
+            dao = get(),
+            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+            sharedStorage = get(),
+        )
+    }
+
+    single<PropertyPriceRepository> {
+        PropertyPriceRepositoryImpl(
+            dao = get(),
+        )
+    }
+
+    single<PropertyRepository> {
+        PropertyRepositoryImpl(
+            dao = get(),
+            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+        )
+    }
+
+    single<PropertySeaProximityTypeRepository> {
+        PropertySeaProximityRepositoryImpl(
+            dao = get(),
+        )
+    }
+
+    single<PropertyTypeRepository> {
+        PropertyTypeRepositoryImpl(
             dao = get(),
         )
     }

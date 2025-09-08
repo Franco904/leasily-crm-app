@@ -1,0 +1,88 @@
+package com.fstengineering.leasilycrm.core.presentation.utils
+
+import android.content.Context
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
+import com.fstengineering.leasilycrm.R
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.toPersistentSet
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.util.Calendar
+
+val daysOfWeek = listOf(
+    R.string.sunday_label,
+    R.string.monday_label,
+    R.string.tuesday_label,
+    R.string.wednesday_label,
+    R.string.thursday_label,
+    R.string.friday_label,
+    R.string.saturday_label,
+)
+
+private val months = mapOf(
+    1 to R.string.january_label,
+    2 to R.string.february_label,
+    3 to R.string.march_label,
+    4 to R.string.april_label,
+    5 to R.string.may_label,
+    6 to R.string.june_label,
+    7 to R.string.july_label,
+    8 to R.string.august_label,
+    9 to R.string.september_label,
+    10 to R.string.october_label,
+    11 to R.string.november_label,
+    12 to R.string.december_label,
+)
+
+fun Context.getMonthLabelByNumber(monthNumber: Int): String {
+    return getString(months[monthNumber] ?: R.string.january_label)
+}
+
+fun getMonthTimestamp(month: Int, year: Int): Long {
+    val calendar = Calendar.getInstance()
+    calendar.set(year, month - 1, 1)
+
+    return calendar.timeInMillis
+}
+
+fun getNumberOfDaysOfMonth(month: Int, year: Int): Int {
+    val calendar = Calendar.getInstance()
+    calendar.set(year, month - 1, 1)
+
+    return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+}
+
+fun getFirstDayOfWeekOfMonth(month: Int, year: Int): Int {
+    val calendar = Calendar.getInstance()
+    calendar.set(year, month - 1, 1)
+
+    return calendar.get(Calendar.DAY_OF_WEEK)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun getSelectableDates(
+    initialDayOfMonth: Int,
+    initialMonth: Int,
+    initialYear: Int,
+    alreadySelectedDates: ImmutableSet<LocalDate>,
+): SelectableDates {
+    val minUtcMillis = LocalDate.of(initialYear, initialMonth, initialDayOfMonth)
+        .atStartOfDay(ZoneOffset.UTC)
+        .toInstant()
+        .toEpochMilli()
+
+    val alreadySelectedDatesUtc = alreadySelectedDates
+        .map { it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli() }
+        .toPersistentSet()
+
+    return object : SelectableDates {
+        override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+            return utcTimeMillis >= minUtcMillis && utcTimeMillis !in alreadySelectedDatesUtc
+        }
+
+        override fun isSelectableYear(year: Int): Boolean {
+            return year >= initialYear
+        }
+    }
+}

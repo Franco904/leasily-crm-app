@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.presentation.models
+package com.fstengineering.leasilycrm.home.models
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

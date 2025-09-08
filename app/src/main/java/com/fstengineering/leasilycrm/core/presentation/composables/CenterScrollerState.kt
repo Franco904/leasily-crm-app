@@ -24,7 +24,7 @@ fun rememberCenterScroller(
 
                 val delta = (targetTop - scrollContainerTop) - (scrollContainerH - targetH) / 2f
 
-                scrollState.animateScrollBy(scrollState.value + delta)
+                scrollState.animateScrollBy(delta)
             }
         }
     }

@@ -21,7 +21,7 @@ data class PropertyOwnerCompound(
         entityColumn = "property_owner_id",
         entity = PropertyOwnerFileEntity::class,
     )
-    val files: List<PropertyOwnerFileEntity>
+    val files: List<PropertyOwnerFileEntity>,
 ) {
     val activeFiles: List<PropertyOwnerFileEntity>
         get() = files.filter { !it.isDeleted }

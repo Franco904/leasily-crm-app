@@ -35,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomsheet
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveEditionDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
@@ -75,7 +75,7 @@ fun PropertyOwnerRegistrationScreen(
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    var mustShowConfirmLeaveEditionDialog by remember { mutableStateOf(false) }
+    var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
     var mustShowCustomerSegmentComboBottomsheet by remember { mutableStateOf(false) }
 
     val openDocumentFile = rememberLauncherForActivityResult(
@@ -126,27 +126,18 @@ fun PropertyOwnerRegistrationScreen(
 
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
+        activity.window.navigationBarColor = surfaceColor.toArgb()
     }
 
     BackHandler {
-        if (propertyOwnerId != null) {
-            mustShowConfirmLeaveEditionDialog = true
-        } else {
-            onBack()
-        }
+        mustShowConfirmLeaveRegistrationDialog = true
     }
 
     Scaffold(
         topBar = {
             PropertyOwnerRegistrationTopAppBar(
                 isEditing = propertyOwnerId != null,
-                onBack = {
-                    if (propertyOwnerId != null) {
-                        mustShowConfirmLeaveEditionDialog = true
-                    } else {
-                        onBack()
-                    }
-                },
+                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
                 onSavePropertyOwner = viewModel::savePropertyOwner,
             )
         },
@@ -206,14 +197,15 @@ fun PropertyOwnerRegistrationScreen(
                 emptyOptionsText = stringResource(R.string.property_owner_registration_customer_segment_empty_text),
             )
         }
-        if (mustShowConfirmLeaveEditionDialog) {
-            ConfirmLeaveEditionDialog(
+        if (mustShowConfirmLeaveRegistrationDialog) {
+            ConfirmLeaveRegistrationDialog(
+                isEditing = propertyOwnerId != null,
                 onConfirmLeave = {
-                    mustShowConfirmLeaveEditionDialog = false
+                    mustShowConfirmLeaveRegistrationDialog = false
 
                     onBack()
                 },
-                onCancel = { mustShowConfirmLeaveEditionDialog = false }
+                onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
             )
         }
     }

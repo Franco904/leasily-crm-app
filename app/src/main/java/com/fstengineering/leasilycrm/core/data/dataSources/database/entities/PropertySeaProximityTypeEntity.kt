@@ -11,6 +11,11 @@ data class PropertySeaProximityTypeEntity(
     val name: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean = true,
 ) {
+    fun toDomain() = PropertySeaProximityType(
+        id = id,
+        name = name,
+    )
+
     companion object {
         fun fromDomain(domain: PropertySeaProximityType) = PropertySeaProximityTypeEntity(
             id = domain.id,

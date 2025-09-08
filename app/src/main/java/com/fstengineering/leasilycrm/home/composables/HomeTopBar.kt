@@ -23,7 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.fstengineering.leasilycrm.core.presentation.models.BottomNavBarDestination
+import com.fstengineering.leasilycrm.home.models.BottomNavBarDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

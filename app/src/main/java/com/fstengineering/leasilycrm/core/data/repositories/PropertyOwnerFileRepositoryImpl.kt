@@ -10,12 +10,12 @@ import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 
 class PropertyOwnerFileRepositoryImpl(
-    private val propertyOwnerFileDao: PropertyOwnerFileDao,
+    private val dao: PropertyOwnerFileDao,
     private val sharedStorage: SharedStorage,
 ) : PropertyOwnerFileRepository {
     override suspend fun insertOrUpdate(file: PropertyOwnerFile): AppResult<Unit, DataSourceError> {
         val fileEntity = PropertyOwnerFileEntity.fromDomain(domain = file)
-        propertyOwnerFileDao.insertOrUpdate(fileEntity)
+        dao.insertOrUpdate(fileEntity)
 
         return AppResult.Success(data = Unit)
     }

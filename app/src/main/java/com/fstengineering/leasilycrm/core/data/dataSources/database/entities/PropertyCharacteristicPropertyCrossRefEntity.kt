@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
 
 @Entity(
     tableName = "property_characteristics_properties",
@@ -31,4 +32,17 @@ data class PropertyCharacteristicPropertyCrossRefEntity(
     @ColumnInfo(name = "property_id") val propertyId: Int,
     @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Int,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-)
+) {
+    companion object {
+        fun fromDomain(domain: PropertyCharacteristicProperty): PropertyCharacteristicPropertyCrossRefEntity {
+            requireNotNull(domain.propertyId) { "PropertyCharacteristicProperty.propertyId is required" }
+            requireNotNull(domain.propertyCharacteristic?.id) { "PropertyCharacteristicProperty.propertyCharacteristic.id is required" }
+
+            return PropertyCharacteristicPropertyCrossRefEntity(
+                propertyId = domain.propertyId,
+                propertyCharacteristicId = domain.propertyCharacteristic.id,
+                isDeleted = domain.isDeleted,
+            )
+        }
+    }
+}

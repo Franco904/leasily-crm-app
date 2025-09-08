@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
@@ -62,6 +63,10 @@ fun PropertyOwnerRegistrationFormSection(
     val emailFieldFocusRequester = remember { FocusRequester() }
     val paymentKeyFieldFocusRequester = remember { FocusRequester() }
 
+    val propertyOwnerNotDeletedFiles = remember(propertyOwnerForm) {
+        propertyOwnerForm.files.filter { !it.isDeleted }.toPersistentList()
+    }
+
     LaunchedEffect(Unit) {
         scrollToFieldFlow.collect { fieldToScroll ->
             bringIntoViewRequesters[fieldToScroll]?.bringIntoView()
@@ -84,7 +89,13 @@ fun PropertyOwnerRegistrationFormSection(
                 label = stringResource(R.string.property_owner_registration_customer_segment_label),
                 value = propertyOwnerForm.customerSegment?.name ?: "",
                 onTap = onCustomerSegmentFieldTap,
-                suffixIcon = Icons.Default.ArrowDropDown,
+                suffix = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                },
                 isReadOnly = true,
             )
         }
@@ -132,6 +143,7 @@ fun PropertyOwnerRegistrationFormSection(
                         if (phoneError != null) stringResource(phoneError) else null
                     },
                     maxLength = 20,
+                    keyboardType = KeyboardType.Phone,
                     onDone = { emailFieldFocusRequester.requestFocus() },
                     fieldFocusRequester = phoneFieldFocusRequester,
                 )
@@ -157,6 +169,7 @@ fun PropertyOwnerRegistrationFormSection(
                         if (emailError != null) stringResource(emailError) else null
                     },
                     maxLength = 120,
+                    keyboardType = KeyboardType.Email,
                     onDone = { paymentKeyFieldFocusRequester.requestFocus() },
                     fieldFocusRequester = emailFieldFocusRequester,
                 )
@@ -226,18 +239,17 @@ fun PropertyOwnerRegistrationFormSection(
         }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         itemsIndexed(
-            items = propertyOwnerForm.files.filter { !it.isDeleted },
+            items = propertyOwnerNotDeletedFiles,
             key = { i, file -> file.id ?: "${file.name}$i" },
-        ) { _, file ->
+        ) { i, file ->
             DocumentFileCard(
                 fileName = file.name,
                 actionIcon = Icons.Filled.Close,
                 onAction = {
                     val newFiles = if (file.id == null) {
-                        propertyOwnerForm.files.toPersistentList().remove(file)
+                        propertyOwnerNotDeletedFiles.remove(file)
                     } else {
-                        propertyOwnerForm.files.toPersistentList().mutate {
-                            val i = it.indexOf(file)
+                        propertyOwnerNotDeletedFiles.mutate {
                             it[i] = file.copy(isDeleted = true)
                         }
                     }

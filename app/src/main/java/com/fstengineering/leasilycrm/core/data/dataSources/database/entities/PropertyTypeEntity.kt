@@ -11,6 +11,11 @@ data class PropertyTypeEntity(
     val name: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean = true,
 ) {
+    fun toDomain() = PropertyType(
+        id = id,
+        name = name,
+    )
+
     companion object {
         fun fromDomain(domain: PropertyType) = PropertyTypeEntity(
             id = domain.id,
