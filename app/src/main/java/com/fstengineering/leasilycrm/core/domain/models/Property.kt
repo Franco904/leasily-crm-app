@@ -16,7 +16,7 @@ data class Property(
     val parkingSpotNumber: String? = null,
     val parkingBasementLevelNumber: String? = null,
     val hobbyBoxNumber: String? = null,
-    val qtBedrooms: Int = 0,
+    val qtBedrooms: Int = 1,
     val qtEnSuites: Int = 0,
     val qtDoubleBeds: Int = 0,
     val qtSingleBeds: Int = 0,

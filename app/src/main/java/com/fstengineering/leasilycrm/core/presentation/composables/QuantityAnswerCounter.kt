@@ -36,7 +36,10 @@ fun QuantityAnswerCounter(
         )
         IconButton(
             colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
+                containerColor = when {
+                    count == 0 -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+                    else -> MaterialTheme.colorScheme.primary
+                },
             ),
             onClick = { onCountChange((count - 1).coerceAtLeast(0)) },
             modifier = Modifier
@@ -45,7 +48,10 @@ fun QuantityAnswerCounter(
             Icon(
                 imageVector = Icons.Default.Remove,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = when {
+                    count == 0 -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    else -> MaterialTheme.colorScheme.onPrimary
+                },
             )
         }
         Spacer(modifier = Modifier.width(16.dp))

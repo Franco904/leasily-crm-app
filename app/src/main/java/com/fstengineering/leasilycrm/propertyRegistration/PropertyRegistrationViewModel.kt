@@ -272,7 +272,7 @@ class PropertyRegistrationViewModel(
             }
 
             _uiEvents.send(
-                if (propertyToEdit != null) UiEvents.PropertyEditSuccess(messageId = R.string.snackbar_edit_property_owner_succeeded)
+                if (propertyToEdit != null) UiEvents.PropertyEditSuccess(messageId = R.string.snackbar_edit_property_succeeded)
                 else UiEvents.PropertyCreateSuccess,
             )
         }

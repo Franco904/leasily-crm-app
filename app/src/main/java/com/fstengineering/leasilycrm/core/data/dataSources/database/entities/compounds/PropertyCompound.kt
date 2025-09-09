@@ -68,7 +68,9 @@ data class PropertyCompound(
     fun toDomain() = Property(
         id = property.id,
         registerDate = property.registerDate,
+        neighborhood = property.neighborhood,
         streetAddress = property.streetAddress,
+        cepPostalCode = property.cepPostalCode,
         number = property.number,
         addressLine2 = property.addressLine2,
         parkingSpotNumber = property.parkingSpotNumber,
@@ -82,6 +84,7 @@ data class PropertyCompound(
         qtParkingSpots = property.qtParkingSpots,
         qtAirConditioners = property.qtAirConditioners,
         qtMaxGuests = property.qtMaxGuests,
+        distanceToSea = property.distanceToSea,
         includedItems = property.includedItems,
         hasIncludedItems = property.hasIncludedItems,
         cleaningServiceTax = property.cleaningServiceTax,

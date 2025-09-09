@@ -131,6 +131,7 @@ fun PropertyOwnersScreen(
                         .padding(innerPadding)
                         .padding(horizontal = 16.dp)
                 ) {
+                    item { Spacer(modifier = Modifier.height(16.dp)) }
                     itemsIndexed(
                         items = propertyOwners.groupBy {
                             it.name?.first()?.uppercaseChar().toString()
@@ -161,6 +162,7 @@ fun PropertyOwnersScreen(
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                     }
+                    item { Spacer(modifier = Modifier.height(72.dp)) }
                 }
             }
         }

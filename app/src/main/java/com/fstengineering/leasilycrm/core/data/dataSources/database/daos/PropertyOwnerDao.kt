@@ -5,13 +5,14 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.PropertyOwnerCompound
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PropertyOwnerDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertOrUpdate(propertyOwner: PropertyOwnerEntity): Long
 
     @Query("UPDATE property_owners SET is_deleted = 1 WHERE id = :id")

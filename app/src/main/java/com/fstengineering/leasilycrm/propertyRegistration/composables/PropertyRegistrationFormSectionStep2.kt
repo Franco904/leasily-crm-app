@@ -36,7 +36,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
-import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicChip
+import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicSelectableChip
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberCenterScroller
@@ -157,11 +157,11 @@ fun PropertyRegistrationFormSectionStep2(
             Spacer(modifier = Modifier.height(16.dp))
             FlowRow {
                 propertyCharacteristics.forEach { characteristic ->
-                    CharacteristicChip(
+                    CharacteristicSelectableChip(
                         label = characteristic.name,
-                        isSelected = characteristic in propertyForm.characteristics.map {
-                            it.propertyCharacteristic
-                        },
+                        isSelected = characteristic in propertyForm.characteristics
+                            .filter { !it.isDeleted }
+                            .map { it.propertyCharacteristic },
                         onSelect = {
                             onSelectPropertyCharacteristic(
                                 characteristic = characteristic,

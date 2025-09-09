@@ -21,7 +21,7 @@ fun DistanceToSeaFormField(
         label = stringResource(R.string.property_registration_distance_to_sea_label),
         value = value ?: "",
         onValueChange = { distanceToSeaInput ->
-            if (!distanceToSeaInput.isDigitsOnly()) return@AppTextField
+            if (!distanceToSeaInput.isDigitsOnly() || distanceToSeaInput.length > 5) return@AppTextField
             onValueChange(distanceToSeaInput)
         },
         isInvalid = error != null,
