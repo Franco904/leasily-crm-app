@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.presentation.composables
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -69,6 +70,8 @@ fun AppMoreOptionsMenu(
                                 text = it.text!!,
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .padding(end = 24.dp)
                             )
                         },
                         onClick = {

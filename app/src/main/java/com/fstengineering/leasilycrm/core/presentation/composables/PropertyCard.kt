@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -34,6 +35,7 @@ import coil.compose.AsyncImage
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.constants.APARTMENT_PROPERTY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXIMITY_TYPE_ID
+import com.fstengineering.leasilycrm.core.domain.constants.NOT_APPLICABLE_PROXIMITY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import kotlinx.collections.immutable.persistentListOf
 
@@ -121,7 +123,10 @@ fun PropertyCard(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    if (property.seaProximityType != null) {
+                    val canShowSeaProximityChip = property.seaProximityType != null
+                            && property.seaProximityType.id != NOT_APPLICABLE_PROXIMITY_TYPE_ID
+
+                    if (canShowSeaProximityChip) {
                         CharacteristicReadOnlyChip(
                             characteristicText = when {
                                 property.seaProximityType.id == DISTANCE_TO_SEA_PROXIMITY_TYPE_ID -> {
@@ -138,8 +143,9 @@ fun PropertyCard(
                     }
                     if (property.qtBedrooms > 0) {
                         CharacteristicReadOnlyChip(
-                            characteristicText = stringResource(
-                                R.string.properties_qt_bedrooms,
+                            characteristicText = pluralStringResource(
+                                R.plurals.properties_qt_bedrooms,
+                                property.qtBedrooms,
                                 property.qtBedrooms,
                             ),
                         )
