@@ -54,28 +54,15 @@
     <string name="customer_segments_delete_dialog_headline">Excluir segmento de cliente?</string>
     <string name="customer_segments_delete_dialog_supporting_text">Se confirmada a exclusão, imóveis e inquilinos com este segmento serão desvinculados dele.</string>
 
-    <!-- Property owners -->
-    <string name="property_owners_top_app_bar_title">Proprietários</string>
-    <string name="property_owners_empty_text">Nenhum proprietário registrado.</string>
-    <string name="property_owners_delete_dialog_headline">Excluir proprietário?</string>
-    <string name="property_owners_delete_dialog_supporting_text">Se confirmada a exclusão, este proprietário não estará mais disponível.</string>
+    <!-- Properties -->
+    <string name="properties_top_app_bar_title">Imóveis</string>
+    <string name="properties_empty_text">Nenhum imóvel registrado.</string>
 
-    <!-- Property owner registration -->
-    <string name="property_owner_registration_top_app_bar_title_create">Novo proprietário</string>
-    <string name="property_owner_registration_top_app_bar_title_edit">Editar proprietário</string>
+    <string name="properties_sea_proximity_distance_to_sea">%1$s m até a praia</string>
+    <string name="properties_qt_bedrooms">%1$d dormitórios</string>
 
-    <string name="property_owner_registration_customer_segment_label">Segmento de proprietário</string>
-    <string name="property_owner_registration_name_label">Nome</string>
-    <string name="property_owner_registration_phone_label">Telefone</string>
-    <string name="property_owner_registration_email_label">Email</string>
-    <string name="property_owner_registration_payment_key_label">Chave de pagamento (PIX, outro)</string>
-    <string name="property_owner_registration_documents_title">Documentos</string>
-    <string name="property_owner_registration_documents_body_text">Documentos relacionados ao proprietário podem ser, por exemplo, cópia(s) do(s) contrato(s) de administração imobiliária.</string>
-
-    <string name="property_owner_registration_customer_segment_empty_text">Nenhum segmento de proprietário registrado.</string>
-
-    <!-- Property owner details -->
-    <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
+    <string name="properties_delete_dialog_headline">Excluir imóvel?</string>
+    <string name="properties_delete_dialog_supporting_text">Se confirmada a exclusão, este imóvel e suas estadias não estarão mais disponíveis.</string>
 
     <!-- Property registration -->
     <string name="property_registration_top_app_bar_title_create">Novo imóvel</string>
@@ -115,7 +102,6 @@
     <string name="property_registration_does_not_include_cleaning_service_body_text">Não inclui serviço de faxina</string>
     <string name="property_registration_daily_price_label">Valores da diária por período</string>
 
-
     <string name="property_registration_date_range_price_dialog_title_create">Novo valor de diária</string>
     <string name="property_registration_date_range_price_dialog_title_edit">Editar valor de diária</string>
     <string name="property_registration_date_range_price_dialog_supporting_text">Preencha o valor da diária do aluguel estabelecido pelo proprietário para o período.</string>
@@ -133,6 +119,29 @@
     <string name="property_registration_observations_label">Observações sobre o imóvel</string>
 
     <string name="property_registration_property_owner_empty_text">Nenhum proprietário registrado.</string>
+
+    <!-- Property owners -->
+    <string name="property_owners_top_app_bar_title">Proprietários</string>
+    <string name="property_owners_empty_text">Nenhum proprietário registrado.</string>
+    <string name="property_owners_delete_dialog_headline">Excluir proprietário?</string>
+    <string name="property_owners_delete_dialog_supporting_text">Se confirmada a exclusão, este proprietário não estará mais disponível.</string>
+
+    <!-- Property owner registration -->
+    <string name="property_owner_registration_top_app_bar_title_create">Novo proprietário</string>
+    <string name="property_owner_registration_top_app_bar_title_edit">Editar proprietário</string>
+
+    <string name="property_owner_registration_customer_segment_label">Segmento de proprietário</string>
+    <string name="property_owner_registration_name_label">Nome</string>
+    <string name="property_owner_registration_phone_label">Telefone</string>
+    <string name="property_owner_registration_email_label">Email</string>
+    <string name="property_owner_registration_payment_key_label">Chave de pagamento (PIX, outro)</string>
+    <string name="property_owner_registration_documents_title">Documentos</string>
+    <string name="property_owner_registration_documents_body_text">Documentos relacionados ao proprietário podem ser, por exemplo, cópia(s) do(s) contrato(s) de administração imobiliária.</string>
+
+    <string name="property_owner_registration_customer_segment_empty_text">Nenhum segmento de proprietário registrado.</string>
+
+    <!-- Property owner details -->
+    <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
 
     <!-- Base calendar -->
     <string name="january_label">JANEIRO</string>
@@ -190,6 +199,7 @@
     <string name="select_action_button_text">Selecionar</string>
     <string name="search_action_button_text">Buscar</string>
     <string name="sign_out_action_button_text">Sair</string>
+    <string name="view_details_action_button_text">Ver detalhes</string>
 
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório</string>
