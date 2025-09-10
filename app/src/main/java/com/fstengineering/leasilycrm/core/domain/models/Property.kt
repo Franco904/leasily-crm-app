@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 data class Property(
-    val id: Int? = null,
+    val id: Long? = null,
     val registerDate: LocalDate? = null,
     val neighborhood: String? = null,
     val streetAddress: String? = null,
@@ -37,5 +37,5 @@ data class Property(
     val characteristics: ImmutableList<PropertyCharacteristicProperty> = persistentListOf(),
     val prices: ImmutableList<PropertyPrice> = persistentListOf(),
     val files: ImmutableList<PropertyFile> = persistentListOf(),
-    val userId: Int? = null,
+    val userId: Long? = null,
 )

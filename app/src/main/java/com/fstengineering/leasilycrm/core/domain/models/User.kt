@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
 data class User(
-    val remoteId: Int? = null,
+    val remoteId: Long? = null,
     val name: String? = null,
     val creciNumber: String? = null,
     val profilePictureUrl: String? = null,

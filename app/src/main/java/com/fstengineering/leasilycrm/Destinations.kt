@@ -22,16 +22,16 @@ sealed interface Destinations {
     data object PropertyOwners
 
     @Serializable
-    data class PropertyOwnerRegistration(val propertyOwnerId: Int?)
+    data class PropertyOwnerRegistration(val propertyOwnerId: Long?)
 
     @Serializable
-    data class PropertyOwnerDetails(val propertyOwnerId: Int)
+    data class PropertyOwnerDetails(val propertyOwnerId: Long)
 
     @Serializable
     data object Properties
 
     @Serializable
-    data class PropertyRegistration(val propertyId: Int?) {
+    data class PropertyRegistration(val propertyId: Long?) {
         @Serializable
         data object PropertyRegistrationStep1
 

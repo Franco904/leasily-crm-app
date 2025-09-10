@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignInUserResponseDto(
-    val id: Int?,
+    val id: Long?,
 )

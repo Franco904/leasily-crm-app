@@ -81,7 +81,7 @@ class PropertyValidatorImpl : PropertyValidator {
     }
 
     private fun validateDistanceToSea(
-        seaProximityTypeId: Int?,
+        seaProximityTypeId: Long?,
         distanceToSea: BigDecimal?,
     ): AppResult<Unit, ValidationError.PropertyDistanceToSea> {
         return when {

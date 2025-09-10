@@ -14,15 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentFormUiState
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun CustomerSegmentCard(
-    segment: CustomerSegmentFormUiState,
+    segment: CustomerSegment,
     onEditSegment: () -> Unit,
     onDeleteSegment: () -> Unit,
     modifier: Modifier = Modifier,

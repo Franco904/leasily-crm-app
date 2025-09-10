@@ -13,13 +13,11 @@ import androidx.room.Index
             entity = AssistanceEntity::class,
             parentColumns = ["id"],
             childColumns = ["assistance_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = AssistanceCharacteristicEntity::class,
             parentColumns = ["id"],
             childColumns = ["assistance_characteristic_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [
@@ -28,7 +26,7 @@ import androidx.room.Index
     ],
 )
 data class AssistanceCharacteristicAssistanceCrossRefEntity(
-    @ColumnInfo(name = "assistance_id") val assistanceId: Int,
-    @ColumnInfo(name = "assistance_characteristic_id") val assistanceCharacteristicId: Int,
+    @ColumnInfo(name = "assistance_id") val assistanceId: Long,
+    @ColumnInfo(name = "assistance_characteristic_id") val assistanceCharacteristicId: Long,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 )

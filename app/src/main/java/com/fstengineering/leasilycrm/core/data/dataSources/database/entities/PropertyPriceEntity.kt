@@ -16,18 +16,17 @@ import java.time.LocalDate
             entity = PropertyEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [Index("property_id")],
 )
 data class PropertyPriceEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "start_date") val startDate: LocalDate,
     @ColumnInfo(name = "end_date") val endDate: LocalDate,
     val price: BigDecimal,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "property_id") val propertyId: Int,
+    @ColumnInfo(name = "property_id") val propertyId: Long,
 ) {
     fun toDomain() = PropertyPrice(
         id = id,

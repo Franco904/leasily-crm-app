@@ -34,11 +34,11 @@ import com.fstengineering.leasilycrm.propertyOwnerDetails.composables.PropertyOw
 
 @Composable
 fun PropertyOwnerDetailsScreen(
-    propertyOwnerId: Int,
+    propertyOwnerId: Long,
     viewModel: PropertyOwnerDetailsViewModel,
     onBack: () -> Unit,
     onSignOut: () -> Unit,
-    onEditPropertyOwner: (Int) -> Unit,
+    onEditPropertyOwner: (Long) -> Unit,
     showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {

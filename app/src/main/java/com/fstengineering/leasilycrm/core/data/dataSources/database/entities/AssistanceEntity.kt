@@ -15,13 +15,11 @@ import java.time.LocalDate
             entity = TenantEntity::class,
             parentColumns = ["id"],
             childColumns = ["tenant_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = PropertySeaProximityTypeEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_sea_proximity_type_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [
@@ -30,7 +28,7 @@ import java.time.LocalDate
     ],
 )
 data class AssistanceEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "contact_date") val contactDate: LocalDate?,
     @ColumnInfo(name = "searched_start_date") val searchedStartDate: LocalDate?,
     @ColumnInfo(name = "searched_end_date") val searchedEndDate: LocalDate?,
@@ -48,7 +46,7 @@ data class AssistanceEntity(
     @ColumnInfo(name = "qt_parking_spots") val qtParkingSpots: Int,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "tenant_id") val tenantId: Int,
-    @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Int,
-    @ColumnInfo(name = "user_id") val userId: Int,
+    @ColumnInfo(name = "tenant_id") val tenantId: Long,
+    @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Long,
+    @ColumnInfo(name = "user_id") val userId: Long,
 )

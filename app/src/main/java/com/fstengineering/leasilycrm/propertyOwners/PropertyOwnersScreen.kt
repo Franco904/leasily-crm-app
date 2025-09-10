@@ -44,8 +44,8 @@ fun PropertyOwnersScreen(
     viewModel: PropertyOwnersViewModel,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
-    onRegisterPropertyOwner: (Int?) -> Unit = { _ -> },
-    onViewPropertyOwnerDetails: (Int) -> Unit = { _ -> },
+    onRegisterPropertyOwner: (Long?) -> Unit = { _ -> },
+    onViewPropertyOwnerDetails: (Long) -> Unit = { _ -> },
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {

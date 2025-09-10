@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class EncryptedPreferences(
     val sessionCookie: Cookie? = null,
-    val remoteId: Int? = null,
+    val remoteId: Long? = null,
     val name: String? = null,
     val creciNumber: String? = null,
     val profilePictureUrl: String? = null,

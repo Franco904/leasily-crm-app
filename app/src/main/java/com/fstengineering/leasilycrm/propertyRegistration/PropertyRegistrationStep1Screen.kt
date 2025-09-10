@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PropertyRegistrationStep1Screen(
-    propertyId: Int?,
+    propertyId: Long?,
     parentViewModel: PropertyRegistrationViewModel,
     stepViewModel: PropertyRegistrationStep1ViewModel,
     onLeaveRegistration: () -> Unit,

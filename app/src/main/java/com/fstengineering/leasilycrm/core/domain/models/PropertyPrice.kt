@@ -4,10 +4,10 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 data class PropertyPrice(
-    val id: Int? = null,
+    val id: Long? = null,
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
     val price: BigDecimal? = null,
-    val propertyId: Int? = null,
+    val propertyId: Long? = null,
     val isDeleted: Boolean = false,
 )

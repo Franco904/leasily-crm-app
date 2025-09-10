@@ -14,13 +14,13 @@ interface PropertyDao {
     suspend fun insertOrUpdate(property: PropertyEntity): Long
 
     @Query("UPDATE properties SET is_deleted = 1 WHERE id = :id")
-    suspend fun delete(id: Int)
+    suspend fun delete(id: Long)
 
     @Query("SELECT * FROM properties")
     suspend fun getAll(): List<PropertyEntity>
 
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
-    suspend fun getById(id: Int): PropertyCompound
+    suspend fun getById(id: Long): PropertyCompound
 
     @Query(
         """
@@ -30,11 +30,11 @@ interface PropertyDao {
         ORDER BY neighborhood
     """
     )
-    suspend fun getAllNeighborHoodNames(userId: Int): List<String>
+    suspend fun getAllNeighborHoodNames(userId: Long): List<String>
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
-    fun watchById(id: Int): Flow<PropertyCompound>
+    fun watchById(id: Long): Flow<PropertyCompound>
 
     @Transaction
     @Query(
@@ -45,5 +45,5 @@ interface PropertyDao {
         ORDER BY register_date DESC
     """
     )
-    fun watchAll(userId: Int): Flow<List<PropertyCompound>>
+    fun watchAll(userId: Long): Flow<List<PropertyCompound>>
 }

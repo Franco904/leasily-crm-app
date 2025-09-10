@@ -14,16 +14,15 @@ import java.time.LocalDate
             entity = StayEntity::class,
             parentColumns = ["id"],
             childColumns = ["stay_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [Index("stay_id")],
 )
 data class StayTransferEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "transfer_date") val transferDate: LocalDate,
     @ColumnInfo(name = "transfer_amount") val transferAmount: String,
     @ColumnInfo(name = "transfer_description") val transferDescription: String,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "stay_id") val stayId: Int
+    @ColumnInfo(name = "stay_id") val stayId: Long,
 )

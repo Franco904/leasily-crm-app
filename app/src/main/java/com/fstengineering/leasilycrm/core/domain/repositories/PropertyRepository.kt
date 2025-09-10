@@ -7,15 +7,15 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyRepository {
-    suspend fun insertOrUpdate(property: Property): AppResult<Int, DataSourceError>
+    suspend fun insertOrUpdate(property: Property): AppResult<Long, DataSourceError>
 
-    suspend fun delete(id: Int): AppResult<Unit, DataSourceError>
+    suspend fun delete(id: Long): AppResult<Unit, DataSourceError>
 
-    suspend fun getById(propertyId: Int): AppResult<Property, DataSourceError>
+    suspend fun getById(propertyId: Long): AppResult<Property, DataSourceError>
 
     suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, DataSourceError>
 
-    fun watchById(propertyId: Int): Flow<AppResult<Property, DataSourceError>>
+    fun watchById(propertyId: Long): Flow<AppResult<Property, DataSourceError>>
 
     fun watchAll(): Flow<AppResult<ImmutableList<Property>, DataSourceError>>
 }

@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.constants.PROPERTY_OWNER_CUSTOMER_SEGMENT_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.constants.TENANT_CUSTOMER_SEGMENT_TYPE_ID
+import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
+import com.fstengineering.leasilycrm.core.domain.models.CustomerSegmentType
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
@@ -17,8 +19,6 @@ import com.fstengineering.leasilycrm.core.domain.validators.interfaces.CustomerS
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentErrorUiState
 import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentField
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentFormUiState
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentTypeUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
@@ -47,13 +47,13 @@ class CustomerSegmentsViewModel(
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _customerSegmentTypes =
-        MutableStateFlow<ImmutableList<CustomerSegmentTypeUiState>>(persistentListOf())
+        MutableStateFlow<ImmutableList<CustomerSegmentType>>(persistentListOf())
     val customerSegmentTypes = _customerSegmentTypes.asStateFlow()
 
     private val _customerSegments =
-        MutableStateFlow<ImmutableList<CustomerSegmentFormUiState>>(persistentListOf())
+        MutableStateFlow<ImmutableList<CustomerSegment>>(persistentListOf())
 
-    val tenantCustomerSegments: StateFlow<ImmutableList<CustomerSegmentFormUiState>> =
+    val tenantCustomerSegments: StateFlow<ImmutableList<CustomerSegment>> =
         _customerSegments
             .map {
                 it.filter { segment -> segment.type?.id == TENANT_CUSTOMER_SEGMENT_TYPE_ID }
@@ -66,7 +66,7 @@ class CustomerSegmentsViewModel(
                 initialValue = persistentListOf(),
             )
 
-    val propertyOwnerCustomerSegments: StateFlow<ImmutableList<CustomerSegmentFormUiState>> =
+    val propertyOwnerCustomerSegments: StateFlow<ImmutableList<CustomerSegment>> =
         _customerSegments
             .map {
                 it.filter { segment -> segment.type?.id == PROPERTY_OWNER_CUSTOMER_SEGMENT_TYPE_ID }
@@ -79,10 +79,10 @@ class CustomerSegmentsViewModel(
                 initialValue = persistentListOf(),
             )
 
-    private val _customerSegmentForm = MutableStateFlow<CustomerSegmentFormUiState?>(null)
+    private val _customerSegmentForm = MutableStateFlow<CustomerSegment?>(null)
     val customerSegmentForm = _customerSegmentForm.asStateFlow()
 
-    private val _customerSegmentToDelete = MutableStateFlow<CustomerSegmentFormUiState?>(null)
+    private val _customerSegmentToDelete = MutableStateFlow<CustomerSegment?>(null)
     val customerSegmentToDelete = _customerSegmentToDelete.asStateFlow()
 
     private val _formErrors = MutableStateFlow(CustomerSegmentErrorUiState())
@@ -125,10 +125,7 @@ class CustomerSegmentsViewModel(
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                 }
                 .onSuccess { customerSegmentTypes ->
-                    val uiState = customerSegmentTypes
-                        .map { CustomerSegmentTypeUiState.fromDomain(it) }
-                        .toPersistentList()
-                    _customerSegmentTypes.update { uiState }
+                    _customerSegmentTypes.update { customerSegmentTypes }
                 }
         }
     }
@@ -143,10 +140,7 @@ class CustomerSegmentsViewModel(
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                     }
                     .onSuccess { customerSegments ->
-                        val uiState = customerSegments
-                            .map { CustomerSegmentFormUiState.fromDomain(it) }
-                            .toPersistentList()
-                        _customerSegments.update { uiState }
+                        _customerSegments.update { customerSegments }
                     }
 
                 _isLoading.update { false }
@@ -155,7 +149,7 @@ class CustomerSegmentsViewModel(
     }
 
     fun onCustomerSegmentFormChange(
-        form: CustomerSegmentFormUiState?,
+        form: CustomerSegment?,
     ) {
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
@@ -187,7 +181,7 @@ class CustomerSegmentsViewModel(
                 }
             }
 
-            val newCustomerSegment = customerSegmentForm.value?.toDomain() ?: return@launch
+            val newCustomerSegment = customerSegmentForm.value ?: return@launch
 
             customerSegmentValidator.validate(newCustomerSegment)
                 .onErrors { errors ->
@@ -206,31 +200,17 @@ class CustomerSegmentsViewModel(
                     return@launch
                 }
 
-            if (isEditing) {
-                customerSegmentRepository.update(customerSegment = newCustomerSegment)
-                    .onError { error ->
-                        if (error.isRedirectError()) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-
-                        return@launch
+            customerSegmentRepository.insertOrUpdate(customerSegment = newCustomerSegment)
+                .onError { error ->
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
                     }
-            } else {
-                customerSegmentRepository.insert(customerSegment = newCustomerSegment)
-                    .onError { error ->
-                        if (error.isRedirectError()) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
 
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
 
-                        return@launch
-                    }
-            }
+                    return@launch
+                }
 
             _uiEvents.send(
                 if (isEditing) UiEvents.CustomerSegmentEditSuccess(messageId = R.string.snackbar_edit_customer_segment_succeeded)
@@ -242,14 +222,14 @@ class CustomerSegmentsViewModel(
     }
 
     fun onDeleteCustomerSegment(
-        customerSegment: CustomerSegmentFormUiState?,
+        customerSegment: CustomerSegment?,
     ) {
         _customerSegmentToDelete.update { customerSegment }
     }
 
     fun deleteCustomerSegment() {
         viewModelScope.launch {
-            val csToDelete = customerSegmentToDelete.value?.toDomain() ?: return@launch
+            val csToDelete = customerSegmentToDelete.value ?: return@launch
 
             customerSegmentRepository.delete(csToDelete.id!!)
                 .onError { error ->

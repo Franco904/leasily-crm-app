@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel.UiEvents.CustomerSegmentCreateSuccess
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel.UiEvents.CustomerSegmentDeleteSuccess
@@ -52,7 +53,6 @@ import com.fstengineering.leasilycrm.customerSegments.composables.CustomerSegmen
 import com.fstengineering.leasilycrm.customerSegments.composables.CustomerSegmentsTopAppBar
 import com.fstengineering.leasilycrm.customerSegments.composables.PropertyOwnerCustomerSegmentsEmptySection
 import com.fstengineering.leasilycrm.customerSegments.composables.TenantCustomerSegmentsEmptySection
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentFormUiState
 
 @Composable
 fun CustomerSegmentsScreen(
@@ -127,7 +127,7 @@ fun CustomerSegmentsScreen(
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
                 onClick = {
-                    viewModel.onCustomerSegmentFormChange(form = CustomerSegmentFormUiState())
+                    viewModel.onCustomerSegmentFormChange(form = CustomerSegment())
                     isRegisteringNewCustomerSegment = true
                 },
                 modifier = Modifier
@@ -252,7 +252,7 @@ fun CustomerSegmentsScreen(
         }
         if (customerSegmentForm != null) {
             CustomerSegmentRegistrationDialog(
-                customerSegmentForm = customerSegmentForm ?: CustomerSegmentFormUiState(),
+                customerSegmentForm = customerSegmentForm!!,
                 onCustomerSegmentFormChange = viewModel::onCustomerSegmentFormChange,
                 customerSegmentTypes = customerSegmentTypes,
                 formErrors = formErrors.errors,

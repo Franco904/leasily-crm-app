@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
 
 @Entity(tableName = "tenant_contact_origin_types")
 data class TenantContactOriginTypeEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     val name: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean = true,
 ) {

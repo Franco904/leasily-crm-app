@@ -15,13 +15,11 @@ import java.time.LocalDateTime
             entity = PropertyEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = TenantEntity::class,
             parentColumns = ["id"],
             childColumns = ["tenant_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [
@@ -30,7 +28,7 @@ import java.time.LocalDateTime
     ],
 )
 data class StayEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "is_from_other_realtor") val isFromOtherRealtor: Boolean,
     @ColumnInfo(name = "qt_guests") val qtGuests: Int,
     @ColumnInfo(name = "total_price") val totalPrice: BigDecimal,
@@ -39,6 +37,6 @@ data class StayEntity(
     val commission: BigDecimal?,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "property_id") val propertyId: Int,
-    @ColumnInfo(name = "tenant_id") val tenantId: Int,
+    @ColumnInfo(name = "property_id") val propertyId: Long,
+    @ColumnInfo(name = "tenant_id") val tenantId: Long,
 )

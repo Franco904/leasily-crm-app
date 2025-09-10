@@ -27,7 +27,7 @@ class PropertyOwnerRepositoryImpl(
 ) : PropertyOwnerRepository {
     override suspend fun insertOrUpdate(
         propertyOwner: PropertyOwner,
-    ): AppResult<Int, DataSourceError> {
+    ): AppResult<Long, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
@@ -41,20 +41,20 @@ class PropertyOwnerRepositoryImpl(
         val propertyOwnerWithUser = propertyOwner.copy(userId = userRemoteId)
         val propertyOwnerEntity = PropertyOwnerEntity.fromDomain(propertyOwnerWithUser)
 
-        // TODO: Convert all Int ids to Long in database
-        val id = dao.insertOrUpdate(propertyOwnerEntity).toInt()
+        val id = dao.insertOrUpdate(propertyOwnerEntity)
+            .let { propertyOwner.id ?: it }
 
         return AppResult.Success(data = id)
     }
 
-    override suspend fun delete(id: Int): AppResult<Unit, DataSourceError> {
+    override suspend fun delete(id: Long): AppResult<Unit, DataSourceError> {
         dao.delete(id)
 
         return AppResult.Success(data = Unit)
     }
 
     override suspend fun getById(
-        propertyOwnerId: Int,
+        propertyOwnerId: Long,
     ): AppResult<PropertyOwner, DataSourceError> {
         val propertyOwner = dao.getById(id = propertyOwnerId)
             .toDomain()
@@ -73,7 +73,7 @@ class PropertyOwnerRepositoryImpl(
     }
 
     override fun watchById(
-        propertyOwnerId: Int,
+        propertyOwnerId: Long,
     ): Flow<AppResult<PropertyOwner, DataSourceError>> = flow {
         val propertyOwnerFlow = dao.watchById(id = propertyOwnerId)
             .map { propertyOwner ->

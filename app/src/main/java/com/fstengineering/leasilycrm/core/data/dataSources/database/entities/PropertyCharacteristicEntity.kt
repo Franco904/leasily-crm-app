@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristic
 
 @Entity(tableName = "property_characteristics")
 data class PropertyCharacteristicEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     val name: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean = true,
 ) {

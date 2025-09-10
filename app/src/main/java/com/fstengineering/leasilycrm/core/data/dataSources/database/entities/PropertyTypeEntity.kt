@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyType
 
 @Entity(tableName = "property_types")
 data class PropertyTypeEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     val name: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean = true,
 ) {

@@ -13,14 +13,13 @@ import androidx.room.PrimaryKey
             entity = AssistanceEntity::class,
             parentColumns = ["id"],
             childColumns = ["assistance_id"],
-            onDelete = ForeignKey.CASCADE,
         )
     ],
     indices = [Index("assistance_id")],
 )
 data class AssistanceSearchedNeighborhoodEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     val neighborhood: String,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "assistance_id") val assistanceId: Int,
+    @ColumnInfo(name = "assistance_id") val assistanceId: Long,
 )

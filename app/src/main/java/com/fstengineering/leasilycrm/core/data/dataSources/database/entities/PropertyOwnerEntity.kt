@@ -23,14 +23,14 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
     ],
 )
 data class PropertyOwnerEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int?,
+    @PrimaryKey(autoGenerate = true) val id: Long?,
     val name: String,
     val phone: String?,
     val email: String?,
     @ColumnInfo(name = "payment_key") val paymentKey: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Int?,
-    @ColumnInfo(name = "user_id") val userId: Int,
+    @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Long?,
+    @ColumnInfo(name = "user_id") val userId: Long,
 ) {
     companion object {
         fun fromDomain(domain: PropertyOwner): PropertyOwnerEntity {

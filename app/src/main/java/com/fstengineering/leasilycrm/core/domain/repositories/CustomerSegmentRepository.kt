@@ -7,15 +7,11 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface CustomerSegmentRepository {
-    suspend fun insert(
+    suspend fun insertOrUpdate(
         customerSegment: CustomerSegment,
     ): AppResult<Unit, DataSourceError>
 
-    suspend fun update(
-        customerSegment: CustomerSegment,
-    ): AppResult<Unit, DataSourceError>
-
-    suspend fun delete(id: Int): AppResult<Unit, DataSourceError>
+    suspend fun delete(id: Long): AppResult<Unit, DataSourceError>
 
     suspend fun getAllTenantType(): AppResult<ImmutableList<CustomerSegment>, DataSourceError>
 

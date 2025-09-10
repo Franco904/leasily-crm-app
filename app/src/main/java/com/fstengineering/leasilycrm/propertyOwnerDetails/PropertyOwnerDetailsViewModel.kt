@@ -34,7 +34,7 @@ class PropertyOwnerDetailsViewModel(
 
     private var watchPropertyOwnerJob: Job? = null
 
-    fun init(propertyOwnerId: Int) {
+    fun init(propertyOwnerId: Long) {
         if (isInitialized) return
 
         watchSessionExpiration()
@@ -60,7 +60,7 @@ class PropertyOwnerDetailsViewModel(
         }
     }
 
-    private fun watchPropertyOwner(propertyOwnerId: Int) {
+    private fun watchPropertyOwner(propertyOwnerId: Long) {
         _isLoading.update { true }
 
         watchPropertyOwnerJob = viewModelScope.launch {

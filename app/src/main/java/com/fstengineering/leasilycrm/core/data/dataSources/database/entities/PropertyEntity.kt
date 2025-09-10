@@ -16,19 +16,16 @@ import java.time.LocalDate
             entity = PropertyOwnerEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_owner_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = PropertyTypeEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_type_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = PropertySeaProximityTypeEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_sea_proximity_type_id"],
-            onDelete = ForeignKey.CASCADE,
         )
     ],
     indices = [
@@ -39,7 +36,7 @@ import java.time.LocalDate
     ],
 )
 data class PropertyEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "register_date") val registerDate: LocalDate,
     val neighborhood: String,
     @ColumnInfo(name = "street_address") val streetAddress: String,
@@ -64,10 +61,10 @@ data class PropertyEntity(
     @ColumnInfo(name = "has_cleaning_service_included") val hasCleaningServiceIncluded: Boolean,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Int,
-    @ColumnInfo(name = "property_type_id") val propertyTypeId: Int,
-    @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityType: Int?,
-    @ColumnInfo(name = "user_id") val userId: Int,
+    @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Long,
+    @ColumnInfo(name = "property_type_id") val propertyTypeId: Long,
+    @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityType: Long?,
+    @ColumnInfo(name = "user_id") val userId: Long,
 ) {
     companion object {
         fun fromDomain(domain: Property): PropertyEntity {

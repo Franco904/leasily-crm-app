@@ -14,15 +14,14 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
             entity = PropertyOwnerEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_owner_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [Index("property_owner_id")],
 )
 data class PropertyOwnerFileEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int?,
+    @PrimaryKey(autoGenerate = true) val id: Long?,
     @ColumnInfo(name = "property_owner_file_uri") val propertyOwnerFileUri: String,
-    @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Int,
+    @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Long,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 ) {
     fun toDomain() = PropertyOwnerFile(

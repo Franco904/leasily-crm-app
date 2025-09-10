@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetCustomerSegmentTypeDto(
-    val id: Int,
+    val id: Long,
     val name: String,
     val isActive: Boolean,
 ) {

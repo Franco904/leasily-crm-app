@@ -46,7 +46,7 @@ class PropertyRegistrationViewModel(
 ) : ViewModel() {
     private var isInitialized = false
 
-    var propertyId: Int? = null
+    var propertyId: Long? = null
         private set
 
     private val _uiEvents = Channel<UiEvents>()
@@ -81,7 +81,7 @@ class PropertyRegistrationViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    fun init(propertyId: Int?) {
+    fun init(propertyId: Long?) {
         if (isInitialized) return
 
         _isLoading.update { true }
@@ -120,7 +120,7 @@ class PropertyRegistrationViewModel(
         }
     }
 
-    private fun getPropertyToEdit(propertyId: Int) {
+    private fun getPropertyToEdit(propertyId: Long) {
         viewModelScope.launch {
             propertyRepository.getById(propertyId)
                 .onError { error ->

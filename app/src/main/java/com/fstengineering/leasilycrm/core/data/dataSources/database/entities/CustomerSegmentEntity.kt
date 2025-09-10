@@ -23,10 +23,10 @@ import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
     ],
 )
 data class CustomerSegmentEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int?,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     val name: String,
-    @ColumnInfo(name = "customer_segment_type_id") val customerSegmentTypeId: Int,
-    @ColumnInfo(name = "user_id") val userId: Int,
+    @ColumnInfo(name = "customer_segment_type_id") val customerSegmentTypeId: Long,
+    @ColumnInfo(name = "user_id") val userId: Long,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 ) {
     companion object {

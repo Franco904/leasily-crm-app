@@ -14,13 +14,11 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicPr
             entity = PropertyEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = PropertyCharacteristicEntity::class,
             parentColumns = ["id"],
             childColumns = ["property_characteristic_id"],
-            onDelete = ForeignKey.CASCADE,
         )
     ],
     indices = [
@@ -29,8 +27,8 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicPr
     ],
 )
 data class PropertyCharacteristicPropertyCrossRefEntity(
-    @ColumnInfo(name = "property_id") val propertyId: Int,
-    @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Int,
+    @ColumnInfo(name = "property_id") val propertyId: Long,
+    @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Long,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 ) {
     companion object {

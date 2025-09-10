@@ -4,7 +4,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 data class PropertyOwner(
-    val id: Int? = null,
+    val id: Long? = null,
     val name: String? = null,
     val phone: String? = null,
     val email: String? = null,
@@ -12,5 +12,5 @@ data class PropertyOwner(
     val isDeleted: Boolean = false,
     val customerSegment: CustomerSegment? = null,
     val files: ImmutableList<PropertyOwnerFile> = persistentListOf(),
-    val userId: Int? = null,
+    val userId: Long? = null,
 )

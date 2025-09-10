@@ -14,16 +14,15 @@ import java.time.LocalDate
             entity = AssistanceEntity::class,
             parentColumns = ["id"],
             childColumns = ["assistance_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [Index("assistance_id")],
 )
 data class AssistanceInteractionEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "interaction_date") val interactionDate: LocalDate,
     val title: String,
     val description: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "assistance_id") val assistanceId: Int,
+    @ColumnInfo(name = "assistance_id") val assistanceId: Long,
 )

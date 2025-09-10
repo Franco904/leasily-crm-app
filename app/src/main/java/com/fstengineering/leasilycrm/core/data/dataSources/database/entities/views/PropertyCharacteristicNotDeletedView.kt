@@ -16,7 +16,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristic
     """
 )
 data class PropertyCharacteristicNotDeletedView(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: Long,
     val name: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean
 ) {

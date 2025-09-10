@@ -18,13 +18,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
+import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
+import com.fstengineering.leasilycrm.core.domain.models.CustomerSegmentType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioGroup
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioOption
 import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentField
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentFormUiState
-import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentTypeUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
@@ -35,9 +35,9 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun CustomerSegmentRegistrationDialog(
-    customerSegmentForm: CustomerSegmentFormUiState,
-    onCustomerSegmentFormChange: (CustomerSegmentFormUiState) -> Unit,
-    customerSegmentTypes: ImmutableList<CustomerSegmentTypeUiState>,
+    customerSegmentForm: CustomerSegment,
+    onCustomerSegmentFormChange: (CustomerSegment) -> Unit,
+    customerSegmentTypes: ImmutableList<CustomerSegmentType>,
     formErrors: ImmutableMap<CustomerSegmentField, Int?>,
     isEditing: Boolean,
     onSave: () -> Unit,
@@ -136,11 +136,11 @@ fun CustomerSegmentRegistrationDialogPreview(
 ) {
     AppTheme {
         CustomerSegmentRegistrationDialog(
-            customerSegmentForm = CustomerSegmentFormUiState(),
+            customerSegmentForm = CustomerSegment(),
             onCustomerSegmentFormChange = { _ -> },
             customerSegmentTypes = persistentListOf(
-                CustomerSegmentTypeUiState(id = 1, name = "Proprietário"),
-                CustomerSegmentTypeUiState(id = 2, name = "Inquilino"),
+                CustomerSegmentType(id = 1, name = "Proprietário"),
+                CustomerSegmentType(id = 2, name = "Inquilino"),
             ),
             formErrors = persistentMapOf(),
             isEditing = false,

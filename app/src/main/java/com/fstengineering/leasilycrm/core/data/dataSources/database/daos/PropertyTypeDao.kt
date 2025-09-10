@@ -1,14 +1,13 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyTypeEntity
 
 @Dao
 interface PropertyTypeDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertOrUpdate(propertyType: PropertyTypeEntity): Long
 
     @Query("SELECT * FROM property_types")

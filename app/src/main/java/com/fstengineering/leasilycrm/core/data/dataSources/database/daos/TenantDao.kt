@@ -2,14 +2,13 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
 
 @Dao
 interface TenantDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertOrUpdate(tenant: TenantEntity): Long
 
     @Delete

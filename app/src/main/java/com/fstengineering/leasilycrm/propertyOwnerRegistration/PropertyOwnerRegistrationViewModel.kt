@@ -61,7 +61,7 @@ class PropertyOwnerRegistrationViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    fun init(propertyOwnerId: Int?) {
+    fun init(propertyOwnerId: Long?) {
         if (isInitialized) return
 
         _isLoading.update { true }
@@ -91,7 +91,7 @@ class PropertyOwnerRegistrationViewModel(
         }
     }
 
-    private fun getPropertyOwnerToEdit(propertyOwnerId: Int) {
+    private fun getPropertyOwnerToEdit(propertyOwnerId: Long) {
         viewModelScope.launch {
             propertyOwnerRepository.getById(propertyOwnerId)
                 .onError { error ->

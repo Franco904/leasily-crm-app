@@ -25,7 +25,7 @@ fun PropertyOwnerCard(
     propertyOwner: PropertyOwner,
     onEditPropertyOwner: () -> Unit,
     onDeletePropertyOwner: () -> Unit,
-    onViewPropertyOwnerDetails: (Int) -> Unit,
+    onViewPropertyOwnerDetails: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AppCard(

@@ -41,9 +41,9 @@ fun PropertiesScreen(
     viewModel: PropertiesViewModel,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
-    onRegisterProperty: (Int?) -> Unit = { _ -> },
-    onViewPropertyDashboard: (Int) -> Unit = { _ -> },
-    onViewPropertyDetails: (Int) -> Unit = { _ -> },
+    onRegisterProperty: (Long?) -> Unit = { _ -> },
+    onViewPropertyDashboard: (Long) -> Unit = { _ -> },
+    onViewPropertyDetails: (Long) -> Unit = { _ -> },
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {

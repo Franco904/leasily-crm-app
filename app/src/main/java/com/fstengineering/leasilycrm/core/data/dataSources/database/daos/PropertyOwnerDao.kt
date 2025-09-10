@@ -1,8 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -16,14 +14,14 @@ interface PropertyOwnerDao {
     suspend fun insertOrUpdate(propertyOwner: PropertyOwnerEntity): Long
 
     @Query("UPDATE property_owners SET is_deleted = 1 WHERE id = :id")
-    suspend fun delete(id: Int)
+    suspend fun delete(id: Long)
 
     @Query("SELECT * FROM property_owners WHERE id = :id AND is_deleted = 0")
-    suspend fun getById(id: Int): PropertyOwnerCompound
+    suspend fun getById(id: Long): PropertyOwnerCompound
 
     @Transaction
     @Query("SELECT * FROM property_owners WHERE id = :id AND is_deleted = 0")
-    fun watchById(id: Int): Flow<PropertyOwnerCompound>
+    fun watchById(id: Long): Flow<PropertyOwnerCompound>
 
     @Transaction
     @Query(
@@ -34,5 +32,5 @@ interface PropertyOwnerDao {
         ORDER BY name
     """
     )
-    fun watchAll(userId: Int): Flow<List<PropertyOwnerCompound>>
+    fun watchAll(userId: Long): Flow<List<PropertyOwnerCompound>>
 }

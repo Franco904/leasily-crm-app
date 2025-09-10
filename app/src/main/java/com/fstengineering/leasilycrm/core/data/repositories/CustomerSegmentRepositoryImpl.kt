@@ -22,7 +22,7 @@ class CustomerSegmentRepositoryImpl(
     private val dao: CustomerSegmentDao,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
 ) : CustomerSegmentRepository {
-    override suspend fun insert(
+    override suspend fun insertOrUpdate(
         customerSegment: CustomerSegment,
     ): AppResult<Unit, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
@@ -38,29 +38,12 @@ class CustomerSegmentRepositoryImpl(
         val customerSegmentWithUser = customerSegment.copy(userId = userRemoteId)
         val entity = CustomerSegmentEntity.fromDomain(customerSegmentWithUser)
 
-        dao.insert(entity)
+        dao.insertOrUpdate(entity)
 
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun update(
-        customerSegment: CustomerSegment,
-    ): AppResult<Unit, DataSourceError> {
-        if (customerSegment.id == null) {
-            return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
-        }
-
-        val storedUpdated = dao.getById(id = customerSegment.id).copy(
-            name = customerSegment.name!!,
-            customerSegmentTypeId = customerSegment.type?.id!!,
-        )
-
-        dao.update(storedUpdated)
-
-        return AppResult.Success(data = Unit)
-    }
-
-    override suspend fun delete(id: Int): AppResult<Unit, DataSourceError> {
+    override suspend fun delete(id: Long): AppResult<Unit, DataSourceError> {
         dao.delete(id)
 
         return AppResult.Success(data = Unit)

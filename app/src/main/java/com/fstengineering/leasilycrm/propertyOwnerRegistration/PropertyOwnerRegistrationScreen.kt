@@ -51,7 +51,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PropertyOwnerRegistrationScreen(
-    propertyOwnerId: Int?,
+    propertyOwnerId: Long?,
     viewModel: PropertyOwnerRegistrationViewModel,
     onBack: () -> Unit,
     onSignOut: () -> Unit,

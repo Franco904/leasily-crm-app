@@ -1,27 +1,23 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CustomerSegmentCompound
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CustomerSegmentDao {
-    @Insert
-    suspend fun insert(customerSegment: CustomerSegmentEntity)
-
-    @Update
-    suspend fun update(customerSegment: CustomerSegmentEntity)
+    @Upsert
+    suspend fun insertOrUpdate(customerSegment: CustomerSegmentEntity)
 
     @Query("UPDATE customer_segments SET is_deleted = 1 WHERE id = :id")
-    suspend fun delete(id: Int)
+    suspend fun delete(id: Long)
 
     @Query("SELECT * FROM customer_segments WHERE id = :id AND is_deleted = 0")
-    suspend fun getById(id: Int): CustomerSegmentEntity
+    suspend fun getById(id: Long): CustomerSegmentEntity
 
     @Transaction
     @Query(
@@ -33,7 +29,7 @@ interface CustomerSegmentDao {
         ORDER BY name
     """
     )
-    suspend fun getAllTenantType(userId: Int): List<CustomerSegmentCompound>
+    suspend fun getAllTenantType(userId: Long): List<CustomerSegmentCompound>
 
     @Transaction
     @Query(
@@ -45,7 +41,7 @@ interface CustomerSegmentDao {
         ORDER BY name
     """
     )
-    suspend fun getAllPropertyOwnerType(userId: Int): List<CustomerSegmentCompound>
+    suspend fun getAllPropertyOwnerType(userId: Long): List<CustomerSegmentCompound>
 
     @Transaction
     @Query(
@@ -56,5 +52,5 @@ interface CustomerSegmentDao {
         ORDER BY name
     """
     )
-    fun watchAll(userId: Int): Flow<List<CustomerSegmentCompound>>
+    fun watchAll(userId: Long): Flow<List<CustomerSegmentCompound>>
 }

@@ -14,13 +14,11 @@ import java.time.LocalDate
             entity = CustomerSegmentEntity::class,
             parentColumns = ["id"],
             childColumns = ["customer_segment_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = TenantContactOriginTypeEntity::class,
             parentColumns = ["id"],
             childColumns = ["tenant_contact_origin_type_id"],
-            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [
@@ -29,7 +27,7 @@ import java.time.LocalDate
     ],
 )
 data class TenantEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "register_date") val registerDate: LocalDate,
     val name: String,
     val city: String?,
@@ -39,7 +37,7 @@ data class TenantEntity(
     val observations: String?,
     @ColumnInfo(name = "is_lead") val isLead: Boolean = true,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Int?,
-    @ColumnInfo(name = "tenant_contact_origin_type_id") val tenantContactOriginTypeId: Int?,
-    @ColumnInfo(name = "user_id") val userId: Int,
+    @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Long?,
+    @ColumnInfo(name = "tenant_contact_origin_type_id") val tenantContactOriginTypeId: Long?,
+    @ColumnInfo(name = "user_id") val userId: Long,
 )
