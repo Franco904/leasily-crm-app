@@ -57,6 +57,10 @@
     <!-- Properties -->
     <string name="properties_top_app_bar_title">Imóveis</string>
     <string name="properties_empty_text">Nenhum imóvel registrado.</string>
+    <plurals name="properties_number_of_properties">
+        <item quantity="one">%d imóvel</item>
+        <item quantity="other">%d imóveis</item>
+    </plurals>
 
     <string name="properties_sea_proximity_distance_to_sea">%1$s m até o mar</string>
     <plurals name="properties_qt_bedrooms">

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.presentation.composables
+package com.fstengineering.leasilycrm.core.presentation.composables.cards
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
@@ -37,6 +37,10 @@ import com.fstengineering.leasilycrm.core.domain.constants.APARTMENT_PROPERTY_TY
 import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXIMITY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.constants.NOT_APPLICABLE_PROXIMITY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
+import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
+import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicReadOnlyChip
+import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -111,6 +115,7 @@ fun PropertyCard(
                         ),
                     )
                 }
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "${property.streetAddress}$numberText",
                     style = MaterialTheme.typography.bodyMedium,
