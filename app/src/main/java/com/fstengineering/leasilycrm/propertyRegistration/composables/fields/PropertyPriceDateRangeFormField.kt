@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDay
 import java.time.LocalDate
 
@@ -20,7 +20,7 @@ fun PropertyPriceDateRangeFormField(
     onTap: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AppTextField(
+    FormTextField(
         label = stringResource(R.string.property_registration_date_range_label),
         value = when {
             priceStartDate != null && priceEndDate != null -> {

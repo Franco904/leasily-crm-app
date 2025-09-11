@@ -7,7 +7,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.text.isDigitsOnly
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 
 @Composable
 fun NumberFormField(
@@ -17,11 +17,11 @@ fun NumberFormField(
     fieldFocusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
-    AppTextField(
+    FormTextField(
         label = stringResource(R.string.property_registration_number_label),
         value = value ?: "",
         onValueChange = { numberInput ->
-            if (!numberInput.isDigitsOnly()) return@AppTextField
+            if (!numberInput.isDigitsOnly()) return@FormTextField
             onValueChange(numberInput)
         },
         keyboardType = KeyboardType.Number,

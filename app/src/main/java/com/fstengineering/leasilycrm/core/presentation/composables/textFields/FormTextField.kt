@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.presentation.composables
+package com.fstengineering.leasilycrm.core.presentation.composables.textFields
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AppTextField(
+fun FormTextField(
     label: String,
     value: String,
     modifier: Modifier = Modifier,

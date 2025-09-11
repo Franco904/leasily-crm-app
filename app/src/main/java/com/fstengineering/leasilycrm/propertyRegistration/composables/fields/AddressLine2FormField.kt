@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 
 @Composable
 fun AddressLine2FormField(
@@ -15,7 +15,7 @@ fun AddressLine2FormField(
     fieldFocusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
-    AppTextField(
+    FormTextField(
         label = stringResource(R.string.property_registration_address_line_2_label),
         value = value ?: "",
         onValueChange = onValueChange,

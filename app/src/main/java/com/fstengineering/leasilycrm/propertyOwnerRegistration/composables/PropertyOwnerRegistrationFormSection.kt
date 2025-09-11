@@ -31,9 +31,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
-import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.DocumentFileCard
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
 import kotlinx.collections.immutable.ImmutableMap
@@ -85,7 +85,7 @@ fun PropertyOwnerRegistrationFormSection(
         modifier = modifier
     ) {
         item {
-            AppTextField(
+            FormTextField(
                 label = stringResource(R.string.property_owner_registration_customer_segment_label),
                 value = propertyOwnerForm.customerSegment?.name ?: "",
                 onTap = onCustomerSegmentFieldTap,
@@ -105,7 +105,7 @@ fun PropertyOwnerRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(PropertyOwnerField.Name))
             ) {
-                AppTextField(
+                FormTextField(
                     label = stringResource(R.string.property_owner_registration_name_label),
                     value = propertyOwnerForm.name ?: "",
                     onValueChange = { nameInput ->
@@ -129,7 +129,7 @@ fun PropertyOwnerRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(PropertyOwnerField.Phone))
             ) {
-                AppTextField(
+                FormTextField(
                     label = stringResource(R.string.property_owner_registration_phone_label),
                     value = propertyOwnerForm.phone ?: "",
                     onValueChange = { phoneInput ->
@@ -155,7 +155,7 @@ fun PropertyOwnerRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(PropertyOwnerField.Email))
             ) {
-                AppTextField(
+                FormTextField(
                     label = stringResource(R.string.property_owner_registration_email_label),
                     value = propertyOwnerForm.email ?: "",
                     onValueChange = { emailInput ->
@@ -181,7 +181,7 @@ fun PropertyOwnerRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(PropertyOwnerField.PaymentKey))
             ) {
-                AppTextField(
+                FormTextField(
                     label = stringResource(R.string.property_owner_registration_payment_key_label),
                     value = propertyOwnerForm.paymentKey ?: "",
                     onValueChange = { paymentKeyInput ->

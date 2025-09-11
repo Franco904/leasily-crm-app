@@ -16,11 +16,24 @@ interface PropertyDao {
     @Query("UPDATE properties SET is_deleted = 1 WHERE id = :id")
     suspend fun delete(id: Long)
 
-    @Query("SELECT * FROM properties")
-    suspend fun getAll(): List<PropertyEntity>
-
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): PropertyCompound
+
+    @Transaction
+    @Query(
+        """
+        SELECT * FROM properties
+        WHERE user_id = :userId
+        AND is_deleted = 0
+        AND (
+            :matching IS NULL OR
+            neighborhood   LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE OR
+            street_address LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE
+        )
+        ORDER BY register_date DESC
+    """
+    )
+    suspend fun getAllMatching(userId: Long, matching: String?): List<PropertyCompound>
 
     @Query(
         """
