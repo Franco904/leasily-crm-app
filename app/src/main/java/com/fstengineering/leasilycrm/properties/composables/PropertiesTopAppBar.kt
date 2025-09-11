@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.properties.composables
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -17,11 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.SearchTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PropertiesTopAppBar(
     onBack: () -> Unit,
+    isSearchingProperty: Boolean,
+    searchInput: String?,
+    onSearchInputChange: (String) -> Unit,
     onSearchProperty: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -36,23 +41,37 @@ fun PropertiesTopAppBar(
             }
         },
         title = {
-            Text(
-                text = stringResource(R.string.properties_top_app_bar_title),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .padding(start = 8.dp)
-            )
+            AnimatedContent(
+                targetState = isSearchingProperty,
+                label = "PropertiesTopAppBarTitle",
+            ) { isSearchingProperty ->
+                if (isSearchingProperty) {
+                    SearchTextField(
+                        searchInput = searchInput ?: "",
+                        onSearchInputChange = onSearchInputChange,
+                    )
+                } else {
+                    Text(
+                        text = stringResource(R.string.properties_top_app_bar_title),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                    )
+                }
+            }
         },
         actions = {
-            IconButton(
-                onClick = onSearchProperty,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Search,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+            if (!isSearchingProperty) {
+                IconButton(
+                    onClick = onSearchProperty,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

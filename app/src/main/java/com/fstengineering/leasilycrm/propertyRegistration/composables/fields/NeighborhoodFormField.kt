@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import kotlinx.collections.immutable.ImmutableList
 
@@ -43,7 +43,7 @@ fun NeighborhoodFormField(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        AppTextField(
+        FormTextField(
             label = stringResource(R.string.property_registration_neighborhood_label),
             value = value ?: "",
             onValueChange = { onValueChange(it.capitalizeFirst()) },

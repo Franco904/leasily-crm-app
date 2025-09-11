@@ -6,7 +6,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 
 @Composable
 fun CepPostalCodeFormField(
@@ -16,7 +16,7 @@ fun CepPostalCodeFormField(
     fieldFocusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
-    AppTextField(
+    FormTextField(
         label = stringResource(R.string.property_registration_cep_postal_code_label),
         value = value ?: "",
         onValueChange = onValueChange,

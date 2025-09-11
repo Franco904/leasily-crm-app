@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.profile.models.EditUserErrorUiState
 import com.fstengineering.leasilycrm.profile.models.UserUiState
 import kotlinx.coroutines.delay
@@ -55,7 +55,7 @@ fun EditUserDialog(
         },
         text = {
             Column {
-                AppTextField(
+                FormTextField(
                     label = stringResource(R.string.profile_edit_user_dialog_name_field_placeholder),
                     value = currentUserUiState.name ?: "",
                     onValueChange = { nameInput ->
@@ -74,7 +74,7 @@ fun EditUserDialog(
                     fieldFocusRequester = nameFieldFocusRequester,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                AppTextField(
+                FormTextField(
                     label = stringResource(R.string.profile_edit_user_dialog_creci_field_placeholder),
                     value = currentUserUiState.creciNumber ?: "",
                     onValueChange = { creciNumberInput ->

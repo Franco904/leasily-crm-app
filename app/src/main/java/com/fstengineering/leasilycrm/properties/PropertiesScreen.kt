@@ -1,6 +1,11 @@
 package com.fstengineering.leasilycrm.properties
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,10 +26,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,6 +42,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
+import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.PropertyDeleteSuccess
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.RedirectToSignIn
@@ -51,6 +62,7 @@ fun PropertiesScreen(
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current!!
+    val focusManager = LocalFocusManager.current
 
     val lazyListState = rememberLazyListState()
 
@@ -60,6 +72,19 @@ fun PropertiesScreen(
 
     val properties by viewModel.properties.collectAsStateWithLifecycle()
     val propertyToDelete by viewModel.propertyToDelete.collectAsStateWithLifecycle()
+
+    var isSearchingProperty by remember { mutableStateOf(false) }
+    val searchInput by viewModel.searchInput.collectAsStateWithLifecycle()
+
+    val listStatus by remember(isLoading, properties) {
+        val status = when {
+            isLoading -> ListState.Loading
+            properties.isEmpty() -> ListState.Empty
+            else -> ListState.Idle
+        }
+
+        mutableStateOf(status)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.init()
@@ -89,79 +114,102 @@ fun PropertiesScreen(
     Scaffold(
         topBar = {
             PropertiesTopAppBar(
-                onBack = onBack,
-                onSearchProperty = {},
+                onBack = {
+                    if (isSearchingProperty) {
+                        isSearchingProperty = false
+                        viewModel.onSearchInputChange(searchInput = null)
+                    } else {
+                        onBack()
+                    }
+                },
+                isSearchingProperty = isSearchingProperty,
+                onSearchProperty = { isSearchingProperty = true },
+                searchInput = searchInput,
+                onSearchInputChange = viewModel::onSearchInputChange,
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.primary,
-                onClick = { onRegisterProperty(null) },
+            AnimatedVisibility(
+                !isSearchingProperty,
+                enter = fadeIn(),
+                exit = fadeOut(),
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                )
-            }
-        },
-        modifier = modifier
-    ) { innerPadding ->
-        when {
-            isLoading -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    onClick = { onRegisterProperty(null) },
                 ) {
-                    AppCircularProgressIndicator(
-                        modifier = Modifier
-                            .size(64.dp)
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
             }
-
-            properties.isEmpty() -> {
-                PropertiesEmptySection()
+        },
+        modifier = modifier
+            .pointerInput(Unit) {
+                detectTapGestures { focusManager.clearFocus() }
             }
+    ) { innerPadding ->
+        AnimatedContent(
+            targetState = listStatus,
+        ) { listStatus ->
+            when (listStatus) {
+                ListState.Loading -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        AppCircularProgressIndicator(
+                            modifier = Modifier
+                                .size(64.dp)
+                        )
+                    }
+                }
 
-            else -> {
-                LazyColumn(
-                    state = lazyListState,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(horizontal = 16.dp)
-                ) {
-                    item { Spacer(modifier = Modifier.height(16.dp)) }
-                    item {
-                        Text(
-                            text = pluralStringResource(
-                                R.plurals.properties_number_of_properties,
-                                properties.size,
-                                properties.size,
-                            ),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
+                ListState.Empty -> {
+                    PropertiesEmptySection(isSearchingProperty = isSearchingProperty)
+                }
+
+                ListState.Idle -> {
+                    LazyColumn(
+                        state = lazyListState,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        item { Spacer(modifier = Modifier.height(16.dp)) }
+                        item {
+                            Text(
+                                text = pluralStringResource(
+                                    R.plurals.properties_number_of_properties,
+                                    properties.size,
+                                    properties.size,
+                                ),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
+                        item { Spacer(modifier = Modifier.height(16.dp)) }
+                        itemsIndexed(
+                            items = properties,
+                            key = { _, property -> property.id!! },
+                            contentType = { _, entryType -> entryType },
+                        ) { _, property ->
+                            PropertyCard(
+                                property = property,
+                                onEditProperty = { onRegisterProperty(property.id) },
+                                onDeleteProperty = { viewModel.onDeleteProperty(property = property) },
+                                onViewPropertyDashboard = { onViewPropertyDashboard(property.id!!) },
+                                onViewPropertyDetails = { onViewPropertyDetails(property.id!!) },
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                        item { Spacer(modifier = Modifier.height(72.dp)) }
                     }
-                    item { Spacer(modifier = Modifier.height(16.dp)) }
-                    itemsIndexed(
-                        items = properties,
-                        key = { _, property -> property.id!! },
-                        contentType = { _, entryType -> entryType },
-                    ) { _, property ->
-                        PropertyCard(
-                            property = property,
-                            onEditProperty = { onRegisterProperty(property.id) },
-                            onDeleteProperty = { viewModel.onDeleteProperty(property = property) },
-                            onViewPropertyDashboard = { onViewPropertyDashboard(property.id!!) },
-                            onViewPropertyDetails = { onViewPropertyDetails(property.id!!) },
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                    item { Spacer(modifier = Modifier.height(72.dp)) }
                 }
             }
         }

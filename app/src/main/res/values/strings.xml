@@ -18,6 +18,7 @@
     <string name="home_stays_label">Estadias</string>
 
     <!-- Search -->
+    <string name="search_property_placeholder">Buscar imóvel</string>
 
     <!-- Profile -->
     <string name="profile_top_app_bar_title">Perfil</string>
@@ -57,6 +58,7 @@
     <!-- Properties -->
     <string name="properties_top_app_bar_title">Imóveis</string>
     <string name="properties_empty_text">Nenhum imóvel registrado.</string>
+    <string name="properties_empty_search_text">Nenhum imóvel encontrado.</string>
     <plurals name="properties_number_of_properties">
         <item quantity="one">%d imóvel</item>
         <item quantity="other">%d imóveis</item>

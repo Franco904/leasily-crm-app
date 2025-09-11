@@ -20,6 +20,7 @@ import com.fstengineering.leasilycrm.R
 
 @Composable
 fun PropertiesEmptySection(
+    isSearchingProperty: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -37,7 +38,10 @@ fun PropertiesEmptySection(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = stringResource(R.string.properties_empty_text),
+            text = stringResource(
+                if (isSearchingProperty) R.string.properties_empty_search_text
+                else R.string.properties_empty_text
+            ),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier

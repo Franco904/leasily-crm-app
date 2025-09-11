@@ -59,6 +59,28 @@ class PropertyRepositoryImpl(
         return AppResult.Success(data = property)
     }
 
+    override suspend fun getAllMatching(
+        matching: String?,
+    ): AppResult<ImmutableList<Property>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: return AppResult.Error(
+                        error = DataSourceError.PreferencesError.NotFound,
+                    )
+                }
+            )
+
+        val properties = dao.getAllMatching(
+            userId = userRemoteId,
+            matching = matching,
+        )
+            .map { property -> property.toDomain() }.toPersistentList()
+
+        return AppResult.Success(data = properties)
+    }
+
     override suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(

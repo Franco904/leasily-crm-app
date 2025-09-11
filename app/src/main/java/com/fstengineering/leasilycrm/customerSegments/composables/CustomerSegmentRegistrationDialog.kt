@@ -22,7 +22,7 @@ import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegmentType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioGroup
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioOption
-import com.fstengineering.leasilycrm.core.presentation.composables.AppTextField
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.customerSegments.models.CustomerSegmentField
 import kotlinx.collections.immutable.ImmutableList
@@ -63,7 +63,7 @@ fun CustomerSegmentRegistrationDialog(
         },
         text = {
             Column {
-                AppTextField(
+                FormTextField(
                     label = stringResource(R.string.customer_segments_save_edit_dialog_name_placeholder),
                     value = customerSegmentForm.name ?: "",
                     onValueChange = { nameInput ->
