@@ -2,10 +2,11 @@ package com.fstengineering.leasilycrm.home
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -148,25 +149,31 @@ fun DashboardBody(
     onCustomerSegmentsSelect: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    FlowRow(
+    Row(
         modifier = modifier
     ) {
         HomeNavCard(
             icon = Icons.Default.Apartment,
             title = stringResource(R.string.home_properties_label),
             onSelect = onPropertiesSelect,
+            modifier = Modifier
+                .weight(1f)
         )
         HomeNavCard(
             icon = Icons.Outlined.Person,
             title = stringResource(R.string.home_property_owners_label),
             onSelect = onPropertyOwnersSelect,
-        )
-        HomeNavCard(
-            icon = Icons.Outlined.BookmarkBorder,
-            title = stringResource(R.string.home_customer_segments_label),
-            onSelect = onCustomerSegmentsSelect,
+            modifier = Modifier
+                .weight(1f)
         )
     }
+    HomeNavCard(
+        icon = Icons.Outlined.BookmarkBorder,
+        title = stringResource(R.string.home_customer_segments_label),
+        onSelect = onCustomerSegmentsSelect,
+        modifier = Modifier
+            .fillMaxWidth()
+    )
     Spacer(modifier = Modifier.height(24.dp))
     HorizontalDivider()
     Spacer(modifier = Modifier.height(24.dp))
