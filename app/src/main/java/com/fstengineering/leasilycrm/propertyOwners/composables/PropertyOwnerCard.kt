@@ -23,16 +23,14 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun PropertyOwnerCard(
     propertyOwner: PropertyOwner,
-    onEditPropertyOwner: () -> Unit,
-    onDeletePropertyOwner: () -> Unit,
-    onViewPropertyOwnerDetails: (Long) -> Unit,
+    onViewPropertyOwnerDetails: () -> Unit,
     modifier: Modifier = Modifier,
+    onEditPropertyOwner: () -> Unit = {},
+    onDeletePropertyOwner: () -> Unit = {},
+    hasMoreOptionsMenu: Boolean = true,
 ) {
     AppCard(
-        onClick = {
-            if (propertyOwner.id == null) return@AppCard
-            onViewPropertyOwnerDetails(propertyOwner.id)
-        },
+        onClick = onViewPropertyOwnerDetails,
         modifier = modifier
             .fillMaxWidth()
     ) {
@@ -48,20 +46,22 @@ fun PropertyOwnerCard(
                 modifier = Modifier
                     .weight(1f)
             )
-            AppMoreOptionsMenu(
-                options = persistentListOf(
-                    MoreOptionsMenuOption(
-                        icon = Icons.Outlined.Edit,
-                        text = stringResource(R.string.edit_action_button_text),
-                        onClick = onEditPropertyOwner,
+            if (hasMoreOptionsMenu) {
+                AppMoreOptionsMenu(
+                    options = persistentListOf(
+                        MoreOptionsMenuOption(
+                            icon = Icons.Outlined.Edit,
+                            text = stringResource(R.string.edit_action_button_text),
+                            onClick = onEditPropertyOwner,
+                        ),
+                        MoreOptionsMenuOption(
+                            icon = Icons.Outlined.Delete,
+                            text = stringResource(R.string.delete_action_button_text),
+                            onClick = onDeletePropertyOwner,
+                        ),
                     ),
-                    MoreOptionsMenuOption(
-                        icon = Icons.Outlined.Delete,
-                        text = stringResource(R.string.delete_action_button_text),
-                        onClick = onDeletePropertyOwner,
-                    ),
-                ),
-            )
+                )
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyPriceEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertySeaProximityTypeEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyTypeEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.views.PropertyCharacteristicNotDeletedView
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
@@ -58,12 +59,21 @@ data class PropertyCompound(
         entity = PropertyFileEntity::class,
     )
     val files: List<PropertyFileEntity>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "property_id",
+        entity = StayEntity::class,
+    )
+    val stays: List<StayEntity>,
 ) {
     val activePrices: List<PropertyPriceEntity>
         get() = prices.filter { !it.isDeleted }
 
     val activeFiles: List<PropertyFileEntity>
         get() = files.filter { !it.isDeleted }
+
+    val activeStays: List<StayEntity>
+        get() = stays.filter { !it.isDeleted }
 
     fun toDomain() = Property(
         id = property.id,
@@ -103,6 +113,7 @@ data class PropertyCompound(
         }.toImmutableList(),
         prices = activePrices.map { it.toDomain() }.toImmutableList(),
         files = activeFiles.map { it.toDomain() }.toImmutableList(),
+        stays = activeStays.map { it.toDomain() }.toImmutableList(),
         userId = property.userId,
     )
 }

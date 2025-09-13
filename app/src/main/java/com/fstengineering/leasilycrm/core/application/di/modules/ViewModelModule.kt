@@ -4,6 +4,7 @@ import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.profile.ProfileViewModel
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel
+import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel
 import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel
@@ -43,18 +44,18 @@ val viewModelModule = module {
     }
 
     viewModel {
-        PropertiesViewModel(
-            propertyRepository = get(),
-            userRepository = get(),
-        )
-    }
-
-    viewModel {
         CustomerSegmentsViewModel(
             customerSegmentRepository = get(),
             customerSegmentTypeRepository = get(),
             userRepository = get(),
             customerSegmentValidator = get(),
+        )
+    }
+
+    viewModel {
+        PropertiesViewModel(
+            propertyRepository = get(),
+            userRepository = get(),
         )
     }
 
@@ -87,6 +88,13 @@ val viewModelModule = module {
     viewModel {
         PropertyRegistrationStep3ViewModel(
             propertyPriceValidator = get(),
+        )
+    }
+
+    viewModel {
+        PropertyDashboardViewModel(
+            propertyRepository = get(),
+            userRepository = get(),
         )
     }
 
