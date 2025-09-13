@@ -129,6 +129,15 @@
 
     <string name="property_registration_property_owner_empty_text">Nenhum proprietário registrado.</string>
 
+    <!-- Property dashboard -->
+    <string name="property_dashboard_top_app_bar_title">Imóvel</string>
+
+    <string name="property_dashboard_property_owner_title">Proprietário</string>
+    <string name="property_dashboard_current_month_stays_title">Estadias no mês atual</string>
+
+    <string name="see_all_stays_action_button_text">Ver todas</string>
+    <string name="new_property_stay_action_button_text">Nova estadia</string>
+
     <!-- Property owners -->
     <string name="property_owners_top_app_bar_title">Proprietários</string>
     <string name="property_owners_empty_text">Nenhum proprietário registrado.</string>
@@ -151,6 +160,9 @@
 
     <!-- Property owner details -->
     <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
+
+    <!-- Stays -->
+    <string name="stays_empty_text">Nenhuma estadia registrada.</string>
 
     <!-- Base calendar -->
     <string name="january_label">JANEIRO</string>

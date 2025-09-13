@@ -37,5 +37,6 @@ data class Property(
     val characteristics: ImmutableList<PropertyCharacteristicProperty> = persistentListOf(),
     val prices: ImmutableList<PropertyPrice> = persistentListOf(),
     val files: ImmutableList<PropertyFile> = persistentListOf(),
+    val stays: ImmutableList<Stay> = persistentListOf(),
     val userId: Long? = null,
 )

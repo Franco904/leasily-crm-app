@@ -19,15 +19,6 @@ sealed interface Destinations {
     data object CustomerSegments
 
     @Serializable
-    data object PropertyOwners
-
-    @Serializable
-    data class PropertyOwnerRegistration(val propertyOwnerId: Long?)
-
-    @Serializable
-    data class PropertyOwnerDetails(val propertyOwnerId: Long)
-
-    @Serializable
     data object Properties
 
     @Serializable
@@ -44,4 +35,16 @@ sealed interface Destinations {
         @Serializable
         data object PropertyRegistrationStep4
     }
+
+    @Serializable
+    data class PropertyDashboard(val propertyId: Long)
+
+    @Serializable
+    data object PropertyOwners
+
+    @Serializable
+    data class PropertyOwnerRegistration(val propertyOwnerId: Long?)
+
+    @Serializable
+    data class PropertyOwnerDetails(val propertyOwnerId: Long)
 }

@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.models.Stay
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -39,4 +41,17 @@ data class StayEntity(
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_id") val propertyId: Long,
     @ColumnInfo(name = "tenant_id") val tenantId: Long,
-)
+) {
+    fun toDomain() = Stay(
+        id = id,
+        isFromOtherRealtor = isFromOtherRealtor,
+        qtGuests = qtGuests,
+        totalPrice = totalPrice,
+        startDatetime = startDatetime,
+        endDatetime = endDatetime,
+        commission = commission,
+        observations = observations,
+        isDeleted = isDeleted,
+        property = Property(id = propertyId),
+    )
+}

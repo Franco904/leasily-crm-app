@@ -155,7 +155,10 @@ fun PropertyOwnersScreen(
                                     onDeletePropertyOwner = {
                                         viewModel.onDeletePropertyOwner(propertyOwner = propertyOwner)
                                     },
-                                    onViewPropertyOwnerDetails = onViewPropertyOwnerDetails,
+                                    onViewPropertyOwnerDetails = {
+                                        if (propertyOwner.id == null) return@PropertyOwnerCard
+                                        onViewPropertyOwnerDetails(propertyOwner.id)
+                                    },
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                             }

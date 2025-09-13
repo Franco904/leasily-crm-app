@@ -10,6 +10,7 @@ import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsScreen
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.profile.ProfileScreen
 import com.fstengineering.leasilycrm.properties.PropertiesScreen
+import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardScreen
 import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsScreen
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationScreen
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersScreen
@@ -116,7 +117,9 @@ object DestinationsHandler {
                 onRegisterProperty = { propertyId ->
                     navController.navigate(Destinations.PropertyRegistration(propertyId))
                 },
-                onViewPropertyDashboard = { propertyId -> },
+                onViewPropertyDashboard = { propertyId ->
+                    navController.navigate(Destinations.PropertyDashboard(propertyId))
+                },
                 onViewPropertyDetails = { propertyId -> },
                 onSignOut = {
                     onSignOut()
@@ -225,6 +228,30 @@ object DestinationsHandler {
                     showSnackbar = { message -> showSnackbar(message) },
                 )
             }
+        }
+
+        composable<Destinations.PropertyDashboard> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.PropertyDashboard>()
+
+            PropertyDashboardScreen(
+                propertyId = args.propertyId,
+                viewModel = koinViewModel(),
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
+                },
+                onEditProperty = { propertyId ->
+                    navController.navigate(Destinations.PropertyRegistration(propertyId))
+                },
+                onViewPropertyDetails = {},
+                onViewPropertyOwnerDetails = { propertyOwnerId ->
+                    navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
+                },
+                onSeeNextPropertyStays = {},
+                onNewPropertyStay = {},
+                showSnackbar = { message -> showSnackbar(message) },
+            )
         }
 
         composable<Destinations.PropertyOwners> {
