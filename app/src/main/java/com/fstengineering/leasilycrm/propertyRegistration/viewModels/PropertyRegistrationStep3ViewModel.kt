@@ -88,6 +88,10 @@ class PropertyRegistrationStep3ViewModel(
         }
     }
 
+    fun clearErrors() {
+        _priceFormErrors.update { PropertyPriceErrorUiState() }
+    }
+
     fun onDeletePropertyPrice(
         price: PropertyPrice?,
     ) {

@@ -11,6 +11,11 @@ data class TenantContactOriginTypeEntity(
     val name: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean = true,
 ) {
+    fun toDomain() = TenantContactOriginType(
+        id = id,
+        name = name,
+    )
+
     companion object {
         fun fromDomain(domain: TenantContactOriginType) = TenantContactOriginTypeEntity(
             id = domain.id,

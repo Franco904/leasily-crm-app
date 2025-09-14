@@ -14,6 +14,8 @@ import com.fstengineering.leasilycrm.core.data.repositories.PropertyPriceReposit
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertySeaProximityRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyTypeRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.TenantContactOriginTypeRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.TenantRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.UserRepositoryImpl
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentTypeRepository
@@ -27,6 +29,8 @@ import com.fstengineering.leasilycrm.core.domain.repositories.PropertyPriceRepos
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyTypeRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.TenantContactOriginTypeRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import org.koin.dsl.module
 
@@ -110,6 +114,19 @@ val repositoryModule = module {
 
     single<PropertyTypeRepository> {
         PropertyTypeRepositoryImpl(
+            dao = get(),
+        )
+    }
+
+    single<TenantRepository> {
+        TenantRepositoryImpl(
+            dao = get(),
+            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+        )
+    }
+
+    single<TenantContactOriginTypeRepository> {
+        TenantContactOriginTypeRepositoryImpl(
             dao = get(),
         )
     }
