@@ -24,6 +24,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.NavigateUp
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.PropertyDeleteSuccess
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyDashboard.composables.PropertyDashboardSection
@@ -65,6 +66,10 @@ fun PropertyDashboardScreen(
 
                 is RedirectToSignIn -> {
                     onSignOut()
+                }
+
+                is NavigateUp -> {
+                    onBack()
                 }
 
                 is PropertyDeleteSuccess -> {

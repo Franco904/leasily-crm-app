@@ -37,6 +37,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoApp
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
 import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.NavigateUp
 import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.PropertyDeleteSuccess
 import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyDetails.composables.PropertyDetailsFinancialPage
@@ -84,6 +85,10 @@ fun PropertyDetailsScreen(
 
                 is RedirectToSignIn -> {
                     onSignOut()
+                }
+
+                is NavigateUp -> {
+                    onBack()
                 }
 
                 is PropertyDeleteSuccess -> {

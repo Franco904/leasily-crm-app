@@ -81,6 +81,12 @@ class PropertyDetailsViewModel(
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                     }
                     .onSuccess { storedProperty ->
+                        if (storedProperty == null) {
+                            _uiEvents.send(UiEvents.NavigateUp)
+                            watchPropertyJob?.cancel()
+                            return@onSuccess
+                        }
+
                         _property.update { storedProperty }
                     }
             }
@@ -126,6 +132,8 @@ class PropertyDetailsViewModel(
         data class DataSourceError(@StringRes val messageId: Int) : UiEvents
 
         data object RedirectToSignIn : UiEvents
+
+        data object NavigateUp : UiEvents
 
         data object PropertyDeleteSuccess : UiEvents
     }
