@@ -192,6 +192,7 @@ fun PropertyRegistrationStep3Screen(
                     propertyPriceFormStartDate = null
 
                     stepViewModel.onPropertyPriceFormChange(form = null)
+                    stepViewModel.clearErrors()
                 },
             )
         }
