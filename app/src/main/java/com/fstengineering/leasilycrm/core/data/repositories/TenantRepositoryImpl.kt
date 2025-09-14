@@ -62,6 +62,23 @@ class TenantRepositoryImpl(
         return AppResult.Success(data = tenant)
     }
 
+    override suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: return AppResult.Error(
+                        error = DataSourceError.PreferencesError.NotFound,
+                    )
+                }
+            )
+
+        val cityNames =
+            dao.getAllCityNames(userId = userRemoteId).toPersistentList()
+
+        return AppResult.Success(data = cityNames)
+    }
+
     override fun watchById(
         tenantId: Long,
     ): Flow<AppResult<Tenant, DataSourceError>> = flow {

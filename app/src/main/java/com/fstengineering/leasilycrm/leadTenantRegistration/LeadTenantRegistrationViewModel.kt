@@ -56,6 +56,9 @@ class LeadTenantRegistrationViewModel(
         MutableStateFlow<ImmutableList<CustomerSegment>>(persistentListOf())
     val tenantSegments = _tenantSegments.asStateFlow()
 
+    private val _pastCities = MutableStateFlow<ImmutableList<String>>(persistentListOf())
+    val pastCities = _pastCities.asStateFlow()
+
     private val _tenantContactOriginTypes =
         MutableStateFlow<ImmutableList<TenantContactOriginType>>(persistentListOf())
     val tenantContactOriginTypes = _tenantContactOriginTypes.asStateFlow()
@@ -72,6 +75,7 @@ class LeadTenantRegistrationViewModel(
         if (leadTenantId != null) getLeadTenantToEdit(leadTenantId)
 
         getTenantSegments()
+        getPastCities()
         getTenantContactOriginTypes()
 
         isInitialized = true
@@ -116,8 +120,18 @@ class LeadTenantRegistrationViewModel(
                 .onSuccess { storedCustomerSegments ->
                     _tenantSegments.update { storedCustomerSegments }
                 }
+        }
+    }
 
-            _isLoading.update { false }
+    private fun getPastCities() {
+        viewModelScope.launch {
+            tenantRepository.getAllCityNames()
+                .onError { error ->
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                }
+                .onSuccess { storedCities ->
+                    _pastCities.update { storedCities }
+                }
         }
     }
 

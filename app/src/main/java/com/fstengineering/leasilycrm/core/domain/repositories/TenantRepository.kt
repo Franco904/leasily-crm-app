@@ -15,6 +15,8 @@ interface TenantRepository {
 
     suspend fun getById(tenantId: Long): AppResult<Tenant, DataSourceError>
 
+    suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataSourceError>
+
     fun watchById(tenantId: Long): Flow<AppResult<Tenant, DataSourceError>>
 
     fun watchAll(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>

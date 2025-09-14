@@ -27,6 +27,7 @@ import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.L
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantPhoneFormField
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantSegmentFormField
 import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantField
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.mutate
@@ -37,6 +38,7 @@ import kotlinx.coroutines.flow.Flow
 fun LeadTenantRegistrationFormSection(
     leadTenantForm: Tenant,
     onLeadTenantFormChange: (Tenant) -> Unit,
+    pastCities: ImmutableList<String>,
     formErrors: ImmutableMap<LeadTenantField, Int?>,
     onCustomerSegmentFieldTap: () -> Unit,
     onTenantContactOriginFieldTap: () -> Unit,
@@ -95,6 +97,7 @@ fun LeadTenantRegistrationFormSection(
         LeadTenantCityFormField(
             city = leadTenantForm.city,
             onCityChange = { onLeadTenantFormChange(leadTenantForm.copy(city = it)) },
+            pastCities = pastCities,
             onDone = { identityDocumentFieldFocusRequester.requestFocus() },
             fieldFocusRequester = cityFieldFocusRequester,
         )

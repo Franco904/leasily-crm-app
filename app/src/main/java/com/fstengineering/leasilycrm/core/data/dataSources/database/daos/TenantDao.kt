@@ -19,6 +19,17 @@ interface TenantDao {
     @Query("SELECT * FROM tenants WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): TenantCompound
 
+    @Query(
+        """
+        SELECT DISTINCT(city) FROM tenants
+        WHERE user_id = :userId
+        AND city IS NOT NULL
+        AND is_deleted = 0
+        ORDER BY city
+    """
+    )
+    suspend fun getAllCityNames(userId: Long): List<String>
+
     @Transaction
     @Query("SELECT * FROM tenants WHERE id = :id AND is_deleted = 0")
     fun watchById(id: Long): Flow<TenantCompound>

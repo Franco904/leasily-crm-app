@@ -69,6 +69,7 @@ fun LeadTenantRegistrationScreen(
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
     val tenantSegments by viewModel.tenantSegments.collectAsStateWithLifecycle()
+    val pastCities by viewModel.pastCities.collectAsStateWithLifecycle()
     val tenantContactOriginTypes by viewModel.tenantContactOriginTypes.collectAsStateWithLifecycle()
 
     val scrollToFieldFlow = Channel<LeadTenantField>()
@@ -149,6 +150,7 @@ fun LeadTenantRegistrationScreen(
             LeadTenantRegistrationFormSection(
                 leadTenantForm = leadTenantForm,
                 onLeadTenantFormChange = viewModel::onLeadTenantFormChange,
+                pastCities = pastCities,
                 formErrors = formErrors.errors,
                 onCustomerSegmentFieldTap = {
                     showingComboBottomsheetType = LeadTenantComboType.TenantSegment
