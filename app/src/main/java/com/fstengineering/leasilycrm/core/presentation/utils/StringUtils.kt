@@ -7,3 +7,6 @@ fun String.capitalizeFirst(): String {
         if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
     }
 }
+
+fun String?.orNotRegistered(notRegisteredString: String): String =
+    this?.takeUnless { it.isBlank() } ?: notRegisteredString

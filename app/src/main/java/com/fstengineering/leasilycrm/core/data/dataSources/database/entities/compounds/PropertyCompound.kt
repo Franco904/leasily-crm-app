@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.entities.co
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyFileEntity
@@ -11,7 +12,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertySeaProximityTypeEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyTypeEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.views.PropertyCharacteristicNotDeletedView
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
 import kotlinx.collections.immutable.toImmutableList
@@ -38,15 +38,21 @@ data class PropertyCompound(
     val seaProximityType: PropertySeaProximityTypeEntity?,
     @Relation(
         parentColumn = "id",
+        entity = PropertyCharacteristicEntity::class,
         entityColumn = "id",
-        entity = PropertyCharacteristicNotDeletedView::class,
         associateBy = Junction(
             value = PropertyCharacteristicPropertyCrossRefEntity::class,
             parentColumn = "property_id",
-            entityColumn = "property_characteristic_id",
-        ),
+            entityColumn = "property_characteristic_id"
+        )
     )
-    val characteristics: List<PropertyCharacteristicNotDeletedView>,
+    val allCharacteristics: List<PropertyCharacteristicEntity>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "property_id",
+        entity = PropertyCharacteristicPropertyCrossRefEntity::class
+    )
+    val checkedCharacteristics: List<PropertyCharacteristicPropertyCrossRefEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "property_id",
@@ -66,6 +72,24 @@ data class PropertyCompound(
     )
     val stays: List<StayEntity>,
 ) {
+    val activeCharacteristics: List<PropertyCharacteristicProperty>
+        get() {
+            val activeCharacteristicIds = checkedCharacteristics
+                .filter { !it.isDeleted }
+                .map { it.propertyCharacteristicId }
+                .toSet()
+
+            return activeCharacteristicIds.map { activeCharacteristicId ->
+                val characteristic = allCharacteristics.find { it.id == activeCharacteristicId }
+
+                PropertyCharacteristicProperty(
+                    propertyId = property.id,
+                    propertyCharacteristic = characteristic?.toDomain(),
+                    isDeleted = false,
+                )
+            }
+        }
+
     val activePrices: List<PropertyPriceEntity>
         get() = prices.filter { !it.isDeleted }
 
@@ -104,13 +128,7 @@ data class PropertyCompound(
         owner = owner.toDomain(),
         type = type.toDomain(),
         seaProximityType = seaProximityType?.toDomain(),
-        characteristics = characteristics.map { characteristic ->
-            PropertyCharacteristicProperty(
-                propertyId = property.id,
-                propertyCharacteristic = characteristic.toDomain(),
-                isDeleted = false,
-            )
-        }.toImmutableList(),
+        characteristics = activeCharacteristics.toImmutableList(),
         prices = activePrices.map { it.toDomain() }.toImmutableList(),
         files = activeFiles.map { it.toDomain() }.toImmutableList(),
         stays = activeStays.map { it.toDomain() }.toImmutableList(),

@@ -35,7 +35,7 @@ fun PropertyDashboardScreen(
     viewModel: PropertyDashboardViewModel,
     onBack: () -> Unit,
     onSignOut: () -> Unit,
-    onEditProperty: (Long) -> Unit,
+    onEditProperty: () -> Unit,
     onViewPropertyDetails: () -> Unit,
     onViewPropertyOwnerDetails: (Long) -> Unit,
     onSeeNextPropertyStays: () -> Unit,
@@ -83,7 +83,7 @@ fun PropertyDashboardScreen(
         topBar = {
             PropertyDashboardTopAppBar(
                 onBack = onBack,
-                onEditProperty = { onEditProperty(propertyId) },
+                onEditProperty = onEditProperty,
                 onDeleteProperty = { mustShowConfirmDeleteDialog = true },
             )
         },

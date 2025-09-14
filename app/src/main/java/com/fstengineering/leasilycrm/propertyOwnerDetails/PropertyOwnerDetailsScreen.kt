@@ -25,7 +25,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularPr
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyOwnerDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
-import com.fstengineering.leasilycrm.core.presentation.utils.openToPlayStoreApp
+import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
 import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsViewModel.UiEvents.PropertyOwnerDeleteSuccess
 import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsViewModel.UiEvents.RedirectToSignIn
@@ -129,7 +129,7 @@ fun PropertyOwnerDetailsScreen(
         }
         if (mustShowNoAppToShowFileContentDialog) {
             NoAppToShowFileContentDialog(
-                onOpenPlayStore = { context.openToPlayStoreApp() },
+                onOpenPlayStore = { context.openPlayStoreApp() },
                 onClose = { mustShowNoAppToShowFileContentDialog = false }
             )
         }

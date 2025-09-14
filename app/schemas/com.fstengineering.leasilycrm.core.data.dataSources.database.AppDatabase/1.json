@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "67e1776df1f22f1a241004f009baf68f",
+    "identityHash": "dbd4d20b6d6c87c0d31794c7064e164c",
     "entities": [
       {
         "tableName": "assistances",
@@ -1688,15 +1688,9 @@
         }
       }
     ],
-    "views": [
-      {
-        "viewName": "property_characteristics_not_deleted_view",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT *\n        FROM property_characteristics pc\n        INNER JOIN property_characteristics_properties pcp\n        ON pcp.property_characteristic_id = pc.id\n        WHERE pcp.is_deleted = 0"
-      }
-    ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '67e1776df1f22f1a241004f009baf68f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dbd4d20b6d6c87c0d31794c7064e164c')"
     ]
   }
 }

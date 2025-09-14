@@ -39,7 +39,7 @@ fun Context.openFileWithChooser(
     }
 }
 
-fun Context.openToPlayStoreApp() {
+fun Context.openPlayStoreApp() {
     val intent = Intent(Intent.ACTION_MAIN).apply {
         addCategory(Intent.CATEGORY_APP_MARKET)
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

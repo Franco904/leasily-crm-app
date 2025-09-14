@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyRegistration.composables
+package com.fstengineering.leasilycrm.core.presentation.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

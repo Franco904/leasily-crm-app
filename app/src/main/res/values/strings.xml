@@ -60,14 +60,14 @@
     <string name="properties_empty_text">Nenhum imóvel registrado.</string>
     <string name="properties_empty_search_text">Nenhum imóvel encontrado.</string>
     <plurals name="properties_number_of_properties">
-        <item quantity="one">%d imóvel</item>
-        <item quantity="other">%d imóveis</item>
+        <item quantity="one">%1$d imóvel</item>
+        <item quantity="other">%1$d imóveis</item>
     </plurals>
 
     <string name="properties_sea_proximity_distance_to_sea">%1$s m até o mar</string>
     <plurals name="properties_qt_bedrooms">
-        <item quantity="one">%d dormitório</item>
-        <item quantity="other">%d dormitórios</item>
+        <item quantity="one">%1$d dormitório</item>
+        <item quantity="other">%1$d dormitórios</item>
     </plurals>
 
     <string name="properties_delete_dialog_headline">Excluir imóvel?</string>
@@ -136,7 +136,66 @@
     <string name="property_dashboard_current_month_stays_title">Estadias no mês atual</string>
 
     <string name="see_all_stays_action_button_text">Ver todas</string>
-    <string name="new_property_stay_action_button_text">Nova estadia</string>
+
+    <!-- Property details -->
+    <string name="property_details_top_app_bar_title">Detalhes do imóvel</string>
+
+    <string name="property_details_tab_identification_label_title">Identificação</string>
+    <string name="property_details_top_financial_label_title">Financeiro</string>
+
+    <string name="property_details_location_title">Localização</string>
+    <string name="property_details_basic_characteristics_title">Características básicas</string>
+
+    <string name="property_details_apartment_specific_characteristics_body_text">Vaga %1$s, Subsolo %2$s, Hobby box %3$s</string>
+
+    <string name="property_details_no_bedrooms">Nenhum dormitório</string>
+    <plurals name="property_details_qt_bedrooms">
+        <item quantity="one">%1$d dormitório (%2$s)</item>
+        <item quantity="other">%1$d dormitórios (%2$s)</item>
+    </plurals>
+
+    <string name="property_details_no_en_suites">Nenhuma suíte</string>
+    <plurals name="property_details_qt_en_suites">
+        <item quantity="one">%1$d suíte</item>
+        <item quantity="other">%1$d suítes</item>
+    </plurals>
+
+    <string name="property_details_no_beds">Nenhuma cama</string>
+    <string name="property_details_no_double_beds">Nenhuma cama de casal e %1$s</string>
+    <string name="property_details_no_single_beds">Nenhuma cama de solteiro</string>
+
+    <plurals name="property_details_qt_double_beds">
+        <item quantity="one">%1$d cama de casal e %2$s</item>
+        <item quantity="other">%1$d camas de casal e %2$s</item>
+    </plurals>
+    <plurals name="property_details_qt_single_beds">
+        <item quantity="one">%1$d cama de solteiro</item>
+        <item quantity="other">%1$d camas de solteiro</item>
+    </plurals>
+
+    <string name="property_details_no_bathrooms">Nenhum banheiro</string>
+    <plurals name="property_details_qt_bathrooms">
+        <item quantity="one">%1$d banheiro</item>
+        <item quantity="other">%1$d banheiros</item>
+    </plurals>
+
+    <string name="property_details_no_parking_spots">Nenhuma vaga de estacionamento</string>
+    <plurals name="property_details_qt_parking_spots">
+        <item quantity="one">%1$d vaga de estacionamento</item>
+        <item quantity="other">%1$d vagas de estacionamento</item>
+    </plurals>
+
+    <string name="property_details_no_air_conditioners">Nenhum ar condicionado</string>
+    <plurals name="property_details_qt_air_conditioners">
+        <item quantity="one">%1$d ar condicionado</item>
+        <item quantity="other">%1$d ares condicionados</item>
+    </plurals>
+
+    <string name="property_details_no_max_guests">Sem restrição máxima de pessoas</string>
+    <plurals name="property_details_qt_max_guests">
+        <item quantity="one">Máximo de %1$d pessoa</item>
+        <item quantity="other">Máximo de %1$d pessoas</item>
+    </plurals>
 
     <!-- Property owners -->
     <string name="property_owners_top_app_bar_title">Proprietários</string>
@@ -188,6 +247,7 @@
 
     <!-- Body texts -->
     <string name="not_registered_info_body_text">Informação não registrada</string>
+    <string name="not_registered_info_var_1_body_text">Não informado</string>
     <string name="no_file_registered_body_text">Nenhum arquivo registrado</string>
     <string name="unnamed_file_text">Arquivo sem nome</string>
 
@@ -215,6 +275,7 @@
     <string name="confirm_action_button_text">Confirmar</string>
     <string name="delete_action_button_text">Excluir</string>
     <string name="edit_action_button_text">Editar</string>
+    <string name="new_property_stay_action_button_text">Nova estadia</string>
     <string name="register_action_button_text">Cadastrar</string>
     <string name="save_action_button_text">Salvar</string>
     <string name="select_action_button_text">Selecionar</string>

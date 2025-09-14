@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.profile.ProfileScreen
 import com.fstengineering.leasilycrm.properties.PropertiesScreen
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardScreen
+import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsScreen
 import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsScreen
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationScreen
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersScreen
@@ -120,7 +121,9 @@ object DestinationsHandler {
                 onViewPropertyDashboard = { propertyId ->
                     navController.navigate(Destinations.PropertyDashboard(propertyId))
                 },
-                onViewPropertyDetails = { propertyId -> },
+                onViewPropertyDetails = { propertyId ->
+                    navController.navigate(Destinations.PropertyDetails(propertyId))
+                },
                 onSignOut = {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
@@ -241,14 +244,35 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                onEditProperty = { propertyId ->
-                    navController.navigate(Destinations.PropertyRegistration(propertyId))
+                onEditProperty = {
+                    navController.navigate(Destinations.PropertyRegistration(args.propertyId))
                 },
-                onViewPropertyDetails = {},
+                onViewPropertyDetails = {
+                    navController.navigate(Destinations.PropertyDetails(args.propertyId))
+                },
                 onViewPropertyOwnerDetails = { propertyOwnerId ->
                     navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
                 },
                 onSeeNextPropertyStays = {},
+                onNewPropertyStay = {},
+                showSnackbar = { message -> showSnackbar(message) },
+            )
+        }
+
+        composable<Destinations.PropertyDetails> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.PropertyDashboard>()
+
+            PropertyDetailsScreen(
+                propertyId = args.propertyId,
+                viewModel = koinViewModel(),
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
+                },
+                onEditProperty = {
+                    navController.navigate(Destinations.PropertyRegistration(args.propertyId))
+                },
                 onNewPropertyStay = {},
                 showSnackbar = { message -> showSnackbar(message) },
             )
