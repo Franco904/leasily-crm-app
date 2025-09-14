@@ -8,6 +8,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
@@ -17,6 +19,7 @@ fun SearchTextField(
     searchInput: String,
     onSearchInputChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    fieldFocusRequester: FocusRequester? = null,
 ) {
     TextField(
         value = searchInput,
@@ -43,5 +46,8 @@ fun SearchTextField(
         shape = CircleShape,
         modifier = modifier
             .fillMaxWidth()
+            .then(
+                fieldFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier
+            )
     )
 }

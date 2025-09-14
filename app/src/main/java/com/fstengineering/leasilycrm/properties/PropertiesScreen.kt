@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.properties
 
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -109,6 +110,11 @@ fun PropertiesScreen(
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()
+    }
+
+    BackHandler {
+        if (isSearchingProperty) isSearchingProperty = false
+        else onBack()
     }
 
     Scaffold(
