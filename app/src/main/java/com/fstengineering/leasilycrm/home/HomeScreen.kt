@@ -127,7 +127,9 @@ fun HomeScreen(
                 composable<Destinations.Home.Leads> {
                     LeadsPage(
                         viewModel = koinViewModel(),
-                        onRegisterLead = onRegisterLead
+                        onRegisterLead = onRegisterLead,
+                        onSignOut = onSignOut,
+                        showSnackbar = showSnackbar,
                     )
                 }
                 composable<Destinations.Home.Tenants> {
