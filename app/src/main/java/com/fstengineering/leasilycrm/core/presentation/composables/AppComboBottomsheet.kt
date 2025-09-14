@@ -37,6 +37,7 @@ fun AppComboBottomsheet(
     emptyOptionsIcon: ImageVector,
     emptyOptionsText: String,
     modifier: Modifier = Modifier,
+    emptyAction: (@Composable () -> Unit)? = null,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -67,6 +68,10 @@ fun AppComboBottomsheet(
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                if (emptyAction != null) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    emptyAction()
+                }
             }
         } else {
             LazyColumn(

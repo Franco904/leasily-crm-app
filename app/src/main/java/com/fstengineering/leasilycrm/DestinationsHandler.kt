@@ -146,6 +146,9 @@ object DestinationsHandler {
                     propertyId = args.propertyId,
                     parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                     stepViewModel = koinViewModel(),
+                    onRegisterNewPropertyOwner = {
+                        navController.navigate(Destinations.PropertyOwnerRegistration(null))
+                    },
                     onLeaveRegistration = {
                         navController
                             .popBackStack<Destinations.PropertyRegistration>(inclusive = true)

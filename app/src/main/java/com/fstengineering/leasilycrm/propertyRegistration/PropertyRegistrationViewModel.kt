@@ -94,7 +94,7 @@ class PropertyRegistrationViewModel(
             _isLoading.update { false }
         }
 
-        getPropertyOwners()
+        watchPropertyOwners()
         getPropertyTypes()
         getPastNeighborhoods()
         getSeaProximityTypes()
@@ -135,7 +135,7 @@ class PropertyRegistrationViewModel(
         }
     }
 
-    private fun getPropertyOwners() {
+    private fun watchPropertyOwners() {
         viewModelScope.launch {
             propertyOwnerRepository.watchAll().collect { result ->
                 result
