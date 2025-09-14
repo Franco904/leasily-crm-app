@@ -220,6 +220,15 @@
     <!-- Property owner details -->
     <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
 
+    <!-- Leads -->
+    <string name="leads_empty_text">Nenhum lead registrado.</string>
+    <string name="leads_empty_search_text">Nenhum lead encontrado.</string>
+    <string name="leads_order_by_name_text">Nome</string>
+    <string name="leads_order_by_last_update_date_text">Última atualização</string>
+
+    <string name="leads_delete_dialog_headline">Excluir lead?</string>
+    <string name="leads_delete_dialog_supporting_text">Se confirmada a exclusão, este lead, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>
+
     <!-- Lead/tenant registration -->
     <string name="lead_registration_top_app_bar_title_create">Novo lead</string>
     <string name="lead_registration_top_app_bar_title_edit">Editar lead</string>
@@ -292,13 +301,16 @@
     <string name="confirm_action_button_text">Confirmar</string>
     <string name="delete_action_button_text">Excluir</string>
     <string name="edit_action_button_text">Editar</string>
+    <string name="new_assistance_action_button_text">Novo atendimento</string>
     <string name="new_property_stay_action_button_text">Nova estadia</string>
     <string name="register_action_button_text">Cadastrar</string>
     <string name="save_action_button_text">Salvar</string>
     <string name="select_action_button_text">Selecionar</string>
     <string name="search_action_button_text">Buscar</string>
     <string name="sign_out_action_button_text">Sair</string>
+    <string name="view_assistance_action_button_text">Ver atendimento</string>
     <string name="view_details_action_button_text">Ver detalhes</string>
+    <string name="view_property_stay_action_button_text">Ver estadia</string>
 
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório</string>

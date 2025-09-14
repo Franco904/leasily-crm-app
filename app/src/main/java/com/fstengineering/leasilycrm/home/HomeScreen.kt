@@ -27,9 +27,10 @@ import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.home.composables.HomeBottomNavigationBar
 import com.fstengineering.leasilycrm.home.composables.HomeTopBar
-import com.fstengineering.leasilycrm.home.composables.pages.DashboardPage
-import com.fstengineering.leasilycrm.home.composables.pages.LeadsPage
+import com.fstengineering.leasilycrm.home.dashboard.DashboardPage
+import com.fstengineering.leasilycrm.home.leads.LeadsPage
 import com.fstengineering.leasilycrm.home.models.BottomNavBarDestination
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
@@ -124,7 +125,12 @@ fun HomeScreen(
                     )
                 }
                 composable<Destinations.Home.Leads> {
-                    LeadsPage(onRegisterLead = onRegisterLead)
+                    LeadsPage(
+                        viewModel = koinViewModel(),
+                        onRegisterLead = onRegisterLead,
+                        onSignOut = onSignOut,
+                        showSnackbar = showSnackbar,
+                    )
                 }
                 composable<Destinations.Home.Tenants> {
                     Box(modifier = Modifier)

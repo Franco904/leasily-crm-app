@@ -122,6 +122,7 @@ val repositoryModule = module {
         TenantRepositoryImpl(
             dao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+            plainPreferencesStorage = get(plainPreferencesQualifier),
         )
     }
 
