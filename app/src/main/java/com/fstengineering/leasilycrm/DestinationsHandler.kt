@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsScreen
 import com.fstengineering.leasilycrm.home.HomeScreen
+import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationScreen
 import com.fstengineering.leasilycrm.profile.ProfileScreen
 import com.fstengineering.leasilycrm.properties.PropertiesScreen
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardScreen
@@ -77,6 +78,9 @@ object DestinationsHandler {
                 },
                 onCustomerSegmentsSelect = {
                     navController.navigate(Destinations.CustomerSegments)
+                },
+                onRegisterLead = { leadTenantId ->
+                    navController.navigate(Destinations.LeadTenantRegistration(leadTenantId))
                 },
                 onSignOut = {
                     onSignOut()
@@ -327,6 +331,21 @@ object DestinationsHandler {
                 },
                 onEditPropertyOwner = { propertyOwnerId ->
                     navController.navigate(Destinations.PropertyOwnerRegistration(propertyOwnerId))
+                },
+                showSnackbar = { message -> showSnackbar(message) },
+            )
+        }
+
+        composable<Destinations.LeadTenantRegistration> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.LeadTenantRegistration>()
+
+            LeadTenantRegistrationScreen(
+                leadTenantId = args.leadTenantId,
+                viewModel = koinViewModel(),
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
                 showSnackbar = { message -> showSnackbar(message) },
             )

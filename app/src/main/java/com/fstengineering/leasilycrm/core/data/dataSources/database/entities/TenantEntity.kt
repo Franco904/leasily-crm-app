@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import java.time.LocalDate
 
 @Entity(
@@ -40,4 +41,28 @@ data class TenantEntity(
     @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Long?,
     @ColumnInfo(name = "tenant_contact_origin_type_id") val tenantContactOriginTypeId: Long?,
     @ColumnInfo(name = "user_id") val userId: Long,
-)
+) {
+    companion object {
+        fun fromDomain(domain: Tenant): TenantEntity {
+            requireNotNull(domain.name) { "Tenant.name is required" }
+            requireNotNull(domain.registerDate) { "Tenant.registerDate is required" }
+            requireNotNull(domain.userId) { "Tenant.userId is required" }
+
+            return TenantEntity(
+                id = domain.id,
+                registerDate = domain.registerDate,
+                name = domain.name,
+                city = domain.city,
+                identityDocument = domain.identityDocument,
+                phone = domain.phone,
+                email = domain.email,
+                observations = domain.observations,
+                isLead = domain.isLead,
+                isDeleted = domain.isDeleted,
+                customerSegmentId = domain.customerSegment?.id,
+                tenantContactOriginTypeId = domain.tenantContactOriginType?.id,
+                userId = domain.userId,
+            )
+        }
+    }
+}

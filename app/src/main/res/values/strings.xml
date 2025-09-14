@@ -220,6 +220,23 @@
     <!-- Property owner details -->
     <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
 
+    <!-- Lead/tenant registration -->
+    <string name="lead_registration_top_app_bar_title_create">Novo lead</string>
+    <string name="lead_registration_top_app_bar_title_edit">Editar lead</string>
+    <string name="tenant_registration_top_app_bar_title_edit">Editar inquilino</string>
+
+    <string name="lead_tenant_registration_customer_segment_label">Segmento de inquilino</string>
+    <string name="lead_tenant_registration_name_label">Nome</string>
+    <string name="lead_tenant_registration_city_label">Cidade</string>
+    <string name="lead_tenant_registration_identity_document_label">Documento de identidade</string>
+    <string name="lead_tenant_registration_phone_label">Telefone</string>
+    <string name="lead_tenant_registration_email_label">Email</string>
+    <string name="lead_tenant_registration_contact_origin_type_label">Origem do contato</string>
+    <string name="lead_tenant_registration_lead_observations_label">Observações sobre o lead</string>
+    <string name="lead_tenant_registration_tenant_observations_label">Observações sobre o inquilino</string>
+
+    <string name="lead_tenant_registration_customer_segment_empty_text">Nenhum segmento de inquilino registrado.</string>
+
     <!-- Stays -->
     <string name="stays_empty_text">Nenhuma estadia registrada.</string>
 
@@ -302,13 +319,19 @@
     <string name="snackbar_edit_customer_segment_succeeded">Segmento de cliente editado.</string>
     <string name="snackbar_delete_customer_segment_succeeded">Segmento de cliente excluído.</string>
 
+    <string name="snackbar_create_property_succeeded">Imóvel criado.</string>
+    <string name="snackbar_edit_property_succeeded">Imóvel editado.</string>
+    <string name="snackbar_delete_property_succeeded">Imóvel excluído.</string>
+
     <string name="snackbar_create_property_owner_succeeded">Proprietário criado.</string>
     <string name="snackbar_edit_property_owner_succeeded">Proprietário editado.</string>
     <string name="snackbar_delete_property_owner_succeeded">Proprietário excluído.</string>
 
-    <string name="snackbar_create_property_succeeded">Imóvel criado.</string>
-    <string name="snackbar_edit_property_succeeded">Imóvel editado.</string>
-    <string name="snackbar_delete_property_succeeded">Imóvel excluído.</string>
+    <string name="snackbar_create_lead_succeeded">Lead criado.</string>
+    <string name="snackbar_edit_lead_succeeded">Lead editado.</string>
+    <string name="snackbar_edit_tenant_succeeded">Inquilino editado.</string>
+    <string name="snackbar_delete_lead_succeeded">Lead excluído.</string>
+    <string name="snackbar_delete_tenant_succeeded">Inquilino excluído.</string>
 
     <!-- Snackbar errors -->
     <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>

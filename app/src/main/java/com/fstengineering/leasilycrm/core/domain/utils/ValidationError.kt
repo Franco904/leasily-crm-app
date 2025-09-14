@@ -10,24 +10,6 @@ sealed interface ValidationError : Error {
         IsNull,
     }
 
-    enum class PropertyOwnerName : ValidationError {
-        IsBlank,
-        LengthIsGreaterThan100Chars,
-    }
-
-    enum class PropertyOwnerPhone : ValidationError {
-        LengthIsGreaterThan20Chars,
-    }
-
-    enum class PropertyOwnerEmail : ValidationError {
-        InvalidFormat,
-        LengthIsGreaterThan120Chars,
-    }
-
-    enum class PropertyOwnerPaymentKey : ValidationError {
-        LengthIsGreaterThan120Chars,
-    }
-
     enum class PropertyPropertyOwner : ValidationError {
         IsNull,
     }
@@ -54,6 +36,38 @@ sealed interface ValidationError : Error {
 
     enum class PropertyPriceAmount : ValidationError {
         IsNull,
+    }
+
+    enum class PropertyOwnerName : ValidationError {
+        IsBlank,
+        LengthIsGreaterThan100Chars,
+    }
+
+    enum class PropertyOwnerPhone : ValidationError {
+        LengthIsGreaterThan20Chars,
+    }
+
+    enum class PropertyOwnerEmail : ValidationError {
+        InvalidFormat,
+        LengthIsGreaterThan120Chars,
+    }
+
+    enum class PropertyOwnerPaymentKey : ValidationError {
+        LengthIsGreaterThan120Chars,
+    }
+
+    enum class TenantName : ValidationError {
+        IsBlank,
+        LengthIsGreaterThan100Chars,
+    }
+
+    enum class TenantPhone : ValidationError {
+        LengthIsGreaterThan20Chars,
+    }
+
+    enum class TenantEmail : ValidationError {
+        InvalidFormat,
+        LengthIsGreaterThan120Chars,
     }
 
     enum class UserName : ValidationError {

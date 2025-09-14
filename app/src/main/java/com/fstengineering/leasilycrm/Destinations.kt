@@ -10,7 +10,19 @@ sealed interface Destinations {
     data object SignIn
 
     @Serializable
-    data object Home
+    data object Home {
+        @Serializable
+        data object Dashboard
+
+        @Serializable
+        data object Leads
+
+        @Serializable
+        data object Tenants
+
+        @Serializable
+        data object Stays
+    }
 
     @Serializable
     data object Profile
@@ -47,6 +59,9 @@ sealed interface Destinations {
 
     @Serializable
     data class PropertyOwnerRegistration(val propertyOwnerId: Long?)
+
+    @Serializable
+    data class LeadTenantRegistration(val leadTenantId: Long?)
 
     @Serializable
     data class PropertyOwnerDetails(val propertyOwnerId: Long)
