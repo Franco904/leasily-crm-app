@@ -3,11 +3,14 @@ package com.fstengineering.leasilycrm.home.leads
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrdenationType
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -35,6 +38,9 @@ class LeadsViewModel(
 
     private val _searchInput = MutableStateFlow<String?>(null)
     val searchInput = _searchInput.asStateFlow()
+
+    private val _ordenationType = MutableStateFlow(LeadTenantOrdenationType.Name)
+    val ordenationType = _ordenationType.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -70,7 +76,20 @@ class LeadsViewModel(
         _isLoading.update { true }
 
         viewModelScope.launch {
-            tenantRepository.watchAllLeads().collect { result ->
+            val ordenationTypeId = tenantRepository.getPreferredLeadsOrdenationTypeId()
+                .fold(
+                    onError = { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                        return@launch
+                    },
+                    onSuccess = { ordenationTypeId -> ordenationTypeId },
+                )
+
+            _ordenationType.update { LeadTenantOrdenationType.fromId(ordenationTypeId) }
+
+            tenantRepository.watchAllLeads(
+                ordenationTypeId = ordenationTypeId,
+            ).collect { result ->
                 result
                     .onError { error ->
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
@@ -105,6 +124,14 @@ class LeadsViewModel(
 //        }
 //    }
 
+    fun onOrdenationTypeChange(ordenationType: LeadTenantOrdenationType) {
+        viewModelScope.launch {
+            tenantRepository.updatePreferredLeadsOrdenationTypeId(ordenationType.id)
+
+            watchLeads()
+        }
+    }
+
     fun onSearchInputChange(searchInput: String?) {
         _searchInput.update { searchInput?.ifEmpty { null } }
     }
@@ -115,9 +142,9 @@ class LeadsViewModel(
 
     fun deleteLead() {
         viewModelScope.launch {
-            val id = leadToDelete.value?.id ?: return@launch
+            val leadToDelete = leadToDelete.value ?: return@launch
 
-            tenantRepository.delete(id)
+            tenantRepository.delete(leadToDelete.id!!)
                 .onError { error ->
                     if (error.isRedirectError()) {
                         userRepository.deleteCachedUser()
@@ -129,7 +156,11 @@ class LeadsViewModel(
                     return@launch
                 }
 
-            _uiEvents.send(UiEvents.LeadDeleteSuccess)
+            val messageId = if (leadToDelete.isLead) {
+                R.string.snackbar_delete_lead_succeeded
+            } else R.string.snackbar_delete_tenant_succeeded
+
+            _uiEvents.send(UiEvents.LeadDeleteSuccess(messageId = messageId))
 
             onDeleteLead(lead = null)
         }
@@ -140,6 +171,6 @@ class LeadsViewModel(
 
         data object RedirectToSignIn : UiEvents
 
-        data object LeadDeleteSuccess : UiEvents
+        data class LeadDeleteSuccess(@StringRes val messageId: Int) : UiEvents
     }
 }

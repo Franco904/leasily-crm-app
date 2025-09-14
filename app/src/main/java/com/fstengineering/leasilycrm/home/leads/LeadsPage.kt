@@ -17,7 +17,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,18 +28,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByMenuOption
+import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByTextButton
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrdenationType
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel.UiEvents.LeadDeleteSuccess
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.home.leads.composables.LeadsEmptySection
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun LeadsPage(
@@ -59,6 +62,8 @@ fun LeadsPage(
 
     val leads by viewModel.leads.collectAsStateWithLifecycle()
     val leadToDelete by viewModel.leadToDelete.collectAsStateWithLifecycle()
+
+    val ordenationType by viewModel.ordenationType.collectAsStateWithLifecycle()
 
     var isSearchingLead by remember { mutableStateOf(false) }
     val searchInput by viewModel.searchInput.collectAsStateWithLifecycle()
@@ -87,7 +92,7 @@ fun LeadsPage(
                 }
 
                 is LeadDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_property_succeeded))
+                    showSnackbar(context.getString(uiEvent.messageId))
                 }
             }
         }
@@ -142,18 +147,32 @@ fun LeadsPage(
                             .padding(horizontal = 16.dp)
                     ) {
                         item { Spacer(modifier = Modifier.height(16.dp)) }
-                        item {
-                            Text(
-                                text = pluralStringResource(
-                                    R.plurals.leads_number_of_leads,
-                                    leads.size,
-                                    leads.size,
-                                ),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
+                        if (!isSearchingLead) {
+                            item {
+                                OrderByTextButton(
+                                    ordenationType = ordenationType,
+                                    orderByMenuOptions = persistentListOf(
+                                        OrderByMenuOption(
+                                            text = stringResource(R.string.leads_order_by_name_text),
+                                            onClick = {
+                                                viewModel.onOrdenationTypeChange(
+                                                    LeadTenantOrdenationType.Name,
+                                                )
+                                            },
+                                        ),
+                                        OrderByMenuOption(
+                                            text = stringResource(R.string.leads_order_by_last_update_date_text),
+                                            onClick = {
+                                                viewModel.onOrdenationTypeChange(
+                                                    LeadTenantOrdenationType.LastUpdateDate,
+                                                )
+                                            },
+                                        ),
+                                    ),
+                                )
+                            }
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
                         }
-                        item { Spacer(modifier = Modifier.height(16.dp)) }
                         itemsIndexed(
                             items = leads,
                             key = { _, lead -> lead.id!! },

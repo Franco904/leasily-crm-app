@@ -4,11 +4,13 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.TenantD
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
+import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +24,7 @@ import java.time.LocalDate
 class TenantRepositoryImpl(
     private val dao: TenantDao,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
+    private val plainPreferencesStorage: PreferencesStorage<PlainPreferences>,
 ) : TenantRepository {
     override suspend fun insertOrUpdate(
         tenant: Tenant,
@@ -79,6 +82,48 @@ class TenantRepositoryImpl(
         return AppResult.Success(data = cityNames)
     }
 
+    override suspend fun getPreferredLeadsOrdenationTypeId(): AppResult<Int, DataSourceError> {
+        val preferredLeadsOrdenationTypeId = plainPreferencesStorage.readPreferences()
+            .fold(
+                onError = { error -> return AppResult.Error(error = error) },
+                onSuccess = { prefsFlow -> prefsFlow.first().leadsOrdenationTypeId ?: 1 }
+            )
+
+        return AppResult.Success(data = preferredLeadsOrdenationTypeId)
+    }
+
+    override suspend fun getPreferredTenantsOrdenationTypeId(): AppResult<Int, DataSourceError> {
+        val preferredTenantsOrdenationTypeId = plainPreferencesStorage.readPreferences()
+            .fold(
+                onError = { error -> return AppResult.Error(error = error) },
+                onSuccess = { prefsFlow -> prefsFlow.first().tenantsOrdenationTypeId ?: 1 }
+            )
+
+        return AppResult.Success(data = preferredTenantsOrdenationTypeId)
+    }
+
+    override suspend fun updatePreferredLeadsOrdenationTypeId(
+        ordenationTypeId: Int,
+    ): AppResult<Unit, DataSourceError> {
+        plainPreferencesStorage.savePreferences { prefs ->
+            prefs.copy(leadsOrdenationTypeId = ordenationTypeId)
+        }
+            .onError { return AppResult.Error(error = it) }
+
+        return AppResult.Success(data = Unit)
+    }
+
+    override suspend fun updatePreferredTenantsOrdenationTypeId(
+        ordenationTypeId: Int,
+    ): AppResult<Unit, DataSourceError> {
+        plainPreferencesStorage.savePreferences { prefs ->
+            prefs.copy(tenantsOrdenationTypeId = ordenationTypeId)
+        }
+            .onError { return AppResult.Error(error = it) }
+
+        return AppResult.Success(data = Unit)
+    }
+
     override fun watchById(
         tenantId: Long,
     ): Flow<AppResult<Tenant, DataSourceError>> = flow {
@@ -93,7 +138,9 @@ class TenantRepositoryImpl(
         emitAll(tenantFlow)
     }
 
-    override fun watchAllLeads(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
+    override fun watchAllLeads(
+        ordenationTypeId: Int,
+    ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -110,7 +157,7 @@ class TenantRepositoryImpl(
                 )
 
             emitAll(
-                dao.watchAllLeads(userId = userRemoteId)
+                dao.watchAllLeads(userId = userRemoteId, order = ordenationTypeId)
                     .map {
                         val tenants = it.map { tenant -> tenant.toDomain() }.toPersistentList()
                         AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = tenants)
@@ -119,7 +166,9 @@ class TenantRepositoryImpl(
             )
         }
 
-    override fun watchAllTenants(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
+    override fun watchAllTenants(
+        ordenationTypeId: Int,
+    ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -136,7 +185,7 @@ class TenantRepositoryImpl(
                 )
 
             emitAll(
-                dao.watchAllTenants(userId = userRemoteId)
+                dao.watchAllTenants(userId = userRemoteId, order = ordenationTypeId)
                     .map {
                         val tenants = it.map { tenant -> tenant.toDomain() }.toPersistentList()
                         AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = tenants)

@@ -223,10 +223,8 @@
     <!-- Leads -->
     <string name="leads_empty_text">Nenhum lead registrado.</string>
     <string name="leads_empty_search_text">Nenhum lead encontrado.</string>
-    <plurals name="leads_number_of_leads">
-        <item quantity="one">%1$d lead</item>
-        <item quantity="other">%1$d leads</item>
-    </plurals>
+    <string name="leads_order_by_name_text">Nome</string>
+    <string name="leads_order_by_last_update_date_text">Última atualização</string>
 
     <string name="leads_delete_dialog_headline">Excluir lead?</string>
     <string name="leads_delete_dialog_supporting_text">Se confirmada a exclusão, este lead, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>

@@ -17,9 +17,17 @@ interface TenantRepository {
 
     suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataSourceError>
 
+    suspend fun getPreferredLeadsOrdenationTypeId(): AppResult<Int, DataSourceError>
+
+    suspend fun getPreferredTenantsOrdenationTypeId(): AppResult<Int, DataSourceError>
+
+    suspend fun updatePreferredLeadsOrdenationTypeId(ordenationTypeId: Int): AppResult<Unit, DataSourceError>
+
+    suspend fun updatePreferredTenantsOrdenationTypeId(ordenationTypeId: Int): AppResult<Unit, DataSourceError>
+
     fun watchById(tenantId: Long): Flow<AppResult<Tenant, DataSourceError>>
 
-    fun watchAllLeads(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
+    fun watchAllLeads(ordenationTypeId: Int): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
 
-    fun watchAllTenants(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
+    fun watchAllTenants(ordenationTypeId: Int): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
 }
