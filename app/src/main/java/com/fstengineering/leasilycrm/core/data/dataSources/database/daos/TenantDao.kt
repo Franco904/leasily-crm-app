@@ -39,9 +39,22 @@ interface TenantDao {
         """
         SELECT * FROM tenants
         WHERE user_id = :userId
+        AND is_lead = 1
         AND is_deleted = 0
         ORDER BY name
     """
     )
-    fun watchAll(userId: Long): Flow<List<TenantCompound>>
+    fun watchAllLeads(userId: Long): Flow<List<TenantCompound>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT * FROM tenants
+        WHERE user_id = :userId
+        AND is_lead = 0
+        AND is_deleted = 0
+        ORDER BY name
+    """
+    )
+    fun watchAllTenants(userId: Long): Flow<List<TenantCompound>>
 }

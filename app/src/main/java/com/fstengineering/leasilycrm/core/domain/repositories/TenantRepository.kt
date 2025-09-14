@@ -19,5 +19,7 @@ interface TenantRepository {
 
     fun watchById(tenantId: Long): Flow<AppResult<Tenant, DataSourceError>>
 
-    fun watchAll(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
+    fun watchAllLeads(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
+
+    fun watchAllTenants(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
 }

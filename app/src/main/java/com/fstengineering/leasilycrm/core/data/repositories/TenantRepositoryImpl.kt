@@ -93,7 +93,7 @@ class TenantRepositoryImpl(
         emitAll(tenantFlow)
     }
 
-    override fun watchAll(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
+    override fun watchAllLeads(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -110,7 +110,33 @@ class TenantRepositoryImpl(
                 )
 
             emitAll(
-                dao.watchAll(userId = userRemoteId)
+                dao.watchAllLeads(userId = userRemoteId)
+                    .map {
+                        val tenants = it.map { tenant -> tenant.toDomain() }.toPersistentList()
+                        AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = tenants)
+                    }
+                    .distinctUntilChanged()
+            )
+        }
+
+    override fun watchAllTenants(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
+        flow {
+            val userRemoteId = encryptedPreferencesStorage.readPreferences()
+                .fold(
+                    onError = {
+                        emit(AppResult.Error(error = it))
+                        return@flow
+                    },
+                    onSuccess = { prefsFlow ->
+                        prefsFlow.first().remoteId ?: run {
+                            emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
+                            return@flow
+                        }
+                    }
+                )
+
+            emitAll(
+                dao.watchAllTenants(userId = userRemoteId)
                     .map {
                         val tenants = it.map { tenant -> tenant.toDomain() }.toPersistentList()
                         AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = tenants)
