@@ -1,6 +1,9 @@
 package com.fstengineering.leasilycrm.core.presentation.composables
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -20,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 
@@ -53,17 +57,33 @@ fun AppMoreOptionsMenu(
         ) {
             options.map {
                 if (it.isHorizontalDivider) {
+                    Spacer(modifier = Modifier.height(8.dp))
                     HorizontalDivider()
+                    Spacer(modifier = Modifier.height(8.dp))
                 } else {
                     DropdownMenuItem(
-                        leadingIcon = if (it.icon == null) null else {
-                            {
-                                Icon(
-                                    imageVector = it.icon,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurface,
-                                )
+                        leadingIcon = when {
+                            it.icon != null -> {
+                                {
+                                    Icon(
+                                        imageVector = it.icon,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface,
+                                    )
+                                }
                             }
+
+                            it.iconDrawable != null -> {
+                                {
+                                    Icon(
+                                        painter = painterResource(it.iconDrawable),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface,
+                                    )
+                                }
+                            }
+
+                            else -> null
                         },
                         text = {
                             Text(
@@ -87,7 +107,8 @@ fun AppMoreOptionsMenu(
 
 data class MoreOptionsMenuOption(
     val icon: ImageVector? = null,
+    @DrawableRes val iconDrawable: Int? = null,
     val text: String? = null,
-    val onClick: () -> Unit,
+    val onClick: () -> Unit = {},
     val isHorizontalDivider: Boolean = false,
 )

@@ -4,14 +4,20 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +58,7 @@ fun PropertyRegistrationStep1Screen(
     propertyId: Long?,
     parentViewModel: PropertyRegistrationViewModel,
     stepViewModel: PropertyRegistrationStep1ViewModel,
+    onRegisterNewPropertyOwner: () -> Unit,
     onLeaveRegistration: () -> Unit,
     onNext: () -> Unit,
     onSignOut: () -> Unit,
@@ -195,6 +202,21 @@ fun PropertyRegistrationStep1Screen(
                 },
                 emptyOptionsIcon = Icons.Outlined.Person,
                 emptyOptionsText = stringResource(R.string.property_registration_property_owner_empty_text),
+                emptyAction = {
+                    TextButton(onRegisterNewPropertyOwner) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.add_action_button_text),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
             )
         }
         if (mustShowConfirmLeaveRegistrationDialog) {

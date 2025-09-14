@@ -5,6 +5,7 @@ import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.profile.ProfileViewModel
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel
+import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel
@@ -94,6 +95,14 @@ val viewModelModule = module {
     viewModel {
         PropertyDashboardViewModel(
             propertyRepository = get(),
+            userRepository = get(),
+        )
+    }
+
+    viewModel {
+        PropertyDetailsViewModel(
+            propertyRepository = get(),
+            propertyCharacteristicRepository = get(),
             userRepository = get(),
         )
     }

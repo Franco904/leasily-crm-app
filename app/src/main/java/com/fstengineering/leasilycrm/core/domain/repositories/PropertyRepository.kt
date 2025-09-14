@@ -17,7 +17,7 @@ interface PropertyRepository {
 
     suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, DataSourceError>
 
-    fun watchById(propertyId: Long): Flow<AppResult<Property, DataSourceError>>
+    fun watchById(propertyId: Long): Flow<AppResult<Property?, DataSourceError>>
 
     fun watchAll(): Flow<AppResult<ImmutableList<Property>, DataSourceError>>
 }

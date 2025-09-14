@@ -29,6 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPicturesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPicturesRow
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.SavePrimaryButton
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyObservationsFormField
@@ -96,7 +98,7 @@ fun PropertyRegistrationFormSectionStep4(
                 PropertyPicturesEmptySection()
             } else {
                 PropertyPicturesRow(
-                    propertyNotDeletedFiles = propertyNotDeletedFiles,
+                    propertyNotDeletedPictures = propertyNotDeletedFiles,
                     propertyForm = propertyForm,
                     onPropertyFormChange = onPropertyFormChange,
                 )

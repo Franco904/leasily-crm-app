@@ -1,6 +1,11 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
 sealed interface DataSourceError : Error {
+    enum class DatabaseError : DataSourceError {
+        NotFound,
+        UnknownError,
+    }
+
     enum class PreferencesError : DataSourceError {
         NotFound,
         SerializationError,

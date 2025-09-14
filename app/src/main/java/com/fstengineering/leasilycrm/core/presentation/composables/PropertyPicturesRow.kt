@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyRegistration.composables
+package com.fstengineering.leasilycrm.core.presentation.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -35,47 +35,62 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun PropertyPicturesRow(
-    propertyNotDeletedFiles: PersistentList<PropertyFile>,
-    propertyForm: Property,
-    onPropertyFormChange: (Property) -> Unit,
+    propertyNotDeletedPictures: PersistentList<PropertyFile>,
     modifier: Modifier = Modifier,
+    propertyForm: Property? = null,
+    onPropertyFormChange: ((Property) -> Unit)? = null,
+    onViewPropertyPicture: ((PropertyFile) -> Unit)? = null,
+    isReadOnly: Boolean = false,
 ) {
     LazyRow(
         modifier = modifier
     ) {
         itemsIndexed(
-            items = propertyNotDeletedFiles,
+            items = propertyNotDeletedPictures,
             key = { i, file -> file.id ?: "${file.uriString}$i" },
         ) { i, file ->
             if (file.uriString == null) return@itemsIndexed
 
             PropertyPictureItem(
                 propertyPicture = file,
-                isMainPicture = file.isMainPicture && propertyNotDeletedFiles.size > 1,
-                onSetMainPicture = {
-                    if (file.isMainPicture || propertyNotDeletedFiles.size == 1) return@PropertyPictureItem
+                isMainPicture = !isReadOnly && file.isMainPicture && propertyNotDeletedPictures.size > 1,
+                isReadOnly = isReadOnly,
+                onClick = if (isReadOnly) {
+                    { onViewPropertyPicture?.invoke(file) }
+                } else {
+                    {
+                        if (file.isMainPicture || propertyNotDeletedPictures.size == 1) return@PropertyPictureItem
 
-                    val newFiles = propertyNotDeletedFiles
-                        .map { file -> file.copy(isMainPicture = false) }
-                        .toPersistentList()
-                        .mutate { it[i] = file.copy(isMainPicture = true) }
+                        val newFiles = propertyNotDeletedPictures
+                            .map { file -> file.copy(isMainPicture = false) }
+                            .toPersistentList()
+                            .mutate { it[i] = file.copy(isMainPicture = true) }
 
-                    onPropertyFormChange(propertyForm.copy(files = newFiles))
-                },
-                onDeletePicture = {
-                    val newFiles = if (file.id == null) {
-                        propertyNotDeletedFiles.remove(file)
-                    } else {
-                        propertyNotDeletedFiles.mutate { it[i] = file.copy(isDeleted = true) }
+                        if (propertyForm == null) return@PropertyPictureItem
+                        onPropertyFormChange?.invoke(propertyForm.copy(files = newFiles))
                     }
+                },
+                onDeletePicture = if (isReadOnly) {
+                    {}
+                } else {
+                    {
+                        val newFiles = if (file.id == null) {
+                            propertyNotDeletedPictures.remove(file)
+                        } else {
+                            propertyNotDeletedPictures.mutate {
+                                it[i] = file.copy(isDeleted = true)
+                            }
+                        }
 
-                    val hasMainPicture = newFiles.any { !it.isDeleted && it.isMainPicture }
+                        val hasMainPicture = newFiles.any { !it.isDeleted && it.isMainPicture }
 
-                    val newFilesUpdated = if (newFiles.isNotEmpty() && !hasMainPicture) {
-                        newFiles.mutate { it[0] = it[0].copy(isMainPicture = true) }
-                    } else newFiles
+                        val newFilesUpdated = if (newFiles.isNotEmpty() && !hasMainPicture) {
+                            newFiles.mutate { it[0] = it[0].copy(isMainPicture = true) }
+                        } else newFiles
 
-                    onPropertyFormChange(propertyForm.copy(files = newFilesUpdated))
+                        if (propertyForm == null) return@PropertyPictureItem
+                        onPropertyFormChange?.invoke(propertyForm.copy(files = newFilesUpdated))
+                    }
                 },
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -87,7 +102,8 @@ fun PropertyPicturesRow(
 private fun PropertyPictureItem(
     propertyPicture: PropertyFile,
     isMainPicture: Boolean,
-    onSetMainPicture: () -> Unit,
+    isReadOnly: Boolean,
+    onClick: () -> Unit,
     onDeletePicture: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -103,7 +119,7 @@ private fun PropertyPictureItem(
                     } else MaterialTheme.colorScheme.outlineVariant,
                 ),
                 shape = MaterialTheme.shapes.small,
-                onClick = onSetMainPicture,
+                onClick = onClick,
                 modifier = modifier
                     .size(96.dp),
             ) {
@@ -113,26 +129,28 @@ private fun PropertyPictureItem(
                     contentScale = ContentScale.Crop,
                 )
             }
-            Surface(
-                color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = CircleShape,
-                onClick = onDeletePicture,
-                modifier = Modifier
-                    .size(24.dp)
-                    .align(Alignment.TopEnd)
-                    .offset(x = 8.dp, y = (-8).dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.outline,
+            if (!isReadOnly) {
+                Surface(
+                    color = MaterialTheme.colorScheme.surfaceContainer,
+                    shape = CircleShape,
+                    onClick = onDeletePicture,
                     modifier = Modifier
-                        .size(8.dp)
-                )
+                        .size(24.dp)
+                        .align(Alignment.TopEnd)
+                        .offset(x = 8.dp, y = (-8).dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier
+                            .size(8.dp)
+                    )
+                }
             }
         }
-        Spacer(modifier = Modifier.height(4.dp))
         if (isMainPicture) {
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = stringResource(R.string.property_registration_pictures_main_picture_label),
                 style = MaterialTheme.typography.labelLarge,

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyRegistration.composables
+package com.fstengineering.leasilycrm.core.presentation.composables.cards
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,9 +30,10 @@ import kotlinx.collections.immutable.persistentListOf
 fun PropertyPriceCard(
     monthLabel: String,
     monthPrices: ImmutableList<PropertyPrice>,
-    onEditPropertyPrice: (PropertyPrice) -> Unit,
-    onDeletePropertyPrice: (PropertyPrice) -> Unit,
     modifier: Modifier = Modifier,
+    onEditPropertyPrice: (PropertyPrice) -> Unit = {},
+    onDeletePropertyPrice: (PropertyPrice) -> Unit = {},
+    hasMoreOptionsMenu: Boolean = true,
 ) {
     AppCard(
         modifier = modifier
@@ -65,24 +66,30 @@ fun PropertyPriceCard(
                             .padding(start = 8.dp)
                             .weight(1f)
                     )
-                    Text(text = "R$ ${price.price}")
-                    Spacer(modifier = Modifier.width(24.dp))
-                    AppMoreOptionsMenu(
-                        options = persistentListOf(
-                            MoreOptionsMenuOption(
-                                icon = Icons.Outlined.Edit,
-                                text = stringResource(R.string.edit_action_button_text),
-                                onClick = { onEditPropertyPrice(price) },
-                            ),
-                            MoreOptionsMenuOption(
-                                icon = Icons.Outlined.Delete,
-                                text = stringResource(R.string.delete_action_button_text),
-                                onClick = { onDeletePropertyPrice(price) },
-                            ),
-                        ),
+                    Text(
+                        text = "R$ ${price.price}",
                         modifier = Modifier
-                            .padding(end = 4.dp)
+                            .padding(end = if (hasMoreOptionsMenu) 0.dp else 4.dp)
                     )
+                    if (hasMoreOptionsMenu) {
+                        Spacer(modifier = Modifier.width(24.dp))
+                        AppMoreOptionsMenu(
+                            options = persistentListOf(
+                                MoreOptionsMenuOption(
+                                    icon = Icons.Outlined.Edit,
+                                    text = stringResource(R.string.edit_action_button_text),
+                                    onClick = { onEditPropertyPrice(price) },
+                                ),
+                                MoreOptionsMenuOption(
+                                    icon = Icons.Outlined.Delete,
+                                    text = stringResource(R.string.delete_action_button_text),
+                                    onClick = { onDeletePropertyPrice(price) },
+                                ),
+                            ),
+                            modifier = Modifier
+                                .padding(end = 4.dp)
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }

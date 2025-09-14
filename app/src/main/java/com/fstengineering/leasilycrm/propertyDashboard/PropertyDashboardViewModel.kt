@@ -70,6 +70,12 @@ class PropertyDashboardViewModel(
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                     }
                     .onSuccess { storedProperty ->
+                        if (storedProperty == null) {
+                            _uiEvents.send(UiEvents.NavigateUp)
+                            watchPropertyJob?.cancel()
+                            return@onSuccess
+                        }
+
                         _property.update { storedProperty }
                     }
 
@@ -88,7 +94,7 @@ class PropertyDashboardViewModel(
                 .onError { error ->
                     if (error.isRedirectError()) {
                         userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                        _uiEvents.send(UiEvents.NavigateUp)
                     }
 
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
@@ -103,6 +109,8 @@ class PropertyDashboardViewModel(
         data class DataSourceError(@StringRes val messageId: Int) : UiEvents
 
         data object RedirectToSignIn : UiEvents
+
+        data object NavigateUp : UiEvents
 
         data object PropertyDeleteSuccess : UiEvents
     }

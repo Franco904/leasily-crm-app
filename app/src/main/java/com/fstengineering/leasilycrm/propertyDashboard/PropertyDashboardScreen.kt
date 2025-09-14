@@ -24,6 +24,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.NavigateUp
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.PropertyDeleteSuccess
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyDashboard.composables.PropertyDashboardSection
@@ -35,7 +36,7 @@ fun PropertyDashboardScreen(
     viewModel: PropertyDashboardViewModel,
     onBack: () -> Unit,
     onSignOut: () -> Unit,
-    onEditProperty: (Long) -> Unit,
+    onEditProperty: () -> Unit,
     onViewPropertyDetails: () -> Unit,
     onViewPropertyOwnerDetails: (Long) -> Unit,
     onSeeNextPropertyStays: () -> Unit,
@@ -67,6 +68,10 @@ fun PropertyDashboardScreen(
                     onSignOut()
                 }
 
+                is NavigateUp -> {
+                    onBack()
+                }
+
                 is PropertyDeleteSuccess -> {
                     showSnackbar(context.getString(R.string.snackbar_delete_property_succeeded))
                 }
@@ -83,7 +88,7 @@ fun PropertyDashboardScreen(
         topBar = {
             PropertyDashboardTopAppBar(
                 onBack = onBack,
-                onEditProperty = { onEditProperty(propertyId) },
+                onEditProperty = onEditProperty,
                 onDeleteProperty = { mustShowConfirmDeleteDialog = true },
             )
         },

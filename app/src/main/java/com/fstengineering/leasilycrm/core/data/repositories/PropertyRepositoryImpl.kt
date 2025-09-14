@@ -98,10 +98,10 @@ class PropertyRepositoryImpl(
         return AppResult.Success(data = neighborHoodNames)
     }
 
-    override fun watchById(propertyId: Long): Flow<AppResult<Property, DataSourceError>> = flow {
+    override fun watchById(propertyId: Long): Flow<AppResult<Property?, DataSourceError>> = flow {
         val propertyFlow = dao.watchById(id = propertyId)
             .map { property ->
-                AppResult.Success<Property, DataSourceError>(data = property.toDomain())
+                AppResult.Success<Property?, DataSourceError>(data = property?.toDomain())
             }
             .distinctUntilChanged()
 
