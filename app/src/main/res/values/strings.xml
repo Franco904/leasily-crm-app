@@ -223,11 +223,19 @@
     <!-- Leads -->
     <string name="leads_empty_text">Nenhum lead registrado.</string>
     <string name="leads_empty_search_text">Nenhum lead encontrado.</string>
-    <string name="leads_order_by_name_text">Nome</string>
-    <string name="leads_order_by_last_update_date_text">Última atualização</string>
 
     <string name="leads_delete_dialog_headline">Excluir lead?</string>
     <string name="leads_delete_dialog_supporting_text">Se confirmada a exclusão, este lead, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>
+
+    <!-- Tenants -->
+    <string name="tenants_empty_text">Nenhum inquilino registrado.</string>
+    <string name="tenants_empty_search_text">Nenhum inquilino encontrado.</string>
+
+    <string name="tenants_delete_dialog_headline">Excluir inquilino?</string>
+    <string name="tenants_delete_dialog_supporting_text">Se confirmada a exclusão, este inquilino, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>
+
+    <string name="tenants_upcoming_stays_filter_text">Estadia agendada</string>
+    <string name="tenants_old_filter_text">Antigos</string>
 
     <!-- Lead/tenant registration -->
     <string name="lead_registration_top_app_bar_title_create">Novo lead</string>
@@ -276,6 +284,9 @@
     <string name="not_registered_info_var_1_body_text">Não informado</string>
     <string name="no_file_registered_body_text">Nenhum arquivo registrado</string>
     <string name="unnamed_file_text">Arquivo sem nome</string>
+
+    <string name="order_by_name_text">Nome</string>
+    <string name="order_by_last_update_date_text">Última atualização</string>
 
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>

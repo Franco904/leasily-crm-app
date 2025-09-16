@@ -92,7 +92,7 @@ fun LeadsPage(
                 }
 
                 is LeadDeleteSuccess -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
+                    showSnackbar(context.getString(R.string.snackbar_delete_lead_succeeded))
                 }
             }
         }
@@ -153,7 +153,7 @@ fun LeadsPage(
                                     ordenationType = ordenationType,
                                     orderByMenuOptions = persistentListOf(
                                         OrderByMenuOption(
-                                            text = stringResource(R.string.leads_order_by_name_text),
+                                            text = stringResource(R.string.order_by_name_text),
                                             onClick = {
                                                 viewModel.onOrdenationTypeChange(
                                                     LeadTenantOrdenationType.Name,
@@ -161,7 +161,7 @@ fun LeadsPage(
                                             },
                                         ),
                                         OrderByMenuOption(
-                                            text = stringResource(R.string.leads_order_by_last_update_date_text),
+                                            text = stringResource(R.string.order_by_last_update_date_text),
                                             onClick = {
                                                 viewModel.onOrdenationTypeChange(
                                                     LeadTenantOrdenationType.LastUpdateDate,
@@ -197,9 +197,7 @@ fun LeadsPage(
         if (leadToDelete != null) {
             ConfirmDeleteLeadDialog(
                 onConfirmDelete = viewModel::deleteLead,
-                onCancel = {
-                    viewModel.onDeleteLead(lead = null)
-                },
+                onCancel = { viewModel.onDeleteLead(lead = null) },
             )
         }
     }

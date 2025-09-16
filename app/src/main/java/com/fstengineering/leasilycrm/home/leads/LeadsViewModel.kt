@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.home.leads
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
@@ -156,12 +155,7 @@ class LeadsViewModel(
                     return@launch
                 }
 
-            val messageId = if (leadToDelete.isLead) {
-                R.string.snackbar_delete_lead_succeeded
-            } else R.string.snackbar_delete_tenant_succeeded
-
-            _uiEvents.send(UiEvents.LeadDeleteSuccess(messageId = messageId))
-
+            _uiEvents.send(UiEvents.LeadDeleteSuccess)
             onDeleteLead(lead = null)
         }
     }
@@ -171,6 +165,6 @@ class LeadsViewModel(
 
         data object RedirectToSignIn : UiEvents
 
-        data class LeadDeleteSuccess(@StringRes val messageId: Int) : UiEvents
+        data object LeadDeleteSuccess : UiEvents
     }
 }

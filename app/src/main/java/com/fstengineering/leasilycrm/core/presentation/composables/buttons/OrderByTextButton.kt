@@ -60,8 +60,8 @@ fun OrderByTextButton(
             Text(
                 text = stringResource(
                     when (ordenationType) {
-                        LeadTenantOrdenationType.Name -> R.string.leads_order_by_name_text
-                        LeadTenantOrdenationType.LastUpdateDate -> R.string.leads_order_by_last_update_date_text
+                        LeadTenantOrdenationType.Name -> R.string.order_by_name_text
+                        LeadTenantOrdenationType.LastUpdateDate -> R.string.order_by_last_update_date_text
                     },
                 ),
                 style = MaterialTheme.typography.bodyMedium,
