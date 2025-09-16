@@ -127,7 +127,6 @@ dependencies {
     // Material Design
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.wear.compose)
 
     // Coil (Image loading)
     implementation(libs.coil.compose)
