@@ -79,7 +79,7 @@ object DestinationsHandler {
                 onCustomerSegmentsSelect = {
                     navController.navigate(Destinations.CustomerSegments)
                 },
-                onRegisterLead = { leadTenantId ->
+                onRegisterLeadTenant = { leadTenantId ->
                     navController.navigate(Destinations.LeadTenantRegistration(leadTenantId))
                 },
                 onSignOut = {

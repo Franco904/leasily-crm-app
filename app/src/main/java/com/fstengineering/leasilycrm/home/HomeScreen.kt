@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.home
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
@@ -16,7 +17,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,6 +33,7 @@ import com.fstengineering.leasilycrm.home.composables.HomeTopBar
 import com.fstengineering.leasilycrm.home.dashboard.DashboardPage
 import com.fstengineering.leasilycrm.home.leads.LeadsPage
 import com.fstengineering.leasilycrm.home.models.BottomNavBarDestination
+import com.fstengineering.leasilycrm.home.tenants.TenantsPage
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -40,12 +44,13 @@ fun HomeScreen(
     onPropertiesSelect: () -> Unit = {},
     onPropertyOwnersSelect: () -> Unit = {},
     onCustomerSegmentsSelect: () -> Unit = {},
-    onRegisterLead: (Long?) -> Unit,
+    onRegisterLeadTenant: (Long?) -> Unit,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current!!
+    val focusManager = LocalFocusManager.current
 
     val navController = rememberNavController()
 
@@ -109,6 +114,9 @@ fun HomeScreen(
         },
         contentWindowInsets = WindowInsets.safeDrawing,
         modifier = modifier
+            .pointerInput(Unit) {
+                detectTapGestures { focusManager.clearFocus() }
+            }
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -127,13 +135,18 @@ fun HomeScreen(
                 composable<Destinations.Home.Leads> {
                     LeadsPage(
                         viewModel = koinViewModel(),
-                        onRegisterLead = onRegisterLead,
+                        onRegisterLead = onRegisterLeadTenant,
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
                     )
                 }
                 composable<Destinations.Home.Tenants> {
-                    Box(modifier = Modifier)
+                    TenantsPage(
+                        viewModel = koinViewModel(),
+                        onRegisterTenant = onRegisterLeadTenant,
+                        onSignOut = onSignOut,
+                        showSnackbar = showSnackbar,
+                    )
                 }
                 composable<Destinations.Home.Stays> {
                     Box(modifier = Modifier)
