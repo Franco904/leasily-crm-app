@@ -4,6 +4,14 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
 
 fun ValidationError.toUiMessage() = when (this) {
+    ValidationError.AssistanceInteractionDate.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.AssistanceInteractionTitle.IsNullOrBlank -> {
+        R.string.inline_required
+    }
+
     ValidationError.CustomerSegmentName.IsBlank -> {
         R.string.inline_required
     }

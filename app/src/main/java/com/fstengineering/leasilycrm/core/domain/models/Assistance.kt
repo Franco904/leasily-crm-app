@@ -21,6 +21,7 @@ data class Assistance(
     val qtSingleBeds: Int = 0,
     val qtBathrooms: Int = 0,
     val qtParkingSpots: Int = 0,
+    val distanceToSea: BigDecimal? = null,
     val isDeleted: Boolean = false,
     val searchedNeighborhoods: ImmutableList<AssistanceSearchedNeighborhood> = persistentListOf(),
     val seaProximityType: PropertySeaProximityType? = null,
