@@ -31,7 +31,7 @@ fun PreferredOtherCharacteristics(
                     .filter { !it.isDeleted }
                     .map { it.assistanceCharacteristic },
                 onSelect = {
-                    onSelectAssistancePropertyCharacteristic(
+                    onAssistancePropertyCharacteristicSelect(
                         characteristic = characteristic,
                         assistanceForm = assistanceForm,
                         onAssistanceFormChange = onAssistanceFormChange,
@@ -43,7 +43,7 @@ fun PreferredOtherCharacteristics(
     }
 }
 
-private fun onSelectAssistancePropertyCharacteristic(
+private fun onAssistancePropertyCharacteristicSelect(
     characteristic: AssistanceCharacteristic,
     assistanceForm: Assistance,
     onAssistanceFormChange: (Assistance) -> Unit,

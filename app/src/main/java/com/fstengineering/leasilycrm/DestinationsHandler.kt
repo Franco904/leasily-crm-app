@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationStep1Screen
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationStep2Screen
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsScreen
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationScreen
@@ -379,7 +380,33 @@ object DestinationsHandler {
                             .popBackStack<Destinations.AssistanceRegistration>(inclusive = true)
                     },
                     onNext = {
-                        val nextRoute = Destinations.AssistanceRegistration.AssistanceRegistrationStep2
+                        val nextRoute =
+                            Destinations.AssistanceRegistration.AssistanceRegistrationStep2
+                        navController.navigate(route = nextRoute)
+                    },
+                    onSignOut = {
+                        onSignOut()
+                        navController.navigateAndPopAllTo(Destinations.SignIn)
+                    },
+                    showSnackbar = { message -> showSnackbar(message) },
+                )
+            }
+            composable<Destinations.AssistanceRegistration.AssistanceRegistrationStep2> { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<Destinations.AssistanceRegistration>()
+                }
+
+                AssistanceRegistrationStep2Screen(
+                    parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
+                    stepViewModel = koinViewModel(),
+                    onLeaveRegistration = {
+                        navController
+                            .popBackStack<Destinations.AssistanceRegistration>(inclusive = true)
+                    },
+                    onBack = { navController.navigateUp() },
+                    onNext = {
+                        val nextRoute =
+                            Destinations.AssistanceRegistration.AssistanceRegistrationStep3
 //                        navController.navigate(route = nextRoute)
                     },
                     onSignOut = {

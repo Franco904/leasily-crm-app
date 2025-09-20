@@ -116,6 +116,7 @@ fun AssistanceRegistrationFormSectionStep1(
             .fillMaxSize()
     ) {
         LazyColumn(
+            state = lazyListState,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         ) {

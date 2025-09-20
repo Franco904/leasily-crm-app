@@ -41,13 +41,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.PropertyDeleteSuccess
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.RedirectToSignIn
-import com.fstengineering.leasilycrm.properties.composables.PropertiesEmptySection
 import com.fstengineering.leasilycrm.properties.composables.PropertiesTopAppBar
 
 @Composable
@@ -128,6 +128,7 @@ fun PropertiesScreen(
                         onBack()
                     }
                 },
+                mustShowSearchPropertyAction = properties.isNotEmpty() && !isSearchingProperty,
                 isSearchingProperty = isSearchingProperty,
                 onSearchProperty = { isSearchingProperty = true },
                 searchInput = searchInput,
@@ -209,7 +210,7 @@ fun PropertiesScreen(
                                 property = property,
                                 onEditProperty = { onRegisterProperty(property.id) },
                                 onDeleteProperty = { viewModel.onDeleteProperty(property = property) },
-                                onViewPropertyDashboard = { onViewPropertyDashboard(property.id!!) },
+                                onCardClick = { onViewPropertyDashboard(property.id!!) },
                                 onViewPropertyDetails = { onViewPropertyDetails(property.id!!) },
                             )
                             Spacer(modifier = Modifier.height(8.dp))

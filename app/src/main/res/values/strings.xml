@@ -258,6 +258,7 @@
     <string name="assistance_registration_top_app_bar_title_create">Novo atendimento</string>
     <string name="assistance_registration_top_app_bar_title_edit">Editar atendimento</string>
     <string name="assistance_registration_top_app_bar_subtitle">para %1$s</string>
+    <string name="assistance_registration_top_app_bar_select_property_to_send_title">Selecionar imóvel</string>
 
     <string name="assistance_registration_step_1_title">Preferências</string>
     <string name="assistance_registration_step_2_title">Imóveis enviados</string>
@@ -284,6 +285,12 @@
 
     <string name="assistance_registration_other_preferences_title">Outras preferências</string>
     <string name="assistance_registration_assistance_observations_label">Observações sobre o atendimento</string>
+
+    <plurals name="assistance_registration_number_of_selected_sent_properties">
+        <item quantity="one">%1$d selecionado</item>
+        <item quantity="other">%1$d selecionados</item>
+    </plurals>
+    <string name="assistance_registration_sent_properties_empty_text">Nenhum imóvel selecionado.</string>
 
     <string name="assistance_registration_interation_registration_title_create">Nova interação</string>
     <string name="assistance_registration_interation_registration_title_edit">Editar interação</string>
@@ -343,20 +350,20 @@
     <!-- Action buttons -->
     <string name="add_action_button_text">Adicionar</string>
     <string name="advance_action_button_text">Avançar</string>
+    <string name="apply_action_button_text">Aplicar</string>
+    <string name="assist_action_button_text">Atender</string>
     <string name="back_action_button_text">Voltar</string>
     <string name="cancel_action_button_text">Cancelar</string>
     <string name="close_action_button_text">Fechar</string>
     <string name="confirm_action_button_text">Confirmar</string>
     <string name="delete_action_button_text">Excluir</string>
     <string name="edit_action_button_text">Editar</string>
-    <string name="new_assistance_action_button_text">Novo atendimento</string>
     <string name="new_property_stay_action_button_text">Nova estadia</string>
     <string name="register_action_button_text">Cadastrar</string>
     <string name="save_action_button_text">Salvar</string>
     <string name="select_action_button_text">Selecionar</string>
     <string name="search_action_button_text">Buscar</string>
     <string name="sign_out_action_button_text">Sair</string>
-    <string name="view_assistance_action_button_text">Ver atendimento</string>
     <string name="view_details_action_button_text">Ver detalhes</string>
     <string name="view_property_stay_action_button_text">Ver estadia</string>
 

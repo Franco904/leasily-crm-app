@@ -188,18 +188,6 @@ class AssistanceRegistrationViewModel(
         _assistanceForm.update { form }
     }
 
-//    fun onPropertyFilePick(contentUriString: String) {
-//        viewModelScope.launch {
-//            val newFile = PropertyFile(
-//                uriString = contentUriString,
-//                isMainPicture = assistanceForm.value.files.isEmpty(),
-//            )
-//
-//            val newFiles = (assistanceForm.value.files + newFile).toPersistentList()
-//            _assistanceForm.update { assistanceForm.value.copy(files = newFiles) }
-//        }
-//    }
-
     fun saveAssistance() {
         viewModelScope.launch {
             if (assistanceToEdit != null && assistanceForm.value == assistanceToEdit) {

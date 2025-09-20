@@ -31,7 +31,7 @@ fun PropertyOtherCharacteristics(
                     .filter { !it.isDeleted }
                     .map { it.propertyCharacteristic },
                 onSelect = {
-                    onSelectAssistancePropertyCharacteristic(
+                    onPropertyCharacteristicSelect(
                         characteristic = characteristic,
                         propertyForm = propertyForm,
                         onPropertyFormChange = onPropertyFormChange,
@@ -43,7 +43,7 @@ fun PropertyOtherCharacteristics(
     }
 }
 
-private fun onSelectAssistancePropertyCharacteristic(
+private fun onPropertyCharacteristicSelect(
     characteristic: PropertyCharacteristic,
     propertyForm: Property,
     onPropertyFormChange: (Property) -> Unit,

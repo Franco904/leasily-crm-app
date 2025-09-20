@@ -38,8 +38,8 @@ import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackS
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberCenterScroller
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.IncludedItemsFormField
-import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyOtherCharacteristics
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyCharacteristicsCountFormField
+import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyOtherCharacteristics
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.SeaProximityTypeFormField
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep2Field
 import kotlinx.collections.immutable.ImmutableList
