@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.propertyRegistration.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,22 +32,20 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
-import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicSelectableChip
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberCenterScroller
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.IncludedItemsFormField
-import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.QuantityCharacteristicsFormField
+import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyOtherCharacteristics
+import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyCharacteristicsCountFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.SeaProximityTypeFormField
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep2Field
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.mutate
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.flow.Flow
 
@@ -102,7 +99,7 @@ fun PropertyRegistrationFormSectionStep2(
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(24.dp))
-            QuantityCharacteristicsFormField(
+            PropertyCharacteristicsCountFormField(
                 propertyForm = propertyForm,
                 onPropertyFormChange = onPropertyFormChange,
             )
@@ -155,24 +152,11 @@ fun PropertyRegistrationFormSectionStep2(
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            FlowRow {
-                propertyCharacteristics.forEach { characteristic ->
-                    CharacteristicSelectableChip(
-                        label = characteristic.name,
-                        isSelected = characteristic in propertyForm.characteristics
-                            .filter { !it.isDeleted }
-                            .map { it.propertyCharacteristic },
-                        onSelect = {
-                            onSelectPropertyCharacteristic(
-                                characteristic = characteristic,
-                                propertyForm = propertyForm,
-                                onPropertyFormChange = onPropertyFormChange,
-                            )
-                        },
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                }
-            }
+            PropertyOtherCharacteristics(
+                propertyForm = propertyForm,
+                onPropertyFormChange = onPropertyFormChange,
+                propertyCharacteristics = propertyCharacteristics,
+            )
             Spacer(modifier = Modifier.height(120.dp))
         }
         Surface(
@@ -206,37 +190,4 @@ fun PropertyRegistrationFormSectionStep2(
             }
         }
     }
-}
-
-private fun onSelectPropertyCharacteristic(
-    characteristic: PropertyCharacteristic,
-    propertyForm: Property,
-    onPropertyFormChange: (Property) -> Unit,
-) {
-    val selectedCharacteristics = propertyForm.characteristics
-        .toPersistentList()
-
-    val newPropertyForm = propertyForm.copy(
-        characteristics = selectedCharacteristics.mutate { list ->
-            val characteristics = list.map { it.propertyCharacteristic }
-
-            if (characteristic in characteristics) {
-                val associatedCharacteristic =
-                    list.find { it.propertyCharacteristic == characteristic } ?: return
-
-                if (associatedCharacteristic.propertyId != null) {
-                    val i = list.indexOf(associatedCharacteristic)
-                    list[i] = associatedCharacteristic.copy(isDeleted = true)
-                } else {
-                    list.remove(associatedCharacteristic)
-                }
-            } else {
-                val newCharacteristic =
-                    PropertyCharacteristicProperty(propertyCharacteristic = characteristic)
-                list.add(newCharacteristic)
-            }
-        }
-    )
-
-    onPropertyFormChange(newPropertyForm)
 }

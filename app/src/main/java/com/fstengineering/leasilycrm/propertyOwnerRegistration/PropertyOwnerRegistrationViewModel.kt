@@ -16,7 +16,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceInteractionValidator
+import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyOwnerValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerErrorUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
@@ -38,7 +38,7 @@ class PropertyOwnerRegistrationViewModel(
     private val propertyOwnerFileRepository: PropertyOwnerFileRepository,
     private val customerSegmentRepository: CustomerSegmentRepository,
     private val userRepository: UserRepository,
-    private val propertyOwnerValidator: AssistanceInteractionValidator,
+    private val propertyOwnerValidator: PropertyOwnerValidator,
 ) : ViewModel() {
     private var isInitialized = false
 

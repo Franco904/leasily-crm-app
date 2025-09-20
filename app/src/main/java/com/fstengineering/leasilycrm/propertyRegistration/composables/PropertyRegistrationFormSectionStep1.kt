@@ -38,7 +38,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.rememberCente
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.AddressLine2FormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.CepPostalCodeFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.HobbyBoxNumberFormField
-import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.NeighborhoodFormField
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.NeighborhoodFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.NumberFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.ParkingBasementLevelNumberFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.ParkingSpotNumberFormField

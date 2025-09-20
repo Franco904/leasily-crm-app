@@ -33,7 +33,7 @@ fun AppCheckbox(
             onCheckedChange = { newIsChecked -> onCheckedChange(newIsChecked) },
             enabled = isEnabled,
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = label,
             style = MaterialTheme.typography.bodyLarge,

@@ -19,6 +19,9 @@ interface TenantDao {
     @Query("SELECT * FROM tenants WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): TenantCompound
 
+    @Query("SELECT name FROM tenants WHERE id = :id AND is_deleted = 0")
+    suspend fun getNameById(id: Long): String
+
     @Query(
         """
         SELECT DISTINCT(city) FROM tenants
@@ -39,7 +42,6 @@ interface TenantDao {
         """
         SELECT * FROM tenants
         WHERE user_id = :userId
-        AND is_lead = 1
         AND is_deleted = 0
         ORDER BY
             CASE WHEN :order = 1  THEN name END COLLATE NOCASE,
@@ -53,7 +55,6 @@ interface TenantDao {
         """
         SELECT * FROM tenants
         WHERE user_id = :userId
-        AND is_lead = 0
         AND is_deleted = 0
         ORDER BY
             CASE WHEN :order = 1  THEN name END COLLATE NOCASE,

@@ -1,0 +1,88 @@
+package com.fstengineering.leasilycrm.assistanceRegistration.viewModels
+
+import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceStep1ErrorUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceValidator
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import kotlinx.collections.immutable.mutate
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
+
+class AssistanceRegistrationStep1ViewModel(
+    private val assistanceValidator: AssistanceValidator,
+) : ViewModel() {
+    private val _uiEvents = Channel<UiEvents>()
+    val uiEvents = _uiEvents.receiveAsFlow()
+
+    private val _formErrors = MutableStateFlow(AssistanceStep1ErrorUiState())
+    val formErrors = _formErrors.asStateFlow()
+
+    fun onAssistanceFormChange(
+        assistanceForm: Assistance,
+        form: Assistance,
+    ) {
+        _formErrors.update {
+            val newErrors = it.errors.mutate { map ->
+                if (assistanceForm.distanceToSea != form.distanceToSea) {
+                    map[AssistanceStep1Field.DistanceToSea] = null
+                }
+            }
+
+            it.copy(errors = newErrors)
+        }
+    }
+
+    fun validateAssistanceStep1(
+        assistanceForm: Assistance,
+    ) {
+        viewModelScope.launch {
+            assistanceValidator.validate(assistance = assistanceForm)
+                .onErrors { errors ->
+                    setFieldErrors(errors)
+                    return@launch
+                }
+
+            _uiEvents.send(UiEvents.ValidateSuccess)
+        }
+    }
+
+    private suspend fun setFieldErrors(errors: List<ValidationError>) {
+        _formErrors.update { AssistanceStep1ErrorUiState() }
+        delay(150.milliseconds)
+
+        val propertyDistanceToSeaError =
+            errors.firstOrNull { it is ValidationError.PropertyDistanceToSea }
+
+        _formErrors.update {
+            val newErrors = it.errors.mutate { map ->
+                map[AssistanceStep1Field.DistanceToSea] =
+                    propertyDistanceToSeaError?.toUiMessage()
+            }
+
+            it.copy(errors = newErrors)
+        }
+
+        val firstFieldWithError = _formErrors.value.errors.entries.first { it.value != null }.key
+        _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
+    }
+
+    sealed interface UiEvents {
+        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+
+        data class ScrollToField(val field: AssistanceStep1Field) : UiEvents
+
+        data object ValidateSuccess : UiEvents
+    }
+}

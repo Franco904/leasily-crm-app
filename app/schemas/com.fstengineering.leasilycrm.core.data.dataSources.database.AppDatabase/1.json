@@ -2,21 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "dbd4d20b6d6c87c0d31794c7064e164c",
+    "identityHash": "dc900b06c9eb41d3a2f91669912a0a59",
     "entities": [
       {
         "tableName": "assistances",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `contact_date` TEXT, `searched_start_date` TEXT, `searched_end_date` TEXT, `has_flexibility_for_period` INTEGER NOT NULL, `max_accepted_nightly_rate` TEXT, `qt_adult_guests` INTEGER NOT NULL, `qt_kid_guests` INTEGER NOT NULL, `qt_baby_guests` INTEGER NOT NULL, `qt_animal_guests` INTEGER NOT NULL, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `tenant_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `searched_start_date` TEXT, `searched_end_date` TEXT, `has_flexibility_for_period` INTEGER NOT NULL, `max_accepted_nightly_rate` TEXT, `qt_adult_guests` INTEGER NOT NULL, `qt_kid_guests` INTEGER NOT NULL, `qt_baby_guests` INTEGER NOT NULL, `qt_animal_guests` INTEGER NOT NULL, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `distance_to_sea` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER, `tenant_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "contactDate",
-            "columnName": "contact_date",
-            "affinity": "TEXT"
           },
           {
             "fieldPath": "searchedStartDate",
@@ -100,6 +95,11 @@
             "notNull": true
           },
           {
+            "fieldPath": "distanceToSea",
+            "columnName": "distance_to_sea",
+            "affinity": "TEXT"
+          },
+          {
             "fieldPath": "observations",
             "columnName": "observations",
             "affinity": "TEXT"
@@ -111,20 +111,13 @@
             "notNull": true
           },
           {
-            "fieldPath": "tenantId",
-            "columnName": "tenant_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "propertySeaProximityTypeId",
             "columnName": "property_sea_proximity_type_id",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
-            "fieldPath": "userId",
-            "columnName": "user_id",
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1534,7 +1527,7 @@
       },
       {
         "tableName": "tenants",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `register_date` TEXT NOT NULL, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `is_lead` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `register_date` TEXT NOT NULL, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1577,12 +1570,6 @@
             "fieldPath": "observations",
             "columnName": "observations",
             "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "isLead",
-            "columnName": "is_lead",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
             "fieldPath": "isDeleted",
@@ -1690,7 +1677,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dbd4d20b6d6c87c0d31794c7064e164c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dc900b06c9eb41d3a2f91669912a0a59')"
     ]
   }
 }

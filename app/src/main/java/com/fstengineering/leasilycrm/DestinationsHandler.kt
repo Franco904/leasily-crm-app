@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationStep1Screen
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsScreen
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationScreen
@@ -81,6 +82,13 @@ object DestinationsHandler {
                 },
                 onRegisterLeadTenant = { leadTenantId ->
                     navController.navigate(Destinations.LeadTenantRegistration(leadTenantId))
+                },
+                onNewAssistance = { leadTenantId ->
+                    val destination = Destinations.AssistanceRegistration(
+                        assistanceId = null,
+                        leadTenantId = leadTenantId,
+                    )
+                    navController.navigate(destination)
                 },
                 onSignOut = {
                     onSignOut()
@@ -349,6 +357,38 @@ object DestinationsHandler {
                 },
                 showSnackbar = { message -> showSnackbar(message) },
             )
+        }
+
+        navigation<Destinations.AssistanceRegistration>(
+            startDestination = Destinations.AssistanceRegistration.AssistanceRegistrationStep1,
+        ) {
+            composable<Destinations.AssistanceRegistration.AssistanceRegistrationStep1> { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry<Destinations.AssistanceRegistration>()
+                }
+
+                val args = parentEntry.toRoute<Destinations.AssistanceRegistration>()
+
+                AssistanceRegistrationStep1Screen(
+                    assistanceId = args.assistanceId,
+                    leadTenantId = args.leadTenantId,
+                    parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
+                    stepViewModel = koinViewModel(),
+                    onLeaveRegistration = {
+                        navController
+                            .popBackStack<Destinations.AssistanceRegistration>(inclusive = true)
+                    },
+                    onNext = {
+                        val nextRoute = Destinations.AssistanceRegistration.AssistanceRegistrationStep2
+//                        navController.navigate(route = nextRoute)
+                    },
+                    onSignOut = {
+                        onSignOut()
+                        navController.navigateAndPopAllTo(Destinations.SignIn)
+                    },
+                    showSnackbar = { message -> showSnackbar(message) },
+                )
+            }
         }
     }
 

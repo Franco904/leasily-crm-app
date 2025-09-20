@@ -49,6 +49,7 @@ import kotlinx.collections.immutable.persistentListOf
 fun LeadsPage(
     viewModel: LeadsViewModel,
     onRegisterLead: (Long?) -> Unit,
+    onNewAssistance: (Long) -> Unit,
     modifier: Modifier = Modifier,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
@@ -183,7 +184,7 @@ fun LeadsPage(
                                 onViewLeadTenantDetails = {},
                                 onEditLeadTenant = { onRegisterLead(lead.id) },
                                 onDeleteLeadTenant = { viewModel.onDeleteLead(lead = lead) },
-                                onNewAssistance = {},
+                                onNewAssistance = { onNewAssistance(lead.id!!) },
                                 onViewAssistance = {},
                                 onNewPropertyStay = {},
                             )
