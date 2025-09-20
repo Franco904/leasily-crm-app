@@ -206,11 +206,19 @@ private fun LazyListScope.addingSentPropertiesList(
     item { Spacer(modifier = Modifier.height(16.dp)) }
     item {
         Text(
-            text = pluralStringResource(
-                R.plurals.assistance_registration_number_of_selected_sent_properties,
-                selectedPropertiesCount,
-                selectedPropertiesCount,
-            ),
+            text = when {
+                selectedPropertiesCount == 0 -> {
+                    stringResource(R.string.assistance_registration_no_selected_sent_properties)
+                }
+
+                else -> {
+                    pluralStringResource(
+                        R.plurals.assistance_registration_number_of_selected_sent_properties,
+                        selectedPropertiesCount,
+                        selectedPropertiesCount,
+                    )
+                }
+            },
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
         )

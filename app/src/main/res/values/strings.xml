@@ -286,6 +286,7 @@
     <string name="assistance_registration_other_preferences_title">Outras preferências</string>
     <string name="assistance_registration_assistance_observations_label">Observações sobre o atendimento</string>
 
+    <string name="assistance_registration_no_selected_sent_properties">Nenhum selecionado</string>
     <plurals name="assistance_registration_number_of_selected_sent_properties">
         <item quantity="one">%1$d selecionado</item>
         <item quantity="other">%1$d selecionados</item>
