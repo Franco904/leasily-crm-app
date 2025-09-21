@@ -29,7 +29,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.buttons.Order
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByTextButton
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteTenantDialog
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrdenationType
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrderType
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel.UiEvents.LeadDeleteSuccess
@@ -41,6 +41,8 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun TenantsPage(
     viewModel: TenantsViewModel,
+    isSearchingTenant: Boolean,
+    searchInput: String?,
     onRegisterTenant: (Long?) -> Unit,
     onNewAssistance: (Long) -> Unit,
     onViewAssistance: (Long) -> Unit,
@@ -57,10 +59,7 @@ fun TenantsPage(
     val tenants by viewModel.tenants.collectAsStateWithLifecycle()
     val tenantToDelete by viewModel.tenantToDelete.collectAsStateWithLifecycle()
 
-    val ordenationType by viewModel.ordenationType.collectAsStateWithLifecycle()
-
-    var isSearchingTenant by remember { mutableStateOf(false) }
-    val searchInput by viewModel.searchInput.collectAsStateWithLifecycle()
+    val ordenationType by viewModel.orderType.collectAsStateWithLifecycle()
 
     val currentTenantFilter by viewModel.currentTenantFilter.collectAsStateWithLifecycle()
 
@@ -92,6 +91,10 @@ fun TenantsPage(
                 }
             }
         }
+    }
+
+    LaunchedEffect(searchInput) {
+        viewModel.onSearchInputChange(searchInput = searchInput)
     }
 
     Column {
@@ -141,16 +144,16 @@ fun TenantsPage(
                                         OrderByMenuOption(
                                             text = stringResource(R.string.order_by_name_text),
                                             onClick = {
-                                                viewModel.onOrdenationTypeChange(
-                                                    LeadTenantOrdenationType.Name,
+                                                viewModel.onOrderTypeChange(
+                                                    LeadTenantOrderType.Name,
                                                 )
                                             },
                                         ),
                                         OrderByMenuOption(
                                             text = stringResource(R.string.order_by_last_update_date_text),
                                             onClick = {
-                                                viewModel.onOrdenationTypeChange(
-                                                    LeadTenantOrdenationType.LastUpdateDate,
+                                                viewModel.onOrderTypeChange(
+                                                    LeadTenantOrderType.LastUpdateDate,
                                                 )
                                             },
                                         ),

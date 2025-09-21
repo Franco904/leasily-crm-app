@@ -13,8 +13,8 @@ fun ConfirmSignOutUserDialog(
     modifier: Modifier = Modifier,
 ) {
     AppTitleAndMessageDialog(
-        title = stringResource(R.string.profile_signout_dialog_headline),
-        message = stringResource(R.string.profile_signout_dialog_supporting_text),
+        title = stringResource(R.string.profile_sign_out_dialog_headline),
+        message = stringResource(R.string.profile_sign_out_dialog_supporting_text),
         confirmButtonText = stringResource(R.string.sign_out_action_button_text),
         dismissButtonText = stringResource(R.string.cancel_action_button_text),
         onConfirmButtonClick = onConfirmSignOut,

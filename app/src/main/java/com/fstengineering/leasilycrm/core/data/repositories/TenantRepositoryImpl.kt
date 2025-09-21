@@ -65,6 +65,54 @@ class TenantRepositoryImpl(
         return AppResult.Success(data = tenant)
     }
 
+    override suspend fun getAllLeadsMatching(
+        matching: String?,
+        orderTypeId: Int,
+    ): AppResult<ImmutableList<Tenant>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: return AppResult.Error(
+                        error = DataSourceError.PreferencesError.NotFound,
+                    )
+                }
+            )
+
+        val leads = dao.getAllLeadsMatching(
+            userId = userRemoteId,
+            matching = matching,
+            order = orderTypeId,
+        )
+            .map { lead -> lead.toDomain() }.toPersistentList()
+
+        return AppResult.Success(data = leads)
+    }
+
+    override suspend fun getAllTenantsMatching(
+        matching: String?,
+        orderTypeId: Int,
+    ): AppResult<ImmutableList<Tenant>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: return AppResult.Error(
+                        error = DataSourceError.PreferencesError.NotFound,
+                    )
+                }
+            )
+
+        val tenants = dao.getAllTenantsMatching(
+            userId = userRemoteId,
+            matching = matching,
+            order = orderTypeId,
+        )
+            .map { tenant -> tenant.toDomain() }.toPersistentList()
+
+        return AppResult.Success(data = tenants)
+    }
+
     override suspend fun getNameById(tenantId: Long): AppResult<String, DataSourceError> {
         val tenantName = dao.getNameById(id = tenantId)
 
@@ -88,42 +136,42 @@ class TenantRepositoryImpl(
         return AppResult.Success(data = cityNames)
     }
 
-    override suspend fun getPreferredLeadsOrdenationTypeId(): AppResult<Int, DataSourceError> {
-        val preferredLeadsOrdenationTypeId = plainPreferencesStorage.readPreferences()
+    override suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, DataSourceError> {
+        val preferredLeadsOrderTypeId = plainPreferencesStorage.readPreferences()
             .fold(
                 onError = { error -> return AppResult.Error(error = error) },
-                onSuccess = { prefsFlow -> prefsFlow.first().leadsOrdenationTypeId ?: 1 }
+                onSuccess = { prefsFlow -> prefsFlow.first().leadsOrderTypeId ?: 1 }
             )
 
-        return AppResult.Success(data = preferredLeadsOrdenationTypeId)
+        return AppResult.Success(data = preferredLeadsOrderTypeId)
     }
 
-    override suspend fun getPreferredTenantsOrdenationTypeId(): AppResult<Int, DataSourceError> {
-        val preferredTenantsOrdenationTypeId = plainPreferencesStorage.readPreferences()
+    override suspend fun getPreferredTenantsOrderTypeId(): AppResult<Int, DataSourceError> {
+        val preferredTenantsOrderTypeId = plainPreferencesStorage.readPreferences()
             .fold(
                 onError = { error -> return AppResult.Error(error = error) },
-                onSuccess = { prefsFlow -> prefsFlow.first().tenantsOrdenationTypeId ?: 1 }
+                onSuccess = { prefsFlow -> prefsFlow.first().tenantsOrderTypeId ?: 1 }
             )
 
-        return AppResult.Success(data = preferredTenantsOrdenationTypeId)
+        return AppResult.Success(data = preferredTenantsOrderTypeId)
     }
 
-    override suspend fun updatePreferredLeadsOrdenationTypeId(
-        ordenationTypeId: Int,
+    override suspend fun updatePreferredLeadsOrderTypeId(
+        orderTypeId: Int,
     ): AppResult<Unit, DataSourceError> {
         plainPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(leadsOrdenationTypeId = ordenationTypeId)
+            prefs.copy(leadsOrderTypeId = orderTypeId)
         }
             .onError { return AppResult.Error(error = it) }
 
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun updatePreferredTenantsOrdenationTypeId(
-        ordenationTypeId: Int,
+    override suspend fun updatePreferredTenantsOrderTypeId(
+        orderTypeId: Int,
     ): AppResult<Unit, DataSourceError> {
         plainPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(tenantsOrdenationTypeId = ordenationTypeId)
+            prefs.copy(tenantsOrderTypeId = orderTypeId)
         }
             .onError { return AppResult.Error(error = it) }
 
@@ -145,7 +193,7 @@ class TenantRepositoryImpl(
     }
 
     override fun watchAllLeads(
-        ordenationTypeId: Int,
+        orderTypeId: Int,
     ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
@@ -163,17 +211,17 @@ class TenantRepositoryImpl(
                 )
 
             emitAll(
-                dao.watchAllLeads(userId = userRemoteId, order = ordenationTypeId)
+                dao.watchAllLeads(userId = userRemoteId, order = orderTypeId)
                     .map {
-                        val tenants = it.map { tenant -> tenant.toDomain() }.toPersistentList()
-                        AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = tenants)
+                        val leads = it.map { tenant -> tenant.toDomain() }.toPersistentList()
+                        AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = leads)
                     }
                     .distinctUntilChanged()
             )
         }
 
     override fun watchAllTenants(
-        ordenationTypeId: Int,
+        orderTypeId: Int,
         tenantFilterType: Int,
     ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
         flow {
@@ -193,7 +241,7 @@ class TenantRepositoryImpl(
 
             val tenantsFlow = dao.watchAllTenants(
                 userId = userRemoteId,
-                order = ordenationTypeId,
+                order = orderTypeId,
             )
                 .map {
                     val tenants = it.map { tenant -> tenant.toDomain() }.toPersistentList()

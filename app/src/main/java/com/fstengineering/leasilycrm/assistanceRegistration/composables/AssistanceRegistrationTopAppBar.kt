@@ -73,6 +73,7 @@ fun AssistanceRegistrationTopAppBar(
                             SearchTextField(
                                 searchInput = searchInput ?: "",
                                 onSearchInputChange = onSearchInputChange,
+                                label = stringResource(R.string.search_property_label),
                                 fieldFocusRequester = searchFieldFocusRequester,
                             )
                         } else {

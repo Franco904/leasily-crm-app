@@ -18,6 +18,7 @@ import com.fstengineering.leasilycrm.R
 fun SearchTextField(
     searchInput: String,
     onSearchInputChange: (String) -> Unit,
+    label: String,
     modifier: Modifier = Modifier,
     fieldFocusRequester: FocusRequester? = null,
 ) {
@@ -26,7 +27,7 @@ fun SearchTextField(
         onValueChange = { onSearchInputChange(it) },
         placeholder = {
             Text(
-                text = stringResource(R.string.search_property_placeholder),
+                text = label,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier

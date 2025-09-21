@@ -9,16 +9,19 @@ import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrdenationType
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrderType
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class LeadsViewModel(
     private val tenantRepository: TenantRepository,
@@ -36,10 +39,9 @@ class LeadsViewModel(
     val leadToDelete = _leadToDelete.asStateFlow()
 
     private val _searchInput = MutableStateFlow<String?>(null)
-    val searchInput = _searchInput.asStateFlow()
 
-    private val _ordenationType = MutableStateFlow(LeadTenantOrdenationType.Name)
-    val ordenationType = _ordenationType.asStateFlow()
+    private val _orderType = MutableStateFlow(LeadTenantOrderType.Name)
+    val orderType = _orderType.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -49,7 +51,7 @@ class LeadsViewModel(
 
         watchSessionExpiration()
         watchLeads()
-//        watchSearchInput()
+        watchSearchInput()
 
         isInitialized = true
     }
@@ -75,19 +77,19 @@ class LeadsViewModel(
         _isLoading.update { true }
 
         viewModelScope.launch {
-            val ordenationTypeId = tenantRepository.getPreferredLeadsOrdenationTypeId()
+            val orderTypeId = tenantRepository.getPreferredLeadsOrderTypeId()
                 .fold(
                     onError = { error ->
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                         return@launch
                     },
-                    onSuccess = { ordenationTypeId -> ordenationTypeId },
+                    onSuccess = { orderTypeId -> orderTypeId },
                 )
 
-            _ordenationType.update { LeadTenantOrdenationType.fromId(ordenationTypeId) }
+            _orderType.update { LeadTenantOrderType.fromId(orderTypeId) }
 
             tenantRepository.watchAllLeads(
-                ordenationTypeId = ordenationTypeId,
+                orderTypeId = orderTypeId,
             ).collect { result ->
                 result
                     .onError { error ->
@@ -102,30 +104,32 @@ class LeadsViewModel(
         }
     }
 
-    // TODO: Impl. lead search
-//    @OptIn(FlowPreview::class)
-//    fun watchSearchInput() {
-//        viewModelScope.launch {
-//            searchInput
-//                .debounce(500.milliseconds)
-//                .collect { searchInput ->
-//                    _isLoading.update { true }
-//
-//                    propertyRepository.getAllMatching(matching = searchInput)
-//                        .onError { error ->
-//                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-//                        }
-//                        .onSuccess { matchingProperties ->
-//                            _leads.update { matchingProperties }
-//                            _isLoading.update { false }
-//                        }
-//                }
-//        }
-//    }
-
-    fun onOrdenationTypeChange(ordenationType: LeadTenantOrdenationType) {
+    @OptIn(FlowPreview::class)
+    private fun watchSearchInput() {
         viewModelScope.launch {
-            tenantRepository.updatePreferredLeadsOrdenationTypeId(ordenationType.id)
+            _searchInput
+                .debounce(500.milliseconds)
+                .collect { searchInput ->
+                    _isLoading.update { true }
+
+                    tenantRepository.getAllLeadsMatching(
+                        matching = searchInput,
+                        orderTypeId = orderType.value.id,
+                    )
+                        .onError { error ->
+                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                        }
+                        .onSuccess { matchingLeads ->
+                            _leads.update { matchingLeads }
+                            _isLoading.update { false }
+                        }
+                }
+        }
+    }
+
+    fun onOrderTypeChange(orderType: LeadTenantOrderType) {
+        viewModelScope.launch {
+            tenantRepository.updatePreferredLeadsOrderTypeId(orderType.id)
 
             watchLeads()
         }

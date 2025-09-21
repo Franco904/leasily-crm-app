@@ -22,7 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -37,7 +36,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.buttons.Order
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByTextButton
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrdenationType
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrderType
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel.UiEvents.LeadDeleteSuccess
@@ -48,6 +47,8 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun LeadsPage(
     viewModel: LeadsViewModel,
+    isSearchingLead: Boolean,
+    searchInput: String?,
     onRegisterLead: (Long?) -> Unit,
     onNewAssistance: (Long) -> Unit,
     onViewAssistance: (Long) -> Unit,
@@ -65,10 +66,7 @@ fun LeadsPage(
     val leads by viewModel.leads.collectAsStateWithLifecycle()
     val leadToDelete by viewModel.leadToDelete.collectAsStateWithLifecycle()
 
-    val ordenationType by viewModel.ordenationType.collectAsStateWithLifecycle()
-
-    var isSearchingLead by remember { mutableStateOf(false) }
-    val searchInput by viewModel.searchInput.collectAsStateWithLifecycle()
+    val ordenationType by viewModel.orderType.collectAsStateWithLifecycle()
 
     val listStatus by remember(isLoading, leads) {
         val status = when {
@@ -100,17 +98,23 @@ fun LeadsPage(
         }
     }
 
+    LaunchedEffect(searchInput) {
+        viewModel.onSearchInputChange(searchInput = searchInput)
+    }
+
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.primary,
-                onClick = { onRegisterLead(null) },
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.PersonAdd,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                )
+            if (!isSearchingLead) {
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    onClick = { onRegisterLead(null) },
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.PersonAdd,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
             }
         },
         modifier = modifier
@@ -157,16 +161,16 @@ fun LeadsPage(
                                         OrderByMenuOption(
                                             text = stringResource(R.string.order_by_name_text),
                                             onClick = {
-                                                viewModel.onOrdenationTypeChange(
-                                                    LeadTenantOrdenationType.Name,
+                                                viewModel.onOrderTypeChange(
+                                                    LeadTenantOrderType.Name,
                                                 )
                                             },
                                         ),
                                         OrderByMenuOption(
                                             text = stringResource(R.string.order_by_last_update_date_text),
                                             onClick = {
-                                                viewModel.onOrdenationTypeChange(
-                                                    LeadTenantOrdenationType.LastUpdateDate,
+                                                viewModel.onOrderTypeChange(
+                                                    LeadTenantOrderType.LastUpdateDate,
                                                 )
                                             },
                                         ),

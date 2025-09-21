@@ -25,12 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrdenationType
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrderType
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun OrderByTextButton(
-    ordenationType: LeadTenantOrdenationType,
+    ordenationType: LeadTenantOrderType,
     orderByMenuOptions: ImmutableList<OrderByMenuOption>,
     modifier: Modifier = Modifier,
 ) {
@@ -60,8 +60,8 @@ fun OrderByTextButton(
             Text(
                 text = stringResource(
                     when (ordenationType) {
-                        LeadTenantOrdenationType.Name -> R.string.order_by_name_text
-                        LeadTenantOrdenationType.LastUpdateDate -> R.string.order_by_last_update_date_text
+                        LeadTenantOrderType.Name -> R.string.order_by_name_text
+                        LeadTenantOrderType.LastUpdateDate -> R.string.order_by_last_update_date_text
                     },
                 ),
                 style = MaterialTheme.typography.bodyMedium,

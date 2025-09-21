@@ -19,6 +19,50 @@ interface TenantDao {
     @Query("SELECT * FROM tenants WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): TenantCompound
 
+    @Transaction
+    @Query(
+        """
+        SELECT * FROM tenants
+        WHERE user_id = :userId
+        AND is_deleted = 0
+        AND (
+            :matching IS NULL OR
+            name LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE OR
+            city LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE
+        )
+        ORDER BY
+            CASE WHEN :order = 1 THEN name END COLLATE NOCASE,
+            CASE WHEN :order = 2 THEN register_date END COLLATE NOCASE DESC
+    """
+    )
+    suspend fun getAllLeadsMatching(
+        userId: Long,
+        matching: String?,
+        order: Int,
+    ): List<TenantCompound>
+
+    @Transaction
+    @Query(
+        """
+        SELECT * FROM tenants
+        WHERE user_id = :userId
+        AND is_deleted = 0
+        AND (
+            :matching IS NULL OR
+            name LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE OR
+            city LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE
+        )
+        ORDER BY
+            CASE WHEN :order = 1 THEN name END COLLATE NOCASE,
+            CASE WHEN :order = 2 THEN register_date END COLLATE NOCASE DESC
+    """
+    )
+    suspend fun getAllTenantsMatching(
+        userId: Long,
+        matching: String?,
+        order: Int,
+    ): List<TenantCompound>
+
     @Query("SELECT name FROM tenants WHERE id = :id AND is_deleted = 0")
     suspend fun getNameById(id: Long): String
 
@@ -44,7 +88,7 @@ interface TenantDao {
         WHERE user_id = :userId
         AND is_deleted = 0
         ORDER BY
-            CASE WHEN :order = 1  THEN name END COLLATE NOCASE,
+            CASE WHEN :order = 1 THEN name END COLLATE NOCASE,
             CASE WHEN :order = 2 THEN register_date END COLLATE NOCASE DESC
     """
     )
@@ -57,7 +101,7 @@ interface TenantDao {
         WHERE user_id = :userId
         AND is_deleted = 0
         ORDER BY
-            CASE WHEN :order = 1  THEN name END COLLATE NOCASE,
+            CASE WHEN :order = 1 THEN name END COLLATE NOCASE,
             CASE WHEN :order = 2 THEN register_date END COLLATE NOCASE DESC
     """
     )

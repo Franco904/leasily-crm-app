@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.core.presentation.models
 import androidx.annotation.StringRes
 import com.fstengineering.leasilycrm.R
 
-enum class LeadTenantOrdenationType(
+enum class LeadTenantOrderType(
     val id: Int,
     @StringRes val label: Int?,
 ) {
