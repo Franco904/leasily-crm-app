@@ -30,7 +30,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun OrderByTextButton(
-    ordenationType: LeadTenantOrderType,
+    orderType: LeadTenantOrderType,
     orderByMenuOptions: ImmutableList<OrderByMenuOption>,
     modifier: Modifier = Modifier,
 ) {
@@ -59,7 +59,7 @@ fun OrderByTextButton(
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = stringResource(
-                    when (ordenationType) {
+                    when (orderType) {
                         LeadTenantOrderType.Name -> R.string.order_by_name_text
                         LeadTenantOrderType.LastUpdateDate -> R.string.order_by_last_update_date_text
                     },

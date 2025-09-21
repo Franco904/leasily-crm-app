@@ -87,7 +87,7 @@ class TenantsViewModel(
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                         return@launch
                     },
-                    onSuccess = { ordenationTypeId -> ordenationTypeId },
+                    onSuccess = { orderTypeId -> orderTypeId },
                 )
 
             _orderType.update { LeadTenantOrderType.fromId(orderTypeId) }

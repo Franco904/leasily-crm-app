@@ -16,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -59,7 +58,7 @@ fun TenantsPage(
     val tenants by viewModel.tenants.collectAsStateWithLifecycle()
     val tenantToDelete by viewModel.tenantToDelete.collectAsStateWithLifecycle()
 
-    val ordenationType by viewModel.orderType.collectAsStateWithLifecycle()
+    val orderType by viewModel.orderType.collectAsStateWithLifecycle()
 
     val currentTenantFilter by viewModel.currentTenantFilter.collectAsStateWithLifecycle()
 
@@ -139,7 +138,7 @@ fun TenantsPage(
                         if (!isSearchingTenant) {
                             item {
                                 OrderByTextButton(
-                                    ordenationType = ordenationType,
+                                    orderType = orderType,
                                     orderByMenuOptions = persistentListOf(
                                         OrderByMenuOption(
                                             text = stringResource(R.string.order_by_name_text),

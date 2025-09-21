@@ -66,7 +66,7 @@ fun LeadsPage(
     val leads by viewModel.leads.collectAsStateWithLifecycle()
     val leadToDelete by viewModel.leadToDelete.collectAsStateWithLifecycle()
 
-    val ordenationType by viewModel.orderType.collectAsStateWithLifecycle()
+    val orderType by viewModel.orderType.collectAsStateWithLifecycle()
 
     val listStatus by remember(isLoading, leads) {
         val status = when {
@@ -156,7 +156,7 @@ fun LeadsPage(
                         if (!isSearchingLead) {
                             item {
                                 OrderByTextButton(
-                                    ordenationType = ordenationType,
+                                    orderType = orderType,
                                     orderByMenuOptions = persistentListOf(
                                         OrderByMenuOption(
                                             text = stringResource(R.string.order_by_name_text),
