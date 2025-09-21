@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.propertyRegistration.composables.fields
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -37,7 +37,7 @@ fun PropertyPriceDateRangeFormField(
         },
         suffix = {
             Icon(
-                imageVector = Icons.Default.DateRange,
+                imageVector = Icons.Outlined.DateRange,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )

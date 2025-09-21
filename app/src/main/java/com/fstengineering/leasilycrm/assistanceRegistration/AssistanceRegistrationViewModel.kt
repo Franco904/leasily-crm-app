@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicAssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceInteractionRepository
@@ -81,10 +82,13 @@ class AssistanceRegistrationViewModel(
         _isLoading.update { true }
 
         watchSessionExpiration()
+
         if (assistanceId != null) {
-            getAssistanceToEdit(assistanceId)
+            getAssistanceToEdit(assistanceId, leadTenantId)
             this.assistanceId = assistanceId
         } else {
+            _assistanceForm.update { it.copy(tenant = Tenant(id = leadTenantId)) }
+
             _isLoading.update { false }
         }
 
@@ -113,14 +117,17 @@ class AssistanceRegistrationViewModel(
         }
     }
 
-    private fun getAssistanceToEdit(assistanceId: Long) {
+    private fun getAssistanceToEdit(
+        assistanceId: Long,
+        leadTenantId: Long,
+    ) {
         viewModelScope.launch {
             assistanceRepository.getById(assistanceId)
                 .onError { error ->
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                 }
                 .onSuccess { storedAssistance ->
-                    _assistanceForm.update { storedAssistance }
+                    _assistanceForm.update { storedAssistance.copy(tenant = Tenant(id = leadTenantId)) }
                     assistanceToEdit = storedAssistance
                 }
 
@@ -229,7 +236,7 @@ class AssistanceRegistrationViewModel(
             }
 
             _uiEvents.send(
-                if (assistanceToEdit != null) UiEvents.AssistanceEditSuccess(messageId = R.string.snackbar_edit_property_succeeded)
+                if (assistanceToEdit != null) UiEvents.AssistanceEditSuccess(messageId = R.string.snackbar_edit_assistance_succeeded)
                 else UiEvents.AssistanceCreateSuccess,
             )
         }

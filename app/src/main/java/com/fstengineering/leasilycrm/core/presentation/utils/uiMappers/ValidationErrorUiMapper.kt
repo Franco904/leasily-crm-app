@@ -12,6 +12,10 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
+    ValidationError.AssistanceSearchedNeighborhoodName.IsNullOrBlank -> {
+        R.string.inline_required
+    }
+
     ValidationError.CustomerSegmentName.IsBlank -> {
         R.string.inline_required
     }

@@ -9,6 +9,10 @@ sealed interface ValidationError : Error {
         IsNullOrBlank,
     }
 
+    enum class AssistanceSearchedNeighborhoodName : ValidationError {
+        IsNullOrBlank,
+    }
+
     enum class CustomerSegmentName : ValidationError {
         IsBlank,
         LengthIsGreaterThan75Chars,

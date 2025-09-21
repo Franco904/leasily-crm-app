@@ -7,14 +7,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,10 +40,9 @@ import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.A
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.GuestsCountFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.MaxAcceptedNightlyRateFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.PreferredCharacteristicsCountFormField
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.PreferredOtherCharacteristics
+import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.PreferredOtherCharacteristicsFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.PreferredSeaProximityTypeFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.SearchedStayDateRangeFormField
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.searchedNeighborhoodsFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
@@ -50,8 +56,6 @@ import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.mutate
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
@@ -62,7 +66,9 @@ import java.util.Calendar
 fun AssistanceRegistrationFormSectionStep1(
     assistanceForm: Assistance,
     onAssistanceFormChange: (Assistance) -> Unit,
-    pastNeighborhoods: ImmutableList<String>,
+    onAddSearchedNeighborhood: () -> Unit,
+    onEditSearchedNeighborhood: (AssistanceSearchedNeighborhood) -> Unit,
+    onDeleteSearchedNeighborhood: (AssistanceSearchedNeighborhood) -> Unit,
     seaProximityTypes: ImmutableList<PropertySeaProximityType>,
     assistancePropertyCharacteristics: ImmutableList<AssistanceCharacteristic>,
     formErrors: ImmutableMap<AssistanceStep1Field, Int?>,
@@ -88,16 +94,13 @@ fun AssistanceRegistrationFormSectionStep1(
         )
     }
 
-    var mustShowDateRangePickerDialog by rememberSaveable { mutableStateOf(false) }
-
-    var assistanceSearchedNeighborhoodInputs by remember {
-        val initialNeighborhoods = assistanceForm.searchedNeighborhoods
+    val assistanceNotDeletedSearchedNeighborhoods = remember(assistanceForm) {
+        assistanceForm.searchedNeighborhoods
+            .filter { !it.isDeleted }
             .toPersistentList()
-            .takeIf { it.isNotEmpty() }
-            ?: persistentListOf(AssistanceSearchedNeighborhood())
-
-        mutableStateOf(initialNeighborhoods)
     }
+
+    var mustShowDateRangePickerDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         scrollToFieldFlow.collect { fieldToScroll ->
@@ -139,7 +142,7 @@ fun AssistanceRegistrationFormSectionStep1(
             item {
                 AppCheckbox(
                     label = stringResource(R.string.assistance_registration_customer_has_flexibility_body_text),
-                    isChecked = assistanceForm.hasFlexibilityForPeriod ?: false,
+                    isChecked = assistanceForm.hasFlexibilityForPeriod,
                     onCheckedChange = {
                         onAssistanceFormChange(assistanceForm.copy(hasFlexibilityForPeriod = it))
                     },
@@ -194,38 +197,51 @@ fun AssistanceRegistrationFormSectionStep1(
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
-                Text(
-                    text = stringResource(R.string.assistance_registration_property_location_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.assistance_registration_property_location_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .weight(1f)
+                    )
+                    TextButton(onClick = onAddSearchedNeighborhood) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.add_action_button_text),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                }
             }
             item { Spacer(modifier = Modifier.height(16.dp)) }
-            searchedNeighborhoodsFormField(
-                searchedNeighborhoodInputs = assistanceSearchedNeighborhoodInputs,
-                onSearchedNeighborhoodInput = { neighborhoodInput, i ->
-                    assistanceSearchedNeighborhoodInputs =
-                        assistanceSearchedNeighborhoodInputs.mutate { list ->
-                            list[i] = neighborhoodInput
-                        }
-                },
-                onAddNewNeighborhood = {
-                    assistanceSearchedNeighborhoodInputs =
-                        assistanceSearchedNeighborhoodInputs.mutate {
-                            it.add(AssistanceSearchedNeighborhood())
-                        }
-                },
-                onRemoveNeighborhood = { neighborhoodInput ->
-                    assistanceSearchedNeighborhoodInputs =
-                        assistanceSearchedNeighborhoodInputs.mutate { list ->
-                            val existingNeighborhoodInput = list
-                                .find { neighborhood -> neighborhood == neighborhoodInput }
-                                ?: return@mutate
-                            list.remove(existingNeighborhoodInput)
-                        }
-                },
-                pastNeighborhoods = pastNeighborhoods,
-            )
+            if (assistanceNotDeletedSearchedNeighborhoods.isEmpty()) {
+                item { AssistanceSearchedNeighborhoodsEmptySection() }
+            } else {
+                itemsIndexed(
+                    items = assistanceNotDeletedSearchedNeighborhoods,
+                    key = { i, searchedNeighborhood ->
+                        searchedNeighborhood.id ?: "${searchedNeighborhood.neighborhood}$i"
+                    },
+                ) { i, searchedNeighborhood ->
+                    if (i > 0) Spacer(modifier = Modifier.height(8.dp))
+                    AssistanceSearchedNeighborhoodCard(
+                        searchedNeighborhood = searchedNeighborhood,
+                        onEdit = { onEditSearchedNeighborhood(searchedNeighborhood) },
+                        onDelete = { onDeleteSearchedNeighborhood(searchedNeighborhood) },
+                    )
+                }
+            }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+            item { HorizontalDivider() }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
                 Text(
@@ -260,7 +276,7 @@ fun AssistanceRegistrationFormSectionStep1(
             }
             item { Spacer(modifier = Modifier.height(16.dp)) }
             item {
-                PreferredOtherCharacteristics(
+                PreferredOtherCharacteristicsFormField(
                     assistanceForm = assistanceForm,
                     onAssistanceFormChange = onAssistanceFormChange,
                     assistancePropertyCharacteristics = assistancePropertyCharacteristics,
@@ -296,16 +312,7 @@ fun AssistanceRegistrationFormSectionStep1(
                     .padding(16.dp)
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                NextStepButton(onNext = {
-                    val filledSearchedNeighborhoodInputs = assistanceSearchedNeighborhoodInputs
-                        .getFilledSearchedNeighborhoodInputs()
-
-                    onAssistanceFormChange(
-                        assistanceForm.copy(searchedNeighborhoods = filledSearchedNeighborhoodInputs)
-                    )
-
-                    onNext()
-                })
+                NextStepButton(onNext = onNext)
             }
         }
     }
@@ -337,17 +344,5 @@ fun AssistanceRegistrationFormSectionStep1(
             onDismiss = { mustShowDateRangePickerDialog = false },
         )
     }
-}
 
-fun ImmutableList<AssistanceSearchedNeighborhood>.getFilledSearchedNeighborhoodInputs(): ImmutableList<AssistanceSearchedNeighborhood> {
-    return this
-        .filter {
-            if (it.assistanceId == null) !it.neighborhood.isNullOrBlank()
-            else true
-        }
-        .map {
-            if (it.neighborhood.isNullOrBlank()) it.copy(isDeleted = true)
-            else it
-        }
-        .toPersistentList()
 }

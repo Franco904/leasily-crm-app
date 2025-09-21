@@ -129,6 +129,7 @@ data class AssistanceCompound(
         qtSingleBeds = assistance.qtSingleBeds,
         qtBathrooms = assistance.qtBathrooms,
         qtParkingSpots = assistance.qtParkingSpots,
+        distanceToSea = assistance.distanceToSea,
         observations = assistance.observations,
         isDeleted = assistance.isDeleted,
         tenant = null,

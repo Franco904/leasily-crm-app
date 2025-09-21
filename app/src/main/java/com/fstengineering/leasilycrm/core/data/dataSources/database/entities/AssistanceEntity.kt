@@ -52,7 +52,6 @@ data class AssistanceEntity(
 ) {
     companion object {
         fun fromDomain(domain: Assistance): AssistanceEntity {
-            requireNotNull(domain.hasFlexibilityForPeriod) { "Assistance.hasFlexibilityForPeriod is required" }
             requireNotNull(domain.qtAdultGuests) { "Assistance.qtAdultGuests is required" }
             requireNotNull(domain.qtKidGuests) { "Assistance.qtKidGuests is required" }
             requireNotNull(domain.qtBabyGuests) { "Assistance.qtBabyGuests is required" }

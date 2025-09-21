@@ -15,7 +15,7 @@ import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun PreferredOtherCharacteristics(
+fun PreferredOtherCharacteristicsFormField(
     assistanceForm: Assistance,
     onAssistanceFormChange: (Assistance) -> Unit,
     assistancePropertyCharacteristics: ImmutableList<AssistanceCharacteristic>,
@@ -61,7 +61,9 @@ private fun onAssistancePropertyCharacteristicSelect(
 
                 if (associatedCharacteristic.assistanceId != null) {
                     val i = list.indexOf(associatedCharacteristic)
-                    list[i] = associatedCharacteristic.copy(isDeleted = true)
+                    list[i] = associatedCharacteristic.copy(
+                        isDeleted = !associatedCharacteristic.isDeleted,
+                    )
                 } else {
                     list.remove(associatedCharacteristic)
                 }

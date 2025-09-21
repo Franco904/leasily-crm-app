@@ -77,6 +77,11 @@ fun LeadTenantCard(
                                 onClick = onNewAssistance,
                             ),
                             MoreOptionsMenuOption(
+                                iconDrawable = R.drawable.assignment_add,
+                                text = "Ver atendimento",
+                                onClick = onViewAssistance,
+                            ),
+                            MoreOptionsMenuOption(
                                 iconDrawable = R.drawable.calendar_add_on,
                                 text = stringResource(R.string.new_property_stay_action_button_text),
                                 onClick = onNewPropertyStay,

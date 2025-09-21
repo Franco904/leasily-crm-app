@@ -1,11 +1,11 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.models
 
-import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
+import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceInteractionField
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentMap
 
 data class AssistanceInteractionErrorUiState(
-    val errors: PersistentMap<AssistanceStep1Field, Int?> = AssistanceStep1Field.entries
+    val errors: PersistentMap<AssistanceInteractionField, Int?> = AssistanceInteractionField.entries
         .associateWith { null }
         .toPersistentMap(),
 )

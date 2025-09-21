@@ -15,7 +15,7 @@ import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun PropertyOtherCharacteristics(
+fun PropertyOtherCharacteristicsFormField(
     propertyForm: Property,
     onPropertyFormChange: (Property) -> Unit,
     propertyCharacteristics: ImmutableList<PropertyCharacteristic>,
@@ -61,7 +61,9 @@ private fun onPropertyCharacteristicSelect(
 
                 if (associatedCharacteristic.propertyId != null) {
                     val i = list.indexOf(associatedCharacteristic)
-                    list[i] = associatedCharacteristic.copy(isDeleted = true)
+                    list[i] = associatedCharacteristic.copy(
+                        isDeleted = !associatedCharacteristic.isDeleted,
+                    )
                 } else {
                     list.remove(associatedCharacteristic)
                 }

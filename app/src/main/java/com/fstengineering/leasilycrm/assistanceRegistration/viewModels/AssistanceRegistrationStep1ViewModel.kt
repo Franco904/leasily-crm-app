@@ -3,11 +3,15 @@ package com.fstengineering.leasilycrm.assistanceRegistration.viewModels
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceSearchedNeighborhoodErrorUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceStep1ErrorUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceNeighborhoodField
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
+import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceSearchedNeighborhoodValidator
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.mutate
@@ -22,12 +26,20 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class AssistanceRegistrationStep1ViewModel(
     private val assistanceValidator: AssistanceValidator,
+    private val assistanceSearchedNeighborhoodValidator: AssistanceSearchedNeighborhoodValidator,
 ) : ViewModel() {
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _formErrors = MutableStateFlow(AssistanceStep1ErrorUiState())
     val formErrors = _formErrors.asStateFlow()
+
+    private val _searchedNeighborhoodForm = MutableStateFlow<AssistanceSearchedNeighborhood?>(null)
+    val searchedNeighborhoodForm = _searchedNeighborhoodForm.asStateFlow()
+
+    private val _searchedNeighborhoodErrors =
+        MutableStateFlow(AssistanceSearchedNeighborhoodErrorUiState())
+    val searchedNeighborhoodErrors = _searchedNeighborhoodErrors.asStateFlow()
 
     fun onAssistanceFormChange(
         assistanceForm: Assistance,
@@ -44,6 +56,12 @@ class AssistanceRegistrationStep1ViewModel(
         }
     }
 
+    fun onSearchedNeighborhoodFormChange(
+        form: AssistanceSearchedNeighborhood?,
+    ) {
+        _searchedNeighborhoodForm.update { form }
+    }
+
     fun validateAssistanceStep1(
         assistanceForm: Assistance,
     ) {
@@ -56,6 +74,35 @@ class AssistanceRegistrationStep1ViewModel(
 
             _uiEvents.send(UiEvents.ValidateSuccess)
         }
+    }
+
+    fun saveSearchedNeighborhood() {
+        viewModelScope.launch {
+            val newSearchedNeighborhood = searchedNeighborhoodForm.value ?: return@launch
+
+            assistanceSearchedNeighborhoodValidator.validate(newSearchedNeighborhood)
+                .onErrors { errors ->
+                    val nameError =
+                        errors.firstOrNull { it is ValidationError.AssistanceSearchedNeighborhoodName }
+
+                    _searchedNeighborhoodErrors.update {
+                        val newErrors = it.errors.mutate { map ->
+                            map[AssistanceNeighborhoodField.Neighborhood] = nameError?.toUiMessage()
+                        }
+
+                        it.copy(errors = newErrors)
+                    }
+
+                    return@launch
+                }
+
+            clearSearchedNeighborhoodErrors()
+            _uiEvents.send(UiEvents.AssistanceSearchedNeighborhoodSaveSuccess)
+        }
+    }
+
+    fun clearSearchedNeighborhoodErrors() {
+        _searchedNeighborhoodErrors.update { AssistanceSearchedNeighborhoodErrorUiState() }
     }
 
     private suspend fun setFieldErrors(errors: List<ValidationError>) {
@@ -84,5 +131,7 @@ class AssistanceRegistrationStep1ViewModel(
         data class ScrollToField(val field: AssistanceStep1Field) : UiEvents
 
         data object ValidateSuccess : UiEvents
+
+        data object AssistanceSearchedNeighborhoodSaveSuccess : UiEvents
     }
 }

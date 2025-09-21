@@ -9,7 +9,7 @@ data class Assistance(
     val id: Long? = null,
     val searchedStartDate: LocalDate? = null,
     val searchedEndDate: LocalDate? = null,
-    val hasFlexibilityForPeriod: Boolean? = null,
+    val hasFlexibilityForPeriod: Boolean = false,
     val maxAcceptedNightlyRate: BigDecimal? = null,
     val qtAdultGuests: Int = 0,
     val qtKidGuests: Int = 0,
