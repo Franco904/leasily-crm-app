@@ -1,6 +1,12 @@
 package com.fstengineering.leasilycrm.home
 
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -13,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -29,7 +36,7 @@ import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.home.composables.HomeBottomNavigationBar
-import com.fstengineering.leasilycrm.home.composables.HomeTopBar
+import com.fstengineering.leasilycrm.home.composables.HomeTopAppBar
 import com.fstengineering.leasilycrm.home.dashboard.DashboardPage
 import com.fstengineering.leasilycrm.home.leads.LeadsPage
 import com.fstengineering.leasilycrm.home.models.BottomNavBarDestination
@@ -65,6 +72,9 @@ fun HomeScreen(
         mutableStateOf(BottomNavBarDestination.Dashboard)
     }
 
+    var isSearching by remember { mutableStateOf(false) }
+    var searchInput by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect(Unit) {
         viewModel.init()
 
@@ -86,33 +96,56 @@ fun HomeScreen(
         activity.window.navigationBarColor = surfaceContainerColor.toArgb()
     }
 
+    BackHandler(enabled = isSearching) {
+        isSearching = false
+        searchInput = null
+    }
+
     Scaffold(
         topBar = {
-            HomeTopBar(
+            HomeTopAppBar(
                 currentBottomNavDestination = currentBottomNavDestination,
                 userProfilePictureUrl = userProfilePictureUrl,
                 hasSearchButton = currentBottomNavDestination in listOf(
                     BottomNavBarDestination.Leads,
                     BottomNavBarDestination.Tenants,
                 ),
-                onSearchSelect = {}, // TODO: Implement search leads and tenants use cases
+                onBack = {
+                    isSearching = false
+                    searchInput = null
+                },
+                isSearching = isSearching,
+                onSearchSelect = { isSearching = true },
+                searchInput = searchInput,
+                onSearchInputChange = { searchInput = it },
                 onProfileSelect = onProfileSelect,
             )
         },
         bottomBar = {
-            HomeBottomNavigationBar(
-                currentDestination = currentBottomNavDestination,
-                onDestinationSelect = { destination ->
-                    currentBottomNavDestination = destination
+            val enterBottomNavBarAnim =
+                fadeIn() + slideInVertically(initialOffsetY = { fullHeight -> fullHeight })
+            val exitBottomNavBarAnim =
+                slideOutVertically(targetOffsetY = { fullHeight -> fullHeight }) + fadeOut()
 
-                    navController.navigate(destination.navDestination) {
-                        launchSingleTop = true
-                        restoreState = true
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                    }
-                },
-                upcomingStaysCount = 2, // TODO: Get real value from view model when implementing Stays use cases
-            )
+            AnimatedVisibility(
+                visible = !isSearching,
+                enter = enterBottomNavBarAnim,
+                exit = exitBottomNavBarAnim,
+            ) {
+                HomeBottomNavigationBar(
+                    currentDestination = currentBottomNavDestination,
+                    onDestinationSelect = { destination ->
+                        currentBottomNavDestination = destination
+
+                        navController.navigate(destination.navDestination) {
+                            launchSingleTop = true
+                            restoreState = true
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        }
+                    },
+                    upcomingStaysCount = 2, // TODO: Get real value from view model when implementing Stays use cases
+                )
+            }
         },
         contentWindowInsets = WindowInsets.safeDrawing,
         modifier = modifier
@@ -137,6 +170,8 @@ fun HomeScreen(
                 composable<Destinations.Home.Leads> {
                     LeadsPage(
                         viewModel = koinViewModel(),
+                        isSearchingLead = isSearching,
+                        searchInput = searchInput,
                         onRegisterLead = onRegisterLeadTenant,
                         onNewAssistance = onNewAssistance,
                         onViewAssistance = onViewAssistance,
@@ -147,6 +182,8 @@ fun HomeScreen(
                 composable<Destinations.Home.Tenants> {
                     TenantsPage(
                         viewModel = koinViewModel(),
+                        isSearchingTenant = isSearching,
+                        searchInput = searchInput,
                         onRegisterTenant = onRegisterLeadTenant,
                         onNewAssistance = onNewAssistance,
                         onViewAssistance = onViewAssistance,

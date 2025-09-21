@@ -11,13 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import com.fstengineering.leasilycrm.R
 
 @Composable
 fun SearchTextField(
     searchInput: String,
     onSearchInputChange: (String) -> Unit,
+    label: String,
     modifier: Modifier = Modifier,
     fieldFocusRequester: FocusRequester? = null,
 ) {
@@ -26,7 +25,7 @@ fun SearchTextField(
         onValueChange = { onSearchInputChange(it) },
         placeholder = {
             Text(
-                text = stringResource(R.string.search_property_placeholder),
+                text = label,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier

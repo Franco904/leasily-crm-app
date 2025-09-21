@@ -18,13 +18,15 @@
     <string name="home_stays_label">Estadias</string>
 
     <!-- Search -->
-    <string name="search_property_placeholder">Buscar imóvel</string>
+    <string name="search_property_label">Buscar imóvel</string>
+    <string name="search_lead_label">Buscar lead</string>
+    <string name="search_tenant_label">Buscar inquilino</string>
 
     <!-- Profile -->
     <string name="profile_top_app_bar_title">Perfil</string>
 
-    <string name="profile_signout_dialog_headline">Sair do perfil?</string>
-    <string name="profile_signout_dialog_supporting_text">O seu perfil será desconectado e será necessário autenticar novamente.</string>
+    <string name="profile_sign_out_dialog_headline">Sair do perfil?</string>
+    <string name="profile_sign_out_dialog_supporting_text">O seu perfil será desconectado e será necessário autenticar novamente.</string>
 
     <string name="profile_edit_user_dialog_headline">Editar perfil</string>
     <string name="profile_edit_user_dialog_name_field_placeholder">Nome</string>

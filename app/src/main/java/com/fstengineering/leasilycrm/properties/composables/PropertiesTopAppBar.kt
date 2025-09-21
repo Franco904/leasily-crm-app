@@ -59,6 +59,7 @@ fun PropertiesTopAppBar(
                     SearchTextField(
                         searchInput = searchInput ?: "",
                         onSearchInputChange = onSearchInputChange,
+                        stringResource(R.string.search_property_label),
                         fieldFocusRequester = searchFieldFocusRequester,
                     )
                 } else {
