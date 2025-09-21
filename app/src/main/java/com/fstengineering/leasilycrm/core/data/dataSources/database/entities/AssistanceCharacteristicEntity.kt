@@ -11,6 +11,11 @@ data class AssistanceCharacteristicEntity(
     val name: String,
     @ColumnInfo(name = "is_active") val isActive: Boolean = true,
 ) {
+    fun toDomain() = AssistanceCharacteristic(
+        id = id,
+        name = name,
+    )
+
     companion object {
         fun fromDomain(domain: AssistanceCharacteristic) = AssistanceCharacteristicEntity(
             id = domain.id,

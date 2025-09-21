@@ -108,7 +108,7 @@ class PropertiesViewModel(
     }
 
     fun onSearchInputChange(searchInput: String?) {
-        _searchInput.update { searchInput?.ifEmpty { null } }
+        _searchInput.update { searchInput?.ifBlank { null } }
     }
 
     fun onDeleteProperty(

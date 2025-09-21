@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -29,7 +30,6 @@ import java.time.LocalDate
 )
 data class AssistanceEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "contact_date") val contactDate: LocalDate?,
     @ColumnInfo(name = "searched_start_date") val searchedStartDate: LocalDate?,
     @ColumnInfo(name = "searched_end_date") val searchedEndDate: LocalDate?,
     @ColumnInfo(name = "has_flexibility_for_period") val hasFlexibilityForPeriod: Boolean,
@@ -44,9 +44,48 @@ data class AssistanceEntity(
     @ColumnInfo(name = "qt_single_beds") val qtSingleBeds: Int,
     @ColumnInfo(name = "qt_bathrooms") val qtBathrooms: Int,
     @ColumnInfo(name = "qt_parking_spots") val qtParkingSpots: Int,
+    @ColumnInfo(name = "distance_to_sea") val distanceToSea: BigDecimal?,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
+    @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Long?,
     @ColumnInfo(name = "tenant_id") val tenantId: Long,
-    @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Long,
-    @ColumnInfo(name = "user_id") val userId: Long,
-)
+) {
+    companion object {
+        fun fromDomain(domain: Assistance): AssistanceEntity {
+            requireNotNull(domain.qtAdultGuests) { "Assistance.qtAdultGuests is required" }
+            requireNotNull(domain.qtKidGuests) { "Assistance.qtKidGuests is required" }
+            requireNotNull(domain.qtBabyGuests) { "Assistance.qtBabyGuests is required" }
+            requireNotNull(domain.qtAnimalGuests) { "Assistance.qtAnimalGuests is required" }
+            requireNotNull(domain.qtBedrooms) { "Assistance.qtBedrooms is required" }
+            requireNotNull(domain.qtEnSuites) { "Assistance.qtEnSuites is required" }
+            requireNotNull(domain.qtDoubleBeds) { "Assistance.qtDoubleBeds is required" }
+            requireNotNull(domain.qtSingleBeds) { "Assistance.qtSingleBeds is required" }
+            requireNotNull(domain.qtBathrooms) { "Assistance.qtBathrooms is required" }
+            requireNotNull(domain.qtParkingSpots) { "Assistance.qtParkingSpots is required" }
+            requireNotNull(domain.tenant?.id) { "Assistance.tenant.id is required" }
+
+            return AssistanceEntity(
+                id = domain.id,
+                searchedStartDate = domain.searchedStartDate,
+                searchedEndDate = domain.searchedEndDate,
+                hasFlexibilityForPeriod = domain.hasFlexibilityForPeriod,
+                maxAcceptedNightlyRate = domain.maxAcceptedNightlyRate,
+                qtAdultGuests = domain.qtAdultGuests,
+                qtKidGuests = domain.qtKidGuests,
+                qtBabyGuests = domain.qtBabyGuests,
+                qtAnimalGuests = domain.qtAnimalGuests,
+                qtBedrooms = domain.qtBedrooms,
+                qtEnSuites = domain.qtEnSuites,
+                qtDoubleBeds = domain.qtDoubleBeds,
+                qtSingleBeds = domain.qtSingleBeds,
+                qtBathrooms = domain.qtBathrooms,
+                qtParkingSpots = domain.qtParkingSpots,
+                distanceToSea = domain.distanceToSea,
+                observations = domain.observations,
+                isDeleted = domain.isDeleted,
+                propertySeaProximityTypeId = domain.seaProximityType?.id,
+                tenantId = domain.tenant.id,
+            )
+        }
+    }
+}

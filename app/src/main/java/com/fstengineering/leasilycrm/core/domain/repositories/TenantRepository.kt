@@ -15,6 +15,8 @@ interface TenantRepository {
 
     suspend fun getById(tenantId: Long): AppResult<Tenant, DataSourceError>
 
+    suspend fun getNameById(tenantId: Long): AppResult<String, DataSourceError>
+
     suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataSourceError>
 
     suspend fun getPreferredLeadsOrdenationTypeId(): AppResult<Int, DataSourceError>

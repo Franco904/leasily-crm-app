@@ -73,8 +73,13 @@ fun LeadTenantCard(
                             MoreOptionsMenuOption(isHorizontalDivider = true),
                             MoreOptionsMenuOption(
                                 iconDrawable = R.drawable.assignment_add,
-                                text = stringResource(R.string.new_assistance_action_button_text),
+                                text = stringResource(R.string.assist_action_button_text),
                                 onClick = onNewAssistance,
+                            ),
+                            MoreOptionsMenuOption(
+                                iconDrawable = R.drawable.assignment_add,
+                                text = "Ver atendimento",
+                                onClick = onViewAssistance,
                             ),
                             MoreOptionsMenuOption(
                                 iconDrawable = R.drawable.calendar_add_on,

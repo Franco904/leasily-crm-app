@@ -1,6 +1,5 @@
-package com.fstengineering.leasilycrm.propertyRegistration.composables.fields
+package com.fstengineering.leasilycrm.core.presentation.composables.textFields
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -16,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import kotlinx.collections.immutable.ImmutableList
 
@@ -26,10 +24,11 @@ fun NeighborhoodFormField(
     value: String?,
     onValueChange: (String) -> Unit,
     pastNeighborhoods: ImmutableList<String>,
-    error: Int?,
-    onDone: () -> Unit,
-    fieldFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
+    error: Int? = null,
+    hasSupportingText: Boolean = true,
+    onDone: (() -> Unit)? = null,
+    fieldFocusRequester: FocusRequester? = null,
 ) {
     var isMenuExpanded by remember { mutableStateOf(false) }
 
@@ -40,19 +39,20 @@ fun NeighborhoodFormField(
                 isMenuExpanded = !isMenuExpanded
             }
         },
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
     ) {
         FormTextField(
             label = stringResource(R.string.property_registration_neighborhood_label),
             value = value ?: "",
             onValueChange = { onValueChange(it.capitalizeFirst()) },
             isInvalid = error != null,
-            supportingText = stringResource(error ?: R.string.inline_required),
+            supportingText = if (hasSupportingText) stringResource(
+                error ?: R.string.inline_required
+            ) else null,
             maxLength = 75,
-            onDone = { onDone() },
+            onDone = { onDone?.invoke() },
             fieldFocusRequester = fieldFocusRequester,
-            modifier = modifier
+            modifier = Modifier
                 .menuAnchor(
                     type = MenuAnchorType.PrimaryEditable,
                     enabled = true,

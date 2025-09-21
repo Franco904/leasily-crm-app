@@ -30,7 +30,7 @@ data class TenantCompound(
         phone = tenant.phone,
         email = tenant.email,
         observations = tenant.observations,
-        isLead = tenant.isLead,
+        isLead = true,
         isDeleted = tenant.isDeleted,
         customerSegment = customerSegment?.toDomain(),
         tenantContactOriginType = tenantContactOriginType?.toDomain(),

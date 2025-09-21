@@ -254,6 +254,64 @@
 
     <string name="lead_tenant_registration_customer_segment_empty_text">Nenhum segmento de inquilino registrado.</string>
 
+    <!-- Assistance registration -->
+    <string name="assistance_registration_top_app_bar_title_create">Novo atendimento</string>
+    <string name="assistance_registration_top_app_bar_title_edit">Editar atendimento</string>
+    <string name="assistance_registration_top_app_bar_subtitle">para %1$s</string>
+    <string name="assistance_registration_top_app_bar_select_property_to_send_title">Selecionar imóvel(eis)</string>
+
+    <string name="assistance_registration_step_1_title">Preferências</string>
+    <string name="assistance_registration_step_2_title">Imóveis enviados</string>
+    <string name="assistance_registration_step_3_title">Interações</string>
+
+    <string name="assistance_registration_date_range_label">Período</string>
+    <string name="assistance_registration_customer_has_flexibility_body_text">Cliente tem flexibilidade para o período</string>
+    <string name="assistance_registration_max_accepted_nightly_rate_label">Preço máximo da diária (R$)</string>
+
+    <string name="assistance_registration_guests_title">Hóspedes</string>
+    <string name="assistance_registration_guests_helper_text">Quantidade estimada de pessoas que estarão acomodadas no imóvel, contando com o responsável que entrou em contato.</string>
+    <string name="assistance_registration_adult_guests_title">Adultos</string>
+    <string name="assistance_registration_kid_guests_title">Crianças</string>
+    <string name="assistance_registration_baby_guests_title">Bebês</string>
+    <string name="assistance_registration_animal_guests_title">Animais</string>
+
+    <string name="assistance_registration_basic_preferences_title">Preferências básicas</string>
+
+    <string name="assistance_registration_property_location_title">Bairros preferidos</string>
+    <string name="assistance_registration_add_preferred_neighborhood_title">Adicionar mais um bairro</string>
+    <string name="assistance_registration_no_selected_searched_neighborhoods">Nenhum bairro informado.</string>
+
+    <string name="assistance_registration_searched_neighborhood_save_dialog_headline">Novo bairro</string>
+    <string name="assistance_registration_searched_neighborhood_edit_dialog_headline">Editar bairro</string>
+
+    <string name="assistance_registration_sea_proximity_type_title">Proximidade do imóvel para o mar</string>
+    <string name="assistance_registration_distance_to_sea_label">Distância</string>
+
+    <string name="assistance_registration_other_preferences_title">Outras preferências</string>
+    <string name="assistance_registration_assistance_observations_label">Observações sobre o atendimento</string>
+
+    <string name="assistance_registration_no_selected_sent_properties">Nenhum selecionado</string>
+    <plurals name="assistance_registration_number_of_selected_sent_properties">
+        <item quantity="one">%1$d selecionado</item>
+        <item quantity="other">%1$d selecionados</item>
+    </plurals>
+    <string name="assistance_registration_sent_properties_empty_text">Nenhum imóvel selecionado.</string>
+
+    <string name="assistance_registration_interaction_registration_title_create">Nova interação</string>
+    <string name="assistance_registration_interaction_registration_title_edit">Editar interação</string>
+    <string name="assistance_registration_interaction_registration_interaction_date_label">Data</string>
+    <string name="assistance_registration_interaction_registration_interaction_date_value">%1$s/%2$s/%3$s</string>
+    <string name="assistance_registration_interaction_registration_title_label">Título</string>
+    <string name="assistance_registration_interaction_registration_description_label">Descrição</string>
+
+    <string name="assistance_registration_interactions_empty_text">Nenhuma interação registrada.</string>
+    <string name="assistance_registration_interaction_description_empty_text">Sem descrição.</string>
+
+    <string name="assistance_registration_interation_delete_dialog_headline">Excluir interação do atendimento?</string>
+    <string name="assistance_registration_interation_delete_dialog_supporting_text">Se confirmada a exclusão, esta interação não estará mais disponível.</string>
+
+    <string name="interaction_details_title">Interação</string>
+
     <!-- Stays -->
     <string name="stays_empty_text">Nenhuma estadia registrada.</string>
 
@@ -300,26 +358,28 @@
     <string name="chooser_open_file_title">Abrir com</string>
 
     <string name="date_range_picker_dialog_title">Selecione um período</string>
-    <string name="date_range_picker_dialog_primary_button">OK</string>
-    <string name="date_range_picker_dialog_secondary_button">Cancelar</string>
+    <string name="date_picker_dialog_title">Selecione uma data</string>
+
+    <string name="date_picker_dialog_primary_button">OK</string>
+    <string name="date_picker_dialog_secondary_button">Cancelar</string>
 
     <!-- Action buttons -->
     <string name="add_action_button_text">Adicionar</string>
     <string name="advance_action_button_text">Avançar</string>
+    <string name="apply_action_button_text">Aplicar</string>
+    <string name="assist_action_button_text">Atender</string>
     <string name="back_action_button_text">Voltar</string>
     <string name="cancel_action_button_text">Cancelar</string>
     <string name="close_action_button_text">Fechar</string>
     <string name="confirm_action_button_text">Confirmar</string>
     <string name="delete_action_button_text">Excluir</string>
     <string name="edit_action_button_text">Editar</string>
-    <string name="new_assistance_action_button_text">Novo atendimento</string>
     <string name="new_property_stay_action_button_text">Nova estadia</string>
     <string name="register_action_button_text">Cadastrar</string>
     <string name="save_action_button_text">Salvar</string>
     <string name="select_action_button_text">Selecionar</string>
     <string name="search_action_button_text">Buscar</string>
     <string name="sign_out_action_button_text">Sair</string>
-    <string name="view_assistance_action_button_text">Ver atendimento</string>
     <string name="view_details_action_button_text">Ver detalhes</string>
     <string name="view_property_stay_action_button_text">Ver estadia</string>
 
@@ -355,6 +415,14 @@
     <string name="snackbar_edit_tenant_succeeded">Inquilino editado.</string>
     <string name="snackbar_delete_lead_succeeded">Lead excluído.</string>
     <string name="snackbar_delete_tenant_succeeded">Inquilino excluído.</string>
+
+    <string name="snackbar_create_assistance_interaction_succeeded">Interação criada.</string>
+    <string name="snackbar_edit_assistance_interaction_succeeded">Interação editada.</string>
+    <string name="snackbar_delete_assistance_interaction_succeeded">Interação excluída.</string>
+
+    <string name="snackbar_create_assistance_succeeded">Atendimento criado.</string>
+    <string name="snackbar_edit_assistance_succeeded">Atendimento editado.</string>
+    <string name="snackbar_delete_assistance_succeeded">Atendimento excluído.</string>
 
     <!-- Snackbar errors -->
     <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>

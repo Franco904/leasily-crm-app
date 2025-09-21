@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristicAssistance
 
 @Entity(
     tableName = "assistance_characteristics_assistances",
@@ -29,4 +30,19 @@ data class AssistanceCharacteristicAssistanceCrossRefEntity(
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
     @ColumnInfo(name = "assistance_characteristic_id") val assistanceCharacteristicId: Long,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-)
+) {
+    companion object {
+        fun fromDomain(
+            domain: AssistanceCharacteristicAssistance,
+        ): AssistanceCharacteristicAssistanceCrossRefEntity {
+            requireNotNull(domain.assistanceId) { "AssistanceCharacteristicAssistance.assistanceId is required" }
+            requireNotNull(domain.assistanceCharacteristic?.id) { "AssistanceCharacteristicAssistance.assistanceCharacteristic.id is required" }
+
+            return AssistanceCharacteristicAssistanceCrossRefEntity(
+                assistanceId = domain.assistanceId,
+                assistanceCharacteristicId = domain.assistanceCharacteristic.id,
+                isDeleted = domain.isDeleted,
+            )
+        }
+    }
+}

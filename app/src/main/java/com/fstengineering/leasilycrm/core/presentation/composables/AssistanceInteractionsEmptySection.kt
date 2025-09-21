@@ -1,13 +1,12 @@
-package com.fstengineering.leasilycrm.properties.composables
+package com.fstengineering.leasilycrm.core.presentation.composables
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Apartment
+import androidx.compose.material.icons.automirrored.outlined.Message
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,18 +18,16 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 
 @Composable
-fun PropertiesEmptySection(
-    isSearchingProperty: Boolean,
+fun AssistanceInteractionsEmptySection(
     modifier: Modifier = Modifier,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth()
     ) {
         Icon(
-            imageVector = Icons.Outlined.Apartment,
+            imageVector = Icons.AutoMirrored.Outlined.Message,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
@@ -38,14 +35,12 @@ fun PropertiesEmptySection(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = stringResource(
-                if (isSearchingProperty) R.string.properties_empty_search_text
-                else R.string.properties_empty_text
-            ),
+            text = stringResource(R.string.assistance_registration_interactions_empty_text),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
         )
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }

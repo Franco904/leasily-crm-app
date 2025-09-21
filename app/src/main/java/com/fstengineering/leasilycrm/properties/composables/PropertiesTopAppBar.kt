@@ -27,6 +27,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.textFields.Se
 @Composable
 fun PropertiesTopAppBar(
     onBack: () -> Unit,
+    mustShowSearchPropertyAction: Boolean,
     isSearchingProperty: Boolean,
     searchInput: String?,
     onSearchInputChange: (String) -> Unit,
@@ -72,7 +73,7 @@ fun PropertiesTopAppBar(
             }
         },
         actions = {
-            if (!isSearchingProperty) {
+            if (mustShowSearchPropertyAction) {
                 IconButton(
                     onClick = onSearchProperty,
                 ) {

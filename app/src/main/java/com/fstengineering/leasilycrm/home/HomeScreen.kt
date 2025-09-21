@@ -45,6 +45,8 @@ fun HomeScreen(
     onPropertyOwnersSelect: () -> Unit = {},
     onCustomerSegmentsSelect: () -> Unit = {},
     onRegisterLeadTenant: (Long?) -> Unit,
+    onNewAssistance: (Long) -> Unit,
+    onViewAssistance: (Long) -> Unit,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
@@ -136,6 +138,8 @@ fun HomeScreen(
                     LeadsPage(
                         viewModel = koinViewModel(),
                         onRegisterLead = onRegisterLeadTenant,
+                        onNewAssistance = onNewAssistance,
+                        onViewAssistance = onViewAssistance,
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
                     )
@@ -144,6 +148,8 @@ fun HomeScreen(
                     TenantsPage(
                         viewModel = koinViewModel(),
                         onRegisterTenant = onRegisterLeadTenant,
+                        onNewAssistance = onNewAssistance,
+                        onViewAssistance = onViewAssistance,
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
                     )

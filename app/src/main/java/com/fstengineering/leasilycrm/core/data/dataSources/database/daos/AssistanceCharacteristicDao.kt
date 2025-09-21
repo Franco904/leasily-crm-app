@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
+import androidx.room.Query
 import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceCharacteristicEntity
 
@@ -8,4 +9,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ass
 interface AssistanceCharacteristicDao {
     @Upsert
     suspend fun insertOrUpdate(assistanceCharacteristic: AssistanceCharacteristicEntity): Long
+
+    @Query("SELECT * FROM assistance_characteristics")
+    suspend fun getAll(): List<AssistanceCharacteristicEntity>
 }

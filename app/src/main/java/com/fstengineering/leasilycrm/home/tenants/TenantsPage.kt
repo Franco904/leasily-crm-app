@@ -42,6 +42,8 @@ import kotlinx.collections.immutable.persistentListOf
 fun TenantsPage(
     viewModel: TenantsViewModel,
     onRegisterTenant: (Long?) -> Unit,
+    onNewAssistance: (Long) -> Unit,
+    onViewAssistance: (Long) -> Unit,
     modifier: Modifier = Modifier,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
@@ -167,8 +169,8 @@ fun TenantsPage(
                                 onViewLeadTenantDetails = {},
                                 onEditLeadTenant = { onRegisterTenant(tenant.id) },
                                 onDeleteLeadTenant = { viewModel.onDeleteTenant(tenant = tenant) },
-                                onNewAssistance = {},
-                                onViewAssistance = {},
+                                onNewAssistance = { onNewAssistance(tenant.id!!) },
+                                onViewAssistance = { onViewAssistance(tenant.id!!) },
                                 onNewPropertyStay = {},
                             )
                             Spacer(modifier = Modifier.height(8.dp))

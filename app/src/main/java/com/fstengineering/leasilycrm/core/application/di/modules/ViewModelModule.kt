@@ -1,5 +1,9 @@
 package com.fstengineering.leasilycrm.core.application.di.modules
 
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel
+import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
+import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
+import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
@@ -155,6 +159,39 @@ val viewModelModule = module {
         PropertyOwnerDetailsViewModel(
             propertyOwnerRepository = get(),
             userRepository = get(),
+        )
+    }
+
+    viewModel {
+        AssistanceRegistrationViewModel(
+            assistanceRepository = get(),
+            tenantRepository = get(),
+            assistanceSearchedNeighborhoodRepository = get(),
+            propertySeaProximityTypeRepository = get(),
+            assistanceCharacteristicRepository = get(),
+            assistanceCharacteristicAssistanceRepository = get(),
+            assistanceSentPropertyRepository = get(),
+            assistanceInteractionRepository = get(),
+            userRepository = get(),
+        )
+    }
+
+    viewModel {
+        AssistanceRegistrationStep1ViewModel(
+            assistanceValidator = get(),
+            assistanceSearchedNeighborhoodValidator = get(),
+        )
+    }
+
+    viewModel {
+        AssistanceRegistrationStep2ViewModel(
+            propertyRepository = get(),
+        )
+    }
+
+    viewModel {
+        AssistanceRegistrationStep3ViewModel(
+            assistanceInteractionValidator = get(),
         )
     }
 }

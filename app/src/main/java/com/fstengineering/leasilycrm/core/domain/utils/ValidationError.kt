@@ -1,6 +1,18 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
 sealed interface ValidationError : Error {
+    enum class AssistanceInteractionDate : ValidationError {
+        IsNull,
+    }
+
+    enum class AssistanceInteractionTitle : ValidationError {
+        IsNullOrBlank,
+    }
+
+    enum class AssistanceSearchedNeighborhoodName : ValidationError {
+        IsNullOrBlank,
+    }
+
     enum class CustomerSegmentName : ValidationError {
         IsBlank,
         LengthIsGreaterThan75Chars,

@@ -18,6 +18,7 @@ fun BackStepButton(
     OutlinedButton(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         onClick = onBack,
+        modifier = modifier
     ) {
         Text(
             text = stringResource(R.string.back_action_button_text),

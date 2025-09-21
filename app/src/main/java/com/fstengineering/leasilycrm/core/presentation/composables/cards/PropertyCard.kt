@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.presentation.composables.cards
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -51,155 +52,159 @@ fun PropertyCard(
     modifier: Modifier = Modifier,
     onEditProperty: () -> Unit = {},
     onDeleteProperty: () -> Unit = {},
-    onViewPropertyDashboard: (() -> Unit)? = null,
+    onCardClick: (() -> Unit)? = null,
     onViewPropertyDetails: () -> Unit = {},
     hasMoreOptionsMenu: Boolean = true,
     hasCharacteristicsChipsRow: Boolean = true,
     hasViewDetailsButton: Boolean = false,
+    isSelected: Boolean = false,
 ) {
     val mainPropertyPicture = remember(property) {
         property.files.find { picture -> picture.isMainPicture }
     }
     val numberText = if (property.number != null) ", ${property.number}" else ""
 
-    AppCard(
-        onClick = onViewPropertyDashboard,
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Column {
-            if (mainPropertyPicture != null) {
-                Card(
-                    shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                ) {
-                    AsyncImage(
-                        model = mainPropertyPicture.uriString!!.toUri(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
+    Box {
+        AppCard(
+            onClick = onCardClick,
+            isSelected = isSelected,
+            modifier = modifier
+                .fillMaxWidth()
+        ) {
+            Column {
+                if (mainPropertyPicture != null) {
+                    Card(
+                        shape = MaterialTheme.shapes.medium,
                         modifier = Modifier
-                            .fillMaxSize()
-                    )
+                            .fillMaxWidth()
+                            .height(180.dp)
+                    ) {
+                        AsyncImage(
+                            model = mainPropertyPicture.uriString!!.toUri(),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        )
+                    }
                 }
-            }
-            Column(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .padding(horizontal = 16.dp)
-            ) {
-                if (hasMoreOptionsMenu) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = property.neighborhood ?: "",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface,
+                Column(
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    if (hasMoreOptionsMenu) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
-                                .weight(1f)
-                        )
-                        AppMoreOptionsMenu(
-                            options = persistentListOf(
-                                MoreOptionsMenuOption(
-                                    icon = Icons.Outlined.RemoveRedEye,
-                                    text = stringResource(R.string.view_details_action_button_text),
-                                    onClick = onViewPropertyDetails,
-                                ),
-                                MoreOptionsMenuOption(
-                                    icon = Icons.Outlined.Edit,
-                                    text = stringResource(R.string.edit_action_button_text),
-                                    onClick = onEditProperty,
-                                ),
-                                MoreOptionsMenuOption(
-                                    icon = Icons.Outlined.Delete,
-                                    text = stringResource(R.string.delete_action_button_text),
-                                    onClick = onDeleteProperty,
-                                ),
-                            ),
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "${property.streetAddress}$numberText",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                    if (hasCharacteristicsChipsRow) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        CharacteristicsChipsRow(property = property)
-                    }
-                    if (hasViewDetailsButton) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        HorizontalDivider()
-                        Spacer(modifier = Modifier.height(8.dp))
-                        TextButton(
-                            onClick = onViewPropertyDetails,
-                            modifier = Modifier
-                                .align(Alignment.End)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.view_details_action_button_text),
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.labelLarge,
-                            )
-                        }
-                    }
-                    Spacer(
-                        modifier = Modifier.height(if (hasViewDetailsButton) 8.dp else 16.dp)
-                    )
-                } else {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
+                                .fillMaxWidth()
                         ) {
                             Text(
                                 text = property.neighborhood ?: "",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .weight(1f)
                             )
-                            Text(
-                                text = "${property.streetAddress}$numberText",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            AppMoreOptionsMenu(
+                                options = persistentListOf(
+                                    MoreOptionsMenuOption(
+                                        icon = Icons.Outlined.RemoveRedEye,
+                                        text = stringResource(R.string.view_details_action_button_text),
+                                        onClick = onViewPropertyDetails,
+                                    ),
+                                    MoreOptionsMenuOption(
+                                        icon = Icons.Outlined.Edit,
+                                        text = stringResource(R.string.edit_action_button_text),
+                                        onClick = onEditProperty,
+                                    ),
+                                    MoreOptionsMenuOption(
+                                        icon = Icons.Outlined.Delete,
+                                        text = stringResource(R.string.delete_action_button_text),
+                                        onClick = onDeleteProperty,
+                                    ),
+                                ),
                             )
                         }
-                        Spacer(modifier = Modifier.width(16.dp))
-                        PropertyTypeIcon(propertyTypeId = property.type?.id)
-                    }
-                    if (hasCharacteristicsChipsRow) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        CharacteristicsChipsRow(property = property)
-                    }
-                    if (hasViewDetailsButton) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        HorizontalDivider()
-                        Spacer(modifier = Modifier.height(8.dp))
-                        TextButton(
-                            onClick = onViewPropertyDetails,
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "${property.streetAddress}$numberText",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier
-                                .align(Alignment.End)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.view_details_action_button_text),
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.labelLarge,
-                            )
+                                .fillMaxWidth()
+                        )
+                        if (hasCharacteristicsChipsRow) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            CharacteristicsChipsRow(property = property)
                         }
+                        if (hasViewDetailsButton) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            HorizontalDivider()
+                            Spacer(modifier = Modifier.height(8.dp))
+                            TextButton(
+                                onClick = onViewPropertyDetails,
+                                modifier = Modifier
+                                    .align(Alignment.End)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.view_details_action_button_text),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.labelLarge,
+                                )
+                            }
+                        }
+                        Spacer(
+                            modifier = Modifier.height(if (hasViewDetailsButton) 8.dp else 16.dp)
+                        )
+                    } else {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                            ) {
+                                Text(
+                                    text = property.neighborhood ?: "",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                                Text(
+                                    text = "${property.streetAddress}$numberText",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(16.dp))
+                            PropertyTypeIcon(propertyTypeId = property.type?.id)
+                        }
+                        if (hasCharacteristicsChipsRow) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            CharacteristicsChipsRow(property = property)
+                        }
+                        if (hasViewDetailsButton) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            HorizontalDivider()
+                            Spacer(modifier = Modifier.height(8.dp))
+                            TextButton(
+                                onClick = onViewPropertyDetails,
+                                modifier = Modifier
+                                    .align(Alignment.End)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.view_details_action_button_text),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.labelLarge,
+                                )
+                            }
+                        }
+                        Spacer(
+                            modifier = Modifier.height(if (hasViewDetailsButton) 8.dp else 16.dp)
+                        )
                     }
-                    Spacer(
-                        modifier = Modifier.height(if (hasViewDetailsButton) 8.dp else 16.dp)
-                    )
                 }
             }
         }

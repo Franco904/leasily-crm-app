@@ -25,6 +25,17 @@ interface PropertyDao {
         SELECT * FROM properties
         WHERE user_id = :userId
         AND is_deleted = 0
+        ORDER BY register_date DESC
+    """
+    )
+    suspend fun getAll(userId: Long): List<PropertyCompound>
+
+    @Transaction
+    @Query(
+        """
+        SELECT * FROM properties
+        WHERE user_id = :userId
+        AND is_deleted = 0
         AND (
             :matching IS NULL OR
             neighborhood   LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE OR
