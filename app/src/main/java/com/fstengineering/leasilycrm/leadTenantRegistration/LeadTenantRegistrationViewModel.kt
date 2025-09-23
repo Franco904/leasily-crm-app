@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantContactOriginTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
@@ -193,7 +194,7 @@ class LeadTenantRegistrationViewModel(
             _uiEvents.send(
                 if (leadTenantToEdit != null) {
                     UiEvents.LeadTenantEditSuccess(
-                        messageId = if (leadTenant.isLead) {
+                        messageId = if (leadTenant.status == TenantStatus.Lead.code) {
                             R.string.snackbar_edit_lead_succeeded
                         } else R.string.snackbar_edit_tenant_succeeded,
                     )

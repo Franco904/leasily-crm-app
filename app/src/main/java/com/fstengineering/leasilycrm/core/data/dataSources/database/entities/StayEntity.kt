@@ -31,6 +31,8 @@ import java.time.LocalDateTime
 )
 data class StayEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     @ColumnInfo(name = "is_from_other_realtor") val isFromOtherRealtor: Boolean,
     @ColumnInfo(name = "qt_guests") val qtGuests: Int,
     @ColumnInfo(name = "total_price") val totalPrice: BigDecimal,
@@ -38,6 +40,7 @@ data class StayEntity(
     @ColumnInfo(name = "end_datetime") val endDatetime: LocalDateTime,
     val commission: BigDecimal?,
     val observations: String?,
+    @ColumnInfo(name = "is_finished") val isFinished: Boolean = false,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_id") val propertyId: Long,
     @ColumnInfo(name = "tenant_id") val tenantId: Long,
@@ -51,6 +54,7 @@ data class StayEntity(
         endDatetime = endDatetime,
         commission = commission,
         observations = observations,
+        isFinished = isFinished,
         isDeleted = isDeleted,
         property = Property(id = propertyId),
     )

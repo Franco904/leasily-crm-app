@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ass
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertySeaProximityTypeEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristicAssistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceSentProperty
@@ -18,6 +19,12 @@ import kotlinx.collections.immutable.toImmutableList
 
 data class AssistanceCompound(
     @Embedded val assistance: AssistanceEntity,
+    @Relation(
+        parentColumn = "tenant_id",
+        entityColumn = "id",
+        entity = TenantEntity::class,
+    )
+    val tenant: TenantEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",
@@ -115,6 +122,8 @@ data class AssistanceCompound(
 
     fun toDomain() = Assistance(
         id = assistance.id,
+        createDateTime = assistance.createDateTime,
+        updateDateTime = assistance.updateDateTime,
         searchedStartDate = assistance.searchedStartDate,
         searchedEndDate = assistance.searchedEndDate,
         hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,
@@ -132,7 +141,7 @@ data class AssistanceCompound(
         distanceToSea = assistance.distanceToSea,
         observations = assistance.observations,
         isDeleted = assistance.isDeleted,
-        tenant = null,
+        tenant = tenant.toDomain(),
         searchedNeighborhoods = activeSearchedNeighborhoods.map { it.toDomain() }.toImmutableList(),
         seaProximityType = seaProximityType?.toDomain(),
         characteristics = activeCharacteristics.toImmutableList(),

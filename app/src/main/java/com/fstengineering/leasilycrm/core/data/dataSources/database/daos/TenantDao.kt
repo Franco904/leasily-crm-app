@@ -24,6 +24,7 @@ interface TenantDao {
         """
         SELECT * FROM tenants
         WHERE user_id = :userId
+        AND status = 0
         AND is_deleted = 0
         AND (
             :matching IS NULL OR
@@ -32,7 +33,7 @@ interface TenantDao {
         )
         ORDER BY
             CASE WHEN :order = 1 THEN name END COLLATE NOCASE,
-            CASE WHEN :order = 2 THEN register_date END COLLATE NOCASE DESC
+            CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
     suspend fun getAllLeadsMatching(
@@ -46,6 +47,7 @@ interface TenantDao {
         """
         SELECT * FROM tenants
         WHERE user_id = :userId
+        AND status <> 0
         AND is_deleted = 0
         AND (
             :matching IS NULL OR
@@ -54,7 +56,7 @@ interface TenantDao {
         )
         ORDER BY
             CASE WHEN :order = 1 THEN name END COLLATE NOCASE,
-            CASE WHEN :order = 2 THEN register_date END COLLATE NOCASE DESC
+            CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
     suspend fun getAllTenantsMatching(
@@ -86,10 +88,11 @@ interface TenantDao {
         """
         SELECT * FROM tenants
         WHERE user_id = :userId
+        AND status = 0
         AND is_deleted = 0
         ORDER BY
             CASE WHEN :order = 1 THEN name END COLLATE NOCASE,
-            CASE WHEN :order = 2 THEN register_date END COLLATE NOCASE DESC
+            CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
     fun watchAllLeads(userId: Long, order: Int): Flow<List<TenantCompound>>
@@ -99,10 +102,11 @@ interface TenantDao {
         """
         SELECT * FROM tenants
         WHERE user_id = :userId
+        AND status <> 0
         AND is_deleted = 0
         ORDER BY
             CASE WHEN :order = 1 THEN name END COLLATE NOCASE,
-            CASE WHEN :order = 2 THEN register_date END COLLATE NOCASE DESC
+            CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
     fun watchAllTenants(userId: Long, order: Int): Flow<List<TenantCompound>>

@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "stay_transfers",
@@ -20,6 +21,8 @@ import java.time.LocalDate
 )
 data class StayTransferEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     @ColumnInfo(name = "transfer_date") val transferDate: LocalDate,
     @ColumnInfo(name = "transfer_amount") val transferAmount: String,
     @ColumnInfo(name = "transfer_description") val transferDescription: String,

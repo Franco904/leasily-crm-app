@@ -25,7 +25,7 @@ interface PropertyDao {
         SELECT * FROM properties
         WHERE user_id = :userId
         AND is_deleted = 0
-        ORDER BY register_date DESC
+        ORDER BY update_date_time DESC
     """
     )
     suspend fun getAll(userId: Long): List<PropertyCompound>
@@ -41,7 +41,7 @@ interface PropertyDao {
             neighborhood   LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE OR
             street_address LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE
         )
-        ORDER BY register_date DESC
+        ORDER BY update_date_time DESC
     """
     )
     suspend fun getAllMatching(userId: Long, matching: String?): List<PropertyCompound>
@@ -66,7 +66,7 @@ interface PropertyDao {
         SELECT * FROM properties
         WHERE user_id = :userId
         AND is_deleted = 0
-        ORDER BY register_date DESC
+        ORDER BY update_date_time DESC
     """
     )
     fun watchAll(userId: Long): Flow<List<PropertyCompound>>

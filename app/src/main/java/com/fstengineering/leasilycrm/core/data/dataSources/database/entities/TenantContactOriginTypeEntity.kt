@@ -17,10 +17,14 @@ data class TenantContactOriginTypeEntity(
     )
 
     companion object {
-        fun fromDomain(domain: TenantContactOriginType) = TenantContactOriginTypeEntity(
-            id = domain.id,
-            name = domain.name,
-            isActive = domain.isActive,
-        )
+        fun fromDomain(domain: TenantContactOriginType): TenantContactOriginTypeEntity {
+            requireNotNull(domain.name) { "TenantContactOriginType.name is required" }
+
+            return TenantContactOriginTypeEntity(
+                id = domain.id,
+                name = domain.name,
+                isActive = domain.isActive,
+            )
+        }
     }
 }

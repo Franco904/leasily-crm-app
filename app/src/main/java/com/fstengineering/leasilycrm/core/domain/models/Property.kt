@@ -3,11 +3,12 @@ package com.fstengineering.leasilycrm.core.domain.models
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import java.math.BigDecimal
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Property(
     val id: Long? = null,
-    val registerDate: LocalDate? = null,
+    val createDateTime: LocalDateTime? = null,
+    val updateDateTime: LocalDateTime? = null,
     val neighborhood: String? = null,
     val streetAddress: String? = null,
     val cepPostalCode: String? = null,

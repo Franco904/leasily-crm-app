@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.PropertyFile
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "property_files",
@@ -20,6 +21,8 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyFile
 )
 data class PropertyFileEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     @ColumnInfo(name = "property_file_uri") val propertyFileUri: String,
     @ColumnInfo(name = "property_id") val propertyId: Long,
     @ColumnInfo(name = "is_main_picture") val isMainPicture: Boolean = false,
@@ -40,6 +43,8 @@ data class PropertyFileEntity(
 
             return PropertyFileEntity(
                 id = domain.id,
+                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
+                updateDateTime = LocalDateTime.now(),
                 propertyFileUri = domain.uriString,
                 propertyId = domain.propertyId,
                 isMainPicture = domain.isMainPicture,

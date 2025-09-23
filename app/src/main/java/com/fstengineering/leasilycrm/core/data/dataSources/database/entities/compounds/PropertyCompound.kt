@@ -101,7 +101,8 @@ data class PropertyCompound(
 
     fun toDomain() = Property(
         id = property.id,
-        registerDate = property.registerDate,
+        createDateTime = property.createDateTime,
+        updateDateTime = property.updateDateTime,
         neighborhood = property.neighborhood,
         streetAddress = property.streetAddress,
         cepPostalCode = property.cepPostalCode,

@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceSentProperty
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "assistance_sent_properties",
@@ -29,18 +30,22 @@ import com.fstengineering.leasilycrm.core.domain.models.AssistanceSentProperty
 data class AssistanceSentPropertyCrossRefEntity(
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
     @ColumnInfo(name = "property_id") val propertyId: Long,
+    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 ) {
     companion object {
         fun fromDomain(
             domain: AssistanceSentProperty,
         ): AssistanceSentPropertyCrossRefEntity {
-            requireNotNull(domain.assistanceId) { "AssistanceCharacteristicAssistance.assistanceId is required" }
-            requireNotNull(domain.property?.id) { "AssistanceCharacteristicAssistance.property.id is required" }
+            requireNotNull(domain.assistanceId) { "AssistanceSentProperty.assistanceId is required" }
+            requireNotNull(domain.property?.id) { "AssistanceSentProperty.property.id is required" }
 
             return AssistanceSentPropertyCrossRefEntity(
                 assistanceId = domain.assistanceId,
                 propertyId = domain.property.id,
+                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
+                updateDateTime = LocalDateTime.now(),
                 isDeleted = domain.isDeleted,
             )
         }

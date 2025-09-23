@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import java.time.LocalDate
 
 class TenantRepositoryImpl(
     private val dao: TenantDao,
@@ -39,10 +38,7 @@ class TenantRepositoryImpl(
                 }
             )
 
-        val tenantWithUser = tenant.copy(
-            userId = userRemoteId,
-            registerDate = LocalDate.now(),
-        )
+        val tenantWithUser = tenant.copy(userId = userRemoteId)
         val tenantEntity = TenantEntity.fromDomain(tenantWithUser)
 
         dao.insertOrUpdate(tenantEntity)

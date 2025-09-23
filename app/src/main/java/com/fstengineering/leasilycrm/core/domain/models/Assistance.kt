@@ -4,9 +4,12 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Assistance(
     val id: Long? = null,
+    val createDateTime: LocalDateTime? = null,
+    val updateDateTime: LocalDateTime? = null,
     val searchedStartDate: LocalDate? = null,
     val searchedEndDate: LocalDate? = null,
     val hasFlexibilityForPeriod: Boolean = false,
@@ -22,6 +25,7 @@ data class Assistance(
     val qtBathrooms: Int = 0,
     val qtParkingSpots: Int = 0,
     val distanceToSea: BigDecimal? = null,
+    val isFinished: Boolean = false,
     val isDeleted: Boolean = false,
     val searchedNeighborhoods: ImmutableList<AssistanceSearchedNeighborhood> = persistentListOf(),
     val seaProximityType: PropertySeaProximityType? = null,

@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import java.time.LocalDate
 
 class PropertyRepositoryImpl(
     private val dao: PropertyDao,
@@ -34,10 +33,7 @@ class PropertyRepositoryImpl(
                 }
             )
 
-        val propertyWithUser = property.copy(
-            userId = userRemoteId,
-            registerDate = LocalDate.now(),
-        )
+        val propertyWithUser = property.copy(userId = userRemoteId)
         val propertyEntity = PropertyEntity.fromDomain(propertyWithUser)
 
         val id = dao.insertOrUpdate(propertyEntity)

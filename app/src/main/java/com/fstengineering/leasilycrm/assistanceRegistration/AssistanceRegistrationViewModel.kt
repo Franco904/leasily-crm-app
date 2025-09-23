@@ -84,15 +84,15 @@ class AssistanceRegistrationViewModel(
         watchSessionExpiration()
 
         if (assistanceId != null) {
-            getAssistanceToEdit(assistanceId, leadTenantId)
+            getAssistanceToEdit(assistanceId)
             this.assistanceId = assistanceId
         } else {
             _assistanceForm.update { it.copy(tenant = Tenant(id = leadTenantId)) }
+            getLeadTenantName(leadTenantId = leadTenantId)
 
             _isLoading.update { false }
         }
 
-        getLeadTenantName(leadTenantId = leadTenantId)
         getPastNeighborhoods()
         getSeaProximityTypes()
         getAssistancePropertyCharacteristics()
@@ -117,18 +117,17 @@ class AssistanceRegistrationViewModel(
         }
     }
 
-    private fun getAssistanceToEdit(
-        assistanceId: Long,
-        leadTenantId: Long,
-    ) {
+    private fun getAssistanceToEdit(assistanceId: Long) {
         viewModelScope.launch {
             assistanceRepository.getById(assistanceId)
                 .onError { error ->
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                 }
                 .onSuccess { storedAssistance ->
-                    _assistanceForm.update { storedAssistance.copy(tenant = Tenant(id = leadTenantId)) }
+                    _assistanceForm.update { storedAssistance }
                     assistanceToEdit = storedAssistance
+
+                    _leadTenantName.update { assistanceForm.value.tenant?.name ?: "" }
                 }
 
             _isLoading.update { false }

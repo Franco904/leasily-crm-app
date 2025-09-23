@@ -7,7 +7,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import java.math.BigDecimal
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "properties",
@@ -37,7 +37,8 @@ import java.time.LocalDate
 )
 data class PropertyEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "register_date") val registerDate: LocalDate,
+    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     val neighborhood: String,
     @ColumnInfo(name = "street_address") val streetAddress: String,
     @ColumnInfo(name = "cep_postal_code") val cepPostalCode: String?,
@@ -68,7 +69,6 @@ data class PropertyEntity(
 ) {
     companion object {
         fun fromDomain(domain: Property): PropertyEntity {
-            requireNotNull(domain.registerDate) { "Property.registerDate is required" }
             requireNotNull(domain.neighborhood) { "Property.neighborhood is required" }
             requireNotNull(domain.streetAddress) { "Property.streetAddress is required" }
             requireNotNull(domain.qtBedrooms) { "Property.qtBedrooms is required" }
@@ -87,7 +87,8 @@ data class PropertyEntity(
 
             return PropertyEntity(
                 id = domain.id,
-                registerDate = domain.registerDate,
+                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
+                updateDateTime = LocalDateTime.now(),
                 neighborhood = domain.neighborhood,
                 streetAddress = domain.streetAddress,
                 cepPostalCode = domain.cepPostalCode,

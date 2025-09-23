@@ -23,14 +23,15 @@ data class TenantCompound(
 ) {
     fun toDomain() = Tenant(
         id = tenant.id,
-        registerDate = tenant.registerDate,
+        createDateTime = tenant.createDateTime,
+        updateDateTime = tenant.updateDateTime,
         name = tenant.name,
         city = tenant.city,
         identityDocument = tenant.identityDocument,
         phone = tenant.phone,
         email = tenant.email,
         observations = tenant.observations,
-        isLead = true,
+        status = tenant.status,
         isDeleted = tenant.isDeleted,
         customerSegment = customerSegment?.toDomain(),
         tenantContactOriginType = tenantContactOriginType?.toDomain(),

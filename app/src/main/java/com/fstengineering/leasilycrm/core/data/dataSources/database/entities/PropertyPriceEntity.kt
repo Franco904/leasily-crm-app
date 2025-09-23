@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "property_prices",
@@ -22,6 +23,8 @@ import java.time.LocalDate
 )
 data class PropertyPriceEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     @ColumnInfo(name = "start_date") val startDate: LocalDate,
     @ColumnInfo(name = "end_date") val endDate: LocalDate,
     val price: BigDecimal,
@@ -46,6 +49,8 @@ data class PropertyPriceEntity(
 
             return PropertyPriceEntity(
                 id = domain.id,
+                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
+                updateDateTime = LocalDateTime.now(),
                 startDate = domain.startDate,
                 endDate = domain.endDate,
                 price = domain.price,

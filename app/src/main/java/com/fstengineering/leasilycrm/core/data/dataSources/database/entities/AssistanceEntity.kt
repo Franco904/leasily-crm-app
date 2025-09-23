@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "assistances",
@@ -30,6 +31,8 @@ import java.time.LocalDate
 )
 data class AssistanceEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     @ColumnInfo(name = "searched_start_date") val searchedStartDate: LocalDate?,
     @ColumnInfo(name = "searched_end_date") val searchedEndDate: LocalDate?,
     @ColumnInfo(name = "has_flexibility_for_period") val hasFlexibilityForPeriod: Boolean,
@@ -46,6 +49,7 @@ data class AssistanceEntity(
     @ColumnInfo(name = "qt_parking_spots") val qtParkingSpots: Int,
     @ColumnInfo(name = "distance_to_sea") val distanceToSea: BigDecimal?,
     val observations: String?,
+    @ColumnInfo(name = "is_finished") val isFinished: Boolean = false,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Long?,
     @ColumnInfo(name = "tenant_id") val tenantId: Long,
@@ -66,6 +70,8 @@ data class AssistanceEntity(
 
             return AssistanceEntity(
                 id = domain.id,
+                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
+                updateDateTime = LocalDateTime.now(),
                 searchedStartDate = domain.searchedStartDate,
                 searchedEndDate = domain.searchedEndDate,
                 hasFlexibilityForPeriod = domain.hasFlexibilityForPeriod,
@@ -82,6 +88,7 @@ data class AssistanceEntity(
                 qtParkingSpots = domain.qtParkingSpots,
                 distanceToSea = domain.distanceToSea,
                 observations = domain.observations,
+                isFinished = domain.isFinished,
                 isDeleted = domain.isDeleted,
                 propertySeaProximityTypeId = domain.seaProximityType?.id,
                 tenantId = domain.tenant.id,

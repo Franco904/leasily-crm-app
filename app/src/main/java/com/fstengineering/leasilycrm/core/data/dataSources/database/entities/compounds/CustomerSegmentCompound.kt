@@ -17,6 +17,8 @@ data class CustomerSegmentCompound(
 ) {
     fun toDomain() = CustomerSegment(
         id = customerSegment.id,
+        createDateTime = customerSegment.createDateTime,
+        updateDateTime = customerSegment.updateDateTime,
         name = customerSegment.name,
         isDeleted = customerSegment.isDeleted,
         type = CustomerSegmentType(

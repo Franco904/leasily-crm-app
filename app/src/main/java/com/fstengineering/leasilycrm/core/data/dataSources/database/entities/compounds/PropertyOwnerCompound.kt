@@ -28,6 +28,8 @@ data class PropertyOwnerCompound(
 
     fun toDomain() = PropertyOwner(
         id = propertyOwner.id,
+        createDateTime = propertyOwner.createDateTime,
+        updateDateTime = propertyOwner.updateDateTime,
         name = propertyOwner.name,
         phone = propertyOwner.phone,
         email = propertyOwner.email,

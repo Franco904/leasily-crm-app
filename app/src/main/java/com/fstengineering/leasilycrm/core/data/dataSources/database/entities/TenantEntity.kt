@@ -5,8 +5,11 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
-import java.time.LocalDate
+import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "tenants",
@@ -29,33 +32,53 @@ import java.time.LocalDate
 )
 data class TenantEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "register_date") val registerDate: LocalDate,
+    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     val name: String,
     val city: String?,
     @ColumnInfo(name = "identity_document") val identityDocument: String?,
     val phone: String?,
     val email: String?,
     val observations: String?,
+    val status: Int = TenantStatus.Lead.code,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Long?,
     @ColumnInfo(name = "tenant_contact_origin_type_id") val tenantContactOriginTypeId: Long?,
     @ColumnInfo(name = "user_id") val userId: Long,
 ) {
+    fun toDomain() = Tenant(
+        id = id,
+        createDateTime = createDateTime,
+        updateDateTime = updateDateTime,
+        name = name,
+        city = city,
+        identityDocument = identityDocument,
+        phone = phone,
+        email = email,
+        observations = observations,
+        status = status,
+        isDeleted = isDeleted,
+        userId = userId,
+        customerSegment = CustomerSegment(id = customerSegmentId),
+        tenantContactOriginType = TenantContactOriginType(id = tenantContactOriginTypeId),
+    )
+
     companion object {
         fun fromDomain(domain: Tenant): TenantEntity {
             requireNotNull(domain.name) { "Tenant.name is required" }
-            requireNotNull(domain.registerDate) { "Tenant.registerDate is required" }
             requireNotNull(domain.userId) { "Tenant.userId is required" }
 
             return TenantEntity(
                 id = domain.id,
-                registerDate = domain.registerDate,
+                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
+                updateDateTime = LocalDateTime.now(),
                 name = domain.name,
                 city = domain.city,
                 identityDocument = domain.identityDocument,
                 phone = domain.phone,
                 email = domain.email,
                 observations = domain.observations,
+                status = domain.status,
                 isDeleted = domain.isDeleted,
                 customerSegmentId = domain.customerSegment?.id,
                 tenantContactOriginTypeId = domain.tenantContactOriginType?.id,
