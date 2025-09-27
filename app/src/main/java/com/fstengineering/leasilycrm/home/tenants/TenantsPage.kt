@@ -44,7 +44,8 @@ fun TenantsPage(
     searchInput: String?,
     onRegisterTenant: (Long?) -> Unit,
     onNewAssistance: (Long) -> Unit,
-    onViewAssistance: (Long) -> Unit,
+    onNewStay: (Long) -> Unit,
+    onViewStay: (Long, Long) -> Unit,
     modifier: Modifier = Modifier,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
@@ -166,14 +167,19 @@ fun TenantsPage(
                             key = { _, tenant -> tenant.id!! },
                             contentType = { _, entryType -> entryType },
                         ) { _, tenant ->
+                            val unfinishedAssistance = tenant.assistances.find { !it.isFinished }
+                            val unfinishedStay = tenant.stays.find { !it.isFinished }
+
                             LeadTenantCard(
                                 leadTenant = tenant,
                                 onViewLeadTenantDetails = {},
                                 onEditLeadTenant = { onRegisterTenant(tenant.id) },
                                 onDeleteLeadTenant = { viewModel.onDeleteTenant(tenant = tenant) },
                                 onNewAssistance = { onNewAssistance(tenant.id!!) },
-                                onViewAssistance = { onViewAssistance(tenant.id!!) },
-                                onNewPropertyStay = {},
+                                onViewStay = { onViewStay(unfinishedStay?.id!!, tenant.id!!) },
+                                onNewStay = { onNewStay(tenant.id!!) },
+                                hasUnfinishedAssistance = unfinishedAssistance != null,
+                                hasUnfinishedStay = unfinishedStay != null,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

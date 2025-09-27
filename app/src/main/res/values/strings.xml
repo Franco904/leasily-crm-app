@@ -137,8 +137,6 @@
     <string name="property_dashboard_property_owner_title">Proprietário</string>
     <string name="property_dashboard_current_month_stays_title">Estadias no mês atual</string>
 
-    <string name="see_all_stays_action_button_text">Ver todas</string>
-
     <!-- Property details -->
     <string name="property_details_top_app_bar_title">Detalhes do imóvel</string>
 
@@ -256,6 +254,62 @@
 
     <string name="lead_tenant_registration_customer_segment_empty_text">Nenhum segmento de inquilino registrado.</string>
 
+    <!-- Lead/tenant details -->
+    <string name="lead_tenant_details_top_app_bar_title_lead">Detalhes do lead</string>
+    <string name="lead_tenant_details_top_app_bar_title_tenant">Detalhes do inquilino</string>
+    <string name="lead_tenant_details_top_app_bar_title_all_sent_properties">Imóveis enviados</string>
+    <string name="lead_tenant_details_top_app_bar_title_all_interations">Interações</string>
+
+    <string name="lead_tenant_details_tab_details_label_title">Detalhes</string>
+    <string name="lead_tenant_details_top_current_assistance_label_title">Atendimento</string>
+    <string name="lead_tenant_details_top_history_label_title">Histórico</string>
+
+    <string name="lead_tenant_details_lead_observations_title">Observações sobre o lead</string>
+    <string name="lead_tenant_details_tenant_observations_title">Observações sobre o inquilino</string>
+
+    <string name="lead_tenant_details_preferences_title">Preferências</string>
+
+    <string name="lead_tenant_assistance_details_no_searched_date_range">Período da estadia não informado.</string>
+    <plurals name="lead_tenant_assistance_details_searched_date_range">
+        <item quantity="one">%1$s/%2$s/%3$s a %4$s/%5$s/%6$s (%7$s dia)</item>
+        <item quantity="other">%1$s/%2$s/%3$s a %4$s/%5$s/%6$s (%7$s dias)</item>
+    </plurals>
+    <string name="lead_tenant_assistance_details_has_flexibility_for_period_label">Flexível</string>
+
+    <string name="lead_tenant_assistance_details_no_max_accepted_nighly_rate">Preço máximo da diária não informado.</string>
+    <string name="lead_tenant_assistance_details_max_accepted_nighly_rate">Diária de até R$ %1$s.</string>
+
+    <string name="lead_tenant_assistance_details_no_guests">Nenhum hóspede.</string>
+    <plurals name="lead_tenant_assistance_details_adult_guests">
+        <item quantity="one">%1$d adulto</item>
+        <item quantity="other">%1$d adultos</item>
+    </plurals>
+    <plurals name="lead_tenant_assistance_details_kid_guests">
+        <item quantity="one">%1$d criança</item>
+        <item quantity="other">%1$d crianças</item>
+    </plurals>
+    <plurals name="lead_tenant_assistance_details_baby_guests">
+        <item quantity="one">%1$d bebê</item>
+        <item quantity="other">%1$d bebês</item>
+    </plurals>
+    <plurals name="lead_tenant_assistance_details_animal_guests">
+        <item quantity="one">%1$d animal</item>
+        <item quantity="other">%1$d animais</item>
+    </plurals>
+
+    <string name="lead_tenant_assistance_details_observations_title">Observações sobre o atendimento</string>
+    <string name="lead_tenant_assistance_details_last_sent_property_title">Último imóvel enviado</string>
+    <string name="lead_tenant_assistance_details_last_assistance_interaction_title">Última interação</string>
+
+    <string name="lead_tenant_history_details_this_year_label">Este ano</string>
+    <string name="lead_tenant_history_details_assistance_at_label">Atendimento em %1$s</string>
+    <string name="lead_tenant_history_details_stay_at_label">Estadia em %1$s</string>
+
+    <string name="assistance_delete_dialog_headline">Excluir atendimento em andamento?</string>
+    <string name="assistance_delete_dialog_supporting_text">Se confirmada a exclusão, este atendimento não estará mais disponível.</string>
+
+    <string name="assistance_empty_text">Não há atendimento em andamento.</string>
+
     <!-- Assistance registration -->
     <string name="assistance_registration_top_app_bar_title_create">Novo atendimento</string>
     <string name="assistance_registration_top_app_bar_title_edit">Editar atendimento</string>
@@ -348,6 +402,8 @@
     <string name="order_by_name_text">Nome</string>
     <string name="order_by_last_update_date_text">Última atualização</string>
 
+    <string name="last_separator_label">e</string>
+
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>
     <string name="confirm_leave_registration_dialog_headline_edit">Sair da edição?</string>
@@ -375,13 +431,18 @@
     <string name="close_action_button_text">Fechar</string>
     <string name="confirm_action_button_text">Confirmar</string>
     <string name="delete_action_button_text">Excluir</string>
+    <string name="delete_assistance_action_button_text">Excluir atendimento</string>
     <string name="edit_action_button_text">Editar</string>
+    <string name="edit_assistance_action_button_text">Editar atendimento</string>
     <string name="new_property_stay_action_button_text">Nova estadia</string>
     <string name="register_action_button_text">Cadastrar</string>
     <string name="save_action_button_text">Salvar</string>
     <string name="select_action_button_text">Selecionar</string>
     <string name="search_action_button_text">Buscar</string>
     <string name="sign_out_action_button_text">Sair</string>
+    <string name="view_all_a_action_button_text">Ver todas</string>
+    <string name="view_all_o_action_button_text">Ver todos</string>
+    <string name="view_assistance_action_button_text">Ver atendimento</string>
     <string name="view_details_action_button_text">Ver detalhes</string>
     <string name="view_property_stay_action_button_text">Ver estadia</string>
 

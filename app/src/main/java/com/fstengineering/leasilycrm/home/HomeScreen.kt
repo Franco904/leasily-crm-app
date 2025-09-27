@@ -52,8 +52,10 @@ fun HomeScreen(
     onPropertyOwnersSelect: () -> Unit = {},
     onCustomerSegmentsSelect: () -> Unit = {},
     onRegisterLeadTenant: (Long?) -> Unit,
+    onViewLeadTenantDetails: (Long) -> Unit,
     onNewAssistance: (Long) -> Unit,
-    onViewAssistance: (Long) -> Unit,
+    onNewStay: (Long) -> Unit,
+    onViewStay: (Long, Long) -> Unit,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
@@ -173,8 +175,10 @@ fun HomeScreen(
                         isSearchingLead = isSearching,
                         searchInput = searchInput,
                         onRegisterLead = onRegisterLeadTenant,
+                        onViewLeadTenantDetails = onViewLeadTenantDetails,
                         onNewAssistance = onNewAssistance,
-                        onViewAssistance = onViewAssistance,
+                        onNewStay = onNewStay,
+                        onViewStay = onViewStay,
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
                     )
@@ -186,7 +190,8 @@ fun HomeScreen(
                         searchInput = searchInput,
                         onRegisterTenant = onRegisterLeadTenant,
                         onNewAssistance = onNewAssistance,
-                        onViewAssistance = onViewAssistance,
+                        onNewStay = onNewStay,
+                        onViewStay = onViewStay,
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
                     )

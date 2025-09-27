@@ -96,7 +96,7 @@ fun PropertyDashboardSection(
                 if (currentMonthDates.isEmpty()) {
                     TextButton(onClick = onSeeNextPropertyStays) {
                         Text(
-                            text = stringResource(R.string.see_all_stays_action_button_text),
+                            text = stringResource(R.string.view_all_a_action_button_text),
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.primary,
                         )

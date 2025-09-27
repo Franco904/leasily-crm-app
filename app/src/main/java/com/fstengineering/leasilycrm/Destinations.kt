@@ -67,6 +67,9 @@ sealed interface Destinations {
     data class LeadTenantRegistration(val leadTenantId: Long?)
 
     @Serializable
+    data class LeadTenantDetails(val leadTenantId: Long)
+
+    @Serializable
     data class AssistanceRegistration(
         val assistanceId: Long?,
         val leadTenantId: Long,

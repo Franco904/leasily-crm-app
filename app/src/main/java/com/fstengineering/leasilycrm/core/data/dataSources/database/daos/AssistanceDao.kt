@@ -13,7 +13,7 @@ interface AssistanceDao {
     @Upsert
     suspend fun insertOrUpdate(assistance: AssistanceEntity): Long
 
-    @Query("UPDATE assistances SET is_deleted = 1 WHERE id = :id")
+    @Query("UPDATE assistances SET is_deleted = 1, is_finished = 1 WHERE id = :id")
     suspend fun delete(id: Long)
 
     @Query("SELECT * FROM assistances WHERE id = :id AND is_deleted = 0")

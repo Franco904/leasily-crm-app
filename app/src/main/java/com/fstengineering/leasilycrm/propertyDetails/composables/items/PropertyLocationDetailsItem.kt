@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.presentation.composables.details.IconValueDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.utils.orNotRegistered
 
 @Composable
@@ -86,24 +87,13 @@ fun PropertyLocationDetailsItem(
             val hobbyBoxNumber = property.hobbyBoxNumber.orNotRegistered(notRegisteredString)
 
             Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.DirectionsCar,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(
-                        id = R.string.property_details_apartment_specific_characteristics_body_text,
-                        parkingSpotNumber, parkingBasementLevelNumber, hobbyBoxNumber,
-                    ),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-            }
+            IconValueDetailsItem(
+                icon = Icons.Outlined.DirectionsCar,
+                value = stringResource(
+                    id = R.string.property_details_apartment_specific_characteristics_body_text,
+                    parkingSpotNumber, parkingBasementLevelNumber, hobbyBoxNumber,
+                ),
+            )
         }
     }
 }
