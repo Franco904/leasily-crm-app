@@ -133,6 +133,8 @@ fun LeadTenantDetailsScreen(
     var mustShowConfirmDeleteLeadTenantDialog by rememberSaveable { mutableStateOf(false) }
     var mustShowConfirmDeleteAssistanceDialog by rememberSaveable { mutableStateOf(false) }
 
+    var isBringIntoViewEnabled by rememberSaveable { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         viewModel.init(propertyId = leadTenantId)
 
@@ -176,6 +178,8 @@ fun LeadTenantDetailsScreen(
             isViewingAllSentProperties || isViewingAllInterations -> {
                 isViewingAllSentProperties = false
                 isViewingAllInterations = false
+
+                isBringIntoViewEnabled = true
             }
 
             else -> onBack()
@@ -199,6 +203,8 @@ fun LeadTenantDetailsScreen(
                         {
                             isViewingAllSentProperties = false
                             isViewingAllInterations = false
+
+                            isBringIntoViewEnabled = true
                         }
                     }
 
@@ -359,6 +365,9 @@ fun LeadTenantDetailsScreen(
                                     onViewInteractionDetails = { interaction ->
                                         interactionToView = interaction
                                     },
+                                    isViewingAllSentProperties = isViewingAllSentProperties,
+                                    isViewingAllInterations = isViewingAllInterations,
+                                    isBringIntoViewEnabled = isBringIntoViewEnabled,
                                 )
                             }
 

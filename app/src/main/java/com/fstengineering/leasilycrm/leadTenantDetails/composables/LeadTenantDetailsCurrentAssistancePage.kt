@@ -5,11 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
@@ -38,9 +42,27 @@ fun LeadTenantDetailsCurrentAssistancePage(
     onViewAllInteractions: () -> Unit,
     onViewSentPropertyDetails: (Long) -> Unit,
     onViewInteractionDetails: (AssistanceInteraction) -> Unit,
+    isViewingAllSentProperties: Boolean,
+    isViewingAllInterations: Boolean,
+    isBringIntoViewEnabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
+
+    val sentPropertiesBringIntoViewRequester = remember { BringIntoViewRequester() }
+    val interactionsBringIntoViewRequester = remember { BringIntoViewRequester() }
+
+    LaunchedEffect(isViewingAllSentProperties) {
+        if (isBringIntoViewEnabled && !isViewingAllSentProperties) {
+            sentPropertiesBringIntoViewRequester.bringIntoView()
+        }
+    }
+
+    LaunchedEffect(isViewingAllInterations) {
+        if (isBringIntoViewEnabled && !isViewingAllInterations) {
+            interactionsBringIntoViewRequester.bringIntoView()
+        }
+    }
 
     AnimatedContent(
         targetState = currentAssistance != null,
@@ -90,6 +112,8 @@ fun LeadTenantDetailsCurrentAssistancePage(
                     lastSentProperty = lastSentProperty,
                     onViewAll = onViewAllSentProperties,
                     onViewSentPropertyDetails = { onViewSentPropertyDetails(lastSentProperty?.id!!) },
+                    modifier = Modifier
+                        .bringIntoViewRequester(sentPropertiesBringIntoViewRequester)
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()
@@ -98,6 +122,8 @@ fun LeadTenantDetailsCurrentAssistancePage(
                     lastInteraction = lastInteraction,
                     onViewAll = onViewAllInteractions,
                     onViewInteractionDetails = { onViewInteractionDetails(lastInteraction!!) },
+                    modifier = Modifier
+                        .bringIntoViewRequester(interactionsBringIntoViewRequester)
                 )
                 Spacer(modifier = Modifier.height(120.dp))
             }
