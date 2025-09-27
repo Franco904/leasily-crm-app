@@ -197,6 +197,30 @@ fun AssistanceRegistrationFormSectionStep1(
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
+                Text(
+                    text = stringResource(R.string.assistance_registration_sea_proximity_type_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item(key = AssistanceStep1Field.DistanceToSea) {
+                Box(
+                    modifier = Modifier
+                        .bringIntoViewRequester(
+                            bringIntoViewRequesters.getValue(AssistanceStep1Field.DistanceToSea),
+                        )
+                ) {
+                    PreferredSeaProximityTypeFormField(
+                        assistanceForm = assistanceForm,
+                        onAssistanceFormChange = onAssistanceFormChange,
+                        distanceToSeaError = formErrors[AssistanceStep1Field.DistanceToSea],
+                        seaProximityTypes = seaProximityTypes,
+                    )
+                }
+            }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+            item {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -222,7 +246,7 @@ fun AssistanceRegistrationFormSectionStep1(
                     }
                 }
             }
-            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
             if (assistanceNotDeletedSearchedNeighborhoods.isEmpty()) {
                 item { AssistanceSearchedNeighborhoodsEmptySection() }
             } else {
@@ -245,30 +269,6 @@ fun AssistanceRegistrationFormSectionStep1(
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
                 Text(
-                    text = stringResource(R.string.assistance_registration_sea_proximity_type_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-            }
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-            item(key = AssistanceStep1Field.DistanceToSea) {
-                Box(
-                    modifier = Modifier
-                        .bringIntoViewRequester(
-                            bringIntoViewRequesters.getValue(AssistanceStep1Field.DistanceToSea),
-                        )
-                ) {
-                    PreferredSeaProximityTypeFormField(
-                        assistanceForm = assistanceForm,
-                        onAssistanceFormChange = onAssistanceFormChange,
-                        distanceToSeaError = formErrors[AssistanceStep1Field.DistanceToSea],
-                        seaProximityTypes = seaProximityTypes,
-                    )
-                }
-            }
-            item { Spacer(modifier = Modifier.height(24.dp)) }
-            item {
-                Text(
                     text = stringResource(R.string.assistance_registration_other_preferences_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -282,6 +282,8 @@ fun AssistanceRegistrationFormSectionStep1(
                     assistancePropertyCharacteristics = assistancePropertyCharacteristics,
                 )
             }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+            item { HorizontalDivider() }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
                 AssistanceObservationsFormField(

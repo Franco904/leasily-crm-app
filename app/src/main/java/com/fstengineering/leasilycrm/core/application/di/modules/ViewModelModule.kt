@@ -8,6 +8,7 @@ import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
 import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel
+import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel
 import com.fstengineering.leasilycrm.profile.ProfileViewModel
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel
@@ -47,6 +48,7 @@ val viewModelModule = module {
 
     viewModel {
         HomeViewModel(
+            assistanceRepository = get(),
             userRepository = get(),
         )
     }
@@ -152,6 +154,15 @@ val viewModelModule = module {
             tenantContactOriginTypeRepository = get(),
             userRepository = get(),
             tenantValidator = get(),
+        )
+    }
+
+    viewModel {
+        LeadTenantDetailsViewModel(
+            tenantRepository = get(),
+            assistanceRepository = get(),
+            assistanceCharacteristicRepository = get(),
+            userRepository = get(),
         )
     }
 

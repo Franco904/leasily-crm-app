@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.propertyOwnerDetails.composables
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -21,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +28,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.DocumentFileCard
+import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
 
 @Composable
 fun PropertyOwnerDetailsSection(
@@ -42,7 +41,7 @@ fun PropertyOwnerDetailsSection(
     ) {
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item {
-            PropertyOwnerDetailsSimpleItem(
+            IconLabelValueDetailsItem(
                 icon = Icons.Outlined.BookmarkBorder,
                 label = stringResource(R.string.property_owner_registration_customer_segment_label),
                 value = propertyOwner.customerSegment?.name
@@ -52,7 +51,7 @@ fun PropertyOwnerDetailsSection(
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
-            PropertyOwnerDetailsSimpleItem(
+            IconLabelValueDetailsItem(
                 icon = Icons.Outlined.Person,
                 label = stringResource(R.string.property_owner_registration_name_label),
                 value = propertyOwner.name
@@ -62,7 +61,7 @@ fun PropertyOwnerDetailsSection(
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
-            PropertyOwnerDetailsSimpleItem(
+            IconLabelValueDetailsItem(
                 icon = Icons.Outlined.Phone,
                 label = stringResource(R.string.property_owner_registration_phone_label),
                 value = propertyOwner.phone
@@ -72,7 +71,7 @@ fun PropertyOwnerDetailsSection(
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
-            PropertyOwnerDetailsSimpleItem(
+            IconLabelValueDetailsItem(
                 icon = Icons.Outlined.Email,
                 label = stringResource(R.string.property_owner_registration_email_label),
                 value = propertyOwner.email
@@ -82,7 +81,7 @@ fun PropertyOwnerDetailsSection(
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
-            PropertyOwnerDetailsSimpleItem(
+            IconLabelValueDetailsItem(
                 icon = Icons.Outlined.Payment,
                 label = stringResource(R.string.property_owner_registration_payment_key_label),
                 value = propertyOwner.paymentKey
@@ -134,46 +133,5 @@ fun PropertyOwnerDetailsSection(
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
-    }
-}
-
-@Composable
-private fun PropertyOwnerDetailsSimpleItem(
-    icon: ImageVector,
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier,
-    isEmptyText: Boolean = false,
-) {
-    Column(
-        modifier = modifier
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = label,
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = value,
-            style = when {
-                isEmptyText -> MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic)
-                else -> MaterialTheme.typography.bodyLarge
-            },
-            color = when {
-                isEmptyText -> MaterialTheme.colorScheme.onSurfaceVariant
-                else -> MaterialTheme.colorScheme.onSurface
-            },
-        )
     }
 }

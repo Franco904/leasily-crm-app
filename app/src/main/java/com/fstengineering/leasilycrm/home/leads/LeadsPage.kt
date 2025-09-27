@@ -50,8 +50,11 @@ fun LeadsPage(
     isSearchingLead: Boolean,
     searchInput: String?,
     onRegisterLead: (Long?) -> Unit,
-    onNewAssistance: (Long) -> Unit,
-    onViewAssistance: (Long) -> Unit,
+    onViewLeadTenantDetails: (Long) -> Unit,
+    onRegisterAssistance: (Long, Long?) -> Unit,
+    onDeleteAssistance: (Long) -> Unit,
+    onNewStay: (Long) -> Unit,
+    onViewStay: (Long, Long) -> Unit,
     modifier: Modifier = Modifier,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
@@ -184,14 +187,23 @@ fun LeadsPage(
                             key = { _, lead -> lead.id!! },
                             contentType = { _, entryType -> entryType },
                         ) { _, lead ->
+                            val unfinishedAssistance = lead.assistances.find { !it.isFinished }
+                            val unfinishedStay = lead.stays.find { !it.isFinished }
+
                             LeadTenantCard(
                                 leadTenant = lead,
-                                onViewLeadTenantDetails = {},
+                                onViewLeadTenantDetails = { onViewLeadTenantDetails(lead.id!!) },
                                 onEditLeadTenant = { onRegisterLead(lead.id) },
                                 onDeleteLeadTenant = { viewModel.onDeleteLead(lead = lead) },
-                                onNewAssistance = { onNewAssistance(lead.id!!) },
-                                onViewAssistance = { onViewAssistance(lead.id!!) },
-                                onNewPropertyStay = {},
+                                onNewAssistance = { onRegisterAssistance(lead.id!!, null) },
+                                onEditAssistance = {
+                                    onRegisterAssistance(lead.id!!, unfinishedAssistance?.id!!)
+                                },
+                                onDeleteAssistance = { onDeleteAssistance(unfinishedAssistance?.id!!) },
+                                onViewStay = { onViewStay(unfinishedStay?.id!!, lead.id!!) },
+                                onNewStay = { onNewStay(lead.id!!) },
+                                hasUnfinishedAssistance = unfinishedAssistance != null,
+                                hasUnfinishedStay = unfinishedStay != null,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

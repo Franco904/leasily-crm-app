@@ -1,5 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
 data class Tenant(
@@ -16,5 +18,10 @@ data class Tenant(
     val isDeleted: Boolean = false,
     val customerSegment: CustomerSegment? = null,
     val tenantContactOriginType: TenantContactOriginType? = null,
+    val assistances: ImmutableList<Assistance> = persistentListOf(),
+    val stays: ImmutableList<Stay> = persistentListOf(),
     val userId: Long? = null,
-)
+) {
+    fun hasFinishedAssistancesOrStays() =
+        assistances.any { it.isFinished } || stays.any { it.isFinished }
+}

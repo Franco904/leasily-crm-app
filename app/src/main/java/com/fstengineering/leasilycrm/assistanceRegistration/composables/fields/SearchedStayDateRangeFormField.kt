@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
-import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDay
+import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import java.time.LocalDate
 
 @Composable
@@ -25,10 +25,10 @@ fun SearchedStayDateRangeFormField(
             searchedStartDate != null && searchedEndDate != null -> {
                 stringResource(
                     R.string.property_registration_date_range_value,
-                    searchedStartDate.dayOfMonth.formatToTwoDigitsDay(),
-                    searchedStartDate.monthValue.formatToTwoDigitsDay(),
-                    searchedEndDate.dayOfMonth.formatToTwoDigitsDay(),
-                    searchedEndDate.monthValue.formatToTwoDigitsDay(),
+                    searchedStartDate.dayOfMonth.formatToTwoDigitsDateTime(),
+                    searchedStartDate.monthValue.formatToTwoDigitsDateTime(),
+                    searchedEndDate.dayOfMonth.formatToTwoDigitsDateTime(),
+                    searchedEndDate.monthValue.formatToTwoDigitsDateTime(),
                 )
             }
 

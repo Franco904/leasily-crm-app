@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.domain.models.Property
@@ -21,15 +22,19 @@ fun PropertyOtherCharacteristicsFormField(
     propertyCharacteristics: ImmutableList<PropertyCharacteristic>,
     modifier: Modifier = Modifier,
 ) {
+    val notDeletedPropertyCharacteristics = remember(propertyForm.characteristics) {
+        propertyForm.characteristics
+            .filter { !it.isDeleted }
+            .map { it.propertyCharacteristic }
+    }
+
     FlowRow(
         modifier = modifier
     ) {
         propertyCharacteristics.forEach { characteristic ->
             CharacteristicSelectableChip(
                 label = characteristic.name,
-                isSelected = characteristic in propertyForm.characteristics
-                    .filter { !it.isDeleted }
-                    .map { it.propertyCharacteristic },
+                isSelected = characteristic in notDeletedPropertyCharacteristics,
                 onSelect = {
                     onPropertyCharacteristicSelect(
                         characteristic = characteristic,
@@ -59,14 +64,15 @@ private fun onPropertyCharacteristicSelect(
                 val associatedCharacteristic =
                     list.find { it.propertyCharacteristic == characteristic } ?: return
 
-                if (associatedCharacteristic.propertyId != null) {
-                    val i = list.indexOf(associatedCharacteristic)
-                    list[i] = associatedCharacteristic.copy(
-                        isDeleted = !associatedCharacteristic.isDeleted,
-                    )
-                } else {
+                if (associatedCharacteristic.propertyId == null) {
                     list.remove(associatedCharacteristic)
+                    return@mutate
                 }
+
+                val i = list.indexOf(associatedCharacteristic)
+                list[i] = associatedCharacteristic.copy(
+                    isDeleted = !associatedCharacteristic.isDeleted,
+                )
             } else {
                 val newCharacteristic =
                     PropertyCharacteristicProperty(propertyCharacteristic = characteristic)

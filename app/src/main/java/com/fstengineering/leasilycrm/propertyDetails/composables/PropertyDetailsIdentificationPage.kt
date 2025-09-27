@@ -13,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.PropertyFile
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.OtherCharacteristicsDetailsItems
 import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyIncludedItemsDetailsItem
 import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyLocationDetailsItem
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyObservations
+import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyObservationsDetailsItem
+import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyOtherCharacteristicsDetailsItems
 import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyPicturesDetailsItems
 import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyQuantityCharacteristicsDetailsItems
 import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertySeaProximityTypeDetailsItem
@@ -58,7 +58,7 @@ fun PropertyDetailsIdentificationPage(
         Spacer(modifier = Modifier.height(24.dp))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(24.dp))
-        OtherCharacteristicsDetailsItems(
+        PropertyOtherCharacteristicsDetailsItems(
             property = property,
             propertyCharacteristics = propertyCharacteristics,
         )
@@ -70,7 +70,7 @@ fun PropertyDetailsIdentificationPage(
             onViewPropertyPicture = onViewPropertyPicture,
         )
         Spacer(modifier = Modifier.height(24.dp))
-        PropertyObservations(observations = property.observations)
+        PropertyObservationsDetailsItem(observations = property.observations)
         Spacer(modifier = Modifier.height(120.dp))
     }
 }

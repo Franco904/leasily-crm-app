@@ -37,7 +37,7 @@ interface TenantRepository {
 
     suspend fun updatePreferredTenantsOrderTypeId(orderTypeId: Int): AppResult<Unit, DataSourceError>
 
-    fun watchById(tenantId: Long): Flow<AppResult<Tenant, DataSourceError>>
+    fun watchById(tenantId: Long): Flow<AppResult<Tenant?, DataSourceError>>
 
     fun watchAllLeads(orderTypeId: Int): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
 

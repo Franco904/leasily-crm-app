@@ -176,12 +176,12 @@ class TenantRepositoryImpl(
 
     override fun watchById(
         tenantId: Long,
-    ): Flow<AppResult<Tenant, DataSourceError>> = flow {
+    ): Flow<AppResult<Tenant?, DataSourceError>> = flow {
         val tenantFlow = dao.watchById(id = tenantId)
             .map { tenant ->
-                val domain = tenant.toDomain()
+                val domain = tenant?.toDomain()
 
-                AppResult.Success<Tenant, DataSourceError>(domain)
+                AppResult.Success<Tenant?, DataSourceError>(domain)
             }
             .distinctUntilChanged()
 

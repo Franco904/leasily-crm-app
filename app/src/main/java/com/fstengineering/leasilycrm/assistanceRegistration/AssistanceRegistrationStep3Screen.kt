@@ -14,6 +14,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -66,23 +67,21 @@ fun AssistanceRegistrationStep3Screen(
     val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
 
     val interactionForm by stepViewModel.interactionForm.collectAsStateWithLifecycle()
-    var interactionFormBeforeEdit by remember { mutableStateOf<AssistanceInteraction?>(null) }
+    var interactionFormBeforeEdit by rememberSaveable { mutableStateOf<AssistanceInteraction?>(null) }
 
     val formErrors by stepViewModel.formErrors.collectAsStateWithLifecycle()
 
-    var interactionToView by remember { mutableStateOf<AssistanceInteraction?>(null) }
-    var interactionToDelete by remember { mutableStateOf<AssistanceInteraction?>(null) }
+    var interactionToView by rememberSaveable { mutableStateOf<AssistanceInteraction?>(null) }
+    var interactionToDelete by rememberSaveable { mutableStateOf<AssistanceInteraction?>(null) }
 
-    var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
+    var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
 
-    val listStatus by remember(isLoading, assistanceForm.interactions) {
-        val status = when {
+    val listStatus = remember(isLoading, assistanceForm.interactions) {
+        when {
             isLoading -> ListState.Loading
             assistanceForm.interactions.isEmpty() -> ListState.Empty
             else -> ListState.Idle
         }
-
-        mutableStateOf(status)
     }
 
     LaunchedEffect(Unit) {

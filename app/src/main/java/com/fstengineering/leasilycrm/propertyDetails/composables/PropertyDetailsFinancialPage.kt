@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachMoney
+import androidx.compose.material.icons.outlined.CleaningServices
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,10 +26,10 @@ import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPricesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyPriceCard
+import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.CleaningServiceDetailsItem
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import okhttp3.internal.toImmutableMap
@@ -47,9 +48,14 @@ fun PropertyDetailsFinancialPage(
     ) {
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
-            CleaningServiceDetailsItem(
-                hasCleaningServiceIncluded = property.hasCleaningServiceIncluded == true,
-                cleaningServiceTax = property.cleaningServiceTax,
+            IconLabelValueDetailsItem(
+                icon = Icons.Outlined.CleaningServices,
+                label = stringResource(R.string.property_registration_cleaning_service_tax_label),
+                value = when {
+                    property.hasCleaningServiceIncluded == true -> "R$ ${property.cleaningServiceTax}"
+                    else -> stringResource(R.string.property_registration_does_not_include_cleaning_service_body_text)
+                },
+                isEmptyText = property.hasCleaningServiceIncluded != true,
             )
         }
         item { Spacer(modifier = Modifier.height(16.dp)) }

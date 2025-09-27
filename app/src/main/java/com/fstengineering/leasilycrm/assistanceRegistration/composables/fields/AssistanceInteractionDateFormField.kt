@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
-import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDay
+import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import java.time.LocalDate
 
 @Composable
@@ -25,8 +25,8 @@ fun AssistanceInteractionDateFormField(
             interactionDate != null -> {
                 stringResource(
                     R.string.assistance_registration_interaction_registration_interaction_date_value,
-                    interactionDate.dayOfMonth.formatToTwoDigitsDay(),
-                    interactionDate.monthValue.formatToTwoDigitsDay(),
+                    interactionDate.dayOfMonth.formatToTwoDigitsDateTime(),
+                    interactionDate.monthValue.formatToTwoDigitsDateTime(),
                     interactionDate.year,
                 )
             }

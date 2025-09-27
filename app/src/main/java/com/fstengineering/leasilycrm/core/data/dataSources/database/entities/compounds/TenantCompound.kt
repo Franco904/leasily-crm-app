@@ -2,10 +2,13 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.entities.co
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginTypeEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import kotlinx.collections.immutable.toImmutableList
 
 data class TenantCompound(
     @Embedded val tenant: TenantEntity,
@@ -20,7 +23,25 @@ data class TenantCompound(
         entityColumn = "id",
     )
     val tenantContactOriginType: TenantContactOriginTypeEntity?,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "tenant_id",
+        entity = AssistanceEntity::class,
+    )
+    val assistances: List<AssistanceCompound>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "tenant_id",
+        entity = StayEntity::class,
+    )
+    val stays: List<StayEntity>,
 ) {
+    val activeAssistances: List<AssistanceCompound>
+        get() = assistances.filter { !it.assistance.isDeleted }
+
+    val activeStays: List<StayEntity>
+        get() = stays.filter { !it.isDeleted }
+
     fun toDomain() = Tenant(
         id = tenant.id,
         createDateTime = tenant.createDateTime,
@@ -35,6 +56,8 @@ data class TenantCompound(
         isDeleted = tenant.isDeleted,
         customerSegment = customerSegment?.toDomain(),
         tenantContactOriginType = tenantContactOriginType?.toDomain(),
+        assistances = activeAssistances.map { it.toDomain() }.toImmutableList(),
+        stays = activeStays.map { it.toDomain() }.toImmutableList(),
         userId = tenant.userId,
     )
 }

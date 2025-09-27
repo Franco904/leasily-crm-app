@@ -18,7 +18,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.HasCharacteri
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun OtherCharacteristicsDetailsItems(
+fun PropertyOtherCharacteristicsDetailsItems(
     property: Property,
     propertyCharacteristics: ImmutableList<PropertyCharacteristic>,
     modifier: Modifier = Modifier,

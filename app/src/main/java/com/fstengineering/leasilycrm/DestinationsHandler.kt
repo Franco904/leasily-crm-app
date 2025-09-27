@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationStep3Screen
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsScreen
 import com.fstengineering.leasilycrm.home.HomeScreen
+import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsScreen
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationScreen
 import com.fstengineering.leasilycrm.profile.ProfileScreen
 import com.fstengineering.leasilycrm.properties.PropertiesScreen
@@ -85,20 +86,18 @@ object DestinationsHandler {
                 onRegisterLeadTenant = { leadTenantId ->
                     navController.navigate(Destinations.LeadTenantRegistration(leadTenantId))
                 },
-                onNewAssistance = { leadTenantId ->
+                onViewLeadTenantDetails = { leadTenantId ->
+                    navController.navigate(Destinations.LeadTenantDetails(leadTenantId))
+                },
+                onRegisterAssistance = { leadTenantId, assistanceId ->
                     val destination = Destinations.AssistanceRegistration(
-                        assistanceId = null,
+                        assistanceId = assistanceId,
                         leadTenantId = leadTenantId,
                     )
                     navController.navigate(destination)
                 },
-                onViewAssistance = { leadTenantId ->
-                    val destination = Destinations.AssistanceRegistration(
-                        assistanceId = 1,
-                        leadTenantId = leadTenantId,
-                    )
-                    navController.navigate(destination)
-                },
+                onNewStay = { leadTenantId -> },
+                onViewStay = { stayId, leadTenantId -> },
                 onSignOut = {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
@@ -359,6 +358,38 @@ object DestinationsHandler {
             LeadTenantRegistrationScreen(
                 leadTenantId = args.leadTenantId,
                 viewModel = koinViewModel(),
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
+                },
+                showSnackbar = { message -> showSnackbar(message) },
+            )
+        }
+
+        composable<Destinations.LeadTenantDetails> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.LeadTenantDetails>()
+
+            LeadTenantDetailsScreen(
+                leadTenantId = args.leadTenantId,
+                viewModel = koinViewModel(),
+                onEditLeadTenant = {
+                    navController.navigate(
+                        Destinations.LeadTenantRegistration(leadTenantId = args.leadTenantId),
+                    )
+                },
+                onRegisterAssistance = { assistanceId ->
+                    val destination = Destinations.AssistanceRegistration(
+                        assistanceId = assistanceId,
+                        leadTenantId = args.leadTenantId,
+                    )
+                    navController.navigate(destination)
+                },
+                onNewStay = {},
+                onViewStay = { stayId -> },
+                onViewSentPropertyDetails = { propertyId ->
+                    navController.navigate(Destinations.PropertyDetails(propertyId))
+                },
                 onBack = { navController.navigateUp() },
                 onSignOut = {
                     onSignOut()

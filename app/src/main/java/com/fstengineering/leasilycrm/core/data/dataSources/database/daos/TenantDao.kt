@@ -81,7 +81,7 @@ interface TenantDao {
 
     @Transaction
     @Query("SELECT * FROM tenants WHERE id = :id AND is_deleted = 0")
-    fun watchById(id: Long): Flow<TenantCompound>
+    fun watchById(id: Long): Flow<TenantCompound?>
 
     @Transaction
     @Query(

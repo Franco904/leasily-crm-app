@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.EditNote
+import androidx.compose.material.icons.outlined.PlaylistRemove
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +23,7 @@ import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun LeadTenantCard(
@@ -31,9 +33,13 @@ fun LeadTenantCard(
     onEditLeadTenant: () -> Unit = {},
     onDeleteLeadTenant: () -> Unit = {},
     onNewAssistance: () -> Unit = {},
-    onViewAssistance: () -> Unit = {},
-    onNewPropertyStay: () -> Unit = {},
+    onEditAssistance: () -> Unit,
+    onDeleteAssistance: () -> Unit,
+    onNewStay: () -> Unit,
+    onViewStay: () -> Unit,
     hasMoreOptionsMenu: Boolean = true,
+    hasUnfinishedAssistance: Boolean = false,
+    hasUnfinishedStay: Boolean = false,
     hasCharacteristicsRow: Boolean = true,
 ) {
     AppCard(
@@ -59,34 +65,69 @@ fun LeadTenantCard(
                 )
                 if (hasMoreOptionsMenu) {
                     AppMoreOptionsMenu(
-                        options = persistentListOf(
-                            MoreOptionsMenuOption(
-                                icon = Icons.Outlined.Edit,
-                                text = stringResource(R.string.edit_action_button_text),
-                                onClick = onEditLeadTenant,
-                            ),
-                            MoreOptionsMenuOption(
-                                icon = Icons.Outlined.Delete,
-                                text = stringResource(R.string.delete_action_button_text),
-                                onClick = onDeleteLeadTenant,
-                            ),
-                            MoreOptionsMenuOption(isHorizontalDivider = true),
-                            MoreOptionsMenuOption(
-                                iconDrawable = R.drawable.assignment_add,
-                                text = stringResource(R.string.assist_action_button_text),
-                                onClick = onNewAssistance,
-                            ),
-                            MoreOptionsMenuOption(
-                                iconDrawable = R.drawable.assignment_add,
-                                text = "Ver atendimento",
-                                onClick = onViewAssistance,
-                            ),
-                            MoreOptionsMenuOption(
-                                iconDrawable = R.drawable.calendar_add_on,
-                                text = stringResource(R.string.new_property_stay_action_button_text),
-                                onClick = onNewPropertyStay,
-                            ),
-                        ),
+                        options = buildList {
+                            add(
+                                MoreOptionsMenuOption(
+                                    icon = Icons.Outlined.Edit,
+                                    text = stringResource(R.string.edit_action_button_text),
+                                    onClick = onEditLeadTenant,
+                                ),
+                            )
+                            add(
+                                MoreOptionsMenuOption(
+                                    icon = Icons.Outlined.Delete,
+                                    text = stringResource(R.string.delete_action_button_text),
+                                    onClick = onDeleteLeadTenant,
+                                ),
+                            )
+                            if (hasUnfinishedAssistance) {
+                                val options = listOf(
+                                    MoreOptionsMenuOption(isHorizontalDivider = true),
+                                    MoreOptionsMenuOption(
+                                        icon = Icons.Outlined.EditNote,
+                                        text = stringResource(R.string.edit_assistance_action_button_text),
+                                        onClick = onEditAssistance,
+                                    ),
+                                    MoreOptionsMenuOption(
+                                        icon = Icons.Outlined.PlaylistRemove,
+                                        text = stringResource(R.string.delete_assistance_action_button_text),
+                                        onClick = onDeleteAssistance,
+                                    ),
+
+                                    )
+
+                                addAll(options)
+                            } else {
+                                val options = listOf(
+                                    MoreOptionsMenuOption(isHorizontalDivider = true),
+                                    MoreOptionsMenuOption(
+                                        iconDrawable = R.drawable.assignment_add,
+                                        text = stringResource(R.string.assist_action_button_text),
+                                        onClick = onNewAssistance,
+                                    ),
+                                )
+
+                                addAll(options)
+                            }
+                            add(MoreOptionsMenuOption(isHorizontalDivider = true))
+                            if (hasUnfinishedStay) {
+                                add(
+                                    MoreOptionsMenuOption(
+                                        iconDrawable = R.drawable.calendar_view,
+                                        text = stringResource(R.string.view_property_stay_action_button_text),
+                                        onClick = onViewStay,
+                                    ),
+                                )
+                            } else {
+                                add(
+                                    MoreOptionsMenuOption(
+                                        iconDrawable = R.drawable.calendar_add_on,
+                                        text = stringResource(R.string.new_property_stay_action_button_text),
+                                        onClick = onNewStay,
+                                    ),
+                                )
+                            }
+                        }.toPersistentList()
                     )
                 }
             }
