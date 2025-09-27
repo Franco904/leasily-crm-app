@@ -28,7 +28,7 @@ import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
-import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDay
+import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -74,8 +74,8 @@ fun AssistanceInteractionCard(
                     Text(
                         text = stringResource(
                             R.string.assistance_registration_interaction_registration_interaction_date_value,
-                            interaction.interactionDate!!.dayOfMonth.formatToTwoDigitsDay(),
-                            interaction.interactionDate.monthValue.formatToTwoDigitsDay(),
+                            interaction.interactionDate!!.dayOfMonth.formatToTwoDigitsDateTime(),
+                            interaction.interactionDate.monthValue.formatToTwoDigitsDateTime(),
                             interaction.interactionDate.year,
                         ),
                         style = MaterialTheme.typography.titleMedium,

@@ -18,12 +18,14 @@ import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceLastInteractionDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceLastSentPropertyDetailsItem
+import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceLastUpdateDateDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceObservationsDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistancePreferredOtherCharacteristicsDetailsItems
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceQuantityCharacteristicsDetailsItems
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceSearchedNeighborhoodsDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.PreferredSeaProximityTypeDetailsItem
 import kotlinx.collections.immutable.ImmutableList
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +55,10 @@ fun LeadTenantDetailsCurrentAssistancePage(
                     .verticalScroll(scrollState)
                     .fillMaxWidth()
             ) {
+                Spacer(modifier = Modifier.height(24.dp))
+                AssistanceLastUpdateDateDetailsItem(
+                    updateDateTime = currentAssistance.updateDateTime ?: LocalDateTime.now(),
+                )
                 Spacer(modifier = Modifier.height(24.dp))
                 AssistanceQuantityCharacteristicsDetailsItems(assistance = currentAssistance)
                 Spacer(modifier = Modifier.height(24.dp))

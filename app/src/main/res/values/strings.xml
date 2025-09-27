@@ -267,6 +267,8 @@
     <string name="lead_tenant_details_lead_observations_title">Observações sobre o lead</string>
     <string name="lead_tenant_details_tenant_observations_title">Observações sobre o inquilino</string>
 
+    <string name="lead_tenant_assistance_details_last_update_at_label">Última atualização em: %1$s/%2$s/%3$s %4$s:%5$s</string>
+
     <string name="lead_tenant_details_preferences_title">Preferências</string>
 
     <string name="lead_tenant_assistance_details_no_searched_date_range">Período da estadia não informado.</string>

@@ -30,7 +30,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.details.Bedro
 import com.fstengineering.leasilycrm.core.presentation.composables.details.DoubleSingleBedsDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconValueDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.ParkingSpotsDetailsItem
-import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDay
+import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.persistentListOf
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -111,11 +111,11 @@ fun SearchedDateRangeDetailsItem(
                     context.resources.getQuantityString(
                         /* id = */ R.plurals.lead_tenant_assistance_details_searched_date_range,
                         /* quantity = */ dateRangeDaysCount,
-                        searchedStartDate.dayOfMonth.formatToTwoDigitsDay(),
-                        searchedStartDate.monthValue.formatToTwoDigitsDay(),
+                        searchedStartDate.dayOfMonth.formatToTwoDigitsDateTime(),
+                        searchedStartDate.monthValue.formatToTwoDigitsDateTime(),
                         searchedStartDate.year,
-                        searchedEndDate.dayOfMonth.formatToTwoDigitsDay(),
-                        searchedEndDate.monthValue.formatToTwoDigitsDay(),
+                        searchedEndDate.dayOfMonth.formatToTwoDigitsDateTime(),
+                        searchedEndDate.monthValue.formatToTwoDigitsDateTime(),
                         searchedEndDate.year,
                         dateRangeDaysCount,
                     )
