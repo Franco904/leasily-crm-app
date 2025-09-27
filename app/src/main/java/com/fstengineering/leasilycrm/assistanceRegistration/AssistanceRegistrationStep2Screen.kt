@@ -13,6 +13,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -56,24 +57,22 @@ fun AssistanceRegistrationStep2Screen(
     val searchInput by stepViewModel.searchInput.collectAsStateWithLifecycle()
     val selectableProperties by stepViewModel.selectableProperties.collectAsStateWithLifecycle()
 
-    var isAddingSentProperty by remember { mutableStateOf(false) }
-    var isSearchingPropertyToSend by remember { mutableStateOf(false) }
-    var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
+    var isAddingSentProperty by rememberSaveable { mutableStateOf(false) }
+    var isSearchingPropertyToSend by rememberSaveable { mutableStateOf(false) }
+    var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
 
-    val listStatus by remember(
+    val listStatus = remember(
         isLoadingParent,
         isLoadingStep,
         isAddingSentProperty,
         selectableProperties,
     ) {
-        val status = when {
+        when {
             isLoadingParent || isLoadingStep -> AssistanceRegistrationStep2ListState.Loading
             !isAddingSentProperty -> AssistanceRegistrationStep2ListState.ShowingSelectedSentProperties
             selectableProperties.isEmpty() -> AssistanceRegistrationStep2ListState.Empty
             else -> AssistanceRegistrationStep2ListState.AddingSentProperties
         }
-
-        mutableStateOf(status)
     }
 
     LaunchedEffect(Unit) {

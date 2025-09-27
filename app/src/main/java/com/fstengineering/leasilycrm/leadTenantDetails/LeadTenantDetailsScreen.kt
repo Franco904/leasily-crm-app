@@ -21,6 +21,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
@@ -49,6 +51,10 @@ import com.fstengineering.leasilycrm.core.presentation.composables.cards.Propert
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteTenantDialog
+import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
+import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
+import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.CurrentAssistanceDeleteSuccess
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.LeadTenantDeleteSuccess
@@ -61,6 +67,7 @@ import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDet
 import com.fstengineering.leasilycrm.leadTenantDetails.models.LeadTenantDetailsTab
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,6 +91,8 @@ fun LeadTenantDetailsScreen(
 
     val lazyListState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
+
+    val currentMonth = remember { LocalDate.now().monthValue }
 
     var selectedTabId by rememberSaveable {
         mutableIntStateOf(LeadTenantDetailsTab.Details.id)
@@ -270,18 +279,42 @@ fun LeadTenantDetailsScreen(
 
                         isViewingAllInterations -> {
                             itemsIndexed(
-                                items = sortedInteractions,
-                                key = { i, interaction ->
-                                    interaction.id ?: "${interaction.updateDateTime}-$i"
+                                items = sortedInteractions.groupBy { interaction ->
+                                    CalendarMonthYear(
+                                        id = interaction.interactionDate!!.monthValue + interaction.interactionDate.year,
+                                        month = interaction.interactionDate.monthValue,
+                                        year = interaction.interactionDate.year,
+                                    )
                                 },
+                                key = { i, (monthYear, _) -> monthYear.id },
                                 contentType = { _, entryType -> entryType },
-                            ) { i, interaction ->
-                                if (i > 0) Spacer(modifier = Modifier.height(8.dp))
-                                AssistanceInteractionCard(
-                                    interaction = interaction,
-                                    onViewInteractionDetails = { interactionToView = interaction },
-                                    hasMoreOptionsMenu = false,
+                            ) { i, (monthYear, interactions) ->
+                                val monthLabel = when {
+                                    monthYear.month == currentMonth -> stringResource(R.string.this_month_label)
+                                    else -> context
+                                        .getMonthLabelByNumber(monthYear.month)
+                                        .capitalizeFirst()
+                                }
+
+                                if (i > 0) Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = monthLabel,
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                                    color = MaterialTheme.colorScheme.onSurface,
                                 )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Column {
+                                    interactions.forEach { interaction ->
+                                        AssistanceInteractionCard(
+                                            interaction = interaction,
+                                            onViewInteractionDetails = {
+                                                interactionToView = interaction
+                                            },
+                                            hasMoreOptionsMenu = false,
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                    }
+                                }
                             }
                         }
                     }

@@ -151,7 +151,6 @@ fun AssistanceRegistrationFormSectionStep2(
                                     onSentPropertySelect = { property ->
                                         onSentPropertySelect(
                                             property = property,
-//                                            alreadySelectedPropertiesIds = alreadySelectedPropertiesIds,
                                             assistanceSentProperties = assistanceSentProperties,
                                             onNewSelectedProperties = {
                                                 assistanceSentProperties = it
@@ -193,10 +192,13 @@ fun AssistanceRegistrationFormSectionStep2(
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                if (isAddingSentProperty) ApplyPrimaryButton(
-                    onAdd = { onSelectProperties(assistanceSentProperties) },
-                )
-                else NextStepButton(onNext = onNext)
+                if (isAddingSentProperty) {
+                    ApplyPrimaryButton(
+                        onAdd = { onSelectProperties(assistanceSentProperties) },
+                    )
+                } else {
+                    NextStepButton(onNext = onNext)
+                }
             }
         }
     }
@@ -304,7 +306,6 @@ private fun LazyListScope.showingSelectedSentPropertiesList(
 
 private fun onSentPropertySelect(
     property: Property,
-//    alreadySelectedPropertiesIds: ImmutableList<Long>,
     assistanceSentProperties: PersistentList<AssistanceSentProperty>,
     onNewSelectedProperties: (PersistentList<AssistanceSentProperty>) -> Unit,
 ) {

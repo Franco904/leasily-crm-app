@@ -16,7 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,10 +71,8 @@ fun AssistanceRegistrationStep1Screen(
     val leadTenantName by parentViewModel.leadTenantName.collectAsStateWithLifecycle()
 
     val searchedNeighborhoodForm by stepViewModel.searchedNeighborhoodForm.collectAsStateWithLifecycle()
-    var searchedNeighborhoodFormBeforeEdit by remember {
-        mutableStateOf<AssistanceSearchedNeighborhood?>(
-            null
-        )
+    var searchedNeighborhoodFormBeforeEdit by rememberSaveable {
+        mutableStateOf<AssistanceSearchedNeighborhood?>(null)
     }
 
     val searchedNeighborhoodErrors by stepViewModel.searchedNeighborhoodErrors.collectAsStateWithLifecycle()
@@ -88,8 +86,8 @@ fun AssistanceRegistrationStep1Screen(
 
     val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
 
-    var isRegisteringNewSearchedNeighborhood by remember { mutableStateOf(false) }
-    var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
+    var isRegisteringNewSearchedNeighborhood by rememberSaveable { mutableStateOf(false) }
+    var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         parentViewModel.init(

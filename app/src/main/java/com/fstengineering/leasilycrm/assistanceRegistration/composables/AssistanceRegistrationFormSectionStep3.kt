@@ -62,6 +62,7 @@ fun AssistanceRegistrationFormSectionStep3(
     val assistanceInteractions by remember(assistanceForm.interactions) {
         val newAssistanceInteractions = assistanceForm.interactions
             .filter { !it.isDeleted }
+            .sortedByDescending { it.interactionDate }
             .toPersistentList()
 
         mutableStateOf(newAssistanceInteractions)
@@ -126,7 +127,7 @@ fun AssistanceRegistrationFormSectionStep3(
                             item { AssistanceInteractionsEmptySection() }
                         } else {
                             itemsIndexed(
-                                items = assistanceInteractions.sortedBy { it.interactionDate },
+                                items = assistanceInteractions,
                                 key = { i, interaction -> interaction.id ?: "${interaction.id}$i" },
                                 contentType = { _, entryType -> entryType },
                             ) { i, interaction ->

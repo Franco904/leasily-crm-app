@@ -374,6 +374,7 @@
     <string name="stays_empty_text">Nenhuma estadia registrada.</string>
 
     <!-- Base calendar -->
+    <string name="this_month_label">Este mês</string>
     <string name="january_label">JANEIRO</string>
     <string name="february_label">FEVEREIRO</string>
     <string name="march_label">MARÇO</string>
