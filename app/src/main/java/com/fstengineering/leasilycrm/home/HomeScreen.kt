@@ -33,6 +33,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.fstengineering.leasilycrm.Destinations
+import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
+import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.CurrentAssistanceDeleteSuccess
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.home.composables.HomeBottomNavigationBar
@@ -53,7 +56,7 @@ fun HomeScreen(
     onCustomerSegmentsSelect: () -> Unit = {},
     onRegisterLeadTenant: (Long?) -> Unit,
     onViewLeadTenantDetails: (Long) -> Unit,
-    onNewAssistance: (Long) -> Unit,
+    onRegisterAssistance: (Long, Long?) -> Unit,
     onNewStay: (Long) -> Unit,
     onViewStay: (Long, Long) -> Unit,
     onSignOut: () -> Unit = {},
@@ -77,6 +80,8 @@ fun HomeScreen(
     var isSearching by remember { mutableStateOf(false) }
     var searchInput by remember { mutableStateOf<String?>(null) }
 
+    var assistanceToDeleteId by rememberSaveable { mutableStateOf<Long?>(null) }
+
     LaunchedEffect(Unit) {
         viewModel.init()
 
@@ -88,6 +93,10 @@ fun HomeScreen(
 
                 is RedirectToSignIn -> {
                     onSignOut()
+                }
+
+                is CurrentAssistanceDeleteSuccess -> {
+                    showSnackbar(context.getString(R.string.snackbar_delete_assistance_succeeded))
                 }
             }
         }
@@ -176,7 +185,8 @@ fun HomeScreen(
                         searchInput = searchInput,
                         onRegisterLead = onRegisterLeadTenant,
                         onViewLeadTenantDetails = onViewLeadTenantDetails,
-                        onNewAssistance = onNewAssistance,
+                        onRegisterAssistance = onRegisterAssistance,
+                        onDeleteAssistance = { assistanceToDeleteId = it },
                         onNewStay = onNewStay,
                         onViewStay = onViewStay,
                         onSignOut = onSignOut,
@@ -189,7 +199,8 @@ fun HomeScreen(
                         isSearchingTenant = isSearching,
                         searchInput = searchInput,
                         onRegisterTenant = onRegisterLeadTenant,
-                        onNewAssistance = onNewAssistance,
+                        onRegisterAssistance = onRegisterAssistance,
+                        onDeleteAssistance = { assistanceToDeleteId = it },
                         onNewStay = onNewStay,
                         onViewStay = onViewStay,
                         onSignOut = onSignOut,
@@ -200,6 +211,16 @@ fun HomeScreen(
                     Box(modifier = Modifier)
                 }
             }
+        }
+        if (assistanceToDeleteId != null) {
+            ConfirmDeleteAssistanceDialog(
+                onConfirmDelete = {
+                    viewModel.deleteCurrentAssistance(assistanceId = assistanceToDeleteId!!)
+
+                    assistanceToDeleteId = null
+                },
+                onCancel = { assistanceToDeleteId = null },
+            )
         }
     }
 }

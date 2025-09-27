@@ -72,19 +72,25 @@ fun AssistanceRegistrationFormSectionStep2(
     val lazyListState = rememberLazyListState()
 
     var assistanceSentProperties by remember(assistanceForm.sentProperties) {
-        val newAssistanceSentProperties = assistanceForm.sentProperties
-            .filter { !it.isDeleted }
-            .toPersistentList()
-
-        mutableStateOf(newAssistanceSentProperties)
+        mutableStateOf(assistanceForm.sentProperties.toPersistentList())
     }
 
-    val alreadySelectedProperties by remember(assistanceSentProperties) {
-        val selectedProperties = assistanceSentProperties
+    val assistanceNotDeletedSentProperties = remember(assistanceSentProperties) {
+        assistanceSentProperties
+            .filter { !it.isDeleted }
+            .toPersistentList()
+    }
+
+    val alreadySelectedProperties = remember(assistanceNotDeletedSentProperties) {
+        assistanceNotDeletedSentProperties
             .mapNotNull { it.property }
             .toPersistentList()
+    }
 
-        mutableStateOf(selectedProperties)
+    val alreadySelectedPropertiesIds = remember(alreadySelectedProperties) {
+        alreadySelectedProperties
+            .mapNotNull { it.id }
+            .toPersistentList()
     }
 
     val isAddingSentProperty = remember(listStatus) {
@@ -133,7 +139,7 @@ fun AssistanceRegistrationFormSectionStep2(
                         when (listStatus) {
                             AssistanceRegistrationStep2ListState.ShowingSelectedSentProperties -> {
                                 showingSelectedSentPropertiesList(
-                                    alreadySelectedProperties = alreadySelectedProperties,
+                                    alreadySelectedProperties = assistanceNotDeletedSentProperties,
                                     onAddSentProperty = onAddSentProperty,
                                 )
                             }
@@ -141,11 +147,11 @@ fun AssistanceRegistrationFormSectionStep2(
                             AssistanceRegistrationStep2ListState.AddingSentProperties -> {
                                 addingSentPropertiesList(
                                     selectableProperties = selectableProperties,
-                                    alreadySelectedProperties = alreadySelectedProperties,
+                                    alreadySelectedPropertiesIds = alreadySelectedPropertiesIds,
                                     onSentPropertySelect = { property ->
                                         onSentPropertySelect(
                                             property = property,
-                                            alreadySelectedProperties = alreadySelectedProperties,
+//                                            alreadySelectedPropertiesIds = alreadySelectedPropertiesIds,
                                             assistanceSentProperties = assistanceSentProperties,
                                             onNewSelectedProperties = {
                                                 assistanceSentProperties = it
@@ -198,10 +204,10 @@ fun AssistanceRegistrationFormSectionStep2(
 
 private fun LazyListScope.addingSentPropertiesList(
     selectableProperties: ImmutableList<Property>,
-    alreadySelectedProperties: ImmutableList<Property>,
+    alreadySelectedPropertiesIds: ImmutableList<Long>,
     onSentPropertySelect: (Property) -> Unit,
 ) {
-    val selectedPropertiesCount = alreadySelectedProperties.size
+    val selectedPropertiesCount = alreadySelectedPropertiesIds.size
 
     item { Spacer(modifier = Modifier.height(16.dp)) }
     item {
@@ -231,7 +237,7 @@ private fun LazyListScope.addingSentPropertiesList(
     ) { _, property ->
         PropertyCard(
             property = property,
-            isSelected = property in alreadySelectedProperties,
+            isSelected = property.id in alreadySelectedPropertiesIds,
             onCardClick = { onSentPropertySelect(property) },
             hasMoreOptionsMenu = false,
             hasCharacteristicsChipsRow = false,
@@ -241,7 +247,7 @@ private fun LazyListScope.addingSentPropertiesList(
 }
 
 private fun LazyListScope.showingSelectedSentPropertiesList(
-    alreadySelectedProperties: ImmutableList<Property>,
+    alreadySelectedProperties: ImmutableList<AssistanceSentProperty>,
     onAddSentProperty: () -> Unit,
 ) {
     item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -283,12 +289,12 @@ private fun LazyListScope.showingSelectedSentPropertiesList(
     } else {
         itemsIndexed(
             items = alreadySelectedProperties,
-            key = { i, entry -> entry.id ?: "${entry.id}$i" },
+            key = { i, entry -> entry.property?.id ?: "${entry.updateDateTime}-$i" },
             contentType = { _, entryType -> entryType },
         ) { i, selectedProperty ->
             if (i > 0) Spacer(modifier = Modifier.height(8.dp))
             PropertyCard(
-                property = selectedProperty,
+                property = selectedProperty.property!!,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,
             )
@@ -298,30 +304,29 @@ private fun LazyListScope.showingSelectedSentPropertiesList(
 
 private fun onSentPropertySelect(
     property: Property,
-    alreadySelectedProperties: ImmutableList<Property>,
+//    alreadySelectedPropertiesIds: ImmutableList<Long>,
     assistanceSentProperties: PersistentList<AssistanceSentProperty>,
     onNewSelectedProperties: (PersistentList<AssistanceSentProperty>) -> Unit,
 ) {
-    val newAssistanceSentProperties = if (property !in alreadySelectedProperties) {
-        assistanceSentProperties.add(
-            AssistanceSentProperty(property = property)
-        )
-    } else {
+    val assistanceSentPropertiesIds = assistanceSentProperties.mapNotNull { it.property?.id }
+
+    val newAssistanceSentProperties = if (property.id in assistanceSentPropertiesIds) {
         val existingSentProperty = assistanceSentProperties
-            .find { it.property == property }
+            .find { it.property?.id == property.id }
             ?: return
 
         if (existingSentProperty.assistanceId == null) {
-            assistanceSentProperties.remove(
-                existingSentProperty
-            )
+            assistanceSentProperties.remove(existingSentProperty)
         } else {
             assistanceSentProperties.mutate {
                 val i = it.indexOf(existingSentProperty)
-                it[i] =
-                    existingSentProperty.copy(isDeleted = true)
+                it[i] = existingSentProperty.copy(isDeleted = !existingSentProperty.isDeleted)
             }
         }
+    } else {
+        assistanceSentProperties.add(
+            AssistanceSentProperty(property = property)
+        )
     }
 
     onNewSelectedProperties(newAssistanceSentProperties)

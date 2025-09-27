@@ -335,15 +335,15 @@
 
     <string name="assistance_registration_basic_preferences_title">Preferências básicas</string>
 
+    <string name="assistance_registration_sea_proximity_type_title">Proximidade para o mar preferida</string>
+    <string name="assistance_registration_distance_to_sea_label">Distância</string>
+
     <string name="assistance_registration_property_location_title">Bairros preferidos</string>
     <string name="assistance_registration_add_preferred_neighborhood_title">Adicionar mais um bairro</string>
     <string name="assistance_registration_no_selected_searched_neighborhoods">Nenhum bairro informado.</string>
 
     <string name="assistance_registration_searched_neighborhood_save_dialog_headline">Novo bairro</string>
     <string name="assistance_registration_searched_neighborhood_edit_dialog_headline">Editar bairro</string>
-
-    <string name="assistance_registration_sea_proximity_type_title">Proximidade do imóvel para o mar</string>
-    <string name="assistance_registration_distance_to_sea_label">Distância</string>
 
     <string name="assistance_registration_other_preferences_title">Outras preferências</string>
     <string name="assistance_registration_assistance_observations_label">Observações sobre o atendimento</string>

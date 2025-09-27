@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.leadTenantDetails
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
@@ -131,9 +130,7 @@ class LeadTenantDetailsViewModel(
         }
     }
 
-    fun deleteCurrentAssistance(currentAssistance: Assistance) {
-        val assistanceId = currentAssistance.id ?: return
-
+    fun deleteCurrentAssistance(assistanceId: Long) {
         viewModelScope.launch {
             assistanceRepository.delete(id = assistanceId)
                 .onError { error ->

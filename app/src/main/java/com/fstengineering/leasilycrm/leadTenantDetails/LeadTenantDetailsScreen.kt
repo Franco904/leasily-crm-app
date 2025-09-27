@@ -372,7 +372,7 @@ fun LeadTenantDetailsScreen(
         if (mustShowConfirmDeleteAssistanceDialog) {
             ConfirmDeleteAssistanceDialog(
                 onConfirmDelete = {
-                    viewModel.deleteCurrentAssistance(currentAssistance = currentAssistance!!)
+                    viewModel.deleteCurrentAssistance(assistanceId = currentAssistance?.id!!)
 
                     mustShowConfirmDeleteAssistanceDialog = false
                 },

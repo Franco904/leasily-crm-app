@@ -48,6 +48,7 @@ val viewModelModule = module {
 
     viewModel {
         HomeViewModel(
+            assistanceRepository = get(),
             userRepository = get(),
         )
     }

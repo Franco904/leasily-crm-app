@@ -79,35 +79,35 @@ fun LeadTenantDetailsTopAppBar(
                                 onClick = onDeleteLeadTenant,
                             ),
                         )
-                        add(MoreOptionsMenuOption(isHorizontalDivider = true))
                         if (hasUnfinishedAssistance) {
-                            addAll(
-                                listOf(
-                                    MoreOptionsMenuOption(
-                                        icon = Icons.Outlined.EditNote,
-                                        text = stringResource(R.string.edit_assistance_action_button_text),
-                                        onClick = onEditAssistance,
-                                    ),
-                                    MoreOptionsMenuOption(
-                                        icon = Icons.Outlined.PlaylistRemove,
-                                        text = stringResource(R.string.delete_assistance_action_button_text),
-                                        onClick = onDeleteAssistance,
-                                    ),
-                                    MoreOptionsMenuOption(isHorizontalDivider = true),
+                            val options = listOf(
+                                MoreOptionsMenuOption(isHorizontalDivider = true),
+                                MoreOptionsMenuOption(
+                                    icon = Icons.Outlined.EditNote,
+                                    text = stringResource(R.string.edit_assistance_action_button_text),
+                                    onClick = onEditAssistance,
+                                ),
+                                MoreOptionsMenuOption(
+                                    icon = Icons.Outlined.PlaylistRemove,
+                                    text = stringResource(R.string.delete_assistance_action_button_text),
+                                    onClick = onDeleteAssistance,
                                 ),
                             )
+
+                            addAll(options)
                         } else {
-                            addAll(
-                                listOf(
-                                    MoreOptionsMenuOption(
-                                        iconDrawable = R.drawable.assignment_add,
-                                        text = stringResource(R.string.assist_action_button_text),
-                                        onClick = onNewAssistance,
-                                    ),
-                                    MoreOptionsMenuOption(isHorizontalDivider = true),
+                            val options = listOf(
+                                MoreOptionsMenuOption(isHorizontalDivider = true),
+                                MoreOptionsMenuOption(
+                                    iconDrawable = R.drawable.assignment_add,
+                                    text = stringResource(R.string.assist_action_button_text),
+                                    onClick = onNewAssistance,
                                 ),
                             )
+
+                            addAll(options)
                         }
+                        add(MoreOptionsMenuOption(isHorizontalDivider = true))
                         if (hasUnfinishedStay) {
                             add(
                                 MoreOptionsMenuOption(

@@ -89,9 +89,9 @@ object DestinationsHandler {
                 onViewLeadTenantDetails = { leadTenantId ->
                     navController.navigate(Destinations.LeadTenantDetails(leadTenantId))
                 },
-                onNewAssistance = { leadTenantId ->
+                onRegisterAssistance = { leadTenantId, assistanceId ->
                     val destination = Destinations.AssistanceRegistration(
-                        assistanceId = null,
+                        assistanceId = assistanceId,
                         leadTenantId = leadTenantId,
                     )
                     navController.navigate(destination)

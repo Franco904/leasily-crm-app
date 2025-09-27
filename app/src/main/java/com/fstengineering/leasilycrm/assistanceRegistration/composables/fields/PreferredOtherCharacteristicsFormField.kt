@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
@@ -21,15 +22,19 @@ fun PreferredOtherCharacteristicsFormField(
     assistancePropertyCharacteristics: ImmutableList<AssistanceCharacteristic>,
     modifier: Modifier = Modifier,
 ) {
+    val notDeletedAssistanceCharacteristics = remember(assistanceForm.characteristics) {
+        assistanceForm.characteristics
+            .filter { !it.isDeleted }
+            .map { it.assistanceCharacteristic }
+    }
+
     FlowRow(
         modifier = modifier
     ) {
         assistancePropertyCharacteristics.forEach { characteristic ->
             CharacteristicSelectableChip(
                 label = characteristic.name,
-                isSelected = characteristic in assistanceForm.characteristics
-                    .filter { !it.isDeleted }
-                    .map { it.assistanceCharacteristic },
+                isSelected = characteristic in notDeletedAssistanceCharacteristics,
                 onSelect = {
                     onAssistancePropertyCharacteristicSelect(
                         characteristic = characteristic,
@@ -59,14 +64,15 @@ private fun onAssistancePropertyCharacteristicSelect(
                 val associatedCharacteristic =
                     list.find { it.assistanceCharacteristic == characteristic } ?: return
 
-                if (associatedCharacteristic.assistanceId != null) {
-                    val i = list.indexOf(associatedCharacteristic)
-                    list[i] = associatedCharacteristic.copy(
-                        isDeleted = !associatedCharacteristic.isDeleted,
-                    )
-                } else {
+                if (associatedCharacteristic.assistanceId == null) {
                     list.remove(associatedCharacteristic)
+                    return@mutate
                 }
+
+                val i = list.indexOf(associatedCharacteristic)
+                list[i] = associatedCharacteristic.copy(
+                    isDeleted = !associatedCharacteristic.isDeleted,
+                )
             } else {
                 val newCharacteristic =
                     AssistanceCharacteristicAssistance(assistanceCharacteristic = characteristic)

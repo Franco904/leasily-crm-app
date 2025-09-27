@@ -43,7 +43,8 @@ fun TenantsPage(
     isSearchingTenant: Boolean,
     searchInput: String?,
     onRegisterTenant: (Long?) -> Unit,
-    onNewAssistance: (Long) -> Unit,
+    onRegisterAssistance: (Long, Long?) -> Unit,
+    onDeleteAssistance: (Long) -> Unit,
     onNewStay: (Long) -> Unit,
     onViewStay: (Long, Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -175,7 +176,11 @@ fun TenantsPage(
                                 onViewLeadTenantDetails = {},
                                 onEditLeadTenant = { onRegisterTenant(tenant.id) },
                                 onDeleteLeadTenant = { viewModel.onDeleteTenant(tenant = tenant) },
-                                onNewAssistance = { onNewAssistance(tenant.id!!) },
+                                onNewAssistance = { onRegisterAssistance(tenant.id!!, null) },
+                                onEditAssistance = {
+                                    onRegisterAssistance(tenant.id!!, unfinishedAssistance?.id!!)
+                                },
+                                onDeleteAssistance = { onDeleteAssistance(unfinishedAssistance?.id!!) },
                                 onViewStay = { onViewStay(unfinishedStay?.id!!, tenant.id!!) },
                                 onNewStay = { onNewStay(tenant.id!!) },
                                 hasUnfinishedAssistance = unfinishedAssistance != null,

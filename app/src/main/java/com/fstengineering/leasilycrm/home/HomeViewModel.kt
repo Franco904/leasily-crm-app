@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.home
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
+    private val assistanceRepository: AssistanceRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
@@ -69,9 +71,28 @@ class HomeViewModel(
         }
     }
 
+    fun deleteCurrentAssistance(assistanceId: Long) {
+        viewModelScope.launch {
+            assistanceRepository.delete(id = assistanceId)
+                .onError { error ->
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
+
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    return@launch
+                }
+
+            _uiEvents.send(UiEvents.CurrentAssistanceDeleteSuccess)
+        }
+    }
+
     sealed interface UiEvents {
         data class DataSourceError(@StringRes val messageId: Int) : UiEvents
 
         data object RedirectToSignIn : UiEvents
+
+        data object CurrentAssistanceDeleteSuccess : UiEvents
     }
 }

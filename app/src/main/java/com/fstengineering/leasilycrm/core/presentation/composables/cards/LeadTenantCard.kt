@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.EditNote
+import androidx.compose.material.icons.outlined.PlaylistRemove
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +33,8 @@ fun LeadTenantCard(
     onEditLeadTenant: () -> Unit = {},
     onDeleteLeadTenant: () -> Unit = {},
     onNewAssistance: () -> Unit = {},
+    onEditAssistance: () -> Unit,
+    onDeleteAssistance: () -> Unit,
     onNewStay: () -> Unit,
     onViewStay: () -> Unit,
     hasMoreOptionsMenu: Boolean = true,
@@ -76,7 +80,24 @@ fun LeadTenantCard(
                                     onClick = onDeleteLeadTenant,
                                 ),
                             )
-                            if (!hasUnfinishedAssistance) {
+                            if (hasUnfinishedAssistance) {
+                                val options = listOf(
+                                    MoreOptionsMenuOption(isHorizontalDivider = true),
+                                    MoreOptionsMenuOption(
+                                        icon = Icons.Outlined.EditNote,
+                                        text = stringResource(R.string.edit_assistance_action_button_text),
+                                        onClick = onEditAssistance,
+                                    ),
+                                    MoreOptionsMenuOption(
+                                        icon = Icons.Outlined.PlaylistRemove,
+                                        text = stringResource(R.string.delete_assistance_action_button_text),
+                                        onClick = onDeleteAssistance,
+                                    ),
+
+                                    )
+
+                                addAll(options)
+                            } else {
                                 val options = listOf(
                                     MoreOptionsMenuOption(isHorizontalDivider = true),
                                     MoreOptionsMenuOption(
