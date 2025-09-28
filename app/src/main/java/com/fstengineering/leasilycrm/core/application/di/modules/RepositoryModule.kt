@@ -20,6 +20,9 @@ import com.fstengineering.leasilycrm.core.data.repositories.PropertyPriceReposit
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertySeaProximityRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyTypeRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.StayFileRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.StayRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.StayTransferRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.TenantContactOriginTypeRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.TenantRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.UserRepositoryImpl
@@ -41,6 +44,9 @@ import com.fstengineering.leasilycrm.core.domain.repositories.PropertyPriceRepos
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyTypeRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.StayTransferRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantContactOriginTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
@@ -163,6 +169,26 @@ val repositoryModule = module {
 
     single<PropertyTypeRepository> {
         PropertyTypeRepositoryImpl(
+            dao = get(),
+        )
+    }
+
+    single<StayRepository> {
+        StayRepositoryImpl(
+            dao = get(),
+            encryptedPreferencesStorage = get(),
+        )
+    }
+
+    single<StayFileRepository> {
+        StayFileRepositoryImpl(
+            dao = get(),
+            sharedStorage = get(),
+        )
+    }
+
+    single<StayTransferRepository> {
+        StayTransferRepositoryImpl(
             dao = get(),
         )
     }

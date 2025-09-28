@@ -14,6 +14,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 data class PropertyCompound(
@@ -70,7 +71,7 @@ data class PropertyCompound(
         entityColumn = "property_id",
         entity = StayEntity::class,
     )
-    val stays: List<StayEntity>,
+    val stays: List<StayCompound>,
 ) {
     val activeCharacteristics: List<PropertyCharacteristicProperty>
         get() {
@@ -96,10 +97,10 @@ data class PropertyCompound(
     val activeFiles: List<PropertyFileEntity>
         get() = files.filter { !it.isDeleted }
 
-    val activeStays: List<StayEntity>
-        get() = stays.filter { !it.isDeleted }
+    val activeStays: List<StayCompound>
+        get() = stays.filter { !it.stay.isDeleted }
 
-    fun toDomain() = Property(
+    fun toDomain(depth: Int = 1) = Property(
         id = property.id,
         createDateTime = property.createDateTime,
         updateDateTime = property.updateDateTime,
@@ -132,7 +133,9 @@ data class PropertyCompound(
         characteristics = activeCharacteristics.toImmutableList(),
         prices = activePrices.map { it.toDomain() }.toImmutableList(),
         files = activeFiles.map { it.toDomain() }.toImmutableList(),
-        stays = activeStays.map { it.toDomain() }.toImmutableList(),
+        stays = if (depth > 0) {
+            activeStays.map { it.toDomain() }.toImmutableList()
+        } else persistentListOf(),
         userId = property.userId,
     )
 }

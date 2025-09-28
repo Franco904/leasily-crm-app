@@ -9,7 +9,4 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Sta
 interface StayFileDao {
     @Upsert
     suspend fun insertOrUpdate(stayFile: StayFileEntity): Long
-
-    @Query("SELECT * FROM stay_files WHERE stay_id = :stayId")
-    suspend fun getAllByStay(stayId: Long): List<StayFileEntity>
 }
