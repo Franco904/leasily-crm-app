@@ -2,15 +2,11 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.entities.co
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransferEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import kotlinx.collections.immutable.toImmutableList
 

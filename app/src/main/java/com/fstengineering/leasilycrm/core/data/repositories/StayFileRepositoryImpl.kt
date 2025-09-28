@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.core.data.repositories
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.sharedStorage.interfaces.SharedStorage
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.domain.models.StayFile
 import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

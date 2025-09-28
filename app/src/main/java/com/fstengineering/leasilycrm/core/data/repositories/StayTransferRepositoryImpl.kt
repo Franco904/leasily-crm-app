@@ -1,11 +1,8 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.StayTransferDao
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyPriceEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransferEntity
-import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyPriceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayTransferRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
