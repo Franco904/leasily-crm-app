@@ -28,7 +28,7 @@ fun PropertyDetailsTopAppBar(
     onBack: () -> Unit,
     onEditProperty: () -> Unit,
     onDeleteProperty: () -> Unit,
-    onNewPropertyStay: () -> Unit,
+    onNewStay: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
@@ -67,7 +67,7 @@ fun PropertyDetailsTopAppBar(
                     MoreOptionsMenuOption(
                         iconDrawable = R.drawable.calendar_add_on,
                         text = stringResource(R.string.new_property_stay_action_button_text),
-                        onClick = onNewPropertyStay,
+                        onClick = onNewStay,
                     ),
                 ),
                 modifier = Modifier

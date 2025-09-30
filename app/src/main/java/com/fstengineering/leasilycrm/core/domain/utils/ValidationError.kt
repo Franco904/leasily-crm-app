@@ -90,10 +90,6 @@ sealed interface ValidationError : Error {
         IsNull,
     }
 
-    enum class StayTotalPrice : ValidationError {
-        IsNull,
-    }
-
     enum class StayPeriod : ValidationError {
         IsNull,
     }
@@ -103,6 +99,10 @@ sealed interface ValidationError : Error {
     }
 
     enum class StayCheckOutTime : ValidationError {
+        IsNull,
+    }
+
+    enum class StayTotalPrice : ValidationError {
         IsNull,
     }
 

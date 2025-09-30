@@ -34,8 +34,8 @@ fun PropertyDashboardSection(
     property: Property,
     onViewPropertyDetails: () -> Unit,
     onViewPropertyOwnerDetails: () -> Unit,
-    onSeeNextPropertyStays: () -> Unit,
-    onNewPropertyStay: () -> Unit,
+    onViewNextStays: () -> Unit,
+    onNewStay: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -51,7 +51,7 @@ fun PropertyDashboardSection(
 
     val currentMonthDates = remember(property) {
         property.stays
-            .filter { it.startDatetime?.month?.value == currentMonthYear.month }
+            .filter { it.checkInDateTime?.monthValue == currentMonthYear.month }
             .toPersistentList()
     }
 
@@ -94,7 +94,7 @@ fun PropertyDashboardSection(
             },
             actions = {
                 if (currentMonthDates.isEmpty()) {
-                    TextButton(onClick = onSeeNextPropertyStays) {
+                    TextButton(onClick = onViewNextStays) {
                         Text(
                             text = stringResource(R.string.view_all_a_action_button_text),
                             style = MaterialTheme.typography.labelLarge,
@@ -107,7 +107,7 @@ fun PropertyDashboardSection(
                     colors = ButtonDefaults.elevatedButtonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                     ),
-                    onClick = onNewPropertyStay,
+                    onClick = onNewStay,
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.calendar_add_on),

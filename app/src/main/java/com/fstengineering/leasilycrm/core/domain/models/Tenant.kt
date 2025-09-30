@@ -23,5 +23,5 @@ data class Tenant(
     val userId: Long? = null,
 ) {
     fun hasFinishedAssistancesOrStays() =
-        assistances.any { it.isFinished } || stays.any { it.isFinished }
+        assistances.any { it.isFinished } || stays.any { it.isCheckOutDone }
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -34,6 +35,7 @@ fun FormTextField(
     onValueChange: (String) -> Unit = { _ -> },
     onTap: (() -> Unit)? = null,
     isInvalid: Boolean = false,
+    isEnabled: Boolean = true,
     isReadOnly: Boolean = false,
     isSingleLine: Boolean = true,
     prefix: @Composable (() -> Unit)? = null,
@@ -69,10 +71,16 @@ fun FormTextField(
         label = {
             Text(
                 text = label,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = when {
+                    isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                },
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
         },
         isError = isInvalid,
+        enabled = isEnabled,
         readOnly = isReadOnly,
         textStyle = MaterialTheme.typography.bodyLarge,
         prefix = prefix,
@@ -82,8 +90,13 @@ fun FormTextField(
                 if (supportingText != null) {
                     Text(
                         text = supportingText,
-                        color = if (isInvalid) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = when {
+                            isInvalid -> MaterialTheme.colorScheme.error
+                            isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
+                            else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                        },
                         style = MaterialTheme.typography.bodySmall,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .padding(top = 4.dp)
                     )
@@ -91,6 +104,10 @@ fun FormTextField(
                 if (maxLength != null) {
                     Text(
                         text = "$currentLength / $maxLength",
+                        color = when {
+                            isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
+                            else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                        },
                         style = MaterialTheme.typography.bodySmall,
                         textAlign = TextAlign.End,
                         modifier = Modifier

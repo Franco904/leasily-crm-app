@@ -29,21 +29,21 @@ import kotlinx.collections.immutable.toPersistentList
 fun LeadTenantCard(
     leadTenant: Tenant,
     modifier: Modifier = Modifier,
-    onViewLeadTenantDetails: (() -> Unit)? = null,
+    onCardClick: (() -> Unit)? = null,
     onEditLeadTenant: () -> Unit = {},
     onDeleteLeadTenant: () -> Unit = {},
     onNewAssistance: () -> Unit = {},
-    onEditAssistance: () -> Unit,
-    onDeleteAssistance: () -> Unit,
-    onNewStay: () -> Unit,
-    onViewStay: () -> Unit,
+    onEditAssistance: () -> Unit = {},
+    onDeleteAssistance: () -> Unit = {},
+    onNewStay: () -> Unit = {},
+    onViewStay: () -> Unit = {},
     hasMoreOptionsMenu: Boolean = true,
     hasUnfinishedAssistance: Boolean = false,
     hasUnfinishedStay: Boolean = false,
     hasCharacteristicsRow: Boolean = true,
 ) {
     AppCard(
-        onClick = onViewLeadTenantDetails,
+        onClick = onCardClick,
         modifier = modifier
             .fillMaxWidth()
     ) {

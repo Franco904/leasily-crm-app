@@ -16,6 +16,7 @@ interface StayDao {
     @Query("UPDATE stays SET is_deleted = 1 WHERE id = :id")
     suspend fun delete(id: Long)
 
+    @Transaction
     @Query("SELECT * FROM stays WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): StayCompound
 
@@ -23,12 +24,15 @@ interface StayDao {
     @Query("SELECT * FROM stays WHERE id = :id AND is_deleted = 0")
     fun watchById(id: Long): Flow<StayCompound?>
 
+    @Transaction
     @Query("SELECT * FROM stays WHERE user_id = :userId")
-    suspend fun watchAll(userId: Long): Flow<List<StayCompound>>
+    fun watchAll(userId: Long): Flow<List<StayCompound>>
 
+    @Transaction
     @Query("SELECT * FROM stays WHERE property_id = :propertyId")
-    suspend fun watchAllByProperty(propertyId: Long): Flow<List<StayCompound>>
+    fun watchAllByProperty(propertyId: Long): Flow<List<StayCompound>>
 
+    @Transaction
     @Query("SELECT * FROM stays WHERE tenant_id = :tenantId")
-    suspend fun watchAllByTenant(tenantId: Long): Flow<List<StayCompound>>
+    fun watchAllByTenant(tenantId: Long): Flow<List<StayCompound>>
 }

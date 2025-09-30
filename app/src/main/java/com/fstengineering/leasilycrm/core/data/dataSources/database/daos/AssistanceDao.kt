@@ -16,6 +16,7 @@ interface AssistanceDao {
     @Query("UPDATE assistances SET is_deleted = 1, is_finished = 1 WHERE id = :id")
     suspend fun delete(id: Long)
 
+    @Transaction
     @Query("SELECT * FROM assistances WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): AssistanceCompound
 

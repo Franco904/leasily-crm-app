@@ -18,15 +18,13 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDate
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateRangePickerDialog(
     initialDisplayedMonthMillis: Long,
     selectableDates: SelectableDates,
-    onDateRangeSelected: (Pair<LocalDate, LocalDate>) -> Unit,
+    onDateRangeSelected: (Pair<Long, Long>) -> Unit,
     onDismiss: () -> Unit,
     isDateSelectionEmpty: Boolean,
     modifier: Modifier = Modifier,
@@ -56,12 +54,12 @@ fun DateRangePickerDialog(
                         return@TextButton
                     }
 
-                    val startDate =
-                        dateRangePickerState.selectedStartDateMillis!!.timestampToLocalDate()
-                    val endDate =
-                        dateRangePickerState.selectedEndDateMillis!!.timestampToLocalDate()
+                    val selectedDates = Pair(
+                        dateRangePickerState.selectedStartDateMillis!!,
+                        dateRangePickerState.selectedEndDateMillis!!,
+                    )
 
-                    onDateRangeSelected(Pair(startDate, endDate))
+                    onDateRangeSelected(selectedDates)
                     onDismiss()
                 }
             ) {

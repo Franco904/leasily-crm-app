@@ -16,6 +16,7 @@ interface PropertyDao {
     @Query("UPDATE properties SET is_deleted = 1 WHERE id = :id")
     suspend fun delete(id: Long)
 
+    @Transaction
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): PropertyCompound
 

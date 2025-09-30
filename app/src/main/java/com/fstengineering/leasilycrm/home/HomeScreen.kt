@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -43,6 +42,7 @@ import com.fstengineering.leasilycrm.home.composables.HomeTopAppBar
 import com.fstengineering.leasilycrm.home.dashboard.DashboardPage
 import com.fstengineering.leasilycrm.home.leads.LeadsPage
 import com.fstengineering.leasilycrm.home.models.BottomNavBarDestination
+import com.fstengineering.leasilycrm.home.stays.StaysScreen
 import com.fstengineering.leasilycrm.home.tenants.TenantsPage
 import org.koin.androidx.compose.koinViewModel
 
@@ -57,7 +57,8 @@ fun HomeScreen(
     onRegisterLeadTenant: (Long?) -> Unit,
     onViewLeadTenantDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
-    onNewStay: (Long) -> Unit,
+    onNewStayWithLeadTenant: (Long) -> Unit,
+    onNewStayBlank: (Boolean) -> Unit,
     onViewStay: (Long, Long) -> Unit,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
@@ -184,10 +185,10 @@ fun HomeScreen(
                         isSearchingLead = isSearching,
                         searchInput = searchInput,
                         onRegisterLead = onRegisterLeadTenant,
-                        onViewLeadTenantDetails = onViewLeadTenantDetails,
+                        onViewLeadDetails = onViewLeadTenantDetails,
                         onRegisterAssistance = onRegisterAssistance,
                         onDeleteAssistance = { assistanceToDeleteId = it },
-                        onNewStay = onNewStay,
+                        onNewStay = onNewStayWithLeadTenant,
                         onViewStay = onViewStay,
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
@@ -199,16 +200,19 @@ fun HomeScreen(
                         isSearchingTenant = isSearching,
                         searchInput = searchInput,
                         onRegisterTenant = onRegisterLeadTenant,
+                        onViewTenantDetails = onViewLeadTenantDetails,
                         onRegisterAssistance = onRegisterAssistance,
                         onDeleteAssistance = { assistanceToDeleteId = it },
-                        onNewStay = onNewStay,
+                        onNewStay = onNewStayWithLeadTenant,
                         onViewStay = onViewStay,
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
                     )
                 }
                 composable<Destinations.Home.Stays> {
-                    Box(modifier = Modifier)
+                    StaysScreen(
+                        onNewStayBlank = onNewStayBlank,
+                    )
                 }
             }
         }

@@ -12,7 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.NavigateUp
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.PropertyDeleteSuccess
@@ -39,8 +40,8 @@ fun PropertyDashboardScreen(
     onEditProperty: () -> Unit,
     onViewPropertyDetails: () -> Unit,
     onViewPropertyOwnerDetails: (Long) -> Unit,
-    onSeeNextPropertyStays: () -> Unit,
-    onNewPropertyStay: () -> Unit,
+    onViewNextStays: () -> Unit,
+    onNewStay: (Boolean) -> Unit,
     showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -53,7 +54,8 @@ fun PropertyDashboardScreen(
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    var mustShowConfirmDeleteDialog by remember { mutableStateOf(false) }
+    var mustShowConfirmDeleteDialog by rememberSaveable { mutableStateOf(false) }
+    var mustShowStayTypeDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.init(propertyId = propertyId)
@@ -114,8 +116,8 @@ fun PropertyDashboardScreen(
                     if (property.owner?.id == null) return@PropertyDashboardSection
                     onViewPropertyOwnerDetails(property.owner?.id!!)
                 },
-                onSeeNextPropertyStays = onSeeNextPropertyStays,
-                onNewPropertyStay = onNewPropertyStay,
+                onViewNextStays = onViewNextStays,
+                onNewStay = { mustShowStayTypeDialog = true },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -131,6 +133,19 @@ fun PropertyDashboardScreen(
                     onBack()
                 },
                 onCancel = { mustShowConfirmDeleteDialog = false },
+            )
+        }
+        if (mustShowStayTypeDialog) {
+            StayTypeDialog(
+                onLoggedRealtorStayType = {
+                    mustShowStayTypeDialog = false
+                    onNewStay(false)
+                },
+                onOtherRealtorStayType = {
+                    mustShowStayTypeDialog = false
+                    onNewStay(true)
+                },
+                onCancel = { mustShowStayTypeDialog = false }
             )
         }
     }

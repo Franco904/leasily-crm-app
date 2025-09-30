@@ -105,7 +105,7 @@ fun LeadTenantDetailsScreen(
         leadTenant.assistances.find { !it.isFinished }
     }
     val currentStay = remember(leadTenant.stays) {
-        leadTenant.stays.find { !it.isFinished }
+        leadTenant.stays.find { !it.isCheckOutDone }
     }
 
     val sortedSentProperties = remember(currentAssistance?.sentProperties) {

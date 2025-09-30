@@ -172,7 +172,7 @@ fun PropertyOwnerRegistrationScreen(
                 scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
                 modifier = Modifier
                     .padding(innerPadding)
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 24.dp)
             )
         }
         if (mustShowCustomerSegmentComboBottomsheet) {

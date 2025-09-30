@@ -6,6 +6,10 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.models.PropertyType
+import kotlinx.collections.immutable.persistentListOf
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -67,6 +71,43 @@ data class PropertyEntity(
     @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityType: Long?,
     @ColumnInfo(name = "user_id") val userId: Long,
 ) {
+    fun toDomain() = Property(
+        id = id,
+        createDateTime = createDateTime,
+        updateDateTime = updateDateTime,
+        neighborhood = neighborhood,
+        streetAddress = streetAddress,
+        cepPostalCode = cepPostalCode,
+        number = number,
+        addressLine2 = addressLine2,
+        parkingSpotNumber = parkingSpotNumber,
+        parkingBasementLevelNumber = parkingBasementLevelNumber,
+        hobbyBoxNumber = hobbyBoxNumber,
+        qtBedrooms = qtBedrooms,
+        qtEnSuites = qtEnSuites,
+        qtDoubleBeds = qtDoubleBeds,
+        qtSingleBeds = qtSingleBeds,
+        qtBathrooms = qtBathrooms,
+        qtParkingSpots = qtParkingSpots,
+        qtAirConditioners = qtAirConditioners,
+        qtMaxGuests = qtMaxGuests,
+        distanceToSea = distanceToSea,
+        includedItems = includedItems,
+        hasIncludedItems = hasIncludedItems,
+        cleaningServiceTax = cleaningServiceTax,
+        hasCleaningServiceIncluded = hasCleaningServiceIncluded,
+        observations = observations,
+        isDeleted = isDeleted,
+        owner = PropertyOwner(id = propertyOwnerId),
+        type = PropertyType(id = propertyTypeId),
+        seaProximityType = PropertySeaProximityType(id = propertySeaProximityType),
+        userId = userId,
+        characteristics = persistentListOf(),
+        prices = persistentListOf(),
+        files = persistentListOf(),
+        stays = persistentListOf(),
+    )
+
     companion object {
         fun fromDomain(domain: Property): PropertyEntity {
             requireNotNull(domain.neighborhood) { "Property.neighborhood is required" }

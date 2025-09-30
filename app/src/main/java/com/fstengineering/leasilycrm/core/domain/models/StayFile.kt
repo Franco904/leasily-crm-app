@@ -7,6 +7,7 @@ data class StayFile(
     val createDateTime: LocalDateTime? = null,
     val updateDateTime: LocalDateTime? = null,
     val uriString: String? = null,
+    val name: String? = null,
     val stayId: Long? = null,
     val isDeleted: Boolean = false,
 )

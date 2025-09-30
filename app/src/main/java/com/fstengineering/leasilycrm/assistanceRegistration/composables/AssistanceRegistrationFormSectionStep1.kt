@@ -54,6 +54,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.centerVisible
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
+import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentSetOf
@@ -332,11 +333,11 @@ fun AssistanceRegistrationFormSectionStep1(
                 initialYear = initialYear,
                 alreadySelectedDates = persistentSetOf(),
             ),
-            onDateRangeSelected = { (startDate, endDate) ->
+            onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onAssistanceFormChange(
                     assistanceForm.copy(
-                        searchedStartDate = startDate,
-                        searchedEndDate = endDate,
+                        searchedStartDate = startDateTimestamp.timestampToLocalDate(),
+                        searchedEndDate = endDateTimestamp.timestampToLocalDate(),
                     )
                 )
 
@@ -346,5 +347,4 @@ fun AssistanceRegistrationFormSectionStep1(
             onDismiss = { mustShowDateRangePickerDialog = false },
         )
     }
-
 }

@@ -23,7 +23,7 @@ data class StayCompound(
         entityColumn = "id",
         entity = TenantEntity::class,
     )
-    val tenant: TenantCompound,
+    val tenant: TenantCompound?,
     @Relation(
         parentColumn = "id",
         entityColumn = "stay_id",
@@ -43,21 +43,29 @@ data class StayCompound(
     val activeFiles: List<StayFileEntity>
         get() = files.filter { !it.isDeleted }
 
-    fun toDomain(depth: Int = 1): Stay = Stay(
+    fun toDomain(): Stay = Stay(
         id = stay.id,
         createDateTime = stay.createDateTime,
         updateDateTime = stay.updateDateTime,
         isFromOtherRealtor = stay.isFromOtherRealtor,
         qtGuests = stay.qtGuests,
         totalPrice = stay.totalPrice,
-        startDatetime = stay.startDatetime,
-        endDatetime = stay.endDatetime,
+        checkInDateTime = stay.checkInDateTime,
+        checkInHourMinute = stay.checkInDateTime.hour to stay.checkInDateTime.minute,
+        checkOutDateTime = stay.checkOutDateTime,
+        checkOutHourMinute = stay.checkOutDateTime.hour to stay.checkOutDateTime.minute,
+        isAutoCheckIn = stay.isAutoCheckIn,
+        isAutoCheckOut = stay.isAutoCheckOut,
+        isCheckInDone = stay.isCheckInDone,
+        isCheckOutDone = stay.isCheckOutDone,
         commission = stay.commission,
+        vehicleMake = stay.vehicleMake,
+        vehicleColor = stay.vehicleColor,
+        vehicleLicensePlate = stay.vehicleLicensePlate,
         observations = stay.observations,
-        isFinished = stay.isFinished,
         isDeleted = stay.isDeleted,
-        property = if (depth > 0) property.toDomain(depth - 1) else null,
-        tenant = tenant.toDomain(),
+        property = property.toDomain(),
+        tenant = tenant?.toDomain(),
         transfers = activeTransfers.map { it.toDomain() }.toImmutableList(),
         files = activeFiles.map { it.toDomain() }.toImmutableList(),
         userId = stay.userId,

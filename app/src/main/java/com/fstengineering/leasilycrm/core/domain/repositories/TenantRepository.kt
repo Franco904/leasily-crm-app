@@ -27,6 +27,10 @@ interface TenantRepository {
         orderTypeId: Int,
     ): AppResult<ImmutableList<Tenant>, DataSourceError>
 
+    suspend fun getAllWithoutUpcomingStaysMatching(
+        matching: String?,
+    ): AppResult<ImmutableList<Tenant>, DataSourceError>
+
     suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataSourceError>
 
     suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, DataSourceError>

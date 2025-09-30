@@ -65,6 +65,26 @@ interface TenantDao {
         order: Int,
     ): List<TenantCompound>
 
+    @Transaction
+    @Query(
+        """
+        SELECT * FROM tenants
+        WHERE user_id = :userId
+        AND status <> 1
+        AND is_deleted = 0
+        AND (
+            :matching IS NULL OR
+            name LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE OR
+            city LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE
+        )
+        ORDER BY name
+    """
+    )
+    suspend fun getAllWithoutUpcomingStaysMatching(
+        userId: Long,
+        matching: String?,
+    ): List<TenantCompound>
+
     @Query("SELECT name FROM tenants WHERE id = :id AND is_deleted = 0")
     suspend fun getNameById(id: Long): String
 

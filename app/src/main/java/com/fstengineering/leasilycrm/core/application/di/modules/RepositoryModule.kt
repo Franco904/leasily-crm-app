@@ -176,7 +176,7 @@ val repositoryModule = module {
     single<StayRepository> {
         StayRepositoryImpl(
             dao = get(),
-            encryptedPreferencesStorage = get(),
+            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
         )
     }
 

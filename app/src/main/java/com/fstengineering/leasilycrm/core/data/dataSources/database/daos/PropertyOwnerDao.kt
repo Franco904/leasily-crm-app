@@ -16,6 +16,7 @@ interface PropertyOwnerDao {
     @Query("UPDATE property_owners SET is_deleted = 1 WHERE id = :id")
     suspend fun delete(id: Long)
 
+    @Transaction
     @Query("SELECT * FROM property_owners WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): PropertyOwnerCompound
 

@@ -20,23 +20,25 @@ class StayValidatorImpl : StayValidator {
         validateProperty(property = stay.property)
             .onError { e -> errors.add(e) }
 
-        validateTenant(tenant = stay.tenant)
-            .onError { e -> errors.add(e) }
-
-        validateTotalPrice(totalPrice = stay.totalPrice)
-            .onError { e -> errors.add(e) }
-
         validatePeriod(
             checkInDateTime = stay.checkInDateTime,
             checkOutDateTime = stay.checkOutDateTime,
         )
             .onError { e -> errors.add(e) }
 
-        validateCheckInTime(checkInHourMinute = stay.checkInHourMinute)
-            .onError { e -> errors.add(e) }
+        if (!stay.isFromOtherRealtor) {
+            validateTenant(tenant = stay.tenant)
+                .onError { e -> errors.add(e) }
 
-        validateCheckOutTime(checkOutHourMinute = stay.checkOutHourMinute)
-            .onError { e -> errors.add(e) }
+            validateTotalPrice(totalPrice = stay.totalPrice)
+                .onError { e -> errors.add(e) }
+
+            validateCheckInTime(checkInHourMinute = stay.checkInHourMinute)
+                .onError { e -> errors.add(e) }
+
+            validateCheckOutTime(checkOutHourMinute = stay.checkOutHourMinute)
+                .onError { e -> errors.add(e) }
+        }
 
         return if (errors.isEmpty()) {
             AppResultCompound.Success(Unit)

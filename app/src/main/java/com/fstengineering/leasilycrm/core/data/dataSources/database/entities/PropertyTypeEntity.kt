@@ -17,10 +17,14 @@ data class PropertyTypeEntity(
     )
 
     companion object {
-        fun fromDomain(domain: PropertyType) = PropertyTypeEntity(
-            id = domain.id,
-            name = domain.name,
-            isActive = domain.isActive,
-        )
+        fun fromDomain(domain: PropertyType): PropertyTypeEntity {
+            requireNotNull(domain.name) { "PropertyType.name is required" }
+
+            return PropertyTypeEntity(
+                id = domain.id,
+                name = domain.name,
+                isActive = domain.isActive,
+            )
+        }
     }
 }

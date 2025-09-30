@@ -35,7 +35,7 @@ fun SeaProximityTypeFormField(
     AppRadioGroup(
         radioOptions = seaProximityTypes.map { type ->
             AppRadioOption(
-                label = type.name,
+                label = type.name ?: "",
                 relatedContent = {
                     val isDistanceToSeaType = type.id == DISTANCE_TO_SEA_PROXIMITY_TYPE_ID
                             && selectedSeaProximityType?.id == DISTANCE_TO_SEA_PROXIMITY_TYPE_ID

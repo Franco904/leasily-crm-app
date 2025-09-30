@@ -100,6 +100,38 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_too_big_120_chars
     }
 
+    ValidationError.StayProperty.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.StayTenant.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.StayPeriod.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.StayCheckInTime.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.StayCheckOutTime.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.StayTotalPrice.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.StayTransferDate.IsNull -> {
+        R.string.inline_required
+    }
+
+    ValidationError.StayTransferAmount.IsNull -> {
+        R.string.inline_required
+    }
+
     ValidationError.UserName.IsBlank -> {
         R.string.inline_required
     }

@@ -54,6 +54,8 @@ class AssistanceRegistrationStep3ViewModel(
     fun validateInteractionForm(
         assistanceForm: Assistance,
     ) {
+        clearErrors()
+
         viewModelScope.launch {
             val interactionFromForm = interactionForm.value ?: return@launch
             val isEditing = interactionFromForm.id != null

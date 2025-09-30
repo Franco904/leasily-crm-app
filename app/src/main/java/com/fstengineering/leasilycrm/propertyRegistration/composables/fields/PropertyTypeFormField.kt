@@ -19,7 +19,9 @@ fun PropertyTypeFormField(
     modifier: Modifier = Modifier,
 ) {
     AppRadioGroup(
-        radioOptions = propertyTypes.map { AppRadioOption(label = it.name) }.toImmutableList(),
+        radioOptions = propertyTypes
+            .map { AppRadioOption(label = it.name ?: "") }
+            .toImmutableList(),
         selectedOptionLabel = selectedPropertyType?.name,
         onOptionSelected = { typeName ->
             val type = propertyTypes.find { it.name == typeName }

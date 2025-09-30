@@ -17,10 +17,14 @@ data class PropertySeaProximityTypeEntity(
     )
 
     companion object {
-        fun fromDomain(domain: PropertySeaProximityType) = PropertySeaProximityTypeEntity(
-            id = domain.id,
-            name = domain.name,
-            isActive = domain.isActive,
-        )
+        fun fromDomain(domain: PropertySeaProximityType): PropertySeaProximityTypeEntity {
+            requireNotNull(domain.name) { "PropertySeaProximityType.name is required" }
+
+            return PropertySeaProximityTypeEntity(
+                id = domain.id,
+                name = domain.name,
+                isActive = domain.isActive,
+            )
+        }
     }
 }
