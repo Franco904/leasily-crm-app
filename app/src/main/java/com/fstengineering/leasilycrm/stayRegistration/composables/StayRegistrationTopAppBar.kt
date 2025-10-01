@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.stayRegistration.composables
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
@@ -48,10 +47,6 @@ fun StayRegistrationTopAppBar(
 
     LaunchedEffect(isSearching) {
         if (isSearching) searchFieldFocusRequester.requestFocus()
-    }
-
-    BackHandler {
-        onBack()
     }
 
     Surface(
@@ -142,7 +137,7 @@ fun StayRegistrationTopAppBar(
                     }
                 }
 
-                !isSearching -> {
+                !isSearching && !isSelectingProperty && !isSelectingTenant -> {
                     OutlinedButton(
                         border = BorderStroke(
                             1.dp,

@@ -172,6 +172,7 @@ fun StayRegistrationScreen(
             isSearching -> {
                 isSearching = false
                 viewModel.onPropertySearchInputChange(searchInput = null)
+                viewModel.onTenantSearchInputChange(searchInput = null)
             }
 
             else -> listStatus = StayRegistrationListState.ShowingMainForm
@@ -219,6 +220,7 @@ fun StayRegistrationScreen(
                         isSearching -> {
                             isSearching = false
                             viewModel.onPropertySearchInputChange(searchInput = null)
+                            viewModel.onTenantSearchInputChange(searchInput = null)
                         }
 
                         else -> listStatus = StayRegistrationListState.ShowingMainForm
@@ -317,7 +319,10 @@ fun StayRegistrationScreen(
                                 properties = properties,
                                 onPropertySelect = { property ->
                                     viewModel.onStayFormChange(stayForm.copy(property = property))
+
                                     listStatus = StayRegistrationListState.ShowingMainForm
+                                    isSearching = false
+                                    viewModel.onPropertySearchInputChange(searchInput = null)
                                 },
                                 modifier = Modifier
                                     .padding(innerPadding)
@@ -334,7 +339,10 @@ fun StayRegistrationScreen(
                                 tenants = tenants,
                                 onTenantSelect = { tenant ->
                                     viewModel.onStayFormChange(stayForm.copy(tenant = tenant))
+
                                     listStatus = StayRegistrationListState.ShowingMainForm
+                                    isSearching = false
+                                    viewModel.onTenantSearchInputChange(searchInput = null)
                                 },
                                 modifier = Modifier
                                     .padding(innerPadding)
