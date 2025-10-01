@@ -34,4 +34,6 @@ data class Assistance(
     val sentProperties: ImmutableList<AssistanceSentProperty> = persistentListOf(),
     val interactions: ImmutableList<AssistanceInteraction> = persistentListOf(),
     val tenant: Tenant? = null,
-)
+) {
+    val qtGuests get() = qtAdultGuests + qtKidGuests + qtBabyGuests + qtAnimalGuests
+}

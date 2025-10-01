@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -187,8 +188,10 @@ fun LeadsPage(
                             key = { _, lead -> lead.id!! },
                             contentType = { _, entryType -> entryType },
                         ) { _, lead ->
-                            val unfinishedAssistance = lead.assistances.find { !it.isFinished }
-                            val unfinishedStay = lead.stays.find { !it.isCheckOutDone }
+                            val unfinishedAssistance =
+                                remember(leads) { lead.assistances.find { !it.isFinished } }
+                            val unfinishedStay =
+                                remember(leads) { lead.stays.find { !it.isCheckOutDone } }
 
                             LeadTenantCard(
                                 leadTenant = lead,
@@ -204,6 +207,17 @@ fun LeadsPage(
                                 onNewStay = { onNewStay(lead.id!!) },
                                 hasUnfinishedAssistance = unfinishedAssistance != null,
                                 hasUnfinishedStay = unfinishedStay != null,
+                                qtGuestsLabelText = when {
+                                    unfinishedAssistance != null && unfinishedAssistance.qtGuests > 0 -> {
+                                        pluralStringResource(
+                                            id = R.plurals.lead_searching_qt_guests_label,
+                                            count = unfinishedAssistance.qtGuests,
+                                            unfinishedAssistance.qtGuests,
+                                        )
+                                    }
+
+                                    else -> null
+                                },
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

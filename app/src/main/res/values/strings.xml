@@ -224,6 +224,11 @@
     <string name="leads_empty_text">Nenhum lead registrado.</string>
     <string name="leads_empty_search_text">Nenhum lead encontrado.</string>
 
+    <plurals name="lead_searching_qt_guests_label">
+        <item quantity="one">Procurando para %1$d pessoa</item>
+        <item quantity="other">Procurando para %1$d pessoas</item>
+    </plurals>
+
     <string name="leads_delete_dialog_headline">Excluir lead?</string>
     <string name="leads_delete_dialog_supporting_text">Se confirmada a exclusão, este lead, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>
 
@@ -232,6 +237,11 @@
     <string name="tenants_old_empty_text">Nenhum inquilino antigo.</string>
     <string name="tenants_generic_empty_text">Nenhum inquilino registrado.</string>
     <string name="tenants_empty_search_text">Nenhum inquilino encontrado.</string>
+
+    <plurals name="tenant_stay_qt_guests_label">
+        <item quantity="one">%1$d pessoa na estadia</item>
+        <item quantity="other">%1$d pessoas na estadia</item>
+    </plurals>
 
     <string name="tenants_delete_dialog_headline">Excluir inquilino?</string>
     <string name="tenants_delete_dialog_supporting_text">Se confirmada a exclusão, este inquilino, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>

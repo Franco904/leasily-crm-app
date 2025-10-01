@@ -34,7 +34,6 @@ fun StayTenantSelectionList(
                 leadTenant = tenant,
                 onCardClick = { onTenantSelect(tenant) },
                 hasMoreOptionsMenu = false,
-                hasCharacteristicsRow = false,
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
