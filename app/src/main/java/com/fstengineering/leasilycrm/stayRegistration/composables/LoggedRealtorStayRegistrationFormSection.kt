@@ -378,6 +378,7 @@ fun LoggedRealtorStayRegistrationFormSection(
     }
     if (mustShowStayCheckInTimePickerDialog) {
         TimePickerDialog(
+            title = stringResource(R.string.stay_registration_check_in_time_picker_dialog_title),
             onTimeSelect = {
                 onStayFormChange(
                     stayForm.copy(checkInHourMinute = Pair(it.hour, it.minute))
@@ -388,6 +389,7 @@ fun LoggedRealtorStayRegistrationFormSection(
     }
     if (mustShowStayCheckOutTimePickerDialog) {
         TimePickerDialog(
+            title = stringResource(R.string.stay_registration_check_out_time_picker_dialog_title),
             onTimeSelect = {
                 onStayFormChange(
                     stayForm.copy(checkOutHourMinute = Pair(it.hour, it.minute))

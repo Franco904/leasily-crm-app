@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,14 +33,18 @@ fun AppCheckbox(
             checked = isChecked,
             onCheckedChange = { newIsChecked -> onCheckedChange(newIsChecked) },
             enabled = isEnabled,
+            colors = CheckboxDefaults.colors(
+                uncheckedColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                disabledUncheckedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+            ),
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = label,
             style = MaterialTheme.typography.bodyLarge,
             color = when {
-                isEnabled -> MaterialTheme.colorScheme.onSurface
-                else -> MaterialTheme.colorScheme.onSurfaceVariant
+                isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
+                else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
             }
         )
     }

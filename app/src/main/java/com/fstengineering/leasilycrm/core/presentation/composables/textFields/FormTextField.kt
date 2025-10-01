@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -73,7 +74,7 @@ fun FormTextField(
                 text = label,
                 color = when {
                     isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
-                    else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                    else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -82,6 +83,9 @@ fun FormTextField(
         isError = isInvalid,
         enabled = isEnabled,
         readOnly = isReadOnly,
+        colors = OutlinedTextFieldDefaults.colors(
+            disabledBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+        ),
         textStyle = MaterialTheme.typography.bodyLarge,
         prefix = prefix,
         suffix = suffix,
@@ -106,7 +110,7 @@ fun FormTextField(
                         text = "$currentLength / $maxLength",
                         color = when {
                             isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
-                            else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                            else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                         },
                         style = MaterialTheme.typography.bodySmall,
                         textAlign = TextAlign.End,

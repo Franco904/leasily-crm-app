@@ -406,6 +406,9 @@
     <string name="stay_registration_commission_label">Minha comissão (R$)</string>
     <string name="stay_registration_observations_label">Observações sobre a estadia</string>
 
+    <string name="stay_registration_check_in_time_picker_dialog_title">Selecione o horário do check-in</string>
+    <string name="stay_registration_check_out_time_picker_dialog_title">Selecione o horário do check-out</string>
+
     <string name="stay_registration_transfers_title">Transferências realizadas</string>
     <string name="stay_registration_transfers_body_text">Transferências financeiras podem ser, por exemplo, envio da entrada para o corretor por parte do inquilino ou extração do valor da comissão do corretor.</string>
 

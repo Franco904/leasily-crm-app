@@ -22,6 +22,7 @@ fun TimePickerDialog(
     onTimeSelect: (LocalTime) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    title: String? = null,
 ) {
     val timeNow = remember { LocalTime.now() }
 
@@ -33,7 +34,9 @@ fun TimePickerDialog(
     AlertDialog(
         title = {
             Text(
-                text = stringResource(R.string.time_picker_dialog_title),
+                text = title ?: stringResource(R.string.time_picker_dialog_title),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .padding(16.dp)
             )
@@ -68,5 +71,6 @@ fun TimePickerDialog(
         },
         onDismissRequest = { onDismiss() },
         shape = MaterialTheme.shapes.extraLarge,
+        modifier = modifier
     )
 }
