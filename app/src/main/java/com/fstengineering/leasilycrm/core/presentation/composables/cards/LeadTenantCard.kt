@@ -23,11 +23,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
-import com.fstengineering.leasilycrm.home.tenants.models.TenantFilterType
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
