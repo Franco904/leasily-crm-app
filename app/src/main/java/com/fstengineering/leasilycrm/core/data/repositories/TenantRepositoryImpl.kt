@@ -238,9 +238,10 @@ class TenantRepositoryImpl(
             )
         }
 
-    override fun watchAllTenants(
+    override fun watchTenantsMatching(
         orderTypeId: Int,
-        tenantFilterType: Int,
+        tenantFilterType: Int?,
+        matching: String?,
     ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
@@ -260,6 +261,8 @@ class TenantRepositoryImpl(
             val tenantsFlow = dao.watchAllTenants(
                 userId = userRemoteId,
                 order = orderTypeId,
+                tenantFilterType = tenantFilterType,
+                matching = matching,
             )
                 .map {
                     val tenants = it.map { tenant -> tenant.toDomain() }.toPersistentList()

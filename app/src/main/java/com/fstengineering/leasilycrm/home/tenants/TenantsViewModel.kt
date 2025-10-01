@@ -14,11 +14,14 @@ import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessa
 import com.fstengineering.leasilycrm.home.tenants.models.TenantFilterType
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -44,8 +47,12 @@ class TenantsViewModel(
     private val _orderType = MutableStateFlow(LeadTenantOrderType.Name)
     val orderType = _orderType.asStateFlow()
 
-    private val _currentTenantFilter = MutableStateFlow(TenantFilterType.UpcomingStay)
-    val currentTenantFilter = _currentTenantFilter.asStateFlow()
+    private val _currentTenantFilterType =
+        MutableStateFlow<TenantFilterType?>(TenantFilterType.UpcomingStay)
+    val currentTenantFilterType = _currentTenantFilterType.asStateFlow()
+
+    var tenantFilterTypeBeforeSearch = TenantFilterType.UpcomingStay
+        private set
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -54,8 +61,9 @@ class TenantsViewModel(
         if (isInitialized) return
 
         watchSessionExpiration()
+
+        getPreferredTenantsOrderTypeId()
         watchTenants()
-        watchSearchInput()
 
         isInitialized = true
     }
@@ -77,11 +85,9 @@ class TenantsViewModel(
         }
     }
 
-    private fun watchTenants() {
-        _isLoading.update { true }
-
+    private fun getPreferredTenantsOrderTypeId() {
         viewModelScope.launch {
-            val orderTypeId = tenantRepository.getPreferredLeadsOrderTypeId()
+            val orderTypeId = tenantRepository.getPreferredTenantsOrderTypeId()
                 .fold(
                     onError = { error ->
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
@@ -91,59 +97,54 @@ class TenantsViewModel(
                 )
 
             _orderType.update { LeadTenantOrderType.fromId(orderTypeId) }
-
-            tenantRepository.watchAllTenants(
-                orderTypeId = orderTypeId,
-                tenantFilterType = currentTenantFilter.value.id,
-            ).collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { tenants ->
-                        _tenants.update { tenants }
-                    }
-
-                _isLoading.update { false }
-            }
         }
     }
 
-    @OptIn(FlowPreview::class)
-    private fun watchSearchInput() {
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    private fun watchTenants() {
+        val searchInputDebounced = _searchInput
+            .debounce(500.milliseconds)
+
         viewModelScope.launch {
-            _searchInput
-                .debounce(500.milliseconds)
-                .collect { searchInput ->
+            orderType
+                .combine(currentTenantFilterType) { order, filter -> order to filter }
+                .combine(searchInputDebounced) { (order, filter), searchInput ->
+                    Triple(order, filter, searchInput)
+                }
+                .flatMapLatest { (order, filter, searchInput) ->
                     _isLoading.update { true }
 
-                    tenantRepository.getAllTenantsMatching(
+                    tenantRepository.watchTenantsMatching(
+                        orderTypeId = order.id,
+                        tenantFilterType = filter?.id,
                         matching = searchInput,
-                        orderTypeId = orderType.value.id,
                     )
+                }
+                .collect { result ->
+                    result
                         .onError { error ->
                             _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                         }
-                        .onSuccess { matchingTenants ->
-                            _tenants.update { matchingTenants }
-                            _isLoading.update { false }
+                        .onSuccess { tenants ->
+                            _tenants.update { tenants }
                         }
+
+                    _isLoading.update { false }
                 }
         }
     }
 
-    fun onTenantFilterTypeChange(tenantFilterType: TenantFilterType) {
-        viewModelScope.launch {
-            _currentTenantFilter.update { tenantFilterType }
-            watchTenants()
-        }
+    fun onTenantFilterTypeChange(tenantFilterType: TenantFilterType?) {
+        _currentTenantFilterType.update { tenantFilterType }
+
+        if (tenantFilterType != null) tenantFilterTypeBeforeSearch = tenantFilterType
     }
 
     fun onOrderTypeChange(orderType: LeadTenantOrderType) {
+        _orderType.update { orderType }
+
         viewModelScope.launch {
             tenantRepository.updatePreferredLeadsOrderTypeId(orderType.id)
-
-            watchTenants()
         }
     }
 

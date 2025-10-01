@@ -58,12 +58,11 @@ fun TenantsPage(
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    val tenants by viewModel.tenants.collectAsStateWithLifecycle()
-    val tenantToDelete by viewModel.tenantToDelete.collectAsStateWithLifecycle()
-
+    val currentTenantFilter by viewModel.currentTenantFilterType.collectAsStateWithLifecycle()
     val orderType by viewModel.orderType.collectAsStateWithLifecycle()
 
-    val currentTenantFilter by viewModel.currentTenantFilter.collectAsStateWithLifecycle()
+    val tenants by viewModel.tenants.collectAsStateWithLifecycle()
+    val tenantToDelete by viewModel.tenantToDelete.collectAsStateWithLifecycle()
 
     val listStatus by remember(isLoading, tenants) {
         val status = when {
@@ -99,11 +98,16 @@ fun TenantsPage(
         viewModel.onSearchInputChange(searchInput = searchInput)
     }
 
+    LaunchedEffect(isSearchingTenant) {
+        val filterType = if (isSearchingTenant) null else viewModel.tenantFilterTypeBeforeSearch
+        viewModel.onTenantFilterTypeChange(tenantFilterType = filterType)
+    }
+
     Column {
-        if (!isSearchingTenant) {
+        if (!isSearchingTenant && currentTenantFilter != null) {
             Spacer(modifier = Modifier.height(16.dp))
             TenantFilterButtonGroup(
-                selectedFilterType = currentTenantFilter,
+                selectedFilterType = currentTenantFilter!!,
                 onFilterTypeSelect = viewModel::onTenantFilterTypeChange,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -127,7 +131,10 @@ fun TenantsPage(
                 }
 
                 ListState.Empty -> {
-                    TenantsEmptySection(isSearchingTenant = isSearchingTenant)
+                    TenantsEmptySection(
+                        isSearchingTenant = isSearchingTenant,
+                        tenantFilterType = currentTenantFilter,
+                    )
                 }
 
                 ListState.Idle -> {

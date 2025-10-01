@@ -221,14 +221,16 @@
     <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
 
     <!-- Leads -->
-    <string name="leads_empty_text">Nenhum lead.</string>
+    <string name="leads_empty_text">Nenhum lead registrado.</string>
     <string name="leads_empty_search_text">Nenhum lead encontrado.</string>
 
     <string name="leads_delete_dialog_headline">Excluir lead?</string>
     <string name="leads_delete_dialog_supporting_text">Se confirmada a exclusão, este lead, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>
 
     <!-- Tenants -->
-    <string name="tenants_empty_text">Nenhum inquilino.</string>
+    <string name="tenants_upcoming_stay_empty_text">Nenhum inquilino com estadia agendada.</string>
+    <string name="tenants_old_empty_text">Nenhum inquilino antigo.</string>
+    <string name="tenants_generic_empty_text">Nenhum inquilino registrado.</string>
     <string name="tenants_empty_search_text">Nenhum inquilino encontrado.</string>
 
     <string name="tenants_delete_dialog_headline">Excluir inquilino?</string>
