@@ -65,9 +65,10 @@ fun getSelectableDates(
     initialDayOfMonth: Int,
     initialMonth: Int,
     initialYear: Int,
+    forceBelow: Boolean = false,
     alreadySelectedDates: ImmutableSet<LocalDate>,
 ): SelectableDates {
-    val minUtcMillis = LocalDate.of(initialYear, initialMonth, initialDayOfMonth)
+    val initialUtcMillis = LocalDate.of(initialYear, initialMonth, initialDayOfMonth)
         .atStartOfDay(ZoneOffset.UTC)
         .toInstant()
         .toEpochMilli()
@@ -78,7 +79,12 @@ fun getSelectableDates(
 
     return object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-            return utcTimeMillis >= minUtcMillis && utcTimeMillis !in alreadySelectedDatesUtc
+            val minMaxCondition = when {
+                forceBelow -> utcTimeMillis <= initialUtcMillis
+                else -> utcTimeMillis >= initialUtcMillis
+            }
+
+            return minMaxCondition && utcTimeMillis !in alreadySelectedDatesUtc
         }
 
         override fun isSelectableYear(year: Int): Boolean {

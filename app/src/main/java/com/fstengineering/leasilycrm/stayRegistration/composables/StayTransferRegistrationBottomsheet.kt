@@ -32,11 +32,13 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DatePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
+import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTransferAmountFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTransferDateFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTransferDescriptionFormField
 import com.fstengineering.leasilycrm.stayRegistration.models.StayTransferField
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentSetOf
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +61,8 @@ fun StayTransferRegistrationBottomsheet(
     val initialDateSelection = remember {
         val calendar = Calendar.getInstance()
 
-        Pair(
+        Triple(
+            calendar.get(Calendar.DAY_OF_MONTH),
             (calendar.get(Calendar.MONTH) + 1),
             calendar.get(Calendar.YEAR)
         )
@@ -132,12 +135,19 @@ fun StayTransferRegistrationBottomsheet(
         }
     }
     if (mustShowDatePickerDialog) {
-        val (initialMonth, initialYear) = initialDateSelection
+        val (initialDayOfMonth, initialMonth, initialYear) = initialDateSelection
 
         DatePickerDialog(
             initialDisplayedMonthMillis = getMonthTimestamp(
                 month = initialMonth,
                 year = initialYear,
+            ),
+            selectableDates = getSelectableDates(
+                initialDayOfMonth = initialDayOfMonth,
+                initialMonth = initialMonth,
+                initialYear = initialYear,
+                forceBelow = true,
+                alreadySelectedDates = persistentSetOf(),
             ),
             onDateSelected = { selectedDate ->
                 onTransferFormChange(

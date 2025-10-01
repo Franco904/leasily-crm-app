@@ -36,7 +36,9 @@ import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.Assist
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DatePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
+import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentSetOf
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +60,8 @@ fun AssistanceInteractionRegistrationBottomsheet(
     val initialDateSelection = remember {
         val calendar = Calendar.getInstance()
 
-        Pair(
+        Triple(
+            calendar.get(Calendar.DAY_OF_MONTH),
             (calendar.get(Calendar.MONTH) + 1),
             calendar.get(Calendar.YEAR)
         )
@@ -130,12 +133,19 @@ fun AssistanceInteractionRegistrationBottomsheet(
         }
     }
     if (mustShowDatePickerDialog) {
-        val (initialMonth, initialYear) = initialDateSelection
+        val (initialDayOfMonth, initialMonth, initialYear) = initialDateSelection
 
         DatePickerDialog(
             initialDisplayedMonthMillis = getMonthTimestamp(
                 month = initialMonth,
                 year = initialYear,
+            ),
+            selectableDates = getSelectableDates(
+                initialDayOfMonth = initialDayOfMonth,
+                initialMonth = initialMonth,
+                initialYear = initialYear,
+                forceBelow = true,
+                alreadySelectedDates = persistentSetOf(),
             ),
             onDateSelected = { selectedDate ->
                 onInterationFormChange(
