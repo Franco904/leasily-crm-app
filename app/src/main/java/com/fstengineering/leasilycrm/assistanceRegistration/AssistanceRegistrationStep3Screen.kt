@@ -67,7 +67,6 @@ fun AssistanceRegistrationStep3Screen(
     val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
 
     val interactionForm by stepViewModel.interactionForm.collectAsStateWithLifecycle()
-    var interactionFormBeforeEdit by rememberSaveable { mutableStateOf<AssistanceInteraction?>(null) }
 
     val formErrors by stepViewModel.formErrors.collectAsStateWithLifecycle()
 
@@ -121,7 +120,7 @@ fun AssistanceRegistrationStep3Screen(
                             form = assistanceForm.copy(interactions = newInterations),
                         )
                         stepViewModel.onInteractionFormChange(form = null)
-                        interactionFormBeforeEdit = null
+                        stepViewModel.onDismissInteraction()
 
                         val message =
                             context.getString(R.string.snackbar_create_assistance_interaction_succeeded)
@@ -132,7 +131,7 @@ fun AssistanceRegistrationStep3Screen(
                         val newInterations = assistanceForm.interactions
                             .toPersistentList()
                             .mutate { list ->
-                                val i = list.indexOf(interactionFormBeforeEdit)
+                                val i = list.indexOf(stepViewModel.interactionFormBeforeEdit)
                                 list[i] = interactionForm!!
                             }
 
@@ -140,7 +139,7 @@ fun AssistanceRegistrationStep3Screen(
                             form = assistanceForm.copy(interactions = newInterations),
                         )
                         stepViewModel.onInteractionFormChange(form = null)
-                        interactionFormBeforeEdit = null
+                        stepViewModel.onDismissInteraction()
 
                         showSnackbar(context.getString(uiEvent.messageId))
                     }
@@ -180,7 +179,7 @@ fun AssistanceRegistrationStep3Screen(
             onViewInteractionDetails = { interactionToView = it },
             onEditInteraction = {
                 stepViewModel.onInteractionFormChange(form = it)
-                interactionFormBeforeEdit = it
+                stepViewModel.onEditInteraction(interaction = it)
             },
             onDeleteInteraction = { interactionToDelete = it },
             onBack = onBack,
@@ -200,7 +199,7 @@ fun AssistanceRegistrationStep3Screen(
             formErrors = formErrors.errors,
             onDismissRequest = {
                 stepViewModel.onInteractionFormChange(form = null)
-                interactionFormBeforeEdit = null
+                stepViewModel.onDismissInteraction()
             },
             onSave = {
                 stepViewModel.clearErrors()

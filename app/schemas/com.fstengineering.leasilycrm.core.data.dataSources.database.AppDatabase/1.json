@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "de6e364030fdd24c8e9f906acae05cde",
+    "identityHash": "26148a551480f2fa1587c15dbeefc8ab",
     "entities": [
       {
         "tableName": "assistances",
@@ -1422,7 +1422,7 @@
       },
       {
         "tableName": "stays",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `is_from_other_realtor` INTEGER NOT NULL, `qt_guests` INTEGER NOT NULL, `total_price` TEXT NOT NULL, `start_datetime` INTEGER NOT NULL, `end_datetime` INTEGER NOT NULL, `commission` TEXT, `observations` TEXT, `is_finished` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `is_from_other_realtor` INTEGER NOT NULL, `qt_guests` INTEGER, `total_price` TEXT, `check_in_date_time` INTEGER NOT NULL, `check_out_date_time` INTEGER NOT NULL, `is_auto_check_in` INTEGER NOT NULL, `is_auto_check_out` INTEGER NOT NULL, `is_check_in_done` INTEGER NOT NULL, `is_check_out_done` INTEGER NOT NULL, `commission` TEXT, `vehicle_make` TEXT, `vehicle_color` TEXT, `vehicle_license_plate` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1450,24 +1450,46 @@
           {
             "fieldPath": "qtGuests",
             "columnName": "qt_guests",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "totalPrice",
             "columnName": "total_price",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "TEXT"
           },
           {
-            "fieldPath": "startDatetime",
-            "columnName": "start_datetime",
+            "fieldPath": "checkInDateTime",
+            "columnName": "check_in_date_time",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "endDatetime",
-            "columnName": "end_datetime",
+            "fieldPath": "checkOutDateTime",
+            "columnName": "check_out_date_time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isAutoCheckIn",
+            "columnName": "is_auto_check_in",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isAutoCheckOut",
+            "columnName": "is_auto_check_out",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCheckInDone",
+            "columnName": "is_check_in_done",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCheckOutDone",
+            "columnName": "is_check_out_done",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1477,15 +1499,24 @@
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "observations",
-            "columnName": "observations",
+            "fieldPath": "vehicleMake",
+            "columnName": "vehicle_make",
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "isFinished",
-            "columnName": "is_finished",
-            "affinity": "INTEGER",
-            "notNull": true
+            "fieldPath": "vehicleColor",
+            "columnName": "vehicle_color",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "vehicleLicensePlate",
+            "columnName": "vehicle_license_plate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "observations",
+            "columnName": "observations",
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "isDeleted",
@@ -1502,6 +1533,11 @@
           {
             "fieldPath": "tenantId",
             "columnName": "tenant_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1530,6 +1566,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_stays_tenant_id` ON `${TABLE_NAME}` (`tenant_id`)"
+          },
+          {
+            "name": "index_stays_user_id",
+            "unique": false,
+            "columnNames": [
+              "user_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stays_user_id` ON `${TABLE_NAME}` (`user_id`)"
           }
         ],
         "foreignKeys": [
@@ -1630,7 +1675,7 @@
       },
       {
         "tableName": "stay_transfers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `transfer_date` TEXT NOT NULL, `transfer_amount` TEXT NOT NULL, `transfer_description` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `transfer_date` TEXT NOT NULL, `transfer_amount` TEXT NOT NULL, `transfer_description` TEXT, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1664,8 +1709,7 @@
           {
             "fieldPath": "transferDescription",
             "columnName": "transfer_description",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "isDeleted",
@@ -1816,6 +1860,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_tenants_tenant_contact_origin_type_id` ON `${TABLE_NAME}` (`tenant_contact_origin_type_id`)"
+          },
+          {
+            "name": "index_tenants_user_id",
+            "unique": false,
+            "columnNames": [
+              "user_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_tenants_user_id` ON `${TABLE_NAME}` (`user_id`)"
           }
         ],
         "foreignKeys": [
@@ -1875,7 +1928,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'de6e364030fdd24c8e9f906acae05cde')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '26148a551480f2fa1587c15dbeefc8ab')"
     ]
   }
 }

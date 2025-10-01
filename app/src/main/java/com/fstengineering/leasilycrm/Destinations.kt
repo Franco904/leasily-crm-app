@@ -83,4 +83,12 @@ sealed interface Destinations {
         @Serializable
         data object AssistanceRegistrationStep3
     }
+
+    @Serializable
+    data class StayRegistration(
+        val stayId: Long?,
+        val propertyId: Long?,
+        val leadTenantId: Long?,
+        val isStayFromOtherRealtor: Boolean,
+    )
 }

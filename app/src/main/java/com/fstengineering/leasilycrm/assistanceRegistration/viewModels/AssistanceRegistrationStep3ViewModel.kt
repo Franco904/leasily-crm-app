@@ -29,6 +29,8 @@ class AssistanceRegistrationStep3ViewModel(
     private val _interactionForm = MutableStateFlow<AssistanceInteraction?>(null)
     val interactionForm = _interactionForm.asStateFlow()
 
+    var interactionFormBeforeEdit: AssistanceInteraction? = null
+
     private val _formErrors = MutableStateFlow(AssistanceInteractionErrorUiState())
     val formErrors = _formErrors.asStateFlow()
 
@@ -51,16 +53,26 @@ class AssistanceRegistrationStep3ViewModel(
         _interactionForm.update { form }
     }
 
+    fun onEditInteraction(interaction: AssistanceInteraction) {
+        interactionFormBeforeEdit = interaction
+    }
+
+    fun onDismissInteraction() {
+        interactionFormBeforeEdit = null
+    }
+
     fun validateInteractionForm(
         assistanceForm: Assistance,
     ) {
+        clearErrors()
+
         viewModelScope.launch {
             val interactionFromForm = interactionForm.value ?: return@launch
-            val isEditing = interactionFromForm.id != null
+            val isEditing = interactionFormBeforeEdit != null
 
             if (isEditing) {
                 val storedInteraction = assistanceForm.interactions
-                    .find { it.id == interactionFromForm.id }
+                    .find { it == interactionFormBeforeEdit }
 
                 if (interactionFromForm == storedInteraction) {
                     _uiEvents.send(

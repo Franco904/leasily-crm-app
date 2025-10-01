@@ -7,6 +7,8 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import kotlinx.collections.immutable.persistentListOf
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -27,6 +29,7 @@ import java.time.LocalDateTime
     indices = [
         Index("property_id"),
         Index("tenant_id"),
+        Index("user_id"),
     ],
 )
 data class StayEntity(
@@ -34,28 +37,109 @@ data class StayEntity(
     @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
     @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     @ColumnInfo(name = "is_from_other_realtor") val isFromOtherRealtor: Boolean,
-    @ColumnInfo(name = "qt_guests") val qtGuests: Int,
-    @ColumnInfo(name = "total_price") val totalPrice: BigDecimal,
-    @ColumnInfo(name = "start_datetime") val startDatetime: LocalDateTime,
-    @ColumnInfo(name = "end_datetime") val endDatetime: LocalDateTime,
-    val commission: BigDecimal?,
-    val observations: String?,
-    @ColumnInfo(name = "is_finished") val isFinished: Boolean = false,
+    @ColumnInfo(name = "qt_guests") val qtGuests: Int? = null,
+    @ColumnInfo(name = "total_price") val totalPrice: BigDecimal? = null,
+    @ColumnInfo(name = "check_in_date_time") val checkInDateTime: LocalDateTime,
+    @ColumnInfo(name = "check_out_date_time") val checkOutDateTime: LocalDateTime,
+    @ColumnInfo(name = "is_auto_check_in") val isAutoCheckIn: Boolean = false,
+    @ColumnInfo(name = "is_auto_check_out") val isAutoCheckOut: Boolean = false,
+    @ColumnInfo(name = "is_check_in_done") val isCheckInDone: Boolean = false,
+    @ColumnInfo(name = "is_check_out_done") val isCheckOutDone: Boolean = false,
+    val commission: BigDecimal? = null,
+    @ColumnInfo(name = "vehicle_make") val vehicleMake: String? = null,
+    @ColumnInfo(name = "vehicle_color") val vehicleColor: String? = null,
+    @ColumnInfo(name = "vehicle_license_plate") val vehicleLicensePlate: String? = null,
+    val observations: String? = null,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_id") val propertyId: Long,
-    @ColumnInfo(name = "tenant_id") val tenantId: Long,
+    @ColumnInfo(name = "tenant_id") val tenantId: Long? = null,
+    @ColumnInfo(name = "user_id") val userId: Long,
 ) {
     fun toDomain() = Stay(
         id = id,
+        createDateTime = createDateTime,
+        updateDateTime = updateDateTime,
         isFromOtherRealtor = isFromOtherRealtor,
         qtGuests = qtGuests,
         totalPrice = totalPrice,
-        startDatetime = startDatetime,
-        endDatetime = endDatetime,
+        checkInDateTime = checkInDateTime,
+        checkInHourMinute = checkInDateTime.hour to checkInDateTime.minute,
+        checkOutDateTime = checkOutDateTime,
+        checkOutHourMinute = checkOutDateTime.hour to checkOutDateTime.minute,
+        isAutoCheckIn = isAutoCheckIn,
+        isAutoCheckOut = isAutoCheckOut,
+        isCheckInDone = isCheckInDone,
+        isCheckOutDone = isCheckOutDone,
         commission = commission,
+        vehicleMake = vehicleMake,
+        vehicleColor = vehicleColor,
+        vehicleLicensePlate = vehicleLicensePlate,
         observations = observations,
-        isFinished = isFinished,
         isDeleted = isDeleted,
         property = Property(id = propertyId),
+        tenant = Tenant(id = tenantId),
+        transfers = persistentListOf(),
+        files = persistentListOf(),
+        userId = userId,
     )
+
+    companion object {
+        fun fromDomain(domain: Stay): StayEntity {
+            requireNotNull(domain.checkInDateTime) { "Stay.checkInDateTime is required" }
+            requireNotNull(domain.checkOutDateTime) { "Stay.checkOutDateTime is required" }
+            requireNotNull(domain.property?.id) { "Stay.property.id is required" }
+            requireNotNull(domain.userId) { "Stay.userId is required" }
+
+            if (domain.isFromOtherRealtor) {
+                return StayEntity(
+                    id = domain.id,
+                    createDateTime = domain.createDateTime ?: LocalDateTime.now(),
+                    updateDateTime = LocalDateTime.now(),
+                    isFromOtherRealtor = true,
+                    checkInDateTime = domain.checkInDateTime,
+                    checkOutDateTime = domain.checkOutDateTime,
+                    propertyId = domain.property.id,
+                    userId = domain.userId,
+                )
+            }
+
+            val (checkInHour, checkInMinute) = domain.checkInHourMinute
+            val (checkOutHour, checkOutMinute) = domain.checkOutHourMinute
+
+            requireNotNull(domain.qtGuests) { "Stay.qtGuests is required" }
+            requireNotNull(domain.totalPrice) { "Stay.totalPrice is required" }
+            requireNotNull(checkInHour) { "checkInHour is required" }
+            requireNotNull(checkInMinute) { "checkInMinute is required" }
+            requireNotNull(checkOutHour) { "checkOutHour is required" }
+            requireNotNull(checkOutMinute) { "checkOutMinute is required" }
+            requireNotNull(domain.tenant?.id) { "Stay.tenant.id is required" }
+
+            val adjustedCheckInDateTime = domain.checkInDateTime
+                .withHour(checkInHour)
+                .withMinute(checkInMinute)
+
+            val adjustedCheckOutDateTime = domain.checkOutDateTime
+                .withHour(checkOutHour)
+                .withMinute(checkOutMinute)
+
+            return StayEntity(
+                id = domain.id,
+                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
+                updateDateTime = LocalDateTime.now(),
+                isFromOtherRealtor = false,
+                qtGuests = domain.qtGuests,
+                totalPrice = domain.totalPrice,
+                checkInDateTime = adjustedCheckInDateTime,
+                checkOutDateTime = adjustedCheckOutDateTime,
+                commission = domain.commission,
+                observations = domain.observations,
+                isCheckInDone = domain.isCheckInDone,
+                isCheckOutDone = domain.isCheckOutDone,
+                isDeleted = domain.isDeleted,
+                propertyId = domain.property.id,
+                tenantId = domain.tenant.id,
+                userId = domain.userId,
+            )
+        }
+    }
 }

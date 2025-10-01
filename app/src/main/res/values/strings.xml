@@ -371,9 +371,66 @@
     <string name="interaction_details_title">Interação</string>
 
     <!-- Stays -->
-    <string name="stays_empty_text">Nenhuma estadia registrada.</string>
+    <string name="stay_type_logged_realtor_title">Estadia de cliente</string>
+    <string name="stay_type_logged_realtor_description">Registre uma estadia para um de seus leads</string>
 
-    <!-- Base calendar -->
+    <string name="stay_type_other_realtor_title">Período indisponível</string>
+    <string name="stay_type_other_realtor_description">Registre a indisponibilidade de um imóvel por motivos externos</string>
+
+    <string name="stays_empty_text">Nenhuma estadia registrada.</string>
+    <string name="stay_transfers_empty_text">Nenhuma transferência registrada.</string>
+
+    <!-- Stay registration -->
+    <string name="stay_registration_top_app_bar_title_create">Nova estadia</string>
+    <string name="stay_registration_top_app_bar_title_edit">Editar estadia</string>
+    <string name="stay_registration_top_app_bar_select_property_title">Selecionar imóvel</string>
+    <string name="stay_registration_top_app_bar_select_tenant_title">Selecionar inquilino</string>
+
+    <string name="stay_registration_property_title">Imóvel</string>
+
+    <string name="stay_registration_tenant_title">Inquilino</string>
+    <string name="stay_registration_tenant_vehicle_make_label">Marca do automóvel</string>
+    <string name="stay_registration_tenant_vehicle_color_label">Cor do automóvel</string>
+    <string name="stay_registration_tenant_vehicle_license_plate_label">Placa do automóvel</string>
+
+    <string name="stay_registration_stay_title">Estadia</string>
+    <string name="stay_registration_qt_guests_label">Quantidade de hóspedes</string>
+    <string name="stay_registration_total_price_label">Preço total (R$)</string>
+    <string name="stay_registration_period_label">Período</string>
+    <string name="stay_registration_date_range_value">%1$s/%2$s a %3$s/%4$s</string>
+    <string name="stay_registration_check_in_time_label">Horário do check-in</string>
+    <string name="stay_registration_check_out_time_label">Horário do check-out</string>
+    <string name="stay_registration_time_value">%1$s:%2$s</string>
+    <string name="stay_registration_is_auto_check_in_label">É auto check-in?</string>
+    <string name="stay_registration_is_auto_check_out_label">É auto check-out?</string>
+    <string name="stay_registration_commission_label">Minha comissão (R$)</string>
+    <string name="stay_registration_observations_label">Observações sobre a estadia</string>
+
+    <string name="stay_registration_check_in_time_picker_dialog_title">Selecione o horário do check-in</string>
+    <string name="stay_registration_check_out_time_picker_dialog_title">Selecione o horário do check-out</string>
+
+    <string name="stay_registration_transfers_title">Transferências realizadas</string>
+    <string name="stay_registration_transfers_body_text">Transferências financeiras podem ser, por exemplo, envio da entrada para o corretor por parte do inquilino ou extração do valor da comissão do corretor.</string>
+
+    <string name="stay_registration_transfer_registration_title_create">Nova transferência</string>
+    <string name="stay_registration_transfer_registration_title_edit">Editar transferência</string>
+
+    <string name="stay_registration_transfers_date_column_header">Data</string>
+    <string name="stay_registration_transfers_amount_column_header">Valor</string>
+    <string name="stay_registration_transfers_amount_label">Valor (R$)</string>
+    <string name="stay_registration_transfers_description_column_header">Descrição</string>
+
+    <string name="stay_registration_transfers_date_column_value">%1$s/%2$s/%3$s</string>
+    <string name="stay_registration_transfers_amount_column_value">R$ %1$s</string>
+    <string name="stay_registration_transfer_description_empty_text">Sem descrição</string>
+
+    <string name="stay_registration_transfer_delete_dialog_headline">Excluir transferência financeira?</string>
+    <string name="stay_registration_transfer_delete_dialog_supporting_text">Se confirmada a exclusão, esta transferência não estará mais disponível.</string>
+
+    <string name="stay_registration_documents_title">Documentos do aluguel</string>
+    <string name="stay_registration_documents_body_text">Documentos relacionados ao aluguel podem ser, por exemplo, uma cópia do contrato ou recibo de locação elaborado entre as partes do processo.</string>
+
+    <!-- Calendar -->
     <string name="this_month_label">Este mês</string>
     <string name="january_label">JANEIRO</string>
     <string name="february_label">FEVEREIRO</string>
@@ -420,6 +477,7 @@
 
     <string name="date_range_picker_dialog_title">Selecione um período</string>
     <string name="date_picker_dialog_title">Selecione uma data</string>
+    <string name="time_picker_dialog_title">Selecione um horário</string>
 
     <string name="date_picker_dialog_primary_button">OK</string>
     <string name="date_picker_dialog_secondary_button">Cancelar</string>
@@ -489,6 +547,14 @@
     <string name="snackbar_create_assistance_succeeded">Atendimento criado.</string>
     <string name="snackbar_edit_assistance_succeeded">Atendimento editado.</string>
     <string name="snackbar_delete_assistance_succeeded">Atendimento excluído.</string>
+
+    <string name="snackbar_create_stay_succeeded">Estadia criada.</string>
+    <string name="snackbar_edit_stay_succeeded">Estadia editada.</string>
+    <string name="snackbar_delete_stay_succeeded">Estadia excluída.</string>
+
+    <string name="snackbar_create_stay_transfer_succeeded">Transferência criada.</string>
+    <string name="snackbar_edit_stay_transfer_succeeded">Transferência editada.</string>
+    <string name="snackbar_delete_stay_transfer_succeeded">Transferência excluída.</string>
 
     <!-- Snackbar errors -->
     <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>

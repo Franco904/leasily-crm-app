@@ -50,10 +50,11 @@ import kotlinx.collections.immutable.persistentListOf
 fun PropertyCard(
     property: Property,
     modifier: Modifier = Modifier,
-    onEditProperty: () -> Unit = {},
-    onDeleteProperty: () -> Unit = {},
     onCardClick: (() -> Unit)? = null,
     onViewPropertyDetails: () -> Unit = {},
+    onEditProperty: () -> Unit = {},
+    onDeleteProperty: () -> Unit = {},
+    onNewStay: () -> Unit = {},
     hasMoreOptionsMenu: Boolean = true,
     hasCharacteristicsChipsRow: Boolean = true,
     hasViewDetailsButton: Boolean = false,
@@ -122,6 +123,12 @@ fun PropertyCard(
                                         icon = Icons.Outlined.Delete,
                                         text = stringResource(R.string.delete_action_button_text),
                                         onClick = onDeleteProperty,
+                                    ),
+                                    MoreOptionsMenuOption(isHorizontalDivider = true),
+                                    MoreOptionsMenuOption(
+                                        iconDrawable = R.drawable.calendar_add_on,
+                                        text = stringResource(R.string.new_property_stay_action_button_text),
+                                        onClick = onNewStay,
                                     ),
                                 ),
                             )
@@ -233,7 +240,7 @@ fun CharacteristicsChipsRow(
                         )
                     }
 
-                    else -> property.seaProximityType.name
+                    else -> property.seaProximityType.name ?: ""
                 }
             )
             Spacer(modifier = Modifier.width(4.dp))

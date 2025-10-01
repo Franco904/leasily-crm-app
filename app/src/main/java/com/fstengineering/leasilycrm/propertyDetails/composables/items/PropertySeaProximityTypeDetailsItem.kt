@@ -32,7 +32,7 @@ fun PropertySeaProximityTypeDetailsItem(
                 )
             }
 
-            else -> seaProximityType.name
+            else -> seaProximityType.name ?: ""
         },
         isEmptyText = seaProximityType == null,
         modifier = modifier

@@ -9,9 +9,9 @@ enum class RangeSelectionLabel(
     val color: @Composable () -> Color,
 ) {
     None(count = 0, color = { MaterialTheme.colorScheme.surface }),
-    First(count = 1, color = { MaterialTheme.colorScheme.tertiary }),
-    Second(count = 2, color = { MaterialTheme.colorScheme.tertiary }),
-    Third(count = 3, color = { MaterialTheme.colorScheme.tertiary });
+    First(count = 1, color = { MaterialTheme.colorScheme.tertiaryContainer }),
+    Second(count = 2, color = { MaterialTheme.colorScheme.tertiaryContainer }),
+    Third(count = 3, color = { MaterialTheme.colorScheme.tertiaryContainer });
 
     companion object {
         fun fromCount(count: Int) = entries.find { it.count == count } ?: None

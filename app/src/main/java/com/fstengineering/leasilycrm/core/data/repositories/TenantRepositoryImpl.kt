@@ -109,6 +109,28 @@ class TenantRepositoryImpl(
         return AppResult.Success(data = tenants)
     }
 
+    override suspend fun getAllWithoutUpcomingStaysMatching(
+        matching: String?,
+    ): AppResult<ImmutableList<Tenant>, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: return AppResult.Error(
+                        error = DataSourceError.PreferencesError.NotFound,
+                    )
+                }
+            )
+
+        val tenants = dao.getAllWithoutUpcomingStaysMatching(
+            userId = userRemoteId,
+            matching = matching,
+        )
+            .map { tenant -> tenant.toDomain() }.toPersistentList()
+
+        return AppResult.Success(data = tenants)
+    }
+
     override suspend fun getNameById(tenantId: Long): AppResult<String, DataSourceError> {
         val tenantName = dao.getNameById(id = tenantId)
 

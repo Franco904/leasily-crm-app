@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -24,8 +26,38 @@ data class StayTransferEntity(
     @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
     @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     @ColumnInfo(name = "transfer_date") val transferDate: LocalDate,
-    @ColumnInfo(name = "transfer_amount") val transferAmount: String,
-    @ColumnInfo(name = "transfer_description") val transferDescription: String,
+    @ColumnInfo(name = "transfer_amount") val transferAmount: BigDecimal,
+    @ColumnInfo(name = "transfer_description") val transferDescription: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "stay_id") val stayId: Long,
-)
+) {
+    fun toDomain() = StayTransfer(
+        id = id,
+        createDateTime = createDateTime,
+        updateDateTime = updateDateTime,
+        transferDate = transferDate,
+        transferAmount = transferAmount,
+        transferDescription = transferDescription,
+        isDeleted = isDeleted,
+        stayId = stayId,
+    )
+
+    companion object {
+        fun fromDomain(domain: StayTransfer): StayTransferEntity {
+            requireNotNull(domain.transferDate) { "StayTransfer.transferDate is required" }
+            requireNotNull(domain.transferAmount) { "StayTransfer.transferAmount is required" }
+            requireNotNull(domain.stayId) { "StayTransfer.stayId is required" }
+
+            return StayTransferEntity(
+                id = domain.id,
+                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
+                updateDateTime = LocalDateTime.now(),
+                transferDate = domain.transferDate,
+                transferAmount = domain.transferAmount,
+                transferDescription = domain.transferDescription,
+                isDeleted = domain.isDeleted,
+                stayId = domain.stayId,
+            )
+        }
+    }
+}

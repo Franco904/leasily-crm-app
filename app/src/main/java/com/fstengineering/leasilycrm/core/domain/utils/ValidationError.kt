@@ -82,6 +82,38 @@ sealed interface ValidationError : Error {
         LengthIsGreaterThan120Chars,
     }
 
+    enum class StayProperty : ValidationError {
+        IsNull,
+    }
+
+    enum class StayTenant : ValidationError {
+        IsNull,
+    }
+
+    enum class StayPeriod : ValidationError {
+        IsNull,
+    }
+
+    enum class StayCheckInTime : ValidationError {
+        IsNull,
+    }
+
+    enum class StayCheckOutTime : ValidationError {
+        IsNull,
+    }
+
+    enum class StayTotalPrice : ValidationError {
+        IsNull,
+    }
+
+    enum class StayTransferDate : ValidationError {
+        IsNull,
+    }
+
+    enum class StayTransferAmount : ValidationError {
+        IsNull,
+    }
+
     enum class UserName : ValidationError {
         IsBlank,
         LengthIsGreaterThan75Chars,

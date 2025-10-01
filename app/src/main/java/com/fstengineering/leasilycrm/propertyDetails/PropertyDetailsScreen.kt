@@ -34,6 +34,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
 import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.DataSourceError
@@ -53,7 +54,7 @@ fun PropertyDetailsScreen(
     onBack: () -> Unit,
     onSignOut: () -> Unit,
     onEditProperty: () -> Unit,
-    onNewPropertyStay: () -> Unit,
+    onNewStay: (Boolean) -> Unit,
     showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -73,6 +74,7 @@ fun PropertyDetailsScreen(
 
     var mustShowConfirmDeleteDialog by remember { mutableStateOf(false) }
     var mustShowNoAppToShowFileContentDialog by remember { mutableStateOf(false) }
+    var mustShowStayTypeDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.init(propertyId = propertyId)
@@ -109,7 +111,7 @@ fun PropertyDetailsScreen(
                 onBack = onBack,
                 onEditProperty = onEditProperty,
                 onDeleteProperty = { mustShowConfirmDeleteDialog = true },
-                onNewPropertyStay = onNewPropertyStay,
+                onNewStay = { mustShowStayTypeDialog = true },
             )
         },
         modifier = modifier
@@ -204,6 +206,19 @@ fun PropertyDetailsScreen(
             NoAppToShowFileContentDialog(
                 onOpenPlayStore = { context.openPlayStoreApp() },
                 onClose = { mustShowNoAppToShowFileContentDialog = false }
+            )
+        }
+        if (mustShowStayTypeDialog) {
+            StayTypeDialog(
+                onLoggedRealtorStayType = {
+                    mustShowStayTypeDialog = false
+                    onNewStay(false)
+                },
+                onOtherRealtorStayType = {
+                    mustShowStayTypeDialog = false
+                    onNewStay(true)
+                },
+                onCancel = { mustShowStayTypeDialog = false }
             )
         }
     }

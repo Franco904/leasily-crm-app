@@ -28,6 +28,7 @@ import java.time.LocalDateTime
     indices = [
         Index("customer_segment_id"),
         Index("tenant_contact_origin_type_id"),
+        Index("user_id"),
     ],
 )
 data class TenantEntity(

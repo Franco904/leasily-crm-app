@@ -1,0 +1,53 @@
+package com.fstengineering.leasilycrm.stayRegistration.composables.fields
+
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
+import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
+import java.time.LocalDateTime
+
+@Composable
+fun StayDateRangeFormField(
+    checkInDateTime: LocalDateTime?,
+    checkOutDateTime: LocalDateTime?,
+    error: Int?,
+    isEnabled: Boolean,
+    onTap: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FormTextField(
+        label = stringResource(R.string.stay_registration_period_label),
+        value = when {
+            checkInDateTime != null && checkOutDateTime != null -> {
+                stringResource(
+                    R.string.stay_registration_date_range_value,
+                    checkInDateTime.dayOfMonth.formatToTwoDigitsDateTime(),
+                    checkInDateTime.monthValue.formatToTwoDigitsDateTime(),
+                    checkOutDateTime.dayOfMonth.formatToTwoDigitsDateTime(),
+                    checkOutDateTime.monthValue.formatToTwoDigitsDateTime(),
+                )
+            }
+
+            else -> ""
+        },
+        isInvalid = error != null,
+        isEnabled = isEnabled,
+        suffix = {
+            Icon(
+                imageVector = Icons.Outlined.DateRange,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        },
+        supportingText = stringResource(error ?: R.string.inline_required),
+        onTap = onTap,
+        isReadOnly = true,
+        modifier = modifier
+    )
+}

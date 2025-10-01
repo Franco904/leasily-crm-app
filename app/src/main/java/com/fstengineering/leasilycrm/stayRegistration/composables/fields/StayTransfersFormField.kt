@@ -1,0 +1,193 @@
+package com.fstengineering.leasilycrm.stayRegistration.composables.fields
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
+import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
+import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
+import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.composables.StayTransfersEmptySection
+import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
+
+@Composable
+fun StayTransfersFormField(
+    stayNotDeletedTransfers: PersistentList<StayTransfer>,
+    onAddTransfer: () -> Unit,
+    onEditTransfer: (StayTransfer) -> Unit,
+    onDeleteTransfer: (StayTransfer) -> Unit,
+    modifier: Modifier = Modifier,
+    hasMoreOptionsMenu: Boolean = true,
+) {
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(R.string.stay_registration_transfers_title),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .weight(1f)
+            )
+            TextButton(onClick = onAddTransfer) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.add_action_button_text),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(R.string.stay_registration_transfers_body_text),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        AppCard(
+            modifier = modifier
+        ) {
+            if (stayNotDeletedTransfers.isEmpty()) {
+                StayTransfersEmptySection(
+                    modifier = Modifier
+                        .padding(vertical = 64.dp)
+                )
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.stay_registration_transfers_date_column_header),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .weight(3f)
+                        )
+                        Text(
+                            text = stringResource(R.string.stay_registration_transfers_amount_column_header),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .weight(2f)
+                        )
+                        Text(
+                            text = stringResource(R.string.stay_registration_transfers_description_column_header),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .weight(5f)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    HorizontalDivider()
+                    stayNotDeletedTransfers.forEach { transfer ->
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = when {
+                                    transfer.transferDate != null -> {
+                                        stringResource(
+                                            id = R.string.stay_registration_transfers_date_column_value,
+                                            transfer.transferDate.dayOfMonth.formatToTwoDigitsDateTime(),
+                                            transfer.transferDate.monthValue.formatToTwoDigitsDateTime(),
+                                            transfer.transferDate.year.formatToTwoDigitsDateTime(),
+                                        )
+                                    }
+
+                                    else -> ""
+                                },
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                                    .weight(3f)
+                            )
+                            Text(
+                                text = when {
+                                    transfer.transferAmount != null -> {
+                                        stringResource(
+                                            id = R.string.stay_registration_transfers_amount_column_value,
+                                            transfer.transferAmount,
+                                        )
+                                    }
+
+                                    else -> ""
+                                },
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .weight(2f)
+                            )
+                            Text(
+                                text = transfer.transferDescription
+                                    ?: stringResource(R.string.stay_registration_transfer_description_empty_text),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .weight(if (hasMoreOptionsMenu) 4f else 5f)
+                            )
+                            if (hasMoreOptionsMenu) {
+                                Spacer(modifier = Modifier.width(16.dp))
+                                AppMoreOptionsMenu(
+                                    options = persistentListOf(
+                                        MoreOptionsMenuOption(
+                                            icon = Icons.Outlined.Edit,
+                                            text = stringResource(R.string.edit_action_button_text),
+                                            onClick = { onEditTransfer(transfer) },
+                                        ),
+                                        MoreOptionsMenuOption(
+                                            icon = Icons.Outlined.Delete,
+                                            text = stringResource(R.string.delete_action_button_text),
+                                            onClick = { onDeleteTransfer(transfer) },
+                                        ),
+                                    ),
+                                    modifier = Modifier
+                                        .padding(end = 4.dp)
+                                        .weight(1f)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        HorizontalDivider()
+                    }
+                }
+            }
+        }
+    }
+}

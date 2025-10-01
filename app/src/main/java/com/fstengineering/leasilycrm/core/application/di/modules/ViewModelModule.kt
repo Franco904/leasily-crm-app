@@ -23,6 +23,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyReg
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.signin.SignInViewModel
+import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -203,6 +204,19 @@ val viewModelModule = module {
     viewModel {
         AssistanceRegistrationStep3ViewModel(
             assistanceInteractionValidator = get(),
+        )
+    }
+
+    viewModel {
+        StayRegistrationViewModel(
+            stayRepository = get(),
+            propertyRepository = get(),
+            tenantRepository = get(),
+            stayTransferRepository = get(),
+            stayFileRepository = get(),
+            userRepository = get(),
+            stayValidator = get(),
+            stayTransferValidator = get(),
         )
     }
 }

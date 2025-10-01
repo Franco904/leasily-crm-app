@@ -43,6 +43,7 @@ fun TenantsPage(
     isSearchingTenant: Boolean,
     searchInput: String?,
     onRegisterTenant: (Long?) -> Unit,
+    onViewTenantDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
     onDeleteAssistance: (Long) -> Unit,
     onNewStay: (Long) -> Unit,
@@ -169,11 +170,11 @@ fun TenantsPage(
                             contentType = { _, entryType -> entryType },
                         ) { _, tenant ->
                             val unfinishedAssistance = tenant.assistances.find { !it.isFinished }
-                            val unfinishedStay = tenant.stays.find { !it.isFinished }
+                            val unfinishedStay = tenant.stays.find { !it.isCheckOutDone }
 
                             LeadTenantCard(
                                 leadTenant = tenant,
-                                onViewLeadTenantDetails = {},
+                                onCardClick = { onViewTenantDetails(tenant.id!!) },
                                 onEditLeadTenant = { onRegisterTenant(tenant.id) },
                                 onDeleteLeadTenant = { viewModel.onDeleteTenant(tenant = tenant) },
                                 onNewAssistance = { onRegisterAssistance(tenant.id!!, null) },

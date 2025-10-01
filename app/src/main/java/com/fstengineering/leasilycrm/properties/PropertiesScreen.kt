@@ -44,6 +44,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularPr
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.PropertyDeleteSuccess
@@ -58,6 +59,7 @@ fun PropertiesScreen(
     onRegisterProperty: (Long?) -> Unit = { _ -> },
     onViewPropertyDashboard: (Long) -> Unit = { _ -> },
     onViewPropertyDetails: (Long) -> Unit = { _ -> },
+    onNewStay: (Long, Boolean) -> Unit = { _, _ -> },
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
 ) {
@@ -86,6 +88,8 @@ fun PropertiesScreen(
 
         mutableStateOf(status)
     }
+
+    var propertyIdToRegisterStay by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.init()
@@ -208,10 +212,13 @@ fun PropertiesScreen(
                         ) { _, property ->
                             PropertyCard(
                                 property = property,
-                                onEditProperty = { onRegisterProperty(property.id) },
-                                onDeleteProperty = { viewModel.onDeleteProperty(property = property) },
                                 onCardClick = { onViewPropertyDashboard(property.id!!) },
                                 onViewPropertyDetails = { onViewPropertyDetails(property.id!!) },
+                                onEditProperty = { onRegisterProperty(property.id) },
+                                onDeleteProperty = { viewModel.onDeleteProperty(property = property) },
+                                onNewStay = {
+                                    propertyIdToRegisterStay = property.id!!
+                                }
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }
@@ -226,6 +233,19 @@ fun PropertiesScreen(
                 onCancel = {
                     viewModel.onDeleteProperty(property = null)
                 },
+            )
+        }
+        if (propertyIdToRegisterStay != null) {
+            StayTypeDialog(
+                onLoggedRealtorStayType = {
+                    onNewStay(propertyIdToRegisterStay!!, false)
+                    propertyIdToRegisterStay = null
+                },
+                onOtherRealtorStayType = {
+                    onNewStay(propertyIdToRegisterStay!!, true)
+                    propertyIdToRegisterStay = null
+                },
+                onCancel = { propertyIdToRegisterStay = null }
             )
         }
     }

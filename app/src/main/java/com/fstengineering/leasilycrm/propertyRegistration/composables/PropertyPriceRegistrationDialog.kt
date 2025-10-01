@@ -24,6 +24,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
+import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDate
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyPriceAmountFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyPriceDateRangeFormField
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyPriceField
@@ -138,11 +139,11 @@ fun PropertyPriceRegistrationDialog(
                         priceFormStartDate = propertyPriceForm.startDate,
                     )
             ),
-            onDateRangeSelected = { (startDate, endDate) ->
+            onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onPropertyPriceFormChange(
                     propertyPriceForm.copy(
-                        startDate = startDate,
-                        endDate = endDate,
+                        startDate = startDateTimestamp.timestampToLocalDate(),
+                        endDate = endDateTimestamp.timestampToLocalDate(),
                     )
                 )
 

@@ -50,7 +50,7 @@ fun LeadsPage(
     isSearchingLead: Boolean,
     searchInput: String?,
     onRegisterLead: (Long?) -> Unit,
-    onViewLeadTenantDetails: (Long) -> Unit,
+    onViewLeadDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
     onDeleteAssistance: (Long) -> Unit,
     onNewStay: (Long) -> Unit,
@@ -188,11 +188,11 @@ fun LeadsPage(
                             contentType = { _, entryType -> entryType },
                         ) { _, lead ->
                             val unfinishedAssistance = lead.assistances.find { !it.isFinished }
-                            val unfinishedStay = lead.stays.find { !it.isFinished }
+                            val unfinishedStay = lead.stays.find { !it.isCheckOutDone }
 
                             LeadTenantCard(
                                 leadTenant = lead,
-                                onViewLeadTenantDetails = { onViewLeadTenantDetails(lead.id!!) },
+                                onCardClick = { onViewLeadDetails(lead.id!!) },
                                 onEditLeadTenant = { onRegisterLead(lead.id) },
                                 onDeleteLeadTenant = { viewModel.onDeleteLead(lead = lead) },
                                 onNewAssistance = { onRegisterAssistance(lead.id!!, null) },
