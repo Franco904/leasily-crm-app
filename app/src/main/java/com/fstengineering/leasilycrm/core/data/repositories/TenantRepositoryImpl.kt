@@ -131,12 +131,6 @@ class TenantRepositoryImpl(
         return AppResult.Success(data = tenants)
     }
 
-    override suspend fun getNameById(tenantId: Long): AppResult<String, DataSourceError> {
-        val tenantName = dao.getNameById(id = tenantId)
-
-        return AppResult.Success(data = tenantName)
-    }
-
     override suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(

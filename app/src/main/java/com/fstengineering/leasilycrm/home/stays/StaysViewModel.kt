@@ -4,11 +4,11 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteStayUseCase
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
@@ -30,9 +30,10 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class StaysViewModel(
+    private val deleteStayUseCase: DeleteStayUseCase,
+    private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
+    private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
     private val stayRepository: StayRepository,
-    private val assistanceRepository: AssistanceRepository,
-    private val tenantRepository: TenantRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
@@ -165,7 +166,7 @@ class StaysViewModel(
         viewModelScope.launch {
             val stayToDelete = this@StaysViewModel.stayToDelete.value ?: return@launch
 
-            stayRepository.delete(stayToDelete.id!!)
+            deleteStayUseCase(stayToDelete)
                 .onError { error ->
                     if (error.isRedirectError()) {
                         userRepository.deleteCachedUser()
@@ -234,12 +235,7 @@ class StaysViewModel(
         if (stayToRegisterCheckOut == null) return
 
         viewModelScope.launch {
-            val updatedStay = stayToRegisterCheckOut!!.copy(
-                isCheckInDone = true,
-                isCheckOutDone = true,
-            )
-
-            stayRepository.insertOrUpdate(stay = updatedStay)
+            registerStayCheckOutUseCase(stay = stayToRegisterCheckOut!!)
                 .onError { error ->
                     if (error.isRedirectError()) {
                         userRepository.deleteCachedUser()
@@ -247,7 +243,6 @@ class StaysViewModel(
                     }
 
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-
                     return@launch
                 }
                 .onSuccess {
@@ -256,11 +251,6 @@ class StaysViewModel(
                     delay(100.milliseconds)
                     _currentStayFilterType.update { StayFilterType.Finished }
                 }
-
-            updateCurrentAssistanceAndTenant(
-                isAssistanceFinished = true,
-                isTenantOld = true,
-            )
         }
 
         viewModelScope.launch {
@@ -274,7 +264,6 @@ class StaysViewModel(
                     }
 
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-
                     return@launch
                 }
         }
@@ -282,10 +271,7 @@ class StaysViewModel(
 
     fun undoRegisterStayCheckOut() {
         viewModelScope.launch {
-            val stayToRegisterCheckOut = stayToRegisterCheckOut
-                ?.copy(isCheckOutDone = false) ?: return@launch
-
-            stayRepository.insertOrUpdate(stay = stayToRegisterCheckOut)
+            undoRegisterStayCheckOutUseCase(stay = stayToRegisterCheckOut!!)
                 .onError { error ->
                     if (error.isRedirectError()) {
                         userRepository.deleteCachedUser()
@@ -296,49 +282,7 @@ class StaysViewModel(
 
                     return@launch
                 }
-
-            updateCurrentAssistanceAndTenant(
-                isAssistanceFinished = false,
-                isTenantOld = false,
-            )
         }
-    }
-
-    private suspend fun updateCurrentAssistanceAndTenant(
-        isAssistanceFinished: Boolean,
-        isTenantOld: Boolean,
-    ) {
-        val unfinishedAssistance = stayToRegisterCheckOut?.tenant?.assistances
-            ?.firstOrNull { !it.isFinished }
-            ?.copy(isFinished = isAssistanceFinished)
-
-        if (unfinishedAssistance != null) {
-            assistanceRepository.insertOrUpdate(unfinishedAssistance)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return
-                }
-        }
-
-        val updatedTenant = stayToRegisterCheckOut?.tenant
-            ?.copy(status = if (isTenantOld) TenantStatus.Old.code else TenantStatus.UpcomingStay.code)
-            ?: return
-
-        tenantRepository.insertOrUpdate(updatedTenant)
-            .onError { error ->
-                if (error.isRedirectError()) {
-                    userRepository.deleteCachedUser()
-                    _uiEvents.send(UiEvents.RedirectToSignIn)
-                }
-
-                _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                return
-            }
     }
 
     sealed interface UiEvents {

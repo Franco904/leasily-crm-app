@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceCreateSuccess
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceEditSuccess
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.ConvertOldTenantToLead
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceInteractionRegistrationBottomsheet
@@ -62,7 +63,6 @@ fun AssistanceRegistrationStep3Screen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val assistanceForm by parentViewModel.assistanceForm.collectAsStateWithLifecycle()
-    val leadTenantName by parentViewModel.leadTenantName.collectAsStateWithLifecycle()
 
     val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -103,6 +103,10 @@ fun AssistanceRegistrationStep3Screen(
                     is AssistanceEditSuccess -> {
                         onLeaveRegistration()
                         showSnackbar(context.getString(uiEvent.messageId))
+                    }
+
+                    is ConvertOldTenantToLead -> {
+                        showSnackbar(context.getString(R.string.snackbar_convert_old_tenant_to_lead_succeeded))
                     }
                 }
             }
@@ -160,7 +164,7 @@ fun AssistanceRegistrationStep3Screen(
     Scaffold(
         topBar = {
             AssistanceRegistrationTopAppBar(
-                leadTenantName = leadTenantName,
+                leadTenantName = assistanceForm.tenant?.name ?: "",
                 isEditing = parentViewModel.assistanceId != null,
                 onBack = { mustShowConfirmLeaveRegistrationDialog = true },
             )

@@ -33,6 +33,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.CurrentAssistanceDeleteSuccess
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.DataSourceError
@@ -82,7 +83,7 @@ fun HomeScreen(
     var isSearching by remember { mutableStateOf(false) }
     var searchInput by remember { mutableStateOf<String?>(null) }
 
-    var assistanceToDeleteId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var assistanceToDelete by rememberSaveable { mutableStateOf<Assistance?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.init()
@@ -188,7 +189,7 @@ fun HomeScreen(
                         onRegisterLead = onRegisterLeadTenant,
                         onViewLeadDetails = onViewLeadTenantDetails,
                         onRegisterAssistance = onRegisterAssistance,
-                        onDeleteAssistance = { assistanceToDeleteId = it },
+                        onDeleteAssistance = { assistanceToDelete = it },
                         onNewStay = onNewStayWithLeadTenant,
                         onViewStay = onViewStay,
                         onSignOut = onSignOut,
@@ -203,7 +204,7 @@ fun HomeScreen(
                         onRegisterTenant = onRegisterLeadTenant,
                         onViewTenantDetails = onViewLeadTenantDetails,
                         onRegisterAssistance = onRegisterAssistance,
-                        onDeleteAssistance = { assistanceToDeleteId = it },
+                        onDeleteAssistance = { assistanceToDelete = it },
                         onNewStay = onNewStayWithLeadTenant,
                         onViewStay = onViewStay,
                         onSignOut = onSignOut,
@@ -224,14 +225,17 @@ fun HomeScreen(
                 }
             }
         }
-        if (assistanceToDeleteId != null) {
+        if (assistanceToDelete != null) {
             ConfirmDeleteAssistanceDialog(
                 onConfirmDelete = {
-                    viewModel.deleteCurrentAssistance(assistanceId = assistanceToDeleteId!!)
+                    viewModel.deleteCurrentAssistance(
+                        currentAssistance = assistanceToDelete!!,
+                        leadTenant = assistanceToDelete?.tenant!!,
+                    )
 
-                    assistanceToDeleteId = null
+                    assistanceToDelete = null
                 },
-                onCancel = { assistanceToDeleteId = null },
+                onCancel = { assistanceToDelete = null },
             )
         }
     }

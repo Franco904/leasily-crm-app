@@ -41,7 +41,7 @@ data class TenantEntity(
     val phone: String?,
     val email: String?,
     val observations: String?,
-    val status: Int = TenantStatus.Lead.code,
+    val status: Int = TenantStatus.Lead.id,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Long?,
     @ColumnInfo(name = "tenant_contact_origin_type_id") val tenantContactOriginTypeId: Long?,

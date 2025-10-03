@@ -426,7 +426,7 @@ class StayRegistrationViewModel(
 
             if (stayForm.value.tenant != null) {
                 val updatedTenant = stayForm.value.tenant
-                    ?.copy(status = TenantStatus.UpcomingStay.code)
+                    ?.copy(status = TenantStatus.UpcomingStay.id)
                     ?: return@launch
 
                 tenantRepository.insertOrUpdate(updatedTenant)

@@ -125,7 +125,7 @@ fun LeadTenantRegistrationScreen(
         topBar = {
             LeadTenantRegistrationTopAppBar(
                 isEditing = leadTenantId != null,
-                isLead = leadTenantForm.status == TenantStatus.Lead.code,
+                isLead = leadTenantForm.status == TenantStatus.Lead.id,
                 onBack = { mustShowConfirmLeaveRegistrationDialog = true },
                 onSaveLeadTenant = viewModel::saveLeadTenant,
             )

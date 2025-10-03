@@ -50,7 +50,7 @@ val viewModelModule = module {
 
     viewModel {
         HomeViewModel(
-            assistanceRepository = get(),
+            deleteCurrentAssistanceUseCase = get(),
             userRepository = get(),
         )
     }
@@ -161,8 +161,8 @@ val viewModelModule = module {
 
     viewModel {
         LeadTenantDetailsViewModel(
+            deleteCurrentAssistanceUseCase = get(),
             tenantRepository = get(),
-            assistanceRepository = get(),
             assistanceCharacteristicRepository = get(),
             userRepository = get(),
         )
@@ -210,9 +210,10 @@ val viewModelModule = module {
 
     viewModel {
         StaysViewModel(
+            deleteStayUseCase = get(),
+            registerStayCheckOutUseCase = get(),
+            undoRegisterStayCheckOutUseCase = get(),
             stayRepository = get(),
-            assistanceRepository = get(),
-            tenantRepository = get(),
             userRepository = get(),
         )
     }

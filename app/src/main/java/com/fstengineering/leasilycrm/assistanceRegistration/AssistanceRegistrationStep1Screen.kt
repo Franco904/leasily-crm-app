@@ -68,8 +68,6 @@ fun AssistanceRegistrationStep1Screen(
     val assistanceForm by parentViewModel.assistanceForm.collectAsStateWithLifecycle()
     val formErrors by stepViewModel.formErrors.collectAsStateWithLifecycle()
 
-    val leadTenantName by parentViewModel.leadTenantName.collectAsStateWithLifecycle()
-
     val searchedNeighborhoodForm by stepViewModel.searchedNeighborhoodForm.collectAsStateWithLifecycle()
     var searchedNeighborhoodFormBeforeEdit by rememberSaveable {
         mutableStateOf<AssistanceSearchedNeighborhood?>(null)
@@ -167,7 +165,7 @@ fun AssistanceRegistrationStep1Screen(
     Scaffold(
         topBar = {
             AssistanceRegistrationTopAppBar(
-                leadTenantName = leadTenantName,
+                leadTenantName = assistanceForm.tenant?.name ?: "",
                 isEditing = parentViewModel.assistanceId != null,
                 onBack = { mustShowConfirmLeaveRegistrationDialog = true },
             )

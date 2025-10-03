@@ -194,7 +194,7 @@ class LeadTenantRegistrationViewModel(
             _uiEvents.send(
                 if (leadTenantToEdit != null) {
                     UiEvents.LeadTenantEditSuccess(
-                        messageId = if (leadTenant.status == TenantStatus.Lead.code) {
+                        messageId = if (leadTenant.status == TenantStatus.Lead.id) {
                             R.string.snackbar_edit_lead_succeeded
                         } else R.string.snackbar_edit_tenant_succeeded,
                     )

@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByMenuOption
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByTextButton
@@ -53,7 +54,7 @@ fun LeadsPage(
     onRegisterLead: (Long?) -> Unit,
     onViewLeadDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
-    onDeleteAssistance: (Long) -> Unit,
+    onDeleteAssistance: (Assistance) -> Unit,
     onNewStay: (Long) -> Unit,
     onViewStay: (Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -189,9 +190,9 @@ fun LeadsPage(
                             contentType = { _, entryType -> entryType },
                         ) { _, lead ->
                             val unfinishedAssistance =
-                                remember(leads) { lead.assistances.find { !it.isFinished } }
+                                remember(lead) { lead.assistances.find { !it.isFinished } }
                             val unfinishedStay =
-                                remember(leads) { lead.stays.find { !it.isCheckOutDone } }
+                                remember(lead) { lead.stays.find { !it.isCheckOutDone } }
 
                             LeadTenantCard(
                                 leadTenant = lead,
@@ -202,7 +203,9 @@ fun LeadsPage(
                                 onEditAssistance = {
                                     onRegisterAssistance(lead.id!!, unfinishedAssistance?.id!!)
                                 },
-                                onDeleteAssistance = { onDeleteAssistance(unfinishedAssistance?.id!!) },
+                                onDeleteAssistance = {
+                                    onDeleteAssistance(unfinishedAssistance!!.copy(tenant = lead))
+                                },
                                 onViewStay = { onViewStay(unfinishedStay?.id!!) },
                                 onNewStay = { onNewStay(lead.id!!) },
                                 hasUnfinishedAssistance = unfinishedAssistance != null,

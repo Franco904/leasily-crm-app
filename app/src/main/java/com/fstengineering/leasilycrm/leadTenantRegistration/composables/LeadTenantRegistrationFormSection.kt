@@ -147,7 +147,7 @@ fun LeadTenantRegistrationFormSection(
                 onLeadTenantFormChange(leadTenantForm.copy(observations = it))
             },
             onDone = onLastTextFieldDone,
-            isLead = leadTenantForm.status == TenantStatus.Lead.code,
+            isLead = leadTenantForm.status == TenantStatus.Lead.id,
             fieldFocusRequester = observationsFieldFocusRequester,
         )
         Spacer(modifier = Modifier.height(240.dp))

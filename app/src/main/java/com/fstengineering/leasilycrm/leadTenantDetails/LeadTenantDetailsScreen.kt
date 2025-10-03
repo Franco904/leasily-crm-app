@@ -123,7 +123,7 @@ fun LeadTenantDetailsScreen(
     }
     var interactionToView by remember { mutableStateOf<AssistanceInteraction?>(null) }
 
-    val isLead = remember(leadTenant.status) { leadTenant.status == TenantStatus.Lead.code }
+    val isLead = remember(leadTenant.status) { leadTenant.status == TenantStatus.Lead.id }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -414,7 +414,9 @@ fun LeadTenantDetailsScreen(
         if (mustShowConfirmDeleteAssistanceDialog) {
             ConfirmDeleteAssistanceDialog(
                 onConfirmDelete = {
-                    viewModel.deleteCurrentAssistance(assistanceId = currentAssistance?.id!!)
+                    viewModel.deleteCurrentAssistance(
+                        currentAssistance = currentAssistance!!,
+                    )
 
                     mustShowConfirmDeleteAssistanceDialog = false
                 },

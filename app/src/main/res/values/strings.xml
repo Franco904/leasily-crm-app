@@ -607,6 +607,7 @@
     <string name="snackbar_edit_stay_succeeded">Estadia editada.</string>
     <string name="snackbar_delete_stay_succeeded">Estadia excluída.</string>
 
+    <string name="snackbar_convert_old_tenant_to_lead_succeeded">Inquilino movido para \"Leads\".</string>
     <string name="snackbar_register_check_in_stay_succeeded">Estadia movida para \"Em andamento\".</string>
     <string name="snackbar_register_check_out_stay_succeeded">Estadia movida para \"Finalizadas\".</string>
 

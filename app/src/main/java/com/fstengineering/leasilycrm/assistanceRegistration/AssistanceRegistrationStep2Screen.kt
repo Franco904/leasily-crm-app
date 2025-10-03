@@ -49,7 +49,6 @@ fun AssistanceRegistrationStep2Screen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val assistanceForm by parentViewModel.assistanceForm.collectAsStateWithLifecycle()
-    val leadTenantName by parentViewModel.leadTenantName.collectAsStateWithLifecycle()
 
     val isLoadingParent by parentViewModel.isLoading.collectAsStateWithLifecycle()
     val isLoadingStep by stepViewModel.isLoading.collectAsStateWithLifecycle()
@@ -125,7 +124,7 @@ fun AssistanceRegistrationStep2Screen(
     Scaffold(
         topBar = {
             AssistanceRegistrationTopAppBar(
-                leadTenantName = leadTenantName,
+                leadTenantName = assistanceForm.tenant?.name ?: "",
                 isEditing = parentViewModel.assistanceId != null,
                 isAddingSentProperty = isAddingSentProperty,
                 mustShowSearchPropertyAction = isAddingSentProperty
