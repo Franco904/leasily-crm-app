@@ -178,6 +178,7 @@ val repositoryModule = module {
             dao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
             plainPreferencesStorage = get(plainPreferencesQualifier),
+            sharedStorage = get(),
         )
     }
 
