@@ -102,7 +102,7 @@
     <string name="property_registration_bathrooms_body_text">Banheiros</string>
     <string name="property_registration_parking_spots_body_text">Vagas de estacionamento</string>
     <string name="property_registration_air_conditioners_body_text">Ares condicionados</string>
-    <string name="property_registration_max_guests_body_text">Máximo de pessoas</string>
+    <string name="property_registration_max_guests_body_text">Máximo de hóspedes</string>
     <string name="property_registration_sea_proximity_type_title">Proximidade para o mar</string>
     <string name="property_registration_distance_to_sea_label">Distância</string>
     <string name="property_registration_included_items_label">Itens incluídos</string>
@@ -191,10 +191,10 @@
         <item quantity="other">%1$d ares condicionados</item>
     </plurals>
 
-    <string name="property_details_no_max_guests">Sem restrição máxima de pessoas</string>
+    <string name="property_details_no_max_guests">Sem restrição máxima de hóspedes</string>
     <plurals name="property_details_qt_max_guests">
-        <item quantity="one">Máximo de %1$d pessoa</item>
-        <item quantity="other">Máximo de %1$d pessoas</item>
+        <item quantity="one">Máximo de %1$d hóspede</item>
+        <item quantity="other">Máximo de %1$d hóspedes</item>
     </plurals>
 
     <!-- Property owners -->
@@ -225,8 +225,8 @@
     <string name="leads_empty_search_text">Nenhum lead encontrado.</string>
 
     <plurals name="lead_searching_qt_guests_label">
-        <item quantity="one">Procurando para %1$d pessoa</item>
-        <item quantity="other">Procurando para %1$d pessoas</item>
+        <item quantity="one">Procurando para %1$d hóspede</item>
+        <item quantity="other">Procurando para %1$d hóspedes</item>
     </plurals>
 
     <string name="leads_delete_dialog_headline">Excluir lead?</string>
@@ -239,8 +239,8 @@
     <string name="tenants_empty_search_text">Nenhum inquilino encontrado.</string>
 
     <plurals name="tenant_stay_qt_guests_label">
-        <item quantity="one">%1$d pessoa na estadia</item>
-        <item quantity="other">%1$d pessoas na estadia</item>
+        <item quantity="one">%1$d hóspede na estadia</item>
+        <item quantity="other">%1$d hóspedes na estadia</item>
     </plurals>
 
     <string name="tenants_delete_dialog_headline">Excluir inquilino?</string>
@@ -339,7 +339,7 @@
     <string name="assistance_registration_max_accepted_nightly_rate_label">Preço máximo da diária (R$)</string>
 
     <string name="assistance_registration_guests_title">Hóspedes</string>
-    <string name="assistance_registration_guests_helper_text">Quantidade estimada de pessoas que estarão acomodadas no imóvel, contando com o responsável que entrou em contato.</string>
+    <string name="assistance_registration_guests_helper_text">Quantidade estimada de hóspedes que estarão acomodados no imóvel, contando com o responsável que entrou em contato.</string>
     <string name="assistance_registration_adult_guests_title">Adultos</string>
     <string name="assistance_registration_kid_guests_title">Crianças</string>
     <string name="assistance_registration_baby_guests_title">Bebês</string>
