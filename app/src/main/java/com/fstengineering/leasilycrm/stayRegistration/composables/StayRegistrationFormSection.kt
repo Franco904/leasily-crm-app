@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,7 +43,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDat
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckInTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckOutTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCommissionFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayDateRangeFormField
+import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPeriodFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPropertyFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTenantFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTenantVehicleColorFormField
@@ -60,6 +61,7 @@ import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Calendar
 
@@ -75,6 +77,8 @@ fun StayRegistrationFormSection(
     getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<LocalDate>,
     onSelectProperty: () -> Unit,
     onSelectTenant: () -> Unit,
+    onPeriodDisabledByPropertyUnselected: () -> Unit,
+    onPeriodDisabledByCheckInDone: () -> Unit,
     onLastTextFieldDone: () -> Unit,
     onAddTransfer: () -> Unit,
     onEditTransfer: (StayTransfer) -> Unit,
@@ -85,6 +89,7 @@ fun StayRegistrationFormSection(
     scrollToFieldFlow: Flow<StayField>,
     modifier: Modifier = Modifier,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
 
@@ -225,12 +230,30 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Period))
             ) {
-                StayDateRangeFormField(
+                val isEnabled = stayForm.property != null && !stayForm.isCheckInDone
+
+                StayPeriodFormField(
                     checkInDateTime = stayForm.checkInDateTime,
                     checkOutDateTime = stayForm.checkOutDateTime,
                     error = stayFormErrors[StayField.Period],
-                    isEnabled = stayForm.property != null,
-                    onTap = { mustShowStayDateRangePickerDialog = true },
+                    isEnabled = isEnabled,
+                    onTap = {
+                        when {
+                            isEnabled -> mustShowStayDateRangePickerDialog = true
+                            stayForm.property == null -> {
+                                coroutineScope.launch {
+                                    centerVisibleLazyItemByKey(
+                                        lazyListState = lazyListState,
+                                        key = StayField.Property,
+                                        fallbackIndex = StayField.Property.scrollIndex,
+                                    )
+
+                                    onPeriodDisabledByPropertyUnselected()
+                                }
+                            }
+                            stayForm.isCheckInDone -> onPeriodDisabledByCheckInDone()
+                        }
+                    },
                 )
             }
         }

@@ -106,7 +106,7 @@ fun AssistanceRegistrationStep3Screen(
                     }
 
                     is ConvertOldTenantToLead -> {
-                        showSnackbar(context.getString(R.string.snackbar_convert_old_tenant_to_lead_succeeded))
+                        showSnackbar(context.getString(R.string.snackbar_convert_tenant_to_lead_succeeded))
                     }
                 }
             }

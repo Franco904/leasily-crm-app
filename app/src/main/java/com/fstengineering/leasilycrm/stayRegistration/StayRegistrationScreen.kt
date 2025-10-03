@@ -282,6 +282,16 @@ fun StayRegistrationScreen(
                                 onSelectTenant = {
                                     listStatus = StayRegistrationListState.SelectingTenant
                                 },
+                                onPeriodDisabledByPropertyUnselected = {
+                                    showSnackbar(
+                                        context.getString(R.string.snackbar_register_first_select_property_warning)
+                                    )
+                                },
+                                onPeriodDisabledByCheckInDone = {
+                                    showSnackbar(
+                                        context.getString(R.string.snackbar_register_stay_check_in_already_done_warning)
+                                    )
+                                },
                                 onLastTextFieldDone = { focusManager.clearFocus() },
                                 onAddTransfer = {
                                     viewModel.onStayTransferFormChange(form = StayTransfer())

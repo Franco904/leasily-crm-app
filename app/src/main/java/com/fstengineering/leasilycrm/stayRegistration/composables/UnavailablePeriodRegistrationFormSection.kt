@@ -35,7 +35,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
 import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDateTime
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckInTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckOutTimeFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayDateRangeFormField
+import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPeriodFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPropertyFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StaysObservationsFormField
 import com.fstengineering.leasilycrm.stayRegistration.models.StayField
@@ -128,7 +128,7 @@ fun UnavailablePeriodRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Period))
             ) {
-                StayDateRangeFormField(
+                StayPeriodFormField(
                     checkInDateTime = stayForm.checkInDateTime,
                     checkOutDateTime = stayForm.checkOutDateTime,
                     error = stayFormErrors[StayField.Period],

@@ -1,11 +1,13 @@
 package com.fstengineering.leasilycrm.stayRegistration.composables.fields
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
@@ -13,7 +15,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDa
 import java.time.LocalDateTime
 
 @Composable
-fun StayDateRangeFormField(
+fun StayPeriodFormField(
     checkInDateTime: LocalDateTime?,
     checkOutDateTime: LocalDateTime?,
     error: Int?,
@@ -50,6 +52,11 @@ fun StayDateRangeFormField(
         supportingText = stringResource(error ?: R.string.inline_required),
         onTap = onTap,
         isReadOnly = true,
-        modifier = modifier
+        modifier = if (isEnabled) modifier else {
+            modifier
+                .pointerInput(Unit) {
+                    detectTapGestures { onTap() }
+                }
+        }
     )
 }

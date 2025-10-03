@@ -607,13 +607,19 @@
     <string name="snackbar_edit_stay_succeeded">Estadia editada.</string>
     <string name="snackbar_delete_stay_succeeded">Estadia excluída.</string>
 
-    <string name="snackbar_convert_old_tenant_to_lead_succeeded">Inquilino movido para \"Leads\".</string>
+    <string name="snackbar_convert_tenant_to_lead_succeeded">Inquilino movido para \"Leads\".</string>
+    <string name="snackbar_convert_tenant_to_with_upcoming_stay_succeeded">Inquilino movido para \"Estadia agendada\".</string>
+    <string name="snackbar_convert_tenant_to_old_succeeded">Inquilino movido para \"Antigos\".</string>
     <string name="snackbar_register_check_in_stay_succeeded">Estadia movida para \"Em andamento\".</string>
     <string name="snackbar_register_check_out_stay_succeeded">Estadia movida para \"Finalizadas\".</string>
 
     <string name="snackbar_create_stay_transfer_succeeded">Transferência criada.</string>
     <string name="snackbar_edit_stay_transfer_succeeded">Transferência editada.</string>
     <string name="snackbar_delete_stay_transfer_succeeded">Transferência excluída.</string>
+
+    <!-- Snackbar warnings -->
+    <string name="snackbar_register_first_select_property_warning">Selecione o imóvel primeiro.</string>
+    <string name="snackbar_register_stay_check_in_already_done_warning">O check-in desta estadia já foi registrado.</string>
 
     <!-- Snackbar errors -->
     <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>
