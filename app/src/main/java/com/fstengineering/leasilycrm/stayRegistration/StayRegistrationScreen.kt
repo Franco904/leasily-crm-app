@@ -44,11 +44,11 @@ import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.TransferCreateSuccess
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.TransferEditSuccess
 import com.fstengineering.leasilycrm.stayRegistration.composables.ConfirmDeleteStayTransferDialog
-import com.fstengineering.leasilycrm.stayRegistration.composables.LoggedRealtorStayRegistrationFormSection
-import com.fstengineering.leasilycrm.stayRegistration.composables.OtherRealtorStayRegistrationFormSection
 import com.fstengineering.leasilycrm.stayRegistration.composables.StayPropertySelectionList
+import com.fstengineering.leasilycrm.stayRegistration.composables.StayRegistrationFormSection
 import com.fstengineering.leasilycrm.stayRegistration.composables.StayRegistrationTopAppBar
 import com.fstengineering.leasilycrm.stayRegistration.composables.StayTenantSelectionList
+import com.fstengineering.leasilycrm.stayRegistration.composables.UnavailablePeriodRegistrationFormSection
 import com.fstengineering.leasilycrm.stayRegistration.models.StayField
 import com.fstengineering.leasilycrm.stayRegistration.models.StayRegistrationListState
 import kotlinx.collections.immutable.mutate
@@ -187,6 +187,7 @@ fun StayRegistrationScreen(
             StayRegistrationTopAppBar(
                 isEditing = stayId != null,
                 onSaveStay = viewModel::saveStay,
+                isStayFromOtherRealtor = isStayFromOtherRealtor,
                 isSelectingProperty = isSelectingProperty,
                 isSelectingTenant = isSelectingTenant,
                 mustShowSearchAction = when {
@@ -252,7 +253,7 @@ fun StayRegistrationScreen(
                 when (status) {
                     StayRegistrationListState.ShowingMainForm -> {
                         if (isStayFromOtherRealtor) {
-                            OtherRealtorStayRegistrationFormSection(
+                            UnavailablePeriodRegistrationFormSection(
                                 stayForm = stayForm,
                                 onStayFormChange = viewModel::onStayFormChange,
                                 stayFormErrors = stayFormErrors.errors,
@@ -267,7 +268,7 @@ fun StayRegistrationScreen(
                                     .padding(horizontal = 24.dp)
                             )
                         } else {
-                            LoggedRealtorStayRegistrationFormSection(
+                            StayRegistrationFormSection(
                                 stayForm = stayForm,
                                 onStayFormChange = viewModel::onStayFormChange,
                                 stayFormErrors = stayFormErrors.errors,

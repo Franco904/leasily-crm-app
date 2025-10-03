@@ -4,11 +4,13 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
+import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.map
 class StayRepositoryImpl(
     private val dao: StayDao,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
+    private val plainPreferencesStorage: PreferencesStorage<PlainPreferences>,
 ) : StayRepository {
     override suspend fun insertOrUpdate(stay: Stay): AppResult<Long, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
@@ -118,4 +121,35 @@ class StayRepositoryImpl(
 
             emitAll(staysFlow)
         }
+
+    override fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, DataSourceError>> =
+        flow {
+            plainPreferencesStorage.readPreferences()
+                .fold(
+                    onError = { error ->
+                        emit(AppResult.Error(error = error))
+                        return@flow
+                    },
+                    onSuccess = { prefsFlow ->
+                        emitAll(
+                            prefsFlow.map {
+                                AppResult.Success(
+                                    data = it.mustNotShowCheckOutDialogAnymore ?: false
+                                )
+                            }
+                        )
+                    }
+                )
+        }
+
+    override suspend fun setMustNotShowCheckOutDialogAnymore(
+        mustNotShowCheckOutDialogAnymore: Boolean,
+    ): AppResult<Unit, DataSourceError> {
+        plainPreferencesStorage.savePreferences { prefs ->
+            prefs.copy(mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore)
+        }
+            .onError { return AppResult.Error(error = it) }
+
+        return AppResult.Success(data = Unit)
+    }
 }

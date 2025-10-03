@@ -48,7 +48,7 @@ fun TenantsPage(
     onRegisterAssistance: (Long, Long?) -> Unit,
     onDeleteAssistance: (Long) -> Unit,
     onNewStay: (Long) -> Unit,
-    onViewStay: (Long, Long) -> Unit,
+    onViewStay: (Long) -> Unit,
     modifier: Modifier = Modifier,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
@@ -192,7 +192,7 @@ fun TenantsPage(
                                     onRegisterAssistance(tenant.id!!, unfinishedAssistance?.id!!)
                                 },
                                 onDeleteAssistance = { onDeleteAssistance(unfinishedAssistance?.id!!) },
-                                onViewStay = { onViewStay(unfinishedStay?.id!!, tenant.id!!) },
+                                onViewStay = { onViewStay(unfinishedStay?.id!!) },
                                 onNewStay = { onNewStay(tenant.id!!) },
                                 hasUnfinishedAssistance = unfinishedAssistance != null,
                                 hasUnfinishedStay = unfinishedStay != null,

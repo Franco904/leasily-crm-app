@@ -65,7 +65,7 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoggedRealtorStayRegistrationFormSection(
+fun StayRegistrationFormSection(
     stayForm: Stay,
     onStayFormChange: (Stay) -> Unit,
     stayFormErrors: ImmutableMap<StayField, Int?>,

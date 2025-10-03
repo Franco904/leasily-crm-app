@@ -15,9 +15,13 @@ fun StayCheckOutTimeFormField(
     onTap: () -> Unit,
     modifier: Modifier = Modifier,
     hasValidation: Boolean = true,
+    isStayFromOtherRealtor: Boolean = false,
 ) {
     FormTextField(
-        label = stringResource(R.string.stay_registration_check_out_time_label),
+        label = stringResource(
+            if (isStayFromOtherRealtor) R.string.stay_registration_unavailable_period_end_time_label
+            else R.string.stay_registration_check_out_time_label
+        ),
         value = when {
             checkOutHour != null && checkOutMinute != null -> {
                 stringResource(

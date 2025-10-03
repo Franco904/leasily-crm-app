@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.SearchTextField
@@ -34,14 +35,15 @@ fun StayRegistrationTopAppBar(
     isEditing: Boolean,
     onBack: () -> Unit,
     onSaveStay: () -> Unit,
+    isStayFromOtherRealtor: Boolean,
+    isSelectingProperty: Boolean,
+    isSelectingTenant: Boolean,
+    mustShowSearchAction: Boolean,
+    isSearching: Boolean,
+    onSearch: () -> Unit,
+    searchInput: String?,
+    onSearchInputChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    isSelectingProperty: Boolean = false,
-    isSelectingTenant: Boolean = false,
-    mustShowSearchAction: Boolean = false,
-    isSearching: Boolean = false,
-    onSearch: () -> Unit = {},
-    searchInput: String? = null,
-    onSearchInputChange: (String) -> Unit = {},
 ) {
     val searchFieldFocusRequester = remember { FocusRequester() }
 
@@ -115,12 +117,23 @@ fun StayRegistrationTopAppBar(
                     Text(
                         text = stringResource(
                             when {
-                                isEditing -> R.string.stay_registration_top_app_bar_title_edit
-                                else -> R.string.stay_registration_top_app_bar_title_create
+                                isEditing -> {
+                                    if (isStayFromOtherRealtor) R.string.stay_registration_unavailable_period_top_app_bar_title_edit
+                                    else R.string.stay_registration_top_app_bar_title_edit
+                                }
+
+                                else -> {
+                                    if (isStayFromOtherRealtor) R.string.stay_registration_unavailable_period_top_app_bar_title_create
+                                    else R.string.stay_registration_top_app_bar_title_create
+                                }
                             },
                         ),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .padding(end = 8.dp)
                     )
                 }
             }

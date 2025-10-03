@@ -1,188 +1,355 @@
-//package com.fstengineering.leasilycrm.home.stays
-//
-//import androidx.annotation.StringRes
-//import androidx.lifecycle.ViewModel
-//import androidx.lifecycle.viewModelScope
-//import com.fstengineering.leasilycrm.core.domain.models.Tenant
-//import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-//import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
-//import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-//import com.fstengineering.leasilycrm.core.domain.utils.fold
-//import com.fstengineering.leasilycrm.core.domain.utils.onError
-//import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-//import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrderType
-//import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
-//import com.fstengineering.leasilycrm.home.tenants.models.TenantFilterType
-//import kotlinx.collections.immutable.ImmutableList
-//import kotlinx.collections.immutable.persistentListOf
-//import kotlinx.coroutines.ExperimentalCoroutinesApi
-//import kotlinx.coroutines.FlowPreview
-//import kotlinx.coroutines.channels.Channel
-//import kotlinx.coroutines.flow.MutableStateFlow
-//import kotlinx.coroutines.flow.asStateFlow
-//import kotlinx.coroutines.flow.combine
-//import kotlinx.coroutines.flow.debounce
-//import kotlinx.coroutines.flow.flatMapLatest
-//import kotlinx.coroutines.flow.receiveAsFlow
-//import kotlinx.coroutines.flow.update
-//import kotlinx.coroutines.launch
-//import kotlin.time.Duration.Companion.milliseconds
-//
-//class StaysViewModel(
-//    private val stayRepository: StayRepository,
-//    private val userRepository: UserRepository,
-//) : ViewModel() {
-//    private var isInitialized = false
-//
-//    private val _uiEvents = Channel<UiEvents>()
-//    val uiEvents = _uiEvents.receiveAsFlow()
-//
-//    private val _tenants = MutableStateFlow<ImmutableList<Tenant>>(persistentListOf())
-//    val tenants = _tenants.asStateFlow()
-//
-//    private val _tenantToDelete = MutableStateFlow<Tenant?>(null)
-//    val tenantToDelete = _tenantToDelete.asStateFlow()
-//
-//    private val _searchInput = MutableStateFlow<String?>(null)
-//
-//    private val _orderType = MutableStateFlow(LeadTenantOrderType.Name)
-//    val orderType = _orderType.asStateFlow()
-//
-//    private val _currentTenantFilterType =
-//        MutableStateFlow<TenantFilterType?>(TenantFilterType.UpcomingStay)
-//    val currentTenantFilterType = _currentTenantFilterType.asStateFlow()
-//
-//    var tenantFilterTypeBeforeSearch = TenantFilterType.UpcomingStay
-//        private set
-//
-//    private val _isLoading = MutableStateFlow(false)
-//    val isLoading = _isLoading.asStateFlow()
-//
-//    fun init() {
-//        if (isInitialized) return
-//
-//        watchSessionExpiration()
-//
-//        getPreferredTenantsOrderTypeId()
-//        watchTenants()
-//
-//        isInitialized = true
-//    }
-//
-//    private fun watchSessionExpiration() {
-//        viewModelScope.launch {
-//            userRepository.watchSessionExpiration().collect { result ->
-//                result
-//                    .onError { error ->
-//                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-//                    }
-//                    .onSuccess { hasSessionExpired ->
-//                        if (hasSessionExpired) {
-//                            userRepository.deleteCachedUser()
-//                            _uiEvents.send(UiEvents.RedirectToSignIn)
-//                        }
-//                    }
-//            }
-//        }
-//    }
-//
-//    private fun getPreferredTenantsOrderTypeId() {
-//        viewModelScope.launch {
-//            val orderTypeId = tenantRepository.getPreferredTenantsOrderTypeId()
-//                .fold(
-//                    onError = { error ->
-//                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-//                        return@launch
-//                    },
-//                    onSuccess = { orderTypeId -> orderTypeId },
-//                )
-//
-//            _orderType.update { LeadTenantOrderType.fromId(orderTypeId) }
-//        }
-//    }
-//
-//    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-//    private fun watchTenants() {
-//        val searchInputDebounced = _searchInput
-//            .debounce(500.milliseconds)
-//
-//        viewModelScope.launch {
-//            orderType
-//                .combine(currentTenantFilterType) { order, filter -> order to filter }
-//                .combine(searchInputDebounced) { (order, filter), searchInput ->
-//                    Triple(order, filter, searchInput)
-//                }
-//                .flatMapLatest { (order, filter, searchInput) ->
-//                    _isLoading.update { true }
-//
-//                    tenantRepository.watchTenantsMatching(
-//                        orderTypeId = order.id,
-//                        tenantFilterType = filter?.id,
-//                        matching = searchInput,
-//                    )
-//                }
-//                .collect { result ->
-//                    result
-//                        .onError { error ->
-//                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-//                        }
-//                        .onSuccess { tenants ->
-//                            _tenants.update { tenants }
-//                        }
-//
-//                    _isLoading.update { false }
-//                }
-//        }
-//    }
-//
-//    fun onTenantFilterTypeChange(tenantFilterType: TenantFilterType?) {
-//        _currentTenantFilterType.update { tenantFilterType }
-//
-//        if (tenantFilterType != null) tenantFilterTypeBeforeSearch = tenantFilterType
-//    }
-//
-//    fun onOrderTypeChange(orderType: LeadTenantOrderType) {
-//        _orderType.update { orderType }
-//
-//        viewModelScope.launch {
-//            tenantRepository.updatePreferredLeadsOrderTypeId(orderType.id)
-//        }
-//    }
-//
-//    fun onSearchInputChange(searchInput: String?) {
-//        _searchInput.update { searchInput?.ifEmpty { null } }
-//    }
-//
-//    fun onDeleteTenant(tenant: Tenant?) {
-//        _tenantToDelete.update { tenant }
-//    }
-//
-//    fun deleteTenant() {
-//        viewModelScope.launch {
-//            val tenantToDelete = this@StaysViewModel.tenantToDelete.value ?: return@launch
-//
-//            tenantRepository.delete(tenantToDelete.id!!)
-//                .onError { error ->
-//                    if (error.isRedirectError()) {
-//                        userRepository.deleteCachedUser()
-//                        _uiEvents.send(UiEvents.RedirectToSignIn)
-//                    }
-//
-//                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-//
-//                    return@launch
-//                }
-//
-//            _uiEvents.send(UiEvents.LeadDeleteSuccess)
-//            onDeleteTenant(tenant = null)
-//        }
-//    }
-//
-//    sealed interface UiEvents {
-//        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-//
-//        data object RedirectToSignIn : UiEvents
-//
-//        data object LeadDeleteSuccess : UiEvents
-//    }
-//}
+package com.fstengineering.leasilycrm.home.stays
+
+import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
+import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import com.fstengineering.leasilycrm.home.stays.models.StayFilterType
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
+
+class StaysViewModel(
+    private val stayRepository: StayRepository,
+    private val assistanceRepository: AssistanceRepository,
+    private val tenantRepository: TenantRepository,
+    private val userRepository: UserRepository,
+) : ViewModel() {
+    private var isInitialized = false
+
+    private val _uiEvents = Channel<UiEvents>()
+    val uiEvents = _uiEvents.receiveAsFlow()
+
+    private val _stays = MutableStateFlow<ImmutableList<Stay>>(persistentListOf())
+    val stays = _stays.asStateFlow()
+
+    private val _stayToDelete = MutableStateFlow<Stay?>(null)
+    val stayToDelete = _stayToDelete.asStateFlow()
+
+    private var stayToRegisterCheckIn: Stay? = null
+    private var stayToRegisterCheckOut: Stay? = null
+
+    var mustNotShowCheckOutDialog: Boolean = true
+        private set
+
+    private val _currentStayFilterType = MutableStateFlow(StayFilterType.UpcomingCheckIn)
+    val currentStayFilterType = _currentStayFilterType.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    fun init() {
+        if (isInitialized) return
+
+        watchSessionExpiration()
+        watchMustNotShowCheckOutDialogAnymore()
+
+        watchStays()
+
+        isInitialized = true
+    }
+
+    private fun watchSessionExpiration() {
+        viewModelScope.launch {
+            userRepository.watchSessionExpiration().collect { result ->
+                result
+                    .onError { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+                    .onSuccess { hasSessionExpired ->
+                        if (hasSessionExpired) {
+                            userRepository.deleteCachedUser()
+                            _uiEvents.send(UiEvents.RedirectToSignIn)
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun watchMustNotShowCheckOutDialogAnymore() {
+        viewModelScope.launch {
+            stayRepository.watchMustNotShowCheckOutDialogAnymore().collect { result ->
+                result
+                    .onError { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+                    .onSuccess { mustNotShowCheckOutDialogAnymore ->
+                        mustNotShowCheckOutDialog = mustNotShowCheckOutDialogAnymore
+                    }
+            }
+        }
+    }
+
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    private fun watchStays() {
+        viewModelScope.launch {
+            currentStayFilterType
+                .flatMapLatest { newFilter ->
+                    _isLoading.update { true }
+
+                    stayRepository.watchAll()
+                        .map { it to newFilter }
+                }
+                .collect { (result, newFilter) ->
+                    result
+                        .onError { error ->
+                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                        }
+                        .onSuccess { stays ->
+                            _stays.update { stays.filterAndSortStays(filterType = newFilter) }
+                        }
+
+                    _isLoading.update { false }
+                }
+        }
+    }
+
+    private fun ImmutableList<Stay>.filterAndSortStays(
+        filterType: StayFilterType,
+    ): ImmutableList<Stay> {
+        val filteredStays = filter { stay ->
+            if (stay.isDeleted) return@filter false
+
+            when (filterType) {
+                StayFilterType.UpcomingCheckIn -> !stay.isCheckInDone && !stay.isCheckOutDone && !stay.isFromOtherRealtor
+                StayFilterType.UpcomingCheckOut -> stay.isCheckInDone && !stay.isCheckOutDone && !stay.isFromOtherRealtor
+                StayFilterType.Finished -> stay.isCheckInDone && stay.isCheckOutDone && !stay.isFromOtherRealtor
+                StayFilterType.UnavailablePeriod -> stay.isFromOtherRealtor
+                StayFilterType.All -> true
+            }
+        }
+
+        val sortedStays = when (filterType) {
+            StayFilterType.Finished, StayFilterType.All -> {
+                filteredStays.sortedBy { stay -> stay.isCheckInDone }
+            }
+
+            else -> {
+                filteredStays
+                    .sortedByDescending { stay -> stay.isCheckInDone }
+            }
+        }
+
+        return sortedStays.toPersistentList()
+    }
+
+    fun onStayFilterTypeChange(stayFilterType: StayFilterType) {
+        _currentStayFilterType.update { stayFilterType }
+    }
+
+    fun onDeleteStay(stay: Stay?) {
+        _stayToDelete.update { stay }
+    }
+
+    fun deleteStay() {
+        viewModelScope.launch {
+            val stayToDelete = this@StaysViewModel.stayToDelete.value ?: return@launch
+
+            stayRepository.delete(stayToDelete.id!!)
+                .onError { error ->
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
+
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+
+                    return@launch
+                }
+
+            _uiEvents.send(UiEvents.StayDeleteSuccess)
+            onDeleteStay(stay = null)
+        }
+    }
+
+    fun registerStayCheckIn(stay: Stay) {
+        viewModelScope.launch {
+            stayToRegisterCheckIn = stay.copy(isCheckInDone = true)
+
+            stayRepository.insertOrUpdate(stay = stayToRegisterCheckIn!!)
+                .onError { error ->
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
+
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+
+                    return@launch
+                }
+                .onSuccess {
+                    _uiEvents.send(UiEvents.RegisterCheckInSuccess)
+
+                    delay(100.milliseconds)
+                    _currentStayFilterType.update { StayFilterType.UpcomingCheckOut }
+                }
+        }
+    }
+
+    fun undoRegisterStayCheckIn() {
+        viewModelScope.launch {
+            stayToRegisterCheckIn = stayToRegisterCheckIn?.copy(isCheckInDone = false)
+
+            stayRepository.insertOrUpdate(stay = stayToRegisterCheckIn!!)
+                .onError { error ->
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
+
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+
+                    return@launch
+                }
+        }
+    }
+
+    fun onRegisterStayCheckOut(stay: Stay) {
+        stayToRegisterCheckOut = stay
+    }
+
+    fun registerStayCheckOut(
+        mustNotShowCheckOutDialogAnymore: Boolean = true,
+    ) {
+        if (stayToRegisterCheckOut == null) return
+
+        viewModelScope.launch {
+            val updatedStay = stayToRegisterCheckOut!!.copy(
+                isCheckInDone = true,
+                isCheckOutDone = true,
+            )
+
+            stayRepository.insertOrUpdate(stay = updatedStay)
+                .onError { error ->
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
+
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+
+                    return@launch
+                }
+                .onSuccess {
+                    _uiEvents.send(UiEvents.RegisterCheckOutSuccess)
+
+                    delay(100.milliseconds)
+                    _currentStayFilterType.update { StayFilterType.Finished }
+                }
+
+            updateCurrentAssistanceAndTenant(
+                isAssistanceFinished = true,
+                isTenantOld = true,
+            )
+        }
+
+        viewModelScope.launch {
+            stayRepository.setMustNotShowCheckOutDialogAnymore(
+                mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore,
+            )
+                .onError { error ->
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
+
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+
+                    return@launch
+                }
+        }
+    }
+
+    fun undoRegisterStayCheckOut() {
+        viewModelScope.launch {
+            val stayToRegisterCheckOut = stayToRegisterCheckOut
+                ?.copy(isCheckOutDone = false) ?: return@launch
+
+            stayRepository.insertOrUpdate(stay = stayToRegisterCheckOut)
+                .onError { error ->
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
+
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+
+                    return@launch
+                }
+
+            updateCurrentAssistanceAndTenant(
+                isAssistanceFinished = false,
+                isTenantOld = false,
+            )
+        }
+    }
+
+    private suspend fun updateCurrentAssistanceAndTenant(
+        isAssistanceFinished: Boolean,
+        isTenantOld: Boolean,
+    ) {
+        val unfinishedAssistance = stayToRegisterCheckOut?.tenant?.assistances
+            ?.firstOrNull { !it.isFinished }
+            ?.copy(isFinished = isAssistanceFinished)
+
+        if (unfinishedAssistance != null) {
+            assistanceRepository.insertOrUpdate(unfinishedAssistance)
+                .onError { error ->
+                    if (error.isRedirectError()) {
+                        userRepository.deleteCachedUser()
+                        _uiEvents.send(UiEvents.RedirectToSignIn)
+                    }
+
+                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    return
+                }
+        }
+
+        val updatedTenant = stayToRegisterCheckOut?.tenant
+            ?.copy(status = if (isTenantOld) TenantStatus.Old.code else TenantStatus.UpcomingStay.code)
+            ?: return
+
+        tenantRepository.insertOrUpdate(updatedTenant)
+            .onError { error ->
+                if (error.isRedirectError()) {
+                    userRepository.deleteCachedUser()
+                    _uiEvents.send(UiEvents.RedirectToSignIn)
+                }
+
+                _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                return
+            }
+    }
+
+    sealed interface UiEvents {
+        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+
+        data object RedirectToSignIn : UiEvents
+
+        data object StayDeleteSuccess : UiEvents
+
+        data object RegisterCheckInSuccess : UiEvents
+
+        data object RegisterCheckOutSuccess : UiEvents
+    }
+}

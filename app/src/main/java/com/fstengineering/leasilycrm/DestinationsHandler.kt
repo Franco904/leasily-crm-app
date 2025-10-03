@@ -36,6 +36,7 @@ object DestinationsHandler {
         onSignInSuccess: () -> Unit,
         onSignOut: () -> Unit,
         showSnackbar: (String) -> Unit,
+        showActionSnackbar: (String, String, () -> Unit) -> Unit,
     ) {
         composable<Destinations.Root> {
             RootScreen(
@@ -107,9 +108,9 @@ object DestinationsHandler {
 
                     navController.navigate(destination)
                 },
-                onNewStayBlank = { isStayFromOtherRealtor ->
+                onRegisterStayBlank = { stayId, isStayFromOtherRealtor ->
                     val destination = Destinations.StayRegistration(
-                        stayId = null,
+                        stayId = stayId,
                         propertyId = null,
                         leadTenantId = null,
                         isStayFromOtherRealtor = isStayFromOtherRealtor,
@@ -117,12 +118,13 @@ object DestinationsHandler {
 
                     navController.navigate(destination)
                 },
-                onViewStay = { stayId, leadTenantId -> },
+                onViewStay = { stayId -> },
                 onSignOut = {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
                 showSnackbar = { message -> showSnackbar(message) },
+                showActionSnackbar = showActionSnackbar,
             )
         }
 

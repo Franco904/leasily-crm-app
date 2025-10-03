@@ -58,10 +58,11 @@ fun HomeScreen(
     onViewLeadTenantDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
     onNewStayWithLeadTenant: (Long) -> Unit,
-    onNewStayBlank: (Boolean) -> Unit,
-    onViewStay: (Long, Long) -> Unit,
+    onRegisterStayBlank: (Long?, Boolean) -> Unit,
+    onViewStay: (Long) -> Unit,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
+    showActionSnackbar: (String, String, () -> Unit) -> Unit = { _, _, _ -> },
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current!!
@@ -155,7 +156,7 @@ fun HomeScreen(
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                         }
                     },
-                    upcomingStaysCount = 2, // TODO: Get real value from view model when implementing Stays use cases
+                    upcomingStaysCount = 0, // TODO: Get real value from view model when implementing Stays use cases
                 )
             }
         },
@@ -211,7 +212,14 @@ fun HomeScreen(
                 }
                 composable<Destinations.Home.Stays> {
                     StaysScreen(
-                        onNewStayBlank = onNewStayBlank,
+                        viewModel = koinViewModel(),
+                        onRegisterStayBlank = { stayId, isStayFromOtherRealtor ->
+                            onRegisterStayBlank(stayId, isStayFromOtherRealtor)
+                        },
+                        onViewStayDetails = { stayId -> onViewStay(stayId) },
+                        onSignOut = onSignOut,
+                        showSnackbar = showSnackbar,
+                        showActionSnackbar = showActionSnackbar,
                     )
                 }
             }
