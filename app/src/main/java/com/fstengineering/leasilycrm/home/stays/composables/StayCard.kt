@@ -172,7 +172,10 @@ fun StayCard(
                 CheckInCheckOutChipLabel(
                     isCheckIn = true,
                     isStayFromOtherRealtor = stay.isFromOtherRealtor,
-                    isActive = !stay.isCheckInDone,
+                    isActive = when {
+                        stay.isFromOtherRealtor -> now < checkInDateTimeStartOfDay
+                        else -> !stay.isCheckInDone
+                    },
                     modifier = Modifier
                         .width(if (stay.isFromOtherRealtor) checkInChipWidthDp else checkOutChipWidthDp)
                         .onSizeChanged { size ->
@@ -202,7 +205,13 @@ fun StayCard(
                 CheckInCheckOutChipLabel(
                     isCheckIn = false,
                     isStayFromOtherRealtor = stay.isFromOtherRealtor,
-                    isActive = stay.isCheckInDone && !stay.isCheckOutDone,
+                    isActive = when {
+                        stay.isFromOtherRealtor -> {
+                            now > checkInDateTimeStartOfDay && now < checkOutDateTimeStartOfDay
+                        }
+
+                        else -> stay.isCheckInDone && !stay.isCheckOutDone
+                    },
                     modifier = Modifier
                         .width(if (stay.isFromOtherRealtor) checkInChipWidthDp else checkOutChipWidthDp)
                         .onSizeChanged { size ->
