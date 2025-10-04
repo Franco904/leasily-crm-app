@@ -10,13 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +31,8 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
@@ -39,7 +41,11 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberHorizontalCenterScroller
+import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
+import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
+import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
+import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.StayDeleteSuccess
@@ -50,6 +56,7 @@ import com.fstengineering.leasilycrm.home.stays.models.StayFilterType
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @Composable
 fun StaysScreen(
@@ -76,6 +83,9 @@ fun StaysScreen(
                 .toPersistentMap(),
         )
     }
+
+    val currentMonth = remember { LocalDate.now().monthValue }
+    val currentYear = remember { LocalDate.now().year }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -202,29 +212,58 @@ fun StaysScreen(
                         ) {
                             item { Spacer(modifier = Modifier.height(16.dp)) }
                             itemsIndexed(
-                                items = stays,
-                                key = { _, stay -> stay.id!! },
+                                items = stays.groupBy { stay ->
+                                    CalendarMonthYear(
+                                        id = stay.checkInDateTime!!.monthValue + stay.checkInDateTime.year,
+                                        month = stay.checkInDateTime.monthValue,
+                                        year = stay.checkInDateTime.year,
+                                    )
+                                },
+                                key = { i, (monthYear, _) -> monthYear.id },
                                 contentType = { _, entryType -> entryType },
-                            ) { _, stay ->
-                                StayCard(
-                                    stay = stay,
-                                    onCardClick = { onViewStayDetails(stay.id!!) },
-                                    onEditStay = {
-                                        onRegisterStayBlank(stay.id!!, stay.isFromOtherRealtor)
-                                    },
-                                    onDeleteStay = { viewModel.onDeleteStay(stay) },
-                                    onRegisterCheckIn = { viewModel.registerStayCheckIn(stay) },
-                                    onRegisterCheckOut = {
-                                        viewModel.onRegisterStayCheckOut(stay)
+                            ) { i, (monthYear, stays) ->
+                                val monthLabel = when {
+                                    monthYear.month == currentMonth -> stringResource(R.string.this_month_label)
+                                    else -> context
+                                        .getMonthLabelByNumber(monthYear.month)
+                                        .capitalizeFirst()
+                                }
 
-                                        if (viewModel.mustNotShowCheckOutDialog) {
-                                            viewModel.registerStayCheckOut()
-                                        } else {
-                                            mustShowConfirmRegisterStayCheckOutDialog = true
-                                        }
-                                    },
+                                val isCurrentYear = monthYear.year == currentYear
+
+                                if (i > 0) Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = "$monthLabel ${if (!isCurrentYear) monthYear.year else ""}",
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                                    color = MaterialTheme.colorScheme.onSurface,
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Column {
+                                    stays.forEach { stay ->
+                                        StayCard(
+                                            stay = stay,
+                                            onCardClick = { onViewStayDetails(stay.id!!) },
+                                            onEditStay = {
+                                                onRegisterStayBlank(
+                                                    stay.id!!,
+                                                    stay.isFromOtherRealtor,
+                                                )
+                                            },
+                                            onDeleteStay = { viewModel.onDeleteStay(stay) },
+                                            onRegisterCheckIn = { viewModel.registerStayCheckIn(stay) },
+                                            onRegisterCheckOut = {
+                                                viewModel.onRegisterStayCheckOut(stay)
+
+                                                if (viewModel.mustNotShowCheckOutDialog) {
+                                                    viewModel.registerStayCheckOut()
+                                                } else {
+                                                    mustShowConfirmRegisterStayCheckOutDialog = true
+                                                }
+                                            },
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                    }
+                                }
                             }
                             item { Spacer(modifier = Modifier.height(72.dp)) }
                         }

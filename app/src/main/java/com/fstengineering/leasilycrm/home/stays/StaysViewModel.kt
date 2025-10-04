@@ -141,14 +141,8 @@ class StaysViewModel(
         }
 
         val sortedStays = when (filterType) {
-            StayFilterType.Finished, StayFilterType.All -> {
-                filteredStays.sortedBy { stay -> stay.isCheckInDone }
-            }
-
-            else -> {
-                filteredStays
-                    .sortedByDescending { stay -> stay.isCheckInDone }
-            }
+            StayFilterType.Finished, StayFilterType.All -> filteredStays.sortedByDescending { it.checkInDateTime }
+            else -> filteredStays.sortedBy { it.checkInDateTime }
         }
 
         return sortedStays.toPersistentList()
