@@ -89,6 +89,6 @@ sealed interface Destinations {
         val stayId: Long?,
         val propertyId: Long?,
         val leadTenantId: Long?,
-        val isStayFromOtherRealtor: Boolean,
+        val isUnavailablePeriod: Boolean,
     )
 }

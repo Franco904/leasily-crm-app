@@ -9,7 +9,7 @@ data class Stay(
     val id: Long? = null,
     val createDateTime: LocalDateTime? = null,
     val updateDateTime: LocalDateTime? = null,
-    val isFromOtherRealtor: Boolean = false,
+    val isUnavailablePeriod: Boolean = false,
     val qtGuests: Int? = 1,
     val checkInDateTime: LocalDateTime? = null,
     val checkInHourMinute: Pair<Int?, Int?> = null to null,

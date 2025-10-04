@@ -29,7 +29,7 @@ class StayValidatorImpl : StayValidator {
         )
             .onError { e -> errors.add(e) }
 
-        if (!stay.isFromOtherRealtor) {
+        if (!stay.isUnavailablePeriod) {
             validateTenant(tenant = stay.tenant)
                 .onError { e -> errors.add(e) }
 

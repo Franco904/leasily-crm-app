@@ -227,8 +227,8 @@ fun HomeScreen(
                 composable<Destinations.Home.Stays> {
                     StaysScreen(
                         viewModel = koinViewModel(),
-                        onRegisterStayBlank = { stayId, isStayFromOtherRealtor ->
-                            onRegisterStayBlank(stayId, isStayFromOtherRealtor)
+                        onRegisterStayBlank = { stayId, isUnavailablePeriod ->
+                            onRegisterStayBlank(stayId, isUnavailablePeriod)
                         },
                         onViewStayDetails = { stayId -> onViewStay(stayId) },
                         onSignOut = onSignOut,

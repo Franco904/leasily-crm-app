@@ -59,7 +59,7 @@ data class StayEntity(
         id = id,
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
-        isFromOtherRealtor = isFromOtherRealtor,
+        isUnavailablePeriod = isFromOtherRealtor,
         qtGuests = qtGuests,
         totalPrice = totalPrice,
         checkInDateTime = checkInDateTime,
@@ -101,7 +101,7 @@ data class StayEntity(
                 .withHour(checkOutHour ?: 23)
                 .withMinute(checkOutMinute ?: 59)
 
-            if (domain.isFromOtherRealtor) {
+            if (domain.isUnavailablePeriod) {
                 return StayEntity(
                     id = domain.id,
                     createDateTime = domain.createDateTime ?: LocalDateTime.now(),

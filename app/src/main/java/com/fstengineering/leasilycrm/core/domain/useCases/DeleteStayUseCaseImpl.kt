@@ -25,7 +25,7 @@ class DeleteStayUseCaseImpl(
             else -> TenantStatus.Lead
         }
 
-        if (leadTenant != null && !stay.isFromOtherRealtor) {
+        if (leadTenant != null && !stay.isUnavailablePeriod) {
             val updatedLeadTenant = leadTenant.copy(status = newStatus.id)
 
             tenantRepository.insertOrUpdate(updatedLeadTenant)

@@ -246,7 +246,7 @@ fun StaysScreen(
                                             onEditStay = {
                                                 onRegisterStayBlank(
                                                     stay.id!!,
-                                                    stay.isFromOtherRealtor,
+                                                    stay.isUnavailablePeriod,
                                                 )
                                             },
                                             onDeleteStay = { viewModel.onDeleteStay(stay) },
@@ -279,11 +279,11 @@ fun StaysScreen(
         }
         if (mustShowStayTypeDialog) {
             StayTypeDialog(
-                onLoggedRealtorStayType = {
+                onTenantStayType = {
                     onRegisterStayBlank(null, false)
                     mustShowStayTypeDialog = false
                 },
-                onOtherRealtorStayType = {
+                onUnavailablePeriodStayType = {
                     onRegisterStayBlank(null, true)
                     mustShowStayTypeDialog = false
                 },

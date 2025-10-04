@@ -407,11 +407,11 @@
     <string name="stay_check_in_date_text">%1$s/%2$s/%3$s • %4$sh%5$s %6$s</string>
     <string name="stay_check_out_date_text">%1$s/%2$s/%3$s • %4$sh%5$s %6$s</string>
 
-    <string name="stay_type_logged_realtor_title">Estadia de cliente</string>
-    <string name="stay_type_logged_realtor_description">Registre uma estadia para um de seus leads</string>
+    <string name="stay_type_stay_title">Estadia de cliente</string>
+    <string name="stay_type_stay_description">Registre uma estadia para um de seus leads</string>
 
-    <string name="stay_type_other_realtor_title">Período indisponível</string>
-    <string name="stay_type_other_realtor_description">Registre a indisponibilidade de um imóvel por motivos externos</string>
+    <string name="stay_type_unavailable_period_title">Período indisponível</string>
+    <string name="stay_type_unavailable_period_description">Registre a indisponibilidade de um imóvel por motivos externos</string>
 
     <string name="stay_delete_dialog_headline">Excluir estadia?</string>
     <string name="stay_delete_dialog_supporting_text">Se confirmada a exclusão, esta estadia não estará mais disponível.</string>

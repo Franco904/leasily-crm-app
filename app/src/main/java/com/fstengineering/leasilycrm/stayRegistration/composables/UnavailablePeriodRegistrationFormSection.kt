@@ -151,9 +151,8 @@ fun UnavailablePeriodRegistrationFormSection(
                     StayCheckInTimeFormField(
                         checkInHour = stayForm.checkInHourMinute.first,
                         checkInMinute = stayForm.checkInHourMinute.second,
-                        isStayFromOtherRealtor = true,
+                        isUnavailablePeriod = true,
                         error = stayFormErrors[StayField.CheckInTime],
-                        hasValidation = false,
                         onTap = { mustShowStayCheckInTimePickerDialog = true },
                     )
                 }
@@ -166,9 +165,8 @@ fun UnavailablePeriodRegistrationFormSection(
                     StayCheckOutTimeFormField(
                         checkOutHour = stayForm.checkOutHourMinute.first,
                         checkOutMinute = stayForm.checkOutHourMinute.second,
-                        isStayFromOtherRealtor = true,
+                        isUnavailablePeriod = true,
                         error = stayFormErrors[StayField.CheckOutTime],
-                        hasValidation = false,
                         onTap = { mustShowStayCheckOutTimePickerDialog = true },
                     )
                 }
@@ -181,7 +179,7 @@ fun UnavailablePeriodRegistrationFormSection(
             StaysObservationsFormField(
                 value = stayForm.observations,
                 onValueChange = { onStayFormChange(stayForm.copy(observations = it)) },
-                isStayFromOtherRealtor = true,
+                isUnavailablePeriod = true,
                 onDone = onLastTextFieldDone,
             )
         }

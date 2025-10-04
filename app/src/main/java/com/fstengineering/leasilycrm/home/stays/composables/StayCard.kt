@@ -77,9 +77,9 @@ fun StayCard(
         ?.withMinute(0)
 
     val canRegisterCheckIn =
-        !stay.isCheckInDone && now > checkInDateTimeStartOfDay && !stay.isFromOtherRealtor
+        !stay.isCheckInDone && now > checkInDateTimeStartOfDay && !stay.isUnavailablePeriod
     val canRegisterCheckOut =
-        !stay.isCheckOutDone && now > checkOutDateTimeStartOfDay && !stay.isFromOtherRealtor
+        !stay.isCheckOutDone && now > checkOutDateTimeStartOfDay && !stay.isUnavailablePeriod
 
     var checkInChipWidthDp by remember { mutableStateOf(Dp.Unspecified) }
     var checkOutChipWidthDp by remember { mutableStateOf(Dp.Unspecified) }
@@ -103,7 +103,7 @@ fun StayCard(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    if (stay.isFromOtherRealtor) {
+                    if (stay.isUnavailablePeriod) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -114,7 +114,7 @@ fun StayCard(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = stringResource(R.string.stay_type_other_realtor_title),
+                                text = stringResource(R.string.stay_type_unavailable_period_title),
                                 style = MaterialTheme.typography.titleMedium.copy(fontStyle = FontStyle.Italic),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -171,13 +171,13 @@ fun StayCard(
             ) {
                 CheckInCheckOutChipLabel(
                     isCheckIn = true,
-                    isStayFromOtherRealtor = stay.isFromOtherRealtor,
+                    isUnavailablePeriod = stay.isUnavailablePeriod,
                     isActive = when {
-                        stay.isFromOtherRealtor -> now < checkInDateTimeStartOfDay
+                        stay.isUnavailablePeriod -> now < checkInDateTimeStartOfDay
                         else -> !stay.isCheckInDone
                     },
                     modifier = Modifier
-                        .width(if (stay.isFromOtherRealtor) checkInChipWidthDp else checkOutChipWidthDp)
+                        .width(if (stay.isUnavailablePeriod) checkInChipWidthDp else checkOutChipWidthDp)
                         .onSizeChanged { size ->
                             checkInChipWidthDp = with(density) { size.width.toDp() }
                         }
@@ -204,16 +204,16 @@ fun StayCard(
             ) {
                 CheckInCheckOutChipLabel(
                     isCheckIn = false,
-                    isStayFromOtherRealtor = stay.isFromOtherRealtor,
+                    isUnavailablePeriod = stay.isUnavailablePeriod,
                     isActive = when {
-                        stay.isFromOtherRealtor -> {
+                        stay.isUnavailablePeriod -> {
                             now > checkInDateTimeStartOfDay && now < checkOutDateTimeStartOfDay
                         }
 
                         else -> stay.isCheckInDone && !stay.isCheckOutDone
                     },
                     modifier = Modifier
-                        .width(if (stay.isFromOtherRealtor) checkInChipWidthDp else checkOutChipWidthDp)
+                        .width(if (stay.isUnavailablePeriod) checkInChipWidthDp else checkOutChipWidthDp)
                         .onSizeChanged { size ->
                             checkOutChipWidthDp = with(density) { size.width.toDp() }
                         }
@@ -255,7 +255,7 @@ fun StayCard(
 @Composable
 fun CheckInCheckOutChipLabel(
     isCheckIn: Boolean,
-    isStayFromOtherRealtor: Boolean,
+    isUnavailablePeriod: Boolean,
     isActive: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -273,12 +273,12 @@ fun CheckInCheckOutChipLabel(
             text = stringResource(
                 when {
                     isCheckIn -> {
-                        if (isStayFromOtherRealtor) R.string.stay_card_start_chip_label_text
+                        if (isUnavailablePeriod) R.string.stay_card_start_chip_label_text
                         else R.string.stay_card_check_in_chip_label_text
                     }
 
                     else -> {
-                        if (isStayFromOtherRealtor) R.string.stay_card_end_chip_label_text
+                        if (isUnavailablePeriod) R.string.stay_card_end_chip_label_text
                         else R.string.stay_card_check_out_chip_label_text
                     }
                 }

@@ -124,17 +124,17 @@ object DestinationsHandler {
                         stayId = null,
                         propertyId = null,
                         leadTenantId = leadTenantId,
-                        isStayFromOtherRealtor = false,
+                        isUnavailablePeriod = false,
                     )
 
                     navController.navigate(destination)
                 },
-                onRegisterStayBlank = { stayId, isStayFromOtherRealtor ->
+                onRegisterStayBlank = { stayId, isUnavailablePeriod ->
                     val destination = Destinations.StayRegistration(
                         stayId = stayId,
                         propertyId = null,
                         leadTenantId = null,
-                        isStayFromOtherRealtor = isStayFromOtherRealtor,
+                        isUnavailablePeriod = isUnavailablePeriod,
                     )
 
                     navController.navigate(destination)
@@ -187,12 +187,12 @@ object DestinationsHandler {
                 onViewPropertyDetails = { propertyId ->
                     navController.navigate(Destinations.PropertyDetails(propertyId))
                 },
-                onNewStay = { propertyId, isStayFromOtherRealtor ->
+                onNewStay = { propertyId, isUnavailablePeriod ->
                     val destination = Destinations.StayRegistration(
                         stayId = null,
                         propertyId = propertyId,
                         leadTenantId = null,
-                        isStayFromOtherRealtor = isStayFromOtherRealtor,
+                        isUnavailablePeriod = isUnavailablePeriod,
                     )
 
                     navController.navigate(destination)
@@ -330,12 +330,12 @@ object DestinationsHandler {
                     navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
                 },
                 onViewNextStays = {},
-                onNewStay = { isStayFromOtherRealtor ->
+                onNewStay = { isUnavailablePeriod ->
                     val destination = Destinations.StayRegistration(
                         stayId = null,
                         propertyId = args.propertyId,
                         leadTenantId = null,
-                        isStayFromOtherRealtor = isStayFromOtherRealtor,
+                        isUnavailablePeriod = isUnavailablePeriod,
                     )
 
                     navController.navigate(destination)
@@ -360,12 +360,12 @@ object DestinationsHandler {
                         Destinations.PropertyRegistration(args.propertyId),
                     )
                 },
-                onNewStay = { isStayFromOtherRealtor ->
+                onNewStay = { isUnavailablePeriod ->
                     val destination = Destinations.StayRegistration(
                         stayId = null,
                         propertyId = args.propertyId,
                         leadTenantId = null,
-                        isStayFromOtherRealtor = isStayFromOtherRealtor,
+                        isUnavailablePeriod = isUnavailablePeriod,
                     )
 
                     navController.navigate(destination)
@@ -463,7 +463,7 @@ object DestinationsHandler {
                         stayId = null,
                         propertyId = null,
                         leadTenantId = args.leadTenantId,
-                        isStayFromOtherRealtor = false,
+                        isUnavailablePeriod = false,
                     )
 
                     navController.navigate(destination)
@@ -569,7 +569,7 @@ object DestinationsHandler {
                 stayId = args.stayId,
                 propertyId = args.propertyId,
                 tenantId = args.leadTenantId,
-                isStayFromOtherRealtor = args.isStayFromOtherRealtor,
+                isUnavailablePeriod = args.isUnavailablePeriod,
                 viewModel = koinViewModel(),
                 onBack = { success ->
                     previousBackStackEntry
