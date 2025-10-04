@@ -253,9 +253,11 @@ class StayRegistrationViewModel(
     ): ImmutableSet<LocalDate> {
         val isEditing = stayToEdit != null
 
-        return propertyStays
+        val propertyAlreadySelectedDatesForStay = propertyStays
             .asSequence()
             .filter {
+                if (it.isDeleted) return@filter false
+
                 val isSelectedDate =
                     it.checkInDateTime?.dayOfMonth == stayForm.value.checkInDateTime?.dayOfMonth &&
                             it.checkInDateTime?.monthValue == stayForm.value.checkInDateTime?.monthValue &&
@@ -274,6 +276,8 @@ class StayRegistrationViewModel(
                     .map { it.toLocalDate() }
             }
             .toPersistentSet()
+
+        return propertyAlreadySelectedDatesForStay
     }
 
     fun onStayTransferFormChange(form: StayTransfer?) {

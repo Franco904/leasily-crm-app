@@ -85,8 +85,7 @@ fun getSelectableDates(
                 if (forceBelow) date <= initialDate
                 else date >= initialDate
 
-            return minMaxCondition
-//                    && date !in alreadySelectedDates
+            return minMaxCondition && date !in alreadySelectedDates
         }
 
         override fun isSelectableYear(year: Int): Boolean {

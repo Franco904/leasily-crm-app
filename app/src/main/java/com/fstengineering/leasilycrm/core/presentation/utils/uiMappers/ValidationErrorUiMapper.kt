@@ -112,6 +112,10 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
+    ValidationError.StayPeriod.IsOverlappingOtherPropertyStayPeriod -> {
+        R.string.inline_period_is_overlapping_other_property_stay_period
+    }
+
     ValidationError.StayCheckInTime.IsNull -> {
         R.string.inline_required
     }

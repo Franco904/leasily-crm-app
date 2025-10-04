@@ -92,6 +92,7 @@ sealed interface ValidationError : Error {
 
     enum class StayPeriod : ValidationError {
         IsNull,
+        IsOverlappingOtherPropertyStayPeriod,
     }
 
     enum class StayCheckInTime : ValidationError {
