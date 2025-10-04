@@ -14,8 +14,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.EditCalendar
+import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -139,12 +139,12 @@ fun StayCard(
                 AppMoreOptionsMenu(
                     options = persistentListOf(
                         MoreOptionsMenuOption(
-                            icon = Icons.Outlined.Edit,
+                            icon = Icons.Outlined.EditCalendar,
                             text = stringResource(R.string.edit_action_button_text),
                             onClick = onEditStay,
                         ),
                         MoreOptionsMenuOption(
-                            icon = Icons.Outlined.Delete,
+                            icon = Icons.Outlined.EventBusy,
                             text = stringResource(R.string.delete_action_button_text),
                             onClick = onDeleteStay,
                         ),
