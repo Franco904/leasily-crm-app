@@ -50,20 +50,21 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    modifier: Modifier = Modifier,
-    onProfileSelect: () -> Unit = {},
-    onPropertiesSelect: () -> Unit = {},
-    onPropertyOwnersSelect: () -> Unit = {},
-    onCustomerSegmentsSelect: () -> Unit = {},
+    isStayRegistrationSuccess: Boolean,
+    onProfileSelect: () -> Unit,
+    onPropertiesSelect: () -> Unit,
+    onPropertyOwnersSelect: () -> Unit,
+    onCustomerSegmentsSelect: () -> Unit,
     onRegisterLeadTenant: (Long?) -> Unit,
     onViewLeadTenantDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
     onNewStayWithLeadTenant: (Long) -> Unit,
     onRegisterStayBlank: (Long?, Boolean) -> Unit,
     onViewStay: (Long) -> Unit,
-    onSignOut: () -> Unit = {},
-    showSnackbar: (String) -> Unit = { _ -> },
-    showActionSnackbar: (String, String, () -> Unit) -> Unit = { _, _, _ -> },
+    onSignOut: () -> Unit,
+    showSnackbar: (String) -> Unit,
+    showActionSnackbar: (String, String, () -> Unit) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current!!
@@ -101,6 +102,18 @@ fun HomeScreen(
                 is CurrentAssistanceDeleteSuccess -> {
                     showSnackbar(context.getString(R.string.snackbar_delete_assistance_succeeded))
                 }
+            }
+        }
+    }
+
+    LaunchedEffect(isStayRegistrationSuccess) {
+        if (isStayRegistrationSuccess) {
+            currentBottomNavDestination = BottomNavBarDestination.Stays
+
+            navController.navigate(BottomNavBarDestination.Stays.navDestination) {
+                launchSingleTop = true
+                restoreState = true
+                popUpTo(navController.graph.startDestinationId) { saveState = true }
             }
         }
     }

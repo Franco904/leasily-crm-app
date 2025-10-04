@@ -64,7 +64,7 @@ fun StayRegistrationScreen(
     tenantId: Long?,
     isStayFromOtherRealtor: Boolean,
     viewModel: StayRegistrationViewModel,
-    onBack: () -> Unit,
+    onBack: (success: Boolean) -> Unit,
     onSignOut: () -> Unit,
     showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -135,13 +135,13 @@ fun StayRegistrationScreen(
                 }
 
                 is StayCreateSuccess -> {
-                    onBack()
+                    onBack(true)
 
                     showSnackbar(context.getString(R.string.snackbar_create_stay_succeeded))
                 }
 
                 is StayEditSuccess -> {
-                    onBack()
+                    onBack(true)
 
                     showSnackbar(context.getString(uiEvent.messageId))
                 }
@@ -392,7 +392,7 @@ fun StayRegistrationScreen(
                     onConfirmLeave = {
                         mustShowConfirmLeaveRegistrationDialog = false
 
-                        onBack()
+                        onBack(false)
                     },
                     onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
                 )

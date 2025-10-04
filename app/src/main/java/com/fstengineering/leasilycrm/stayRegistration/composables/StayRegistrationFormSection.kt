@@ -251,6 +251,7 @@ fun StayRegistrationFormSection(
                                     onPeriodDisabledByPropertyUnselected()
                                 }
                             }
+
                             stayForm.isCheckInDone -> onPeriodDisabledByCheckInDone()
                         }
                     },

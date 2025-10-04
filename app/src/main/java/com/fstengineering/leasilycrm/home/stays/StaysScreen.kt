@@ -22,10 +22,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -35,6 +38,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularPr
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.rememberHorizontalCenterScroller
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.RedirectToSignIn
@@ -42,6 +46,10 @@ import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.StayDele
 import com.fstengineering.leasilycrm.home.stays.composables.StayCard
 import com.fstengineering.leasilycrm.home.stays.composables.StayFilterButtonGroup
 import com.fstengineering.leasilycrm.home.stays.composables.StaysEmptySection
+import com.fstengineering.leasilycrm.home.stays.models.StayFilterType
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.toPersistentMap
+import kotlinx.coroutines.launch
 
 @Composable
 fun StaysScreen(
@@ -55,8 +63,19 @@ fun StaysScreen(
 ) {
     val context = LocalContext.current
 
+    val coroutineScope = rememberCoroutineScope()
     val horizontalScrollState = rememberScrollState()
+    val centerHorizontalScrollState = rememberHorizontalCenterScroller(horizontalScrollState)
     val lazyListState = rememberLazyListState()
+
+    var scrollContainerCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var buttonsCoords by remember {
+        mutableStateOf<PersistentMap<StayFilterType, LayoutCoordinates?>>(
+            StayFilterType.entries
+                .associateWith { null }
+                .toPersistentMap(),
+        )
+    }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -112,6 +131,18 @@ fun StaysScreen(
         }
     }
 
+    LaunchedEffect(currentStayFilterType, buttonsCoords) {
+        val currentStayFilterTypeButtonCoords =
+            buttonsCoords[currentStayFilterType] ?: return@LaunchedEffect
+
+        coroutineScope.launch {
+            centerHorizontalScrollState(
+                scrollContainerCoords,
+                currentStayFilterTypeButtonCoords,
+            )
+        }
+    }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -135,9 +166,11 @@ fun StaysScreen(
             StayFilterButtonGroup(
                 selectedFilterType = currentStayFilterType,
                 onFilterTypeSelect = viewModel::onStayFilterTypeChange,
+                buttonsCoords = buttonsCoords,
+                onButtonGroupCoords = { coords -> buttonsCoords = coords },
                 modifier = Modifier
                     .horizontalScroll(horizontalScrollState)
-                    .padding(horizontal = 16.dp)
+                    .onGloballyPositioned { coords -> scrollContainerCoords = coords }
             )
             AnimatedContent(
                 targetState = listStatus,
@@ -208,12 +241,12 @@ fun StaysScreen(
         if (mustShowStayTypeDialog) {
             StayTypeDialog(
                 onLoggedRealtorStayType = {
-                    mustShowStayTypeDialog = false
                     onRegisterStayBlank(null, false)
+                    mustShowStayTypeDialog = false
                 },
                 onOtherRealtorStayType = {
-                    mustShowStayTypeDialog = false
                     onRegisterStayBlank(null, true)
+                    mustShowStayTypeDialog = false
                 },
                 onCancel = { mustShowStayTypeDialog = false }
             )

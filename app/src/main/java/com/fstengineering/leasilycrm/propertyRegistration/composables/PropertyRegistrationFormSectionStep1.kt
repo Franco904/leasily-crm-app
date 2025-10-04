@@ -34,7 +34,7 @@ import com.fstengineering.leasilycrm.core.domain.constants.APARTMENT_PROPERTY_TY
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
-import com.fstengineering.leasilycrm.core.presentation.composables.rememberCenterScroller
+import com.fstengineering.leasilycrm.core.presentation.composables.rememberVerticalCenterScroller
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.NeighborhoodFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.AddressLine2FormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.CepPostalCodeFormField
@@ -70,7 +70,7 @@ fun PropertyRegistrationFormSectionStep1(
     val outlineColor = MaterialTheme.colorScheme.outline
 
     val scrollState = rememberScrollState()
-    val centerScrollState = rememberCenterScroller(scrollState)
+    val centerScrollState = rememberVerticalCenterScroller(scrollState)
 
     var scrollContainerCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var fieldsCoords by remember {

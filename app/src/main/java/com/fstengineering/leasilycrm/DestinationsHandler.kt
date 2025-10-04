@@ -1,6 +1,10 @@
 package com.fstengineering.leasilycrm
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -31,6 +35,8 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
 object DestinationsHandler {
+    private const val STAY_REGISTRATION_SUCCESS_KEY = "stay_registration_success"
+
     fun NavGraphBuilder.destinations(
         navController: NavController,
         onSignInSuccess: () -> Unit,
@@ -71,8 +77,23 @@ object DestinationsHandler {
         }
 
         composable<Destinations.Home> {
+            val savedStateHandle = navController.currentBackStackEntry
+                ?.savedStateHandle
+
+            var isStayRegistrationSuccess by remember { mutableStateOf(false) }
+
+            LaunchedEffect(Unit) {
+                savedStateHandle
+                    ?.getLiveData<Boolean>(STAY_REGISTRATION_SUCCESS_KEY)
+                    ?.observeForever { success ->
+                        isStayRegistrationSuccess = success
+                        savedStateHandle.remove<String>(STAY_REGISTRATION_SUCCESS_KEY)
+                    }
+            }
+
             HomeScreen(
                 viewModel = koinViewModel(),
+                isStayRegistrationSuccess = isStayRegistrationSuccess,
                 onProfileSelect = {
                     navController.navigateAndPopAllTo(Destinations.Profile)
                 },
@@ -542,6 +563,7 @@ object DestinationsHandler {
 
         composable<Destinations.StayRegistration> { backStackEntry ->
             val args = backStackEntry.toRoute<Destinations.StayRegistration>()
+            val previousBackStackEntry = navController.previousBackStackEntry
 
             StayRegistrationScreen(
                 stayId = args.stayId,
@@ -549,7 +571,13 @@ object DestinationsHandler {
                 tenantId = args.leadTenantId,
                 isStayFromOtherRealtor = args.isStayFromOtherRealtor,
                 viewModel = koinViewModel(),
-                onBack = { navController.navigateUp() },
+                onBack = { success ->
+                    previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(STAY_REGISTRATION_SUCCESS_KEY, success)
+
+                    navController.navigateUp()
+                },
                 onSignOut = {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
