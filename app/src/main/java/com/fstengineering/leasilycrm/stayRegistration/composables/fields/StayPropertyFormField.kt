@@ -1,18 +1,14 @@
 package com.fstengineering.leasilycrm.stayRegistration.composables.fields
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,12 +17,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppOutlinedButton
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 
 @Composable
 fun StayPropertyFormField(
     stayProperty: Property?,
     onSelectStayProperty: () -> Unit,
+    isEnabled: Boolean,
     error: Int?,
     modifier: Modifier = Modifier,
 ) {
@@ -43,29 +41,20 @@ fun StayPropertyFormField(
                 modifier = Modifier
                     .weight(1f)
             )
-            OutlinedButton(
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            AppOutlinedButton(
+                icon = when {
+                    stayProperty == null -> Icons.Outlined.Search
+                    else -> Icons.Outlined.Edit
+                },
+                label = stringResource(
+                    when {
+                        stayProperty == null -> R.string.select_action_button_text
+                        else -> R.string.edit_action_button_text
+                    }
+                ),
+                isEnabled = isEnabled,
                 onClick = onSelectStayProperty,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Search,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier
-                        .size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(
-                        when {
-                            stayProperty == null -> R.string.select_action_button_text
-                            else -> R.string.edit_action_button_text
-                        }
-                    ),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+            )
         }
         AnimatedVisibility(stayProperty != null) {
             Column {

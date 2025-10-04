@@ -1,13 +1,11 @@
 package com.fstengineering.leasilycrm.stayRegistration.composables.fields
 
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
@@ -52,11 +50,6 @@ fun StayPeriodFormField(
         supportingText = stringResource(error ?: R.string.inline_required),
         onTap = onTap,
         isReadOnly = true,
-        modifier = if (isEnabled) modifier else {
-            modifier
-                .pointerInput(Unit) {
-                    detectTapGestures { onTap() }
-                }
-        }
+        modifier = modifier
     )
 }

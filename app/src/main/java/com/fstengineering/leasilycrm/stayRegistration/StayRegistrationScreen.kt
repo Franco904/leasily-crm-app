@@ -276,11 +276,23 @@ fun StayRegistrationScreen(
                                 transferForm = transferForm,
                                 onTransferFormChange = viewModel::onStayTransferFormChange,
                                 transferFormErrors = transferFormErrors.errors,
-                                onSelectProperty = {
-                                    listStatus = StayRegistrationListState.SelectingProperty
+                                onSelectProperty = { isEnabled ->
+                                    if (isEnabled) {
+                                        listStatus = StayRegistrationListState.SelectingProperty
+                                    } else {
+                                        showSnackbar(
+                                            context.getString(R.string.snackbar_register_stay_check_in_already_done_warning)
+                                        )
+                                    }
                                 },
-                                onSelectTenant = {
-                                    listStatus = StayRegistrationListState.SelectingTenant
+                                onSelectTenant = { isEnabled ->
+                                    if (isEnabled) {
+                                        listStatus = StayRegistrationListState.SelectingTenant
+                                    } else {
+                                        showSnackbar(
+                                            context.getString(R.string.snackbar_register_stay_check_in_already_done_warning)
+                                        )
+                                    }
                                 },
                                 onPeriodDisabledByPropertyUnselected = {
                                     showSnackbar(
@@ -329,7 +341,13 @@ fun StayRegistrationScreen(
                             StayPropertySelectionList(
                                 properties = properties,
                                 onPropertySelect = { property ->
-                                    viewModel.onStayFormChange(stayForm.copy(property = property))
+                                    viewModel.onStayFormChange(
+                                        stayForm.copy(
+                                            property = property,
+                                            checkInDateTime = null,
+                                            checkOutDateTime = null,
+                                        )
+                                    )
 
                                     listStatus = StayRegistrationListState.ShowingMainForm
                                     isSearching = false

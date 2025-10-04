@@ -108,6 +108,7 @@ fun UnavailablePeriodRegistrationFormSection(
                 StayPropertyFormField(
                     stayProperty = stayForm.property,
                     onSelectStayProperty = onSelectProperty,
+                    isEnabled = true,
                     error = stayFormErrors[StayField.Property],
                 )
             }

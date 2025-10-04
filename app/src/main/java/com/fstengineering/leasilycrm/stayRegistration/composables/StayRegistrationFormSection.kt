@@ -75,8 +75,8 @@ fun StayRegistrationFormSection(
     onTransferFormChange: (StayTransfer) -> Unit,
     transferFormErrors: ImmutableMap<StayTransferField, Int?>,
     getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<LocalDate>,
-    onSelectProperty: () -> Unit,
-    onSelectTenant: () -> Unit,
+    onSelectProperty: (isEnabled: Boolean) -> Unit,
+    onSelectTenant: (isEnabled: Boolean) -> Unit,
     onPeriodDisabledByPropertyUnselected: () -> Unit,
     onPeriodDisabledByCheckInDone: () -> Unit,
     onLastTextFieldDone: () -> Unit,
@@ -152,9 +152,12 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Property))
             ) {
+                val isEnabled = !stayForm.isCheckInDone
+
                 StayPropertyFormField(
                     stayProperty = stayForm.property,
-                    onSelectStayProperty = onSelectProperty,
+                    onSelectStayProperty = { onSelectProperty(isEnabled) },
+                    isEnabled = isEnabled,
                     error = stayFormErrors[StayField.Property],
                 )
             }
@@ -167,9 +170,12 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Tenant))
             ) {
+                val isEnabled = !stayForm.isCheckInDone
+
                 StayTenantFormField(
                     stayTenant = stayForm.tenant,
-                    onSelectStayTenant = onSelectTenant,
+                    onSelectStayTenant = { onSelectTenant(isEnabled) },
+                    isEnabled = isEnabled,
                     error = stayFormErrors[StayField.Tenant],
                 )
             }
