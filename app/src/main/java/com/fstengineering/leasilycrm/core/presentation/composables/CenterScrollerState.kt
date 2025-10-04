@@ -8,9 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.positionInWindow
+import kotlin.math.roundToInt
 
 @Composable
-fun rememberCenterScroller(
+fun rememberVerticalCenterScroller(
     scrollState: ScrollState,
 ): suspend (LayoutCoordinates?, LayoutCoordinates?) -> Unit {
     return remember(scrollState) {
@@ -25,6 +26,31 @@ fun rememberCenterScroller(
                 val delta = (targetTop - scrollContainerTop) - (scrollContainerH - targetH) / 2f
 
                 scrollState.animateScrollBy(delta)
+            }
+        }
+    }
+}
+
+@Composable
+fun rememberHorizontalCenterScroller(
+    scrollState: ScrollState,
+): suspend (LayoutCoordinates?, LayoutCoordinates?) -> Unit {
+    return remember(scrollState) {
+        { scrollContainer, target ->
+            if (scrollContainer != null && target != null) {
+                val viewportW = scrollState.viewportSize
+
+                val scrollContainerLeft = scrollContainer.positionInWindow().x
+                val targetLeft = target.positionInWindow().x - scrollContainerLeft
+                val targetW = target.size.width.toFloat()
+
+                val targetCenterX = targetLeft + (targetW / 2)
+
+                val desiredScrollX = (targetCenterX - (viewportW / 2))
+                    .coerceIn(0f, scrollState.maxValue.toFloat())
+                    .roundToInt()
+
+                scrollState.animateScrollTo(desiredScrollX)
             }
         }
     }

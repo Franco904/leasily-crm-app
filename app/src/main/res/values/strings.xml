@@ -102,7 +102,7 @@
     <string name="property_registration_bathrooms_body_text">Banheiros</string>
     <string name="property_registration_parking_spots_body_text">Vagas de estacionamento</string>
     <string name="property_registration_air_conditioners_body_text">Ares condicionados</string>
-    <string name="property_registration_max_guests_body_text">Máximo de pessoas</string>
+    <string name="property_registration_max_guests_body_text">Máximo de hóspedes</string>
     <string name="property_registration_sea_proximity_type_title">Proximidade para o mar</string>
     <string name="property_registration_distance_to_sea_label">Distância</string>
     <string name="property_registration_included_items_label">Itens incluídos</string>
@@ -191,10 +191,10 @@
         <item quantity="other">%1$d ares condicionados</item>
     </plurals>
 
-    <string name="property_details_no_max_guests">Sem restrição máxima de pessoas</string>
+    <string name="property_details_no_max_guests">Sem restrição máxima de hóspedes</string>
     <plurals name="property_details_qt_max_guests">
-        <item quantity="one">Máximo de %1$d pessoa</item>
-        <item quantity="other">Máximo de %1$d pessoas</item>
+        <item quantity="one">Máximo de %1$d hóspede</item>
+        <item quantity="other">Máximo de %1$d hóspedes</item>
     </plurals>
 
     <!-- Property owners -->
@@ -221,15 +221,27 @@
     <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
 
     <!-- Leads -->
-    <string name="leads_empty_text">Nenhum lead.</string>
+    <string name="leads_empty_text">Nenhum lead registrado.</string>
     <string name="leads_empty_search_text">Nenhum lead encontrado.</string>
+
+    <plurals name="lead_searching_qt_guests_label">
+        <item quantity="one">Procurando para %1$d hóspede</item>
+        <item quantity="other">Procurando para %1$d hóspedes</item>
+    </plurals>
 
     <string name="leads_delete_dialog_headline">Excluir lead?</string>
     <string name="leads_delete_dialog_supporting_text">Se confirmada a exclusão, este lead, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>
 
     <!-- Tenants -->
-    <string name="tenants_empty_text">Nenhum inquilino.</string>
+    <string name="tenants_upcoming_stay_empty_text">Nenhum inquilino com estadia agendada.</string>
+    <string name="tenants_old_empty_text">Nenhum inquilino antigo.</string>
+    <string name="tenants_generic_empty_text">Nenhum inquilino registrado.</string>
     <string name="tenants_empty_search_text">Nenhum inquilino encontrado.</string>
+
+    <plurals name="tenant_stay_qt_guests_label">
+        <item quantity="one">%1$d hóspede na estadia</item>
+        <item quantity="other">%1$d hóspedes na estadia</item>
+    </plurals>
 
     <string name="tenants_delete_dialog_headline">Excluir inquilino?</string>
     <string name="tenants_delete_dialog_supporting_text">Se confirmada a exclusão, este inquilino, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>
@@ -327,7 +339,7 @@
     <string name="assistance_registration_max_accepted_nightly_rate_label">Preço máximo da diária (R$)</string>
 
     <string name="assistance_registration_guests_title">Hóspedes</string>
-    <string name="assistance_registration_guests_helper_text">Quantidade estimada de pessoas que estarão acomodadas no imóvel, contando com o responsável que entrou em contato.</string>
+    <string name="assistance_registration_guests_helper_text">Quantidade estimada de hóspedes que estarão acomodados no imóvel, contando com o responsável que entrou em contato.</string>
     <string name="assistance_registration_adult_guests_title">Adultos</string>
     <string name="assistance_registration_kid_guests_title">Crianças</string>
     <string name="assistance_registration_baby_guests_title">Bebês</string>
@@ -371,18 +383,47 @@
     <string name="interaction_details_title">Interação</string>
 
     <!-- Stays -->
+    <string name="stays_upcoming_check_in_filter_text">Aguardando check-in</string>
+    <string name="stays_upcoming_check_out_filter_text">Em andamento</string>
+    <string name="stays_finished_filter_text">Finalizadas</string>
+    <string name="stays_unavailable_period_filter_text">Períodos indiponíveis</string>
+    <string name="stays_all_filter_text">Todas</string>
+
+    <string name="stays_upcoming_check_in_empty_text">Nenhuma estadia aguardando check-in.</string>
+    <string name="stays_upcoming_check_out_empty_text">Nenhuma estadia em andamento.</string>
+    <string name="stays_finished_empty_text">Nenhuma estadia finalizada.</string>
+    <string name="stays_unavailable_period_empty_text">Nenhum período indisponível.</string>
+    <string name="stays_generic_empty_text">Nenhuma estadia registrada.</string>
+
+    <string name="stay_card_subtitle_text">%1$s em %2$s</string>
+
+    <string name="stay_card_check_in_chip_label_text">CHECK-IN</string>
+    <string name="stay_card_check_out_chip_label_text">CHECK-OUT</string>
+    <string name="stay_card_start_chip_label_text">INÍCIO</string>
+    <string name="stay_card_end_chip_label_text">FIM</string>
+
+    <string name="stay_auto_check_in_suffix_text">(Auto check-in)</string>
+    <string name="stay_auto_check_out_suffix_text">(Auto check-out)</string>
+    <string name="stay_check_in_date_text">%1$s/%2$s/%3$s • %4$sh%5$s %6$s</string>
+    <string name="stay_check_out_date_text">%1$s/%2$s/%3$s • %4$sh%5$s %6$s</string>
+
     <string name="stay_type_logged_realtor_title">Estadia de cliente</string>
     <string name="stay_type_logged_realtor_description">Registre uma estadia para um de seus leads</string>
 
     <string name="stay_type_other_realtor_title">Período indisponível</string>
     <string name="stay_type_other_realtor_description">Registre a indisponibilidade de um imóvel por motivos externos</string>
 
-    <string name="stays_empty_text">Nenhuma estadia registrada.</string>
-    <string name="stay_transfers_empty_text">Nenhuma transferência registrada.</string>
+    <string name="stay_delete_dialog_headline">Excluir estadia?</string>
+    <string name="stay_delete_dialog_supporting_text">Se confirmada a exclusão, esta estadia não estará mais disponível.</string>
+
+    <string name="stay_register_check_out_dialog_headline">Registrar check-out?</string>
+    <string name="stay_register_check_out_dialog_supporting_text">O atendimento e a estadia do inquilino serão marcados como finalizados e o inquilino será marcado como antigo.</string>
 
     <!-- Stay registration -->
     <string name="stay_registration_top_app_bar_title_create">Nova estadia</string>
+    <string name="stay_registration_unavailable_period_top_app_bar_title_create">Novo período indisponível</string>
     <string name="stay_registration_top_app_bar_title_edit">Editar estadia</string>
+    <string name="stay_registration_unavailable_period_top_app_bar_title_edit">Editar período indisponível</string>
     <string name="stay_registration_top_app_bar_select_property_title">Selecionar imóvel</string>
     <string name="stay_registration_top_app_bar_select_tenant_title">Selecionar inquilino</string>
 
@@ -397,17 +438,22 @@
     <string name="stay_registration_qt_guests_label">Quantidade de hóspedes</string>
     <string name="stay_registration_total_price_label">Preço total (R$)</string>
     <string name="stay_registration_period_label">Período</string>
-    <string name="stay_registration_date_range_value">%1$s/%2$s a %3$s/%4$s</string>
+    <string name="stay_registration_date_range_value">%1$s/%2$s/%3$s a %4$s/%5$s/%6$s</string>
     <string name="stay_registration_check_in_time_label">Horário do check-in</string>
+    <string name="stay_registration_unavailable_period_start_time_label">Horário de início</string>
     <string name="stay_registration_check_out_time_label">Horário do check-out</string>
+    <string name="stay_registration_unavailable_period_end_time_label">Horário de fim</string>
     <string name="stay_registration_time_value">%1$s:%2$s</string>
     <string name="stay_registration_is_auto_check_in_label">É auto check-in?</string>
     <string name="stay_registration_is_auto_check_out_label">É auto check-out?</string>
     <string name="stay_registration_commission_label">Minha comissão (R$)</string>
     <string name="stay_registration_observations_label">Observações sobre a estadia</string>
+    <string name="stay_registration_unavailable_period_observations_label">Observações sobre o período</string>
 
     <string name="stay_registration_check_in_time_picker_dialog_title">Selecione o horário do check-in</string>
+    <string name="stay_registration_start_time_picker_dialog_title">Selecione o horário de início</string>
     <string name="stay_registration_check_out_time_picker_dialog_title">Selecione o horário do check-out</string>
+    <string name="stay_registration_end_time_picker_dialog_title">Selecione o horário de fim</string>
 
     <string name="stay_registration_transfers_title">Transferências realizadas</string>
     <string name="stay_registration_transfers_body_text">Transferências financeiras podem ser, por exemplo, envio da entrada para o corretor por parte do inquilino ou extração do valor da comissão do corretor.</string>
@@ -429,6 +475,9 @@
 
     <string name="stay_registration_documents_title">Documentos do aluguel</string>
     <string name="stay_registration_documents_body_text">Documentos relacionados ao aluguel podem ser, por exemplo, uma cópia do contrato ou recibo de locação elaborado entre as partes do processo.</string>
+
+    <!-- Stay details -->
+    <string name="stay_details_transfers_empty_text">Nenhuma transferência registrada.</string>
 
     <!-- Calendar -->
     <string name="this_month_label">Este mês</string>
@@ -479,6 +528,8 @@
     <string name="date_picker_dialog_title">Selecione uma data</string>
     <string name="time_picker_dialog_title">Selecione um horário</string>
 
+    <string name="dont_show_dialog_anymore_in_the_future_title">Não mostrar esta mensagem novamente</string>
+
     <string name="date_picker_dialog_primary_button">OK</string>
     <string name="date_picker_dialog_secondary_button">Cancelar</string>
 
@@ -497,10 +548,14 @@
     <string name="edit_assistance_action_button_text">Editar atendimento</string>
     <string name="new_property_stay_action_button_text">Nova estadia</string>
     <string name="register_action_button_text">Cadastrar</string>
+    <string name="register_button_text">Registrar</string>
+    <string name="register_check_in_button_text">Registrar check-in</string>
+    <string name="register_check_out_button_text">Registrar check-out</string>
     <string name="save_action_button_text">Salvar</string>
     <string name="select_action_button_text">Selecionar</string>
     <string name="search_action_button_text">Buscar</string>
     <string name="sign_out_action_button_text">Sair</string>
+    <string name="undo_button_text">Desfazer</string>
     <string name="view_all_a_action_button_text">Ver todas</string>
     <string name="view_all_o_action_button_text">Ver todos</string>
     <string name="view_assistance_action_button_text">Ver atendimento</string>
@@ -516,6 +571,7 @@
     <string name="inline_too_big_120_chars">Deve ter no máximo 120 caracteres</string>
 
     <string name="inline_invalid_email">Email inválido</string>
+    <string name="inline_period_is_overlapping_other_property_stay_period">Imóvel está ocupado por outra estadia neste período</string>
 
     <!-- Snackbar success -->
     <string name="snackbar_no_data_changed">Nenhum dado foi editado.</string>
@@ -552,9 +608,19 @@
     <string name="snackbar_edit_stay_succeeded">Estadia editada.</string>
     <string name="snackbar_delete_stay_succeeded">Estadia excluída.</string>
 
+    <string name="snackbar_convert_tenant_to_lead_succeeded">Inquilino movido para \"Leads\".</string>
+    <string name="snackbar_convert_tenant_to_with_upcoming_stay_succeeded">Inquilino movido para \"Estadia agendada\".</string>
+    <string name="snackbar_convert_tenant_to_old_succeeded">Inquilino movido para \"Antigos\".</string>
+    <string name="snackbar_register_check_in_stay_succeeded">Estadia movida para \"Em andamento\".</string>
+    <string name="snackbar_register_check_out_stay_succeeded">Estadia movida para \"Finalizadas\".</string>
+
     <string name="snackbar_create_stay_transfer_succeeded">Transferência criada.</string>
     <string name="snackbar_edit_stay_transfer_succeeded">Transferência editada.</string>
     <string name="snackbar_delete_stay_transfer_succeeded">Transferência excluída.</string>
+
+    <!-- Snackbar warnings -->
+    <string name="snackbar_register_first_select_property_warning">Selecione o imóvel primeiro.</string>
+    <string name="snackbar_register_stay_check_in_already_done_warning">O check-in desta estadia já foi registrado.</string>
 
     <!-- Snackbar errors -->
     <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>

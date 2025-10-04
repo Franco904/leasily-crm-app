@@ -13,7 +13,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDa
 import java.time.LocalDateTime
 
 @Composable
-fun StayDateRangeFormField(
+fun StayPeriodFormField(
     checkInDateTime: LocalDateTime?,
     checkOutDateTime: LocalDateTime?,
     error: Int?,
@@ -29,8 +29,10 @@ fun StayDateRangeFormField(
                     R.string.stay_registration_date_range_value,
                     checkInDateTime.dayOfMonth.formatToTwoDigitsDateTime(),
                     checkInDateTime.monthValue.formatToTwoDigitsDateTime(),
+                    checkInDateTime.year.toString(),
                     checkOutDateTime.dayOfMonth.formatToTwoDigitsDateTime(),
                     checkOutDateTime.monthValue.formatToTwoDigitsDateTime(),
+                    checkOutDateTime.year.toString(),
                 )
             }
 

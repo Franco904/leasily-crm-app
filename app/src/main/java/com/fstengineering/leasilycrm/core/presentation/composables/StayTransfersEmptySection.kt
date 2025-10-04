@@ -36,7 +36,7 @@ fun StayTransfersEmptySection(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = stringResource(R.string.stay_transfers_empty_text),
+            text = stringResource(R.string.stay_details_transfers_empty_text),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier

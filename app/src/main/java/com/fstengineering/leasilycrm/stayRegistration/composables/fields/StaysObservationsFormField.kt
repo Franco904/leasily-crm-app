@@ -13,10 +13,14 @@ fun StaysObservationsFormField(
     value: String?,
     onValueChange: (String) -> Unit,
     onDone: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isStayFromOtherRealtor: Boolean = false,
 ) {
     FormTextField(
-        label = stringResource(R.string.stay_registration_observations_label),
+        label = stringResource(
+            if (isStayFromOtherRealtor) R.string.stay_registration_unavailable_period_observations_label
+            else R.string.stay_registration_observations_label
+        ),
         value = value ?: "",
         onValueChange = onValueChange,
         isSingleLine = false,

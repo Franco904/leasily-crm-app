@@ -3,12 +3,13 @@ package com.fstengineering.leasilycrm.leadTenantDetails
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteCurrentAssistanceUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
@@ -23,8 +24,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LeadTenantDetailsViewModel(
+    private val deleteCurrentAssistanceUseCase: DeleteCurrentAssistanceUseCase,
     private val tenantRepository: TenantRepository,
-    private val assistanceRepository: AssistanceRepository,
     private val assistanceCharacteristicRepository: AssistanceCharacteristicRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {
@@ -130,9 +131,12 @@ class LeadTenantDetailsViewModel(
         }
     }
 
-    fun deleteCurrentAssistance(assistanceId: Long) {
+    fun deleteCurrentAssistance(currentAssistance: Assistance) {
         viewModelScope.launch {
-            assistanceRepository.delete(id = assistanceId)
+            deleteCurrentAssistanceUseCase(
+                currentAssistance = currentAssistance,
+                hasFinishedStays = leadTenant.value.hasFinishedStays(),
+            )
                 .onError { error ->
                     if (error.isRedirectError()) {
                         userRepository.deleteCachedUser()

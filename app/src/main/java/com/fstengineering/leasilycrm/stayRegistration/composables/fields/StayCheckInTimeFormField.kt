@@ -15,9 +15,13 @@ fun StayCheckInTimeFormField(
     onTap: () -> Unit,
     modifier: Modifier = Modifier,
     hasValidation: Boolean = true,
+    isStayFromOtherRealtor: Boolean = false,
 ) {
     FormTextField(
-        label = stringResource(R.string.stay_registration_check_in_time_label),
+        label = stringResource(
+            if (isStayFromOtherRealtor) R.string.stay_registration_unavailable_period_start_time_label
+            else R.string.stay_registration_check_in_time_label
+        ),
         value = when {
             checkInHour != null && checkInMinute != null -> {
                 stringResource(
@@ -29,7 +33,7 @@ fun StayCheckInTimeFormField(
 
             else -> ""
         },
-        isInvalid = !hasValidation && error != null,
+        isInvalid = hasValidation && error != null,
         supportingText = if (hasValidation) {
             stringResource(error ?: R.string.inline_required)
         } else null,

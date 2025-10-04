@@ -90,47 +90,52 @@ data class StayEntity(
             requireNotNull(domain.property?.id) { "Stay.property.id is required" }
             requireNotNull(domain.userId) { "Stay.userId is required" }
 
+            val (checkInHour, checkInMinute) = domain.checkInHourMinute
+            val (checkOutHour, checkOutMinute) = domain.checkOutHourMinute
+
+            val adjustedCheckInDateTime = domain.checkInDateTime
+                .withHour(checkInHour ?: 0)
+                .withMinute(checkInMinute ?: 0)
+
+            val adjustedCheckOutDateTime = domain.checkOutDateTime
+                .withHour(checkOutHour ?: 23)
+                .withMinute(checkOutMinute ?: 59)
+
             if (domain.isFromOtherRealtor) {
                 return StayEntity(
                     id = domain.id,
                     createDateTime = domain.createDateTime ?: LocalDateTime.now(),
                     updateDateTime = LocalDateTime.now(),
                     isFromOtherRealtor = true,
-                    checkInDateTime = domain.checkInDateTime,
-                    checkOutDateTime = domain.checkOutDateTime,
+                    checkInDateTime = adjustedCheckInDateTime,
+                    checkOutDateTime = adjustedCheckOutDateTime,
                     propertyId = domain.property.id,
                     userId = domain.userId,
                 )
             }
 
-            val (checkInHour, checkInMinute) = domain.checkInHourMinute
-            val (checkOutHour, checkOutMinute) = domain.checkOutHourMinute
-
             requireNotNull(domain.qtGuests) { "Stay.qtGuests is required" }
-            requireNotNull(domain.totalPrice) { "Stay.totalPrice is required" }
             requireNotNull(checkInHour) { "checkInHour is required" }
             requireNotNull(checkInMinute) { "checkInMinute is required" }
             requireNotNull(checkOutHour) { "checkOutHour is required" }
             requireNotNull(checkOutMinute) { "checkOutMinute is required" }
+            requireNotNull(domain.totalPrice) { "Stay.totalPrice is required" }
             requireNotNull(domain.tenant?.id) { "Stay.tenant.id is required" }
-
-            val adjustedCheckInDateTime = domain.checkInDateTime
-                .withHour(checkInHour)
-                .withMinute(checkInMinute)
-
-            val adjustedCheckOutDateTime = domain.checkOutDateTime
-                .withHour(checkOutHour)
-                .withMinute(checkOutMinute)
 
             return StayEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: LocalDateTime.now(),
                 updateDateTime = LocalDateTime.now(),
                 isFromOtherRealtor = false,
+                vehicleMake = domain.vehicleMake,
+                vehicleColor = domain.vehicleColor,
+                vehicleLicensePlate = domain.vehicleLicensePlate,
                 qtGuests = domain.qtGuests,
-                totalPrice = domain.totalPrice,
                 checkInDateTime = adjustedCheckInDateTime,
                 checkOutDateTime = adjustedCheckOutDateTime,
+                isAutoCheckIn = domain.isAutoCheckIn,
+                isAutoCheckOut = domain.isAutoCheckOut,
+                totalPrice = domain.totalPrice,
                 commission = domain.commission,
                 observations = domain.observations,
                 isCheckInDone = domain.isCheckInDone,

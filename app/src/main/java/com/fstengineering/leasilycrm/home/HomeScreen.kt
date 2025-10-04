@@ -33,6 +33,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.CurrentAssistanceDeleteSuccess
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.DataSourceError
@@ -49,19 +50,21 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    modifier: Modifier = Modifier,
-    onProfileSelect: () -> Unit = {},
-    onPropertiesSelect: () -> Unit = {},
-    onPropertyOwnersSelect: () -> Unit = {},
-    onCustomerSegmentsSelect: () -> Unit = {},
+    isStayRegistrationSuccess: Boolean,
+    onProfileSelect: () -> Unit,
+    onPropertiesSelect: () -> Unit,
+    onPropertyOwnersSelect: () -> Unit,
+    onCustomerSegmentsSelect: () -> Unit,
     onRegisterLeadTenant: (Long?) -> Unit,
     onViewLeadTenantDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
     onNewStayWithLeadTenant: (Long) -> Unit,
-    onNewStayBlank: (Boolean) -> Unit,
-    onViewStay: (Long, Long) -> Unit,
-    onSignOut: () -> Unit = {},
-    showSnackbar: (String) -> Unit = { _ -> },
+    onRegisterStayBlank: (Long?, Boolean) -> Unit,
+    onViewStay: (Long) -> Unit,
+    onSignOut: () -> Unit,
+    showSnackbar: (String) -> Unit,
+    showActionSnackbar: (String, String, () -> Unit) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current!!
@@ -81,7 +84,7 @@ fun HomeScreen(
     var isSearching by remember { mutableStateOf(false) }
     var searchInput by remember { mutableStateOf<String?>(null) }
 
-    var assistanceToDeleteId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var assistanceToDelete by rememberSaveable { mutableStateOf<Assistance?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.init()
@@ -99,6 +102,18 @@ fun HomeScreen(
                 is CurrentAssistanceDeleteSuccess -> {
                     showSnackbar(context.getString(R.string.snackbar_delete_assistance_succeeded))
                 }
+            }
+        }
+    }
+
+    LaunchedEffect(isStayRegistrationSuccess) {
+        if (isStayRegistrationSuccess) {
+            currentBottomNavDestination = BottomNavBarDestination.Stays
+
+            navController.navigate(BottomNavBarDestination.Stays.navDestination) {
+                launchSingleTop = true
+                restoreState = true
+                popUpTo(navController.graph.startDestinationId) { saveState = true }
             }
         }
     }
@@ -155,7 +170,7 @@ fun HomeScreen(
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                         }
                     },
-                    upcomingStaysCount = 2, // TODO: Get real value from view model when implementing Stays use cases
+                    upcomingStaysCount = 0, // TODO: Get real value from view model when implementing Stays use cases
                 )
             }
         },
@@ -187,7 +202,7 @@ fun HomeScreen(
                         onRegisterLead = onRegisterLeadTenant,
                         onViewLeadDetails = onViewLeadTenantDetails,
                         onRegisterAssistance = onRegisterAssistance,
-                        onDeleteAssistance = { assistanceToDeleteId = it },
+                        onDeleteAssistance = { assistanceToDelete = it },
                         onNewStay = onNewStayWithLeadTenant,
                         onViewStay = onViewStay,
                         onSignOut = onSignOut,
@@ -202,7 +217,7 @@ fun HomeScreen(
                         onRegisterTenant = onRegisterLeadTenant,
                         onViewTenantDetails = onViewLeadTenantDetails,
                         onRegisterAssistance = onRegisterAssistance,
-                        onDeleteAssistance = { assistanceToDeleteId = it },
+                        onDeleteAssistance = { assistanceToDelete = it },
                         onNewStay = onNewStayWithLeadTenant,
                         onViewStay = onViewStay,
                         onSignOut = onSignOut,
@@ -211,19 +226,29 @@ fun HomeScreen(
                 }
                 composable<Destinations.Home.Stays> {
                     StaysScreen(
-                        onNewStayBlank = onNewStayBlank,
+                        viewModel = koinViewModel(),
+                        onRegisterStayBlank = { stayId, isStayFromOtherRealtor ->
+                            onRegisterStayBlank(stayId, isStayFromOtherRealtor)
+                        },
+                        onViewStayDetails = { stayId -> onViewStay(stayId) },
+                        onSignOut = onSignOut,
+                        showSnackbar = showSnackbar,
+                        showActionSnackbar = showActionSnackbar,
                     )
                 }
             }
         }
-        if (assistanceToDeleteId != null) {
+        if (assistanceToDelete != null) {
             ConfirmDeleteAssistanceDialog(
                 onConfirmDelete = {
-                    viewModel.deleteCurrentAssistance(assistanceId = assistanceToDeleteId!!)
+                    viewModel.deleteCurrentAssistance(
+                        currentAssistance = assistanceToDelete!!,
+                        leadTenant = assistanceToDelete?.tenant!!,
+                    )
 
-                    assistanceToDeleteId = null
+                    assistanceToDelete = null
                 },
-                onCancel = { assistanceToDeleteId = null },
+                onCancel = { assistanceToDelete = null },
             )
         }
     }

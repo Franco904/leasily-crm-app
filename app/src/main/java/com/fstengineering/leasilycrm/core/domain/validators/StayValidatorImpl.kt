@@ -23,6 +23,9 @@ class StayValidatorImpl : StayValidator {
         validatePeriod(
             checkInDateTime = stay.checkInDateTime,
             checkOutDateTime = stay.checkOutDateTime,
+            propertyStayCheckInDateTimes = stay.property?.stays
+                ?.map { it.checkInDateTime!! }
+                ?: emptyList(),
         )
             .onError { e -> errors.add(e) }
 
@@ -84,13 +87,25 @@ class StayValidatorImpl : StayValidator {
     private fun validatePeriod(
         checkInDateTime: LocalDateTime?,
         checkOutDateTime: LocalDateTime?,
+        propertyStayCheckInDateTimes: List<LocalDateTime>,
     ): AppResult<Unit, ValidationError.StayPeriod> {
-        return when {
+        when {
             checkInDateTime == null || checkOutDateTime == null -> {
-                AppResult.Error(ValidationError.StayPeriod.IsNull)
+                return AppResult.Error(ValidationError.StayPeriod.IsNull)
             }
 
-            else -> AppResult.Success(Unit)
+            propertyStayCheckInDateTimes.isNotEmpty() -> {
+                val isTherePropertyOverbooking = propertyStayCheckInDateTimes
+                    .any { existingStayCheckInDateTime ->
+                        checkInDateTime < existingStayCheckInDateTime && checkOutDateTime > existingStayCheckInDateTime
+                    }
+
+                if (!isTherePropertyOverbooking) return AppResult.Success(Unit)
+
+                return AppResult.Error(ValidationError.StayPeriod.IsOverlappingOtherPropertyStayPeriod)
+            }
+
+            else -> return AppResult.Success(Unit)
         }
     }
 

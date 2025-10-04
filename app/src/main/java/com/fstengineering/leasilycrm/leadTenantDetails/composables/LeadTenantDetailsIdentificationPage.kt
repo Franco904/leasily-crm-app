@@ -54,7 +54,7 @@ fun LeadTenantDetailsIdentificationPage(
         Spacer(modifier = Modifier.height(24.dp))
         LeadTenantObservationsDetailsItem(
             observations = leadTenant.observations,
-            isLead = leadTenant.status == TenantStatus.Lead.code,
+            isLead = leadTenant.status == TenantStatus.Lead.id,
         )
         Spacer(modifier = Modifier.height(120.dp))
     }

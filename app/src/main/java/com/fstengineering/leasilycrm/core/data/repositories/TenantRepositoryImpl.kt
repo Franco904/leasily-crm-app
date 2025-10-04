@@ -131,12 +131,6 @@ class TenantRepositoryImpl(
         return AppResult.Success(data = tenants)
     }
 
-    override suspend fun getNameById(tenantId: Long): AppResult<String, DataSourceError> {
-        val tenantName = dao.getNameById(id = tenantId)
-
-        return AppResult.Success(data = tenantName)
-    }
-
     override suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
@@ -238,9 +232,10 @@ class TenantRepositoryImpl(
             )
         }
 
-    override fun watchAllTenants(
+    override fun watchTenantsMatching(
         orderTypeId: Int,
-        tenantFilterType: Int,
+        tenantFilterType: Int?,
+        matching: String?,
     ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
@@ -260,6 +255,8 @@ class TenantRepositoryImpl(
             val tenantsFlow = dao.watchAllTenants(
                 userId = userRemoteId,
                 order = orderTypeId,
+                tenantFilterType = tenantFilterType,
+                matching = matching,
             )
                 .map {
                     val tenants = it.map { tenant -> tenant.toDomain() }.toPersistentList()

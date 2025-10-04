@@ -9,6 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.StayFile
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
@@ -227,9 +228,6 @@ class StayRegistrationViewModel(
                 if (stayForm.value.tenant != form.tenant) {
                     map[StayField.Tenant] = null
                 }
-                if (stayForm.value.totalPrice != form.totalPrice) {
-                    map[StayField.TotalPrice] = null
-                }
                 if (stayForm.value.checkInDateTime != form.checkInDateTime) {
                     map[StayField.Period] = null
                 }
@@ -238,6 +236,9 @@ class StayRegistrationViewModel(
                 }
                 if (stayForm.value.checkOutHourMinute != form.checkOutHourMinute) {
                     map[StayField.CheckOutTime] = null
+                }
+                if (stayForm.value.totalPrice != form.totalPrice) {
+                    map[StayField.TotalPrice] = null
                 }
             }
 
@@ -252,9 +253,11 @@ class StayRegistrationViewModel(
     ): ImmutableSet<LocalDate> {
         val isEditing = stayToEdit != null
 
-        return propertyStays
+        val propertyAlreadySelectedDatesForStay = propertyStays
             .asSequence()
             .filter {
+                if (it.isDeleted) return@filter false
+
                 val isSelectedDate =
                     it.checkInDateTime?.dayOfMonth == stayForm.value.checkInDateTime?.dayOfMonth &&
                             it.checkInDateTime?.monthValue == stayForm.value.checkInDateTime?.monthValue &&
@@ -273,6 +276,8 @@ class StayRegistrationViewModel(
                     .map { it.toLocalDate() }
             }
             .toPersistentSet()
+
+        return propertyAlreadySelectedDatesForStay
     }
 
     fun onStayTransferFormChange(form: StayTransfer?) {
@@ -421,6 +426,17 @@ class StayRegistrationViewModel(
                 stayTransferRepository.insertOrUpdate(
                     transfer = transfer.copy(stayId = stayId),
                 )
+            }
+
+            if (stayForm.value.tenant != null) {
+                val updatedTenant = stayForm.value.tenant
+                    ?.copy(status = TenantStatus.UpcomingStay.id)
+                    ?: return@launch
+
+                tenantRepository.insertOrUpdate(updatedTenant)
+                    .onError { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
             }
 
             _uiEvents.send(

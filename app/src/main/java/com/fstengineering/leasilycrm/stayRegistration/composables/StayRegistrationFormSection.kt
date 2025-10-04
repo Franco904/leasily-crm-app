@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,7 +43,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDat
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckInTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckOutTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCommissionFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayDateRangeFormField
+import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPeriodFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPropertyFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTenantFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTenantVehicleColorFormField
@@ -60,12 +61,13 @@ import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoggedRealtorStayRegistrationFormSection(
+fun StayRegistrationFormSection(
     stayForm: Stay,
     onStayFormChange: (Stay) -> Unit,
     stayFormErrors: ImmutableMap<StayField, Int?>,
@@ -73,8 +75,10 @@ fun LoggedRealtorStayRegistrationFormSection(
     onTransferFormChange: (StayTransfer) -> Unit,
     transferFormErrors: ImmutableMap<StayTransferField, Int?>,
     getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<LocalDate>,
-    onSelectProperty: () -> Unit,
-    onSelectTenant: () -> Unit,
+    onSelectProperty: (isEnabled: Boolean) -> Unit,
+    onSelectTenant: (isEnabled: Boolean) -> Unit,
+    onPeriodDisabledByPropertyUnselected: () -> Unit,
+    onPeriodDisabledByCheckInDone: () -> Unit,
     onLastTextFieldDone: () -> Unit,
     onAddTransfer: () -> Unit,
     onEditTransfer: (StayTransfer) -> Unit,
@@ -85,6 +89,7 @@ fun LoggedRealtorStayRegistrationFormSection(
     scrollToFieldFlow: Flow<StayField>,
     modifier: Modifier = Modifier,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
 
@@ -147,9 +152,12 @@ fun LoggedRealtorStayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Property))
             ) {
+                val isEnabled = !stayForm.isCheckInDone
+
                 StayPropertyFormField(
                     stayProperty = stayForm.property,
-                    onSelectStayProperty = onSelectProperty,
+                    onSelectStayProperty = { onSelectProperty(isEnabled) },
+                    isEnabled = isEnabled,
                     error = stayFormErrors[StayField.Property],
                 )
             }
@@ -162,9 +170,12 @@ fun LoggedRealtorStayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Tenant))
             ) {
+                val isEnabled = !stayForm.isCheckInDone
+
                 StayTenantFormField(
                     stayTenant = stayForm.tenant,
-                    onSelectStayTenant = onSelectTenant,
+                    onSelectStayTenant = { onSelectTenant(isEnabled) },
+                    isEnabled = isEnabled,
                     error = stayFormErrors[StayField.Tenant],
                 )
             }
@@ -225,12 +236,31 @@ fun LoggedRealtorStayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Period))
             ) {
-                StayDateRangeFormField(
+                val isEnabled = stayForm.property != null && !stayForm.isCheckInDone
+
+                StayPeriodFormField(
                     checkInDateTime = stayForm.checkInDateTime,
                     checkOutDateTime = stayForm.checkOutDateTime,
                     error = stayFormErrors[StayField.Period],
-                    isEnabled = stayForm.property != null,
-                    onTap = { mustShowStayDateRangePickerDialog = true },
+                    isEnabled = isEnabled,
+                    onTap = {
+                        when {
+                            isEnabled -> mustShowStayDateRangePickerDialog = true
+                            stayForm.property == null -> {
+                                coroutineScope.launch {
+                                    centerVisibleLazyItemByKey(
+                                        lazyListState = lazyListState,
+                                        key = StayField.Property,
+                                        fallbackIndex = StayField.Property.scrollIndex,
+                                    )
+
+                                    onPeriodDisabledByPropertyUnselected()
+                                }
+                            }
+
+                            stayForm.isCheckInDone -> onPeriodDisabledByCheckInDone()
+                        }
+                    },
                 )
             }
         }

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -21,6 +22,7 @@ fun AppCheckbox(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
+    labelStyle: TextStyle? = null,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -41,7 +43,7 @@ fun AppCheckbox(
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = label,
-            style = MaterialTheme.typography.bodyLarge,
+            style = labelStyle ?: MaterialTheme.typography.bodyLarge,
             color = when {
                 isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
                 else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)

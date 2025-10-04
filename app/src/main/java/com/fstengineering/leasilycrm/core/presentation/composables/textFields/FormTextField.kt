@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.presentation.composables.textFields
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -135,6 +137,14 @@ fun FormTextField(
             .fillMaxWidth()
             .then(
                 fieldFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier
+            )
+            .then(
+                if (!isEnabled) {
+                    Modifier
+                        .pointerInput(Unit) {
+                            detectTapGestures { onTap?.invoke() }
+                        }
+                } else Modifier
             )
     )
 }

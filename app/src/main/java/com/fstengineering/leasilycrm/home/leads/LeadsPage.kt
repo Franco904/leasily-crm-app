@@ -27,10 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByMenuOption
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByTextButton
@@ -52,9 +54,9 @@ fun LeadsPage(
     onRegisterLead: (Long?) -> Unit,
     onViewLeadDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
-    onDeleteAssistance: (Long) -> Unit,
+    onDeleteAssistance: (Assistance) -> Unit,
     onNewStay: (Long) -> Unit,
-    onViewStay: (Long, Long) -> Unit,
+    onViewStay: (Long) -> Unit,
     modifier: Modifier = Modifier,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
@@ -187,8 +189,10 @@ fun LeadsPage(
                             key = { _, lead -> lead.id!! },
                             contentType = { _, entryType -> entryType },
                         ) { _, lead ->
-                            val unfinishedAssistance = lead.assistances.find { !it.isFinished }
-                            val unfinishedStay = lead.stays.find { !it.isCheckOutDone }
+                            val unfinishedAssistance =
+                                remember(lead) { lead.assistances.find { !it.isFinished } }
+                            val unfinishedStay =
+                                remember(lead) { lead.stays.find { !it.isCheckOutDone } }
 
                             LeadTenantCard(
                                 leadTenant = lead,
@@ -199,11 +203,24 @@ fun LeadsPage(
                                 onEditAssistance = {
                                     onRegisterAssistance(lead.id!!, unfinishedAssistance?.id!!)
                                 },
-                                onDeleteAssistance = { onDeleteAssistance(unfinishedAssistance?.id!!) },
-                                onViewStay = { onViewStay(unfinishedStay?.id!!, lead.id!!) },
+                                onDeleteAssistance = {
+                                    onDeleteAssistance(unfinishedAssistance!!.copy(tenant = lead))
+                                },
+                                onViewStay = { onViewStay(unfinishedStay?.id!!) },
                                 onNewStay = { onNewStay(lead.id!!) },
                                 hasUnfinishedAssistance = unfinishedAssistance != null,
                                 hasUnfinishedStay = unfinishedStay != null,
+                                qtGuestsLabelText = when {
+                                    unfinishedAssistance != null && unfinishedAssistance.qtGuests > 0 -> {
+                                        pluralStringResource(
+                                            id = R.plurals.lead_searching_qt_guests_label,
+                                            count = unfinishedAssistance.qtGuests,
+                                            unfinishedAssistance.qtGuests,
+                                        )
+                                    }
+
+                                    else -> null
+                                },
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

@@ -36,7 +36,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
-import com.fstengineering.leasilycrm.core.presentation.composables.rememberCenterScroller
+import com.fstengineering.leasilycrm.core.presentation.composables.rememberVerticalCenterScroller
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.IncludedItemsFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyCharacteristicsCountFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyOtherCharacteristicsFormField
@@ -64,7 +64,7 @@ fun PropertyRegistrationFormSectionStep2(
     val outlineColor = MaterialTheme.colorScheme.outline
 
     val scrollState = rememberScrollState()
-    val centerScrollState = rememberCenterScroller(scrollState)
+    val centerScrollState = rememberVerticalCenterScroller(scrollState)
 
     var scrollContainerCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var fieldsCoords by remember {

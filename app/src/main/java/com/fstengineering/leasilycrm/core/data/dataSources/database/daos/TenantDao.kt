@@ -124,10 +124,24 @@ interface TenantDao {
         WHERE user_id = :userId
         AND status <> 0
         AND is_deleted = 0
+        AND (
+            :tenantFilterType IS NULL OR
+            status = :tenantFilterType
+        )
+        AND (
+            :matching IS NULL OR
+            name LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE OR
+            city LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE
+        )
         ORDER BY
             CASE WHEN :order = 1 THEN name END COLLATE NOCASE,
             CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
-    fun watchAllTenants(userId: Long, order: Int): Flow<List<TenantCompound>>
+    fun watchAllTenants(
+        userId: Long,
+        order: Int,
+        tenantFilterType: Int?,
+        matching: String?,
+    ): Flow<List<TenantCompound>>
 }

@@ -5,8 +5,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import com.fstengineering.leasilycrm.R
 import kotlinx.collections.immutable.ImmutableSet
-import kotlinx.collections.immutable.toPersistentSet
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.Calendar
 
@@ -68,27 +69,28 @@ fun getSelectableDates(
     forceBelow: Boolean = false,
     alreadySelectedDates: ImmutableSet<LocalDate>,
 ): SelectableDates {
-    val initialUtcMillis = LocalDate.of(initialYear, initialMonth, initialDayOfMonth)
+    val initialDate = LocalDate.of(initialYear, initialMonth, initialDayOfMonth)
         .atStartOfDay(ZoneOffset.UTC)
         .toInstant()
-        .toEpochMilli()
-
-    val alreadySelectedDatesUtc = alreadySelectedDates
-        .map { it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli() }
-        .toPersistentSet()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
 
     return object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-            val minMaxCondition = when {
-                forceBelow -> utcTimeMillis <= initialUtcMillis
-                else -> utcTimeMillis >= initialUtcMillis
-            }
+            val date = Instant.ofEpochMilli(utcTimeMillis)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
 
-            return minMaxCondition && utcTimeMillis !in alreadySelectedDatesUtc
+            val minMaxCondition =
+                if (forceBelow) date <= initialDate
+                else date >= initialDate
+
+            return minMaxCondition && date !in alreadySelectedDates
         }
 
         override fun isSelectableYear(year: Int): Boolean {
-            return year >= initialYear
+            return if (forceBelow) year <= initialYear
+            else year >= initialYear
         }
     }
 }

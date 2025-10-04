@@ -44,11 +44,11 @@ import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.TransferCreateSuccess
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.TransferEditSuccess
 import com.fstengineering.leasilycrm.stayRegistration.composables.ConfirmDeleteStayTransferDialog
-import com.fstengineering.leasilycrm.stayRegistration.composables.LoggedRealtorStayRegistrationFormSection
-import com.fstengineering.leasilycrm.stayRegistration.composables.OtherRealtorStayRegistrationFormSection
 import com.fstengineering.leasilycrm.stayRegistration.composables.StayPropertySelectionList
+import com.fstengineering.leasilycrm.stayRegistration.composables.StayRegistrationFormSection
 import com.fstengineering.leasilycrm.stayRegistration.composables.StayRegistrationTopAppBar
 import com.fstengineering.leasilycrm.stayRegistration.composables.StayTenantSelectionList
+import com.fstengineering.leasilycrm.stayRegistration.composables.UnavailablePeriodRegistrationFormSection
 import com.fstengineering.leasilycrm.stayRegistration.models.StayField
 import com.fstengineering.leasilycrm.stayRegistration.models.StayRegistrationListState
 import kotlinx.collections.immutable.mutate
@@ -64,7 +64,7 @@ fun StayRegistrationScreen(
     tenantId: Long?,
     isStayFromOtherRealtor: Boolean,
     viewModel: StayRegistrationViewModel,
-    onBack: () -> Unit,
+    onBack: (success: Boolean) -> Unit,
     onSignOut: () -> Unit,
     showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -135,13 +135,13 @@ fun StayRegistrationScreen(
                 }
 
                 is StayCreateSuccess -> {
-                    onBack()
+                    onBack(true)
 
                     showSnackbar(context.getString(R.string.snackbar_create_stay_succeeded))
                 }
 
                 is StayEditSuccess -> {
-                    onBack()
+                    onBack(true)
 
                     showSnackbar(context.getString(uiEvent.messageId))
                 }
@@ -187,6 +187,7 @@ fun StayRegistrationScreen(
             StayRegistrationTopAppBar(
                 isEditing = stayId != null,
                 onSaveStay = viewModel::saveStay,
+                isStayFromOtherRealtor = isStayFromOtherRealtor,
                 isSelectingProperty = isSelectingProperty,
                 isSelectingTenant = isSelectingTenant,
                 mustShowSearchAction = when {
@@ -252,7 +253,7 @@ fun StayRegistrationScreen(
                 when (status) {
                     StayRegistrationListState.ShowingMainForm -> {
                         if (isStayFromOtherRealtor) {
-                            OtherRealtorStayRegistrationFormSection(
+                            UnavailablePeriodRegistrationFormSection(
                                 stayForm = stayForm,
                                 onStayFormChange = viewModel::onStayFormChange,
                                 stayFormErrors = stayFormErrors.errors,
@@ -267,7 +268,7 @@ fun StayRegistrationScreen(
                                     .padding(horizontal = 24.dp)
                             )
                         } else {
-                            LoggedRealtorStayRegistrationFormSection(
+                            StayRegistrationFormSection(
                                 stayForm = stayForm,
                                 onStayFormChange = viewModel::onStayFormChange,
                                 stayFormErrors = stayFormErrors.errors,
@@ -275,11 +276,33 @@ fun StayRegistrationScreen(
                                 transferForm = transferForm,
                                 onTransferFormChange = viewModel::onStayTransferFormChange,
                                 transferFormErrors = transferFormErrors.errors,
-                                onSelectProperty = {
-                                    listStatus = StayRegistrationListState.SelectingProperty
+                                onSelectProperty = { isEnabled ->
+                                    if (isEnabled) {
+                                        listStatus = StayRegistrationListState.SelectingProperty
+                                    } else {
+                                        showSnackbar(
+                                            context.getString(R.string.snackbar_register_stay_check_in_already_done_warning)
+                                        )
+                                    }
                                 },
-                                onSelectTenant = {
-                                    listStatus = StayRegistrationListState.SelectingTenant
+                                onSelectTenant = { isEnabled ->
+                                    if (isEnabled) {
+                                        listStatus = StayRegistrationListState.SelectingTenant
+                                    } else {
+                                        showSnackbar(
+                                            context.getString(R.string.snackbar_register_stay_check_in_already_done_warning)
+                                        )
+                                    }
+                                },
+                                onPeriodDisabledByPropertyUnselected = {
+                                    showSnackbar(
+                                        context.getString(R.string.snackbar_register_first_select_property_warning)
+                                    )
+                                },
+                                onPeriodDisabledByCheckInDone = {
+                                    showSnackbar(
+                                        context.getString(R.string.snackbar_register_stay_check_in_already_done_warning)
+                                    )
                                 },
                                 onLastTextFieldDone = { focusManager.clearFocus() },
                                 onAddTransfer = {
@@ -318,7 +341,13 @@ fun StayRegistrationScreen(
                             StayPropertySelectionList(
                                 properties = properties,
                                 onPropertySelect = { property ->
-                                    viewModel.onStayFormChange(stayForm.copy(property = property))
+                                    viewModel.onStayFormChange(
+                                        stayForm.copy(
+                                            property = property,
+                                            checkInDateTime = null,
+                                            checkOutDateTime = null,
+                                        )
+                                    )
 
                                     listStatus = StayRegistrationListState.ShowingMainForm
                                     isSearching = false
@@ -381,7 +410,7 @@ fun StayRegistrationScreen(
                     onConfirmLeave = {
                         mustShowConfirmLeaveRegistrationDialog = false
 
-                        onBack()
+                        onBack(false)
                     },
                     onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
                 )

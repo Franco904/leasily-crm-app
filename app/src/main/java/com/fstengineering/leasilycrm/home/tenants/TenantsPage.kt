@@ -19,10 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByMenuOption
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByTextButton
@@ -45,9 +47,9 @@ fun TenantsPage(
     onRegisterTenant: (Long?) -> Unit,
     onViewTenantDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
-    onDeleteAssistance: (Long) -> Unit,
+    onDeleteAssistance: (Assistance) -> Unit,
     onNewStay: (Long) -> Unit,
-    onViewStay: (Long, Long) -> Unit,
+    onViewStay: (Long) -> Unit,
     modifier: Modifier = Modifier,
     onSignOut: () -> Unit = {},
     showSnackbar: (String) -> Unit = { _ -> },
@@ -58,12 +60,11 @@ fun TenantsPage(
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    val tenants by viewModel.tenants.collectAsStateWithLifecycle()
-    val tenantToDelete by viewModel.tenantToDelete.collectAsStateWithLifecycle()
-
+    val currentTenantFilter by viewModel.currentTenantFilterType.collectAsStateWithLifecycle()
     val orderType by viewModel.orderType.collectAsStateWithLifecycle()
 
-    val currentTenantFilter by viewModel.currentTenantFilter.collectAsStateWithLifecycle()
+    val tenants by viewModel.tenants.collectAsStateWithLifecycle()
+    val tenantToDelete by viewModel.tenantToDelete.collectAsStateWithLifecycle()
 
     val listStatus by remember(isLoading, tenants) {
         val status = when {
@@ -99,11 +100,16 @@ fun TenantsPage(
         viewModel.onSearchInputChange(searchInput = searchInput)
     }
 
+    LaunchedEffect(isSearchingTenant) {
+        val filterType = if (isSearchingTenant) null else viewModel.tenantFilterTypeBeforeSearch
+        viewModel.onTenantFilterTypeChange(tenantFilterType = filterType)
+    }
+
     Column {
-        if (!isSearchingTenant) {
+        if (!isSearchingTenant && currentTenantFilter != null) {
             Spacer(modifier = Modifier.height(16.dp))
             TenantFilterButtonGroup(
-                selectedFilterType = currentTenantFilter,
+                selectedFilterType = currentTenantFilter!!,
                 onFilterTypeSelect = viewModel::onTenantFilterTypeChange,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -127,7 +133,10 @@ fun TenantsPage(
                 }
 
                 ListState.Empty -> {
-                    TenantsEmptySection(isSearchingTenant = isSearchingTenant)
+                    TenantsEmptySection(
+                        isSearchingTenant = isSearchingTenant,
+                        tenantFilterType = currentTenantFilter,
+                    )
                 }
 
                 ListState.Idle -> {
@@ -169,8 +178,10 @@ fun TenantsPage(
                             key = { _, tenant -> tenant.id!! },
                             contentType = { _, entryType -> entryType },
                         ) { _, tenant ->
-                            val unfinishedAssistance = tenant.assistances.find { !it.isFinished }
-                            val unfinishedStay = tenant.stays.find { !it.isCheckOutDone }
+                            val unfinishedAssistance =
+                                remember(tenant) { tenant.assistances.find { !it.isFinished } }
+                            val unfinishedStay =
+                                remember(tenant) { tenant.stays.find { !it.isCheckOutDone } }
 
                             LeadTenantCard(
                                 leadTenant = tenant,
@@ -181,11 +192,24 @@ fun TenantsPage(
                                 onEditAssistance = {
                                     onRegisterAssistance(tenant.id!!, unfinishedAssistance?.id!!)
                                 },
-                                onDeleteAssistance = { onDeleteAssistance(unfinishedAssistance?.id!!) },
-                                onViewStay = { onViewStay(unfinishedStay?.id!!, tenant.id!!) },
+                                onDeleteAssistance = {
+                                    onDeleteAssistance(unfinishedAssistance!!.copy(tenant = tenant))
+                                },
+                                onViewStay = { onViewStay(unfinishedStay?.id!!) },
                                 onNewStay = { onNewStay(tenant.id!!) },
                                 hasUnfinishedAssistance = unfinishedAssistance != null,
                                 hasUnfinishedStay = unfinishedStay != null,
+                                qtGuestsLabelText = when {
+                                    unfinishedStay?.qtGuests != null && unfinishedStay.qtGuests > 0 -> {
+                                        pluralStringResource(
+                                            id = R.plurals.tenant_stay_qt_guests_label,
+                                            count = unfinishedStay.qtGuests,
+                                            unfinishedStay.qtGuests,
+                                        )
+                                    }
+
+                                    else -> null
+                                },
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

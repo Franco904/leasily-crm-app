@@ -17,11 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.home.tenants.models.TenantFilterType
 
 @Composable
 fun TenantsEmptySection(
     isSearchingTenant: Boolean,
     modifier: Modifier = Modifier,
+    tenantFilterType: TenantFilterType? = null,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,8 +41,12 @@ fun TenantsEmptySection(
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = stringResource(
-                if (isSearchingTenant) R.string.tenants_empty_search_text
-                else R.string.tenants_empty_text
+                when {
+                    isSearchingTenant -> R.string.tenants_empty_search_text
+                    tenantFilterType == TenantFilterType.UpcomingStay -> R.string.tenants_upcoming_stay_empty_text
+                    tenantFilterType == TenantFilterType.Old -> R.string.tenants_old_empty_text
+                    else -> R.string.tenants_generic_empty_text
+                },
             ),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,

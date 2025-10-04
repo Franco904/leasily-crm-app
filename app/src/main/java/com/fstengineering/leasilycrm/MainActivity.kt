@@ -7,7 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -61,7 +63,20 @@ class MainActivity : ComponentActivity() {
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(message = message)
                                     }
-                                }
+                                },
+                                showActionSnackbar = { message, actionLabel, action ->
+                                    coroutineScope.launch {
+                                        val result = snackbarHostState.showSnackbar(
+                                            message = message,
+                                            actionLabel = actionLabel,
+                                            duration = SnackbarDuration.Long,
+                                        )
+
+                                        if (result == SnackbarResult.ActionPerformed) {
+                                            action()
+                                        }
+                                    }
+                                },
                             )
                         },
                         modifier = Modifier

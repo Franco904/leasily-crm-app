@@ -35,7 +35,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
 import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDateTime
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckInTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckOutTimeFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayDateRangeFormField
+import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPeriodFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPropertyFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StaysObservationsFormField
 import com.fstengineering.leasilycrm.stayRegistration.models.StayField
@@ -49,7 +49,7 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OtherRealtorStayRegistrationFormSection(
+fun UnavailablePeriodRegistrationFormSection(
     stayForm: Stay,
     onStayFormChange: (Stay) -> Unit,
     stayFormErrors: ImmutableMap<StayField, Int?>,
@@ -108,6 +108,7 @@ fun OtherRealtorStayRegistrationFormSection(
                 StayPropertyFormField(
                     stayProperty = stayForm.property,
                     onSelectStayProperty = onSelectProperty,
+                    isEnabled = true,
                     error = stayFormErrors[StayField.Property],
                 )
             }
@@ -117,7 +118,7 @@ fun OtherRealtorStayRegistrationFormSection(
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
             Text(
-                text = stringResource(R.string.stay_registration_stay_title),
+                text = stringResource(R.string.stay_registration_period_label),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -128,7 +129,7 @@ fun OtherRealtorStayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Period))
             ) {
-                StayDateRangeFormField(
+                StayPeriodFormField(
                     checkInDateTime = stayForm.checkInDateTime,
                     checkOutDateTime = stayForm.checkOutDateTime,
                     error = stayFormErrors[StayField.Period],
@@ -150,6 +151,7 @@ fun OtherRealtorStayRegistrationFormSection(
                     StayCheckInTimeFormField(
                         checkInHour = stayForm.checkInHourMinute.first,
                         checkInMinute = stayForm.checkInHourMinute.second,
+                        isStayFromOtherRealtor = true,
                         error = stayFormErrors[StayField.CheckInTime],
                         hasValidation = false,
                         onTap = { mustShowStayCheckInTimePickerDialog = true },
@@ -164,6 +166,7 @@ fun OtherRealtorStayRegistrationFormSection(
                     StayCheckOutTimeFormField(
                         checkOutHour = stayForm.checkOutHourMinute.first,
                         checkOutMinute = stayForm.checkOutHourMinute.second,
+                        isStayFromOtherRealtor = true,
                         error = stayFormErrors[StayField.CheckOutTime],
                         hasValidation = false,
                         onTap = { mustShowStayCheckOutTimePickerDialog = true },
@@ -178,6 +181,7 @@ fun OtherRealtorStayRegistrationFormSection(
             StaysObservationsFormField(
                 value = stayForm.observations,
                 onValueChange = { onStayFormChange(stayForm.copy(observations = it)) },
+                isStayFromOtherRealtor = true,
                 onDone = onLastTextFieldDone,
             )
         }
@@ -212,7 +216,7 @@ fun OtherRealtorStayRegistrationFormSection(
     }
     if (mustShowStayCheckInTimePickerDialog) {
         TimePickerDialog(
-            title = stringResource(R.string.stay_registration_check_in_time_picker_dialog_title),
+            title = stringResource(R.string.stay_registration_start_time_picker_dialog_title),
             onTimeSelect = {
                 onStayFormChange(
                     stayForm.copy(checkInHourMinute = Pair(it.hour, it.minute))
@@ -223,7 +227,7 @@ fun OtherRealtorStayRegistrationFormSection(
     }
     if (mustShowStayCheckOutTimePickerDialog) {
         TimePickerDialog(
-            title = stringResource(R.string.stay_registration_check_out_time_picker_dialog_title),
+            title = stringResource(R.string.stay_registration_end_time_picker_dialog_title),
             onTimeSelect = {
                 onStayFormChange(
                     stayForm.copy(checkOutHourMinute = Pair(it.hour, it.minute))

@@ -140,6 +140,7 @@ data class AssistanceCompound(
         qtParkingSpots = assistance.qtParkingSpots,
         distanceToSea = assistance.distanceToSea,
         observations = assistance.observations,
+        isFinished = assistance.isFinished,
         isDeleted = assistance.isDeleted,
         tenant = tenant.toDomain(),
         searchedNeighborhoods = activeSearchedNeighborhoods.map { it.toDomain() }.toImmutableList(),

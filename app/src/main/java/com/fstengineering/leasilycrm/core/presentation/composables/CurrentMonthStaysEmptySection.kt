@@ -37,7 +37,7 @@ fun CurrentMonthStaysEmptySection(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = stringResource(R.string.stays_empty_text),
+            text = stringResource(R.string.stays_generic_empty_text),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier

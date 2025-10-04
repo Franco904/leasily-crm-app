@@ -1,11 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.models.enums
 
-enum class TenantStatus(val code: Int) {
-    Lead(code = 0),
-    UpcomingStay(code = 1),
-    Old(code = 2);
-
-    companion object {
-        fun fromCode(code: Int) = TenantStatus.entries.find { it.code == code }
-    }
+enum class TenantStatus(val id: Int) {
+    Lead(id = 0),
+    UpcomingStay(id = 1),
+    Old(id = 2),
 }

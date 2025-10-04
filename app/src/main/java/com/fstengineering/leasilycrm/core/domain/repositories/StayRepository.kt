@@ -24,4 +24,10 @@ interface StayRepository {
     fun watchAllByTenant(
         tenantId: Long,
     ): Flow<AppResult<ImmutableList<Stay>, DataSourceError>>
+
+    fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, DataSourceError>>
+
+    suspend fun setMustNotShowCheckOutDialogAnymore(
+        mustNotShowCheckOutDialogAnymore: Boolean,
+    ): AppResult<Unit, DataSourceError>
 }

@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.Assistanc
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
+import com.fstengineering.leasilycrm.home.stays.StaysViewModel
 import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel
@@ -49,7 +50,7 @@ val viewModelModule = module {
 
     viewModel {
         HomeViewModel(
-            assistanceRepository = get(),
+            deleteCurrentAssistanceUseCase = get(),
             userRepository = get(),
         )
     }
@@ -160,8 +161,8 @@ val viewModelModule = module {
 
     viewModel {
         LeadTenantDetailsViewModel(
+            deleteCurrentAssistanceUseCase = get(),
             tenantRepository = get(),
-            assistanceRepository = get(),
             assistanceCharacteristicRepository = get(),
             userRepository = get(),
         )
@@ -204,6 +205,16 @@ val viewModelModule = module {
     viewModel {
         AssistanceRegistrationStep3ViewModel(
             assistanceInteractionValidator = get(),
+        )
+    }
+
+    viewModel {
+        StaysViewModel(
+            deleteStayUseCase = get(),
+            registerStayCheckOutUseCase = get(),
+            undoRegisterStayCheckOutUseCase = get(),
+            stayRepository = get(),
+            userRepository = get(),
         )
     }
 

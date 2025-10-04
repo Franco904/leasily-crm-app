@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
-import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicAssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceInteractionRepository
@@ -49,9 +49,6 @@ class AssistanceRegistrationViewModel(
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _leadTenantName = MutableStateFlow("")
-    val leadTenantName = _leadTenantName.asStateFlow()
-
     private val _pastNeighborhoods =
         MutableStateFlow<ImmutableList<String>>(persistentListOf())
     val pastNeighborhoods = _pastNeighborhoods.asStateFlow()
@@ -87,10 +84,7 @@ class AssistanceRegistrationViewModel(
             getAssistanceToEdit(assistanceId)
             this.assistanceId = assistanceId
         } else {
-            _assistanceForm.update { it.copy(tenant = Tenant(id = leadTenantId)) }
-            getLeadTenantName(leadTenantId = leadTenantId)
-
-            _isLoading.update { false }
+            getAssistanceLeadTenant(leadTenantId = leadTenantId)
         }
 
         getPastNeighborhoods()
@@ -126,23 +120,23 @@ class AssistanceRegistrationViewModel(
                 .onSuccess { storedAssistance ->
                     _assistanceForm.update { storedAssistance }
                     assistanceToEdit = storedAssistance
-
-                    _leadTenantName.update { assistanceForm.value.tenant?.name ?: "" }
                 }
 
             _isLoading.update { false }
         }
     }
 
-    private fun getLeadTenantName(leadTenantId: Long) {
+    private fun getAssistanceLeadTenant(leadTenantId: Long) {
         viewModelScope.launch {
-            tenantRepository.getNameById(tenantId = leadTenantId)
+            tenantRepository.getById(tenantId = leadTenantId)
                 .onError { error ->
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                 }
-                .onSuccess { storedTenantName ->
-                    _leadTenantName.update { storedTenantName }
+                .onSuccess { storedLeadTenant ->
+                    _assistanceForm.update { it.copy(tenant = storedLeadTenant) }
                 }
+
+            _isLoading.update { false }
         }
     }
 
@@ -238,6 +232,19 @@ class AssistanceRegistrationViewModel(
                 if (assistanceToEdit != null) UiEvents.AssistanceEditSuccess(messageId = R.string.snackbar_edit_assistance_succeeded)
                 else UiEvents.AssistanceCreateSuccess,
             )
+
+            if (assistanceForm.value.tenant?.status == TenantStatus.Old.id) {
+                val updatedTenant = assistanceForm.value.tenant
+                    ?.copy(status = TenantStatus.Lead.id)
+                    ?: return@launch
+
+                tenantRepository.insertOrUpdate(updatedTenant)
+                    .onError { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+
+                _uiEvents.send(UiEvents.ConvertOldTenantToLead)
+            }
         }
     }
 
@@ -249,5 +256,7 @@ class AssistanceRegistrationViewModel(
         data object AssistanceCreateSuccess : UiEvents
 
         data class AssistanceEditSuccess(@StringRes val messageId: Int) : UiEvents
+
+        data object ConvertOldTenantToLead : UiEvents
     }
 }

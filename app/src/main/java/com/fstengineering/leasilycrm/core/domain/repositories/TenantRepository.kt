@@ -15,8 +15,6 @@ interface TenantRepository {
 
     suspend fun getById(tenantId: Long): AppResult<Tenant, DataSourceError>
 
-    suspend fun getNameById(tenantId: Long): AppResult<String, DataSourceError>
-
     suspend fun getAllLeadsMatching(
         matching: String?,
         orderTypeId: Int,
@@ -43,10 +41,13 @@ interface TenantRepository {
 
     fun watchById(tenantId: Long): Flow<AppResult<Tenant?, DataSourceError>>
 
-    fun watchAllLeads(orderTypeId: Int): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
-
-    fun watchAllTenants(
+    fun watchAllLeads(
         orderTypeId: Int,
-        tenantFilterType: Int,
+    ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
+
+    fun watchTenantsMatching(
+        orderTypeId: Int,
+        tenantFilterType: Int?,
+        matching: String?,
     ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
 }

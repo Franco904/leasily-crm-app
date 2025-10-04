@@ -22,6 +22,7 @@ data class Tenant(
     val stays: ImmutableList<Stay> = persistentListOf(),
     val userId: Long? = null,
 ) {
-    fun hasFinishedAssistancesOrStays() =
-        assistances.any { it.isFinished } || stays.any { it.isCheckOutDone }
+    fun hasFinishedStays() = stays.any { it.isCheckOutDone }
+
+    fun hasFinishedAssistancesOrStays() = assistances.any { it.isFinished } || hasFinishedStays()
 }

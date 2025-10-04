@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.EditNote
+import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.PlaylistRemove
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +43,7 @@ fun LeadTenantCard(
     hasMoreOptionsMenu: Boolean = true,
     hasUnfinishedAssistance: Boolean = false,
     hasUnfinishedStay: Boolean = false,
-    hasCharacteristicsRow: Boolean = true,
+    qtGuestsLabelText: String? = null,
 ) {
     AppCard(
         onClick = onCardClick,
@@ -140,6 +143,24 @@ fun LeadTenantCard(
                     modifier = Modifier
                         .fillMaxWidth()
                 )
+            }
+            if (qtGuestsLabelText != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Group,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = qtGuestsLabelText,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         }
     }
