@@ -33,7 +33,7 @@ fun StayCheckOutTimeFormField(
 
             else -> ""
         },
-        isInvalid = !hasValidation && error != null,
+        isInvalid = hasValidation && error != null,
         supportingText = if (hasValidation) {
             stringResource(error ?: R.string.inline_required)
         } else null,
