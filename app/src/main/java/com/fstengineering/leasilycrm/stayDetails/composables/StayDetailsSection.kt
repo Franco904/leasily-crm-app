@@ -114,8 +114,6 @@ fun StayDetailsSection(
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { StayCommissionDetailsItem(commission = stay.commission) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item { HorizontalDivider() }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
         item { StayTransfersDetailsItem(transfers = stay.transfers) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { HorizontalDivider() }

@@ -29,7 +29,9 @@ fun StayTransfersFormField(
     onDeleteTransfer: (StayTransfer) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
