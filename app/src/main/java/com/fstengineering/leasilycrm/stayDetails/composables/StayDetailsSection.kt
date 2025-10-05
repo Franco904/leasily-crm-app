@@ -31,6 +31,10 @@ fun StayDetailsSection(
     stay: Stay,
     stayPeriodDateCircleColor: Color?,
     onOpenStayFile: (StayFile) -> Unit,
+    cameFromProperty: Boolean,
+    cameFromTenant: Boolean,
+    onViewPropertyDashboard: () -> Unit,
+    onViewTenantDetails: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val hasAnyVehicleData = stay.vehicleMake != null
@@ -41,11 +45,23 @@ fun StayDetailsSection(
         modifier = modifier
     ) {
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { StayPropertyDetailsItem(property = stay.property) }
+        item {
+            StayPropertyDetailsItem(
+                property = stay.property,
+                cameFromProperty = cameFromProperty,
+                onViewPropertyDashboard = onViewPropertyDashboard,
+            )
+        }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { HorizontalDivider() }
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item { StayTenantDetailsItem(tenant = stay.tenant) }
+        item {
+            StayTenantDetailsItem(
+                tenant = stay.tenant,
+                cameFromTenant = cameFromTenant,
+                onViewTenantDetails = onViewTenantDetails,
+            )
+        }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         if (hasAnyVehicleData) {
             item {

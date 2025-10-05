@@ -22,13 +22,21 @@ import com.fstengineering.leasilycrm.stayDetails.composables.items.StayPropertyD
 fun UnavailablePeriodDetailsSection(
     stay: Stay,
     stayPeriodDateCircleColor: Color?,
+    cameFromProperty: Boolean,
+    onViewPropertyDashboard: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier
     ) {
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { StayPropertyDetailsItem(property = stay.property) }
+        item {
+            StayPropertyDetailsItem(
+                property = stay.property,
+                cameFromProperty = cameFromProperty,
+                onViewPropertyDashboard = onViewPropertyDashboard,
+            )
+        }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { HorizontalDivider() }
         item { Spacer(modifier = Modifier.height(24.dp)) }

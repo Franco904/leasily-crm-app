@@ -42,10 +42,14 @@ import com.fstengineering.leasilycrm.stayDetails.composables.UnavailablePeriodDe
 @Composable
 fun StayDetailsScreen(
     stayId: Long,
+    cameFromProperty: Boolean,
+    cameFromTenant: Boolean,
     viewModel: StayDetailsViewModel,
+    onEdit: (Stay) -> Unit,
+    onViewPropertyDashboard: (Long) -> Unit,
+    onViewTenantDetails: (Long) -> Unit,
     onBack: () -> Unit,
     onSignOut: () -> Unit,
-    onEdit: (Stay) -> Unit,
     showSnackbar: (String) -> Unit,
     showActionSnackbar: (String, String, () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
@@ -155,6 +159,8 @@ fun StayDetailsScreen(
                 UnavailablePeriodDetailsSection(
                     stay = stay,
                     stayPeriodDateCircleColor = stayPeriodDateCircleColor,
+                    cameFromProperty = cameFromProperty,
+                    onViewPropertyDashboard = { onViewPropertyDashboard(stay.property?.id!!) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
@@ -172,6 +178,10 @@ fun StayDetailsScreen(
                             onActivityNotFound = { mustShowNoAppToShowFileContentDialog = true }
                         )
                     },
+                    cameFromProperty = cameFromProperty,
+                    cameFromTenant = cameFromTenant,
+                    onViewPropertyDashboard = { onViewPropertyDashboard(stay.property?.id!!) },
+                    onViewTenantDetails = { onViewTenantDetails(stay.tenant?.id!!) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)

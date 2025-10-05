@@ -16,6 +16,8 @@ import com.fstengineering.leasilycrm.core.presentation.composables.cards.Propert
 @Composable
 fun StayPropertyDetailsItem(
     property: Property?,
+    cameFromProperty: Boolean,
+    onViewPropertyDashboard: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -30,6 +32,7 @@ fun StayPropertyDetailsItem(
         if (property != null) {
             PropertyCard(
                 property = property,
+                onCardClick = if (cameFromProperty) null else onViewPropertyDashboard,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,
             )

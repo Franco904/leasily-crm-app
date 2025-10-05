@@ -10,14 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 
 @Composable
 fun StayTenantDetailsItem(
     tenant: Tenant?,
+    cameFromTenant: Boolean,
+    onViewTenantDetails: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -32,6 +32,7 @@ fun StayTenantDetailsItem(
         if (tenant != null) {
             LeadTenantCard(
                 leadTenant = tenant,
+                onCardClick = if (cameFromTenant) null else onViewTenantDetails,
                 hasMoreOptionsMenu = false,
             )
         }

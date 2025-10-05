@@ -140,8 +140,14 @@ object DestinationsHandler {
 
                     navController.navigate(destination)
                 },
-                onViewStay = { stayId ->
-                    navController.navigate(Destinations.StayDetails(stayId))
+                onViewStay = { stayId, cameFromLeadTenant ->
+                    val destination = Destinations.StayDetails(
+                        stayId = stayId,
+                        cameFromProperty = false,
+                        cameFromTenant = cameFromLeadTenant,
+                    )
+
+                    navController.navigate(destination)
                 },
                 onSignOut = {
                     onSignOut()
@@ -472,7 +478,13 @@ object DestinationsHandler {
                     navController.navigate(destination)
                 },
                 onViewStay = { stayId ->
-                    navController.navigate(Destinations.StayDetails(stayId))
+                    val destination = Destinations.StayDetails(
+                        stayId = stayId,
+                        cameFromProperty = false,
+                        cameFromTenant = true,
+                    )
+
+                    navController.navigate(destination)
                 },
                 onViewSentPropertyDetails = { propertyId ->
                     navController.navigate(Destinations.PropertyDetails(propertyId))
@@ -596,12 +608,9 @@ object DestinationsHandler {
 
             StayDetailsScreen(
                 stayId = args.stayId,
+                cameFromProperty = args.cameFromProperty,
+                cameFromTenant = args.cameFromTenant,
                 viewModel = koinViewModel(),
-                onBack = { navController.navigateUp() },
-                onSignOut = {
-                    onSignOut()
-                    navController.navigateAndPopAllTo(Destinations.SignIn)
-                },
                 onEdit = { stay ->
                     val destination = Destinations.StayRegistration(
                         stayId = stay.id,
@@ -611,6 +620,17 @@ object DestinationsHandler {
                     )
 
                     navController.navigate(destination)
+                },
+                onViewPropertyDashboard = { propertyId ->
+                    navController.navigate(Destinations.PropertyDashboard(propertyId))
+                },
+                onViewTenantDetails = { tenantId ->
+                    navController.navigate(Destinations.LeadTenantDetails(tenantId))
+                },
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
                 showSnackbar = showSnackbar,
                 showActionSnackbar = showActionSnackbar,
