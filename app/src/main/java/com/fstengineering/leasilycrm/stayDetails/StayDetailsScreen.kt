@@ -13,6 +13,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
@@ -35,6 +37,7 @@ import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.R
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.RegisterCheckInSuccess
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.RegisterCheckOutSuccess
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.StayDeleteSuccess
+import com.fstengineering.leasilycrm.stayDetails.composables.StayDetailsFloatingActionButton
 import com.fstengineering.leasilycrm.stayDetails.composables.StayDetailsSection
 import com.fstengineering.leasilycrm.stayDetails.composables.StayDetailsTopAppBar
 import com.fstengineering.leasilycrm.stayDetails.composables.UnavailablePeriodDetailsSection
@@ -82,6 +85,7 @@ fun StayDetailsScreen(
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     var mustShowConfirmDeleteDialog by remember { mutableStateOf(false) }
+    var mustShowConfirmRegisterStayCheckOutDialog by rememberSaveable { mutableStateOf(false) }
     var mustShowNoAppToShowFileContentDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -137,6 +141,20 @@ fun StayDetailsScreen(
                 onEdit = { onEdit(stay) },
                 onDelete = { mustShowConfirmDeleteDialog = true },
             )
+        },
+        floatingActionButton = {
+            if (canRegisterCheckIn || canRegisterCheckOut) {
+                StayDetailsFloatingActionButton(
+                    canRegisterCheckIn = canRegisterCheckIn,
+                    onClick = {
+                        when {
+                            canRegisterCheckIn -> viewModel.registerStayCheckIn()
+                            viewModel.mustNotShowCheckOutDialog -> viewModel.registerStayCheckOut()
+                            else -> mustShowConfirmRegisterStayCheckOutDialog = true
+                        }
+                    },
+                )
+            }
         },
         modifier = modifier
     ) { innerPadding ->
@@ -198,6 +216,17 @@ fun StayDetailsScreen(
                     onBack()
                 },
                 onCancel = { mustShowConfirmDeleteDialog = false },
+            )
+        }
+        if (mustShowConfirmRegisterStayCheckOutDialog) {
+            ConfirmRegisterStayCheckOutDialog(
+                onConfirmCheckOut = { mustNotShowCheckOutDialogAnymore ->
+                    viewModel.registerStayCheckOut(
+                        mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore,
+                    )
+                    mustShowConfirmRegisterStayCheckOutDialog = false
+                },
+                onCancel = { mustShowConfirmRegisterStayCheckOutDialog = false },
             )
         }
         if (mustShowNoAppToShowFileContentDialog) {

@@ -37,6 +37,9 @@ class StayDetailsViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    var mustNotShowCheckOutDialog: Boolean = true
+        private set
+
     fun init(stayId: Long) {
         if (isInitialized) return
 
@@ -103,9 +106,9 @@ class StayDetailsViewModel(
         }
     }
 
-    fun registerStayCheckIn(stay: Stay) {
+    fun registerStayCheckIn() {
         viewModelScope.launch {
-            val updatedStay = stay.copy(isCheckInDone = true)
+            val updatedStay = stay.value.copy(isCheckInDone = true)
 
             stayRepository.insertOrUpdate(stay = updatedStay)
                 .onError { error ->
