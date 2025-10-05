@@ -91,4 +91,7 @@ sealed interface Destinations {
         val leadTenantId: Long?,
         val isUnavailablePeriod: Boolean,
     )
+
+    @Serializable
+    data class StayDetails(val stayId: Long)
 }

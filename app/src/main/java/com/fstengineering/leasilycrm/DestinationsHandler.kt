@@ -30,6 +30,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationSt
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep4Screen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.signin.SignInScreen
+import com.fstengineering.leasilycrm.stayDetails.StayDetailsScreen
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -72,7 +73,7 @@ object DestinationsHandler {
                         popUpTo(startDestination) { inclusive = true }
                     }
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -139,12 +140,14 @@ object DestinationsHandler {
 
                     navController.navigate(destination)
                 },
-                onViewStay = { stayId -> },
+                onViewStay = { stayId ->
+                    navController.navigate(Destinations.StayDetails(stayId))
+                },
                 onSignOut = {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
                 showActionSnackbar = showActionSnackbar,
             )
         }
@@ -158,7 +161,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -170,7 +173,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -201,7 +204,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -234,7 +237,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -259,7 +262,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -284,7 +287,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -304,7 +307,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
         }
@@ -340,7 +343,7 @@ object DestinationsHandler {
 
                     navController.navigate(destination)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -370,7 +373,7 @@ object DestinationsHandler {
 
                     navController.navigate(destination)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -388,7 +391,7 @@ object DestinationsHandler {
                 onViewPropertyOwnerDetails = { propertyOwnerId ->
                     navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -403,7 +406,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -421,7 +424,7 @@ object DestinationsHandler {
                 onEditPropertyOwner = { propertyOwnerId ->
                     navController.navigate(Destinations.PropertyOwnerRegistration(propertyOwnerId))
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -436,7 +439,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -468,7 +471,9 @@ object DestinationsHandler {
 
                     navController.navigate(destination)
                 },
-                onViewStay = { stayId -> },
+                onViewStay = { stayId ->
+                    navController.navigate(Destinations.StayDetails(stayId))
+                },
                 onViewSentPropertyDetails = { propertyId ->
                     navController.navigate(Destinations.PropertyDetails(propertyId))
                 },
@@ -477,7 +482,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -509,7 +514,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -535,7 +540,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -556,7 +561,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
         }
@@ -582,7 +587,33 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
+            )
+        }
+
+        composable<Destinations.StayDetails> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.StayDetails>()
+
+            StayDetailsScreen(
+                stayId = args.stayId,
+                viewModel = koinViewModel(),
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
+                },
+                onEdit = { stay ->
+                    val destination = Destinations.StayRegistration(
+                        stayId = stay.id,
+                        propertyId = stay.property?.id,
+                        leadTenantId = stay.tenant?.id,
+                        isUnavailablePeriod = stay.isUnavailablePeriod,
+                    )
+
+                    navController.navigate(destination)
+                },
+                showSnackbar = showSnackbar,
+                showActionSnackbar = showActionSnackbar,
             )
         }
     }

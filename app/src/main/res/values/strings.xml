@@ -404,8 +404,7 @@
 
     <string name="stay_auto_check_in_suffix_text">(Auto check-in)</string>
     <string name="stay_auto_check_out_suffix_text">(Auto check-out)</string>
-    <string name="stay_check_in_date_text">%1$s/%2$s/%3$s • %4$sh%5$s %6$s</string>
-    <string name="stay_check_out_date_text">%1$s/%2$s/%3$s • %4$sh%5$s %6$s</string>
+    <string name="stay_check_in_check_out_date_time_text">%1$s/%2$s/%3$s • %4$sh%5$s %6$s</string>
 
     <string name="stay_type_stay_title">Estadia de cliente</string>
     <string name="stay_type_stay_description">Registre uma estadia para um de seus leads</string>
@@ -467,7 +466,6 @@
     <string name="stay_registration_transfers_description_column_header">Descrição</string>
 
     <string name="stay_registration_transfers_date_column_value">%1$s/%2$s/%3$s</string>
-    <string name="stay_registration_transfers_amount_column_value">R$ %1$s</string>
     <string name="stay_registration_transfer_description_empty_text">Sem descrição</string>
 
     <string name="stay_registration_transfer_delete_dialog_headline">Excluir transferência financeira?</string>
@@ -477,6 +475,21 @@
     <string name="stay_registration_documents_body_text">Documentos relacionados ao aluguel podem ser, por exemplo, uma cópia do contrato ou recibo de locação elaborado entre as partes do processo.</string>
 
     <!-- Stay details -->
+    <string name="stay_details_top_app_bar_title">Detalhes da estadia</string>
+    <string name="stay_unavailable_period_details_top_app_bar_title">Detalhes do período</string>
+
+    <string name="stay_details_tenant_vehicle_data_body_text">Marca %1$s, Cor %2$s, Placa %3$s</string>
+
+    <plurals name="stay_details_qt_guests">
+        <item quantity="one">%1$d hóspede</item>
+        <item quantity="other">%1$d hóspedes</item>
+    </plurals>
+
+    <string name="stay_details_check_in_check_out_times_title">Horários</string>
+    <string name="stay_details_check_in_check_out_time">%1$sh%2$s %3$s</string>
+    <string name="stay_details_total_price_label">Preço total</string>
+    <string name="stay_details_commission_label">Minha comissão</string>
+
     <string name="stay_details_transfers_empty_text">Nenhuma transferência registrada.</string>
 
     <!-- Calendar -->
@@ -505,11 +518,14 @@
     <!-- Body texts -->
     <string name="not_registered_info_body_text">Informação não registrada</string>
     <string name="not_registered_info_var_1_body_text">Não informado</string>
+    <string name="not_registered_info_var_2_body_text">Não informada</string>
     <string name="no_file_registered_body_text">Nenhum arquivo registrado</string>
     <string name="unnamed_file_text">Arquivo sem nome</string>
 
     <string name="order_by_name_text">Nome</string>
     <string name="order_by_last_update_date_text">Última atualização</string>
+
+    <string name="reais_currency_value">R$ %1$s</string>
 
     <string name="last_separator_label">e</string>
 
