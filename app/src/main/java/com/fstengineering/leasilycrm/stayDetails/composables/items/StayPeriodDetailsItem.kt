@@ -18,16 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import java.time.LocalDateTime
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
+import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
 
 @Composable
 fun StayPeriodDetailsItem(
-    checkInDateTime: LocalDateTime?,
-    checkOutDateTime: LocalDateTime?,
-    isUnavailablePeriod: Boolean,
-    dateCircleColor: Color?,
+    stayStructuredDates: StaysStructuredDatesMap,
     modifier: Modifier = Modifier,
+    stayPeriodDateCircleColor: Color? = null,
 ) {
+    val defaultPeriodColor = MaterialTheme.colorScheme.secondaryContainer
+
     Column(
         modifier = modifier
     ) {
@@ -47,6 +48,16 @@ fun StayPeriodDetailsItem(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        // TODO: Add period calendars here.
+        Column {
+            stayStructuredDates.entries.forEachIndexed { i, (monthYear, stayDates) ->
+                if (i > 0) Spacer(modifier = Modifier.height(8.dp))
+                StayPeriodsCalendar(
+                    month = monthYear.month,
+                    year = monthYear.year,
+                    stayCalendarDates = monthYear to stayDates,
+                    singleStayPeriodColor = stayPeriodDateCircleColor ?: defaultPeriodColor,
+                )
+            }
+        }
     }
 }

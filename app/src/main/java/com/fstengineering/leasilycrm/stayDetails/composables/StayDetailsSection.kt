@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.StayFile
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.stayDetails.composables.items.StayCheckInCheckOutDetailsItem
 import com.fstengineering.leasilycrm.stayDetails.composables.items.StayCommissionDetailsItem
 import com.fstengineering.leasilycrm.stayDetails.composables.items.StayObservationsDetailsItem
@@ -29,6 +30,7 @@ import com.fstengineering.leasilycrm.stayDetails.composables.items.stayDocuments
 @Composable
 fun StayDetailsSection(
     stay: Stay,
+    stayStructuredDates: StaysStructuredDatesMap,
     stayPeriodDateCircleColor: Color?,
     onOpenStayFile: (StayFile) -> Unit,
     cameFromProperty: Boolean,
@@ -87,10 +89,8 @@ fun StayDetailsSection(
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
             StayPeriodDetailsItem(
-                checkInDateTime = stay.checkInDateTime,
-                checkOutDateTime = stay.checkOutDateTime,
-                isUnavailablePeriod = stay.isUnavailablePeriod,
-                dateCircleColor = stayPeriodDateCircleColor,
+                stayStructuredDates = stayStructuredDates,
+                stayPeriodDateCircleColor = stayPeriodDateCircleColor,
             )
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }

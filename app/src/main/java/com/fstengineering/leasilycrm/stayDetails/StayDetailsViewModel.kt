@@ -7,11 +7,15 @@ import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteStayUseCase
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,6 +27,7 @@ class StayDetailsViewModel(
     private val deleteStayUseCase: DeleteStayUseCase,
     private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
     private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
+    private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
     private val stayRepository: StayRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {
@@ -33,6 +38,9 @@ class StayDetailsViewModel(
 
     private val _stay = MutableStateFlow(Stay())
     val stay = _stay.asStateFlow()
+
+    private val _stayStructuredDates = MutableStateFlow<StaysStructuredDatesMap>(persistentMapOf())
+    val stayStructuredDates = _stayStructuredDates.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -82,6 +90,10 @@ class StayDetailsViewModel(
                         }
 
                         _stay.update { storedStay }
+
+                        _stayStructuredDates.update {
+                            getStaysStructuredDatesUseCase(stays = persistentListOf(storedStay))
+                        }
                     }
 
                 _isLoading.update { false }

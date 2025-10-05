@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.stayDetails.composables.items.StayCheckInCheckOutDetailsItem
 import com.fstengineering.leasilycrm.stayDetails.composables.items.StayObservationsDetailsItem
 import com.fstengineering.leasilycrm.stayDetails.composables.items.StayPeriodDetailsItem
@@ -21,7 +22,7 @@ import com.fstengineering.leasilycrm.stayDetails.composables.items.StayPropertyD
 @Composable
 fun UnavailablePeriodDetailsSection(
     stay: Stay,
-    stayPeriodDateCircleColor: Color?,
+    stayStructuredDates: StaysStructuredDatesMap,
     cameFromProperty: Boolean,
     onViewPropertyDashboard: () -> Unit,
     modifier: Modifier = Modifier,
@@ -48,14 +49,7 @@ fun UnavailablePeriodDetailsSection(
             )
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item {
-            StayPeriodDetailsItem(
-                checkInDateTime = stay.checkInDateTime,
-                checkOutDateTime = stay.checkOutDateTime,
-                isUnavailablePeriod = stay.isUnavailablePeriod,
-                dateCircleColor = stayPeriodDateCircleColor,
-            )
-        }
+        item { StayPeriodDetailsItem(stayStructuredDates = stayStructuredDates) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
             StayCheckInCheckOutDetailsItem(

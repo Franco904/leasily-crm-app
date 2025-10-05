@@ -51,7 +51,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.cards.Propert
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteTenantDialog
-import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed

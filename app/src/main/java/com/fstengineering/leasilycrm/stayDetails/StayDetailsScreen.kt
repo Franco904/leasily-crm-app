@@ -64,6 +64,7 @@ fun StayDetailsScreen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val stay by viewModel.stay.collectAsStateWithLifecycle()
+    val stayStructuredDates by viewModel.stayStructuredDates.collectAsStateWithLifecycle()
 
     val now by rememberNow()
 
@@ -176,7 +177,7 @@ fun StayDetailsScreen(
             stay.isUnavailablePeriod -> {
                 UnavailablePeriodDetailsSection(
                     stay = stay,
-                    stayPeriodDateCircleColor = stayPeriodDateCircleColor,
+                    stayStructuredDates = stayStructuredDates,
                     cameFromProperty = cameFromProperty,
                     onViewPropertyDashboard = { onViewPropertyDashboard(stay.property?.id!!) },
                     modifier = Modifier
@@ -189,6 +190,7 @@ fun StayDetailsScreen(
             else -> {
                 StayDetailsSection(
                     stay = stay,
+                    stayStructuredDates = stayStructuredDates,
                     stayPeriodDateCircleColor = stayPeriodDateCircleColor,
                     onOpenStayFile = { file ->
                         context.openFileWithChooser(

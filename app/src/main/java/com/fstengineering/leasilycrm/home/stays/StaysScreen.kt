@@ -41,7 +41,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberHorizontalCenterScroller
-import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber

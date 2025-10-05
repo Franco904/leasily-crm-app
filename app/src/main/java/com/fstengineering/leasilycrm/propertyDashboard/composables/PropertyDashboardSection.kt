@@ -21,9 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.presentation.composables.AppCalendar
+import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -86,10 +86,10 @@ fun PropertyDashboardSection(
             color = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        AppCalendar(
+        StayPeriodsCalendar(
             month = currentMonthYear.month,
             year = currentMonthYear.year,
-            selectedDatesWithMonthYear = if (currentMonthDates.isEmpty()) null else {
+            stayCalendarDates = if (currentMonthDates.isEmpty()) null else {
                 currentMonthYear to persistentListOf() // TODO: Map selected dates from stays datetimes
             },
             actions = {

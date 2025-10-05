@@ -34,7 +34,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyPriceCard
-import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.CleaningServiceTaxFormField

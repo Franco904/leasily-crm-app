@@ -27,7 +27,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPricesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyPriceCard
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
-import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import kotlinx.collections.immutable.ImmutableList

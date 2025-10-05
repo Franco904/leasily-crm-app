@@ -237,6 +237,7 @@ val viewModelModule = module {
             deleteStayUseCase = get(),
             registerStayCheckOutUseCase = get(),
             undoRegisterStayCheckOutUseCase = get(),
+            getStaysStructuredDatesUseCase = get(),
             stayRepository = get(),
             userRepository = get(),
         )

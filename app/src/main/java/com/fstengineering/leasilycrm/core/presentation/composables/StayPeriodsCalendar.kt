@@ -1,7 +1,5 @@
 package com.fstengineering.leasilycrm.core.presentation.composables
 
-import android.graphics.Bitmap
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
@@ -24,26 +22,20 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.layer.drawLayer
-import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
-import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
-import com.fstengineering.leasilycrm.core.presentation.models.CalendarSelectedDate
-import com.fstengineering.leasilycrm.core.presentation.models.RangeSelectionLabel
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.presentation.utils.daysOfWeek
 import com.fstengineering.leasilycrm.core.presentation.utils.getFirstDayOfWeekOfMonth
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
@@ -54,18 +46,15 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun AppCalendar(
+fun StayPeriodsCalendar(
     month: Int,
     year: Int,
     modifier: Modifier = Modifier,
-    selectedDatesWithMonthYear: Pair<CalendarMonthYear, ImmutableList<CalendarSelectedDate>>? = null,
-    isConvertingToBitmap: Boolean = false,
-    onConvertedToBitmap: (Bitmap) -> Unit = {},
+    stayCalendarDates: Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>? = null,
+    singleStayPeriodColor: Color? = null,
     actions: (@Composable RowScope.() -> Unit)? = null,
 ) {
     val context = LocalContext.current
-
-    val graphicsLayer = rememberGraphicsLayer()
 
     val monthLabel = remember(month) { context.getMonthLabelByNumber(monthNumber = month) }
     val numberOfDaysOfMonth =
@@ -80,25 +69,9 @@ fun AppCalendar(
         List(numberOfDaysOfMonth) { day -> (day + 1).toString() }.toImmutableList()
     }
 
-    LaunchedEffect(isConvertingToBitmap) {
-        if (isConvertingToBitmap) {
-            try {
-                onConvertedToBitmap(graphicsLayer.toImageBitmap().asAndroidBitmap())
-            } catch (e: Exception) {
-                Log.e("Calendar $month/$year", e.message.toString())
-            }
-        }
-    }
-
     AppCard(
         modifier = modifier
             .widthIn(max = 400.dp)
-            .drawWithCache {
-                onDrawWithContent {
-                    graphicsLayer.record { this@onDrawWithContent.drawContent() }
-                    drawLayer(graphicsLayer)
-                }
-            }
     ) {
         Column(
             modifier = Modifier
@@ -113,18 +86,19 @@ fun AppCalendar(
                 year = year,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            if (selectedDatesWithMonthYear?.second.isNullOrEmpty()) {
+            if (stayCalendarDates?.second.isNullOrEmpty()) {
                 CurrentMonthStaysEmptySection(
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .padding(vertical = 64.dp)
                 )
             } else {
-                DatesSection(
+                StayDatesSection(
                     daysOfWeekLabels = daysOfWeekLabels.toPersistentList(),
                     firstDayOfWeek = firstDayOfWeek,
                     daysOfMonth = daysOfMonth.toPersistentList(),
-                    selectedDatesWithMonthYear = selectedDatesWithMonthYear,
+                    selectedDatesWithMonthYear = stayCalendarDates,
+                    singleStayPeriodColor = singleStayPeriodColor,
                 )
             }
             if (actions != null) {
@@ -161,11 +135,12 @@ fun MonthLabelSection(
 }
 
 @Composable
-fun DatesSection(
+fun StayDatesSection(
     daysOfWeekLabels: ImmutableList<String>,
     firstDayOfWeek: Int,
     daysOfMonth: ImmutableList<String>,
-    selectedDatesWithMonthYear: Pair<CalendarMonthYear, ImmutableList<CalendarSelectedDate>>?,
+    selectedDatesWithMonthYear: Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>?,
+    singleStayPeriodColor: Color?,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -179,6 +154,7 @@ fun DatesSection(
             CalendarDate(
                 dayText = dayOfWeek,
                 isWeekDayLabel = true,
+                singleStayPeriodColor = singleStayPeriodColor,
                 modifier = Modifier
                     .wrapContentSize()
                     .padding(bottom = 24.dp)
@@ -189,6 +165,7 @@ fun DatesSection(
             CalendarDate(
                 dayText = "N",
                 mustHideText = true,
+                singleStayPeriodColor = singleStayPeriodColor,
                 modifier = Modifier
                     .wrapContentSize()
                     .padding(bottom = 24.dp)
@@ -204,6 +181,7 @@ fun DatesSection(
 
                 CalendarDate(
                     dayText = day,
+                    singleStayPeriodColor = singleStayPeriodColor,
                     modifier = Modifier
                         .padding(bottom = paddingBottom)
                         .offset(
@@ -222,6 +200,7 @@ fun DatesSection(
                 CalendarDate(
                     dayText = day,
                     selectedDate = selectedDate,
+                    singleStayPeriodColor = singleStayPeriodColor,
                     modifier = Modifier
                         .padding(bottom = paddingBottom)
                         .offset(
@@ -237,10 +216,11 @@ fun DatesSection(
 @Composable
 fun CalendarDate(
     dayText: String,
+    singleStayPeriodColor: Color?,
     modifier: Modifier = Modifier,
     mustHideText: Boolean = false,
     isWeekDayLabel: Boolean = false,
-    selectedDate: CalendarSelectedDate? = null,
+    selectedDate: StayCalendarDate? = null,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -249,9 +229,10 @@ fun CalendarDate(
         AnimatedVisibility(selectedDate != null) {
             if (selectedDate == null) return@AnimatedVisibility
 
-            SelectedDateCircle(
-                selectionRange = selectedDate.rangeSelectionLabel,
-                isRangeEnd = selectedDate.isRangeEnd,
+            StayDateCircle(
+//                selectionRange = selectedDate.rangeSelectionLabel,
+                singleStayPeriodColor = singleStayPeriodColor,
+                isCheckInDate = selectedDate.isCheckOutDate,
             )
         }
         Text(
@@ -265,63 +246,71 @@ fun CalendarDate(
 }
 
 @Composable
-fun SelectedDateCircle(
+fun StayDateCircle(
+    isCheckInDate: Boolean,
+    singleStayPeriodColor: Color?,
     modifier: Modifier = Modifier,
-    selectionRange: Pair<RangeSelectionLabel, RangeSelectionLabel>,
-    isRangeEnd: Boolean,
+//    selectionRange: Pair<RangeSelectionLabel, RangeSelectionLabel>,
 ) {
-    val (firstCircleHalfRange, secondCircleHalfRange) = selectionRange
+//    val (firstCircleHalfRange, secondCircleHalfRange) = selectionRange
 
-    val firstCircleHalfColor = firstCircleHalfRange.color()
-    val secondCircleHalfColor = secondCircleHalfRange.color()
+//    val firstCircleHalfColor = firstCircleHalfRange.color()
+//    val secondCircleHalfColor = secondCircleHalfRange.color()
 
+    val secondaryContainerColor = singleStayPeriodColor ?: MaterialTheme.colorScheme.secondaryContainer
     val backgroundColor = MaterialTheme.colorScheme.surfaceContainerLow
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
-        SelectedDateSubCircle(
+        StayDateSemiCircle(
             size = 28.dp,
-            firstCircleHalfColor = firstCircleHalfColor,
-            secondCircleHalfColor = secondCircleHalfColor,
+            firstHalfColor = when {
+                isCheckInDate -> secondaryContainerColor
+                else -> backgroundColor
+            },
+            secondHalfColor = when {
+                isCheckInDate -> backgroundColor
+                else -> secondaryContainerColor
+            },
         )
-        SelectedDateSubCircle(
-            size = 22.dp,
-            firstCircleHalfColor = if (firstCircleHalfRange == RangeSelectionLabel.First) {
-                firstCircleHalfColor
-            } else backgroundColor,
-            secondCircleHalfColor = if (secondCircleHalfRange == RangeSelectionLabel.First) {
-                secondCircleHalfColor
-            } else backgroundColor,
-        )
-        if (firstCircleHalfRange.count > RangeSelectionLabel.First.count && isRangeEnd) {
-            SelectedDateMiddleDivider(
-                firstCircleHalfColor = firstCircleHalfColor,
-            )
-        }
+//        SelectedDateSubCircle(
+//            size = 22.dp,
+//            firstCircleHalfColor = if (firstCircleHalfRange == RangeSelectionLabel.First) {
+//                firstCircleHalfColor
+//            } else backgroundColor,
+//            secondCircleHalfColor = if (secondCircleHalfRange == RangeSelectionLabel.First) {
+//                secondCircleHalfColor
+//            } else backgroundColor,
+//        )
+//        if (firstCircleHalfRange.count > RangeSelectionLabel.First.count && isRangeEnd) {
+//            SelectedDateMiddleDivider(
+//                firstCircleHalfColor = firstCircleHalfColor,
+//            )
+//        }
     }
 }
 
 @Composable
-fun SelectedDateSubCircle(
+fun StayDateSemiCircle(
     size: Dp,
-    firstCircleHalfColor: Color,
-    secondCircleHalfColor: Color,
+    firstHalfColor: Color,
+    secondHalfColor: Color,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.size(size)) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             // arc 0° angle starts at 3 o'clock
             drawArc(
-                color = firstCircleHalfColor,
+                color = firstHalfColor,
                 startAngle = 90f,
                 sweepAngle = 180f,
                 useCenter = true,
                 style = Fill,
             )
             drawArc(
-                color = secondCircleHalfColor,
+                color = secondHalfColor,
                 startAngle = 270f,
                 sweepAngle = 180f,
                 useCenter = true,
@@ -353,135 +342,181 @@ fun SelectedDateMiddleDivider(
 
 @Preview
 @Composable
-fun BaseCalendarPreview(
+fun StayPeriodsCalendarPreview(
     modifier: Modifier = Modifier,
 ) {
     AppTheme {
-        AppCalendar(
+        StayPeriodsCalendar(
             month = 1,
-            year = 2025,
-            selectedDatesWithMonthYear = Pair(
+            year = 2026,
+            stayCalendarDates = Pair(
                 CalendarMonthYear(-1, 1, 2025),
                 persistentListOf(
-//                    CalendarSelectedDate("1", rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First),
-//                    CalendarSelectedDate("2", rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First),
-//                    CalendarSelectedDate("3", rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "4",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = true,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "5",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "6",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "7",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "8",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "9",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "10",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "11",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "12",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "13",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "14",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "15",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "16",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "17",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "18",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "19",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "20",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "21",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "22",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "23",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "24",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "25",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "26",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "27",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "28",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "29",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = false,
+                        isUnavailableDate = false,
                     ),
-                    CalendarSelectedDate(
+                    StayCalendarDate(
                         "30",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
-                    ),
-                    CalendarSelectedDate(
-                        "31",
-                        rangeSelectionLabel = RangeSelectionLabel.First to RangeSelectionLabel.First
+                        isCheckInDate = false,
+                        isCheckOutDate = true,
+                        isUnavailableDate = false,
                     ),
                 ),
             ),
-            isConvertingToBitmap = false,
-            onConvertedToBitmap = {},
+            singleStayPeriodColor = MaterialTheme.colorScheme.secondaryContainer,
             modifier = modifier,
         )
     }
