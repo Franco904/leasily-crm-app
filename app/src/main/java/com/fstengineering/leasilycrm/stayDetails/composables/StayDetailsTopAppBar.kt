@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.EditCalendar
-import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -64,7 +63,7 @@ fun StayDetailsTopAppBar(
                         onClick = onEdit,
                     ),
                     MoreOptionsMenuOption(
-                        icon = Icons.Outlined.EventBusy,
+                        iconDrawable = R.drawable.event_busy,
                         text = stringResource(R.string.delete_action_button_text),
                         onClick = onDelete,
                     ),

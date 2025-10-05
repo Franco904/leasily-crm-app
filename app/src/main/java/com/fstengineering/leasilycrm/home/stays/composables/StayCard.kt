@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.EditCalendar
-import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.HorizontalDivider
@@ -140,7 +139,7 @@ fun StayCard(
                             onClick = onEditStay,
                         ),
                         MoreOptionsMenuOption(
-                            icon = Icons.Outlined.EventBusy,
+                            iconDrawable = R.drawable.event_busy,
                             text = stringResource(R.string.delete_action_button_text),
                             onClick = onDeleteStay,
                         ),
