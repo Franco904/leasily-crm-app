@@ -271,6 +271,7 @@
     <string name="lead_tenant_details_top_app_bar_title_tenant">Detalhes do inquilino</string>
     <string name="lead_tenant_details_top_app_bar_title_all_sent_properties">Imóveis enviados</string>
     <string name="lead_tenant_details_top_app_bar_title_all_interations">Interações</string>
+    <string name="lead_tenant_details_top_app_bar_title_past_assistance">Atendimento passado</string>
 
     <string name="lead_tenant_details_tab_details_label_title">Detalhes</string>
     <string name="lead_tenant_details_top_current_assistance_label_title">Atendimento</string>
@@ -316,8 +317,8 @@
     <string name="lead_tenant_assistance_details_last_assistance_interaction_title">Última interação</string>
 
     <string name="lead_tenant_history_details_this_year_label">Este ano</string>
-    <string name="lead_tenant_history_details_assistance_at_label">Atendimento em %1$s</string>
-    <string name="lead_tenant_history_details_stay_at_label">Estadia em %1$s</string>
+    <string name="lead_tenant_history_details_assistance_at_label">Atendimento em %1$s/%2$s/%3$s</string>
+    <string name="lead_tenant_history_details_stay_at_label">Estadia em %1$s/%2$s/%3$s</string>
 
     <string name="assistance_delete_dialog_headline">Excluir atendimento em andamento?</string>
     <string name="assistance_delete_dialog_supporting_text">Se confirmada a exclusão, este atendimento não estará mais disponível.</string>
@@ -494,6 +495,8 @@
 
     <!-- Calendar -->
     <string name="this_month_label">Este mês</string>
+    <string name="this_year_label">Este ano</string>
+
     <string name="january_label">JANEIRO</string>
     <string name="february_label">FEVEREIRO</string>
     <string name="march_label">MARÇO</string>
