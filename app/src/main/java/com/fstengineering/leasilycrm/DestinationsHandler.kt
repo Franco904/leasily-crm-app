@@ -487,7 +487,7 @@ object DestinationsHandler {
                     navController.navigate(destination)
                 },
                 onViewSentPropertyDetails = { propertyId ->
-                    navController.navigate(Destinations.PropertyDetails(propertyId))
+                    navController.navigate(Destinations.PropertyDashboard(propertyId))
                 },
                 onBack = { navController.navigateUp() },
                 onSignOut = {
