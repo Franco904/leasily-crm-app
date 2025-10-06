@@ -241,14 +241,6 @@ fun CalendarDate(
             Box(
                 contentAlignment = Alignment.Center,
             ) {
-                // null / -1
-                // null / > -1
-                // -1 / null
-                // -1 / > -1
-                // > -1 / null
-                // > -1 / -1
-                // 0 / 0
-                // 0 / 1
                 if (isAllUnavailableDate) UnavailablePeriodDateCircle()
                 else {
                     StayDateCircle(
