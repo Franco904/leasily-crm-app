@@ -210,11 +210,11 @@ fun PropertyDetailsScreen(
         }
         if (mustShowStayTypeDialog) {
             StayTypeDialog(
-                onLoggedRealtorStayType = {
+                onTenantStayType = {
                     mustShowStayTypeDialog = false
                     onNewStay(false)
                 },
-                onOtherRealtorStayType = {
+                onUnavailablePeriodStayType = {
                     mustShowStayTypeDialog = false
                     onNewStay(true)
                 },

@@ -35,7 +35,7 @@ fun StayRegistrationTopAppBar(
     isEditing: Boolean,
     onBack: () -> Unit,
     onSaveStay: () -> Unit,
-    isStayFromOtherRealtor: Boolean,
+    isUnavailablePeriod: Boolean,
     isSelectingProperty: Boolean,
     isSelectingTenant: Boolean,
     mustShowSearchAction: Boolean,
@@ -118,12 +118,12 @@ fun StayRegistrationTopAppBar(
                         text = stringResource(
                             when {
                                 isEditing -> {
-                                    if (isStayFromOtherRealtor) R.string.stay_registration_unavailable_period_top_app_bar_title_edit
+                                    if (isUnavailablePeriod) R.string.stay_registration_unavailable_period_top_app_bar_title_edit
                                     else R.string.stay_registration_top_app_bar_title_edit
                                 }
 
                                 else -> {
-                                    if (isStayFromOtherRealtor) R.string.stay_registration_unavailable_period_top_app_bar_title_create
+                                    if (isUnavailablePeriod) R.string.stay_registration_unavailable_period_top_app_bar_title_create
                                     else R.string.stay_registration_top_app_bar_title_create
                                 }
                             },

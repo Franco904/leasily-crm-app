@@ -30,6 +30,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationSt
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep4Screen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.signin.SignInScreen
+import com.fstengineering.leasilycrm.stayDetails.StayDetailsScreen
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -72,7 +73,7 @@ object DestinationsHandler {
                         popUpTo(startDestination) { inclusive = true }
                     }
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -124,27 +125,35 @@ object DestinationsHandler {
                         stayId = null,
                         propertyId = null,
                         leadTenantId = leadTenantId,
-                        isStayFromOtherRealtor = false,
+                        isUnavailablePeriod = false,
                     )
 
                     navController.navigate(destination)
                 },
-                onRegisterStayBlank = { stayId, isStayFromOtherRealtor ->
+                onRegisterStayBlank = { stayId, isUnavailablePeriod ->
                     val destination = Destinations.StayRegistration(
                         stayId = stayId,
                         propertyId = null,
                         leadTenantId = null,
-                        isStayFromOtherRealtor = isStayFromOtherRealtor,
+                        isUnavailablePeriod = isUnavailablePeriod,
                     )
 
                     navController.navigate(destination)
                 },
-                onViewStay = { stayId -> },
+                onViewStay = { stayId, cameFromLeadTenant ->
+                    val destination = Destinations.StayDetails(
+                        stayId = stayId,
+                        cameFromProperty = false,
+                        cameFromTenant = cameFromLeadTenant,
+                    )
+
+                    navController.navigate(destination)
+                },
                 onSignOut = {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
                 showActionSnackbar = showActionSnackbar,
             )
         }
@@ -158,7 +167,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -170,7 +179,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -187,12 +196,12 @@ object DestinationsHandler {
                 onViewPropertyDetails = { propertyId ->
                     navController.navigate(Destinations.PropertyDetails(propertyId))
                 },
-                onNewStay = { propertyId, isStayFromOtherRealtor ->
+                onNewStay = { propertyId, isUnavailablePeriod ->
                     val destination = Destinations.StayRegistration(
                         stayId = null,
                         propertyId = propertyId,
                         leadTenantId = null,
-                        isStayFromOtherRealtor = isStayFromOtherRealtor,
+                        isUnavailablePeriod = isUnavailablePeriod,
                     )
 
                     navController.navigate(destination)
@@ -201,7 +210,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -234,7 +243,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -259,7 +268,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -284,7 +293,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -304,7 +313,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
         }
@@ -330,17 +339,17 @@ object DestinationsHandler {
                     navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
                 },
                 onViewNextStays = {},
-                onNewStay = { isStayFromOtherRealtor ->
+                onNewStay = { isUnavailablePeriod ->
                     val destination = Destinations.StayRegistration(
                         stayId = null,
                         propertyId = args.propertyId,
                         leadTenantId = null,
-                        isStayFromOtherRealtor = isStayFromOtherRealtor,
+                        isUnavailablePeriod = isUnavailablePeriod,
                     )
 
                     navController.navigate(destination)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -360,17 +369,17 @@ object DestinationsHandler {
                         Destinations.PropertyRegistration(args.propertyId),
                     )
                 },
-                onNewStay = { isStayFromOtherRealtor ->
+                onNewStay = { isUnavailablePeriod ->
                     val destination = Destinations.StayRegistration(
                         stayId = null,
                         propertyId = args.propertyId,
                         leadTenantId = null,
-                        isStayFromOtherRealtor = isStayFromOtherRealtor,
+                        isUnavailablePeriod = isUnavailablePeriod,
                     )
 
                     navController.navigate(destination)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -388,7 +397,7 @@ object DestinationsHandler {
                 onViewPropertyOwnerDetails = { propertyOwnerId ->
                     navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -403,7 +412,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -421,7 +430,7 @@ object DestinationsHandler {
                 onEditPropertyOwner = { propertyOwnerId ->
                     navController.navigate(Destinations.PropertyOwnerRegistration(propertyOwnerId))
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -436,7 +445,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -463,12 +472,20 @@ object DestinationsHandler {
                         stayId = null,
                         propertyId = null,
                         leadTenantId = args.leadTenantId,
-                        isStayFromOtherRealtor = false,
+                        isUnavailablePeriod = false,
                     )
 
                     navController.navigate(destination)
                 },
-                onViewStay = { stayId -> },
+                onViewStay = { stayId ->
+                    val destination = Destinations.StayDetails(
+                        stayId = stayId,
+                        cameFromProperty = false,
+                        cameFromTenant = true,
+                    )
+
+                    navController.navigate(destination)
+                },
                 onViewSentPropertyDetails = { propertyId ->
                     navController.navigate(Destinations.PropertyDetails(propertyId))
                 },
@@ -477,7 +494,7 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
             )
         }
 
@@ -509,7 +526,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -535,7 +552,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -556,7 +573,7 @@ object DestinationsHandler {
                         onSignOut()
                         navController.navigateAndPopAllTo(Destinations.SignIn)
                     },
-                    showSnackbar = { message -> showSnackbar(message) },
+                    showSnackbar = showSnackbar,
                 )
             }
         }
@@ -569,7 +586,7 @@ object DestinationsHandler {
                 stayId = args.stayId,
                 propertyId = args.propertyId,
                 tenantId = args.leadTenantId,
-                isStayFromOtherRealtor = args.isStayFromOtherRealtor,
+                isUnavailablePeriod = args.isUnavailablePeriod,
                 viewModel = koinViewModel(),
                 onBack = { success ->
                     previousBackStackEntry
@@ -582,7 +599,41 @@ object DestinationsHandler {
                     onSignOut()
                     navController.navigateAndPopAllTo(Destinations.SignIn)
                 },
-                showSnackbar = { message -> showSnackbar(message) },
+                showSnackbar = showSnackbar,
+            )
+        }
+
+        composable<Destinations.StayDetails> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.StayDetails>()
+
+            StayDetailsScreen(
+                stayId = args.stayId,
+                cameFromProperty = args.cameFromProperty,
+                cameFromTenant = args.cameFromTenant,
+                viewModel = koinViewModel(),
+                onEdit = { stay ->
+                    val destination = Destinations.StayRegistration(
+                        stayId = stay.id,
+                        propertyId = stay.property?.id,
+                        leadTenantId = stay.tenant?.id,
+                        isUnavailablePeriod = stay.isUnavailablePeriod,
+                    )
+
+                    navController.navigate(destination)
+                },
+                onViewPropertyDashboard = { propertyId ->
+                    navController.navigate(Destinations.PropertyDashboard(propertyId))
+                },
+                onViewTenantDetails = { tenantId ->
+                    navController.navigate(Destinations.LeadTenantDetails(tenantId))
+                },
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
+                },
+                showSnackbar = showSnackbar,
+                showActionSnackbar = showActionSnackbar,
             )
         }
     }

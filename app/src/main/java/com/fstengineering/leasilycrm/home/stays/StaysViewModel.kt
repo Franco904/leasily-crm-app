@@ -132,10 +132,10 @@ class StaysViewModel(
             if (stay.isDeleted) return@filter false
 
             when (filterType) {
-                StayFilterType.UpcomingCheckIn -> !stay.isCheckInDone && !stay.isCheckOutDone && !stay.isFromOtherRealtor
-                StayFilterType.UpcomingCheckOut -> stay.isCheckInDone && !stay.isCheckOutDone && !stay.isFromOtherRealtor
-                StayFilterType.Finished -> stay.isCheckInDone && stay.isCheckOutDone && !stay.isFromOtherRealtor
-                StayFilterType.UnavailablePeriod -> stay.isFromOtherRealtor
+                StayFilterType.UpcomingCheckIn -> !stay.isCheckInDone && !stay.isCheckOutDone && !stay.isUnavailablePeriod
+                StayFilterType.UpcomingCheckOut -> stay.isCheckInDone && !stay.isCheckOutDone && !stay.isUnavailablePeriod
+                StayFilterType.Finished -> stay.isCheckInDone && stay.isCheckOutDone && !stay.isUnavailablePeriod
+                StayFilterType.UnavailablePeriod -> stay.isUnavailablePeriod
                 StayFilterType.All -> true
             }
         }

@@ -97,7 +97,7 @@ class StayRegistrationViewModel(
         stayId: Long?,
         propertyId: Long?,
         tenantId: Long?,
-        isStayFromOtherRealtor: Boolean,
+        isUnavailablePeriod: Boolean,
     ) {
         if (isInitialized) return
 
@@ -109,7 +109,7 @@ class StayRegistrationViewModel(
         if (stayId == null && propertyId != null) getPropertyToAutofill(propertyId)
         if (stayId == null && tenantId != null) getTenantToAutofill(tenantId)
 
-        _stayForm.update { it.copy(isFromOtherRealtor = isStayFromOtherRealtor) }
+        _stayForm.update { it.copy(isUnavailablePeriod = isUnavailablePeriod) }
 
         watchPropertySearchInput()
         watchTenantSearchInput()
@@ -401,7 +401,10 @@ class StayRegistrationViewModel(
                 return@launch
             }
 
-            stayValidator.validate(stay = stayForm.value)
+            stayValidator.validate(
+                stay = stayForm.value,
+                stayBeforeEdit = stayToEdit,
+            )
                 .onErrors { errors ->
                     setFieldErrors(errors)
                     return@launch

@@ -14,11 +14,11 @@ fun StaysObservationsFormField(
     onValueChange: (String) -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
-    isStayFromOtherRealtor: Boolean = false,
+    isUnavailablePeriod: Boolean = false,
 ) {
     FormTextField(
         label = stringResource(
-            if (isStayFromOtherRealtor) R.string.stay_registration_unavailable_period_observations_label
+            if (isUnavailablePeriod) R.string.stay_registration_unavailable_period_observations_label
             else R.string.stay_registration_observations_label
         ),
         value = value ?: "",

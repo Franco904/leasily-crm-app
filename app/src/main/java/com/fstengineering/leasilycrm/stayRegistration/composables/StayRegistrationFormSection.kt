@@ -348,8 +348,6 @@ fun StayRegistrationFormSection(
             )
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item { HorizontalDivider() }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
             StayTransfersFormField(
                 stayNotDeletedTransfers = stayNotDeletedTransfers,

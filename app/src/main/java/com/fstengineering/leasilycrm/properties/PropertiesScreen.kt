@@ -237,11 +237,11 @@ fun PropertiesScreen(
         }
         if (propertyIdToRegisterStay != null) {
             StayTypeDialog(
-                onLoggedRealtorStayType = {
+                onTenantStayType = {
                     onNewStay(propertyIdToRegisterStay!!, false)
                     propertyIdToRegisterStay = null
                 },
-                onOtherRealtorStayType = {
+                onUnavailablePeriodStayType = {
                     onNewStay(propertyIdToRegisterStay!!, true)
                     propertyIdToRegisterStay = null
                 },

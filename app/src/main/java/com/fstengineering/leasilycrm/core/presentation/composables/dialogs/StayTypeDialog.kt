@@ -26,8 +26,8 @@ import com.fstengineering.leasilycrm.R
 
 @Composable
 fun StayTypeDialog(
-    onLoggedRealtorStayType: () -> Unit,
-    onOtherRealtorStayType: () -> Unit,
+    onTenantStayType: () -> Unit,
+    onUnavailablePeriodStayType: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -37,7 +37,7 @@ fun StayTypeDialog(
             Column {
                 Surface(
                     shape = MaterialTheme.shapes.medium,
-                    onClick = onLoggedRealtorStayType,
+                    onClick = onTenantStayType,
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -62,12 +62,12 @@ fun StayTypeDialog(
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(
-                                text = stringResource(R.string.stay_type_logged_realtor_title),
+                                text = stringResource(R.string.stay_type_stay_title),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
-                                text = stringResource(R.string.stay_type_logged_realtor_description),
+                                text = stringResource(R.string.stay_type_stay_description),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -77,7 +77,7 @@ fun StayTypeDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 Surface(
                     shape = MaterialTheme.shapes.medium,
-                    onClick = onOtherRealtorStayType,
+                    onClick = onUnavailablePeriodStayType,
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -102,12 +102,12 @@ fun StayTypeDialog(
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
                             Text(
-                                text = stringResource(R.string.stay_type_other_realtor_title),
+                                text = stringResource(R.string.stay_type_unavailable_period_title),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
-                                text = stringResource(R.string.stay_type_other_realtor_description),
+                                text = stringResource(R.string.stay_type_unavailable_period_description),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )

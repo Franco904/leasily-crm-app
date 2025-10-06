@@ -24,6 +24,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyReg
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.signin.SignInViewModel
+import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -228,6 +229,17 @@ val viewModelModule = module {
             userRepository = get(),
             stayValidator = get(),
             stayTransferValidator = get(),
+        )
+    }
+
+    viewModel {
+        StayDetailsViewModel(
+            deleteStayUseCase = get(),
+            registerStayCheckOutUseCase = get(),
+            undoRegisterStayCheckOutUseCase = get(),
+            getStaysStructuredDatesUseCase = get(),
+            stayRepository = get(),
+            userRepository = get(),
         )
     }
 }

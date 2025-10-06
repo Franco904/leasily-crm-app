@@ -60,7 +60,7 @@ fun HomeScreen(
     onRegisterAssistance: (Long, Long?) -> Unit,
     onNewStayWithLeadTenant: (Long) -> Unit,
     onRegisterStayBlank: (Long?, Boolean) -> Unit,
-    onViewStay: (Long) -> Unit,
+    onViewStay: (Long, cameFromLeadTenant: Boolean) -> Unit,
     onSignOut: () -> Unit,
     showSnackbar: (String) -> Unit,
     showActionSnackbar: (String, String, () -> Unit) -> Unit,
@@ -204,7 +204,7 @@ fun HomeScreen(
                         onRegisterAssistance = onRegisterAssistance,
                         onDeleteAssistance = { assistanceToDelete = it },
                         onNewStay = onNewStayWithLeadTenant,
-                        onViewStay = onViewStay,
+                        onViewStay = { stayId -> onViewStay(stayId, true) },
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
                     )
@@ -219,7 +219,7 @@ fun HomeScreen(
                         onRegisterAssistance = onRegisterAssistance,
                         onDeleteAssistance = { assistanceToDelete = it },
                         onNewStay = onNewStayWithLeadTenant,
-                        onViewStay = onViewStay,
+                        onViewStay = { stayId -> onViewStay(stayId, true) },
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
                     )
@@ -227,10 +227,10 @@ fun HomeScreen(
                 composable<Destinations.Home.Stays> {
                     StaysScreen(
                         viewModel = koinViewModel(),
-                        onRegisterStayBlank = { stayId, isStayFromOtherRealtor ->
-                            onRegisterStayBlank(stayId, isStayFromOtherRealtor)
+                        onRegisterStayBlank = { stayId, isUnavailablePeriod ->
+                            onRegisterStayBlank(stayId, isUnavailablePeriod)
                         },
-                        onViewStayDetails = { stayId -> onViewStay(stayId) },
+                        onViewStayDetails = { stayId -> onViewStay(stayId, false) },
                         onSignOut = onSignOut,
                         showSnackbar = showSnackbar,
                         showActionSnackbar = showActionSnackbar,

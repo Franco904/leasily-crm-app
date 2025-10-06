@@ -36,12 +36,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberHorizontalCenterScroller
-import com.fstengineering.leasilycrm.core.presentation.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
@@ -246,7 +246,7 @@ fun StaysScreen(
                                             onEditStay = {
                                                 onRegisterStayBlank(
                                                     stay.id!!,
-                                                    stay.isFromOtherRealtor,
+                                                    stay.isUnavailablePeriod,
                                                 )
                                             },
                                             onDeleteStay = { viewModel.onDeleteStay(stay) },
@@ -279,11 +279,11 @@ fun StaysScreen(
         }
         if (mustShowStayTypeDialog) {
             StayTypeDialog(
-                onLoggedRealtorStayType = {
+                onTenantStayType = {
                     onRegisterStayBlank(null, false)
                     mustShowStayTypeDialog = false
                 },
-                onOtherRealtorStayType = {
+                onUnavailablePeriodStayType = {
                     onRegisterStayBlank(null, true)
                     mustShowStayTypeDialog = false
                 },

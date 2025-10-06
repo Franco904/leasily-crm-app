@@ -15,18 +15,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.EditCalendar
-import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,21 +33,17 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
+import com.fstengineering.leasilycrm.core.presentation.composables.CheckInCheckOutChipLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.delay
-import java.time.LocalDateTime
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
+import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun StayCard(
@@ -77,12 +68,16 @@ fun StayCard(
         ?.withMinute(0)
 
     val canRegisterCheckIn =
-        !stay.isCheckInDone && now > checkInDateTimeStartOfDay && !stay.isFromOtherRealtor
+        !stay.isCheckInDone && now > checkInDateTimeStartOfDay && !stay.isUnavailablePeriod
     val canRegisterCheckOut =
-        !stay.isCheckOutDone && now > checkOutDateTimeStartOfDay && !stay.isFromOtherRealtor
+        !stay.isCheckOutDone && now > checkOutDateTimeStartOfDay && !stay.isUnavailablePeriod
 
-    var checkInChipWidthDp by remember { mutableStateOf(Dp.Unspecified) }
-    var checkOutChipWidthDp by remember { mutableStateOf(Dp.Unspecified) }
+    var checkInChipWidthDp by remember(stay.isUnavailablePeriod) {
+        mutableStateOf(Dp.Unspecified)
+    }
+    var checkOutChipWidthDp by remember(stay.isUnavailablePeriod) {
+        mutableStateOf(Dp.Unspecified)
+    }
 
     AppCard(
         onClick = onCardClick,
@@ -103,7 +98,7 @@ fun StayCard(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    if (stay.isFromOtherRealtor) {
+                    if (stay.isUnavailablePeriod) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -114,7 +109,7 @@ fun StayCard(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = stringResource(R.string.stay_type_other_realtor_title),
+                                text = stringResource(R.string.stay_type_unavailable_period_title),
                                 style = MaterialTheme.typography.titleMedium.copy(fontStyle = FontStyle.Italic),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -137,18 +132,24 @@ fun StayCard(
                     }
                 }
                 AppMoreOptionsMenu(
-                    options = persistentListOf(
-                        MoreOptionsMenuOption(
-                            icon = Icons.Outlined.EditCalendar,
-                            text = stringResource(R.string.edit_action_button_text),
-                            onClick = onEditStay,
-                        ),
-                        MoreOptionsMenuOption(
-                            icon = Icons.Outlined.EventBusy,
-                            text = stringResource(R.string.delete_action_button_text),
-                            onClick = onDeleteStay,
-                        ),
-                    ),
+                    options = buildList {
+                        add(
+                            MoreOptionsMenuOption(
+                                icon = Icons.Outlined.EditCalendar,
+                                text = stringResource(R.string.edit_action_button_text),
+                                onClick = onEditStay,
+                            )
+                        )
+                        if (!stay.isCheckOutDone) {
+                            add(
+                                MoreOptionsMenuOption(
+                                    iconDrawable = R.drawable.event_busy,
+                                    text = stringResource(R.string.delete_action_button_text),
+                                    onClick = onDeleteStay,
+                                )
+                            )
+                        }
+                    }.toPersistentList(),
                 )
             }
             Spacer(modifier = Modifier.height(2.dp))
@@ -171,13 +172,13 @@ fun StayCard(
             ) {
                 CheckInCheckOutChipLabel(
                     isCheckIn = true,
-                    isStayFromOtherRealtor = stay.isFromOtherRealtor,
+                    isUnavailablePeriod = stay.isUnavailablePeriod,
                     isActive = when {
-                        stay.isFromOtherRealtor -> now < checkInDateTimeStartOfDay
+                        stay.isUnavailablePeriod -> now < checkInDateTimeStartOfDay
                         else -> !stay.isCheckInDone
                     },
                     modifier = Modifier
-                        .width(if (stay.isFromOtherRealtor) checkInChipWidthDp else checkOutChipWidthDp)
+                        .width(if (stay.isUnavailablePeriod) checkInChipWidthDp else checkOutChipWidthDp)
                         .onSizeChanged { size ->
                             checkInChipWidthDp = with(density) { size.width.toDp() }
                         }
@@ -185,7 +186,7 @@ fun StayCard(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = stringResource(
-                        R.string.stay_check_in_date_text,
+                        R.string.stay_check_in_check_out_date_time_text,
                         stay.checkInDateTime!!.dayOfMonth.formatToTwoDigitsDateTime(),
                         stay.checkInDateTime.monthValue.formatToTwoDigitsDateTime(),
                         stay.checkInDateTime.year.toString(),
@@ -204,16 +205,16 @@ fun StayCard(
             ) {
                 CheckInCheckOutChipLabel(
                     isCheckIn = false,
-                    isStayFromOtherRealtor = stay.isFromOtherRealtor,
+                    isUnavailablePeriod = stay.isUnavailablePeriod,
                     isActive = when {
-                        stay.isFromOtherRealtor -> {
+                        stay.isUnavailablePeriod -> {
                             now > checkInDateTimeStartOfDay && now < checkOutDateTimeStartOfDay
                         }
 
                         else -> stay.isCheckInDone && !stay.isCheckOutDone
                     },
                     modifier = Modifier
-                        .width(if (stay.isFromOtherRealtor) checkInChipWidthDp else checkOutChipWidthDp)
+                        .width(if (stay.isUnavailablePeriod) checkInChipWidthDp else checkOutChipWidthDp)
                         .onSizeChanged { size ->
                             checkOutChipWidthDp = with(density) { size.width.toDp() }
                         }
@@ -221,7 +222,7 @@ fun StayCard(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = stringResource(
-                        R.string.stay_check_in_date_text,
+                        R.string.stay_check_in_check_out_date_time_text,
                         stay.checkOutDateTime!!.dayOfMonth.formatToTwoDigitsDateTime(),
                         stay.checkOutDateTime.monthValue.formatToTwoDigitsDateTime(),
                         stay.checkOutDateTime.year.toString(),
@@ -241,7 +242,7 @@ fun StayCard(
                 Spacer(modifier = Modifier.height(16.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(16.dp))
-                RegisterCheckInCheckOutButton(
+                RegisterCheckInCheckOutStayCardButton(
                     isCheckIn = isCheckIn,
                     onRegister = if (isCheckIn) onRegisterCheckIn else onRegisterCheckOut,
                     modifier = Modifier
@@ -253,53 +254,7 @@ fun StayCard(
 }
 
 @Composable
-fun CheckInCheckOutChipLabel(
-    isCheckIn: Boolean,
-    isStayFromOtherRealtor: Boolean,
-    isActive: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    Card(
-        shape = MaterialTheme.shapes.small,
-        colors = CardDefaults.cardColors(
-            containerColor = when {
-                isActive -> MaterialTheme.colorScheme.secondaryContainer
-                else -> MaterialTheme.colorScheme.surfaceContainerHigh
-            },
-        ),
-        modifier = modifier
-    ) {
-        Text(
-            text = stringResource(
-                when {
-                    isCheckIn -> {
-                        if (isStayFromOtherRealtor) R.string.stay_card_start_chip_label_text
-                        else R.string.stay_card_check_in_chip_label_text
-                    }
-
-                    else -> {
-                        if (isStayFromOtherRealtor) R.string.stay_card_end_chip_label_text
-                        else R.string.stay_card_check_out_chip_label_text
-                    }
-                }
-            ),
-            style = MaterialTheme.typography.labelSmall.copy(
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 1.sp,
-            ),
-            color = when {
-                isActive -> MaterialTheme.colorScheme.onSecondaryContainer
-                else -> MaterialTheme.colorScheme.onSurfaceVariant
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-    }
-}
-
-@Composable
-fun RegisterCheckInCheckOutButton(
+fun RegisterCheckInCheckOutStayCardButton(
     isCheckIn: Boolean,
     onRegister: () -> Unit,
     modifier: Modifier = Modifier,
@@ -326,18 +281,4 @@ fun RegisterCheckInCheckOutButton(
             color = MaterialTheme.colorScheme.onPrimary,
         )
     }
-}
-
-@Composable
-fun rememberNow(interval: Duration = 1.minutes): State<LocalDateTime> {
-    val now = remember { mutableStateOf(LocalDateTime.now()) }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            now.value = LocalDateTime.now()
-            delay(interval)
-        }
-    }
-
-    return now
 }

@@ -89,6 +89,13 @@ sealed interface Destinations {
         val stayId: Long?,
         val propertyId: Long?,
         val leadTenantId: Long?,
-        val isStayFromOtherRealtor: Boolean,
+        val isUnavailablePeriod: Boolean,
+    )
+
+    @Serializable
+    data class StayDetails(
+        val stayId: Long,
+        val cameFromProperty: Boolean,
+        val cameFromTenant: Boolean,
     )
 }

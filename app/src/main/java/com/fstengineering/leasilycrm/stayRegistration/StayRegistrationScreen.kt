@@ -62,7 +62,7 @@ fun StayRegistrationScreen(
     stayId: Long?,
     propertyId: Long?,
     tenantId: Long?,
-    isStayFromOtherRealtor: Boolean,
+    isUnavailablePeriod: Boolean,
     viewModel: StayRegistrationViewModel,
     onBack: (success: Boolean) -> Unit,
     onSignOut: () -> Unit,
@@ -117,7 +117,7 @@ fun StayRegistrationScreen(
             stayId = stayId,
             propertyId = propertyId,
             tenantId = tenantId,
-            isStayFromOtherRealtor = isStayFromOtherRealtor,
+            isUnavailablePeriod = isUnavailablePeriod,
         )
 
         viewModel.uiEvents.collect { uiEvent ->
@@ -187,7 +187,7 @@ fun StayRegistrationScreen(
             StayRegistrationTopAppBar(
                 isEditing = stayId != null,
                 onSaveStay = viewModel::saveStay,
-                isStayFromOtherRealtor = isStayFromOtherRealtor,
+                isUnavailablePeriod = isUnavailablePeriod,
                 isSelectingProperty = isSelectingProperty,
                 isSelectingTenant = isSelectingTenant,
                 mustShowSearchAction = when {
@@ -252,7 +252,7 @@ fun StayRegistrationScreen(
             ) { status ->
                 when (status) {
                     StayRegistrationListState.ShowingMainForm -> {
-                        if (isStayFromOtherRealtor) {
+                        if (isUnavailablePeriod) {
                             UnavailablePeriodRegistrationFormSection(
                                 stayForm = stayForm,
                                 onStayFormChange = viewModel::onStayFormChange,

@@ -47,7 +47,7 @@ data class StayCompound(
         id = stay.id,
         createDateTime = stay.createDateTime,
         updateDateTime = stay.updateDateTime,
-        isFromOtherRealtor = stay.isFromOtherRealtor,
+        isUnavailablePeriod = stay.isFromOtherRealtor,
         qtGuests = stay.qtGuests,
         totalPrice = stay.totalPrice,
         checkInDateTime = stay.checkInDateTime,
