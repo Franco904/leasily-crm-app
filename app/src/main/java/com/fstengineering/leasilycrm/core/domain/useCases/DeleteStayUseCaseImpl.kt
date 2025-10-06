@@ -20,12 +20,15 @@ class DeleteStayUseCaseImpl(
             .onError { return AppResult.Error(error = it) }
 
         val leadTenant = stay.tenant
-        val newStatus = when {
-            stay.tenant?.hasFinishedStays() == true -> TenantStatus.Old
-            else -> TenantStatus.Lead
-        }
+        val mustUpdateTenantStatus = leadTenant != null
+                && !leadTenant.hasUnfinishedStay()
+                && !stay.isUnavailablePeriod
 
-        if (leadTenant != null && !stay.isUnavailablePeriod) {
+        if (mustUpdateTenantStatus) {
+            val newStatus =
+                if (leadTenant.hasFinishedStays()) TenantStatus.Old
+                else TenantStatus.Lead
+
             val updatedLeadTenant = leadTenant.copy(status = newStatus.id)
 
             tenantRepository.insertOrUpdate(updatedLeadTenant)

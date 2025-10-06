@@ -43,7 +43,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.CheckInCheckO
 import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun StayCard(
@@ -132,18 +132,24 @@ fun StayCard(
                     }
                 }
                 AppMoreOptionsMenu(
-                    options = persistentListOf(
-                        MoreOptionsMenuOption(
-                            icon = Icons.Outlined.EditCalendar,
-                            text = stringResource(R.string.edit_action_button_text),
-                            onClick = onEditStay,
-                        ),
-                        MoreOptionsMenuOption(
-                            iconDrawable = R.drawable.event_busy,
-                            text = stringResource(R.string.delete_action_button_text),
-                            onClick = onDeleteStay,
-                        ),
-                    ),
+                    options = buildList {
+                        add(
+                            MoreOptionsMenuOption(
+                                icon = Icons.Outlined.EditCalendar,
+                                text = stringResource(R.string.edit_action_button_text),
+                                onClick = onEditStay,
+                            )
+                        )
+                        if (!stay.isCheckOutDone) {
+                            add(
+                                MoreOptionsMenuOption(
+                                    iconDrawable = R.drawable.event_busy,
+                                    text = stringResource(R.string.delete_action_button_text),
+                                    onClick = onDeleteStay,
+                                )
+                            )
+                        }
+                    }.toPersistentList(),
                 )
             }
             Spacer(modifier = Modifier.height(2.dp))

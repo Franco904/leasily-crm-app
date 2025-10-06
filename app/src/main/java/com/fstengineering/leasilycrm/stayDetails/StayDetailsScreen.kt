@@ -138,6 +138,7 @@ fun StayDetailsScreen(
         topBar = {
             StayDetailsTopAppBar(
                 isUnavailablePeriod = stay.isUnavailablePeriod,
+                isCheckOutDone = stay.isCheckOutDone,
                 onBack = onBack,
                 onEdit = { onEdit(stay) },
                 onDelete = { mustShowConfirmDeleteDialog = true },

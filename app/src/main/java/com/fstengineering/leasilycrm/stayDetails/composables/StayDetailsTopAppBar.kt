@@ -20,12 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StayDetailsTopAppBar(
     isUnavailablePeriod: Boolean,
+    isCheckOutDone: Boolean,
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
@@ -59,18 +60,24 @@ fun StayDetailsTopAppBar(
         },
         actions = {
             AppMoreOptionsMenu(
-                options = persistentListOf(
-                    MoreOptionsMenuOption(
-                        icon = Icons.Outlined.EditCalendar,
-                        text = stringResource(R.string.edit_action_button_text),
-                        onClick = onEdit,
-                    ),
-                    MoreOptionsMenuOption(
-                        iconDrawable = R.drawable.event_busy,
-                        text = stringResource(R.string.delete_action_button_text),
-                        onClick = onDelete,
-                    ),
-                ),
+                options = buildList {
+                    add(
+                        MoreOptionsMenuOption(
+                            icon = Icons.Outlined.EditCalendar,
+                            text = stringResource(R.string.edit_action_button_text),
+                            onClick = onEdit,
+                        ),
+                    )
+                    if (!isCheckOutDone) {
+                        add(
+                            MoreOptionsMenuOption(
+                                iconDrawable = R.drawable.event_busy,
+                                text = stringResource(R.string.delete_action_button_text),
+                                onClick = onDelete,
+                            ),
+                        )
+                    }
+                }.toPersistentList(),
                 modifier = Modifier
                     .padding(end = 16.dp)
             )
