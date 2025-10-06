@@ -447,7 +447,7 @@
     <string name="stay_registration_is_auto_check_out_label">É auto check-out?</string>
     <string name="stay_registration_commission_label">Minha comissão (R$)</string>
     <string name="stay_registration_observations_label">Observações sobre a estadia</string>
-    <string name="stay_registration_unavailable_period_observations_label">Observações sobre o período</string>
+    <string name="stay_registration_unavailable_period_observations_label">Observações sobre o período indisponível</string>
 
     <string name="stay_registration_check_in_time_picker_dialog_title">Selecione o horário do check-in</string>
     <string name="stay_registration_start_time_picker_dialog_title">Selecione o horário de início</string>
@@ -476,7 +476,7 @@
 
     <!-- Stay details -->
     <string name="stay_details_top_app_bar_title">Detalhes da estadia</string>
-    <string name="stay_unavailable_period_details_top_app_bar_title">Detalhes do período</string>
+    <string name="stay_unavailable_period_details_top_app_bar_title">Detalhes do período indisponível</string>
 
     <string name="stay_details_tenant_vehicle_data_body_text">Marca %1$s, Cor %2$s, Placa %3$s</string>
 

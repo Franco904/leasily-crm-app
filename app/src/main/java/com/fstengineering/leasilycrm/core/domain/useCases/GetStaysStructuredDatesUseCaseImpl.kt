@@ -1,35 +1,42 @@
 package com.fstengineering.leasilycrm.core.domain.useCases
 
+import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
-import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
-import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 import java.time.LocalDate
 
 class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
     override operator fun invoke(
         stays: ImmutableList<Stay>,
-//        currentSelectedDates: ImmutableSelectedDates,
     ): StaysStructuredDatesMap {
-        if (stays.isEmpty()) return persistentMapOf()
+        val staysStructuredDatesMap =
+            mutableMapOf<CalendarMonthYear, ImmutableList<StayCalendarDate>>()
 
-        val firstStay = stays.first()
+        if (stays.isEmpty()) return staysStructuredDatesMap.toPersistentMap()
 
-        val staysStructuredDatesMap = getStayDatesGroupedByMonthAndYear(
-            checkInDate = firstStay.checkInDateTime?.toLocalDate()!!,
-            checkOutDate = firstStay.checkOutDateTime?.toLocalDate()!!,
-            isUnavailablePeriod = firstStay.isUnavailablePeriod,
-        )
-//            .mergeToExistingDates(currentSelectedDates = currentSelectedDates)
-//            .removeDuplicatedDates()
+        stays.forEachIndexed { i, stay ->
+            val stayDatesMap = getStayDatesGroupedByMonthAndYear(
+                index = if (stay.isUnavailablePeriod) UNAVAILABLE_PERIOD_INDEX else i,
+                checkInDate = stay.checkInDateTime?.toLocalDate()!!,
+                checkOutDate = stay.checkOutDateTime?.toLocalDate()!!,
+                isUnavailablePeriod = stay.isUnavailablePeriod,
+            )
+
+            staysStructuredDatesMap.putAll(stayDatesMap)
+        }
 
         return staysStructuredDatesMap
+//            .mergeToExistingDates(currentSelectedDates = currentSelectedDates)
+//            .removeDuplicatedDates()
+            .toPersistentMap()
     }
 
     /**
@@ -44,6 +51,7 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
      * @param isUnavailablePeriod Whether the stay dates belong to an unavailable period.
      */
     private fun getStayDatesGroupedByMonthAndYear(
+        index: Int,
         checkInDate: LocalDate,
         checkOutDate: LocalDate,
         isUnavailablePeriod: Boolean,
@@ -87,9 +95,8 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
 
                         StayCalendarDate(
                             dayOfMonth = stayDate.dayOfMonth.toString(),
-                            isCheckInDate = isCheckInDate,
-                            isCheckOutDate = isCheckOutDate,
-                            isUnavailableDate = isUnavailablePeriod,
+                            firstHalfPeriodIndex = if (isCheckInDate) null else index,
+                            secondHalfPeriodIndex = if (isCheckOutDate) null else index,
                         )
                     }
                     .toImmutableList()
@@ -148,7 +155,7 @@ private fun StaysStructuredDatesMap.removeDuplicatedDates(): StaysStructuredDate
 //                    previous.rangeSelectionLabel.first to current.rangeSelectionLabel.second
 
                 previous.copy(
-                    isCheckInDate = current.isCheckInDate,
+//                    isCheckInDate = current.isCheckInDate,
 //                    rangeSelectionLabel = newRangeSelectionLabel,
                 )
             }

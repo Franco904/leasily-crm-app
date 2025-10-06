@@ -14,6 +14,7 @@ import java.time.LocalDateTime
 class StayValidatorImpl : StayValidator {
     override fun validate(
         stay: Stay,
+        stayBeforeEdit: Stay?,
     ): AppResultCompound<Unit, ValidationError> {
         val errors = mutableListOf<ValidationError>()
 
@@ -23,6 +24,8 @@ class StayValidatorImpl : StayValidator {
         validatePeriod(
             checkInDateTime = stay.checkInDateTime,
             checkOutDateTime = stay.checkOutDateTime,
+            checkInDateTimeBeforeEdit = stayBeforeEdit?.checkInDateTime,
+            checkOutDateTimeBeforeEdit = stayBeforeEdit?.checkOutDateTime,
             propertyStayCheckInDateTimes = stay.property?.stays
                 ?.map { it.checkInDateTime!! }
                 ?: emptyList(),
@@ -87,6 +90,8 @@ class StayValidatorImpl : StayValidator {
     private fun validatePeriod(
         checkInDateTime: LocalDateTime?,
         checkOutDateTime: LocalDateTime?,
+        checkInDateTimeBeforeEdit: LocalDateTime?,
+        checkOutDateTimeBeforeEdit: LocalDateTime?,
         propertyStayCheckInDateTimes: List<LocalDateTime>,
     ): AppResult<Unit, ValidationError.StayPeriod> {
         when {
@@ -95,12 +100,14 @@ class StayValidatorImpl : StayValidator {
             }
 
             propertyStayCheckInDateTimes.isNotEmpty() -> {
-                val isTherePropertyOverbooking = propertyStayCheckInDateTimes
+                val isThereAnyPropertyOverbooking = propertyStayCheckInDateTimes
+                    .filter { it != checkInDateTimeBeforeEdit }
                     .any { existingStayCheckInDateTime ->
-                        checkInDateTime < existingStayCheckInDateTime && checkOutDateTime > existingStayCheckInDateTime
+                        checkInDateTime < existingStayCheckInDateTime
+                                && checkOutDateTime > existingStayCheckInDateTime
                     }
 
-                if (!isTherePropertyOverbooking) return AppResult.Success(Unit)
+                if (!isThereAnyPropertyOverbooking) return AppResult.Success(Unit)
 
                 return AppResult.Error(ValidationError.StayPeriod.IsOverlappingOtherPropertyStayPeriod)
             }

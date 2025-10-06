@@ -401,7 +401,10 @@ class StayRegistrationViewModel(
                 return@launch
             }
 
-            stayValidator.validate(stay = stayForm.value)
+            stayValidator.validate(
+                stay = stayForm.value,
+                stayBeforeEdit = stayToEdit,
+            )
                 .onErrors { errors ->
                     setFieldErrors(errors)
                     return@launch

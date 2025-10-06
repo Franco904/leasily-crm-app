@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
@@ -34,7 +35,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyPriceCard
-import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.CleaningServiceTaxFormField

@@ -7,5 +7,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
 interface StayValidator {
     fun validate(
         stay: Stay,
+        stayBeforeEdit: Stay?,
     ): AppResultCompound<Unit, ValidationError>
 }

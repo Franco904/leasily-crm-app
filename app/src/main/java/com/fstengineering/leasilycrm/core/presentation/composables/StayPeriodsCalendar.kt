@@ -27,13 +27,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
+import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.presentation.utils.daysOfWeek
@@ -44,6 +48,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import java.time.LocalDate
 
 @Composable
 fun StayPeriodsCalendar(
@@ -56,7 +61,12 @@ fun StayPeriodsCalendar(
 ) {
     val context = LocalContext.current
 
-    val monthLabel = remember(month) { context.getMonthLabelByNumber(monthNumber = month) }
+    val monthYearLabel = remember(month) {
+        val monthLabel = context.getMonthLabelByNumber(monthNumber = month)
+        val isCurrentYear = year == LocalDate.now().year
+
+        "$monthLabel ${if (!isCurrentYear) year else ""}"
+    }
     val numberOfDaysOfMonth =
         remember(month, year) { getNumberOfDaysOfMonth(month, year) }
     val firstDayOfWeek =
@@ -81,10 +91,7 @@ fun StayPeriodsCalendar(
                     bottom = if (actions != null) 16.dp else 24.dp,
                 )
         ) {
-            MonthLabelSection(
-                monthLabel = monthLabel,
-                year = year,
-            )
+            MonthYearLabelSection(monthYearLabel = monthYearLabel)
             Spacer(modifier = Modifier.height(16.dp))
             if (stayCalendarDates?.second.isNullOrEmpty()) {
                 CurrentMonthStaysEmptySection(
@@ -118,13 +125,12 @@ fun StayPeriodsCalendar(
 }
 
 @Composable
-fun MonthLabelSection(
-    monthLabel: String,
-    year: Int?,
+fun MonthYearLabelSection(
+    monthYearLabel: String,
     modifier: Modifier = Modifier,
 ) {
     Text(
-        if (year != null) "$monthLabel $year" else monthLabel,
+        monthYearLabel,
         style = MaterialTheme.typography.labelSmall.copy(
             fontWeight = FontWeight.Bold,
         ),
@@ -229,11 +235,29 @@ fun CalendarDate(
         AnimatedVisibility(selectedDate != null) {
             if (selectedDate == null) return@AnimatedVisibility
 
-            StayDateCircle(
-//                selectionRange = selectedDate.rangeSelectionLabel,
-                singleStayPeriodColor = singleStayPeriodColor,
-                isCheckInDate = selectedDate.isCheckOutDate,
-            )
+            val isAllUnavailableDate = selectedDate.firstHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
+                    && selectedDate.secondHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
+
+            Box(
+                contentAlignment = Alignment.Center,
+            ) {
+                // null / -1
+                // null / > -1
+                // -1 / null
+                // -1 / > -1
+                // > -1 / null
+                // > -1 / -1
+                // 0 / 0
+                // 0 / 1
+                if (isAllUnavailableDate) UnavailablePeriodDateCircle()
+                else {
+                    StayDateCircle(
+                        firstHalfPeriodIndex = selectedDate.firstHalfPeriodIndex,
+                        secondHalfPeriodIndex = selectedDate.secondHalfPeriodIndex,
+                        singleStayPeriodColor = singleStayPeriodColor,
+                    )
+                }
+            }
         }
         Text(
             text = dayText,
@@ -247,97 +271,152 @@ fun CalendarDate(
 
 @Composable
 fun StayDateCircle(
-    isCheckInDate: Boolean,
+    firstHalfPeriodIndex: Int?,
+    secondHalfPeriodIndex: Int?,
     singleStayPeriodColor: Color?,
     modifier: Modifier = Modifier,
-//    selectionRange: Pair<RangeSelectionLabel, RangeSelectionLabel>,
 ) {
-//    val (firstCircleHalfRange, secondCircleHalfRange) = selectionRange
-
-//    val firstCircleHalfColor = firstCircleHalfRange.color()
-//    val secondCircleHalfColor = secondCircleHalfRange.color()
-
-    val secondaryContainerColor = singleStayPeriodColor ?: MaterialTheme.colorScheme.secondaryContainer
-    val backgroundColor = MaterialTheme.colorScheme.surfaceContainerLow
+    // TODO: Get color by index
+    val stayPeriodColor = singleStayPeriodColor ?: MaterialTheme.colorScheme.secondaryContainer
+    val outlineVariantColor = MaterialTheme.colorScheme.outlineVariant
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
-        StayDateSemiCircle(
-            size = 28.dp,
-            firstHalfColor = when {
-                isCheckInDate -> secondaryContainerColor
-                else -> backgroundColor
-            },
-            secondHalfColor = when {
-                isCheckInDate -> backgroundColor
-                else -> secondaryContainerColor
-            },
-        )
-//        SelectedDateSubCircle(
-//            size = 22.dp,
-//            firstCircleHalfColor = if (firstCircleHalfRange == RangeSelectionLabel.First) {
-//                firstCircleHalfColor
-//            } else backgroundColor,
-//            secondCircleHalfColor = if (secondCircleHalfRange == RangeSelectionLabel.First) {
-//                secondCircleHalfColor
-//            } else backgroundColor,
-//        )
-//        if (firstCircleHalfRange.count > RangeSelectionLabel.First.count && isRangeEnd) {
-//            SelectedDateMiddleDivider(
-//                firstCircleHalfColor = firstCircleHalfColor,
-//            )
-//        }
-    }
-}
+        Box(modifier = modifier.size(28.dp)) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                when (firstHalfPeriodIndex) {
+                    null -> {}
+                    UNAVAILABLE_PERIOD_INDEX -> {
+                        unavailablePeriodDateSemiCircleFirstHalf(outlineVariantColor = outlineVariantColor)
+                    }
 
-@Composable
-fun StayDateSemiCircle(
-    size: Dp,
-    firstHalfColor: Color,
-    secondHalfColor: Color,
-    modifier: Modifier = Modifier,
-) {
-    Box(modifier = modifier.size(size)) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            // arc 0° angle starts at 3 o'clock
-            drawArc(
-                color = firstHalfColor,
-                startAngle = 90f,
-                sweepAngle = 180f,
-                useCenter = true,
-                style = Fill,
-            )
-            drawArc(
-                color = secondHalfColor,
-                startAngle = 270f,
-                sweepAngle = 180f,
-                useCenter = true,
-                style = Fill,
-            )
+                    else -> stayDateSemiCircleFirstHalf(firstHalfColor = stayPeriodColor)
+                }
+                when (secondHalfPeriodIndex) {
+                    null -> {}
+                    UNAVAILABLE_PERIOD_INDEX -> {
+                        unavailablePeriodDateSemiCircleSecondHalf(outlineVariantColor = outlineVariantColor)
+                    }
+
+                    else -> stayDateSemiCircleSecondHalf(secondHalfColor = stayPeriodColor)
+                }
+            }
         }
     }
 }
 
+fun DrawScope.stayDateSemiCircleFirstHalf(
+    firstHalfColor: Color,
+) {
+    // arc 0° angle starts at 3 o'clock
+    drawArc(
+        color = firstHalfColor,
+        startAngle = 90f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Fill,
+    )
+}
+
+fun DrawScope.stayDateSemiCircleSecondHalf(
+    secondHalfColor: Color,
+) {
+    drawArc(
+        color = secondHalfColor,
+        startAngle = 270f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Fill,
+    )
+}
+
 @Composable
-fun SelectedDateMiddleDivider(
-    firstCircleHalfColor: Color,
+fun UnavailablePeriodDateCircle(
     modifier: Modifier = Modifier,
 ) {
+    val outlineVariantColor = MaterialTheme.colorScheme.outlineVariant
+
     Box(modifier = modifier.size(28.dp)) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val canvasWidth = size.width
-            val canvasHeight = size.height
+            val radius = size.minDimension / 2f
+            val center = Offset(size.width / 2f, size.height / 2f)
+            val strokeWidth = 6f
 
+            // Outer circle
+            drawCircle(
+                color = outlineVariantColor,
+                center = center,
+                radius = radius,
+                style = Stroke(width = strokeWidth)
+            )
+
+            // Diagonal line (from top-right to bottom-left)
+            val offset = radius * 0.7f
             drawLine(
-                color = firstCircleHalfColor,
-                start = Offset(x = canvasWidth / 2, y = 0f), // Start from the top
-                end = Offset(x = canvasWidth / 2, y = canvasHeight), // End at the bottom
-                strokeWidth = 8f,
+                color = outlineVariantColor,
+                start = Offset(center.x + offset, center.y - offset),
+                end = Offset(center.x - offset, center.y + offset),
+                strokeWidth = strokeWidth,
+                cap = StrokeCap.Round
             )
         }
     }
+}
+
+fun DrawScope.unavailablePeriodDateSemiCircleFirstHalf(
+    outlineVariantColor: Color,
+) {
+    val radius = size.minDimension / 2f
+    val center = Offset(size.width / 2f, size.height / 2f)
+    val strokeWidth = 6f
+
+    // Outer semicircle
+    drawArc(
+        color = outlineVariantColor,
+        startAngle = 90f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Stroke(width = strokeWidth)
+    )
+
+    // Diagonal slash
+    val offset = radius * 0.7f
+    drawLine(
+        color = outlineVariantColor,
+        start = center,
+        end = Offset(center.x - offset, center.y + offset),
+        strokeWidth = strokeWidth,
+        cap = StrokeCap.Round,
+    )
+}
+
+fun DrawScope.unavailablePeriodDateSemiCircleSecondHalf(
+    outlineVariantColor: Color,
+) {
+    val radius = size.minDimension / 2f
+    val center = Offset(size.width / 2f, size.height / 2f)
+    val strokeWidth = 6f
+
+    // Outer semicircle
+    drawArc(
+        color = outlineVariantColor,
+        startAngle = 270f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Stroke(width = strokeWidth)
+    )
+
+    // Diagonal slash
+    val offset = radius * 0.7f
+    drawLine(
+        color = outlineVariantColor,
+        start = Offset(center.x + offset, center.y - offset),
+        end = center,
+        strokeWidth = strokeWidth,
+        cap = StrokeCap.Round,
+    )
 }
 
 @Preview
@@ -353,166 +432,139 @@ fun StayPeriodsCalendarPreview(
                 CalendarMonthYear(-1, 1, 2025),
                 persistentListOf(
                     StayCalendarDate(
-                        "4",
-                        isCheckInDate = true,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "4",
+                        firstHalfPeriodIndex = null,
+                        secondHalfPeriodIndex = -1,
                     ),
                     StayCalendarDate(
-                        "5",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "5",
+                        firstHalfPeriodIndex = -1,
+                        secondHalfPeriodIndex = -1,
                     ),
                     StayCalendarDate(
-                        "6",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "6",
+                        firstHalfPeriodIndex = -1,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "7",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "7",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "8",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "8",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "9",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "9",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "10",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "10",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "11",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "11",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "12",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "12",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "13",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "13",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "14",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "14",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "15",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "15",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "16",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "16",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "17",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "17",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "18",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "18",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "19",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "19",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "20",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "20",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "21",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "21",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "22",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "22",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "23",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "23",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "24",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "24",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "25",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "25",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "26",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "26",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "27",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "27",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "28",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "28",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "29",
-                        isCheckInDate = false,
-                        isCheckOutDate = false,
-                        isUnavailableDate = false,
+                        dayOfMonth = "29",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = 0,
                     ),
                     StayCalendarDate(
-                        "30",
-                        isCheckInDate = false,
-                        isCheckOutDate = true,
-                        isUnavailableDate = false,
+                        dayOfMonth = "30",
+                        firstHalfPeriodIndex = 0,
+                        secondHalfPeriodIndex = null,
                     ),
                 ),
             ),
