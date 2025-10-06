@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
@@ -61,6 +62,7 @@ import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewMode
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.NavigateUp
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDetailsCurrentAssistancePage
+import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDetailsHistoryPage
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDetailsIdentificationPage
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDetailsTabRow
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDetailsTopAppBar
@@ -123,6 +125,8 @@ fun LeadTenantDetailsScreen(
     }
     var interactionToView by remember { mutableStateOf<AssistanceInteraction?>(null) }
 
+    var pastAssistanceToView by remember { mutableStateOf<Assistance?>(null) }
+
     val isLead = remember(leadTenant.status) { leadTenant.status == TenantStatus.Lead.id }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
@@ -175,9 +179,11 @@ fun LeadTenantDetailsScreen(
 
     BackHandler {
         when {
+            pastAssistanceToView != null -> pastAssistanceToView = null
             isViewingAllSentProperties || isViewingAllInterations -> {
                 isViewingAllSentProperties = false
                 isViewingAllInterations = false
+                pastAssistanceToView = null
 
                 isBringIntoViewEnabled = true
             }
@@ -192,13 +198,18 @@ fun LeadTenantDetailsScreen(
                 titleText = when {
                     isViewingAllSentProperties -> stringResource(R.string.lead_tenant_details_top_app_bar_title_all_sent_properties)
                     isViewingAllInterations -> stringResource(R.string.lead_tenant_details_top_app_bar_title_all_interations)
+                    pastAssistanceToView != null -> stringResource(R.string.lead_tenant_details_top_app_bar_title_past_assistance)
                     isLead -> stringResource(R.string.lead_tenant_details_top_app_bar_title_lead)
                     else -> stringResource(R.string.lead_tenant_details_top_app_bar_title_tenant)
                 },
                 hasUnfinishedAssistance = currentAssistance != null,
                 hasUnfinishedStay = currentStay != null,
-                hasMoreOptions = !(isViewingAllSentProperties || isViewingAllInterations),
+                hasMoreOptions = !(isViewingAllSentProperties || isViewingAllInterations || pastAssistanceToView != null),
                 onBack = when {
+                    pastAssistanceToView != null -> {
+                        { pastAssistanceToView = null }
+                    }
+
                     isViewingAllSentProperties || isViewingAllInterations -> {
                         {
                             isViewingAllSentProperties = false
@@ -327,6 +338,29 @@ fun LeadTenantDetailsScreen(
                 }
             }
 
+            pastAssistanceToView != null -> {
+                LeadTenantDetailsCurrentAssistancePage(
+                    currentAssistance = pastAssistanceToView,
+                    assistancePropertyCharacteristics = assistancePropertyCharacteristics,
+                    lastSentProperty = sortedSentProperties.firstOrNull(),
+                    lastInteraction = sortedInteractions.firstOrNull(),
+                    onViewAllSentProperties = { isViewingAllSentProperties = true },
+                    onViewAllInteractions = { isViewingAllInterations = true },
+                    onViewSentPropertyDetails = { propertyId ->
+                        onViewSentPropertyDetails(propertyId)
+                    },
+                    onViewInteractionDetails = { interaction ->
+                        interactionToView = interaction
+                    },
+                    isViewingAllSentProperties = isViewingAllSentProperties,
+                    isViewingAllInterations = isViewingAllInterations,
+                    isBringIntoViewEnabled = isBringIntoViewEnabled,
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .padding(horizontal = 16.dp)
+                )
+            }
+
             else -> {
                 Column {
                     AnimatedVisibility(
@@ -372,7 +406,19 @@ fun LeadTenantDetailsScreen(
                             }
 
                             LeadTenantDetailsTab.History -> {
-                                // nothing for the moment
+                                LeadTenantDetailsHistoryPage(
+                                    leadTenant = leadTenant,
+                                    onViewHistoryItem = { id, isAssistance ->
+                                        when {
+                                            isAssistance -> {
+                                                pastAssistanceToView = leadTenant.assistances
+                                                    .find { it.id == id }
+                                            }
+
+                                            else -> onViewStay(id)
+                                        }
+                                    }
+                                )
                             }
 
                             null -> null
