@@ -173,7 +173,6 @@ class StaysViewModel(
                 }
 
             _uiEvents.send(UiEvents.StayDeleteSuccess)
-            onDeleteStay(stay = null)
         }
     }
 

@@ -7,13 +7,22 @@ import com.fstengineering.leasilycrm.R
 
 @Composable
 fun ConfirmDeleteStayDialog(
+    isUnavailablePeriod: Boolean,
     onConfirmDelete: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val titleId =
+        if (isUnavailablePeriod) R.string.stay_unavailable_period_delete_dialog_headline
+        else R.string.stay_delete_dialog_headline
+
+    val messageId =
+        if (isUnavailablePeriod) R.string.stay_unavailable_period_delete_dialog_supporting_text
+        else R.string.stay_delete_dialog_supporting_text
+
     AppTitleAndMessageDialog(
-        title = stringResource(R.string.stay_delete_dialog_headline),
-        message = stringResource(R.string.stay_delete_dialog_supporting_text),
+        title = stringResource(titleId),
+        message = stringResource(messageId),
         confirmButtonText = stringResource(id = R.string.delete_action_button_text),
         dismissButtonText = stringResource(id = R.string.cancel_action_button_text),
         onConfirmButtonClick = onConfirmDelete,

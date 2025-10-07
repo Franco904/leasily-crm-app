@@ -461,8 +461,12 @@ class StayRegistrationViewModel(
                     }
             }
 
+            val editMessageId =
+                if (stayForm.value.isUnavailablePeriod) R.string.snackbar_edit_unavailable_period_succeeded
+                else R.string.snackbar_edit_stay_succeeded
+
             _uiEvents.send(
-                if (stayToEdit != null) UiEvents.StayEditSuccess(messageId = R.string.snackbar_edit_stay_succeeded)
+                if (stayToEdit != null) UiEvents.StayEditSuccess(messageId = editMessageId)
                 else UiEvents.StayCreateSuccess,
             )
         }

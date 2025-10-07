@@ -137,7 +137,10 @@ fun StayRegistrationScreen(
                 is StayCreateSuccess -> {
                     onBack(true)
 
-                    showSnackbar(context.getString(R.string.snackbar_create_stay_succeeded))
+                    val messageId =
+                        if (isUnavailablePeriod) R.string.snackbar_create_unavailable_period_succeeded
+                        else R.string.snackbar_create_stay_succeeded
+                    showSnackbar(context.getString(messageId))
                 }
 
                 is StayEditSuccess -> {

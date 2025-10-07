@@ -416,6 +416,9 @@
     <string name="stay_delete_dialog_headline">Excluir estadia?</string>
     <string name="stay_delete_dialog_supporting_text">Se confirmada a exclusão, esta estadia não estará mais disponível.</string>
 
+    <string name="stay_unavailable_period_delete_dialog_headline">Excluir período?</string>
+    <string name="stay_unavailable_period_delete_dialog_supporting_text">Se confirmada a exclusão, este período não estará mais disponível.</string>
+
     <string name="stay_register_check_out_dialog_headline">Registrar check-out?</string>
     <string name="stay_register_check_out_dialog_supporting_text">O atendimento e a estadia do inquilino serão marcados como finalizados e o inquilino será marcado como antigo.</string>
 
@@ -626,6 +629,10 @@
     <string name="snackbar_create_stay_succeeded">Estadia criada.</string>
     <string name="snackbar_edit_stay_succeeded">Estadia editada.</string>
     <string name="snackbar_delete_stay_succeeded">Estadia excluída.</string>
+
+    <string name="snackbar_create_unavailable_period_succeeded">Período criado.</string>
+    <string name="snackbar_edit_unavailable_period_succeeded">Período editado.</string>
+    <string name="snackbar_delete_unavailable_period_succeeded">Período excluído.</string>
 
     <string name="snackbar_convert_tenant_to_lead_succeeded">Inquilino movido para \"Leads\".</string>
     <string name="snackbar_convert_tenant_to_with_upcoming_stay_succeeded">Inquilino movido para \"Estadia agendada\".</string>

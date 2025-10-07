@@ -119,7 +119,14 @@ fun StaysScreen(
                 }
 
                 is StayDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_stay_succeeded))
+                    if (stayToDelete == null) return@collect
+
+                    val messageId =
+                        if (stayToDelete!!.isUnavailablePeriod) R.string.snackbar_delete_unavailable_period_succeeded
+                        else R.string.snackbar_delete_stay_succeeded
+
+                    showSnackbar(context.getString(messageId))
+                    viewModel.onDeleteStay(stay = null)
                 }
 
                 StaysViewModel.UiEvents.RegisterCheckInSuccess -> {
@@ -273,6 +280,7 @@ fun StaysScreen(
         }
         if (stayToDelete != null) {
             ConfirmDeleteStayDialog(
+                isUnavailablePeriod = stayToDelete!!.isUnavailablePeriod,
                 onConfirmDelete = viewModel::deleteStay,
                 onCancel = { viewModel.onDeleteStay(stay = null) },
             )
