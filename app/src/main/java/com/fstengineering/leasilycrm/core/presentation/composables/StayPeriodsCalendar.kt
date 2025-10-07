@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.presentation.composables
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +18,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -89,9 +92,11 @@ fun StayPeriodsCalendar(
 ) {
     val context = LocalContext.current
 
+    val now = remember { LocalDate.now() }
+
     val monthYearLabel = remember(month) {
         val monthLabel = context.getMonthLabelByNumber(monthNumber = month)
-        val isCurrentYear = year == LocalDate.now().year
+        val isCurrentYear = year == now.year
 
         "$monthLabel ${if (!isCurrentYear) year else ""}"
     }
@@ -133,6 +138,9 @@ fun StayPeriodsCalendar(
                     firstDayOfWeek = firstDayOfWeek,
                     daysOfMonth = daysOfMonth.toPersistentList(),
                     selectedDatesWithMonthYear = stayCalendarDates,
+                    now = now,
+                    month = month,
+                    year = year,
                     singleStayPeriodColor = singleStayPeriodColor,
                 )
             }
@@ -175,6 +183,9 @@ fun StayDatesSection(
     daysOfMonth: ImmutableList<String>,
     selectedDatesWithMonthYear: Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>?,
     singleStayPeriodColor: Color?,
+    now: LocalDate,
+    month: Int,
+    year: Int,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -206,40 +217,56 @@ fun StayDatesSection(
             )
         }
 
-        // TODO: Improve logic to add a isSelected attr to CalendarSelectedDate and use it here
         items(daysOfMonth) { day ->
             val selectedDaysOfMonth = selectedDatesWithMonthYear?.second?.map { it.dayOfMonth }
 
+            val isToday = day.toIntOrNull() == now.dayOfMonth
+                    && month == now.monthValue
+                    && year == now.year
+
             if (selectedDatesWithMonthYear == null || day !in selectedDaysOfMonth!!) {
-                val paddingBottom = if (day in daysOfMonth.takeLast(7)) 0.dp else 24.dp
+                val paddingBottom = when {
+                    day in daysOfMonth.takeLast(7) || isToday -> 0.dp
+                    else -> 24.dp
+                }
 
                 CalendarDate(
                     dayText = day,
+                    isToday = isToday,
                     singleStayPeriodColor = singleStayPeriodColor,
                     modifier = Modifier
                         .padding(bottom = paddingBottom)
                         .offset(
                             x = if (day.length == 1) (-0.5).dp else 0.dp,
+                            y = when {
+                                isToday -> (-8).dp
+                                else -> 0.dp
+                            },
                         )
                 )
             } else {
                 val selectedDate = selectedDatesWithMonthYear.second.find { it.dayOfMonth == day }
 
                 val paddingBottom = when {
-                    day in daysOfMonth.takeLast(7) -> 0.dp
+                    day in daysOfMonth.takeLast(7) || isToday -> 0.dp
                     selectedDate != null -> 16.dp
                     else -> 24.dp
                 }
 
                 CalendarDate(
                     dayText = day,
+                    isToday = isToday,
                     selectedDate = selectedDate,
                     singleStayPeriodColor = singleStayPeriodColor,
                     modifier = Modifier
                         .padding(bottom = paddingBottom)
                         .offset(
                             x = if (day.length == 1) (-0.5).dp else 0.dp,
-                            y = if (selectedDate != null) (-5.5).dp else 0.dp,
+                            y = when {
+                                isToday -> (-8).dp
+                                selectedDate != null -> (-4).dp
+                                else -> 0.dp
+                            },
                         )
                 )
             }
@@ -252,6 +279,7 @@ fun CalendarDate(
     dayText: String,
     singleStayPeriodColor: Color?,
     modifier: Modifier = Modifier,
+    isToday: Boolean = false,
     mustHideText: Boolean = false,
     isWeekDayLabel: Boolean = false,
     selectedDate: StayCalendarDate? = null,
@@ -260,6 +288,18 @@ fun CalendarDate(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
+        if (isToday) {
+            Surface(
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                ),
+                color = Color.Transparent,
+                shape = CircleShape,
+                modifier = Modifier
+                    .size(36.dp)
+            ) {}
+        }
         if (selectedDate != null) {
             val isAllUnavailableDate = selectedDate.firstHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
                     && selectedDate.secondHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
