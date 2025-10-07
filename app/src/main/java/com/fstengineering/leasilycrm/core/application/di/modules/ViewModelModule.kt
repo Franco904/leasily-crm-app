@@ -4,6 +4,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
+import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
@@ -28,6 +29,7 @@ import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import java.time.LocalDate
 
 val viewModelModule = module {
     viewModel {
@@ -106,8 +108,10 @@ val viewModelModule = module {
 
     viewModel {
         PropertyDashboardViewModel(
+            getStaysStructuredDatesUseCase = get(),
             propertyRepository = get(),
             userRepository = get(),
+            now = LazyAppDate { LocalDate.now() },
         )
     }
 

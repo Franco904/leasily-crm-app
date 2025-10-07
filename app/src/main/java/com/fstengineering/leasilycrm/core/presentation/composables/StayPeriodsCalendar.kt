@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.core.presentation.composables
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,12 +30,24 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
+import com.fstengineering.leasilycrm.core.application.theme.amber
+import com.fstengineering.leasilycrm.core.application.theme.blueGrey
+import com.fstengineering.leasilycrm.core.application.theme.brown
+import com.fstengineering.leasilycrm.core.application.theme.cyan
+import com.fstengineering.leasilycrm.core.application.theme.deepOrange
+import com.fstengineering.leasilycrm.core.application.theme.grey
+import com.fstengineering.leasilycrm.core.application.theme.indigo
+import com.fstengineering.leasilycrm.core.application.theme.lightBlue
+import com.fstengineering.leasilycrm.core.application.theme.lime
+import com.fstengineering.leasilycrm.core.application.theme.orange
+import com.fstengineering.leasilycrm.core.application.theme.pink
+import com.fstengineering.leasilycrm.core.application.theme.purple
+import com.fstengineering.leasilycrm.core.application.theme.teal
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
@@ -49,6 +60,23 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import java.time.LocalDate
+
+private val stayPeriodColors
+    @Composable get() = listOf(
+        cyan,
+        deepOrange,
+        purple,
+        lime,
+        pink,
+        indigo,
+        teal,
+        brown,
+        lightBlue,
+        orange,
+        blueGrey,
+        amber,
+        grey,
+    )
 
 @Composable
 fun StayPeriodsCalendar(
@@ -232,9 +260,7 @@ fun CalendarDate(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
-        AnimatedVisibility(selectedDate != null) {
-            if (selectedDate == null) return@AnimatedVisibility
-
+        if (selectedDate != null) {
             val isAllUnavailableDate = selectedDate.firstHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
                     && selectedDate.secondHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
 
@@ -268,9 +294,15 @@ fun StayDateCircle(
     singleStayPeriodColor: Color?,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: Get color by index
-    val stayPeriodColor = singleStayPeriodColor ?: MaterialTheme.colorScheme.secondaryContainer
-    val outlineVariantColor = MaterialTheme.colorScheme.outlineVariant
+    val firstHalfStayPeriodColor = firstHalfPeriodIndex?.let {
+        if (it == UNAVAILABLE_PERIOD_INDEX) return@let MaterialTheme.colorScheme.outlineVariant
+        singleStayPeriodColor ?: stayPeriodColors[it % stayPeriodColors.size]
+    }
+
+    val secondHalfStayPeriodColor = secondHalfPeriodIndex?.let {
+        if (it == UNAVAILABLE_PERIOD_INDEX) return@let MaterialTheme.colorScheme.outlineVariant
+        singleStayPeriodColor ?: stayPeriodColors[it % stayPeriodColors.size]
+    }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -281,18 +313,18 @@ fun StayDateCircle(
                 when (firstHalfPeriodIndex) {
                     null -> {}
                     UNAVAILABLE_PERIOD_INDEX -> {
-                        unavailablePeriodDateSemiCircleFirstHalf(outlineVariantColor = outlineVariantColor)
+                        unavailablePeriodDateSemiCircleFirstHalf(outlineVariantColor = firstHalfStayPeriodColor!!)
                     }
 
-                    else -> stayDateSemiCircleFirstHalf(firstHalfColor = stayPeriodColor)
+                    else -> stayDateSemiCircleFirstHalf(firstHalfColor = firstHalfStayPeriodColor!!)
                 }
                 when (secondHalfPeriodIndex) {
                     null -> {}
                     UNAVAILABLE_PERIOD_INDEX -> {
-                        unavailablePeriodDateSemiCircleSecondHalf(outlineVariantColor = outlineVariantColor)
+                        unavailablePeriodDateSemiCircleSecondHalf(outlineVariantColor = secondHalfStayPeriodColor!!)
                     }
 
-                    else -> stayDateSemiCircleSecondHalf(secondHalfColor = stayPeriodColor)
+                    else -> stayDateSemiCircleSecondHalf(secondHalfColor = secondHalfStayPeriodColor!!)
                 }
             }
         }

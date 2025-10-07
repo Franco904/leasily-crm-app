@@ -9,24 +9,22 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
-import java.time.LocalDate
-import java.util.Calendar
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun PropertyDashboardSection(
     property: Property,
+    currentMonthStaysDates: Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>,
     onViewPropertyDetails: () -> Unit,
     onViewPropertyOwnerDetails: () -> Unit,
     onViewNextStays: () -> Unit,
@@ -35,20 +33,7 @@ fun PropertyDashboardSection(
 ) {
     val scrollState = rememberScrollState()
 
-    val currentMonthYear = remember {
-        val now = LocalDate.now()
-
-        val month = now.monthValue
-        val year = now.year
-
-        CalendarMonthYear(month + year, month, year)
-    }
-
-    val currentMonthDates = remember(property) {
-        property.stays
-            .filter { it.checkInDateTime?.monthValue == currentMonthYear.month }
-            .toPersistentList()
-    }
+    val (currentMonthYear, staysDates) = currentMonthStaysDates
 
     Column(
         modifier = modifier
@@ -84,11 +69,9 @@ fun PropertyDashboardSection(
         StayPeriodsCalendar(
             month = currentMonthYear.month,
             year = currentMonthYear.year,
-            stayCalendarDates = if (currentMonthDates.isEmpty()) null else {
-                currentMonthYear to persistentListOf() // TODO: Map selected dates from stays datetimes
-            },
+            stayCalendarDates = if (staysDates.isEmpty()) null else currentMonthStaysDates,
             actions = {
-                if (currentMonthDates.isEmpty()) {
+                if (staysDates.isNotEmpty()) {
                     ViewAllStaysTextButton(onViewNextStays = onViewNextStays)
                     Spacer(modifier = Modifier.width(8.dp))
                 }

@@ -1,0 +1,89 @@
+package com.fstengineering.leasilycrm.core.application.theme
+
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+
+@Composable
+fun customColor(
+    lightColor: Color,
+    darkColor: Color,
+) = if (isSystemInDarkTheme()) darkColor else lightColor
+
+val cyan
+    @Composable get() = customColor(
+        lightColor = Color(0xFFB2EBF2),
+        darkColor = Color(0xFF00838F),
+    )
+
+val deepOrange
+    @Composable get() = customColor(
+        lightColor = Color(0xFFFFCCBC),
+        darkColor = Color(0xFFD84315),
+    )
+
+val purple
+    @Composable get() = customColor(
+        lightColor = Color(0xFFE1BEE7),
+        darkColor = Color(0xFF6A1B9A),
+    )
+
+val lime
+    @Composable get() = customColor(
+        lightColor = Color(0xFFF0F4C3),
+        darkColor = Color(0xFF9E9D24),
+    )
+
+val pink
+    @Composable get() = customColor(
+        lightColor = Color(0xFFF8BBD0),
+        darkColor = Color(0xFFAD1457),
+    )
+
+val indigo
+    @Composable get() = customColor(
+        lightColor = Color(0xFFC5CAE9),
+        darkColor = Color(0xFF283593),
+    )
+
+val teal
+    @Composable get() = customColor(
+        lightColor = Color(0xFFB2DFDB),
+        darkColor = Color(0xFF00695C),
+    )
+
+val brown
+    @Composable get() = customColor(
+        lightColor = Color(0xFFD7CCC8),
+        darkColor = Color(0xFF4E342E),
+    )
+
+val lightBlue
+    @Composable get() = customColor(
+        lightColor = Color(0xFFB3E5FC),
+        darkColor = Color(0xFF0277BD),
+    )
+
+val orange
+    @Composable get() = customColor(
+        lightColor = Color(0xFFFFE0B2),
+        darkColor = Color(0xFFEF6C00),
+    )
+
+val blueGrey
+    @Composable get() = customColor(
+        lightColor = Color(0xFFCFD8DC),
+        darkColor = Color(0xFF37474F),
+    )
+
+val amber
+    @Composable get() = customColor(
+        lightColor = Color(0xFFFFECB3),
+        darkColor = Color(0xFFFF8F00),
+    )
+
+val grey
+    @Composable get() = customColor(
+        lightColor = Color(0xFFEEEEEE),
+        darkColor = Color(0xFF424242),
+    )

@@ -7,7 +7,6 @@ import com.fstengineering.leasilycrm.R
 import kotlinx.collections.immutable.ImmutableSet
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.Calendar
 
@@ -71,14 +70,12 @@ fun getSelectableDates(
 ): SelectableDates {
     val initialDate = LocalDate.of(initialYear, initialMonth, initialDayOfMonth)
         .atStartOfDay(ZoneOffset.UTC)
-        .toInstant()
-        .atZone(ZoneId.systemDefault())
         .toLocalDate()
 
     return object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
             val date = Instant.ofEpochMilli(utcTimeMillis)
-                .atZone(ZoneId.systemDefault())
+                .atZone(ZoneOffset.UTC)
                 .toLocalDate()
 
             val minMaxCondition =

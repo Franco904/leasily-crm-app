@@ -253,7 +253,10 @@ class StayRegistrationViewModel(
     ): ImmutableSet<LocalDate> {
         val isEditing = stayToEdit != null
 
-        val propertyAlreadySelectedDatesForStay = propertyStays
+        val sortedPropertyStays = propertyStays
+            .sortedBy { it.checkInDateTime }
+
+        val propertyAlreadySelectedDatesForStay = sortedPropertyStays
             .asSequence()
             .filter {
                 if (it.isDeleted) return@filter false
@@ -271,8 +274,24 @@ class StayRegistrationViewModel(
                 val checkInDateTime = stay.checkInDateTime!!
                 val checkOutDateTime = stay.checkOutDateTime!!
 
-                generateSequence(checkInDateTime) { it.plusDays(1) }
-                    .takeWhile { it <= checkOutDateTime }
+                val isCheckInAlsoACheckOut = sortedPropertyStays.any { anyStay ->
+                    checkInDateTime.toLocalDate() == anyStay.checkOutDateTime?.toLocalDate()
+                }
+
+                val isCheckOutAlsoACheckIn = sortedPropertyStays.any { anyStay ->
+                    checkOutDateTime.toLocalDate() == anyStay.checkInDateTime?.toLocalDate()
+                }
+
+                val startDateTime =
+                    if (isCheckInAlsoACheckOut) checkInDateTime
+                    else checkInDateTime.plusDays(1)
+
+                val endDateTime =
+                    if (isCheckOutAlsoACheckIn) checkOutDateTime
+                    else checkOutDateTime.minusDays(1)
+
+                generateSequence(startDateTime) { it.plusDays(1) }
+                    .takeWhile { it <= endDateTime }
                     .map { it.toLocalDate() }
             }
             .toPersistentSet()
@@ -479,18 +498,13 @@ class StayRegistrationViewModel(
     }
 
     sealed interface UiEvents {
+
         data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
-
         data class ScrollToField(val field: StayField) : UiEvents
-
-        data object StayCreateSuccess : UiEvents
-
         data class StayEditSuccess(@StringRes val messageId: Int) : UiEvents
-
-        data object TransferCreateSuccess : UiEvents
-
         data class TransferEditSuccess(@StringRes val messageId: Int) : UiEvents
+        data object RedirectToSignIn : UiEvents
+        data object StayCreateSuccess : UiEvents
+        data object TransferCreateSuccess : UiEvents
     }
 }

@@ -51,6 +51,7 @@ fun PropertyDashboardScreen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val property by viewModel.property.collectAsStateWithLifecycle()
+    val currentMonthStaysDates by viewModel.currentMonthStaysDates.collectAsStateWithLifecycle()
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -111,6 +112,7 @@ fun PropertyDashboardScreen(
         } else {
             PropertyDashboardSection(
                 property = property,
+                currentMonthStaysDates = currentMonthStaysDates.entries.first().toPair(),
                 onViewPropertyDetails = onViewPropertyDetails,
                 onViewPropertyOwnerDetails = {
                     if (property.owner?.id == null) return@PropertyDashboardSection
