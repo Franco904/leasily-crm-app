@@ -42,6 +42,7 @@ fun PropertyDashboardScreen(
     onViewPropertyOwnerDetails: (Long) -> Unit,
     onViewNextStays: () -> Unit,
     onNewStay: (Boolean) -> Unit,
+    onViewStay: (Long) -> Unit,
     showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -120,6 +121,7 @@ fun PropertyDashboardScreen(
                 },
                 onViewNextStays = onViewNextStays,
                 onNewStay = { mustShowStayTypeDialog = true },
+                onViewStay = onViewStay,
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp)

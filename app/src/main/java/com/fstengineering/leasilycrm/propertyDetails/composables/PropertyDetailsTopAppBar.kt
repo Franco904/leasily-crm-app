@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
-import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +51,7 @@ fun PropertyDetailsTopAppBar(
             )
         },
         actions = {
-            AppMoreOptionsMenu(
+            AppMoreOptionsIconDropdownMenu(
                 options = persistentListOf(
                     MoreOptionsMenuOption(
                         icon = Icons.Outlined.Edit,

@@ -30,8 +30,8 @@ val purple
 
 val lime
     @Composable get() = customColor(
-        lightColor = Color(0xFFF0F4C3),
-        darkColor = Color(0xFF9E9D24),
+        lightColor = Color(0xFFE6EE9C),
+        darkColor = Color(0xFFAFB42B),
     )
 
 val pink

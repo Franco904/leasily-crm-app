@@ -41,9 +41,9 @@ import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXI
 import com.fstengineering.leasilycrm.core.domain.constants.NOT_APPLICABLE_PROXIMITY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
-import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
+import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicReadOnlyChip
-import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -107,7 +107,7 @@ fun PropertyCard(
                                 modifier = Modifier
                                     .weight(1f)
                             )
-                            AppMoreOptionsMenu(
+                            AppMoreOptionsIconDropdownMenu(
                                 options = persistentListOf(
                                     MoreOptionsMenuOption(
                                         icon = Icons.Outlined.RemoveRedEye,

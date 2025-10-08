@@ -349,6 +349,15 @@ object DestinationsHandler {
 
                     navController.navigate(destination)
                 },
+                onViewStay = { stayId ->
+                    val destination = Destinations.StayDetails(
+                        stayId = stayId,
+                        cameFromProperty = true,
+                        cameFromTenant = false,
+                    )
+
+                    navController.navigate(destination)
+                },
                 showSnackbar = showSnackbar,
             )
         }

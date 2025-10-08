@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
-import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
+import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.CheckInCheckOutChipLabel
-import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
 import kotlinx.collections.immutable.toPersistentList
@@ -131,7 +131,7 @@ fun StayCard(
                         )
                     }
                 }
-                AppMoreOptionsMenu(
+                AppMoreOptionsIconDropdownMenu(
                     options = buildList {
                         add(
                             MoreOptionsMenuOption(

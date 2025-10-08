@@ -21,8 +21,8 @@ import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_IN
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
+import com.fstengineering.leasilycrm.core.presentation.composables.StayColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
-import com.fstengineering.leasilycrm.core.presentation.composables.StayTenantColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import com.fstengineering.leasilycrm.core.presentation.composables.stayPeriodColors
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
@@ -36,6 +36,7 @@ fun PropertyDashboardSection(
     onViewPropertyOwnerDetails: () -> Unit,
     onViewNextStays: () -> Unit,
     onNewStay: () -> Unit,
+    onViewStay: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -63,7 +64,7 @@ fun PropertyDashboardSection(
                     .find { it.id == stayId }?.tenant?.name
                     ?: context.getString(R.string.unknown_text)
 
-                stayTenantColor to tenantName
+                Triple(stayId, stayTenantColor, tenantName)
             }
     }
 
@@ -102,28 +103,30 @@ fun PropertyDashboardSection(
             month = currentMonthYear.month,
             year = currentMonthYear.year,
             stayCalendarDates = if (staysDates.isEmpty()) null else currentMonthStaysDates,
+            onViewStay = onViewStay,
             actions = {
                 if (staysDates.isNotEmpty()) {
                     ViewAllStaysTextButton(onViewNextStays = onViewNextStays)
                     Spacer(modifier = Modifier.width(8.dp))
                 }
                 NewStayPrimaryButton(onNewStay = onNewStay)
-            }
+            },
         )
         Spacer(modifier = Modifier.height(24.dp))
         Column(
             modifier = Modifier
                 .padding(horizontal = 8.dp)
         ) {
-            stayColorToTenantsNames.forEach { (stayTenantColor, tenantName) ->
-                StayTenantColoredLabel(
+            stayColorToTenantsNames.forEach { (stayId, stayTenantColor, tenantName) ->
+                StayColoredLabel(
                     color = stayTenantColor(),
                     label = tenantName,
+                    onClick = { onViewStay(stayId) },
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
             if (property.stays.any { it.isUnavailablePeriod }) {
-                StayTenantColoredLabel(
+                StayColoredLabel(
                     color = null,
                     label = stringResource(R.string.stay_type_unavailable_period_title),
                 )

@@ -18,8 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
-import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +59,7 @@ fun StayDetailsTopAppBar(
             )
         },
         actions = {
-            AppMoreOptionsMenu(
+            AppMoreOptionsIconDropdownMenu(
                 options = buildList {
                     add(
                         MoreOptionsMenuOption(

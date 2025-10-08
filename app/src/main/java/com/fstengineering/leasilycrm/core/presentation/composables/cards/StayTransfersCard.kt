@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
-import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
-import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.StayTransfersEmptySection
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -128,7 +128,7 @@ fun StayTransfersCard(
                         )
                         if (hasMoreOptionsMenu) {
                             Spacer(modifier = Modifier.width(16.dp))
-                            AppMoreOptionsMenu(
+                            AppMoreOptionsIconDropdownMenu(
                                 options = persistentListOf(
                                     MoreOptionsMenuOption(
                                         icon = Icons.Outlined.Edit,

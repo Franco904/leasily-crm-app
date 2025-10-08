@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.presentation.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,7 +25,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -33,11 +37,20 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 import com.fstengineering.leasilycrm.core.application.theme.amber
 import com.fstengineering.leasilycrm.core.application.theme.blueGrey
@@ -55,6 +68,7 @@ import com.fstengineering.leasilycrm.core.application.theme.teal
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.daysOfWeek
 import com.fstengineering.leasilycrm.core.presentation.utils.getFirstDayOfWeekOfMonth
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
@@ -89,6 +103,7 @@ fun StayPeriodsCalendar(
     modifier: Modifier = Modifier,
     stayCalendarDates: Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>? = null,
     singleStayPeriodColor: Color? = null,
+    onViewStay: ((Long) -> Unit)? = null,
     actions: (@Composable RowScope.() -> Unit)? = null,
 ) {
     val context = LocalContext.current
@@ -143,6 +158,7 @@ fun StayPeriodsCalendar(
                     month = month,
                     year = year,
                     singleStayPeriodColor = singleStayPeriodColor,
+                    onViewStay = onViewStay,
                 )
             }
             if (actions != null) {
@@ -187,6 +203,7 @@ fun StayDatesSection(
     now: LocalDate,
     month: Int,
     year: Int,
+    onViewStay: ((Long) -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -226,51 +243,141 @@ fun StayDatesSection(
                     && year == now.year
 
             if (selectedDatesWithMonthYear == null || day !in selectedDaysOfMonth!!) {
-                val paddingBottom = when {
-                    day in daysOfMonth.takeLast(7) || isToday -> 0.dp
-                    else -> 24.dp
-                }
-
-                CalendarDate(
-                    dayText = day,
+                UnselectedCalendarDate(
+                    day = day,
+                    daysOfMonth = daysOfMonth,
                     isToday = isToday,
                     singleStayPeriodColor = singleStayPeriodColor,
-                    modifier = Modifier
-                        .padding(bottom = paddingBottom)
-                        .offset(
-                            x = if (day.length == 1) (-0.5).dp else 0.dp,
-                            y = when {
-                                isToday -> (-8).dp
-                                else -> 0.dp
-                            },
-                        )
                 )
             } else {
-                val selectedDate = selectedDatesWithMonthYear.second.find { it.dayOfMonth == day }
-
-                val paddingBottom = when {
-                    day in daysOfMonth.takeLast(7) || isToday -> 0.dp
-                    selectedDate != null -> 16.dp
-                    else -> 24.dp
-                }
-
-                CalendarDate(
-                    dayText = day,
+                SelectedCalendarDate(
+                    selectedDate = selectedDatesWithMonthYear.second.find { it.dayOfMonth == day },
+                    day = day,
+                    daysOfMonth = daysOfMonth,
                     isToday = isToday,
-                    selectedDate = selectedDate,
                     singleStayPeriodColor = singleStayPeriodColor,
-                    modifier = Modifier
-                        .padding(bottom = paddingBottom)
-                        .offset(
-                            x = if (day.length == 1) (-0.5).dp else 0.dp,
-                            y = when {
-                                isToday -> (-8).dp
-                                selectedDate != null -> (-4).dp
-                                else -> 0.dp
-                            },
-                        )
+                    onViewStay = onViewStay,
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun UnselectedCalendarDate(
+    day: String,
+    daysOfMonth: ImmutableList<String>,
+    isToday: Boolean,
+    singleStayPeriodColor: Color?,
+    modifier: Modifier = Modifier,
+) {
+    val paddingBottom = when {
+        day in daysOfMonth.takeLast(7) || isToday -> 0.dp
+        else -> 24.dp
+    }
+
+    CalendarDate(
+        dayText = day,
+        isToday = isToday,
+        singleStayPeriodColor = singleStayPeriodColor,
+        modifier = modifier
+            .padding(bottom = paddingBottom)
+            .offset(
+                x = if (day.length == 1) (-0.5).dp else 0.dp,
+                y = when {
+                    isToday -> (-8).dp
+                    else -> 0.dp
+                },
+            )
+    )
+}
+
+@Composable
+fun SelectedCalendarDate(
+    selectedDate: StayCalendarDate?,
+    day: String,
+    daysOfMonth: ImmutableList<String>,
+    isToday: Boolean,
+    singleStayPeriodColor: Color?,
+    onViewStay: ((Long) -> Unit)?,
+    modifier: Modifier = Modifier,
+) {
+    val density = LocalDensity.current
+
+    var isDropdownMenuVisible by remember { mutableStateOf(false) }
+
+    var datePosition by remember { mutableStateOf(Offset.Zero) }
+    var dateSize by remember { mutableStateOf(IntSize.Zero) }
+
+    val paddingBottom = when {
+        day in daysOfMonth.takeLast(7) || isToday -> 0.dp
+        selectedDate != null -> 16.dp
+        else -> 24.dp
+    }
+
+    CalendarDate(
+        dayText = day,
+        isToday = isToday,
+        selectedDate = selectedDate,
+        singleStayPeriodColor = singleStayPeriodColor,
+        modifier = modifier
+            .padding(bottom = paddingBottom)
+            .offset(
+                x = if (day.length == 1) (-0.5).dp else 0.dp,
+                y = when {
+                    isToday -> (-8).dp
+                    selectedDate != null -> (-4).dp
+                    else -> 0.dp
+                },
+            )
+            .onGloballyPositioned { coords ->
+                datePosition = coords.positionInWindow()
+                dateSize = coords.size
+            }
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    isDropdownMenuVisible = true
+                }
+            }
+    )
+    if (onViewStay != null) {
+        val menuOffset = with(density) {
+            val dateCenterX = datePosition.x + (dateSize.width / 2)
+
+            DpOffset(
+                x = (dateCenterX.toDp() - 64.dp) / 2,
+                y = 0.dp,
+            )
+        }
+
+        Box(
+            contentAlignment = Alignment.TopStart,
+            modifier = Modifier
+                .fillMaxSize()
+                .zIndex(10f),
+        ) {
+            AppMoreOptionsDropdownMenu(
+                options = persistentListOf(
+                    MoreOptionsMenuOption(
+                        iconDrawable = R.drawable.calendar_view,
+                        text = stringResource(
+                            when {
+                                selectedDate?.firstHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX -> {
+                                    R.string.view_unvailable_period_action_button_text
+                                }
+
+                                else -> R.string.view_property_stay_action_button_text
+                            }
+                        ),
+                        onClick = {
+                            if (selectedDate != null) onViewStay(selectedDate.stayId)
+                        },
+                    ),
+                ),
+                isMenuExpanded = isDropdownMenuVisible,
+                onMenuExpanded = { isDropdownMenuVisible = it },
+                offset = menuOffset,
+            )
         }
     }
 }

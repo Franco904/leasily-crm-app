@@ -584,6 +584,7 @@
     <string name="view_assistance_action_button_text">Ver atendimento</string>
     <string name="view_details_action_button_text">Ver detalhes</string>
     <string name="view_property_stay_action_button_text">Ver estadia</string>
+    <string name="view_unvailable_period_action_button_text">Ver período</string>
 
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório</string>
