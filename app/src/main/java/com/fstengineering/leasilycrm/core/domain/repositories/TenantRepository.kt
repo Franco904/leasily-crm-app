@@ -41,11 +41,13 @@ interface TenantRepository {
 
     fun watchById(tenantId: Long): Flow<AppResult<Tenant?, DataSourceError>>
 
+    fun watchAll(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
+
     fun watchAllLeads(
         orderTypeId: Int,
     ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
 
-    fun watchTenantsMatching(
+    fun watchAllTenantsMatching(
         orderTypeId: Int,
         tenantFilterType: Int?,
         matching: String?,

@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 import com.fstengineering.leasilycrm.core.application.theme.amber
@@ -64,7 +65,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import java.time.LocalDate
 
-private val stayPeriodColors
+val stayPeriodColors
     @Composable get() = listOf(
         cyan,
         deepOrange,
@@ -307,7 +308,7 @@ fun CalendarDate(
             Box(
                 contentAlignment = Alignment.Center,
             ) {
-                if (isAllUnavailableDate) UnavailablePeriodDateCircle()
+                if (isAllUnavailableDate) UnavailablePeriodDateCircle(sizeDp = 28.dp)
                 else {
                     StayDateCircle(
                         firstHalfPeriodIndex = selectedDate.firstHalfPeriodIndex,
@@ -398,11 +399,12 @@ fun DrawScope.stayDateSemiCircleSecondHalf(
 
 @Composable
 fun UnavailablePeriodDateCircle(
+    sizeDp: Dp,
     modifier: Modifier = Modifier,
 ) {
     val outlineVariantColor = MaterialTheme.colorScheme.outlineVariant
 
-    Box(modifier = modifier.size(28.dp)) {
+    Box(modifier = modifier.size(sizeDp)) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val radius = size.minDimension / 2f
             val center = Offset(size.width / 2f, size.height / 2f)
@@ -499,136 +501,163 @@ fun StayPeriodsCalendarPreview(
                         dayOfMonth = "4",
                         firstHalfPeriodIndex = null,
                         secondHalfPeriodIndex = -1,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "5",
                         firstHalfPeriodIndex = -1,
                         secondHalfPeriodIndex = -1,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "6",
                         firstHalfPeriodIndex = -1,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "7",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "8",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "9",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "10",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "11",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "12",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "13",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "14",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "15",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "16",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "17",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "18",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "19",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "20",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "21",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "22",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "23",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "24",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "25",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "26",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "27",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "28",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "29",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
+                        stayId = 0,
                     ),
                     StayCalendarDate(
                         dayOfMonth = "30",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = null,
+                        stayId = 0,
                     ),
                 ),
             ),

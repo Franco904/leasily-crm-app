@@ -121,7 +121,6 @@ fun PropertyDashboardScreen(
                 onViewNextStays = onViewNextStays,
                 onNewStay = { mustShowStayTypeDialog = true },
                 modifier = Modifier
-                    .fillMaxSize()
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp)
             )

@@ -114,7 +114,7 @@ class TenantsViewModel(
                 .flatMapLatest { (order, filter, searchInput) ->
                     _isLoading.update { true }
 
-                    tenantRepository.watchTenantsMatching(
+                    tenantRepository.watchAllTenantsMatching(
                         orderTypeId = order.id,
                         tenantFilterType = filter?.id,
                         matching = searchInput,

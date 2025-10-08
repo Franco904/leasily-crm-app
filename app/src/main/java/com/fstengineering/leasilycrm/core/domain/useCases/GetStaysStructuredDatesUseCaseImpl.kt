@@ -50,6 +50,7 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
                     nextIndex = nextIndex,
                     checkInDate = stay.checkInDateTime?.toLocalDate()!!,
                     checkOutDate = stay.checkOutDateTime?.toLocalDate()!!,
+                    stayId = stay.id!!,
                 )
 
                 stayDatesMap.entries.forEach { (stayMonthYear, stayDates) ->
@@ -90,6 +91,7 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
         nextIndex: Int?,
         checkInDate: LocalDate,
         checkOutDate: LocalDate,
+        stayId: Long,
     ): StaysStructuredDatesMap {
         val checkInDayOfMonth = checkInDate.dayOfMonth
         val checkInMonth = checkInDate.monthValue
@@ -132,6 +134,7 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
                             dayOfMonth = stayDate.dayOfMonth.toString(),
                             firstHalfPeriodIndex = if (isCheckInDate) previousIndex else currentIndex,
                             secondHalfPeriodIndex = if (isCheckOutDate) nextIndex else currentIndex,
+                            stayId = stayId,
                         )
                     }
                     .toPersistentList()

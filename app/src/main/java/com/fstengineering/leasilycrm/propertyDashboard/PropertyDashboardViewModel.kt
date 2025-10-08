@@ -10,13 +10,13 @@ import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentMap
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 
 class PropertyDashboardViewModel(
     private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
+    private val watchPropertyWithStaysTenantsUseCase: WatchPropertyWithStaysTenantsUseCase,
     private val propertyRepository: PropertyRepository,
     private val userRepository: UserRepository,
     private val now: LazyAppDate,
@@ -45,8 +46,6 @@ class PropertyDashboardViewModel(
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
-
-    private var watchPropertyJob: Job? = null
 
     fun init(propertyId: Long) {
         if (isInitialized) return
@@ -77,8 +76,8 @@ class PropertyDashboardViewModel(
     private fun watchProperty(propertyId: Long) {
         _isLoading.update { true }
 
-        watchPropertyJob = viewModelScope.launch {
-            propertyRepository.watchById(propertyId).collect { result ->
+        viewModelScope.launch {
+            watchPropertyWithStaysTenantsUseCase(propertyId).collect { result ->
                 result
                     .onError { error ->
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
@@ -86,7 +85,6 @@ class PropertyDashboardViewModel(
                     .onSuccess { storedProperty ->
                         if (storedProperty == null) {
                             _uiEvents.send(UiEvents.NavigateUp)
-                            watchPropertyJob?.cancel()
                             return@onSuccess
                         }
 
@@ -122,8 +120,6 @@ class PropertyDashboardViewModel(
 
     fun deleteProperty() {
         val propertyId = property.value.id ?: return
-
-        watchPropertyJob?.cancel()
 
         viewModelScope.launch {
             propertyRepository.delete(id = propertyId)

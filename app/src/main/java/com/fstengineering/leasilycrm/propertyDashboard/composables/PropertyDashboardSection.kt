@@ -3,21 +3,28 @@ package com.fstengineering.leasilycrm.propertyDashboard.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
+import com.fstengineering.leasilycrm.core.presentation.composables.StayTenantColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
+import com.fstengineering.leasilycrm.core.presentation.composables.stayPeriodColors
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
 import kotlinx.collections.immutable.ImmutableList
 
@@ -31,9 +38,34 @@ fun PropertyDashboardSection(
     onNewStay: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     val scrollState = rememberScrollState()
 
     val (currentMonthYear, staysDates) = currentMonthStaysDates
+
+    val stayColorToTenantsNames = remember(currentMonthStaysDates) {
+        val idsGroup = currentMonthStaysDates.second
+            .groupBy { it.stayId }
+
+        idsGroup
+            .filter { (_, stayDates) ->
+                val isUnavailablePeriod =
+                    stayDates.first().secondHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
+                !isUnavailablePeriod
+            }
+            .map { (stayId, stayDates) ->
+                val stayTenantColor = stayDates.first().secondHalfPeriodIndex
+                    ?.let { i -> @Composable { stayPeriodColors[i] } }
+                    ?: @Composable { Color.Transparent }
+
+                val tenantName = property.stays
+                    .find { it.id == stayId }?.tenant?.name
+                    ?: context.getString(R.string.unknown_text)
+
+                stayTenantColor to tenantName
+            }
+    }
 
     Column(
         modifier = modifier
@@ -78,6 +110,25 @@ fun PropertyDashboardSection(
                 NewStayPrimaryButton(onNewStay = onNewStay)
             }
         )
+        Spacer(modifier = Modifier.height(24.dp))
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+        ) {
+            stayColorToTenantsNames.forEach { (stayTenantColor, tenantName) ->
+                StayTenantColoredLabel(
+                    color = stayTenantColor(),
+                    label = tenantName,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            if (property.stays.any { it.isUnavailablePeriod }) {
+                StayTenantColoredLabel(
+                    color = null,
+                    label = stringResource(R.string.stay_type_unavailable_period_title),
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(120.dp))
     }
 }

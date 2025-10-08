@@ -527,6 +527,7 @@
     <string name="not_registered_info_var_2_body_text">Não informada</string>
     <string name="no_file_registered_body_text">Nenhum arquivo registrado</string>
     <string name="unnamed_file_text">Arquivo sem nome</string>
+    <string name="unknown_text">Desconhecido</string>
 
     <string name="order_by_name_text">Nome</string>
     <string name="order_by_last_update_date_text">Última atualização</string>

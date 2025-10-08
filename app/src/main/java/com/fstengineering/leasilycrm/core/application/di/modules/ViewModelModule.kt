@@ -109,6 +109,7 @@ val viewModelModule = module {
     viewModel {
         PropertyDashboardViewModel(
             getStaysStructuredDatesUseCase = get(),
+            watchPropertyWithStaysTenantsUseCase = get(),
             propertyRepository = get(),
             userRepository = get(),
             now = LazyAppDate { LocalDate.now() },
