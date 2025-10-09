@@ -27,6 +27,7 @@ interface TenantRepository {
 
     suspend fun getAllWithoutUpcomingStaysMatching(
         matching: String?,
+        currentTenantId: Long?,
     ): AppResult<ImmutableList<Tenant>, DataSourceError>
 
     suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataSourceError>

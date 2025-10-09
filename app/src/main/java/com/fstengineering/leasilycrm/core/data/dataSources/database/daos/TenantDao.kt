@@ -70,7 +70,7 @@ interface TenantDao {
         """
         SELECT * FROM tenants
         WHERE user_id = :userId
-        AND status <> 1
+        AND (status <> 1 OR (:currentTenantId IS NOT NULL AND id = :currentTenantId))
         AND is_deleted = 0
         AND (
             :matching IS NULL OR
@@ -83,6 +83,7 @@ interface TenantDao {
     suspend fun getAllWithoutUpcomingStaysMatching(
         userId: Long,
         matching: String?,
+        currentTenantId: Long?,
     ): List<TenantCompound>
 
     @Query("SELECT name FROM tenants WHERE id = :id AND is_deleted = 0")

@@ -111,6 +111,7 @@ class TenantRepositoryImpl(
 
     override suspend fun getAllWithoutUpcomingStaysMatching(
         matching: String?,
+        currentTenantId: Long?,
     ): AppResult<ImmutableList<Tenant>, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
@@ -125,6 +126,7 @@ class TenantRepositoryImpl(
         val tenants = dao.getAllWithoutUpcomingStaysMatching(
             userId = userRemoteId,
             matching = matching,
+            currentTenantId = currentTenantId,
         )
             .map { tenant -> tenant.toDomain() }.toPersistentList()
 
