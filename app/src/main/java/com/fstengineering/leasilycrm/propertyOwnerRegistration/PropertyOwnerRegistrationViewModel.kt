@@ -162,18 +162,31 @@ class PropertyOwnerRegistrationViewModel(
 
     fun savePropertyOwner() {
         viewModelScope.launch {
-            if (propertyOwnerToEdit != null && propertyOwnerForm.value == propertyOwnerToEdit) {
+            val propertyOwner = propertyOwnerForm.value
+
+            if (propertyOwnerToEdit != null && propertyOwner == propertyOwnerToEdit) {
                 _uiEvents.send(UiEvents.PropertyOwnerEditSuccess(messageId = R.string.snackbar_no_data_changed))
                 return@launch
             }
 
-            propertyOwnerValidator.validate(propertyOwner = propertyOwnerForm.value)
+            val isThereStoredPropertyOwnerWithSameName = propertyOwner.name?.let {
+                propertyOwnerRepository.isTherePropertyOwnerWithName(
+                    propertyOwnerName = propertyOwner.name,
+                    currentStoredPropertyOwnerName = propertyOwnerToEdit?.name,
+                )
+                    .fold(onError = { false }, onSuccess = { it })
+            } ?: false
+
+            propertyOwnerValidator.validate(
+                propertyOwner = propertyOwner,
+                isThereStoredPropertyOwnerWithSameName = isThereStoredPropertyOwnerWithSameName,
+            )
                 .onErrors { errors ->
                     setFieldErrors(errors)
                     return@launch
                 }
 
-            val propertyOwnerId = propertyOwnerRepository.insertOrUpdate(propertyOwnerForm.value)
+            val propertyOwnerId = propertyOwnerRepository.insertOrUpdate(propertyOwner)
                 .fold(
                     onError = { error ->
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
@@ -182,7 +195,7 @@ class PropertyOwnerRegistrationViewModel(
                     onSuccess = { propertyOwnerId -> propertyOwnerId },
                 )
 
-            propertyOwnerForm.value.files.forEach { file ->
+            propertyOwner.files.forEach { file ->
                 propertyOwnerFileRepository.insertOrUpdate(
                     file = file.copy(propertyOwnerId = propertyOwnerId),
                 )

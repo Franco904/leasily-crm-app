@@ -595,6 +595,7 @@
 
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório</string>
+
     <string name="inline_too_big_8_chars">Deve ter no máximo 8 caracteres</string>
     <string name="inline_too_big_20_chars">Deve ter no máximo 20 caracteres</string>
     <string name="inline_too_big_75_chars">Deve ter no máximo 75 caracteres</string>
@@ -602,8 +603,15 @@
     <string name="inline_too_big_120_chars">Deve ter no máximo 120 caracteres</string>
 
     <string name="inline_invalid_email">Email inválido</string>
+
+    <string name="inline_name_belongs_other_tenant_segment">Já existe um segmento de inquilino com este nome</string>
+    <string name="inline_name_belongs_other_property_owner_segment">Já existe um segmento de proprietário com este nome</string>
+    <string name="inline_name_belongs_other_property_owner">Já existe um proprietário com este nome</string>
+    <string name="inline_name_belongs_other_tenant">Já existe um lead ou inquilino com este nome</string>
+
     <string name="inline_period_start_end_date_are_same_period">Data de fim não deve ser a mesma da de início</string>
     <string name="inline_period_is_overlapping_other_property_stay_period">Imóvel está ocupado por outra estadia neste período</string>
+    <string name="inline_period_is_overlapping_other_property_price_period">Imóvel já possui um preço fixado neste período</string>
 
     <!-- Snackbar success -->
     <string name="snackbar_no_data_changed">Nenhum dado foi editado.</string>

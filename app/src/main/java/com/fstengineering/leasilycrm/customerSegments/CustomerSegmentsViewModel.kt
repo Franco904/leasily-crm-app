@@ -12,6 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRep
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -169,21 +170,39 @@ class CustomerSegmentsViewModel(
 
     fun saveCustomerSegment(isEditing: Boolean) {
         viewModelScope.launch {
-            if (isEditing) {
-                val csFromForm = customerSegmentForm.value
-                val storedCustomerSegment = _customerSegments.value.find { it.id == csFromForm?.id }
+            val csFromForm = customerSegmentForm.value
+            val storedCustomerSegment = _customerSegments.value.find { it.id == csFromForm?.id }
 
+            if (isEditing) {
                 if (csFromForm == storedCustomerSegment) {
                     _uiEvents.send(
                         UiEvents.CustomerSegmentEditSuccess(messageId = R.string.snackbar_no_data_changed)
                     )
+
+                    onCustomerSegmentFormChange(form = null)
                     return@launch
                 }
             }
 
             val newCustomerSegment = customerSegmentForm.value ?: return@launch
 
-            customerSegmentValidator.validate(newCustomerSegment)
+            val isThereStoredCustomerSegmentWithSameName = when {
+                newCustomerSegment.name != null && newCustomerSegment.type?.id != null -> {
+                    customerSegmentRepository.isThereCustomerSegmentWithName(
+                        customerSegmentName = newCustomerSegment.name,
+                        customerSegmentTypeId = newCustomerSegment.type.id,
+                        currentStoredCustomerSegmentName = storedCustomerSegment?.name,
+                    )
+                        .fold(onError = { false }, onSuccess = { it })
+                }
+
+                else -> false
+            }
+
+            customerSegmentValidator.validate(
+                customerSegment = newCustomerSegment,
+                isThereStoredCustomerSegmentWithSameName = isThereStoredCustomerSegmentWithSameName,
+            )
                 .onErrors { errors ->
                     val nameError = errors.firstOrNull { it is ValidationError.CustomerSegmentName }
                     val typeError = errors.firstOrNull { it is ValidationError.CustomerSegmentType }

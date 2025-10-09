@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
@@ -111,6 +112,7 @@ class TenantRepositoryImpl(
 
     override suspend fun getAllWithoutUpcomingStaysMatching(
         matching: String?,
+        currentTenantId: Long?,
     ): AppResult<ImmutableList<Tenant>, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
@@ -125,6 +127,7 @@ class TenantRepositoryImpl(
         val tenants = dao.getAllWithoutUpcomingStaysMatching(
             userId = userRemoteId,
             matching = matching,
+            currentTenantId = currentTenantId,
         )
             .map { tenant -> tenant.toDomain() }.toPersistentList()
 
@@ -291,4 +294,27 @@ class TenantRepositoryImpl(
 
             emitAll(tenantsFlow)
         }
+
+    override suspend fun isThereTenantWithName(
+        tenantName: String,
+        currentStoredTenantName: String?,
+    ): AppResult<Boolean, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: run {
+                        return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
+                    }
+                }
+            )
+
+        val count = dao.countTenantsWithName(
+            userId = userRemoteId,
+            tenantName = tenantName.normalizeEncoding(),
+            currentStoredTenantName = currentStoredTenantName,
+        )
+
+        return AppResult.Success(data = count > 0)
+    }
 }

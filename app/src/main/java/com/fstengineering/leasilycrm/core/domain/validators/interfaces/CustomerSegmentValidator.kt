@@ -7,5 +7,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
 interface CustomerSegmentValidator {
     fun validate(
         customerSegment: CustomerSegment,
+        isThereStoredCustomerSegmentWithSameName: Boolean,
     ): AppResultCompound<Unit, ValidationError>
 }

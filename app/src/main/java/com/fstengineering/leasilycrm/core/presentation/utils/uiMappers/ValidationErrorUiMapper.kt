@@ -20,6 +20,14 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
+    ValidationError.CustomerSegmentName.BelongsToOtherTenantSegment -> {
+        R.string.inline_name_belongs_other_tenant_segment
+    }
+
+    ValidationError.CustomerSegmentName.BelongsToOtherPropertyOwnerSegment -> {
+        R.string.inline_name_belongs_other_property_owner_segment
+    }
+
     ValidationError.CustomerSegmentName.LengthIsGreaterThan75Chars -> {
         R.string.inline_too_big_75_chars
     }
@@ -48,12 +56,16 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
-    ValidationError.PropertyPriceDateRange.IsNull -> {
+    ValidationError.PropertyPricePeriod.IsNull -> {
         R.string.inline_required
     }
 
-    ValidationError.PropertyPriceDateRange.StartAndEndDaysAreTheSame -> {
+    ValidationError.PropertyPricePeriod.StartAndEndDaysAreTheSame -> {
         R.string.inline_period_start_end_date_are_same_period
+    }
+
+    ValidationError.PropertyPricePeriod.IsOverlappingOtherPropertyPricePeriod -> {
+        R.string.inline_period_is_overlapping_other_property_price_period
     }
 
     ValidationError.PropertyPriceAmount.IsNull -> {
@@ -62,6 +74,10 @@ fun ValidationError.toUiMessage() = when (this) {
 
     ValidationError.PropertyOwnerName.IsBlank -> {
         R.string.inline_required
+    }
+
+    ValidationError.PropertyOwnerName.BelongsToOtherPropertyOwner -> {
+        R.string.inline_name_belongs_other_property_owner
     }
 
     ValidationError.PropertyOwnerName.LengthIsGreaterThan100Chars -> {
@@ -86,6 +102,10 @@ fun ValidationError.toUiMessage() = when (this) {
 
     ValidationError.TenantName.IsBlank -> {
         R.string.inline_required
+    }
+
+    ValidationError.TenantName.BelongsToOtherTenant -> {
+        R.string.inline_name_belongs_other_tenant
     }
 
     ValidationError.TenantName.LengthIsGreaterThan100Chars -> {

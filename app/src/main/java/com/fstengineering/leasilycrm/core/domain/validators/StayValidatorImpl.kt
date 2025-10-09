@@ -26,7 +26,7 @@ class StayValidatorImpl : StayValidator {
             checkOutDateTime = stay.checkOutDateTime,
             checkInDateTimeBeforeEdit = stayBeforeEdit?.checkInDateTime,
             propertyStayCheckInDateTimes = stay.property?.stays
-                ?.map { it.checkInDateTime!! }
+                ?.mapNotNull { it.checkInDateTime }
                 ?: emptyList(),
         )
             .onError { e -> errors.add(e) }

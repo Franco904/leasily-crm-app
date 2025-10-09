@@ -199,7 +199,10 @@ class StayRegistrationViewModel(
                 .collect { searchInput ->
                     _isLoading.update { true }
 
-                    tenantRepository.getAllWithoutUpcomingStaysMatching(matching = searchInput)
+                    tenantRepository.getAllWithoutUpcomingStaysMatching(
+                        matching = searchInput,
+                        currentTenantId = stayToEdit?.tenant?.id,
+                    )
                         .onError { error ->
                             _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                         }

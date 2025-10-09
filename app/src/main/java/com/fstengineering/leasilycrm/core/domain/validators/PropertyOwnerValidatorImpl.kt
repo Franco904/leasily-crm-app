@@ -11,10 +11,14 @@ import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyO
 class PropertyOwnerValidatorImpl : PropertyOwnerValidator {
     override fun validate(
         propertyOwner: PropertyOwner,
+        isThereStoredPropertyOwnerWithSameName: Boolean,
     ): AppResultCompound<Unit, ValidationError> {
         val errors = mutableListOf<ValidationError>()
 
-        validateName(name = propertyOwner.name)
+        validateName(
+            name = propertyOwner.name,
+            isThereStoredPropertyOwnerWithSameName = isThereStoredPropertyOwnerWithSameName,
+        )
             .onError { e -> errors.add(e) }
 
         if (propertyOwner.phone != null) {
@@ -37,9 +41,16 @@ class PropertyOwnerValidatorImpl : PropertyOwnerValidator {
         } else AppResultCompound.Errors(errors.toList())
     }
 
-    private fun validateName(name: String?): AppResult<Unit, ValidationError.PropertyOwnerName> {
+    private fun validateName(
+        name: String?,
+        isThereStoredPropertyOwnerWithSameName: Boolean,
+    ): AppResult<Unit, ValidationError.PropertyOwnerName> {
         return when {
             name.isNullOrBlank() -> AppResult.Error(ValidationError.PropertyOwnerName.IsBlank)
+            isThereStoredPropertyOwnerWithSameName -> {
+                AppResult.Error(ValidationError.PropertyOwnerName.BelongsToOtherPropertyOwner)
+            }
+
             name.length > 100 -> {
                 AppResult.Error(ValidationError.PropertyOwnerName.LengthIsGreaterThan100Chars)
             }

@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
+import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import java.time.LocalDateTime
 
 @Entity(
@@ -42,7 +43,7 @@ data class CustomerSegmentEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: LocalDateTime.now(),
                 updateDateTime = LocalDateTime.now(),
-                name = domain.name,
+                name = domain.name.normalizeEncoding(),
                 customerSegmentTypeId = domain.type.id,
                 userId = domain.userId,
                 isDeleted = domain.isDeleted,

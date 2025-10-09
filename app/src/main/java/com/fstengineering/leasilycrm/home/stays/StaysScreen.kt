@@ -38,11 +38,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.StaysEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberHorizontalCenterScroller
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
+import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
@@ -51,8 +53,6 @@ import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.Redirect
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.StayDeleteSuccess
 import com.fstengineering.leasilycrm.home.stays.composables.StayCard
 import com.fstengineering.leasilycrm.home.stays.composables.StayFilterButtonGroup
-import com.fstengineering.leasilycrm.core.presentation.composables.StaysEmptySection
-import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.launch

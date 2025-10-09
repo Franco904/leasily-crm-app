@@ -7,5 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
 interface PropertyPriceValidator {
     fun validate(
         propertyPrice: PropertyPrice,
+        propertyPriceBeforeEdit: PropertyPrice?,
+        otherPropertyPrices: List<PropertyPrice>,
     ): AppResultCompound<Unit, ValidationError>
 }

@@ -11,8 +11,8 @@ import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterSta
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList

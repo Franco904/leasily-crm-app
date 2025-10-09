@@ -15,6 +15,8 @@ sealed interface ValidationError : Error {
 
     enum class CustomerSegmentName : ValidationError {
         IsBlank,
+        BelongsToOtherTenantSegment,
+        BelongsToOtherPropertyOwnerSegment,
         LengthIsGreaterThan75Chars,
     }
 
@@ -42,9 +44,10 @@ sealed interface ValidationError : Error {
         IsBlank,
     }
 
-    enum class PropertyPriceDateRange : ValidationError {
+    enum class PropertyPricePeriod : ValidationError {
         IsNull,
         StartAndEndDaysAreTheSame,
+        IsOverlappingOtherPropertyPricePeriod,
     }
 
     enum class PropertyPriceAmount : ValidationError {
@@ -53,6 +56,7 @@ sealed interface ValidationError : Error {
 
     enum class PropertyOwnerName : ValidationError {
         IsBlank,
+        BelongsToOtherPropertyOwner,
         LengthIsGreaterThan100Chars,
     }
 
@@ -71,6 +75,7 @@ sealed interface ValidationError : Error {
 
     enum class TenantName : ValidationError {
         IsBlank,
+        BelongsToOtherTenant,
         LengthIsGreaterThan100Chars,
     }
 

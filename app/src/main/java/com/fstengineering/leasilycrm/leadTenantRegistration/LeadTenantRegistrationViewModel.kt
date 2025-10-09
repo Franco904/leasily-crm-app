@@ -13,6 +13,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.TenantContactOrigi
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -179,7 +180,18 @@ class LeadTenantRegistrationViewModel(
                 return@launch
             }
 
-            tenantValidator.validate(tenant = leadTenant)
+            val isThereStoredTenantWithSameName = leadTenant.name?.let {
+                tenantRepository.isThereTenantWithName(
+                    tenantName = leadTenant.name,
+                    currentStoredTenantName = leadTenantToEdit?.name,
+                )
+                    .fold(onError = { false }, onSuccess = { it })
+            } ?: false
+
+            tenantValidator.validate(
+                tenant = leadTenant,
+                isThereStoredTenantWithSameName = isThereStoredTenantWithSameName,
+            )
                 .onErrors { errors ->
                     setFieldErrors(errors)
                     return@launch
