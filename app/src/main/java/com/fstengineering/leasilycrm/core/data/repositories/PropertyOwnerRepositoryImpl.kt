@@ -10,6 +10,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepos
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -127,4 +128,27 @@ class PropertyOwnerRepositoryImpl(
                     .distinctUntilChanged()
             )
         }
+
+    override suspend fun isTherePropertyOwnerWithName(
+        propertyOwnerName: String,
+        currentStoredPropertyOwnerName: String?,
+    ): AppResult<Boolean, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: run {
+                        return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
+                    }
+                }
+            )
+
+        val count = dao.countPropertyOwnersWithName(
+            userId = userRemoteId,
+            propertyOwnerName = propertyOwnerName.normalizeEncoding(),
+            currentStoredPropertyOwnerName = currentStoredPropertyOwnerName,
+        )
+
+        return AppResult.Success(data = count > 0)
+    }
 }

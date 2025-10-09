@@ -75,7 +75,7 @@ fun CustomerSegmentRegistrationDialog(
                     supportingText = stringResource(
                         formErrors[CustomerSegmentField.Name] ?: R.string.inline_required,
                     ),
-                    maxLength = 75,
+                    maxLength = if (formErrors[CustomerSegmentField.Name] != null) null else 75,
                     fieldFocusRequester = nameFieldFocusRequester,
                 )
                 Spacer(modifier = Modifier.height(16.dp))

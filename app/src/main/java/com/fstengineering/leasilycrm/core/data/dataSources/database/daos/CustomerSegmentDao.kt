@@ -53,4 +53,22 @@ interface CustomerSegmentDao {
     """
     )
     fun watchAll(userId: Long): Flow<List<CustomerSegmentCompound>>
+
+    @Query(
+        """
+        SELECT COUNT(name) FROM customer_segments
+        WHERE user_id = :userId
+        AND (
+            name = :customerSegmentName AND (:currentStoredCustomerSegmentName IS NULL OR name <> :currentStoredCustomerSegmentName)
+        )
+        AND customer_segment_type_id = :customerSegmentTypeId
+        AND is_deleted = 0
+    """
+    )
+    suspend fun countCustomerSegmentsWithName(
+        userId: Long,
+        customerSegmentName: String,
+        customerSegmentTypeId: Long,
+        currentStoredCustomerSegmentName: String?,
+    ): Int
 }

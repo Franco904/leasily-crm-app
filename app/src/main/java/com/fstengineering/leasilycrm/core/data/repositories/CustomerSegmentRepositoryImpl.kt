@@ -9,6 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRep
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
@@ -108,4 +109,29 @@ class CustomerSegmentRepositoryImpl(
                     .distinctUntilChanged()
             )
         }
+
+    override suspend fun isThereCustomerSegmentWithName(
+        customerSegmentName: String,
+        customerSegmentTypeId: Long,
+        currentStoredCustomerSegmentName: String?,
+    ): AppResult<Boolean, DataSourceError> {
+        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.first().remoteId ?: run {
+                        return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
+                    }
+                }
+            )
+
+        val count = dao.countCustomerSegmentsWithName(
+            userId = userRemoteId,
+            customerSegmentName = customerSegmentName.normalizeEncoding(),
+            customerSegmentTypeId = customerSegmentTypeId,
+            currentStoredCustomerSegmentName = currentStoredCustomerSegmentName,
+        )
+
+        return AppResult.Success(data = count > 0)
+    }
 }

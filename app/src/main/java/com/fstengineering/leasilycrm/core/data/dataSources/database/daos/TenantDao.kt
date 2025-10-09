@@ -155,4 +155,20 @@ interface TenantDao {
         tenantFilterType: Int?,
         matching: String?,
     ): Flow<List<TenantCompound>>
+
+    @Query(
+        """
+        SELECT COUNT(name) FROM tenants
+        WHERE user_id = :userId
+        AND (
+            name = :tenantName AND (:currentStoredTenantName IS NULL OR name <> :currentStoredTenantName)
+        )
+        AND is_deleted = 0
+    """
+    )
+    suspend fun countTenantsWithName(
+        userId: Long,
+        tenantName: String,
+        currentStoredTenantName: String?,
+    ): Int
 }

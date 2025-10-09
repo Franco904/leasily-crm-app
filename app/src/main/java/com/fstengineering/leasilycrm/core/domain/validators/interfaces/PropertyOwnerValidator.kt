@@ -7,5 +7,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
 interface PropertyOwnerValidator {
     fun validate(
         propertyOwner: PropertyOwner,
+        isThereStoredPropertyOwnerWithSameName: Boolean,
     ): AppResultCompound<Unit, ValidationError>
 }

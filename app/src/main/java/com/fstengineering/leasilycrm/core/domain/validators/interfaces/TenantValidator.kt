@@ -7,5 +7,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
 interface TenantValidator {
     fun validate(
         tenant: Tenant,
+        isThereStoredTenantWithSameName: Boolean,
     ): AppResultCompound<Unit, ValidationError>
 }

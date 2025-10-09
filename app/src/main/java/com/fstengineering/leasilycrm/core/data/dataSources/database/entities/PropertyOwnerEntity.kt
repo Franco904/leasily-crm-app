@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import java.time.LocalDateTime
 
 @Entity(
@@ -44,7 +45,7 @@ data class PropertyOwnerEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: LocalDateTime.now(),
                 updateDateTime = LocalDateTime.now(),
-                name = domain.name,
+                name = domain.name.normalizeEncoding(),
                 phone = domain.phone,
                 email = domain.email,
                 paymentKey = domain.paymentKey,

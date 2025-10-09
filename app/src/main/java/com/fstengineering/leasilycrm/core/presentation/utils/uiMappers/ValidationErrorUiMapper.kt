@@ -20,6 +20,14 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
+    ValidationError.CustomerSegmentName.BelongsToOtherTenantSegment -> {
+        R.string.inline_name_belongs_other_tenant_segment
+    }
+
+    ValidationError.CustomerSegmentName.BelongsToOtherPropertyOwnerSegment -> {
+        R.string.inline_name_belongs_other_property_owner_segment
+    }
+
     ValidationError.CustomerSegmentName.LengthIsGreaterThan75Chars -> {
         R.string.inline_too_big_75_chars
     }
@@ -64,6 +72,10 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
+    ValidationError.PropertyOwnerName.BelongsToOtherPropertyOwner -> {
+        R.string.inline_name_belongs_other_property_owner
+    }
+
     ValidationError.PropertyOwnerName.LengthIsGreaterThan100Chars -> {
         R.string.inline_too_big_100_chars
     }
@@ -86,6 +98,10 @@ fun ValidationError.toUiMessage() = when (this) {
 
     ValidationError.TenantName.IsBlank -> {
         R.string.inline_required
+    }
+
+    ValidationError.TenantName.BelongsToOtherTenant -> {
+        R.string.inline_name_belongs_other_tenant
     }
 
     ValidationError.TenantName.LengthIsGreaterThan100Chars -> {

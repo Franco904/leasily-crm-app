@@ -11,10 +11,14 @@ import com.fstengineering.leasilycrm.core.domain.validators.interfaces.TenantVal
 class TenantValidatorImpl : TenantValidator {
     override fun validate(
         tenant: Tenant,
+        isThereStoredTenantWithSameName: Boolean,
     ): AppResultCompound<Unit, ValidationError> {
         val errors = mutableListOf<ValidationError>()
 
-        validateName(name = tenant.name)
+        validateName(
+            name = tenant.name,
+            isThereStoredTenantWithSameName = isThereStoredTenantWithSameName,
+        )
             .onError { e -> errors.add(e) }
 
         if (tenant.phone != null) {
@@ -32,9 +36,16 @@ class TenantValidatorImpl : TenantValidator {
         } else AppResultCompound.Errors(errors.toList())
     }
 
-    private fun validateName(name: String?): AppResult<Unit, ValidationError.TenantName> {
+    private fun validateName(
+        name: String?,
+        isThereStoredTenantWithSameName: Boolean,
+    ): AppResult<Unit, ValidationError.TenantName> {
         return when {
             name.isNullOrBlank() -> AppResult.Error(ValidationError.TenantName.IsBlank)
+            isThereStoredTenantWithSameName -> {
+                AppResult.Error(ValidationError.TenantName.BelongsToOtherTenant)
+            }
+
             name.length > 100 -> {
                 AppResult.Error(ValidationError.TenantName.LengthIsGreaterThan100Chars)
             }

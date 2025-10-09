@@ -52,7 +52,6 @@ import com.fstengineering.leasilycrm.core.domain.repositories.TenantContactOrigi
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import org.koin.dsl.module
-import java.time.LocalDate
 
 val repositoryModule = module {
     single<AssistanceCharacteristicAssistanceRepository> {

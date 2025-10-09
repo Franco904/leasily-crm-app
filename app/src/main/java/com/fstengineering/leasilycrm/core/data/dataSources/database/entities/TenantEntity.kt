@@ -9,6 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
 import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
+import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import java.time.LocalDateTime
 
 @Entity(
@@ -51,7 +52,7 @@ data class TenantEntity(
         id = id,
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
-        name = name,
+        name = name.normalizeEncoding(),
         city = city,
         identityDocument = identityDocument,
         phone = phone,

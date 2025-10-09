@@ -18,4 +18,10 @@ interface CustomerSegmentRepository {
     suspend fun getAllPropertyOwnerType(): AppResult<ImmutableList<CustomerSegment>, DataSourceError>
 
     fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataSourceError>>
+
+    suspend fun isThereCustomerSegmentWithName(
+        customerSegmentName: String,
+        customerSegmentTypeId: Long,
+        currentStoredCustomerSegmentName: String?,
+    ): AppResult<Boolean, DataSourceError>
 }

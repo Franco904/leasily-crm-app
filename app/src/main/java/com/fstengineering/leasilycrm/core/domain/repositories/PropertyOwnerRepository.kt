@@ -18,4 +18,9 @@ interface PropertyOwnerRepository {
     fun watchById(propertyOwnerId: Long): Flow<AppResult<PropertyOwner, DataSourceError>>
 
     fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataSourceError>>
+
+    suspend fun isTherePropertyOwnerWithName(
+        propertyOwnerName: String,
+        currentStoredPropertyOwnerName: String?,
+    ): AppResult<Boolean, DataSourceError>
 }
