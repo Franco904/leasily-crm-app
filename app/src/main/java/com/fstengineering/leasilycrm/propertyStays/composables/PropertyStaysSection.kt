@@ -49,8 +49,12 @@ fun PropertyStaysSection(
     val sheetState = rememberModalBottomSheetState()
 
     val yearOptions = remember(property.stays) {
-        property.stays
-            .mapNotNull { it.checkInDateTime?.year?.toString() }
+        val checkInYears = property.stays.mapNotNull { it.checkInDateTime?.year?.toString() }
+        val checkOutYears = property.stays.mapNotNull { it.checkOutDateTime?.year?.toString() }
+
+        checkInYears
+            .toMutableList()
+            .apply { addAll(checkOutYears) }
             .toSet()
             .toPersistentList()
     }
