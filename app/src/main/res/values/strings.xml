@@ -611,6 +611,7 @@
 
     <string name="inline_period_start_end_date_are_same_period">Data de fim não deve ser a mesma da de início</string>
     <string name="inline_period_is_overlapping_other_property_stay_period">Imóvel está ocupado por outra estadia neste período</string>
+    <string name="inline_period_is_overlapping_other_property_price_period">Imóvel já possui um preço fixado neste período</string>
 
     <!-- Snackbar success -->
     <string name="snackbar_no_data_changed">Nenhum dado foi editado.</string>

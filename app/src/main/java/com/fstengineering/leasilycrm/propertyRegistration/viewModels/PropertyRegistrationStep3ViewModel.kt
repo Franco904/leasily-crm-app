@@ -32,10 +32,17 @@ class PropertyRegistrationStep3ViewModel(
     private val _propertyPriceForm = MutableStateFlow<PropertyPrice?>(null)
     val propertyPriceForm = _propertyPriceForm.asStateFlow()
 
+    private var propertyPriceToEdit: PropertyPrice? = null
+
     private val _propertyPriceToDelete = MutableStateFlow<PropertyPrice?>(null)
     val propertyPriceToDelete = _propertyPriceToDelete.asStateFlow()
 
-    fun onPropertyPriceFormChange(form: PropertyPrice?) {
+    fun onPropertyPriceFormChange(
+        form: PropertyPrice?,
+        isStartingEdition: Boolean = false,
+    ) {
+        if (isStartingEdition) propertyPriceToEdit = form
+
         _priceFormErrors.update {
             val newErrors = it.errors.mutate { map ->
                 val hasDateRangeChanged = form?.startDate != propertyPriceForm.value?.startDate
@@ -55,11 +62,17 @@ class PropertyRegistrationStep3ViewModel(
         _propertyPriceForm.update { form }
     }
 
-    fun validatePropertyPrice() {
+    fun validatePropertyPrice(
+        otherPropertyPrices: List<PropertyPrice>,
+    ) {
         val newPropertyPrice = propertyPriceForm.value ?: return
 
         viewModelScope.launch {
-            propertyPriceValidator.validate(propertyPrice = newPropertyPrice)
+            propertyPriceValidator.validate(
+                propertyPrice = newPropertyPrice,
+                propertyPriceBeforeEdit = propertyPriceToEdit,
+                otherPropertyPrices = otherPropertyPrices,
+            )
                 .onErrors { errors ->
                     setFieldErrors(errors)
                     return@launch
@@ -74,7 +87,7 @@ class PropertyRegistrationStep3ViewModel(
         delay(150.milliseconds)
 
         val priceDateRangeError =
-            errors.firstOrNull { it is ValidationError.PropertyPriceDateRange }
+            errors.firstOrNull { it is ValidationError.PropertyPricePeriod }
         val priceAmountError =
             errors.firstOrNull { it is ValidationError.PropertyPriceAmount }
 

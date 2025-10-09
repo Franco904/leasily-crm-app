@@ -44,9 +44,10 @@ sealed interface ValidationError : Error {
         IsBlank,
     }
 
-    enum class PropertyPriceDateRange : ValidationError {
+    enum class PropertyPricePeriod : ValidationError {
         IsNull,
         StartAndEndDaysAreTheSame,
+        IsOverlappingOtherPropertyPricePeriod,
     }
 
     enum class PropertyPriceAmount : ValidationError {

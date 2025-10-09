@@ -12,10 +12,17 @@ import java.time.LocalDate
 class PropertyPriceValidatorImpl : PropertyPriceValidator {
     override fun validate(
         propertyPrice: PropertyPrice,
+        propertyPriceBeforeEdit: PropertyPrice?,
+        otherPropertyPrices: List<PropertyPrice>,
     ): AppResultCompound<Unit, ValidationError> {
         val errors = mutableListOf<ValidationError>()
 
-        validateDateRange(propertyPrice.startDate, propertyPrice.endDate)
+        validatePeriod(
+            startDate = propertyPrice.startDate,
+            endDate = propertyPrice.endDate,
+            startDateBeforeEdit = propertyPriceBeforeEdit?.startDate,
+            otherPropertyPricesStartDates = otherPropertyPrices.mapNotNull { it.startDate },
+        )
             .onError { e -> errors.add(e) }
 
         validateAmount(propertyPrice.price).onError { e -> errors.add(e) }
@@ -25,17 +32,31 @@ class PropertyPriceValidatorImpl : PropertyPriceValidator {
         } else AppResultCompound.Errors(errors.toList())
     }
 
-    private fun validateDateRange(
+    private fun validatePeriod(
         startDate: LocalDate?,
         endDate: LocalDate?,
-    ): AppResult<Unit, ValidationError.PropertyPriceDateRange> {
+        startDateBeforeEdit: LocalDate?,
+        otherPropertyPricesStartDates: List<LocalDate>,
+    ): AppResult<Unit, ValidationError.PropertyPricePeriod> {
         return when {
             startDate == null || endDate == null -> {
-                AppResult.Error(ValidationError.PropertyPriceDateRange.IsNull)
+                AppResult.Error(ValidationError.PropertyPricePeriod.IsNull)
             }
 
             startDate == endDate -> {
-                AppResult.Error(ValidationError.PropertyPriceDateRange.StartAndEndDaysAreTheSame)
+                AppResult.Error(ValidationError.PropertyPricePeriod.StartAndEndDaysAreTheSame)
+            }
+
+            otherPropertyPricesStartDates.isNotEmpty() -> {
+                val isThereAnyPropertyPriceOverlapping = otherPropertyPricesStartDates
+                    .filter { it != startDateBeforeEdit }
+                    .any { existingPriceStartDate ->
+                        startDate < existingPriceStartDate && endDate > existingPriceStartDate
+                    }
+
+                if (!isThereAnyPropertyPriceOverlapping) return AppResult.Success(Unit)
+
+                return AppResult.Error(ValidationError.PropertyPricePeriod.IsOverlappingOtherPropertyPricePeriod)
             }
 
             else -> AppResult.Success(Unit)

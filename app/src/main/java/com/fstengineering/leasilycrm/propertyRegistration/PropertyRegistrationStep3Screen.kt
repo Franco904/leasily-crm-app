@@ -167,7 +167,10 @@ fun PropertyRegistrationStep3Screen(
                 },
                 onEditPropertyPrice = {
                     propertyPriceFormStartDate = it.startDate
-                    stepViewModel.onPropertyPriceFormChange(form = it)
+                    stepViewModel.onPropertyPriceFormChange(
+                        form = it,
+                        isStartingEdition = true,
+                    )
                 },
                 onDeletePropertyPrice = stepViewModel::onDeletePropertyPrice,
                 onBack = onBack,
@@ -186,7 +189,11 @@ fun PropertyRegistrationStep3Screen(
                 currentPropertyPrices = propertyForm.prices,
                 formErrors = priceFormErrors.errors,
                 isEditing = !isRegisteringNewPropertyPrice,
-                onSave = stepViewModel::validatePropertyPrice,
+                onSave = {
+                    stepViewModel.validatePropertyPrice(
+                        otherPropertyPrices = propertyForm.prices,
+                    )
+                },
                 onCancel = {
                     isRegisteringNewPropertyPrice = false
                     propertyPriceFormStartDate = null

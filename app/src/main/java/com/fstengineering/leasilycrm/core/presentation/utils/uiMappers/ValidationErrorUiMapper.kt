@@ -56,12 +56,16 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
-    ValidationError.PropertyPriceDateRange.IsNull -> {
+    ValidationError.PropertyPricePeriod.IsNull -> {
         R.string.inline_required
     }
 
-    ValidationError.PropertyPriceDateRange.StartAndEndDaysAreTheSame -> {
+    ValidationError.PropertyPricePeriod.StartAndEndDaysAreTheSame -> {
         R.string.inline_period_start_end_date_are_same_period
+    }
+
+    ValidationError.PropertyPricePeriod.IsOverlappingOtherPropertyPricePeriod -> {
+        R.string.inline_period_is_overlapping_other_property_price_period
     }
 
     ValidationError.PropertyPriceAmount.IsNull -> {
