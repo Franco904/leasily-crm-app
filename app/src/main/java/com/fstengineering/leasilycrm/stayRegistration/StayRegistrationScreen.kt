@@ -365,7 +365,10 @@ fun StayRegistrationScreen(
 
                     StayRegistrationListState.SelectingTenant -> {
                         if (tenants.isEmpty()) {
-                            TenantsEmptySection(isSearchingTenant = isSearching)
+                            TenantsEmptySection(
+                                isSearchingTenant = isSearching,
+                                isSelectingTenant = true,
+                            )
                         } else {
                             StayTenantSelectionList(
                                 tenants = tenants,

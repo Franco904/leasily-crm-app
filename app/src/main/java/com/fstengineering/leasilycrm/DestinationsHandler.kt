@@ -28,6 +28,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationSt
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep2Screen
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep3Screen
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep4Screen
+import com.fstengineering.leasilycrm.propertyStays.PropertyStaysScreen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.signin.SignInScreen
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsScreen
@@ -338,7 +339,9 @@ object DestinationsHandler {
                 onViewPropertyOwnerDetails = { propertyOwnerId ->
                     navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
                 },
-                onViewNextStays = {},
+                onViewAllPropertyStays = {
+                    navController.navigate(Destinations.PropertyStays(args.propertyId))
+                },
                 onNewStay = { isUnavailablePeriod ->
                     val destination = Destinations.StayRegistration(
                         stayId = null,
@@ -384,6 +387,40 @@ object DestinationsHandler {
                         propertyId = args.propertyId,
                         leadTenantId = null,
                         isUnavailablePeriod = isUnavailablePeriod,
+                    )
+
+                    navController.navigate(destination)
+                },
+                showSnackbar = showSnackbar,
+            )
+        }
+
+        composable<Destinations.PropertyStays> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.PropertyStays>()
+
+            PropertyStaysScreen(
+                propertyId = args.propertyId,
+                viewModel = koinViewModel(),
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
+                },
+                onNewStay = { isUnavailablePeriod ->
+                    val destination = Destinations.StayRegistration(
+                        stayId = null,
+                        propertyId = args.propertyId,
+                        leadTenantId = null,
+                        isUnavailablePeriod = isUnavailablePeriod,
+                    )
+
+                    navController.navigate(destination)
+                },
+                onViewStay = { stayId ->
+                    val destination = Destinations.StayDetails(
+                        stayId = stayId,
+                        cameFromProperty = true,
+                        cameFromTenant = false,
                     )
 
                     navController.navigate(destination)

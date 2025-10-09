@@ -40,7 +40,7 @@ fun PropertyDashboardScreen(
     onEditProperty: () -> Unit,
     onViewPropertyDetails: () -> Unit,
     onViewPropertyOwnerDetails: (Long) -> Unit,
-    onViewNextStays: () -> Unit,
+    onViewAllPropertyStays: () -> Unit,
     onNewStay: (Boolean) -> Unit,
     onViewStay: (Long) -> Unit,
     showSnackbar: (String) -> Unit,
@@ -113,13 +113,13 @@ fun PropertyDashboardScreen(
         } else {
             PropertyDashboardSection(
                 property = property,
-                currentMonthStaysDates = currentMonthStaysDates.entries.first().toPair(),
+                currentMonthStaysDates = currentMonthStaysDates,
                 onViewPropertyDetails = onViewPropertyDetails,
                 onViewPropertyOwnerDetails = {
                     if (property.owner?.id == null) return@PropertyDashboardSection
                     onViewPropertyOwnerDetails(property.owner?.id!!)
                 },
-                onViewNextStays = onViewNextStays,
+                onViewAllPropertyStays = onViewAllPropertyStays,
                 onNewStay = { mustShowStayTypeDialog = true },
                 onViewStay = onViewStay,
                 modifier = Modifier

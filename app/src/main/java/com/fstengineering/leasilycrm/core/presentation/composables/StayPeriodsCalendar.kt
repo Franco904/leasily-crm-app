@@ -101,7 +101,7 @@ fun StayPeriodsCalendar(
     month: Int,
     year: Int,
     modifier: Modifier = Modifier,
-    stayCalendarDates: Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>? = null,
+    selectedDatesWithMonthYear: Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>? = null,
     singleStayPeriodColor: Color? = null,
     onViewStay: ((Long) -> Unit)? = null,
     actions: (@Composable RowScope.() -> Unit)? = null,
@@ -142,7 +142,7 @@ fun StayPeriodsCalendar(
         ) {
             MonthYearLabelSection(monthYearLabel = monthYearLabel)
             Spacer(modifier = Modifier.height(16.dp))
-            if (stayCalendarDates?.second.isNullOrEmpty()) {
+            if (selectedDatesWithMonthYear?.second.isNullOrEmpty()) {
                 CurrentMonthStaysEmptySection(
                     modifier = Modifier
                         .padding(start = 16.dp)
@@ -153,7 +153,7 @@ fun StayPeriodsCalendar(
                     daysOfWeekLabels = daysOfWeekLabels.toPersistentList(),
                     firstDayOfWeek = firstDayOfWeek,
                     daysOfMonth = daysOfMonth.toPersistentList(),
-                    selectedDatesWithMonthYear = stayCalendarDates,
+                    selectedDatesWithMonthYear = selectedDatesWithMonthYear,
                     now = now,
                     month = month,
                     year = year,
@@ -601,7 +601,7 @@ fun StayPeriodsCalendarPreview(
         StayPeriodsCalendar(
             month = 1,
             year = 2026,
-            stayCalendarDates = Pair(
+            selectedDatesWithMonthYear = Pair(
                 CalendarMonthYear(-1, 1, 2025),
                 persistentListOf(
                     StayCalendarDate(

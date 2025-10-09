@@ -22,4 +22,10 @@ interface PropertyRepository {
     fun watchById(propertyId: Long): Flow<AppResult<Property?, DataSourceError>>
 
     fun watchAll(): Flow<AppResult<ImmutableList<Property>, DataSourceError>>
+
+    suspend fun watchPropertyStaysSelectedYear(): Flow<AppResult<Int, DataSourceError>>
+
+    suspend fun updatePropertyStaysSelectedYear(
+        selectedYear: Int,
+    ): AppResult<Unit, DataSourceError>
 }

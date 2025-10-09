@@ -9,12 +9,12 @@ import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
 
 @Composable
-fun ViewAllStaysTextButton(
-    onViewNextStays: () -> Unit,
+fun ViewAllPropertyStaysTextButton(
+    onViewAllPropertyStays: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TextButton(
-        onClick = onViewNextStays,
+        onClick = onViewAllPropertyStays,
         modifier = modifier,
     ) {
         Text(

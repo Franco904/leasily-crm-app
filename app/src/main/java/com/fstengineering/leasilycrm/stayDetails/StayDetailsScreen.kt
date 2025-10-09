@@ -221,7 +221,6 @@ fun StayDetailsScreen(
                     viewModel.deleteStay()
 
                     mustShowConfirmDeleteDialog = false
-                    onBack()
                 },
                 onCancel = { mustShowConfirmDeleteDialog = false },
             )

@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.FilterConnectedButton
 import com.fstengineering.leasilycrm.core.presentation.models.FilterConnectedButtonPosition
-import com.fstengineering.leasilycrm.home.stays.models.StayFilterType
+import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.mutate
 

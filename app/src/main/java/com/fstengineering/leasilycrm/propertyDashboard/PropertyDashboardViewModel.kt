@@ -6,17 +6,17 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,9 +39,10 @@ class PropertyDashboardViewModel(
     private val _property = MutableStateFlow(Property())
     val property = _property.asStateFlow()
 
-    private val _currentMonthStaysDates = MutableStateFlow<StaysStructuredDatesMap>(
-        persistentMapOf(CalendarMonthYear() to persistentListOf())
-    )
+    private val _currentMonthStaysDates =
+        MutableStateFlow<Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>>(
+            CalendarMonthYear() to persistentListOf()
+        )
     val currentMonthStaysDates = _currentMonthStaysDates.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
@@ -99,7 +100,7 @@ class PropertyDashboardViewModel(
 
     private fun getCurrentMonthStaysDates(
         storedProperty: Property,
-    ): StaysStructuredDatesMap {
+    ): Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>> {
         val now = now.date()
         val currentMonthYear = CalendarMonthYear(
             id = now.monthValue + now.year,
@@ -115,7 +116,9 @@ class PropertyDashboardViewModel(
 
         return staysStructuredDatesMap
             .filter { (monthYear, _) -> monthYear == currentMonthYear }
-            .toPersistentMap()
+            .entries
+            .first()
+            .toPair()
     }
 
     fun deleteProperty() {

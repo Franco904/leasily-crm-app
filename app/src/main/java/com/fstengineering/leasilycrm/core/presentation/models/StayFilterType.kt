@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.home.stays.models
+package com.fstengineering.leasilycrm.core.presentation.models
 
 import androidx.annotation.StringRes
 import com.fstengineering.leasilycrm.R

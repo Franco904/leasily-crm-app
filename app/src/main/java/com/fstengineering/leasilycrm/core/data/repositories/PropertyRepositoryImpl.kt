@@ -1,26 +1,33 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
+import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 
 class PropertyRepositoryImpl(
     private val dao: PropertyDao,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
+    private val plainPreferencesStorage: PreferencesStorage<PlainPreferences>,
+    private val now: LazyAppDate,
 ) : PropertyRepository {
     override suspend fun insertOrUpdate(property: Property): AppResult<Long, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
@@ -146,4 +153,29 @@ class PropertyRepositoryImpl(
 
             emitAll(propertiesFlow)
         }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override suspend fun watchPropertyStaysSelectedYear(): Flow<AppResult<Int, DataSourceError>> {
+        return plainPreferencesStorage.readPreferences()
+            .fold(
+                onError = { error -> flow { emit(AppResult.Error(error = error)) } },
+                onSuccess = { prefsFlow ->
+                    prefsFlow.mapLatest { prefs ->
+                        val selectedYear = prefs.propertyStaysSelectedYear ?: now.date().year
+                        AppResult.Success(data = selectedYear)
+                    }
+                }
+            )
+    }
+
+    override suspend fun updatePropertyStaysSelectedYear(
+        selectedYear: Int,
+    ): AppResult<Unit, DataSourceError> {
+        plainPreferencesStorage.savePreferences { prefs ->
+            prefs.copy(propertyStaysSelectedYear = selectedYear)
+        }
+            .onError { return AppResult.Error(error = it) }
+
+        return AppResult.Success(data = Unit)
+    }
 }

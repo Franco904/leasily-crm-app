@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.home.stays.composables
+package com.fstengineering.leasilycrm.core.presentation.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.home.stays.models.StayFilterType
+import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
 
 @Composable
 fun StaysEmptySection(

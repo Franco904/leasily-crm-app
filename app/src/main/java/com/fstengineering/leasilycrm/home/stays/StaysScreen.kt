@@ -51,8 +51,8 @@ import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.Redirect
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.StayDeleteSuccess
 import com.fstengineering.leasilycrm.home.stays.composables.StayCard
 import com.fstengineering.leasilycrm.home.stays.composables.StayFilterButtonGroup
-import com.fstengineering.leasilycrm.home.stays.composables.StaysEmptySection
-import com.fstengineering.leasilycrm.home.stays.models.StayFilterType
+import com.fstengineering.leasilycrm.core.presentation.composables.StaysEmptySection
+import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.launch

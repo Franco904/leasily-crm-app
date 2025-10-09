@@ -54,7 +54,7 @@ fun StayPeriodDetailsItem(
                 StayPeriodsCalendar(
                     month = monthYear.month,
                     year = monthYear.year,
-                    stayCalendarDates = monthYear to stayDates,
+                    selectedDatesWithMonthYear = monthYear to stayDates,
                     singleStayPeriodColor = stayPeriodDateCircleColor ?: defaultPeriodColor,
                 )
             }

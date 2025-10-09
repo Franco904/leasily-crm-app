@@ -197,6 +197,12 @@
         <item quantity="other">Máximo de %1$d hóspedes</item>
     </plurals>
 
+    <!-- Property stays -->
+    <string name="property_stays_top_app_bar_title">Estadias do imóvel</string>
+
+    <string name="property_stays_year_filter_field_placeholder">Ano</string>
+    <string name="property_stays_year_filter_field_empty_text">Nenhum ano</string>
+
     <!-- Property owners -->
     <string name="property_owners_top_app_bar_title">Proprietários</string>
     <string name="property_owners_empty_text">Nenhum proprietário registrado.</string>
@@ -237,6 +243,7 @@
     <string name="tenants_old_empty_text">Nenhum inquilino antigo.</string>
     <string name="tenants_generic_empty_text">Nenhum inquilino registrado.</string>
     <string name="tenants_empty_search_text">Nenhum inquilino encontrado.</string>
+    <string name="tenants_empty_select_text">Nenhum inquilino disponível.</string>
 
     <plurals name="tenant_stay_qt_guests_label">
         <item quantity="one">%1$d hóspede na estadia</item>

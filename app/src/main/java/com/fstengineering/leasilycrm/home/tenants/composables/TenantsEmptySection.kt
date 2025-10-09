@@ -21,9 +21,10 @@ import com.fstengineering.leasilycrm.home.tenants.models.TenantFilterType
 
 @Composable
 fun TenantsEmptySection(
-    isSearchingTenant: Boolean,
     modifier: Modifier = Modifier,
     tenantFilterType: TenantFilterType? = null,
+    isSearchingTenant: Boolean = false,
+    isSelectingTenant: Boolean = false,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -43,6 +44,7 @@ fun TenantsEmptySection(
             text = stringResource(
                 when {
                     isSearchingTenant -> R.string.tenants_empty_search_text
+                    isSelectingTenant -> R.string.tenants_empty_select_text
                     tenantFilterType == TenantFilterType.UpcomingStay -> R.string.tenants_upcoming_stay_empty_text
                     tenantFilterType == TenantFilterType.Old -> R.string.tenants_old_empty_text
                     else -> R.string.tenants_generic_empty_text

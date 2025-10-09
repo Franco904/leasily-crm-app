@@ -41,6 +41,7 @@ fun FormTextField(
     isEnabled: Boolean = true,
     isReadOnly: Boolean = false,
     isSingleLine: Boolean = true,
+    isPlaceholder: Boolean = false,
     prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
     supportingText: String? = null,
@@ -72,15 +73,30 @@ fun FormTextField(
             }
         },
         label = {
-            Text(
-                text = label,
-                color = when {
-                    isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
-                    else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            if (!isPlaceholder) {
+                Text(
+                    text = label,
+                    color = when {
+                        isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
+                        else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    },
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        },
+        placeholder = {
+            if (isPlaceholder) {
+                Text(
+                    text = label,
+                    color = when {
+                        isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
+                        else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    },
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         },
         isError = isInvalid,
         enabled = isEnabled,

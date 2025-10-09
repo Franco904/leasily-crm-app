@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegiste
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
-import com.fstengineering.leasilycrm.home.stays.models.StayFilterType
+import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
