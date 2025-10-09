@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.core.presentation.composables
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -22,13 +21,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun AppMoreOptionsMenu(
+fun AppMoreOptionsIconDropdownMenu(
     options: ImmutableList<MoreOptionsMenuOption>,
     modifier: Modifier = Modifier,
 ) {
@@ -104,11 +103,3 @@ fun AppMoreOptionsMenu(
         }
     }
 }
-
-data class MoreOptionsMenuOption(
-    val icon: ImageVector? = null,
-    @DrawableRes val iconDrawable: Int? = null,
-    val text: String? = null,
-    val onClick: () -> Unit = {},
-    val isHorizontalDivider: Boolean = false,
-)

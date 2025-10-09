@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
-import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsMenu
-import com.fstengineering.leasilycrm.core.presentation.composables.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -47,7 +47,7 @@ fun PropertyOwnerCard(
                     .weight(1f)
             )
             if (hasMoreOptionsMenu) {
-                AppMoreOptionsMenu(
+                AppMoreOptionsIconDropdownMenu(
                     options = persistentListOf(
                         MoreOptionsMenuOption(
                             icon = Icons.Outlined.Edit,

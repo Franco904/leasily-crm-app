@@ -25,7 +25,6 @@ class StayValidatorImpl : StayValidator {
             checkInDateTime = stay.checkInDateTime,
             checkOutDateTime = stay.checkOutDateTime,
             checkInDateTimeBeforeEdit = stayBeforeEdit?.checkInDateTime,
-            checkOutDateTimeBeforeEdit = stayBeforeEdit?.checkOutDateTime,
             propertyStayCheckInDateTimes = stay.property?.stays
                 ?.map { it.checkInDateTime!! }
                 ?: emptyList(),
@@ -91,12 +90,15 @@ class StayValidatorImpl : StayValidator {
         checkInDateTime: LocalDateTime?,
         checkOutDateTime: LocalDateTime?,
         checkInDateTimeBeforeEdit: LocalDateTime?,
-        checkOutDateTimeBeforeEdit: LocalDateTime?,
         propertyStayCheckInDateTimes: List<LocalDateTime>,
     ): AppResult<Unit, ValidationError.StayPeriod> {
         when {
             checkInDateTime == null || checkOutDateTime == null -> {
                 return AppResult.Error(ValidationError.StayPeriod.IsNull)
+            }
+
+            checkInDateTime.toLocalDate() == checkOutDateTime.toLocalDate() -> {
+                return AppResult.Error(ValidationError.StayPeriod.StartAndEndDaysAreTheSame)
             }
 
             propertyStayCheckInDateTimes.isNotEmpty() -> {

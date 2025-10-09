@@ -40,8 +40,9 @@ fun PropertyDashboardScreen(
     onEditProperty: () -> Unit,
     onViewPropertyDetails: () -> Unit,
     onViewPropertyOwnerDetails: (Long) -> Unit,
-    onViewNextStays: () -> Unit,
+    onViewAllPropertyStays: () -> Unit,
     onNewStay: (Boolean) -> Unit,
+    onViewStay: (Long) -> Unit,
     showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -51,6 +52,7 @@ fun PropertyDashboardScreen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val property by viewModel.property.collectAsStateWithLifecycle()
+    val currentMonthStaysDates by viewModel.currentMonthStaysDates.collectAsStateWithLifecycle()
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -111,15 +113,16 @@ fun PropertyDashboardScreen(
         } else {
             PropertyDashboardSection(
                 property = property,
+                currentMonthStaysDates = currentMonthStaysDates,
                 onViewPropertyDetails = onViewPropertyDetails,
                 onViewPropertyOwnerDetails = {
                     if (property.owner?.id == null) return@PropertyDashboardSection
                     onViewPropertyOwnerDetails(property.owner?.id!!)
                 },
-                onViewNextStays = onViewNextStays,
+                onViewAllPropertyStays = onViewAllPropertyStays,
                 onNewStay = { mustShowStayTypeDialog = true },
+                onViewStay = onViewStay,
                 modifier = Modifier
-                    .fillMaxSize()
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp)
             )

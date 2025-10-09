@@ -55,6 +55,9 @@ sealed interface Destinations {
     data class PropertyDetails(val propertyId: Long)
 
     @Serializable
+    data class PropertyStays(val propertyId: Long)
+
+    @Serializable
     data object PropertyOwners
 
     @Serializable

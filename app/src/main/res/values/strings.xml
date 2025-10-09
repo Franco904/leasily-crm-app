@@ -197,6 +197,12 @@
         <item quantity="other">Máximo de %1$d hóspedes</item>
     </plurals>
 
+    <!-- Property stays -->
+    <string name="property_stays_top_app_bar_title">Estadias do imóvel</string>
+
+    <string name="property_stays_year_filter_field_placeholder">Ano</string>
+    <string name="property_stays_year_filter_field_empty_text">Nenhum ano</string>
+
     <!-- Property owners -->
     <string name="property_owners_top_app_bar_title">Proprietários</string>
     <string name="property_owners_empty_text">Nenhum proprietário registrado.</string>
@@ -237,6 +243,7 @@
     <string name="tenants_old_empty_text">Nenhum inquilino antigo.</string>
     <string name="tenants_generic_empty_text">Nenhum inquilino registrado.</string>
     <string name="tenants_empty_search_text">Nenhum inquilino encontrado.</string>
+    <string name="tenants_empty_select_text">Nenhum inquilino disponível.</string>
 
     <plurals name="tenant_stay_qt_guests_label">
         <item quantity="one">%1$d hóspede na estadia</item>
@@ -416,6 +423,9 @@
     <string name="stay_delete_dialog_headline">Excluir estadia?</string>
     <string name="stay_delete_dialog_supporting_text">Se confirmada a exclusão, esta estadia não estará mais disponível.</string>
 
+    <string name="stay_unavailable_period_delete_dialog_headline">Excluir período?</string>
+    <string name="stay_unavailable_period_delete_dialog_supporting_text">Se confirmada a exclusão, este período não estará mais disponível.</string>
+
     <string name="stay_register_check_out_dialog_headline">Registrar check-out?</string>
     <string name="stay_register_check_out_dialog_supporting_text">O atendimento e a estadia do inquilino serão marcados como finalizados e o inquilino será marcado como antigo.</string>
 
@@ -524,6 +534,7 @@
     <string name="not_registered_info_var_2_body_text">Não informada</string>
     <string name="no_file_registered_body_text">Nenhum arquivo registrado</string>
     <string name="unnamed_file_text">Arquivo sem nome</string>
+    <string name="unknown_text">Desconhecido</string>
 
     <string name="order_by_name_text">Nome</string>
     <string name="order_by_last_update_date_text">Última atualização</string>
@@ -580,6 +591,7 @@
     <string name="view_assistance_action_button_text">Ver atendimento</string>
     <string name="view_details_action_button_text">Ver detalhes</string>
     <string name="view_property_stay_action_button_text">Ver estadia</string>
+    <string name="view_unvailable_period_action_button_text">Ver período</string>
 
     <!-- Inline errors -->
     <string name="inline_required">Obrigatório</string>
@@ -590,6 +602,7 @@
     <string name="inline_too_big_120_chars">Deve ter no máximo 120 caracteres</string>
 
     <string name="inline_invalid_email">Email inválido</string>
+    <string name="inline_period_start_end_date_are_same_period">Data de fim não deve ser a mesma da de início</string>
     <string name="inline_period_is_overlapping_other_property_stay_period">Imóvel está ocupado por outra estadia neste período</string>
 
     <!-- Snackbar success -->
@@ -626,6 +639,10 @@
     <string name="snackbar_create_stay_succeeded">Estadia criada.</string>
     <string name="snackbar_edit_stay_succeeded">Estadia editada.</string>
     <string name="snackbar_delete_stay_succeeded">Estadia excluída.</string>
+
+    <string name="snackbar_create_unavailable_period_succeeded">Período criado.</string>
+    <string name="snackbar_edit_unavailable_period_succeeded">Período editado.</string>
+    <string name="snackbar_delete_unavailable_period_succeeded">Período excluído.</string>
 
     <string name="snackbar_convert_tenant_to_lead_succeeded">Inquilino movido para \"Leads\".</string>
     <string name="snackbar_convert_tenant_to_with_upcoming_stay_succeeded">Inquilino movido para \"Estadia agendada\".</string>

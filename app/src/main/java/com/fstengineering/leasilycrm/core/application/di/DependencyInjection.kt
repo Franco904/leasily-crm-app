@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.application.di
 
 import android.app.Application
+import com.fstengineering.leasilycrm.core.application.di.modules.coroutineModule
 import com.fstengineering.leasilycrm.core.application.di.modules.databaseModule
 import com.fstengineering.leasilycrm.core.application.di.modules.externalPresentationModule
 import com.fstengineering.leasilycrm.core.application.di.modules.preferencesModule
@@ -24,6 +25,7 @@ fun Application.configureDependencyInjection() {
         workManagerFactory()
 
         modules(
+            coroutineModule,
             databaseModule,
             preferencesModule,
             remoteBackendModule,

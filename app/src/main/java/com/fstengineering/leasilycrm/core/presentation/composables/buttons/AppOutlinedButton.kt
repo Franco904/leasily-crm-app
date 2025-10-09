@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 fun AppOutlinedButton(
     label: String,
     onClick: () -> Unit,
-    isEnabled: Boolean,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
+    isEnabled: Boolean = true,
 ) {
     OutlinedButton(
         border = BorderStroke(

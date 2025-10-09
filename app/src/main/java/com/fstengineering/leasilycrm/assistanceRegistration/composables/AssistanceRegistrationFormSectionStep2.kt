@@ -43,7 +43,6 @@ import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceSentPropertiesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
-import com.fstengineering.leasilycrm.core.presentation.composables.buttons.ApplyPrimaryButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.CancelOutlinedButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
@@ -193,7 +192,7 @@ fun AssistanceRegistrationFormSectionStep2(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 if (isAddingSentProperty) {
-                    ApplyPrimaryButton(
+                    ApplySelectionButton(
                         onAdd = { onSelectProperties(assistanceSentProperties) },
                     )
                 } else {

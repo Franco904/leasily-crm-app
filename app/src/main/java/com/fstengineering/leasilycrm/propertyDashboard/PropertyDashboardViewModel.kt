@@ -3,13 +3,20 @@ package com.fstengineering.leasilycrm.propertyDashboard
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
-import kotlinx.coroutines.Job
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,8 +25,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PropertyDashboardViewModel(
+    private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
+    private val watchPropertyWithStaysTenantsUseCase: WatchPropertyWithStaysTenantsUseCase,
     private val propertyRepository: PropertyRepository,
     private val userRepository: UserRepository,
+    private val now: LazyAppDate,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -29,10 +39,14 @@ class PropertyDashboardViewModel(
     private val _property = MutableStateFlow(Property())
     val property = _property.asStateFlow()
 
+    private val _currentMonthStaysDates =
+        MutableStateFlow<Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>>(
+            CalendarMonthYear() to persistentListOf()
+        )
+    val currentMonthStaysDates = _currentMonthStaysDates.asStateFlow()
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
-
-    private var watchPropertyJob: Job? = null
 
     fun init(propertyId: Long) {
         if (isInitialized) return
@@ -63,8 +77,8 @@ class PropertyDashboardViewModel(
     private fun watchProperty(propertyId: Long) {
         _isLoading.update { true }
 
-        watchPropertyJob = viewModelScope.launch {
-            propertyRepository.watchById(propertyId).collect { result ->
+        viewModelScope.launch {
+            watchPropertyWithStaysTenantsUseCase(propertyId).collect { result ->
                 result
                     .onError { error ->
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
@@ -72,11 +86,11 @@ class PropertyDashboardViewModel(
                     .onSuccess { storedProperty ->
                         if (storedProperty == null) {
                             _uiEvents.send(UiEvents.NavigateUp)
-                            watchPropertyJob?.cancel()
                             return@onSuccess
                         }
 
                         _property.update { storedProperty }
+                        _currentMonthStaysDates.update { getCurrentMonthStaysDates(storedProperty) }
                     }
 
                 _isLoading.update { false }
@@ -84,10 +98,31 @@ class PropertyDashboardViewModel(
         }
     }
 
+    private fun getCurrentMonthStaysDates(
+        storedProperty: Property,
+    ): Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>> {
+        val now = now.date()
+        val currentMonthYear = CalendarMonthYear(
+            id = now.monthValue + now.year,
+            month = now.monthValue,
+            year = now.year,
+        )
+
+        val notDeletedStays = storedProperty.stays.filter { !it.isDeleted }
+
+        val staysStructuredDatesMap = getStaysStructuredDatesUseCase(stays = notDeletedStays)
+            .takeUnless { it.isEmpty() }
+            ?: persistentMapOf(currentMonthYear to persistentListOf())
+
+        return staysStructuredDatesMap
+            .filter { (monthYear, _) -> monthYear == currentMonthYear }
+            .entries
+            .first()
+            .toPair()
+    }
+
     fun deleteProperty() {
         val propertyId = property.value.id ?: return
-
-        watchPropertyJob?.cancel()
 
         viewModelScope.launch {
             propertyRepository.delete(id = propertyId)

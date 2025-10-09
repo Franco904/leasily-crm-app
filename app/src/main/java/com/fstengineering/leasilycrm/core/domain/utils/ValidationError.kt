@@ -44,6 +44,7 @@ sealed interface ValidationError : Error {
 
     enum class PropertyPriceDateRange : ValidationError {
         IsNull,
+        StartAndEndDaysAreTheSame,
     }
 
     enum class PropertyPriceAmount : ValidationError {
@@ -92,6 +93,7 @@ sealed interface ValidationError : Error {
 
     enum class StayPeriod : ValidationError {
         IsNull,
+        StartAndEndDaysAreTheSame,
         IsOverlappingOtherPropertyStayPeriod,
     }
 

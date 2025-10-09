@@ -51,8 +51,8 @@ import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.Redirect
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.StayDeleteSuccess
 import com.fstengineering.leasilycrm.home.stays.composables.StayCard
 import com.fstengineering.leasilycrm.home.stays.composables.StayFilterButtonGroup
-import com.fstengineering.leasilycrm.home.stays.composables.StaysEmptySection
-import com.fstengineering.leasilycrm.home.stays.models.StayFilterType
+import com.fstengineering.leasilycrm.core.presentation.composables.StaysEmptySection
+import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.launch
@@ -119,7 +119,14 @@ fun StaysScreen(
                 }
 
                 is StayDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_stay_succeeded))
+                    if (stayToDelete == null) return@collect
+
+                    val messageId =
+                        if (stayToDelete!!.isUnavailablePeriod) R.string.snackbar_delete_unavailable_period_succeeded
+                        else R.string.snackbar_delete_stay_succeeded
+
+                    showSnackbar(context.getString(messageId))
+                    viewModel.onDeleteStay(stay = null)
                 }
 
                 StaysViewModel.UiEvents.RegisterCheckInSuccess -> {
@@ -273,6 +280,7 @@ fun StaysScreen(
         }
         if (stayToDelete != null) {
             ConfirmDeleteStayDialog(
+                isUnavailablePeriod = stayToDelete!!.isUnavailablePeriod,
                 onConfirmDelete = viewModel::deleteStay,
                 onCancel = { viewModel.onDeleteStay(stay = null) },
             )

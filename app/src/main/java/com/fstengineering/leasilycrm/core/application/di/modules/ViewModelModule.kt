@@ -4,6 +4,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
+import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
@@ -22,6 +23,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationVi
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep3ViewModel
+import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.signin.SignInViewModel
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel
@@ -106,8 +108,11 @@ val viewModelModule = module {
 
     viewModel {
         PropertyDashboardViewModel(
+            getStaysStructuredDatesUseCase = get(),
+            watchPropertyWithStaysTenantsUseCase = get(),
             propertyRepository = get(),
             userRepository = get(),
+            now = LazyAppDate { LazyAppDate.now() },
         )
     }
 
@@ -115,6 +120,15 @@ val viewModelModule = module {
         PropertyDetailsViewModel(
             propertyRepository = get(),
             propertyCharacteristicRepository = get(),
+            userRepository = get(),
+        )
+    }
+
+    viewModel {
+        PropertyStaysViewModel(
+            getStaysStructuredDatesUseCase = get(),
+            watchPropertyWithStaysTenantsUseCase = get(),
+            propertyRepository = get(),
             userRepository = get(),
         )
     }

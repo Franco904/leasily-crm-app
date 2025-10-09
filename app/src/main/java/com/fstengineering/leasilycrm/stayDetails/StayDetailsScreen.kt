@@ -103,7 +103,11 @@ fun StayDetailsScreen(
                 }
 
                 is StayDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_stay_succeeded))
+                    val messageId =
+                        if (stay.isUnavailablePeriod) R.string.snackbar_delete_unavailable_period_succeeded
+                        else R.string.snackbar_delete_stay_succeeded
+
+                    showSnackbar(context.getString(messageId))
                 }
 
                 RegisterCheckInSuccess -> {
@@ -212,11 +216,11 @@ fun StayDetailsScreen(
         }
         if (mustShowConfirmDeleteDialog) {
             ConfirmDeleteStayDialog(
+                isUnavailablePeriod = stay.isUnavailablePeriod,
                 onConfirmDelete = {
                     viewModel.deleteStay()
 
                     mustShowConfirmDeleteDialog = false
-                    onBack()
                 },
                 onCancel = { mustShowConfirmDeleteDialog = false },
             )

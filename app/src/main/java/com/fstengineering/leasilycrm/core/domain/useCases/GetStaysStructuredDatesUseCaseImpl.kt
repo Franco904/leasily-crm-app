@@ -6,8 +6,8 @@ import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -15,27 +15,63 @@ import java.time.LocalDate
 
 class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
     override operator fun invoke(
-        stays: ImmutableList<Stay>,
+        stays: List<Stay>,
     ): StaysStructuredDatesMap {
         val staysStructuredDatesMap =
-            mutableMapOf<CalendarMonthYear, ImmutableList<StayCalendarDate>>()
+            mutableMapOf<CalendarMonthYear, PersistentList<StayCalendarDate>>()
 
         if (stays.isEmpty()) return staysStructuredDatesMap.toPersistentMap()
 
-        stays.forEachIndexed { i, stay ->
-            val stayDatesMap = getStayDatesGroupedByMonthAndYear(
-                index = if (stay.isUnavailablePeriod) UNAVAILABLE_PERIOD_INDEX else i,
-                checkInDate = stay.checkInDateTime?.toLocalDate()!!,
-                checkOutDate = stay.checkOutDateTime?.toLocalDate()!!,
-                isUnavailablePeriod = stay.isUnavailablePeriod,
-            )
+        var previousIndex: Int? = null
+        var stayIndex = 0
 
-            staysStructuredDatesMap.putAll(stayDatesMap)
-        }
+        val sortedStays = stays.sortedBy { it.checkInDateTime }
+
+        sortedStays
+            .forEachIndexed { i, stay ->
+                val currentIndex =
+                    if (stay.isUnavailablePeriod) UNAVAILABLE_PERIOD_INDEX else stayIndex
+
+                val isLastStay = sortedStays.last() == stay
+                val nextStay = if (isLastStay) null else sortedStays[sortedStays.indexOf(stay) + 1]
+                val isNextStayAdjacent =
+                    nextStay?.checkInDateTime?.dayOfMonth == stay.checkOutDateTime?.dayOfMonth
+
+                val nextIndex = when {
+                    isLastStay || !isNextStayAdjacent -> null
+                    nextStay?.isUnavailablePeriod == true -> UNAVAILABLE_PERIOD_INDEX
+                    stay.isUnavailablePeriod -> stayIndex
+                    else -> stayIndex + 1
+                }
+
+                val stayDatesMap = getStayDatesGroupedByMonthAndYear(
+                    previousIndex = previousIndex,
+                    currentIndex = currentIndex,
+                    nextIndex = nextIndex,
+                    checkInDate = stay.checkInDateTime?.toLocalDate()!!,
+                    checkOutDate = stay.checkOutDateTime?.toLocalDate()!!,
+                    stayId = stay.id!!,
+                )
+
+                stayDatesMap.entries.forEach { (stayMonthYear, stayDates) ->
+                    val isMonthYearPresent =
+                        staysStructuredDatesMap.keys.indexOf(stayMonthYear) != -1
+
+                    if (isMonthYearPresent) {
+                        staysStructuredDatesMap[stayMonthYear] =
+                            staysStructuredDatesMap[stayMonthYear]
+                                ?.addAll(stayDates) ?: persistentListOf()
+                    } else {
+                        staysStructuredDatesMap[stayMonthYear] = stayDates
+                    }
+                }
+
+                previousIndex = if (isNextStayAdjacent) currentIndex else null
+                if (!stay.isUnavailablePeriod) stayIndex++
+            }
 
         return staysStructuredDatesMap
-//            .mergeToExistingDates(currentSelectedDates = currentSelectedDates)
-//            .removeDuplicatedDates()
+            .mapValues { it.value.toSet().toPersistentList() }
             .toPersistentMap()
     }
 
@@ -43,18 +79,19 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
      * Creates a structured period selection map with the selected dates for the property stay.
      *
      * Dates are first grouped by its month/year combination, then each group values are mapped to
-     * flag whether it is the period start or period end date. The date's color and whether it
-     * belongs to an unavailable stay period are also mapped.
+     * flag whether it is the period start or period end date.
      *
      * @param checkInDate The stay check-in date.
      * @param checkOutDate The stay check-out date.
      * @param isUnavailablePeriod Whether the stay dates belong to an unavailable period.
      */
     private fun getStayDatesGroupedByMonthAndYear(
-        index: Int,
+        previousIndex: Int?,
+        currentIndex: Int,
+        nextIndex: Int?,
         checkInDate: LocalDate,
         checkOutDate: LocalDate,
-        isUnavailablePeriod: Boolean,
+        stayId: Long,
     ): StaysStructuredDatesMap {
         val checkInDayOfMonth = checkInDate.dayOfMonth
         val checkInMonth = checkInDate.monthValue
@@ -95,72 +132,13 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
 
                         StayCalendarDate(
                             dayOfMonth = stayDate.dayOfMonth.toString(),
-                            firstHalfPeriodIndex = if (isCheckInDate) null else index,
-                            secondHalfPeriodIndex = if (isCheckOutDate) null else index,
+                            firstHalfPeriodIndex = if (isCheckInDate) previousIndex else currentIndex,
+                            secondHalfPeriodIndex = if (isCheckOutDate) nextIndex else currentIndex,
+                            stayId = stayId,
                         )
                     }
-                    .toImmutableList()
+                    .toPersistentList()
             }
             .toImmutableMap()
     }
-}
-
-/**
- * Merge dates values to already existing dates, looking for repeated calendar month/year keys,
- * both containing values for that month/year combination.
- *
- * Duplicated calendar month/year keys may occur when there is already a range selection,
- * and the user adds a new date range, starting from the last month/year of the current date
- * range.
- *
- * @param currentSelectedDates The current range selection dates map for merge, that will be
- * used to obtain the already existing date values for a month/year.
- */
-private fun StaysStructuredDatesMap.mergeToExistingDates(
-    currentSelectedDates: StaysStructuredDatesMap,
-): StaysStructuredDatesMap {
-    val newSelectedDates = currentSelectedDates.toMutableMap()
-
-    forEach { (monthYear, dates) ->
-        val existingValuesForKey =
-            currentSelectedDates[monthYear] ?: emptyList()
-        val mergedDates =
-            (existingValuesForKey + dates).toPersistentList()
-
-        newSelectedDates[monthYear] = mergedDates
-    }
-
-    return newSelectedDates.toImmutableMap()
-}
-
-/**
- * Removes eventual duplicated dates, looking for repeated days of month in each calendar
- * month and year map values.
- *
- * Duplicated dates may occur when there is already a range selection, and the user adds a
- * new date range, starting from the last date of the current date range.
- */
-private fun StaysStructuredDatesMap.removeDuplicatedDates(): StaysStructuredDatesMap {
-    return mapValues { (_, monthDates) ->
-        val daysOfMonth = monthDates.map { it.dayOfMonth }
-        val hasDuplicatedDates = daysOfMonth.size != daysOfMonth.toSet().size
-
-        if (!hasDuplicatedDates) return@mapValues monthDates
-
-        val datesGroupedByDayOfMonth = monthDates.groupBy { it.dayOfMonth }
-
-        val datesWithoutDuplications = datesGroupedByDayOfMonth.mapValues { (_, dates) ->
-            dates.reduce { previous, current ->
-//                val newRangeSelectionLabel =
-//                    previous.rangeSelectionLabel.first to current.rangeSelectionLabel.second
-
-                previous.copy(
-//                    isCheckInDate = current.isCheckInDate,
-//                    rangeSelectionLabel = newRangeSelectionLabel,
-                )
-            }
-        }
-
-        datesWithoutDuplications.values.toPersistentList()
-    }.toImmutableMap()
 }
