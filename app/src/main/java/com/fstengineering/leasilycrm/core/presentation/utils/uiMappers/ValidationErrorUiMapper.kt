@@ -52,6 +52,10 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
+    ValidationError.PropertyPriceDateRange.StartAndEndDaysAreTheSame -> {
+        R.string.inline_period_start_end_date_are_same_period
+    }
+
     ValidationError.PropertyPriceAmount.IsNull -> {
         R.string.inline_required
     }
@@ -110,6 +114,10 @@ fun ValidationError.toUiMessage() = when (this) {
 
     ValidationError.StayPeriod.IsNull -> {
         R.string.inline_required
+    }
+
+    ValidationError.StayPeriod.StartAndEndDaysAreTheSame -> {
+        R.string.inline_period_start_end_date_are_same_period
     }
 
     ValidationError.StayPeriod.IsOverlappingOtherPropertyStayPeriod -> {

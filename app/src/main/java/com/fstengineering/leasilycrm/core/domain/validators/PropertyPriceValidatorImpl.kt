@@ -34,6 +34,10 @@ class PropertyPriceValidatorImpl : PropertyPriceValidator {
                 AppResult.Error(ValidationError.PropertyPriceDateRange.IsNull)
             }
 
+            startDate == endDate -> {
+                AppResult.Error(ValidationError.PropertyPriceDateRange.StartAndEndDaysAreTheSame)
+            }
+
             else -> AppResult.Success(Unit)
         }
     }
