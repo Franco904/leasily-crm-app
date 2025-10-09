@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
@@ -68,20 +69,20 @@ fun StayDetailsScreen(
 
     val now by rememberNow()
 
-    val checkInDateTimeStartOfDay = stay.checkInDateTime
-        ?.withHour(0)
-        ?.withMinute(0)
-        ?: now
+    val checkInDateTimeStartOfDay = stay.checkInDateTime?.let {
+        AppLazyDateTime { it }.toStartOfDay()
+    }
+    val checkOutDateTimeStartOfDay = stay.checkOutDateTime?.let {
+        AppLazyDateTime { it }.toStartOfDay()
+    }
 
-    val checkOutDateTimeStartOfDay = stay.checkOutDateTime
-        ?.withHour(0)
-        ?.withMinute(0)
-        ?: now
+    val canRegisterCheckIn = !stay.isCheckInDone
+            && now.isHigherThan(checkInDateTimeStartOfDay)
+            && !stay.isUnavailablePeriod
 
-    val canRegisterCheckIn =
-        !stay.isCheckInDone && now > checkInDateTimeStartOfDay && !stay.isUnavailablePeriod
-    val canRegisterCheckOut =
-        !stay.isCheckOutDone && now > checkOutDateTimeStartOfDay && !stay.isUnavailablePeriod
+    val canRegisterCheckOut = !stay.isCheckOutDone
+            && now.isHigherThan(checkOutDateTimeStartOfDay)
+            && !stay.isUnavailablePeriod
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 

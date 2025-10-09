@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.core.application.di.modules
 
 import com.fstengineering.leasilycrm.core.application.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.application.di.qualifiers.plainPreferencesQualifier
-import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceCharacteristicAssistanceRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceCharacteristicRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceInteractionRepositoryImpl
@@ -160,7 +160,7 @@ val repositoryModule = module {
             dao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
             plainPreferencesStorage = get(plainPreferencesQualifier),
-            now = LazyAppDate { LazyAppDate.now() },
+            now = AppLazyDate.now(),
         )
     }
 

@@ -5,6 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.StayCheckStatusCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.StayCompound
 import kotlinx.coroutines.flow.Flow
 
@@ -25,14 +26,20 @@ interface StayDao {
     fun watchById(id: Long): Flow<StayCompound?>
 
     @Transaction
-    @Query("SELECT * FROM stays WHERE user_id = :userId")
+    @Query("SELECT * FROM stays WHERE user_id = :userId AND is_deleted = 0")
     fun watchAll(userId: Long): Flow<List<StayCompound>>
 
     @Transaction
-    @Query("SELECT * FROM stays WHERE property_id = :propertyId")
-    fun watchAllByProperty(propertyId: Long): Flow<List<StayCompound>>
-
-    @Transaction
-    @Query("SELECT * FROM stays WHERE tenant_id = :tenantId")
-    fun watchAllByTenant(tenantId: Long): Flow<List<StayCompound>>
+    @Query(
+        """
+        SELECT check_in_date_time, check_out_date_time, is_check_in_done FROM stays
+        WHERE is_check_out_done = 0
+        AND is_from_other_realtor = 0
+        AND is_deleted = 0
+        AND user_id = :userId
+    """
+    )
+    fun watchAllUpcomingCheckInsAndCheckOuts(
+        userId: Long,
+    ): Flow<List<StayCheckStatusCompound>>
 }

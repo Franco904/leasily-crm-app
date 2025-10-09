@@ -4,7 +4,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
-import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
@@ -54,7 +55,9 @@ val viewModelModule = module {
     viewModel {
         HomeViewModel(
             deleteCurrentAssistanceUseCase = get(),
+            stayRepository = get(),
             userRepository = get(),
+            now = AppLazyDateTime.now(),
         )
     }
 
@@ -112,7 +115,7 @@ val viewModelModule = module {
             watchPropertyWithStaysTenantsUseCase = get(),
             propertyRepository = get(),
             userRepository = get(),
-            now = LazyAppDate { LazyAppDate.now() },
+            now = AppLazyDate.now(),
         )
     }
 
@@ -230,6 +233,7 @@ val viewModelModule = module {
             undoRegisterStayCheckOutUseCase = get(),
             stayRepository = get(),
             userRepository = get(),
+            now = AppLazyDateTime.now(),
         )
     }
 

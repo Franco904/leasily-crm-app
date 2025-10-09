@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.FilterConnectedButton
 import com.fstengineering.leasilycrm.core.presentation.models.FilterConnectedButtonPosition
 import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
+import com.fstengineering.leasilycrm.home.composables.NumberRedBadge
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.mutate
 
@@ -22,6 +23,8 @@ fun StayFilterButtonGroup(
     onFilterTypeSelect: (StayFilterType) -> Unit,
     buttonsCoords: PersistentMap<StayFilterType, LayoutCoordinates?>,
     onButtonGroupCoords: (PersistentMap<StayFilterType, LayoutCoordinates?>) -> Unit,
+    staysAbleToCheckInCount: Int,
+    staysAbleToCheckOutCount: Int,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -34,6 +37,11 @@ fun StayFilterButtonGroup(
             isSelected = selectedFilterType == StayFilterType.UpcomingCheckIn,
             position = FilterConnectedButtonPosition.Start,
             onFilterTypeSelect = { onFilterTypeSelect(StayFilterType.UpcomingCheckIn) },
+            suffix = if (staysAbleToCheckInCount == 0) null else {
+                {
+                    NumberRedBadge(number = staysAbleToCheckInCount)
+                }
+            },
             modifier = Modifier
                 .onGloballyPositioned { coords ->
                     onButtonGroupCoords(
@@ -47,6 +55,11 @@ fun StayFilterButtonGroup(
             isSelected = selectedFilterType == StayFilterType.UpcomingCheckOut,
             position = FilterConnectedButtonPosition.Center,
             onFilterTypeSelect = { onFilterTypeSelect(StayFilterType.UpcomingCheckOut) },
+            suffix = if (staysAbleToCheckOutCount == 0) null else {
+                {
+                    NumberRedBadge(number = staysAbleToCheckOutCount)
+                }
+            },
             modifier = Modifier
                 .onGloballyPositioned { coords ->
                     onButtonGroupCoords(

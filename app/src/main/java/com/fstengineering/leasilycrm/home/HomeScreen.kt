@@ -76,6 +76,7 @@ fun HomeScreen(
     val surfaceContainerColor = MaterialTheme.colorScheme.surfaceContainer
 
     val userProfilePictureUrl by viewModel.userProfilePictureUrl.collectAsStateWithLifecycle()
+    val todayCheckInsAndCheckoutsCount by viewModel.todayCheckInsAndCheckoutsCount.collectAsStateWithLifecycle()
 
     var currentBottomNavDestination: BottomNavBarDestination by rememberSaveable {
         mutableStateOf(BottomNavBarDestination.Dashboard)
@@ -170,7 +171,7 @@ fun HomeScreen(
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                         }
                     },
-                    upcomingStaysCount = 0, // TODO: Get real value from view model when implementing Stays use cases
+                    upcomingStaysCount = todayCheckInsAndCheckoutsCount,
                 )
             }
         },

@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interface
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.sharedStorage.interfaces.SharedStorage
 import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.StayCheckStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
@@ -123,32 +124,31 @@ class StayRepositoryImpl(
             emitAll(staysFlow)
         }
 
-    override fun watchAllByProperty(
-        propertyId: Long,
-    ): Flow<AppResult<ImmutableList<Stay>, DataSourceError>> =
+    override fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<AppResult<ImmutableList<StayCheckStatus>, DataSourceError>> =
         flow {
-            val staysFlow = dao.watchAllByProperty(propertyId = propertyId)
+            val userRemoteId = encryptedPreferencesStorage.readPreferences()
+                .fold(
+                    onError = {
+                        emit(AppResult.Error(error = it))
+                        return@flow
+                    },
+                    onSuccess = { prefsFlow ->
+                        prefsFlow.first().remoteId ?: run {
+                            emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
+                            return@flow
+                        }
+                    }
+                )
+
+            val staysStatusFlow = dao.watchAllUpcomingCheckInsAndCheckOuts(userId = userRemoteId)
                 .map {
-                    val stays = it.map { stay -> stay.toDomain() }.toPersistentList()
-                    AppResult.Success<ImmutableList<Stay>, DataSourceError>(data = stays)
+                    val staysStatus =
+                        it.map { stayStatus -> stayStatus.toDomain() }.toPersistentList()
+                    AppResult.Success<ImmutableList<StayCheckStatus>, DataSourceError>(data = staysStatus)
                 }
                 .distinctUntilChanged()
 
-            emitAll(staysFlow)
-        }
-
-    override fun watchAllByTenant(
-        tenantId: Long,
-    ): Flow<AppResult<ImmutableList<Stay>, DataSourceError>> =
-        flow {
-            val staysFlow = dao.watchAllByTenant(tenantId = tenantId)
-                .map {
-                    val stays = it.map { stay -> stay.toDomain() }.toPersistentList()
-                    AppResult.Success<ImmutableList<Stay>, DataSourceError>(data = stays)
-                }
-                .distinctUntilChanged()
-
-            emitAll(staysFlow)
+            emitAll(staysStatusFlow)
         }
 
     override fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, DataSourceError>> =
