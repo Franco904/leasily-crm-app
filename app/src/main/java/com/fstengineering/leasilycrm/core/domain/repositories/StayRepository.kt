@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.repositories
 
 import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.StayCheckStatus
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import kotlinx.collections.immutable.ImmutableList
@@ -17,13 +18,7 @@ interface StayRepository {
 
     fun watchAll(): Flow<AppResult<ImmutableList<Stay>, DataSourceError>>
 
-    fun watchAllByProperty(
-        propertyId: Long,
-    ): Flow<AppResult<ImmutableList<Stay>, DataSourceError>>
-
-    fun watchAllByTenant(
-        tenantId: Long,
-    ): Flow<AppResult<ImmutableList<Stay>, DataSourceError>>
+    fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<AppResult<ImmutableList<StayCheckStatus>, DataSourceError>>
 
     fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, DataSourceError>>
 

@@ -3,8 +3,10 @@ package com.fstengineering.leasilycrm.home
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteCurrentAssistanceUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -14,11 +16,14 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val deleteCurrentAssistanceUseCase: DeleteCurrentAssistanceUseCase,
+    private val stayRepository: StayRepository,
     private val userRepository: UserRepository,
+    private val now: AppLazyDateTime,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -28,11 +33,15 @@ class HomeViewModel(
     private val _userProfilePictureUrl = MutableStateFlow<String?>(null)
     val userProfilePictureUrl = _userProfilePictureUrl.asStateFlow()
 
+    private val _todayCheckInsAndCheckoutsCount = MutableStateFlow(0)
+    val todayCheckInsAndCheckoutsCount = _todayCheckInsAndCheckoutsCount.asStateFlow()
+
     fun init() {
         if (isInitialized) return
 
         watchSessionExpiration()
         watchUserProfilePictureUrl()
+        watchTodayCheckInsAndCheckouts()
 
         isInitialized = true
     }
@@ -68,6 +77,34 @@ class HomeViewModel(
                     }
                     .onSuccess { user ->
                         _userProfilePictureUrl.value = user.profilePictureUrl
+                    }
+            }
+        }
+    }
+
+    private fun watchTodayCheckInsAndCheckouts() {
+        viewModelScope.launch {
+            stayRepository.watchAllUpcomingCheckInsAndCheckOuts().collect { result ->
+                result
+                    .onError { error ->
+                        if (error.isRedirectError()) {
+                            userRepository.deleteCachedUser()
+                            _uiEvents.send(UiEvents.RedirectToSignIn)
+                        }
+
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+                    .onSuccess { upcomingCheckInsAndCheckOuts ->
+                        val todayCheckInsAndCheckoutsCount = upcomingCheckInsAndCheckOuts.count {
+                            val canRegisterCheckIn = !it.isCheckInDone
+                                    && now.isAfter(it.checkInDateTime.toStartOfDay())
+                            val canRegisterCheckOut =
+                                now.isAfter(it.checkOutDateTime.toStartOfDay())
+
+                            canRegisterCheckIn || canRegisterCheckOut
+                        }
+
+                        _todayCheckInsAndCheckoutsCount.update { todayCheckInsAndCheckoutsCount }
                     }
             }
         }

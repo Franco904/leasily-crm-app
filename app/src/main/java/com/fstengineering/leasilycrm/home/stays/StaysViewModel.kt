@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.home.stays
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
@@ -35,6 +36,7 @@ class StaysViewModel(
     private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
     private val stayRepository: StayRepository,
     private val userRepository: UserRepository,
+    private val now: AppLazyDateTime,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -56,6 +58,12 @@ class StaysViewModel(
     private val _currentStayFilterType = MutableStateFlow(StayFilterType.UpcomingCheckIn)
     val currentStayFilterType = _currentStayFilterType.asStateFlow()
 
+    private val _staysAbleToCheckInCount = MutableStateFlow(0)
+    val staysAbleToCheckInCount = _staysAbleToCheckInCount.asStateFlow()
+
+    private val _staysAbleToCheckOutCount = MutableStateFlow(0)
+    val staysAbleToCheckOutCount = _staysAbleToCheckOutCount.asStateFlow()
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
@@ -66,6 +74,7 @@ class StaysViewModel(
         watchMustNotShowCheckOutDialogAnymore()
 
         watchStays()
+        watchTodayCheckInsAndCheckouts()
 
         isInitialized = true
     }
@@ -111,8 +120,8 @@ class StaysViewModel(
                     stayRepository.watchAll()
                         .map { it to newFilter }
                 }
-                .collect { (result, newFilter) ->
-                    result
+                .collect { (watchAllResult, newFilter) ->
+                    watchAllResult
                         .onError { error ->
                             _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                         }
@@ -129,8 +138,6 @@ class StaysViewModel(
         filterType: StayFilterType,
     ): ImmutableList<Stay> {
         val filteredStays = filter { stay ->
-            if (stay.isDeleted) return@filter false
-
             when (filterType) {
                 StayFilterType.UpcomingCheckIn -> !stay.isCheckInDone && !stay.isCheckOutDone && !stay.isUnavailablePeriod
                 StayFilterType.UpcomingCheckOut -> stay.isCheckInDone && !stay.isCheckOutDone && !stay.isUnavailablePeriod
@@ -142,10 +149,39 @@ class StaysViewModel(
 
         val sortedStays = when (filterType) {
             StayFilterType.Finished, StayFilterType.All -> filteredStays.sortedByDescending { it.checkInDateTime }
+            StayFilterType.UpcomingCheckOut -> filteredStays.sortedBy { it.checkOutDateTime }
             else -> filteredStays.sortedBy { it.checkInDateTime }
         }
 
         return sortedStays.toPersistentList()
+    }
+
+    private fun watchTodayCheckInsAndCheckouts() {
+        viewModelScope.launch {
+            stayRepository.watchAllUpcomingCheckInsAndCheckOuts().collect { result ->
+                result
+                    .onError { error ->
+                        if (error.isRedirectError()) {
+                            userRepository.deleteCachedUser()
+                            _uiEvents.send(UiEvents.RedirectToSignIn)
+                        }
+
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+                    .onSuccess { upcomingCheckInsAndCheckOuts ->
+                        val staysAbleToCheckInCount = upcomingCheckInsAndCheckOuts.count {
+                            !it.isCheckInDone && now.isAfter(it.checkInDateTime.toStartOfDay())
+                        }
+
+                        val staysAbleToCheckOutCount = upcomingCheckInsAndCheckOuts.count {
+                            now.isAfter(it.checkOutDateTime.toStartOfDay())
+                        }
+
+                        _staysAbleToCheckInCount.update { staysAbleToCheckInCount }
+                        _staysAbleToCheckOutCount.update { staysAbleToCheckOutCount }
+                    }
+            }
+        }
     }
 
     fun onStayFilterTypeChange(stayFilterType: StayFilterType) {
@@ -212,7 +248,6 @@ class StaysViewModel(
                     }
 
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-
                     return@launch
                 }
         }

@@ -50,7 +50,9 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
+    startedFromStayNotificationPopUp: Boolean,
     isStayRegistrationSuccess: Boolean,
+    onSettingsSelect: () -> Unit,
     onProfileSelect: () -> Unit,
     onPropertiesSelect: () -> Unit,
     onPropertyOwnersSelect: () -> Unit,
@@ -76,9 +78,16 @@ fun HomeScreen(
     val surfaceContainerColor = MaterialTheme.colorScheme.surfaceContainer
 
     val userProfilePictureUrl by viewModel.userProfilePictureUrl.collectAsStateWithLifecycle()
+    val todayCheckInsAndCheckoutsCount by viewModel.todayCheckInsAndCheckoutsCount.collectAsStateWithLifecycle()
 
-    var currentBottomNavDestination: BottomNavBarDestination by rememberSaveable {
-        mutableStateOf(BottomNavBarDestination.Dashboard)
+    var currentBottomNavDestination: BottomNavBarDestination by rememberSaveable(
+        startedFromStayNotificationPopUp,
+    ) {
+        val startNavDestination =
+            if (startedFromStayNotificationPopUp) BottomNavBarDestination.Stays
+            else BottomNavBarDestination.Dashboard
+
+        mutableStateOf(startNavDestination)
     }
 
     var isSearching by remember { mutableStateOf(false) }
@@ -146,6 +155,7 @@ fun HomeScreen(
                 searchInput = searchInput,
                 onSearchInputChange = { searchInput = it },
                 onProfileSelect = onProfileSelect,
+                onSettingsSelect = onSettingsSelect,
             )
         },
         bottomBar = {
@@ -170,7 +180,7 @@ fun HomeScreen(
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                         }
                     },
-                    upcomingStaysCount = 0, // TODO: Get real value from view model when implementing Stays use cases
+                    upcomingStaysCount = todayCheckInsAndCheckoutsCount,
                 )
             }
         },
@@ -182,11 +192,15 @@ fun HomeScreen(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Destinations.Home,
+            startDestination = Destinations.Home(startedFromStayNotificationPopUp),
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            navigation<Destinations.Home>(startDestination = Destinations.Home.Dashboard) {
+            navigation<Destinations.Home>(
+                startDestination = if (startedFromStayNotificationPopUp) {
+                    Destinations.Home.Stays
+                } else Destinations.Home.Dashboard,
+            ) {
                 composable<Destinations.Home.Dashboard> {
                     DashboardPage(
                         onPropertiesSelect = onPropertiesSelect,

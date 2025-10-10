@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.AppLazyDateTimeTypeConverter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.BigDecimalConverter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.LocalDateTimeTypeConverter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.LocalDateTypeConverter
@@ -88,6 +89,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ten
 )
 @TypeConverters(
     value = [
+        AppLazyDateTimeTypeConverter::class,
         BigDecimalConverter::class,
         LocalDateTimeTypeConverter::class,
         LocalDateTypeConverter::class,

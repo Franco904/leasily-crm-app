@@ -87,12 +87,15 @@ fun StaysScreen(
     val currentMonth = remember { LocalDate.now().monthValue }
     val currentYear = remember { LocalDate.now().year }
 
+    val stays by viewModel.stays.collectAsStateWithLifecycle()
+    val stayToDelete by viewModel.stayToDelete.collectAsStateWithLifecycle()
+
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     val currentStayFilterType by viewModel.currentStayFilterType.collectAsStateWithLifecycle()
 
-    val stays by viewModel.stays.collectAsStateWithLifecycle()
-    val stayToDelete by viewModel.stayToDelete.collectAsStateWithLifecycle()
+    val staysAbleToCheckInCount by viewModel.staysAbleToCheckInCount.collectAsStateWithLifecycle()
+    val staysAbleToCheckOutCount by viewModel.staysAbleToCheckOutCount.collectAsStateWithLifecycle()
 
     val listStatus = remember(isLoading, stays) {
         when {
@@ -185,6 +188,8 @@ fun StaysScreen(
                 onFilterTypeSelect = viewModel::onStayFilterTypeChange,
                 buttonsCoords = buttonsCoords,
                 onButtonGroupCoords = { coords -> buttonsCoords = coords },
+                staysAbleToCheckInCount = staysAbleToCheckInCount,
+                staysAbleToCheckOutCount = staysAbleToCheckOutCount,
                 modifier = Modifier
                     .horizontalScroll(horizontalScrollState)
                     .onGloballyPositioned { coords -> scrollContainerCoords = coords }

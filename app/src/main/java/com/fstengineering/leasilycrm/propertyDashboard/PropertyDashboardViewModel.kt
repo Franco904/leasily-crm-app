@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyDashboard
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
@@ -29,7 +29,7 @@ class PropertyDashboardViewModel(
     private val watchPropertyWithStaysTenantsUseCase: WatchPropertyWithStaysTenantsUseCase,
     private val propertyRepository: PropertyRepository,
     private val userRepository: UserRepository,
-    private val now: LazyAppDate,
+    private val now: AppLazyDate,
 ) : ViewModel() {
     private var isInitialized = false
 

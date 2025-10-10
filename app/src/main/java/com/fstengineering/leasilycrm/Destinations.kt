@@ -10,7 +10,7 @@ sealed interface Destinations {
     data object SignIn
 
     @Serializable
-    data object Home {
+    data class Home(val startedFromStayNotificationPopUp: Boolean) {
         @Serializable
         data object Dashboard
 
@@ -23,6 +23,9 @@ sealed interface Destinations {
         @Serializable
         data object Stays
     }
+
+    @Serializable
+    data object Settings
 
     @Serializable
     data object Profile

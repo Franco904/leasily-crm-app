@@ -30,6 +30,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationSt
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep4Screen
 import com.fstengineering.leasilycrm.propertyStays.PropertyStaysScreen
 import com.fstengineering.leasilycrm.root.RootScreen
+import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.SignInScreen
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsScreen
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationScreen
@@ -41,6 +42,7 @@ object DestinationsHandler {
 
     fun NavGraphBuilder.destinations(
         navController: NavController,
+        startedFromStayNotificationPopUp: Boolean,
         onSignInSuccess: () -> Unit,
         onSignOut: () -> Unit,
         showSnackbar: (String) -> Unit,
@@ -49,6 +51,7 @@ object DestinationsHandler {
         composable<Destinations.Root> {
             RootScreen(
                 viewModel = koinViewModel(),
+                startedFromStayNotificationPopUp = startedFromStayNotificationPopUp,
                 onNavigateToFirstDestination = { firstDestination ->
                     navController.navigate(firstDestination) {
                         val startDestination =
@@ -78,7 +81,8 @@ object DestinationsHandler {
             )
         }
 
-        composable<Destinations.Home> {
+        composable<Destinations.Home> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.Home>()
             val savedStateHandle = navController.currentBackStackEntry
                 ?.savedStateHandle
 
@@ -95,7 +99,11 @@ object DestinationsHandler {
 
             HomeScreen(
                 viewModel = koinViewModel(),
+                startedFromStayNotificationPopUp = args.startedFromStayNotificationPopUp,
                 isStayRegistrationSuccess = isStayRegistrationSuccess,
+                onSettingsSelect = {
+                    navController.navigateAndPopAllTo(Destinations.Settings)
+                },
                 onProfileSelect = {
                     navController.navigateAndPopAllTo(Destinations.Profile)
                 },
@@ -156,6 +164,18 @@ object DestinationsHandler {
                 },
                 showSnackbar = showSnackbar,
                 showActionSnackbar = showActionSnackbar,
+            )
+        }
+
+        composable<Destinations.Settings> {
+            SettingsScreen(
+                viewModel = koinViewModel(),
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
+                },
+                showSnackbar = showSnackbar,
             )
         }
 

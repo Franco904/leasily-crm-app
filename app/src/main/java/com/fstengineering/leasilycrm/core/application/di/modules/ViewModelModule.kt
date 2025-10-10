@@ -4,7 +4,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
-import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
@@ -25,6 +26,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyReg
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
+import com.fstengineering.leasilycrm.settings.SettingsViewModel
 import com.fstengineering.leasilycrm.signin.SignInViewModel
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel
@@ -34,12 +36,20 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel {
         RootViewModel(
+            settingsRepository = get(),
             userRepository = get(),
         )
     }
 
     viewModel {
         SignInViewModel(
+            userRepository = get(),
+        )
+    }
+
+    viewModel {
+        SettingsViewModel(
+            settingsRepository = get(),
             userRepository = get(),
         )
     }
@@ -54,7 +64,9 @@ val viewModelModule = module {
     viewModel {
         HomeViewModel(
             deleteCurrentAssistanceUseCase = get(),
+            stayRepository = get(),
             userRepository = get(),
+            now = AppLazyDateTime.now(),
         )
     }
 
@@ -112,7 +124,7 @@ val viewModelModule = module {
             watchPropertyWithStaysTenantsUseCase = get(),
             propertyRepository = get(),
             userRepository = get(),
-            now = LazyAppDate { LazyAppDate.now() },
+            now = AppLazyDate.now(),
         )
     }
 
@@ -230,6 +242,7 @@ val viewModelModule = module {
             undoRegisterStayCheckOutUseCase = get(),
             stayRepository = get(),
             userRepository = get(),
+            now = AppLazyDateTime.now(),
         )
     }
 

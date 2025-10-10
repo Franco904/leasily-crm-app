@@ -36,6 +36,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun setContent() {
+        val startedFromStayNotificationPopUp = intent
+            ?.getBooleanExtra(NAVIGATE_TO_STAYS_EXTRA, false) == true
+
         setContent {
             AppTheme {
                 val coroutineScope = rememberCoroutineScope()
@@ -55,6 +58,7 @@ class MainActivity : ComponentActivity() {
                         builder = {
                             destinations(
                                 navController = navController,
+                                startedFromStayNotificationPopUp = startedFromStayNotificationPopUp,
                                 onSignInSuccess = {
                                     enqueueAppWorkers()
                                 },
@@ -102,5 +106,9 @@ class MainActivity : ComponentActivity() {
             cancelUniqueWork(ReadsWorker.UNIQUE_NAME)
             cancelUniqueWork(SessionExpirationWorker.UNIQUE_NAME)
         }
+    }
+
+    companion object {
+        const val NAVIGATE_TO_STAYS_EXTRA = "navigate_to_stays"
     }
 }

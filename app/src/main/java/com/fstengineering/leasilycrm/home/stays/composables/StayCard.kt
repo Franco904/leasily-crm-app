@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
@@ -59,18 +60,20 @@ fun StayCard(
 
     val now by rememberNow()
 
-    val checkInDateTimeStartOfDay = stay.checkInDateTime
-        ?.withHour(0)
-        ?.withMinute(0)
+    val checkInDateTimeStartOfDay = stay.checkInDateTime?.let {
+        AppLazyDateTime { it }.toStartOfDay()
+    }
+    val checkOutDateTimeStartOfDay = stay.checkOutDateTime?.let {
+        AppLazyDateTime { it }.toStartOfDay()
+    }
 
-    val checkOutDateTimeStartOfDay = stay.checkOutDateTime
-        ?.withHour(0)
-        ?.withMinute(0)
+    val canRegisterCheckIn = !stay.isCheckInDone
+            && now.isAfter(checkInDateTimeStartOfDay)
+            && !stay.isUnavailablePeriod
 
-    val canRegisterCheckIn =
-        !stay.isCheckInDone && now > checkInDateTimeStartOfDay && !stay.isUnavailablePeriod
-    val canRegisterCheckOut =
-        !stay.isCheckOutDone && now > checkOutDateTimeStartOfDay && !stay.isUnavailablePeriod
+    val canRegisterCheckOut = !stay.isCheckOutDone
+            && now.isAfter(checkOutDateTimeStartOfDay)
+            && !stay.isUnavailablePeriod
 
     var checkInChipWidthDp by remember(stay.isUnavailablePeriod) {
         mutableStateOf(Dp.Unspecified)
@@ -174,7 +177,7 @@ fun StayCard(
                     isCheckIn = true,
                     isUnavailablePeriod = stay.isUnavailablePeriod,
                     isActive = when {
-                        stay.isUnavailablePeriod -> now < checkInDateTimeStartOfDay
+                        stay.isUnavailablePeriod -> now.isBefore(checkInDateTimeStartOfDay)
                         else -> !stay.isCheckInDone
                     },
                     modifier = Modifier
@@ -208,7 +211,8 @@ fun StayCard(
                     isUnavailablePeriod = stay.isUnavailablePeriod,
                     isActive = when {
                         stay.isUnavailablePeriod -> {
-                            now > checkInDateTimeStartOfDay && now < checkOutDateTimeStartOfDay
+                            now.isAfter(checkInDateTimeStartOfDay)
+                                    && now.isBefore(checkOutDateTimeStartOfDay)
                         }
 
                         else -> stay.isCheckInDone && !stay.isCheckOutDone

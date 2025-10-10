@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.application.models.LazyAppDate
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
@@ -27,7 +27,7 @@ class PropertyRepositoryImpl(
     private val dao: PropertyDao,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
     private val plainPreferencesStorage: PreferencesStorage<PlainPreferences>,
-    private val now: LazyAppDate,
+    private val now: AppLazyDate,
 ) : PropertyRepository {
     override suspend fun insertOrUpdate(property: Property): AppResult<Long, DataSourceError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()

@@ -1,14 +1,17 @@
 package com.fstengineering.leasilycrm.core.application.di.modules
 
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.core.domain.useCases.DeleteCurrentAssistanceUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.DeleteStayUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.GetStaysStructuredDatesUseCaseImpl
+import com.fstengineering.leasilycrm.core.domain.useCases.GetTodayCheckInsCheckOutsToNotifyToNotifyUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.RegisterStayCheckOutUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.UndoRegisterStayCheckOutUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.WatchPropertyWithStaysTenantsUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteCurrentAssistanceUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteStayUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
+import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
@@ -54,6 +57,15 @@ val useCaseModule = module {
             propertyRepository = get(),
             tenantRepository = get(),
             applicationScope = get(),
+        )
+    }
+
+    single<GetTodayCheckInsCheckOutsToNotifyUseCase> {
+        GetTodayCheckInsCheckOutsToNotifyToNotifyUseCaseImpl(
+            stayRepository = get(),
+            settingsRepository = get(),
+            userRepository = get(),
+            now = AppLazyDateTime.now(),
         )
     }
 }

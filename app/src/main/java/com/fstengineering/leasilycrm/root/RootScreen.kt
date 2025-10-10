@@ -1,5 +1,8 @@
 package com.fstengineering.leasilycrm.root
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,14 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.SignInState
+import kotlinx.coroutines.launch
 
 @Composable
 fun RootScreen(
     viewModel: RootViewModel,
+    startedFromStayNotificationPopUp: Boolean,
     modifier: Modifier = Modifier,
     onNavigateToFirstDestination: (Any) -> Unit = { _ -> },
     showSnackbar: (String, Boolean) -> Unit = { _, _ -> },
@@ -35,6 +41,9 @@ fun RootScreen(
     LaunchedEffect(Unit) {
         viewModel.init()
 
+        launch {
+
+        }
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
                 is DataSourceError -> {
@@ -45,7 +54,10 @@ fun RootScreen(
 
                 is SignInState -> {
                     val firstDestination = when {
-                        uiEvent.isUserSignedIn -> Destinations.Home
+                        uiEvent.isUserSignedIn -> {
+                            Destinations.Home(startedFromStayNotificationPopUp)
+                        }
+
                         else -> Destinations.SignIn
                     }
 
@@ -53,6 +65,14 @@ fun RootScreen(
                 }
             }
         }
+
+        val isAndroid13OrHigher = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+        val hasNotificationPermission = isAndroid13OrHigher && ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (!hasNotificationPermission) viewModel.uncheckAppNotificationSettings()
     }
 
     SideEffect {
