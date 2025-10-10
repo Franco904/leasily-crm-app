@@ -542,6 +542,8 @@
     <string name="reais_currency_value">R$ %1$s</string>
 
     <string name="last_separator_label">e</string>
+    <string name="na_label">na</string>
+    <string name="no_label">no</string>
 
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>
@@ -690,4 +692,11 @@
     <string name="snackbar_shared_storage_invalid_file_error">O arquivo tem um formato inválido.</string>
 
     <string name="snackbar_unknown_error">Falha inesperada. Tente reiniciar o aplicativo.</string>
+
+    <!-- Notification -->
+    <string name="upcoming_check_in_reminder_notification_title">Lembrete de check-in</string>
+    <string name="upcoming_check_in_reminder_notification_text">O check-in de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
+
+    <string name="upcoming_check_out_reminder_notification_title">Lembrete de check-out</string>
+    <string name="upcoming_check_out_reminder_notification_text">O check-out de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
 </resources>

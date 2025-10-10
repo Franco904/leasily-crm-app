@@ -84,7 +84,7 @@ fun StayCheckInCheckOutDetailsItem(
                 isCheckIn = true,
                 isUnavailablePeriod = isUnavailablePeriod,
                 isActive = when {
-                    isUnavailablePeriod -> now.isLowerThan(checkInDateTimeStartOfDay)
+                    isUnavailablePeriod -> now.isBefore(checkInDateTimeStartOfDay)
                     else -> !isCheckInDone
                 },
                 modifier = Modifier
@@ -117,8 +117,8 @@ fun StayCheckInCheckOutDetailsItem(
                 isUnavailablePeriod = isUnavailablePeriod,
                 isActive = when {
                     isUnavailablePeriod -> {
-                        now.isHigherThan(checkInDateTimeStartOfDay)
-                                && now.isLowerThan(checkOutDateTimeStartOfDay)
+                        now.isAfter(checkInDateTimeStartOfDay)
+                                && now.isBefore(checkOutDateTimeStartOfDay)
                     }
 
                     else -> isCheckInDone && !isCheckOutDone

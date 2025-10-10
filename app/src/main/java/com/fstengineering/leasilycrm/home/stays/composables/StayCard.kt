@@ -68,11 +68,11 @@ fun StayCard(
     }
 
     val canRegisterCheckIn = !stay.isCheckInDone
-            && now.isHigherThan(checkInDateTimeStartOfDay)
+            && now.isAfter(checkInDateTimeStartOfDay)
             && !stay.isUnavailablePeriod
 
     val canRegisterCheckOut = !stay.isCheckOutDone
-            && now.isHigherThan(checkOutDateTimeStartOfDay)
+            && now.isAfter(checkOutDateTimeStartOfDay)
             && !stay.isUnavailablePeriod
 
     var checkInChipWidthDp by remember(stay.isUnavailablePeriod) {
@@ -177,7 +177,7 @@ fun StayCard(
                     isCheckIn = true,
                     isUnavailablePeriod = stay.isUnavailablePeriod,
                     isActive = when {
-                        stay.isUnavailablePeriod -> now.isLowerThan(checkInDateTimeStartOfDay)
+                        stay.isUnavailablePeriod -> now.isBefore(checkInDateTimeStartOfDay)
                         else -> !stay.isCheckInDone
                     },
                     modifier = Modifier
@@ -211,8 +211,8 @@ fun StayCard(
                     isUnavailablePeriod = stay.isUnavailablePeriod,
                     isActive = when {
                         stay.isUnavailablePeriod -> {
-                            now.isHigherThan(checkInDateTimeStartOfDay)
-                                    && now.isLowerThan(checkOutDateTimeStartOfDay)
+                            now.isAfter(checkInDateTimeStartOfDay)
+                                    && now.isBefore(checkOutDateTimeStartOfDay)
                         }
 
                         else -> stay.isCheckInDone && !stay.isCheckOutDone

@@ -77,11 +77,11 @@ fun StayDetailsScreen(
     }
 
     val canRegisterCheckIn = !stay.isCheckInDone
-            && now.isHigherThan(checkInDateTimeStartOfDay)
+            && now.isAfter(checkInDateTimeStartOfDay)
             && !stay.isUnavailablePeriod
 
     val canRegisterCheckOut = !stay.isCheckOutDone
-            && now.isHigherThan(checkOutDateTimeStartOfDay)
+            && now.isAfter(checkOutDateTimeStartOfDay)
             && !stay.isUnavailablePeriod
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()

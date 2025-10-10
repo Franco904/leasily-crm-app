@@ -41,6 +41,7 @@ object DestinationsHandler {
 
     fun NavGraphBuilder.destinations(
         navController: NavController,
+        startedFromStayNotificationPopUp: Boolean,
         onSignInSuccess: () -> Unit,
         onSignOut: () -> Unit,
         showSnackbar: (String) -> Unit,
@@ -49,6 +50,7 @@ object DestinationsHandler {
         composable<Destinations.Root> {
             RootScreen(
                 viewModel = koinViewModel(),
+                startedFromStayNotificationPopUp = startedFromStayNotificationPopUp,
                 onNavigateToFirstDestination = { firstDestination ->
                     navController.navigate(firstDestination) {
                         val startDestination =
@@ -78,7 +80,8 @@ object DestinationsHandler {
             )
         }
 
-        composable<Destinations.Home> {
+        composable<Destinations.Home> { backStackEntry ->
+            val args = backStackEntry.toRoute<Destinations.Home>()
             val savedStateHandle = navController.currentBackStackEntry
                 ?.savedStateHandle
 
@@ -95,6 +98,7 @@ object DestinationsHandler {
 
             HomeScreen(
                 viewModel = koinViewModel(),
+                startedFromStayNotificationPopUp = args.startedFromStayNotificationPopUp,
                 isStayRegistrationSuccess = isStayRegistrationSuccess,
                 onProfileSelect = {
                     navController.navigateAndPopAllTo(Destinations.Profile)

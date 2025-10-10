@@ -1,5 +1,8 @@
 package com.fstengineering.leasilycrm.home
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
@@ -26,6 +29,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,6 +38,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.backgroundWork.alarms.TodayCheckInCheckOutNotificationAlarm
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.CurrentAssistanceDeleteSuccess
@@ -50,6 +56,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
+    startedFromStayNotificationPopUp: Boolean,
     isStayRegistrationSuccess: Boolean,
     onProfileSelect: () -> Unit,
     onPropertiesSelect: () -> Unit,
@@ -78,8 +85,14 @@ fun HomeScreen(
     val userProfilePictureUrl by viewModel.userProfilePictureUrl.collectAsStateWithLifecycle()
     val todayCheckInsAndCheckoutsCount by viewModel.todayCheckInsAndCheckoutsCount.collectAsStateWithLifecycle()
 
-    var currentBottomNavDestination: BottomNavBarDestination by rememberSaveable {
-        mutableStateOf(BottomNavBarDestination.Dashboard)
+    var currentBottomNavDestination: BottomNavBarDestination by rememberSaveable(
+        startedFromStayNotificationPopUp,
+    ) {
+        val startNavDestination =
+            if (startedFromStayNotificationPopUp) BottomNavBarDestination.Stays
+            else BottomNavBarDestination.Dashboard
+
+        mutableStateOf(startNavDestination)
     }
 
     var isSearching by remember { mutableStateOf(false) }
@@ -147,6 +160,21 @@ fun HomeScreen(
                 searchInput = searchInput,
                 onSearchInputChange = { searchInput = it },
                 onProfileSelect = onProfileSelect,
+                onSchedule = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.POST_NOTIFICATIONS
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        ActivityCompat.requestPermissions(
+                            activity,
+                            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                            1001,
+                        )
+                    } else {
+                        TodayCheckInCheckOutNotificationAlarm.schedule(context)
+                    }
+                },
             )
         },
         bottomBar = {
@@ -183,11 +211,15 @@ fun HomeScreen(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Destinations.Home,
+            startDestination = Destinations.Home(startedFromStayNotificationPopUp),
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-            navigation<Destinations.Home>(startDestination = Destinations.Home.Dashboard) {
+            navigation<Destinations.Home>(
+                startDestination = if (startedFromStayNotificationPopUp) {
+                    Destinations.Home.Stays
+                } else Destinations.Home.Dashboard,
+            ) {
                 composable<Destinations.Home.Dashboard> {
                     DashboardPage(
                         onPropertiesSelect = onPropertiesSelect,

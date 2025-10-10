@@ -23,6 +23,7 @@ import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.SignInState
 @Composable
 fun RootScreen(
     viewModel: RootViewModel,
+    startedFromStayNotificationPopUp: Boolean,
     modifier: Modifier = Modifier,
     onNavigateToFirstDestination: (Any) -> Unit = { _ -> },
     showSnackbar: (String, Boolean) -> Unit = { _, _ -> },
@@ -45,7 +46,10 @@ fun RootScreen(
 
                 is SignInState -> {
                     val firstDestination = when {
-                        uiEvent.isUserSignedIn -> Destinations.Home
+                        uiEvent.isUserSignedIn -> {
+                            Destinations.Home(startedFromStayNotificationPopUp)
+                        }
+
                         else -> Destinations.SignIn
                     }
 

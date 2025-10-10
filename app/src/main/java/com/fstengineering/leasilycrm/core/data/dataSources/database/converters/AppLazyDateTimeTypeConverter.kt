@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 class AppLazyDateTimeTypeConverter {
     @TypeConverter
     fun fromAppLazyDateTime(dateTime: AppLazyDateTime?): Long? {
-        return dateTime?.toEpochMillis()
+        return dateTime?.toEpochMillisUTC()
     }
 
     @TypeConverter

@@ -169,11 +169,11 @@ class StaysViewModel(
                     }
                     .onSuccess { upcomingCheckInsAndCheckOuts ->
                         val staysAbleToCheckInCount = upcomingCheckInsAndCheckOuts.count {
-                            !it.isCheckInDone && now.isHigherThan(it.checkInDateTime.toStartOfDay())
+                            !it.isCheckInDone && now.isAfter(it.checkInDateTime.toStartOfDay())
                         }
 
                         val staysAbleToCheckOutCount = upcomingCheckInsAndCheckOuts.count {
-                            now.isHigherThan(it.checkOutDateTime.toStartOfDay())
+                            now.isAfter(it.checkOutDateTime.toStartOfDay())
                         }
 
                         _staysAbleToCheckInCount.update { staysAbleToCheckInCount }

@@ -97,9 +97,9 @@ class HomeViewModel(
                     .onSuccess { upcomingCheckInsAndCheckOuts ->
                         val todayCheckInsAndCheckoutsCount = upcomingCheckInsAndCheckOuts.count {
                             val canRegisterCheckIn = !it.isCheckInDone
-                                    && now.isHigherThan(it.checkInDateTime.toStartOfDay())
+                                    && now.isAfter(it.checkInDateTime.toStartOfDay())
                             val canRegisterCheckOut =
-                                now.isHigherThan(it.checkOutDateTime.toStartOfDay())
+                                now.isAfter(it.checkOutDateTime.toStartOfDay())
 
                             canRegisterCheckIn || canRegisterCheckOut
                         }
