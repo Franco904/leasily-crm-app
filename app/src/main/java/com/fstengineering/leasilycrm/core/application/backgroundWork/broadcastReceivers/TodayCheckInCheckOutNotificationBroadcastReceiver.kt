@@ -27,8 +27,6 @@ class TodayCheckInCheckOutNotificationBroadcastReceiver : BroadcastReceiver(),
                 .fold(onError = { emptyList() }, onSuccess = { it })
 
             todayCheckInsCheckOutsToNotify.forEach {
-                Log.d("StayCheckNotificationStatus", "onReceive: $it")
-
                 if (!it.mustNotifyCheckIn && !it.mustNotifyCheckOut) return@forEach
 
                 val notification = TodayCheckInCheckOutNotification.buildNotification(
