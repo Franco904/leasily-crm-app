@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.useCases
 
-import android.util.Log
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.core.domain.models.StayCheckNotificationStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
@@ -16,6 +16,7 @@ class GetTodayCheckInsCheckOutsToNotifyToNotifyUseCaseImpl(
     private val stayRepository: StayRepository,
     private val settingsRepository: SettingsRepository,
     private val userRepository: UserRepository,
+    private val now: AppLazyDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
     override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, DataSourceError> {
         val isTodayCheckInCheckOutNotificationEnabled = settingsRepository.watchSettings().first()
@@ -24,13 +25,7 @@ class GetTodayCheckInsCheckOutsToNotifyToNotifyUseCaseImpl(
         val hasSessionExpired = userRepository.watchSessionExpiration().first()
             .fold(onError = { true }, onSuccess = { it })
 
-        Log.d(
-            "GetTodayCheckInsCheckOutsToNotifyUseCase",
-            "isTodayCheckInCheckOutNotificationEnabled: $isTodayCheckInCheckOutNotificationEnabled"
-        )
-        Log.d("GetTodayCheckInsCheckOutsToNotifyUseCase", "hasSessionExpired: $hasSessionExpired")
-
-        if (!isTodayCheckInCheckOutNotificationEnabled || hasSessionExpired) {
+        if (now.dateTime().hour > 9 || !isTodayCheckInCheckOutNotificationEnabled || hasSessionExpired) {
             return AppResult.Success(data = emptyList())
         }
 

@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.application.di.modules
 
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.core.domain.useCases.DeleteCurrentAssistanceUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.DeleteStayUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.GetStaysStructuredDatesUseCaseImpl
@@ -64,6 +65,7 @@ val useCaseModule = module {
             stayRepository = get(),
             settingsRepository = get(),
             userRepository = get(),
+            now = AppLazyDateTime.now(),
         )
     }
 }
