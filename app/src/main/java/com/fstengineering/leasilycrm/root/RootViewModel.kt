@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.root
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class RootViewModel(
+    private val settingsRepository: SettingsRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
@@ -36,6 +38,14 @@ class RootViewModel(
                 .onSuccess { isUserSignedIn ->
                     _uiEvents.send(UiEvents.SignInState(isUserSignedIn))
                 }
+        }
+    }
+
+    fun uncheckAppNotificationSettings() {
+        viewModelScope.launch {
+            settingsRepository.setIsTodayCheckInCheckOutNotificationEnabled(
+                isEnabled = false,
+            )
         }
     }
 

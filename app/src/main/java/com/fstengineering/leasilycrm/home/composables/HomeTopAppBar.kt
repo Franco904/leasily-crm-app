@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,8 +44,8 @@ fun HomeTopAppBar(
     onSearchInputChange: (String) -> Unit,
     onSearchSelect: () -> Unit,
     onBack: () -> Unit,
+    onSettingsSelect: () -> Unit,
     onProfileSelect: () -> Unit,
-    onSchedule: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val searchFieldFocusRequester = remember { FocusRequester() }
@@ -97,16 +97,6 @@ fun HomeTopAppBar(
         },
         actions = {
             if (!isSearching) {
-                IconButton(
-                    onClick = onSchedule,
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Schedule,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                Spacer(modifier = Modifier.width(16.dp))
                 if (hasSearchButton) {
                     Row {
                         IconButton(
@@ -118,9 +108,19 @@ fun HomeTopAppBar(
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
-                        Spacer(modifier = Modifier.width(16.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
                     }
                 }
+                IconButton(
+                    onClick = onSettingsSelect,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Settings,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
                 AsyncImage(
                     model = userProfilePictureUrl,
                     contentDescription = null,

@@ -25,6 +25,9 @@ sealed interface Destinations {
     }
 
     @Serializable
+    data object Settings
+
+    @Serializable
     data object Profile
 
     @Serializable

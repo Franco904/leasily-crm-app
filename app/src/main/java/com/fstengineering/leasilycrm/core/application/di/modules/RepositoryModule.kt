@@ -21,6 +21,7 @@ import com.fstengineering.leasilycrm.core.data.repositories.PropertyPriceReposit
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertySeaProximityRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyTypeRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.SettingsRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.StayFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.StayRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.StayTransferRepositoryImpl
@@ -45,6 +46,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.PropertyPriceRepos
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyTypeRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayTransferRepository
@@ -173,6 +175,12 @@ val repositoryModule = module {
     single<PropertyTypeRepository> {
         PropertyTypeRepositoryImpl(
             dao = get(),
+        )
+    }
+
+    single<SettingsRepository> {
+        SettingsRepositoryImpl(
+            plainPreferencesStorage = get(plainPreferencesQualifier),
         )
     }
 

@@ -30,6 +30,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationSt
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep4Screen
 import com.fstengineering.leasilycrm.propertyStays.PropertyStaysScreen
 import com.fstengineering.leasilycrm.root.RootScreen
+import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.SignInScreen
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsScreen
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationScreen
@@ -100,6 +101,9 @@ object DestinationsHandler {
                 viewModel = koinViewModel(),
                 startedFromStayNotificationPopUp = args.startedFromStayNotificationPopUp,
                 isStayRegistrationSuccess = isStayRegistrationSuccess,
+                onSettingsSelect = {
+                    navController.navigateAndPopAllTo(Destinations.Settings)
+                },
                 onProfileSelect = {
                     navController.navigateAndPopAllTo(Destinations.Profile)
                 },
@@ -160,6 +164,18 @@ object DestinationsHandler {
                 },
                 showSnackbar = showSnackbar,
                 showActionSnackbar = showActionSnackbar,
+            )
+        }
+
+        composable<Destinations.Settings> {
+            SettingsScreen(
+                viewModel = koinViewModel(),
+                onBack = { navController.navigateUp() },
+                onSignOut = {
+                    onSignOut()
+                    navController.navigateAndPopAllTo(Destinations.SignIn)
+                },
+                showSnackbar = showSnackbar,
             )
         }
 

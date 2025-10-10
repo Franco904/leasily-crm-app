@@ -22,6 +22,13 @@
     <string name="search_lead_label">Buscar lead</string>
     <string name="search_tenant_label">Buscar inquilino</string>
 
+    <!-- Settings -->
+    <string name="settings_top_app_bar_title">Configurações</string>
+
+    <string name="settings_notifications_group_title">Notificações</string>
+    <string name="settings_today_check_in_check_out_notification_title">Lembrete de check-ins e check-outs</string>
+    <string name="settings_today_check_in_check_out_notification_description">Alerta, no início da manhã, sobre a ocorrência de check-ins e check-outs no dia atual.</string>
+
     <!-- Profile -->
     <string name="profile_top_app_bar_title">Perfil</string>
 
@@ -665,6 +672,7 @@
     <string name="snackbar_delete_stay_transfer_succeeded">Transferência excluída.</string>
 
     <!-- Snackbar warnings -->
+    <string name="snackbar_enable_notifications_warning">Habilite as notificações para poder ativar a configuração.</string>
     <string name="snackbar_register_first_select_property_warning">Selecione o imóvel primeiro.</string>
     <string name="snackbar_register_stay_check_in_already_done_warning">O check-in desta estadia já foi registrado.</string>
 

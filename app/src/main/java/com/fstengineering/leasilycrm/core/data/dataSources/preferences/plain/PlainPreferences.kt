@@ -10,4 +10,5 @@ data class PlainPreferences(
     val tenantsOrderTypeId: Int? = null,
     val mustNotShowCheckOutDialogAnymore: Boolean? = null,
     val propertyStaysSelectedYear: Int? = null,
+    val isTodayCheckInCheckOutNotificationEnabled: Boolean? = null,
 )

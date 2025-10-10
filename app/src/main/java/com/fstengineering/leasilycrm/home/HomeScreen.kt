@@ -1,8 +1,5 @@
 package com.fstengineering.leasilycrm.home
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
@@ -29,8 +26,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,7 +33,6 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.backgroundWork.alarms.TodayCheckInCheckOutNotificationAlarm
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.CurrentAssistanceDeleteSuccess
@@ -58,6 +52,7 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     startedFromStayNotificationPopUp: Boolean,
     isStayRegistrationSuccess: Boolean,
+    onSettingsSelect: () -> Unit,
     onProfileSelect: () -> Unit,
     onPropertiesSelect: () -> Unit,
     onPropertyOwnersSelect: () -> Unit,
@@ -160,21 +155,7 @@ fun HomeScreen(
                 searchInput = searchInput,
                 onSearchInputChange = { searchInput = it },
                 onProfileSelect = onProfileSelect,
-                onSchedule = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.POST_NOTIFICATIONS
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        ActivityCompat.requestPermissions(
-                            activity,
-                            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                            1001,
-                        )
-                    } else {
-                        TodayCheckInCheckOutNotificationAlarm.schedule(context)
-                    }
-                },
+                onSettingsSelect = onSettingsSelect,
             )
         },
         bottomBar = {

@@ -41,6 +41,7 @@ class ProfileViewModel(
     fun init() {
         if (isInitialized) return
 
+        watchSessionExpiration()
         watchUser()
 
         isInitialized = true

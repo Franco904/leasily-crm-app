@@ -62,6 +62,8 @@ val useCaseModule = module {
     single<GetTodayCheckInsCheckOutsToNotifyUseCase> {
         GetTodayCheckInsCheckOutsToNotifyToNotifyUseCaseImpl(
             stayRepository = get(),
+            settingsRepository = get(),
+            userRepository = get(),
         )
     }
 }

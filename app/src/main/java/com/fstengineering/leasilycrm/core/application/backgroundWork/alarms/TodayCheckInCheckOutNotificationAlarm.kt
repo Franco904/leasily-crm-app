@@ -7,6 +7,8 @@ import android.content.Intent
 import com.fstengineering.leasilycrm.core.application.backgroundWork.broadcastReceivers.TodayCheckInCheckOutNotificationBroadcastReceiver
 
 object TodayCheckInCheckOutNotificationAlarm {
+    private const val ALARM_INTENT_REQUEST_CODE = 0
+
     fun schedule(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -20,7 +22,7 @@ object TodayCheckInCheckOutNotificationAlarm {
 
         val pendingIntent = PendingIntent.getBroadcast(
             /* context = */ context,
-            /* requestCode = */ 0,
+            /* requestCode = */ ALARM_INTENT_REQUEST_CODE,
             /* intent = */ receiverIntent,
             /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -36,6 +38,7 @@ object TodayCheckInCheckOutNotificationAlarm {
 
         val triggerAtMillisAdjusted = System.currentTimeMillis() + 5_000
 
+        alarmManager.cancel(pendingIntent)
         alarmManager.setInexactRepeating(
             /* type = */ AlarmManager.RTC_WAKEUP,
             /* triggerAtMillis = */ triggerAtMillisAdjusted,
