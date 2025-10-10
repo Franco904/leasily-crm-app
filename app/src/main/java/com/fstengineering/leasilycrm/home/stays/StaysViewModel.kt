@@ -149,6 +149,7 @@ class StaysViewModel(
 
         val sortedStays = when (filterType) {
             StayFilterType.Finished, StayFilterType.All -> filteredStays.sortedByDescending { it.checkInDateTime }
+            StayFilterType.UpcomingCheckOut -> filteredStays.sortedBy { it.checkOutDateTime }
             else -> filteredStays.sortedBy { it.checkInDateTime }
         }
 
