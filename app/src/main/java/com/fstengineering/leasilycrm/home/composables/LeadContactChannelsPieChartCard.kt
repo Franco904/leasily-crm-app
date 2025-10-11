@@ -35,6 +35,7 @@ import ir.ehsannarmani.compose_charts.models.Pie
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlin.math.roundToInt
 
 @Composable
@@ -45,13 +46,15 @@ fun LeadContactChannelsPieChartCard(
     val pieColors = customColors
 
     var pies by remember(leadContactChannelDistribution) {
-        val pies = leadContactChannelDistribution.mapIndexed { i, (label, percent) ->
-            Pie(
-                label = label,
-                data = percent,
-                color = pieColors[i % pieColors.size],
-            )
-        }
+        val pies = leadContactChannelDistribution
+            .mapIndexed { i, (label, percent) ->
+                Pie(
+                    label = label,
+                    data = percent,
+                    color = pieColors[i % pieColors.size],
+                )
+            }
+            .toPersistentList()
 
         mutableStateOf(pies)
     }
@@ -99,9 +102,11 @@ fun LeadContactChannelsPieChartCard(
                 PieChart(
                     data = pies,
                     onPieClick = { clickedPie ->
-                        pies = pies.mapIndexed { i, pie ->
-                            pie.copy(selected = i == pies.indexOf(clickedPie))
-                        }
+                        pies = pies
+                            .mapIndexed { i, pie ->
+                                pie.copy(selected = i == pies.indexOf(clickedPie) && !pie.selected)
+                            }
+                            .toPersistentList()
                     },
                     selectedScale = 1.02f,
                     scaleAnimEnterSpec = spring(
