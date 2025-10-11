@@ -16,23 +16,33 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.home.composables.HomeNavCard
-import com.fstengineering.leasilycrm.home.composables.LeadContactChannelsMetricCard
+import com.fstengineering.leasilycrm.home.composables.LeadContactChannelsPieChartCard
 import com.fstengineering.leasilycrm.home.composables.MonthlyLeadConversionMetricCard
 import com.fstengineering.leasilycrm.home.composables.MonthlyRevenueMetricCard
 
 @Composable
 fun DashboardPage(
+    viewModel: DashboardViewModel,
     onPropertiesSelect: () -> Unit,
     onPropertyOwnersSelect: () -> Unit,
     onCustomerSegmentsSelect: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
+
+    val leadContactChannelDistribution by viewModel.leadContactChannelDistribution.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.init()
+    }
 
     Column(
         modifier = modifier
@@ -74,7 +84,9 @@ fun DashboardPage(
         Spacer(modifier = Modifier.height(8.dp))
         MonthlyRevenueMetricCard()
         Spacer(modifier = Modifier.height(8.dp))
-        LeadContactChannelsMetricCard()
+        LeadContactChannelsPieChartCard(
+            leadContactChannelDistribution = leadContactChannelDistribution,
+        )
         Spacer(modifier = Modifier.height(16.dp))
     }
 }

@@ -23,10 +23,10 @@ import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_IN
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
-import com.fstengineering.leasilycrm.core.presentation.composables.StayColoredLabel
+import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.composables.stayPeriodColors
+import com.fstengineering.leasilycrm.core.application.theme.customColors
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -64,7 +64,7 @@ fun PropertyDashboardSection(
             }
             .map { (stayId, stayDates) ->
                 val stayTenantColor = stayDates.first().secondHalfPeriodIndex
-                    ?.let { i -> @Composable { stayPeriodColors[i] } }
+                    ?.let { i -> @Composable { customColors[i] } }
                     ?: @Composable { Color.Transparent }
 
                 val tenantName = property.stays
@@ -151,7 +151,7 @@ fun PropertyDashboardSection(
                 ) {
                     stayColorToTenantsNamesChunked[0]
                         .forEach { (stayId, stayTenantColor, tenantName) ->
-                            StayColoredLabel(
+                            ColoredLabel(
                                 color = stayTenantColor(),
                                 label = tenantName,
                                 onClick = { onViewStay(stayId) },
@@ -167,7 +167,7 @@ fun PropertyDashboardSection(
                 ) {
                     stayColorToTenantsNamesChunked[1]
                         .forEach { (stayId, stayTenantColor, tenantName) ->
-                            StayColoredLabel(
+                            ColoredLabel(
                                 color = stayTenantColor(),
                                 label = tenantName,
                                 onClick = { onViewStay(stayId) },
@@ -177,7 +177,7 @@ fun PropertyDashboardSection(
                 }
             }
             if (property.stays.any { it.isUnavailablePeriod }) {
-                StayColoredLabel(
+                ColoredLabel(
                     color = null,
                     label = stringResource(R.string.stay_type_unavailable_period_title),
                 )

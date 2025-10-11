@@ -10,5 +10,9 @@ fun String.capitalizeFirst() = this
 fun String.normalizeEncoding(): String =
     Normalizer.normalize(this, Normalizer.Form.NFC)?.trim() ?: this.trim()
 
+fun String.formatPercent() = this
+    .replace(".0", "")
+    .replace(".", ",")
+
 fun String?.orNotRegistered(notRegisteredString: String): String =
     this?.takeUnless { it.isBlank() } ?: notRegisteredString

@@ -46,8 +46,10 @@
     <string name="dashboard_my_metrics_title">Minhas métricas</string>
     <string name="dashboard_monthly_lead_conversion_metric_title">Taxa de conversão de leads por mês</string>
     <string name="dashboard_monthly_revenue_metric_title">Receita por mês</string>
-    <string name="dashboard_lead_contact_channels_metric_title">Canais de contato (leads)</string>
     <string name="dashboard_last_8_months_body_text">Últimos 8 meses</string>
+    <string name="dashboard_lead_contact_channels_metric_title">Canais de contato dos leads</string>
+
+    <string name="dashboard_crm_metric_chart_empty_text">Nenhum dado para exibir.</string>
 
     <!-- Customer segments -->
     <string name="customer_segments_top_app_bar_title">Segmentos de clientes</string>

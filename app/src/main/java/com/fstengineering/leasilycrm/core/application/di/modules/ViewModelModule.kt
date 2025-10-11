@@ -8,6 +8,7 @@ import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
 import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
+import com.fstengineering.leasilycrm.home.dashboard.DashboardViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel
 import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel
@@ -67,6 +68,12 @@ val viewModelModule = module {
             stayRepository = get(),
             userRepository = get(),
             now = AppLazyDateTime.now(),
+        )
+    }
+
+    viewModel {
+        DashboardViewModel(
+            crmMetricsRepository = get(),
         )
     }
 

@@ -87,3 +87,20 @@ val grey
         lightColor = Color(0xFFEEEEEE),
         darkColor = Color(0xFF424242),
     )
+
+val customColors
+    @Composable get() = listOf(
+        cyan,
+        deepOrange,
+        purple,
+        lime,
+        pink,
+        indigo,
+        teal,
+        brown,
+        lightBlue,
+        orange,
+        blueGrey,
+        amber,
+        grey,
+    )

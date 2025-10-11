@@ -9,6 +9,7 @@ import com.fstengineering.leasilycrm.core.data.repositories.AssistanceInteractio
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceSearchedNeighborhoodRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceSentPropertyRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.CrmMetricsRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.CustomerSegmentRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.CustomerSegmentTypeRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.DomainTablesRepositoryImpl
@@ -34,6 +35,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceInteract
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceSearchedNeighborhoodRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceSentPropertyRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.DomainTablesRepository
@@ -90,6 +92,13 @@ val repositoryModule = module {
     single<AssistanceSentPropertyRepository> {
         AssistanceSentPropertyRepositoryImpl(
             dao = get(),
+        )
+    }
+
+    single<CrmMetricsRepository> {
+        CrmMetricsRepositoryImpl(
+            tenantDao = get(),
+            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
         )
     }
 

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
-import com.fstengineering.leasilycrm.core.presentation.composables.StayColoredLabel
+import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -60,7 +60,7 @@ fun StaysCalendarList(
             ) {
                 stayColorToTenantsNamesChunked[0]
                     .forEach { (stayId, stayTenantColor, tenantName) ->
-                        StayColoredLabel(
+                        ColoredLabel(
                             color = stayTenantColor(),
                             label = tenantName,
                             onClick = { onViewStay(stayId) },
@@ -76,7 +76,7 @@ fun StaysCalendarList(
             ) {
                 stayColorToTenantsNamesChunked[1]
                     .forEach { (stayId, stayTenantColor, tenantName) ->
-                        StayColoredLabel(
+                        ColoredLabel(
                             color = stayTenantColor(),
                             label = tenantName,
                             onClick = { onViewStay(stayId) },
@@ -86,7 +86,7 @@ fun StaysCalendarList(
             }
         }
         if (stays.any { it.isUnavailablePeriod }) {
-            StayColoredLabel(
+            ColoredLabel(
                 color = null,
                 label = stringResource(R.string.stay_type_unavailable_period_title),
             )

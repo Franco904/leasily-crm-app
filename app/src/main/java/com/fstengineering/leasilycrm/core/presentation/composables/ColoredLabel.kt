@@ -37,11 +37,12 @@ import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOpt
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun StayColoredLabel(
+fun ColoredLabel(
     label: String,
     modifier: Modifier = Modifier,
     color: Color? = null,
     onClick: (() -> Unit)? = null,
+    mustEllipsizeText: Boolean = false,
 ) {
     val density = LocalDensity.current
 
@@ -79,8 +80,8 @@ fun StayColoredLabel(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            maxLines = if (mustEllipsizeText) 1 else Int.MAX_VALUE,
+            overflow = if (mustEllipsizeText) TextOverflow.Ellipsis else TextOverflow.Visible,
         )
     }
 

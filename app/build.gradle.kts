@@ -124,6 +124,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
 
+    // Charts
+    implementation(libs.compose.charts)
+
     // Material Design
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)

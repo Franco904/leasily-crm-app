@@ -27,7 +27,7 @@ import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.StaysEmptySection
-import com.fstengineering.leasilycrm.core.presentation.composables.stayPeriodColors
+import com.fstengineering.leasilycrm.core.application.theme.customColors
 import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -74,7 +74,7 @@ fun PropertyStaysSection(
             }
             .map { (stayId, stayDates) ->
                 val stayTenantColor = stayDates.first().secondHalfPeriodIndex
-                    ?.let { i -> @Composable { stayPeriodColors[i] } }
+                    ?.let { i -> @Composable { customColors[i] } }
                     ?: @Composable { Color.Transparent }
 
                 val tenantName = property.stays
