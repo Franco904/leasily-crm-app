@@ -240,8 +240,8 @@ class StayRegistrationViewModel(
                 if (stayForm.value.checkOutHourMinute != form.checkOutHourMinute) {
                     map[StayField.CheckOutTime] = null
                 }
-                if (stayForm.value.totalPrice != form.totalPrice) {
-                    map[StayField.TotalPrice] = null
+                if (stayForm.value.commission != form.commission) {
+                    map[StayField.Commission] = null
                 }
             }
 
@@ -484,7 +484,7 @@ class StayRegistrationViewModel(
         val periodError = errors.firstOrNull { it is ValidationError.StayPeriod }
         val checkInTimeError = errors.firstOrNull { it is ValidationError.StayCheckInTime }
         val checkOutTimeError = errors.firstOrNull { it is ValidationError.StayCheckOutTime }
-        val totalPriceError = errors.firstOrNull { it is ValidationError.StayTotalPrice }
+        val commissionError = errors.firstOrNull { it is ValidationError.StayCommission }
 
         _stayFormErrors.update {
             val newErrors = it.errors.mutate { map ->
@@ -493,7 +493,7 @@ class StayRegistrationViewModel(
                 map[StayField.Period] = periodError?.toUiMessage()
                 map[StayField.CheckInTime] = checkInTimeError?.toUiMessage()
                 map[StayField.CheckOutTime] = checkOutTimeError?.toUiMessage()
-                map[StayField.TotalPrice] = totalPriceError?.toUiMessage()
+                map[StayField.Commission] = commissionError?.toUiMessage()
             }
 
             it.copy(errors = newErrors)

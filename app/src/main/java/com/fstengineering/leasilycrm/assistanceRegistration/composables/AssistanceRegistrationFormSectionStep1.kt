@@ -95,6 +95,10 @@ fun AssistanceRegistrationFormSectionStep1(
         )
     }
 
+    var maxAcceptedNightlyRateInput by rememberSaveable(assistanceForm.maxAcceptedNightlyRate) {
+        mutableStateOf(assistanceForm.maxAcceptedNightlyRate?.toString() ?: "")
+    }
+
     val assistanceNotDeletedSearchedNeighborhoods = remember(assistanceForm) {
         assistanceForm.searchedNeighborhoods
             .filter { !it.isDeleted }
@@ -152,10 +156,8 @@ fun AssistanceRegistrationFormSectionStep1(
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
                 MaxAcceptedNightlyRateFormField(
-                    maxAcceptedNightlyRate = assistanceForm.maxAcceptedNightlyRate,
-                    onMaxAcceptedNightlyRateChange = {
-                        onAssistanceFormChange(assistanceForm.copy(maxAcceptedNightlyRate = it))
-                    }
+                    maxAcceptedNightlyRate = maxAcceptedNightlyRateInput,
+                    onMaxAcceptedNightlyRateChange = { maxAcceptedNightlyRateInput = it }
                 )
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
@@ -315,7 +317,13 @@ fun AssistanceRegistrationFormSectionStep1(
                     .padding(16.dp)
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                NextStepButton(onNext = onNext)
+                NextStepButton(onNext = {
+                    val maxAcceptedNightlyRate = maxAcceptedNightlyRateInput
+                        .replace(',', '.').toBigDecimalOrNull()
+                    onAssistanceFormChange(assistanceForm.copy(maxAcceptedNightlyRate = maxAcceptedNightlyRate))
+
+                    onNext()
+                })
             }
         }
     }

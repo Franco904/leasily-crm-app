@@ -110,7 +110,7 @@ sealed interface ValidationError : Error {
         IsNull,
     }
 
-    enum class StayTotalPrice : ValidationError {
+    enum class StayCommission : ValidationError {
         IsNull,
     }
 

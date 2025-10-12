@@ -18,7 +18,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -53,10 +57,14 @@ fun PropertyRegistrationFormSectionStep3(
     onNext: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val calendar = remember { Calendar.getInstance() }
-
     val context = LocalContext.current
     val outlineColor = MaterialTheme.colorScheme.outline
+
+    val calendar = remember { Calendar.getInstance() }
+
+    var cleaningServiceTaxInput by rememberSaveable(propertyForm.cleaningServiceTax) {
+        mutableStateOf(propertyForm.cleaningServiceTax?.toString() ?: "")
+    }
 
     Box(
         modifier = modifier
@@ -77,14 +85,10 @@ fun PropertyRegistrationFormSectionStep3(
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
                 CleaningServiceTaxFormField(
-                    cleaningServiceTax = propertyForm.cleaningServiceTax,
+                    cleaningServiceTax = cleaningServiceTaxInput,
                     onCleaningServiceTaxChange = {
-                        onPropertyFormChange(
-                            propertyForm.copy(
-                                cleaningServiceTax = it,
-                                hasCleaningServiceIncluded = true,
-                            )
-                        )
+                        cleaningServiceTaxInput = it
+                        onPropertyFormChange(propertyForm.copy(hasCleaningServiceIncluded = true))
                     },
                 )
             }
@@ -96,8 +100,12 @@ fun PropertyRegistrationFormSectionStep3(
                         onPropertyFormChange(
                             propertyForm.copy(hasCleaningServiceIncluded = !newNotHasCleaningServiceIncluded)
                         )
+
+                        if (newNotHasCleaningServiceIncluded) {
+                            cleaningServiceTaxInput = ""
+                        }
                     },
-                    isEnabled = propertyForm.cleaningServiceTax?.toString().isNullOrBlank(),
+                    isEnabled = cleaningServiceTaxInput.isBlank(),
                 )
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
@@ -184,12 +192,28 @@ fun PropertyRegistrationFormSectionStep3(
                     .padding(16.dp)
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-                BackStepButton(onBack = onBack)
+                BackStepButton(onBack = {
+                    val cleaningServiceTax = cleaningServiceTaxInput
+                        .replace(',', '.').toBigDecimalOrNull()
+
+                    val updatedPropertyForm = propertyForm.copy(
+                        cleaningServiceTax = cleaningServiceTax,
+                        hasCleaningServiceIncluded = !cleaningServiceTaxInput.isBlank(),
+                    )
+                    onPropertyFormChange(updatedPropertyForm)
+
+                    onBack()
+                })
                 Spacer(modifier = Modifier.width(8.dp))
                 NextStepButton(onNext = {
-                    if (propertyForm.cleaningServiceTax?.toString().isNullOrBlank()) {
-                        onPropertyFormChange(propertyForm.copy(hasCleaningServiceIncluded = false))
-                    }
+                    val cleaningServiceTax = cleaningServiceTaxInput
+                        .replace(',', '.').toBigDecimalOrNull()
+
+                    val updatedPropertyForm = propertyForm.copy(
+                        cleaningServiceTax = cleaningServiceTax,
+                        hasCleaningServiceIncluded = !cleaningServiceTaxInput.isBlank(),
+                    )
+                    onPropertyFormChange(updatedPropertyForm)
 
                     onNext()
                 })

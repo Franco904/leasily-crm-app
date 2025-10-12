@@ -86,7 +86,7 @@
     <string name="dashboard_last_12_months_body_text">Últimos 12 meses</string>
     <string name="dashboard_plus_generic_body_text">+ %1$s</string>
 
-    <string name="dashboard_crm_metric_chart_last_12_months_empty_text">Nenhum dado nos últimos 12 meses para exibir.</string>
+    <string name="dashboard_crm_metric_chart_last_12_months_empty_text">Nenhum dado nos últimos 12 meses.</string>
     <string name="dashboard_crm_metric_chart_empty_text">Nenhum dado para exibir.</string>
 
     <!-- Customer segments -->

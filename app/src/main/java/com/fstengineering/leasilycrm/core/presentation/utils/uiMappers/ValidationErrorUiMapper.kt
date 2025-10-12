@@ -152,7 +152,7 @@ fun ValidationError.toUiMessage() = when (this) {
         R.string.inline_required
     }
 
-    ValidationError.StayTotalPrice.IsNull -> {
+    ValidationError.StayCommission.IsNull -> {
         R.string.inline_required
     }
 

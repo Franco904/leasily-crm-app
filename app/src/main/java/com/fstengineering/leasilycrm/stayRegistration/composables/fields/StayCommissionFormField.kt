@@ -7,26 +7,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.core.text.isDigitsOnly
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
-import java.math.BigDecimal
 
 @Composable
 fun StayCommissionFormField(
-    commission: BigDecimal?,
-    onCommissionChange: (BigDecimal?) -> Unit,
+    commission: String,
+    onCommissionChange: (String) -> Unit,
+    error: Int?,
     fieldFocusRequester: FocusRequester,
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FormTextField(
         label = stringResource(R.string.stay_registration_commission_label),
-        value = commission?.toString() ?: "",
+        value = commission,
         onValueChange = { commissionInput ->
-            if (!commissionInput.isDigitsOnly()) return@FormTextField
-            onCommissionChange(commissionInput.toBigDecimalOrNull())
+            if (!commissionInput.all { it.isDigit() || it == ',' || it == '.' }) return@FormTextField
+            if (commissionInput.count { it == ',' || it == '.' } > 1) return@FormTextField
+
+            onCommissionChange(commissionInput)
         },
+        isInvalid = error != null,
         prefix = {
             Text(
                 text = "R$ ",
@@ -34,7 +36,8 @@ fun StayCommissionFormField(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         },
-        keyboardType = KeyboardType.Number,
+        supportingText = stringResource(error ?: R.string.inline_required),
+        keyboardType = KeyboardType.Decimal,
         fieldFocusRequester = fieldFocusRequester,
         onDone = { onDone() },
         modifier = modifier

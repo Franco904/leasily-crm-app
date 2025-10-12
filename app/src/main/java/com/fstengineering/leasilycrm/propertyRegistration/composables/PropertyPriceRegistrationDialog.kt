@@ -59,6 +59,10 @@ fun PropertyPriceRegistrationDialog(
         )
     }
 
+    var priceAmountInput by rememberSaveable(propertyPriceForm.price) {
+        mutableStateOf(propertyPriceForm.price?.toString() ?: "")
+    }
+
     var mustShowDateRangePickerDialog by rememberSaveable { mutableStateOf(false) }
 
     AlertDialog(
@@ -84,9 +88,9 @@ fun PropertyPriceRegistrationDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 PropertyPriceAmountFormField(
-                    priceAmount = propertyPriceForm.price,
+                    priceAmount = priceAmountInput,
                     onPriceAmountChange = {
-                        onPropertyPriceFormChange(propertyPriceForm.copy(price = it))
+                        priceAmountInput = it
                     },
                     error = formErrors[PropertyPriceField.Amount],
                     priceAmountFieldFocusRequester = priceAmountFieldFocusRequester,
@@ -95,7 +99,13 @@ fun PropertyPriceRegistrationDialog(
         },
         confirmButton = {
             TextButton(
-                onClick = { onSave() },
+                onClick = {
+                    val priceAmount = priceAmountInput
+                        .replace(',', '.').toBigDecimalOrNull()
+                    onPropertyPriceFormChange(propertyPriceForm.copy(price = priceAmount))
+
+                    onSave()
+                },
             ) {
                 Text(
                     text = stringResource(

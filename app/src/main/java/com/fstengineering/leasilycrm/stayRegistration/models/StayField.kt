@@ -6,5 +6,5 @@ enum class StayField(val scrollIndex: Int) {
     Period(scrollIndex = 16),
     CheckInTime(scrollIndex = 18),
     CheckOutTime(scrollIndex = 18),
-    TotalPrice(scrollIndex = 22),
+    Commission(scrollIndex = 24),
 }

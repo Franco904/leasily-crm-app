@@ -68,6 +68,10 @@ fun StayTransferRegistrationBottomsheet(
         )
     }
 
+    var transferAmountInput by rememberSaveable(transferForm.transferAmount) {
+        mutableStateOf(transferForm.transferAmount?.toString() ?: "")
+    }
+
     var mustShowDatePickerDialog by rememberSaveable { mutableStateOf(false) }
 
     ModalBottomSheet(
@@ -101,7 +105,12 @@ fun StayTransferRegistrationBottomsheet(
                 )
                 OutlinedButton(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                    onClick = onSave,
+                    onClick = {
+                        val amount = transferAmountInput.replace(',', '.').toBigDecimalOrNull()
+                        onTransferFormChange(transferForm.copy(transferAmount = amount))
+
+                        onSave()
+                    },
                 ) {
                     Text(
                         text = stringResource(R.string.save_action_button_text),
@@ -118,8 +127,8 @@ fun StayTransferRegistrationBottomsheet(
             )
             Spacer(modifier = Modifier.height(16.dp))
             StayTransferAmountFormField(
-                transferAmount = transferForm.transferAmount,
-                onTransferAmountChange = { onTransferFormChange(transferForm.copy(transferAmount = it)) },
+                transferAmount = transferAmountInput,
+                onTransferAmountChange = { transferAmountInput = it },
                 error = formErrors[StayTransferField.TransferAmount],
                 onDone = { transferDescriptionFieldFocusRequester.requestFocus() },
                 fieldFocusRequester = transferAmountFieldFocusRequester,

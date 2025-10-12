@@ -98,6 +98,13 @@ fun StayRegistrationScreen(
 
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
 
+    var totalPriceInput by rememberSaveable(stayForm.totalPrice) {
+        mutableStateOf(stayForm.totalPrice?.toString() ?: "")
+    }
+    var commissionInput by rememberSaveable(stayForm.commission) {
+        mutableStateOf(stayForm.commission?.toString() ?: "")
+    }
+
     val openDocumentFile = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
         onResult = { contentUri ->
@@ -189,7 +196,16 @@ fun StayRegistrationScreen(
 
             StayRegistrationTopAppBar(
                 isEditing = stayId != null,
-                onSaveStay = viewModel::saveStay,
+                onSaveStay = {
+                    viewModel.onStayFormChange(
+                        stayForm.copy(
+                            totalPrice = totalPriceInput.replace(',', '.').toBigDecimalOrNull(),
+                            commission = commissionInput.replace(',', '.').toBigDecimalOrNull(),
+                        )
+                    )
+
+                    viewModel.saveStay()
+                },
                 isUnavailablePeriod = isUnavailablePeriod,
                 isSelectingProperty = isSelectingProperty,
                 isSelectingTenant = isSelectingTenant,
@@ -274,6 +290,10 @@ fun StayRegistrationScreen(
                             StayRegistrationFormSection(
                                 stayForm = stayForm,
                                 onStayFormChange = viewModel::onStayFormChange,
+                                totalPriceInput = totalPriceInput,
+                                onTotalPriceChange = { totalPriceInput = it },
+                                commissionInput = commissionInput,
+                                onCommissionChange = { commissionInput = it },
                                 stayFormErrors = stayFormErrors.errors,
                                 getPropertyAlreadySelectedDatesForStay = viewModel::getPropertyAlreadySelectedDatesForStay,
                                 transferForm = transferForm,
