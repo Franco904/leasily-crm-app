@@ -89,7 +89,7 @@ fun PropertyDashboardSection(
 
             else -> {
                 stayColorToTenantsNames
-                    .chunked((stayColorToTenantsNames.size.toFloat() / 2).roundToInt())
+                    .chunked((stayColorToTenantsNames.size.toDouble() / 2).roundToInt())
                     .toImmutableList()
             }
         }
@@ -147,7 +147,10 @@ fun PropertyDashboardSection(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .widthIn(max = 360.dp)
+                        .then(
+                            if (stayColorToTenantsNamesChunked[1].isNotEmpty()) Modifier.widthIn(max = 360.dp)
+                            else Modifier
+                        )
                 ) {
                     stayColorToTenantsNamesChunked[0]
                         .forEach { (stayId, stayTenantColor, tenantName) ->
@@ -159,21 +162,23 @@ fun PropertyDashboardSection(
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                 }
-                Spacer(modifier = Modifier.width(16.dp))
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .widthIn(max = 360.dp)
-                ) {
-                    stayColorToTenantsNamesChunked[1]
-                        .forEach { (stayId, stayTenantColor, tenantName) ->
-                            ColoredLabel(
-                                color = stayTenantColor(),
-                                label = tenantName,
-                                onClick = { onViewStay(stayId) },
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
+                if (stayColorToTenantsNamesChunked[1].isNotEmpty()) {
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .widthIn(max = 360.dp)
+                    ) {
+                        stayColorToTenantsNamesChunked[1]
+                            .forEach { (stayId, stayTenantColor, tenantName) ->
+                                ColoredLabel(
+                                    color = stayTenantColor(),
+                                    label = tenantName,
+                                    onClick = { onViewStay(stayId) },
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
+                    }
                 }
             }
             if (property.stays.any { it.isUnavailablePeriod }) {

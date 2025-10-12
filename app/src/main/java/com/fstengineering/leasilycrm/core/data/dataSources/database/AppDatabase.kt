@@ -15,6 +15,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.Assista
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceInteractionDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceSearchedNeighborhoodDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceSentPropertyCrossRefDao
+import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CrmMetricsDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CustomerSegmentDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CustomerSegmentTypeDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyCharacteristicDao
@@ -107,6 +108,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun assistanceSearchedNeighborhoodDao(): AssistanceSearchedNeighborhoodDao
 
     abstract fun assistanceSentPropertyCrossRefDao(): AssistanceSentPropertyCrossRefDao
+
+    abstract fun crmMetricsDao(): CrmMetricsDao
 
     abstract fun customerSegmentDao(): CustomerSegmentDao
 

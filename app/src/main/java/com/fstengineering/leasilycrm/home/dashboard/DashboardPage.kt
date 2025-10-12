@@ -20,13 +20,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.home.composables.HomeNavCard
-import com.fstengineering.leasilycrm.home.composables.LeadContactChannelsPieChartCard
-import com.fstengineering.leasilycrm.home.composables.MonthlyLeadConversionMetricCard
-import com.fstengineering.leasilycrm.home.composables.MonthlyRevenueMetricCard
+import com.fstengineering.leasilycrm.home.composables.LeadContactChannelsDistributionPieChartCard
+import com.fstengineering.leasilycrm.home.composables.MonthlyLeadGenerationMetricCard
+import com.fstengineering.leasilycrm.home.composables.MonthlyLeadGenerationPerTenantSegmentMetricCard
 
 @Composable
 fun DashboardPage(
@@ -38,6 +39,8 @@ fun DashboardPage(
 ) {
     val scrollState = rememberScrollState()
 
+    val generatedLeadsPerMonth by viewModel.generatedLeadsPerMonth.collectAsStateWithLifecycle()
+    val generatedLeadsPerTenantSegmentPerMonth by viewModel.generatedLeadsPerTenantSegmentPerMonth.collectAsStateWithLifecycle()
     val leadContactChannelDistribution by viewModel.leadContactChannelDistribution.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -78,14 +81,42 @@ fun DashboardPage(
         Text(
             text = stringResource(R.string.dashboard_my_metrics_title),
             style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        MonthlyLeadConversionMetricCard()
+        Text(
+            text = stringResource(R.string.dashboard_leads_group_title),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        MonthlyLeadGenerationMetricCard(
+            generatedLeadsPerMonth = generatedLeadsPerMonth,
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        MonthlyRevenueMetricCard()
+        MonthlyLeadGenerationPerTenantSegmentMetricCard(
+            generatedLeadsPerTenantSegmentPerMonth = generatedLeadsPerTenantSegmentPerMonth,
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        LeadContactChannelsPieChartCard(
+        LeadContactChannelsDistributionPieChartCard(
             leadContactChannelDistribution = leadContactChannelDistribution,
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        HorizontalDivider()
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = stringResource(R.string.dashboard_bookings_group_title),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
+        HorizontalDivider()
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = stringResource(R.string.dashboard_invoicing_group_title),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colorScheme.primary,
         )
         Spacer(modifier = Modifier.height(16.dp))
     }

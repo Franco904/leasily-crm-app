@@ -5,7 +5,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.LeadContactChannelCountCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.TenantCompound
 import kotlinx.coroutines.flow.Flow
 
@@ -172,19 +171,4 @@ interface TenantDao {
         tenantName: String,
         currentStoredTenantName: String?,
     ): Int
-
-    @Query(
-        """
-        SELECT
-            tcot.name AS lead_contact_channel_name,
-            COUNT(*) AS lead_count
-        FROM tenants t
-        INNER JOIN tenant_contact_origin_types tcot ON t.tenant_contact_origin_type_id = tcot.id
-        WHERE user_id = :userId
-        AND status = 0
-        AND is_deleted = 0
-        GROUP BY tcot.name
-    """
-    )
-    fun watchCountLeadsByContactChannelType(userId: Long): Flow<List<LeadContactChannelCountCompound>>
 }

@@ -15,7 +15,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 
 @Composable
-fun MonthlyLeadConversionMetricCard(
+fun MonthlyInvoicingMetricCard(
     modifier: Modifier = Modifier,
 ) {
     AppCard(
@@ -27,23 +27,23 @@ fun MonthlyLeadConversionMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_lead_conversion_metric_title),
+                text = stringResource(R.string.dashboard_monthly_invoicing_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = stringResource(R.string.dashboard_last_8_months_body_text),
+                text = stringResource(R.string.dashboard_last_12_months_body_text),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "+ 12%",
+                text = "+ R$ 17.014",
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.tertiary,
             )
             Spacer(modifier = Modifier.height(12.dp))
-            // TODO: Add bar chart when implementing metrics use cases
+            // TODO: Add row chart when implementing metrics use cases
         }
     }
 }

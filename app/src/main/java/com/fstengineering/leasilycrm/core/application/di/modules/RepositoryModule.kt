@@ -97,8 +97,9 @@ val repositoryModule = module {
 
     single<CrmMetricsRepository> {
         CrmMetricsRepositoryImpl(
-            tenantDao = get(),
+            crmMetricsDao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+            now = AppLazyDate.now(),
         )
     }
 
