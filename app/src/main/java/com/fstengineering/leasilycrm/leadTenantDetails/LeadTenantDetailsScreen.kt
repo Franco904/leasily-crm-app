@@ -310,6 +310,7 @@ fun LeadTenantDetailsScreen(
                                     monthYear.month == currentMonth -> stringResource(R.string.this_month_label)
                                     else -> context
                                         .getMonthLabelByNumber(monthYear.month)
+                                        .lowercase()
                                         .capitalizeFirst()
                                 }
 

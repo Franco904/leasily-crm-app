@@ -22,7 +22,7 @@ fun AppPieChart(
         onPieClick = onPieClick,
         selectedScale = 1.02f,
         scaleAnimEnterSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
+            dampingRatio = Spring.DampingRatioNoBouncy,
             stiffness = Spring.StiffnessLow,
         ),
         colorAnimEnterSpec = tween(300),

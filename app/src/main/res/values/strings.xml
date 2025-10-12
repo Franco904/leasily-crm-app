@@ -46,7 +46,7 @@
     <string name="dashboard_my_metrics_title">Minhas métricas</string>
 
     <string name="dashboard_leads_group_title">Leads</string>
-    <string name="dashboard_bookings_group_title">Reserva</string>
+    <string name="dashboard_stay_bookings_group_title">Reserva</string>
     <string name="dashboard_invoicing_group_title">Faturamento</string>
 
     <string name="dashboard_monthly_lead_generation_metric_title">Geração de leads mensal</string>
@@ -57,7 +57,9 @@
     <string name="dashboard_lead_contact_channels_distribution_metric_description">Mede a distribuição atual dos leads por seus respectivos canais de contato.</string>
 
     <string name="dashboard_leads_body_text">leads</string>
+    <string name="dashboard_stay_bookings_body_text">reservas</string>
     <string name="dashboard_leads_qtd_body_text">Número de leads</string>
+    <string name="dashboard_stay_bookings_qtd_body_text">Número de reservas de estadia</string>
 
     <string name="dashboard_monthly_new_bookings_metric_title">Novas reservas por mês</string>
     <string name="dashboard_monthly_new_bookings_metric_description">Mede o número de novas reservas de estadia agendadas em cada mês.</string>

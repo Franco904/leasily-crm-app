@@ -38,15 +38,41 @@ class DashboardViewModel(
         MutableStateFlow<ImmutableMap<String, Double>>(persistentMapOf())
     val leadContactChannelDistribution = _leadContactChannelDistribution.asStateFlow()
 
+    private val _newStayBookingsPerMonth =
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, Int>>(persistentMapOf())
+    val newStayBookingsPerMonth = _newStayBookingsPerMonth.asStateFlow()
+
+    private val _newStayBookingsPerTenantSegmentPerMonth =
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(persistentMapOf())
+    val newStayBookingsPerTenantSegmentPerMonth =
+        _newStayBookingsPerTenantSegmentPerMonth.asStateFlow()
+
+    private val _newStayBookingsPerPropertyOwnerSegmentPerMonth =
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(persistentMapOf())
+    val newStayBookingsPerPropertyOwnerSegmentPerMonth =
+        _newStayBookingsPerPropertyOwnerSegmentPerMonth.asStateFlow()
+
+    private val _newStayBookingsPerTop3NeighborhoodsPerMonth =
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(persistentMapOf())
+    val newStayBookingsPerTop3NeighborhoodsPerMonth =
+        _newStayBookingsPerTop3NeighborhoodsPerMonth.asStateFlow()
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
     fun init() {
         if (isInitialized) return
 
+        // Leads CRM metrics
         watchGeneratedLeadsPerMonth()
         watchGeneratedLeadsPerTenantSegmentPerMonth()
         watchLeadContactChannelDistribution()
+
+        // Stay bookings CRM metrics
+        watchNewStayBookingsPerMonth()
+        watchNewStayBookingsPerTenantSegmentPerMonth()
+        watchNewStayBookingsPerPropertyOwnerSegmentPerMonth()
+        watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
 
         isInitialized = true
     }
@@ -73,7 +99,9 @@ class DashboardViewModel(
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                     }
                     .onSuccess { generatedLeadsPerTenantSegmentPerMonth ->
-                        _generatedLeadsPerTenantSegmentPerMonth.update { generatedLeadsPerTenantSegmentPerMonth }
+                        _generatedLeadsPerTenantSegmentPerMonth.update {
+                            generatedLeadsPerTenantSegmentPerMonth
+                        }
                     }
             }
         }
@@ -90,6 +118,70 @@ class DashboardViewModel(
                         _leadContactChannelDistribution.update { leadContactChannelDistribution }
                     }
             }
+        }
+    }
+
+    private fun watchNewStayBookingsPerMonth() {
+        viewModelScope.launch {
+            crmMetricsRepository.watchNewStayBookingsPerMonth().collect { result ->
+                result
+                    .onError { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+                    .onSuccess { newStayBookingsPerMonth ->
+                        _newStayBookingsPerMonth.update { newStayBookingsPerMonth }
+                    }
+            }
+        }
+    }
+
+    private fun watchNewStayBookingsPerTenantSegmentPerMonth() {
+        viewModelScope.launch {
+            crmMetricsRepository.watchNewStayBookingsPerTenantSegmentPerMonth().collect { result ->
+                result
+                    .onError { error ->
+                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                    }
+                    .onSuccess { newStayBookingsPerTenantSegmentPerMonth ->
+                        _newStayBookingsPerTenantSegmentPerMonth.update {
+                            newStayBookingsPerTenantSegmentPerMonth
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth() {
+        viewModelScope.launch {
+            crmMetricsRepository.watchNewStayBookingsPerPropertyOwnerSegmentPerMonth()
+                .collect { result ->
+                    result
+                        .onError { error ->
+                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                        }
+                        .onSuccess { newStayBookingsPerPropertyOwnerSegmentPerMonth ->
+                            _newStayBookingsPerPropertyOwnerSegmentPerMonth.update {
+                                newStayBookingsPerPropertyOwnerSegmentPerMonth
+                            }
+                        }
+                }
+        }
+    }
+
+    private fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth() {
+        viewModelScope.launch {
+            crmMetricsRepository.watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
+                .collect { result ->
+                    result
+                        .onError { error ->
+                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
+                        }
+                        .onSuccess { newStayBookingsPerTop3NeighborhoodsPerMonth ->
+                            _newStayBookingsPerTop3NeighborhoodsPerMonth.update {
+                                newStayBookingsPerTop3NeighborhoodsPerMonth
+                            }
+                        }
+                }
         }
     }
 }

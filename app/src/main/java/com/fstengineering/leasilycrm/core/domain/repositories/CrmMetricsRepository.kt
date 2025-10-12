@@ -15,4 +15,16 @@ interface CrmMetricsRepository {
 
     fun watchLeadContactChannelDistribution():
             Flow<AppResult<ImmutableMap<String, Double>, DataSourceError>>
+
+    fun watchNewStayBookingsPerMonth():
+            Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataSourceError>>
+
+    fun watchNewStayBookingsPerTenantSegmentPerMonth():
+            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>>
+
+    fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth():
+            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>>
+
+    fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth():
+            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>>
 }

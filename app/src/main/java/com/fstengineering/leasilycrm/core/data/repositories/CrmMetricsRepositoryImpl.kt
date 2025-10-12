@@ -59,8 +59,8 @@ class CrmMetricsRepositoryImpl(
                         .toMutableMap()
 
                     generatedLeadsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
-                        val leadCount = generatedLeadsPerMonthMap[monthYear]
-                        generatedLeadsWithMissingMonthsMap.put(monthYear, leadCount ?: 0)
+                        val leadsCount = generatedLeadsPerMonthMap[monthYear]
+                        generatedLeadsWithMissingMonthsMap.put(monthYear, leadsCount ?: 0)
                     }
 
                     AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, DataSourceError>(
@@ -110,10 +110,10 @@ class CrmMetricsRepositoryImpl(
                         .toMutableMap()
 
                     generatedLeadsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
-                        val leadCountPerTenantSegment =
+                        val leadsCountPerTenantSegment =
                             generatedLeadsPerTenantSegmentPerMonthMap[monthYear]
                         generatedLeadsWithMissingMonthsMap
-                            .put(monthYear, leadCountPerTenantSegment ?: persistentMapOf())
+                            .put(monthYear, leadsCountPerTenantSegment ?: persistentMapOf())
                     }
 
                     AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>(
@@ -145,8 +145,8 @@ class CrmMetricsRepositoryImpl(
 
                     val leadContactChannelDistribution = leadContactChannelCounts
                         .associate {
-                            val roundedLeadCount = (it.leadCount.toDouble() / totalLeads) * 100
-                            it.leadContactChannelName to roundedLeadCount.roundToInt().toDouble()
+                            val roundedLeadsCount = (it.leadCount.toDouble() / totalLeads) * 100
+                            it.leadContactChannelName to roundedLeadsCount.roundToInt().toDouble()
                         }
                         .filterValues { it > 0.0 }
                         .toPersistentMap()
@@ -157,5 +157,215 @@ class CrmMetricsRepositoryImpl(
                 }
 
             emitAll(leadContactChannelDistributionFlow)
+        }
+
+    override fun watchNewStayBookingsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataSourceError>> =
+        flow {
+            val userRemoteId = encryptedPreferencesStorage.readPreferences()
+                .fold(
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onSuccess = { prefsFlow ->
+                        val remoteId = prefsFlow.first().remoteId
+                        remoteId ?: run {
+                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
+                        }
+                    }
+                )
+
+            val newStayBookingsPerMonthFlow = crmMetricsDao
+                .watchNewStayBookingsPerMonth(userId = userRemoteId)
+                .map { newStayBookingsPerMonth ->
+                    val newStayBookingsPerMonthMap = newStayBookingsPerMonth
+                        .associate {
+                            val split = it.monthYear.split("-")
+
+                            val monthYear = CalendarMonthYear(
+                                id = split[0].toInt() + split[1].toInt(),
+                                month = split[0].toInt(),
+                                year = split[1].toInt(),
+                            )
+
+                            monthYear to it.bookingsCount
+                        }
+                        .toPersistentMap()
+
+                    val newStayBookingsWithMissingMonthsMap = now.getLast12Months()
+                        .associateWith { 0 }
+                        .toMutableMap()
+
+                    newStayBookingsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
+                        val bookingsCount = newStayBookingsPerMonthMap[monthYear]
+                        newStayBookingsWithMissingMonthsMap.put(monthYear, bookingsCount ?: 0)
+                    }
+
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, DataSourceError>(
+                        data = newStayBookingsWithMissingMonthsMap.toPersistentMap(),
+                    )
+                }
+
+            emitAll(newStayBookingsPerMonthFlow)
+        }
+
+    override fun watchNewStayBookingsPerTenantSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>> =
+        flow {
+            val userRemoteId = encryptedPreferencesStorage.readPreferences()
+                .fold(
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onSuccess = { prefsFlow ->
+                        val remoteId = prefsFlow.first().remoteId
+                        remoteId ?: run {
+                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
+                        }
+                    }
+                )
+
+            val newStayBookingsPerTenantSegmentPerMonthFlow = crmMetricsDao
+                .watchNewStayBookingsPerTenantSegmentPerMonth(userId = userRemoteId)
+                .map { newStayBookingsPerTenantSegmentPerMonth ->
+                    val newStayBookingsPerTenantSegmentPerMonthMap =
+                        newStayBookingsPerTenantSegmentPerMonth
+                            .groupBy {
+                                val split = it.monthYear.split("-")
+
+                                CalendarMonthYear(
+                                    id = split[0].toInt() + split[1].toInt(),
+                                    month = split[0].toInt(),
+                                    year = split[1].toInt(),
+                                )
+                            }
+                            .mapValues { (_, compounds) ->
+                                compounds
+                                    .associate { it.customerSegmentName to it.bookingsCount }
+                                    .toPersistentMap()
+                            }
+                            .toPersistentMap()
+
+                    val newStayBookingsWithMissingMonthsMap = now.getLast12Months()
+                        .associateWith { persistentMapOf<String, Int>() }
+                        .toMutableMap()
+
+                    newStayBookingsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
+                        val bookingsCountPerTenantSegment =
+                            newStayBookingsPerTenantSegmentPerMonthMap[monthYear]
+                        newStayBookingsWithMissingMonthsMap
+                            .put(monthYear, bookingsCountPerTenantSegment ?: persistentMapOf())
+                    }
+
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>(
+                        data = newStayBookingsWithMissingMonthsMap
+                            .toPersistentMap(),
+                    )
+                }
+
+            emitAll(newStayBookingsPerTenantSegmentPerMonthFlow)
+        }
+
+    override fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>> =
+        flow {
+            val userRemoteId = encryptedPreferencesStorage.readPreferences()
+                .fold(
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onSuccess = { prefsFlow ->
+                        val remoteId = prefsFlow.first().remoteId
+                        remoteId ?: run {
+                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
+                        }
+                    }
+                )
+
+            val newStayBookingsPerPropertyOwnerSegmentPerMonthFlow = crmMetricsDao
+                .watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(userId = userRemoteId)
+                .map { newStayBookingsPerPropertyOwnerSegmentPerMonth ->
+                    val newStayBookingsPerPropertyOwnerSegmentPerMonthMap =
+                        newStayBookingsPerPropertyOwnerSegmentPerMonth
+                            .groupBy {
+                                val split = it.monthYear.split("-")
+
+                                CalendarMonthYear(
+                                    id = split[0].toInt() + split[1].toInt(),
+                                    month = split[0].toInt(),
+                                    year = split[1].toInt(),
+                                )
+                            }
+                            .mapValues { (_, compounds) ->
+                                compounds
+                                    .associate { it.customerSegmentName to it.bookingsCount }
+                                    .toPersistentMap()
+                            }
+                            .toPersistentMap()
+
+                    val newStayBookingsWithMissingMonthsMap = now.getLast12Months()
+                        .associateWith { persistentMapOf<String, Int>() }
+                        .toMutableMap()
+
+                    newStayBookingsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
+                        val bookingsCountPerTenantSegment =
+                            newStayBookingsPerPropertyOwnerSegmentPerMonthMap[monthYear]
+                        newStayBookingsWithMissingMonthsMap
+                            .put(monthYear, bookingsCountPerTenantSegment ?: persistentMapOf())
+                    }
+
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>(
+                        data = newStayBookingsWithMissingMonthsMap
+                            .toPersistentMap(),
+                    )
+                }
+
+            emitAll(newStayBookingsPerPropertyOwnerSegmentPerMonthFlow)
+        }
+
+    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>> =
+        flow {
+            val userRemoteId = encryptedPreferencesStorage.readPreferences()
+                .fold(
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onSuccess = { prefsFlow ->
+                        val remoteId = prefsFlow.first().remoteId
+                        remoteId ?: run {
+                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
+                        }
+                    }
+                )
+
+            val newStayBookingsPerTop3NeighborhoodsPerMonthFlow = crmMetricsDao
+                .watchNewStayBookingsPerTop3NeighborhoodsPerMonth(userId = userRemoteId)
+                .map { newStayBookingsPerTop3NeighborhoodsPerMonth ->
+                    val newStayBookingsPerTop3NeighborhoodsPerMonthMap =
+                        newStayBookingsPerTop3NeighborhoodsPerMonth
+                            .groupBy {
+                                val split = it.monthYear.split("-")
+
+                                CalendarMonthYear(
+                                    id = split[0].toInt() + split[1].toInt(),
+                                    month = split[0].toInt(),
+                                    year = split[1].toInt(),
+                                )
+                            }
+                            .mapValues { (_, compounds) ->
+                                compounds
+                                    .take(3)
+                                    .associate { it.propertyNeighborhood to it.bookingsCount }
+                                    .toPersistentMap()
+                            }
+                            .toPersistentMap()
+
+                    val newStayBookingsWithMissingMonthsMap = now.getLast12Months()
+                        .associateWith { persistentMapOf<String, Int>() }
+                        .toMutableMap()
+
+                    newStayBookingsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
+                        val bookingsCountPerTenantSegment =
+                            newStayBookingsPerTop3NeighborhoodsPerMonthMap[monthYear]
+                        newStayBookingsWithMissingMonthsMap
+                            .put(monthYear, bookingsCountPerTenantSegment ?: persistentMapOf())
+                    }
+
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>(
+                        data = newStayBookingsWithMissingMonthsMap
+                            .toPersistentMap(),
+                    )
+                }
+
+            emitAll(newStayBookingsPerTop3NeighborhoodsPerMonthFlow)
         }
 }

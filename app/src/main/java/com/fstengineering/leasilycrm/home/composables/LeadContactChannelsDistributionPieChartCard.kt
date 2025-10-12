@@ -87,7 +87,7 @@ fun LeadContactChannelsDistributionPieChartCard(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = stringResource(R.string.dashboard_lead_contact_channels_distribution_metric_description),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(modifier = Modifier.height(32.dp))

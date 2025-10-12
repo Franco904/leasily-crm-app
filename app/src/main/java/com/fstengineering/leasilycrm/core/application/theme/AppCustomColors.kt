@@ -107,17 +107,51 @@ val customColors
 
 val customColorsV2
     @Composable get() = listOf(
-        orange,
+        amber,
         teal,
-        indigo,
+        lightBlue,
         grey,
         pink,
         brown,
-        blueGrey,
+        indigo,
+        orange,
         lime,
         cyan,
-        amber,
         deepOrange,
         purple,
+        blueGrey,
+    )
+
+val customColorsV3
+    @Composable get() = listOf(
+        deepOrange,
+        lime,
+        cyan,
+        brown,
+        blueGrey,
+        indigo,
         lightBlue,
+        orange,
+        teal,
+        purple,
+        amber,
+        grey,
+        pink,
+    )
+
+val customColorsV4
+    @Composable get() = listOf(
+        cyan,
+        lime,
+        pink,
+        brown,
+        deepOrange,
+        teal,
+        blueGrey,
+        amber,
+        purple,
+        grey,
+        indigo,
+        lightBlue,
+        orange,
     )

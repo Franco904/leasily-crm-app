@@ -28,6 +28,10 @@ import com.fstengineering.leasilycrm.home.composables.HomeNavCard
 import com.fstengineering.leasilycrm.home.composables.LeadContactChannelsDistributionPieChartCard
 import com.fstengineering.leasilycrm.home.composables.MonthlyLeadGenerationMetricCard
 import com.fstengineering.leasilycrm.home.composables.MonthlyLeadGenerationPerTenantSegmentMetricCard
+import com.fstengineering.leasilycrm.home.composables.MonthlyNewStayBookingsMetricCard
+import com.fstengineering.leasilycrm.home.composables.MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard
+import com.fstengineering.leasilycrm.home.composables.MonthlyNewStayBookingsPerTenantSegmentMetricCard
+import com.fstengineering.leasilycrm.home.composables.MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard
 
 @Composable
 fun DashboardPage(
@@ -39,9 +43,16 @@ fun DashboardPage(
 ) {
     val scrollState = rememberScrollState()
 
+    // Leads CRM metrics
     val generatedLeadsPerMonth by viewModel.generatedLeadsPerMonth.collectAsStateWithLifecycle()
     val generatedLeadsPerTenantSegmentPerMonth by viewModel.generatedLeadsPerTenantSegmentPerMonth.collectAsStateWithLifecycle()
     val leadContactChannelDistribution by viewModel.leadContactChannelDistribution.collectAsStateWithLifecycle()
+
+    // Stay bookings CRM metrics
+    val newStayBookingsPerMonth by viewModel.newStayBookingsPerMonth.collectAsStateWithLifecycle()
+    val newStayBookingsPerTenantSegmentPerMonth by viewModel.newStayBookingsPerTenantSegmentPerMonth.collectAsStateWithLifecycle()
+    val newStayBookingsPerPropertyOwnerSegmentPerMonth by viewModel.newStayBookingsPerPropertyOwnerSegmentPerMonth.collectAsStateWithLifecycle()
+    val newStayBookingsPerTop3NeighborhoodsPerMonth by viewModel.newStayBookingsPerTop3NeighborhoodsPerMonth.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.init()
@@ -105,11 +116,26 @@ fun DashboardPage(
         HorizontalDivider()
         Spacer(modifier = Modifier.height(32.dp))
         Text(
-            text = stringResource(R.string.dashboard_bookings_group_title),
+            text = stringResource(R.string.dashboard_stay_bookings_group_title),
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
             color = MaterialTheme.colorScheme.primary,
         )
         Spacer(modifier = Modifier.height(16.dp))
+        MonthlyNewStayBookingsMetricCard(
+            newStayBookingsPerMonth = newStayBookingsPerMonth,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        MonthlyNewStayBookingsPerTenantSegmentMetricCard(
+            newStayBookingsPerTenantSegmentPerMonth = newStayBookingsPerTenantSegmentPerMonth,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
+            newStayBookingsPerPropertyOwnerSegmentPerMonth = newStayBookingsPerPropertyOwnerSegmentPerMonth,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
+            newStayBookingsPerTop3NeighborhoodsPerMonth = newStayBookingsPerTop3NeighborhoodsPerMonth,
+        )
         Spacer(modifier = Modifier.height(32.dp))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(32.dp))

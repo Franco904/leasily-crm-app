@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BarChart
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,7 +45,7 @@ fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
     val context = LocalContext.current
     val rowColors = customColorsV2
 
-    var rowsWithColors by remember { mutableStateOf(persistentMapOf<Bars.Data, Color>()) }
+    var rowsWithColors by remember { mutableStateOf(persistentMapOf<String, Color>()) }
 
     val rows = remember(generatedLeadsPerTenantSegmentPerMonth) {
         val rows = generatedLeadsPerTenantSegmentPerMonth.entries
@@ -54,11 +53,12 @@ fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
+                        .lowercase()
                         .capitalizeFirst(),
                     values = tenantSegmentToLeadsCount.entries
                         .mapIndexed { i, (tenantSegmentName, leadsCount) ->
                             val rowColor = rowsWithColors.entries
-                                .find { it.key.label == tenantSegmentName }
+                                .find { it.key == tenantSegmentName }
                                 ?.value
                                 ?: rowColors[i % rowColors.size]
 
@@ -71,7 +71,9 @@ fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
                                 ),
                             )
 
-                            if (outerIndex == 0) rowsWithColors = rowsWithColors.put(row, rowColor)
+                            if (outerIndex == 0) {
+                                rowsWithColors = rowsWithColors.put(row.label!!, rowColor)
+                            }
                             row
                         }
                         .toPersistentList()
@@ -118,12 +120,10 @@ fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_segment_metric_description),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider()
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             if (rows.isEmpty()) {
                 CrmMetricChartEmptySection(
                     icon = Icons.Outlined.BarChart,

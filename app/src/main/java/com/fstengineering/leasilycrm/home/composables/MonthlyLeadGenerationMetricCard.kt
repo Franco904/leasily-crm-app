@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BarChart
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,6 +49,7 @@ fun MonthlyLeadGenerationMetricCard(
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
+                        .lowercase()
                         .capitalizeFirst(),
                     values = persistentListOf(
                         Bars.Data(
@@ -82,12 +82,10 @@ fun MonthlyLeadGenerationMetricCard(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = stringResource(R.string.dashboard_monthly_lead_generation_metric_description),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            HorizontalDivider()
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             if (rows.isEmpty()) {
                 CrmMetricChartEmptySection(
                     icon = Icons.Outlined.BarChart,

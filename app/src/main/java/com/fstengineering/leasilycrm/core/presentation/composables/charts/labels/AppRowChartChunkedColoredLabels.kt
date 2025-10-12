@@ -12,16 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
-import ir.ehsannarmani.compose_charts.models.Bars
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun AppRowChartChunkedColoredLabels(
-    rowsChunked: ImmutableList<ImmutableList<Map.Entry<Bars.Data, Color>>>,
+    rowsChunked: ImmutableList<ImmutableList<Map.Entry<String, Color>>>,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -38,13 +35,10 @@ fun AppRowChartChunkedColoredLabels(
                     else Modifier
                 )
         ) {
-            rowsChunked[0].forEach { (row, color) ->
+            rowsChunked[0].forEach { (label, color) ->
                 ColoredLabel(
                     color = color,
-                    label = when {
-                        row.label == null -> stringResource(R.string.unknown_text)
-                        else -> row.label!!
-                    },
+                    label = label,
                     mustEllipsizeText = false,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -57,13 +51,10 @@ fun AppRowChartChunkedColoredLabels(
                     .weight(1f)
                     .widthIn(max = 360.dp)
             ) {
-                rowsChunked[1].forEach { (row, color) ->
+                rowsChunked[1].forEach { (label, color) ->
                     ColoredLabel(
                         color = color,
-                        label = when {
-                            row.label == null -> stringResource(R.string.unknown_text)
-                            else -> row.label!!
-                        },
+                        label = label,
                         mustEllipsizeText = false,
                     )
                     Spacer(modifier = Modifier.height(16.dp))

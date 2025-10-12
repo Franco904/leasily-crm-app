@@ -70,7 +70,7 @@ fun AppRowChart(
             ),
         ),
         animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
+            dampingRatio = Spring.DampingRatioNoBouncy,
             stiffness = Spring.StiffnessLow,
         ),
         modifier = modifier
