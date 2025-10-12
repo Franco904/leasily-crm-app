@@ -203,6 +203,7 @@ fun HomeScreen(
             ) {
                 composable<Destinations.Home.Dashboard> {
                     DashboardPage(
+                        viewModel = koinViewModel(),
                         onPropertiesSelect = onPropertiesSelect,
                         onPropertyOwnersSelect = onPropertyOwnersSelect,
                         onCustomerSegmentsSelect = onCustomerSegmentsSelect,

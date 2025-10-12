@@ -30,7 +30,11 @@ android {
 
         buildConfigField("String", "REMOTE_API_URL", project.property("REMOTE_API_URL") as String)
         buildConfigField("String", "CLIENT_ID", project.property("CLIENT_ID") as String)
-        buildConfigField("String", "SESSION_COOKIE_NAME", project.property("SESSION_COOKIE_NAME") as String)
+        buildConfigField(
+            "String",
+            "SESSION_COOKIE_NAME",
+            project.property("SESSION_COOKIE_NAME") as String
+        )
     }
 
     signingConfigs {
@@ -123,6 +127,9 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+
+    // Charts
+    implementation(libs.compose.charts)
 
     // Material Design
     implementation(libs.androidx.material3)

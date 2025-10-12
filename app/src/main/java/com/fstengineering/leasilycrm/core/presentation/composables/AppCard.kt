@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.presentation.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -23,6 +24,7 @@ fun AppCard(
 
     val borderStroke = when {
         isSelected -> BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+        isSystemInDarkTheme() -> BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         else -> null
     }
 
@@ -53,7 +55,11 @@ fun AppCard(
         ElevatedCard(
             elevation = CardDefaults.elevatedCardElevation(2.dp),
             shape = MaterialTheme.shapes.medium,
-            modifier = boxModifier.then(modifier)
+            modifier = boxModifier
+                .then(
+                    if (borderStroke != null) Modifier.border(borderStroke, shape)
+                    else Modifier
+                )
         ) {
             content()
         }

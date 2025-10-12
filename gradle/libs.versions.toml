@@ -3,6 +3,7 @@
 activityCompose = "1.10.1"
 coil = "2.7.0"
 composeBom = "2025.07.00"
+composeCharts = "0.2.0"
 coreKtx = "1.16.0"
 credentials = "1.5.0"
 datastorePreferences = "1.1.7"
@@ -48,6 +49,7 @@ androidx-datastore = { group = "androidx.datastore", name = "datastore-preferenc
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+compose-charts = { group = "io.github.ehsannarmani", name = "compose-charts", version.ref = "composeCharts" }
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 koin-android = { group = "io.insert-koin", name = "koin-android" }
 koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose" }

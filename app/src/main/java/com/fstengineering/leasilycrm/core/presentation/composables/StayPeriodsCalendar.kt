@@ -52,19 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
-import com.fstengineering.leasilycrm.core.application.theme.amber
-import com.fstengineering.leasilycrm.core.application.theme.blueGrey
-import com.fstengineering.leasilycrm.core.application.theme.brown
-import com.fstengineering.leasilycrm.core.application.theme.cyan
-import com.fstengineering.leasilycrm.core.application.theme.deepOrange
-import com.fstengineering.leasilycrm.core.application.theme.grey
-import com.fstengineering.leasilycrm.core.application.theme.indigo
-import com.fstengineering.leasilycrm.core.application.theme.lightBlue
-import com.fstengineering.leasilycrm.core.application.theme.lime
-import com.fstengineering.leasilycrm.core.application.theme.orange
-import com.fstengineering.leasilycrm.core.application.theme.pink
-import com.fstengineering.leasilycrm.core.application.theme.purple
-import com.fstengineering.leasilycrm.core.application.theme.teal
+import com.fstengineering.leasilycrm.core.application.theme.customColors
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
@@ -78,23 +66,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import java.time.LocalDate
-
-val stayPeriodColors
-    @Composable get() = listOf(
-        cyan,
-        deepOrange,
-        purple,
-        lime,
-        pink,
-        indigo,
-        teal,
-        brown,
-        lightBlue,
-        orange,
-        blueGrey,
-        amber,
-        grey,
-    )
 
 @Composable
 fun StayPeriodsCalendar(
@@ -444,12 +415,12 @@ fun StayDateCircle(
 ) {
     val firstHalfStayPeriodColor = firstHalfPeriodIndex?.let {
         if (it == UNAVAILABLE_PERIOD_INDEX) return@let MaterialTheme.colorScheme.outlineVariant
-        singleStayPeriodColor ?: stayPeriodColors[it % stayPeriodColors.size]
+        singleStayPeriodColor ?: customColors[it % customColors.size]
     }
 
     val secondHalfStayPeriodColor = secondHalfPeriodIndex?.let {
         if (it == UNAVAILABLE_PERIOD_INDEX) return@let MaterialTheme.colorScheme.outlineVariant
-        singleStayPeriodColor ?: stayPeriodColors[it % stayPeriodColors.size]
+        singleStayPeriodColor ?: customColors[it % customColors.size]
     }
 
     Box(

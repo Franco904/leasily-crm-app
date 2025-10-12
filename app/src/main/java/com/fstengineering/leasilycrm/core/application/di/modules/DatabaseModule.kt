@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.Assista
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceInteractionDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceSearchedNeighborhoodDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceSentPropertyCrossRefDao
+import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CrmMetricsDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CustomerSegmentDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CustomerSegmentTypeDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyCharacteristicDao
@@ -38,6 +39,7 @@ val databaseModule = module {
         get<AppDatabase>().assistanceSearchedNeighborhoodDao()
     }
     single<AssistanceSentPropertyCrossRefDao> { get<AppDatabase>().assistanceSentPropertyCrossRefDao() }
+    single<CrmMetricsDao> { get<AppDatabase>().crmMetricsDao() }
     single<CustomerSegmentDao> { get<AppDatabase>().customerSegmentDao() }
     single<CustomerSegmentTypeDao> { get<AppDatabase>().customerSegmentTypeDao() }
     single<PropertyDao> { get<AppDatabase>().propertyDao() }

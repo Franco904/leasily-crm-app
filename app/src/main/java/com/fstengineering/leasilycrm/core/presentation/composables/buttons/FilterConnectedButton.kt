@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.presentation.composables.buttons
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -65,6 +66,7 @@ fun FilterConnectedButton(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .padding(vertical = 8.dp, horizontal = 24.dp)
         ) {

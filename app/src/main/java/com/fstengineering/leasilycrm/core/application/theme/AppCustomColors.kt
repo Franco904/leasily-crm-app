@@ -22,10 +22,10 @@ val deepOrange
         darkColor = Color(0xFFD84315),
     )
 
-val purple
+val deepPurple
     @Composable get() = customColor(
-        lightColor = Color(0xFFE1BEE7),
-        darkColor = Color(0xFF6A1B9A),
+        lightColor = Color(0xFFD1C4E9),
+        darkColor = Color(0xFF4527A0),
     )
 
 val lime
@@ -84,6 +84,74 @@ val amber
 
 val grey
     @Composable get() = customColor(
-        lightColor = Color(0xFFEEEEEE),
-        darkColor = Color(0xFF424242),
+        lightColor = Color(0xFFBDBDBD),
+        darkColor = Color(0xFF9E9E9E),
+    )
+
+val customColors
+    @Composable get() = listOf(
+        cyan,
+        deepOrange,
+        deepPurple,
+        lime,
+        pink,
+        indigo,
+        teal,
+        brown,
+        lightBlue,
+        orange,
+        blueGrey,
+        amber,
+        grey,
+    )
+
+val customColorsV2
+    @Composable get() = listOf(
+        amber,
+        teal,
+        lightBlue,
+        grey,
+        pink,
+        brown,
+        indigo,
+        orange,
+        lime,
+        cyan,
+        deepOrange,
+        deepPurple,
+        blueGrey,
+    )
+
+val customColorsV3
+    @Composable get() = listOf(
+        deepOrange,
+        lime,
+        cyan,
+        brown,
+        blueGrey,
+        indigo,
+        lightBlue,
+        orange,
+        teal,
+        deepPurple,
+        amber,
+        grey,
+        pink,
+    )
+
+val customColorsV4
+    @Composable get() = listOf(
+        cyan,
+        lime,
+        pink,
+        brown,
+        deepOrange,
+        teal,
+        blueGrey,
+        amber,
+        deepPurple,
+        grey,
+        indigo,
+        lightBlue,
+        orange,
     )
