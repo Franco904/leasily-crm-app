@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.home.composables
+package com.fstengineering.leasilycrm.home.dashboard.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.theme.customColorsV2
+import com.fstengineering.leasilycrm.core.application.theme.customColorsV3
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart
@@ -38,33 +38,33 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlin.math.roundToInt
 
 @Composable
-fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
-    generatedLeadsPerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
+fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
+    newStayBookingsPerPropertyOwnerSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val rowColors = customColorsV2
+    val rowColors = customColorsV3
 
     var rowsWithColors by remember { mutableStateOf(persistentMapOf<String, Color>()) }
 
-    val rows = remember(generatedLeadsPerTenantSegmentPerMonth) {
-        val rows = generatedLeadsPerTenantSegmentPerMonth.entries
-            .mapIndexed { outerIndex, (monthYear, tenantSegmentToLeadsCount) ->
+    val rows = remember(newStayBookingsPerPropertyOwnerSegmentPerMonth) {
+        val rows = newStayBookingsPerPropertyOwnerSegmentPerMonth.entries
+            .mapIndexed { outerIndex, (monthYear, propertyOwnerSegmentToBookingsCount) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
                         .lowercase()
                         .capitalizeFirst(),
-                    values = tenantSegmentToLeadsCount.entries
-                        .mapIndexed { i, (tenantSegmentName, leadsCount) ->
+                    values = propertyOwnerSegmentToBookingsCount.entries
+                        .mapIndexed { i, (propertyOwnerSegmentName, bookingsCount) ->
                             val rowColor = rowsWithColors.entries
-                                .find { it.key == tenantSegmentName }
+                                .find { it.key == propertyOwnerSegmentName }
                                 ?.value
                                 ?: rowColors[i % rowColors.size]
 
                             val row = Bars.Data(
-                                label = tenantSegmentName,
-                                value = leadsCount.toDouble(),
+                                label = propertyOwnerSegmentName,
+                                value = bookingsCount.toDouble(),
                                 color = Brush.linearGradient(
                                     0.0f to rowColor,
                                     1.0f to rowColor,
@@ -114,12 +114,12 @@ fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_segment_metric_title),
+                text = stringResource(R.string.dashboard_monthly_new_bookings_per_property_owner_segment_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_segment_metric_description),
+                text = stringResource(R.string.dashboard_monthly_new_bookings_per_property_owner_segment_metric_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

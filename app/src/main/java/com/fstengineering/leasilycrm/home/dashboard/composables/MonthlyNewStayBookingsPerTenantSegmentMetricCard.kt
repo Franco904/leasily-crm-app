@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.home.composables
+package com.fstengineering.leasilycrm.home.dashboard.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.theme.customColorsV3
+import com.fstengineering.leasilycrm.core.application.theme.customColorsV2
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart
@@ -38,32 +38,32 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlin.math.roundToInt
 
 @Composable
-fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
-    newStayBookingsPerPropertyOwnerSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
+fun MonthlyNewStayBookingsPerTenantSegmentMetricCard(
+    newStayBookingsPerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val rowColors = customColorsV3
+    val rowColors = customColorsV2
 
     var rowsWithColors by remember { mutableStateOf(persistentMapOf<String, Color>()) }
 
-    val rows = remember(newStayBookingsPerPropertyOwnerSegmentPerMonth) {
-        val rows = newStayBookingsPerPropertyOwnerSegmentPerMonth.entries
-            .mapIndexed { outerIndex, (monthYear, propertyOwnerSegmentToBookingsCount) ->
+    val rows = remember(newStayBookingsPerTenantSegmentPerMonth) {
+        val rows = newStayBookingsPerTenantSegmentPerMonth.entries
+            .mapIndexed { outerIndex, (monthYear, tenantSegmentToBookingsCount) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
                         .lowercase()
                         .capitalizeFirst(),
-                    values = propertyOwnerSegmentToBookingsCount.entries
-                        .mapIndexed { i, (propertyOwnerSegmentName, bookingsCount) ->
+                    values = tenantSegmentToBookingsCount.entries
+                        .mapIndexed { i, (tenantSegmentName, bookingsCount) ->
                             val rowColor = rowsWithColors.entries
-                                .find { it.key == propertyOwnerSegmentName }
+                                .find { it.key == tenantSegmentName }
                                 ?.value
                                 ?: rowColors[i % rowColors.size]
 
                             val row = Bars.Data(
-                                label = propertyOwnerSegmentName,
+                                label = tenantSegmentName,
                                 value = bookingsCount.toDouble(),
                                 color = Brush.linearGradient(
                                     0.0f to rowColor,
@@ -114,12 +114,12 @@ fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_new_bookings_per_property_owner_segment_metric_title),
+                text = stringResource(R.string.dashboard_monthly_new_bookings_per_tenant_segment_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.dashboard_monthly_new_bookings_per_property_owner_segment_metric_description),
+                text = stringResource(R.string.dashboard_monthly_new_bookings_per_tenant_segment_metric_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

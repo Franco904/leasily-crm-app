@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.home.composables
+package com.fstengineering.leasilycrm.home.dashboard.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

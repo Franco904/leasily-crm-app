@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.home.composables
+package com.fstengineering.leasilycrm.home.dashboard.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,8 +38,8 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlin.math.roundToInt
 
 @Composable
-fun MonthlyNewStayBookingsPerTenantSegmentMetricCard(
-    newStayBookingsPerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
+fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
+    generatedLeadsPerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -47,16 +47,16 @@ fun MonthlyNewStayBookingsPerTenantSegmentMetricCard(
 
     var rowsWithColors by remember { mutableStateOf(persistentMapOf<String, Color>()) }
 
-    val rows = remember(newStayBookingsPerTenantSegmentPerMonth) {
-        val rows = newStayBookingsPerTenantSegmentPerMonth.entries
-            .mapIndexed { outerIndex, (monthYear, tenantSegmentToBookingsCount) ->
+    val rows = remember(generatedLeadsPerTenantSegmentPerMonth) {
+        val rows = generatedLeadsPerTenantSegmentPerMonth.entries
+            .mapIndexed { outerIndex, (monthYear, tenantSegmentToLeadsCount) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
                         .lowercase()
                         .capitalizeFirst(),
-                    values = tenantSegmentToBookingsCount.entries
-                        .mapIndexed { i, (tenantSegmentName, bookingsCount) ->
+                    values = tenantSegmentToLeadsCount.entries
+                        .mapIndexed { i, (tenantSegmentName, leadsCount) ->
                             val rowColor = rowsWithColors.entries
                                 .find { it.key == tenantSegmentName }
                                 ?.value
@@ -64,7 +64,7 @@ fun MonthlyNewStayBookingsPerTenantSegmentMetricCard(
 
                             val row = Bars.Data(
                                 label = tenantSegmentName,
-                                value = bookingsCount.toDouble(),
+                                value = leadsCount.toDouble(),
                                 color = Brush.linearGradient(
                                     0.0f to rowColor,
                                     1.0f to rowColor,
@@ -114,12 +114,12 @@ fun MonthlyNewStayBookingsPerTenantSegmentMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_new_bookings_per_tenant_segment_metric_title),
+                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_segment_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.dashboard_monthly_new_bookings_per_tenant_segment_metric_description),
+                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_segment_metric_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
