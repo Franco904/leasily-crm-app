@@ -39,6 +39,10 @@ fun Context.getMonthLabelByNumber(monthNumber: Int): String {
     return getString(months[monthNumber] ?: R.string.january_label)
 }
 
+fun Context.getMonthLabelAbbreviationByNumber(monthNumber: Int): String {
+    return getString(months[monthNumber] ?: R.string.january_label).substring(0..2)
+}
+
 fun getMonthTimestamp(month: Int, year: Int): Long {
     val calendar = Calendar.getInstance()
     calendar.set(year, month - 1, 1)

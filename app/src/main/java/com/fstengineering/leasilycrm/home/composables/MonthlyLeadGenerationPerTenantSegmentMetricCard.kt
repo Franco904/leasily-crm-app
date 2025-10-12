@@ -29,7 +29,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.labels.AppRowChartChunkedColoredLabels
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
-import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
+import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelAbbreviationByNumber
 import ir.ehsannarmani.compose_charts.models.Bars
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
@@ -53,7 +53,7 @@ fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
             .mapIndexed { outerIndex, (monthYear, tenantSegmentToLeadsCount) ->
                 Bars(
                     label = context
-                        .getMonthLabelByNumber(monthNumber = monthYear.month)
+                        .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
                         .capitalizeFirst(),
                     values = tenantSegmentToLeadsCount.entries
                         .mapIndexed { i, (tenantSegmentName, leadsCount) ->
