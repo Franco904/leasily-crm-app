@@ -26,6 +26,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.home.composables.HomeNavCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.LeadContactChannelsDistributionPieChartCard
+import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyAverageTicketMetricCard
+import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyCommissionInvoiceMetricCard
+import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyCommissionInvoicePerPropertyOwnerSegmentMetricCard
+import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyCommissionInvoicePerTenantSegmentMetricCard
+import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyCommissionInvoicePerTop3NeighborhoodsMetricCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyLeadGenerationMetricCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyLeadGenerationPerTenantSegmentMetricCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyNewStayBookingsMetricCard
@@ -53,6 +58,13 @@ fun DashboardPage(
     val newStayBookingsPerTenantSegmentPerMonth by viewModel.newStayBookingsPerTenantSegmentPerMonth.collectAsStateWithLifecycle()
     val newStayBookingsPerPropertyOwnerSegmentPerMonth by viewModel.newStayBookingsPerPropertyOwnerSegmentPerMonth.collectAsStateWithLifecycle()
     val newStayBookingsPerTop3NeighborhoodsPerMonth by viewModel.newStayBookingsPerTop3NeighborhoodsPerMonth.collectAsStateWithLifecycle()
+
+    // Commission invoice CRM metrics
+    val commissionInvoicePerMonth by viewModel.commissionInvoicePerMonth.collectAsStateWithLifecycle()
+    val commissionInvoicePerTenantSegmentPerMonth by viewModel.commissionInvoicePerTenantSegmentPerMonth.collectAsStateWithLifecycle()
+    val commissionInvoicePerPropertyOwnerSegmentPerMonth by viewModel.commissionInvoicePerPropertyOwnerSegmentPerMonth.collectAsStateWithLifecycle()
+    val commissionInvoicePerTop3NeighborhoodsPerMonth by viewModel.commissionInvoicePerTop3NeighborhoodsPerMonth.collectAsStateWithLifecycle()
+    val averageTicketPerMonth by viewModel.averageTicketPerMonth.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.init()
@@ -140,10 +152,30 @@ fun DashboardPage(
         HorizontalDivider()
         Spacer(modifier = Modifier.height(32.dp))
         Text(
-            text = stringResource(R.string.dashboard_invoicing_group_title),
+            text = stringResource(R.string.dashboard_commission_invoice_group_title),
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
             color = MaterialTheme.colorScheme.primary,
         )
         Spacer(modifier = Modifier.height(16.dp))
+        MonthlyCommissionInvoiceMetricCard(
+            commissionInvoicePerMonth = commissionInvoicePerMonth,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        MonthlyCommissionInvoicePerTenantSegmentMetricCard(
+            commissionInvoicePerTenantSegmentPerMonth = commissionInvoicePerTenantSegmentPerMonth,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        MonthlyCommissionInvoicePerPropertyOwnerSegmentMetricCard(
+            commissionInvoicePerPropertyOwnerSegmentPerMonth = commissionInvoicePerPropertyOwnerSegmentPerMonth,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        MonthlyCommissionInvoicePerTop3NeighborhoodsMetricCard(
+            commissionInvoicePerTop3NeighborhoodsPerMonth = commissionInvoicePerTop3NeighborhoodsPerMonth,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        MonthlyAverageTicketMetricCard(
+            averageTicketPerMonth = averageTicketPerMonth,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }

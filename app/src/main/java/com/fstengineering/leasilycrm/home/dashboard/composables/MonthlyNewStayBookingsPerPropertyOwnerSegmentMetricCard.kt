@@ -10,14 +10,10 @@ import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -32,9 +28,10 @@ import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelAbbrev
 import ir.ehsannarmani.compose_charts.models.Bars
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
+import kotlinx.collections.immutable.toPersistentSet
 import kotlin.math.roundToInt
 
 @Composable
@@ -45,11 +42,23 @@ fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
     val context = LocalContext.current
     val rowColors = customColorsV3
 
-    var rowsWithColors by remember { mutableStateOf(persistentMapOf<String, Color>()) }
+    val propertyOwnerSegments = remember(newStayBookingsPerPropertyOwnerSegmentPerMonth) {
+        newStayBookingsPerPropertyOwnerSegmentPerMonth.entries
+            .map { it.value.entries.map { propertyOwnerSegmentToCount -> propertyOwnerSegmentToCount.key } }
+            .flatten()
+            .toPersistentSet()
+    }
+
+    val propertyOwnerSegmentsToColors = propertyOwnerSegments
+        .associateWith { propertyOwnerSegment ->
+            val i = propertyOwnerSegments.indexOf(propertyOwnerSegment)
+            rowColors[i % rowColors.size]
+        }
+        .toPersistentMap()
 
     val rows = remember(newStayBookingsPerPropertyOwnerSegmentPerMonth) {
         val rows = newStayBookingsPerPropertyOwnerSegmentPerMonth.entries
-            .mapIndexed { outerIndex, (monthYear, propertyOwnerSegmentToBookingsCount) ->
+            .map { (monthYear, propertyOwnerSegmentToBookingsCount) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
@@ -57,12 +66,12 @@ fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
                         .capitalizeFirst(),
                     values = propertyOwnerSegmentToBookingsCount.entries
                         .mapIndexed { i, (propertyOwnerSegmentName, bookingsCount) ->
-                            val rowColor = rowsWithColors.entries
+                            val rowColor = propertyOwnerSegmentsToColors.entries
                                 .find { it.key == propertyOwnerSegmentName }
                                 ?.value
                                 ?: rowColors[i % rowColors.size]
 
-                            val row = Bars.Data(
+                            Bars.Data(
                                 label = propertyOwnerSegmentName,
                                 value = bookingsCount.toDouble(),
                                 color = Brush.linearGradient(
@@ -70,11 +79,6 @@ fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
                                     1.0f to rowColor,
                                 ),
                             )
-
-                            if (outerIndex == 0) {
-                                rowsWithColors = rowsWithColors.put(row.label!!, rowColor)
-                            }
-                            row
                         }
                         .toPersistentList()
                 )
@@ -84,21 +88,21 @@ fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
         rows
     }
 
-    val rowsWithColorsChunked = remember(rowsWithColors) {
+    val propertyOwnerSegmentsToColorsChunked = remember(propertyOwnerSegmentsToColors) {
         when {
-            rowsWithColors.entries.isEmpty() -> {
+            propertyOwnerSegmentsToColors.entries.isEmpty() -> {
                 persistentListOf(persistentListOf(), persistentListOf())
             }
 
-            rowsWithColors.entries.size == 1 -> {
-                val first = rowsWithColors.entries.first()
+            propertyOwnerSegmentsToColors.entries.size == 1 -> {
+                val first = propertyOwnerSegmentsToColors.entries.first()
                 persistentListOf(persistentListOf(first), persistentListOf())
             }
 
             else -> {
-                rowsWithColors
+                propertyOwnerSegmentsToColors
                     .entries
-                    .chunked((rowsWithColors.entries.size.toDouble() / 2).roundToInt())
+                    .chunked((propertyOwnerSegmentsToColors.entries.size.toDouble() / 2).roundToInt())
                     .map { it.toImmutableList() }
                     .toImmutableList()
             }
@@ -134,17 +138,17 @@ fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
             } else {
                 AppRowChart(
                     rows = rows,
-                    rowThickness = (16.0 / (rowsWithColors.size.toDouble() / 2.5))
+                    rowThickness = (16.0 / (propertyOwnerSegmentsToColors.size.toDouble() / 2.5))
                         .coerceIn(16.0..28.0).dp,
-                    height = (520.0 + (12.0 * rows.size.toDouble() * rowsWithColors.size.toDouble()))
+                    height = (520.0 + (12.0 * rows.size.toDouble() * propertyOwnerSegmentsToColors.size.toDouble()))
                         .coerceAtLeast(520.0).dp,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                 )
             }
-            if (rowsWithColorsChunked.isNotEmpty()) {
+            if (propertyOwnerSegmentsToColorsChunked.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(32.dp))
-                AppRowChartChunkedColoredLabels(rowsChunked = rowsWithColorsChunked)
+                AppRowChartChunkedColoredLabels(rowsChunked = propertyOwnerSegmentsToColorsChunked)
             }
         }
     }

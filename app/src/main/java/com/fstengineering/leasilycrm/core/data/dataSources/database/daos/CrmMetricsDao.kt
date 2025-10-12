@@ -2,6 +2,10 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.AverageTicketPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerCustomerSegmentPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerTop3NeighborhoodsPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerTenantSegmentPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.LeadContactChannelCountCompound
@@ -156,6 +160,111 @@ interface CrmMetricsDao {
             Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>
 
     /*
-     * Invoicing
+     * Commission invoice
      */
+    @Query(
+        """
+        SELECT
+            strftime('%m-%Y', datetime(create_date_time / 1000, 'unixepoch')) AS month_year,
+            SUM(commission) AS commission_invoice
+        FROM stays
+        WHERE user_id = :userId
+            AND is_deleted = 0
+            AND is_from_other_realtor = 0
+            AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
+            AND commission IS NOT NULL
+        GROUP BY month_year
+    """
+    )
+    fun watchCommissionInvoicePerMonth(userId: Long): Flow<List<CommissionInvoicePerMonthCompound>>
+
+    @Query(
+        """
+        SELECT
+            strftime('%m-%Y', datetime(s.create_date_time / 1000, 'unixepoch')) AS month_year,
+            cs.name AS customer_segment_name,
+            SUM(commission) AS commission_invoice
+        FROM stays s
+        INNER JOIN tenants t
+            ON s.tenant_id = t.id
+            AND t.is_deleted = 0
+        INNER JOIN customer_segments cs
+            ON t.customer_segment_id = cs.id
+            AND cs.customer_segment_type_id = 1
+            AND cs.is_deleted = 0
+        WHERE s.user_id = :userId
+            AND s.is_deleted = 0
+            AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
+            AND commission IS NOT NULL
+        GROUP BY month_year, cs.id
+    """
+    )
+    fun watchCommissionInvoicePerTenantSegmentPerMonth(userId: Long):
+            Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>
+
+    @Query(
+        """
+        SELECT
+            strftime('%m-%Y', datetime(s.create_date_time / 1000, 'unixepoch')) AS month_year,
+            cs.name AS customer_segment_name,
+            SUM(commission) AS commission_invoice
+        FROM stays s
+        INNER JOIN properties p
+            ON s.property_id = p.id
+            AND p.is_deleted = 0
+        INNER JOIN property_owners po
+            ON p.property_owner_id = po.id
+            AND po.is_deleted = 0
+        INNER JOIN customer_segments cs
+            ON po.customer_segment_id = cs.id
+            AND cs.customer_segment_type_id = 2
+            AND cs.is_deleted = 0
+        WHERE s.user_id = :userId
+            AND s.is_deleted = 0
+            AND s.is_from_other_realtor = 0
+            AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
+            AND commission IS NOT NULL
+        GROUP BY month_year, cs.id
+    """
+    )
+    fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(userId: Long):
+            Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>
+
+    @Query(
+        """
+        SELECT
+            strftime('%m-%Y', datetime(s.create_date_time / 1000, 'unixepoch')) AS month_year,
+            p.neighborhood AS property_neighborhood,
+            SUM(commission) AS commission_invoice
+        FROM stays s
+        INNER JOIN properties p
+            ON s.property_id = p.id
+            AND p.is_deleted = 0
+        WHERE s.user_id = :userId
+            AND s.is_deleted = 0
+            AND s.is_from_other_realtor = 0
+            AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
+            AND commission IS NOT NULL
+        GROUP BY month_year, p.neighborhood
+        ORDER BY commission_invoice DESC
+    """
+    )
+    fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(userId: Long):
+            Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>
+
+    @Query(
+        """
+        SELECT
+            strftime('%m-%Y', datetime(create_date_time / 1000, 'unixepoch')) AS month_year,
+            ROUND(SUM(commission) * 1.0 / COUNT(*), 2) AS average_ticket
+        FROM stays
+        WHERE user_id = :userId
+            AND is_deleted = 0
+            AND is_from_other_realtor = 0
+            AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
+            AND commission IS NOT NULL
+        GROUP BY month_year
+    """
+    )
+    fun watchAverageTicketPerMonth(userId: Long): Flow<List<AverageTicketPerMonthCompound>>
 }

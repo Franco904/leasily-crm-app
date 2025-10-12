@@ -10,14 +10,10 @@ import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -32,7 +28,6 @@ import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelAbbrev
 import ir.ehsannarmani.compose_charts.models.Bars
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
@@ -49,7 +44,7 @@ fun MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
 
     val neighborhoods = remember(newStayBookingsPerTop3NeighborhoodsPerMonth) {
         newStayBookingsPerTop3NeighborhoodsPerMonth.entries
-            .map { it.value.entries.map { neighborhoodToCount -> neighborhoodToCount.key } }
+            .map { it.value.entries.map { neighborhoodToInvoice -> neighborhoodToInvoice.key } }
             .flatten()
             .toPersistentSet()
     }
@@ -61,11 +56,9 @@ fun MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
         }
         .toPersistentMap()
 
-    var rowsWithColors by remember { mutableStateOf(persistentMapOf<Bars.Data, Color>()) }
-
     val rows = remember(newStayBookingsPerTop3NeighborhoodsPerMonth) {
         val rows = newStayBookingsPerTop3NeighborhoodsPerMonth.entries
-            .mapIndexed { outerIndex, (monthYear, neighborhoodToBookingsCount) ->
+            .map { (monthYear, neighborhoodToBookingsCount) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
@@ -78,7 +71,7 @@ fun MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
                                 ?.value
                                 ?: rowColors[i % rowColors.size]
 
-                            val row = Bars.Data(
+                            Bars.Data(
                                 label = neighborhoodName,
                                 value = bookingsCount.toDouble(),
                                 color = Brush.linearGradient(
@@ -86,9 +79,6 @@ fun MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
                                     1.0f to rowColor,
                                 ),
                             )
-
-                            if (outerIndex == 0) rowsWithColors = rowsWithColors.put(row, rowColor)
-                            row
                         }
                         .toPersistentList()
                 )
@@ -148,9 +138,9 @@ fun MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
             } else {
                 AppRowChart(
                     rows = rows,
-                    rowThickness = (16.0 / (rowsWithColors.size.toDouble() / 2.5))
+                    rowThickness = (16.0 / (neighborhoodsToColors.size.toDouble() / 2.5))
                         .coerceIn(16.0..28.0).dp,
-                    height = (520.0 + (12.0 * rows.size.toDouble() * rowsWithColors.size.toDouble()))
+                    height = (520.0 + (12.0 * rows.size.toDouble() * neighborhoodsToColors.size.toDouble()))
                         .coerceAtLeast(520.0).dp,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
