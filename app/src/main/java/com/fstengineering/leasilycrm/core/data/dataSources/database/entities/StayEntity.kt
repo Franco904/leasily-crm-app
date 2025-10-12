@@ -38,13 +38,13 @@ data class StayEntity(
     @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
     @ColumnInfo(name = "is_from_other_realtor") val isFromOtherRealtor: Boolean,
     @ColumnInfo(name = "qt_guests") val qtGuests: Int? = null,
-    @ColumnInfo(name = "total_price") val totalPrice: BigDecimal? = null,
     @ColumnInfo(name = "check_in_date_time") val checkInDateTime: LocalDateTime,
     @ColumnInfo(name = "check_out_date_time") val checkOutDateTime: LocalDateTime,
     @ColumnInfo(name = "is_auto_check_in") val isAutoCheckIn: Boolean = false,
     @ColumnInfo(name = "is_auto_check_out") val isAutoCheckOut: Boolean = false,
     @ColumnInfo(name = "is_check_in_done") val isCheckInDone: Boolean = false,
     @ColumnInfo(name = "is_check_out_done") val isCheckOutDone: Boolean = false,
+    @ColumnInfo(name = "total_price") val totalPrice: BigDecimal? = null,
     val commission: BigDecimal? = null,
     @ColumnInfo(name = "vehicle_make") val vehicleMake: String? = null,
     @ColumnInfo(name = "vehicle_color") val vehicleColor: String? = null,
@@ -61,7 +61,6 @@ data class StayEntity(
         updateDateTime = updateDateTime,
         isUnavailablePeriod = isFromOtherRealtor,
         qtGuests = qtGuests,
-        totalPrice = totalPrice,
         checkInDateTime = checkInDateTime,
         checkInHourMinute = checkInDateTime.hour to checkInDateTime.minute,
         checkOutDateTime = checkOutDateTime,
@@ -70,6 +69,7 @@ data class StayEntity(
         isAutoCheckOut = isAutoCheckOut,
         isCheckInDone = isCheckInDone,
         isCheckOutDone = isCheckOutDone,
+        totalPrice = totalPrice,
         commission = commission,
         vehicleMake = vehicleMake,
         vehicleColor = vehicleColor,
@@ -119,7 +119,7 @@ data class StayEntity(
             requireNotNull(checkInMinute) { "checkInMinute is required" }
             requireNotNull(checkOutHour) { "checkOutHour is required" }
             requireNotNull(checkOutMinute) { "checkOutMinute is required" }
-            requireNotNull(domain.totalPrice) { "Stay.totalPrice is required" }
+            requireNotNull(domain.commission) { "Stay.commission is required" }
             requireNotNull(domain.tenant?.id) { "Stay.tenant.id is required" }
 
             return StayEntity(

@@ -57,8 +57,8 @@ fun AppCard(
             shape = MaterialTheme.shapes.medium,
             modifier = boxModifier
                 .then(
-                    if (borderStroke != null) Modifier.border(borderStroke, shape)
-                    else Modifier
+                    if (borderStroke != null) modifier.border(borderStroke, shape)
+                    else modifier
                 )
         ) {
             content()

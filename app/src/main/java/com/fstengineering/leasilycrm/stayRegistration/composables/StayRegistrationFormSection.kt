@@ -70,6 +70,10 @@ import java.util.Calendar
 fun StayRegistrationFormSection(
     stayForm: Stay,
     onStayFormChange: (Stay) -> Unit,
+    totalPriceInput: String,
+    onTotalPriceChange: (String) -> Unit,
+    commissionInput: String,
+    onCommissionChange: (String) -> Unit,
     stayFormErrors: ImmutableMap<StayField, Int?>,
     transferForm: StayTransfer?,
     onTransferFormChange: (StayTransfer) -> Unit,
@@ -325,27 +329,27 @@ fun StayRegistrationFormSection(
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { HorizontalDivider() }
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item(key = StayField.TotalPrice) {
-            Box(
-                modifier = Modifier
-                    .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.TotalPrice))
-            ) {
-                StayTotalPriceFormField(
-                    totalPrice = stayForm.totalPrice,
-                    onTotalPriceChange = { onStayFormChange(stayForm.copy(totalPrice = it)) },
-                    error = stayFormErrors[StayField.TotalPrice],
-                    onDone = { commissionFieldFocusRequester.requestFocus() },
-                )
-            }
+        item {
+            StayTotalPriceFormField(
+                totalPrice = totalPriceInput,
+                onTotalPriceChange = onTotalPriceChange,
+                onDone = { commissionFieldFocusRequester.requestFocus() },
+            )
         }
         item { Spacer(modifier = Modifier.height(28.dp)) }
-        item {
-            StayCommissionFormField(
-                commission = stayForm.commission,
-                onCommissionChange = { onStayFormChange(stayForm.copy(commission = it)) },
-                fieldFocusRequester = commissionFieldFocusRequester,
-                onDone = { onLastTextFieldDone() },
-            )
+        item(key = StayField.Commission) {
+            Box(
+                modifier = Modifier
+                    .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Commission))
+            ) {
+                StayCommissionFormField(
+                    commission = commissionInput,
+                    onCommissionChange = onCommissionChange,
+                    error = stayFormErrors[StayField.Commission],
+                    fieldFocusRequester = commissionFieldFocusRequester,
+                    onDone = { onLastTextFieldDone() },
+                )
+            }
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {

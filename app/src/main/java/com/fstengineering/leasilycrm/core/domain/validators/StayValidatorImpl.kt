@@ -35,13 +35,13 @@ class StayValidatorImpl : StayValidator {
             validateTenant(tenant = stay.tenant)
                 .onError { e -> errors.add(e) }
 
-            validateTotalPrice(totalPrice = stay.totalPrice)
-                .onError { e -> errors.add(e) }
-
             validateCheckInTime(checkInHourMinute = stay.checkInHourMinute)
                 .onError { e -> errors.add(e) }
 
             validateCheckOutTime(checkOutHourMinute = stay.checkOutHourMinute)
+                .onError { e -> errors.add(e) }
+
+            validateCommission(commission = stay.commission)
                 .onError { e -> errors.add(e) }
         }
 
@@ -68,18 +68,6 @@ class StayValidatorImpl : StayValidator {
         return when {
             tenant == null -> {
                 AppResult.Error(ValidationError.StayTenant.IsNull)
-            }
-
-            else -> AppResult.Success(Unit)
-        }
-    }
-
-    private fun validateTotalPrice(
-        totalPrice: BigDecimal?,
-    ): AppResult<Unit, ValidationError.StayTotalPrice> {
-        return when {
-            totalPrice == null -> {
-                AppResult.Error(ValidationError.StayTotalPrice.IsNull)
             }
 
             else -> AppResult.Success(Unit)
@@ -136,6 +124,18 @@ class StayValidatorImpl : StayValidator {
         return when {
             checkOutHourMinute.toList().any { it == null } -> {
                 AppResult.Error(ValidationError.StayCheckOutTime.IsNull)
+            }
+
+            else -> AppResult.Success(Unit)
+        }
+    }
+
+    private fun validateCommission(
+        commission: BigDecimal?,
+    ): AppResult<Unit, ValidationError.StayCommission> {
+        return when {
+            commission == null -> {
+                AppResult.Error(ValidationError.StayCommission.IsNull)
             }
 
             else -> AppResult.Success(Unit)

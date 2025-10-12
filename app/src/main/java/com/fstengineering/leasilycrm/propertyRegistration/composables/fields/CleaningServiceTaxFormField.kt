@@ -6,23 +6,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.core.text.isDigitsOnly
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
-import java.math.BigDecimal
 
 @Composable
 fun CleaningServiceTaxFormField(
-    cleaningServiceTax: BigDecimal?,
-    onCleaningServiceTaxChange: (BigDecimal?) -> Unit,
+    cleaningServiceTax: String,
+    onCleaningServiceTaxChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FormTextField(
         label = stringResource(R.string.property_registration_cleaning_service_tax_label),
-        value = cleaningServiceTax?.toString() ?: "",
+        value = cleaningServiceTax,
         onValueChange = { cleaningServiceTaxInput ->
-            if (!cleaningServiceTaxInput.isDigitsOnly()) return@FormTextField
-            onCleaningServiceTaxChange(cleaningServiceTaxInput.toBigDecimalOrNull())
+            if (!cleaningServiceTaxInput.all { it.isDigit() || it == ',' || it == '.' }) return@FormTextField
+            if (cleaningServiceTaxInput.count { it == ',' || it == '.' } > 1) return@FormTextField
+
+            onCleaningServiceTaxChange(cleaningServiceTaxInput)
         },
         prefix = {
             Text(
@@ -31,7 +31,7 @@ fun CleaningServiceTaxFormField(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         },
-        keyboardType = KeyboardType.Number,
+        keyboardType = KeyboardType.Decimal,
         modifier = modifier
     )
 }

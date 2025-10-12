@@ -7,15 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.core.text.isDigitsOnly
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
-import java.math.BigDecimal
 
 @Composable
 fun StayTransferAmountFormField(
-    transferAmount: BigDecimal?,
-    onTransferAmountChange: (BigDecimal?) -> Unit,
+    transferAmount: String,
+    onTransferAmountChange: (String) -> Unit,
     error: Int?,
     fieldFocusRequester: FocusRequester,
     onDone: () -> Unit,
@@ -23,10 +21,12 @@ fun StayTransferAmountFormField(
 ) {
     FormTextField(
         label = stringResource(R.string.stay_registration_transfers_amount_label),
-        value = transferAmount?.toString() ?: "",
+        value = transferAmount,
         onValueChange = { transferAmountInput ->
-            if (!transferAmountInput.isDigitsOnly()) return@FormTextField
-            onTransferAmountChange(transferAmountInput.toBigDecimalOrNull())
+            if (!transferAmountInput.all { it.isDigit() || it == ',' || it == '.' }) return@FormTextField
+            if (transferAmountInput.count { it == ',' || it == '.' } > 1) return@FormTextField
+
+            onTransferAmountChange(transferAmountInput)
         },
         isInvalid = error != null,
         prefix = {
@@ -37,7 +37,7 @@ fun StayTransferAmountFormField(
             )
         },
         supportingText = stringResource(error ?: R.string.inline_required),
-        keyboardType = KeyboardType.Number,
+        keyboardType = KeyboardType.Decimal,
         fieldFocusRequester = fieldFocusRequester,
         onDone = { onDone() },
         modifier = modifier

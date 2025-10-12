@@ -6,23 +6,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.core.text.isDigitsOnly
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
-import java.math.BigDecimal
 
 @Composable
 fun MaxAcceptedNightlyRateFormField(
-    maxAcceptedNightlyRate: BigDecimal?,
-    onMaxAcceptedNightlyRateChange: (BigDecimal?) -> Unit,
+    maxAcceptedNightlyRate: String,
+    onMaxAcceptedNightlyRateChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FormTextField(
         label = stringResource(R.string.assistance_registration_max_accepted_nightly_rate_label),
-        value = maxAcceptedNightlyRate?.toString() ?: "",
+        value = maxAcceptedNightlyRate,
         onValueChange = { maxRateInput ->
-            if (!maxRateInput.isDigitsOnly()) return@FormTextField
-            onMaxAcceptedNightlyRateChange(maxRateInput.toBigDecimalOrNull())
+            if (!maxRateInput.all { it.isDigit() || it == ',' || it == '.' }) return@FormTextField
+            if (maxRateInput.count { it == ',' || it == '.' } > 1) return@FormTextField
+
+            onMaxAcceptedNightlyRateChange(maxRateInput)
         },
         prefix = {
             Text(
@@ -31,7 +31,7 @@ fun MaxAcceptedNightlyRateFormField(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         },
-        keyboardType = KeyboardType.Number,
+        keyboardType = KeyboardType.Decimal,
         modifier = modifier
     )
 }

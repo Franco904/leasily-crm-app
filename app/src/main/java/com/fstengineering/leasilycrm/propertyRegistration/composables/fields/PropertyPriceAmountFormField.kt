@@ -7,25 +7,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.core.text.isDigitsOnly
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
-import java.math.BigDecimal
 
 @Composable
 fun PropertyPriceAmountFormField(
-    priceAmount: BigDecimal?,
-    onPriceAmountChange: (BigDecimal?) -> Unit,
+    priceAmount: String,
+    onPriceAmountChange: (String) -> Unit,
     error: Int?,
     priceAmountFieldFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
     FormTextField(
         label = stringResource(R.string.property_registration_price_amount_label),
-        value = priceAmount?.toString() ?: "",
+        value = priceAmount,
         onValueChange = { priceAmountInput ->
-            if (!priceAmountInput.isDigitsOnly()) return@FormTextField
-            onPriceAmountChange(priceAmountInput.toBigDecimalOrNull())
+            if (!priceAmountInput.all { it.isDigit() || it == ',' || it == '.' }) return@FormTextField
+            if (priceAmountInput.count { it == ',' || it == '.' } > 1) return@FormTextField
+
+            onPriceAmountChange(priceAmountInput)
         },
         isInvalid = error != null,
         prefix = {
@@ -36,7 +36,7 @@ fun PropertyPriceAmountFormField(
             )
         },
         supportingText = stringResource(error ?: R.string.inline_required),
-        keyboardType = KeyboardType.Number,
+        keyboardType = KeyboardType.Decimal,
         fieldFocusRequester = priceAmountFieldFocusRequester,
         modifier = modifier
     )
