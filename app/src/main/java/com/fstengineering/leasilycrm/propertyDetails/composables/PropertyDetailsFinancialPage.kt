@@ -101,9 +101,8 @@ fun LazyListScope.pricesDetailsItems(
                 .sortedBy { it.startDate }
                 .groupBy { price ->
                     CalendarMonthYear(
-                        id = price.startDate!!.monthValue + price.startDate.year,
-                        month = price.startDate.monthValue,
-                        year = price.startDate.year,
+                        month = price.startDate?.monthValue ?: 0,
+                        year = price.startDate?.year ?: 0,
                     )
                 }
                 .toImmutableMap(),

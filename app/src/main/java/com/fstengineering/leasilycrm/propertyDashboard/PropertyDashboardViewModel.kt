@@ -103,7 +103,6 @@ class PropertyDashboardViewModel(
     ): Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>> {
         val now = now.date()
         val currentMonthYear = CalendarMonthYear(
-            id = now.monthValue + now.year,
             month = now.monthValue,
             year = now.year,
         )

@@ -3,9 +3,9 @@ package com.fstengineering.leasilycrm.propertyStays
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
@@ -15,10 +15,10 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
-import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.toPersistentMap
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,6 +32,7 @@ class PropertyStaysViewModel(
     private val watchPropertyWithStaysTenantsUseCase: WatchPropertyWithStaysTenantsUseCase,
     private val propertyRepository: PropertyRepository,
     private val userRepository: UserRepository,
+    private val now: AppLazyDate,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -41,8 +42,13 @@ class PropertyStaysViewModel(
     private val _property = MutableStateFlow(Property())
     val property = _property.asStateFlow()
 
-    private val _selectedYear = MutableStateFlow(0)
-    val selectedYear = _selectedYear.asStateFlow()
+    private val _monthYearOptions =
+        MutableStateFlow<ImmutableList<CalendarMonthYear>>(persistentListOf())
+    val monthYearOptions = _monthYearOptions.asStateFlow()
+
+    private val _selectedPeriod =
+        MutableStateFlow<Pair<CalendarMonthYear?, CalendarMonthYear?>>(null to null)
+    val selectedPeriod = _selectedPeriod.asStateFlow()
 
     private val _selectedYearStaysDates =
         MutableStateFlow<StaysStructuredDatesMap>(persistentMapOf())
@@ -80,13 +86,13 @@ class PropertyStaysViewModel(
     private fun watchProperty(propertyId: Long) {
         viewModelScope.launch {
             val watchPropertyWithStaysTenantsFlow = watchPropertyWithStaysTenantsUseCase(propertyId)
-            val staysSelectedYearFlow = propertyRepository.watchPropertyStaysSelectedYear()
+            val staysSelectedPeriodFlow = propertyRepository.watchPropertyStaysSelectedPeriod()
 
             watchPropertyWithStaysTenantsFlow
-                .combine(staysSelectedYearFlow) { watchPropertyResult, selectedYear ->
-                    watchPropertyResult to selectedYear
+                .combine(staysSelectedPeriodFlow) { watchPropertyResult, selectedPeriod ->
+                    watchPropertyResult to selectedPeriod
                 }
-                .collect { (watchPropertyResult, selectedYearResult) ->
+                .collect { (watchPropertyResult, selectedPeriodResult) ->
                     _isLoading.update { true }
 
                     val storedProperty = watchPropertyResult
@@ -105,7 +111,7 @@ class PropertyStaysViewModel(
                             },
                         )
 
-                    val selectedYear = selectedYearResult
+                    val (calendarStart, calendarEnd) = selectedPeriodResult
                         .fold(
                             onError = { error ->
                                 _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
@@ -115,13 +121,18 @@ class PropertyStaysViewModel(
                         )
 
                     _property.update { storedProperty }
-                    _selectedYear.update { selectedYear }
 
                     val selectedYearStaysDates = getSelectedYearStaysDates(
                         storedProperty = storedProperty,
-                        selectedYear = selectedYear,
+                        selectedStartMonth = calendarStart?.month,
+                        selectedStartYear = calendarStart?.year,
+                        selectedEndMonth = calendarEnd?.month,
+                        selectedEndYear = calendarEnd?.year,
                     )
+
+                    _selectedPeriod.update { calendarStart to calendarEnd }
                     _selectedYearStaysDates.update { selectedYearStaysDates }
+
 
                     _isLoading.update { false }
                 }
@@ -130,37 +141,54 @@ class PropertyStaysViewModel(
 
     private fun getSelectedYearStaysDates(
         storedProperty: Property,
-        selectedYear: Int,
+        selectedStartMonth: Int?,
+        selectedStartYear: Int?,
+        selectedEndMonth: Int?,
+        selectedEndYear: Int?,
     ): StaysStructuredDatesMap {
         val notDeletedStays = storedProperty.stays.filter { !it.isDeleted }
 
         val staysStructuredDatesMap = getStaysStructuredDatesUseCase(stays = notDeletedStays)
-            .takeUnless { it.isEmpty() }
-            ?.filter { (monthYear, _) -> monthYear.year == selectedYear }
+            .takeIf { it.isNotEmpty() }
+            ?.also { stayDates ->
+                _monthYearOptions.update { stayDates.keys.toPersistentList() }
+            }
+            .takeIf {
+                selectedStartMonth != null
+                        && selectedStartYear != null
+                        && selectedEndMonth != null
+                        && selectedEndYear != null
+            }
+            ?.filter { (monthYear, _) ->
+                val date = now.withMonthYear(monthYear.month, monthYear.year)
+                val selectedStart = now.withMonthYear(selectedStartMonth!!, selectedStartYear!!)
+                val selectedEnd = now.withMonthYear(selectedEndMonth!!, selectedEndYear!!)
+
+                date.isAfter(selectedStart) && date.isBefore(selectedEnd)
+            }
             ?: return persistentMapOf()
 
-        val datesWithMissingMonths =
-            mutableMapOf<CalendarMonthYear, PersistentList<StayCalendarDate>>()
+        val staysStructuredDatesWithMissingMonthsMap = AppLazyDate.getDatesWithMissingMonthsBetween(
+            startDate = now.withMonthYear(selectedStartMonth!!, selectedStartYear!!),
+            endDate = now.withMonthYear(selectedEndMonth!!, selectedEndYear!!),
+            staysStructuredDatesMap = staysStructuredDatesMap,
+        )
 
-        val months = List(12) { i ->
-            CalendarMonthYear(id = (i + 1) + selectedYear, month = i + 1, year = selectedYear)
-        }
-
-        months.forEach { monthYear ->
-            val stayDates = staysStructuredDatesMap[monthYear]
-            datesWithMissingMonths.put(monthYear, stayDates ?: persistentListOf())
-        }
-
-        return datesWithMissingMonths
-            .toPersistentMap()
+        return staysStructuredDatesWithMissingMonthsMap
     }
 
     fun updatePropertyStaysSelectedYear(
-        selectedYear: Int,
+        selectedStartMonth: Int? = null,
+        selectedStartYear: Int? = null,
+        selectedEndMonth: Int? = null,
+        selectedEndYear: Int? = null,
     ) {
         viewModelScope.launch {
-            propertyRepository.updatePropertyStaysSelectedYear(
-                selectedYear = selectedYear
+            propertyRepository.updatePropertyStaysSelectedPeriod(
+                selectedStartMonth = selectedStartMonth,
+                selectedStartYear = selectedStartYear,
+                selectedEndMonth = selectedEndMonth,
+                selectedEndYear = selectedEndYear,
             )
         }
     }

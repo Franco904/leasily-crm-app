@@ -46,7 +46,6 @@ class CrmMetricsRepositoryImpl(
                             val split = it.monthYear.split("-")
 
                             val monthYear = CalendarMonthYear(
-                                id = split[0].toInt() + split[1].toInt(),
                                 month = split[0].toInt(),
                                 year = split[1].toInt(),
                             )
@@ -94,7 +93,6 @@ class CrmMetricsRepositoryImpl(
                                 val split = it.monthYear.split("-")
 
                                 CalendarMonthYear(
-                                    id = split[0].toInt() + split[1].toInt(),
                                     month = split[0].toInt(),
                                     year = split[1].toInt(),
                                 )
@@ -181,7 +179,6 @@ class CrmMetricsRepositoryImpl(
                             val split = it.monthYear.split("-")
 
                             val monthYear = CalendarMonthYear(
-                                id = split[0].toInt() + split[1].toInt(),
                                 month = split[0].toInt(),
                                 year = split[1].toInt(),
                             )
@@ -229,7 +226,6 @@ class CrmMetricsRepositoryImpl(
                                 val split = it.monthYear.split("-")
 
                                 CalendarMonthYear(
-                                    id = split[0].toInt() + split[1].toInt(),
                                     month = split[0].toInt(),
                                     year = split[1].toInt(),
                                 )
@@ -283,7 +279,6 @@ class CrmMetricsRepositoryImpl(
                                 val split = it.monthYear.split("-")
 
                                 CalendarMonthYear(
-                                    id = split[0].toInt() + split[1].toInt(),
                                     month = split[0].toInt(),
                                     year = split[1].toInt(),
                                 )
@@ -340,7 +335,6 @@ class CrmMetricsRepositoryImpl(
                                 val split = it.monthYear.split("-")
 
                                 CalendarMonthYear(
-                                    id = split[0].toInt() + split[1].toInt(),
                                     month = split[0].toInt(),
                                     year = split[1].toInt(),
                                 )
@@ -394,7 +388,6 @@ class CrmMetricsRepositoryImpl(
                             val split = it.monthYear.split("-")
 
                             val monthYear = CalendarMonthYear(
-                                id = split[0].toInt() + split[1].toInt(),
                                 month = split[0].toInt(),
                                 year = split[1].toInt(),
                             )
@@ -445,7 +438,6 @@ class CrmMetricsRepositoryImpl(
                                 val split = it.monthYear.split("-")
 
                                 CalendarMonthYear(
-                                    id = split[0].toInt() + split[1].toInt(),
                                     month = split[0].toInt(),
                                     year = split[1].toInt(),
                                 )
@@ -499,7 +491,6 @@ class CrmMetricsRepositoryImpl(
                                 val split = it.monthYear.split("-")
 
                                 CalendarMonthYear(
-                                    id = split[0].toInt() + split[1].toInt(),
                                     month = split[0].toInt(),
                                     year = split[1].toInt(),
                                 )
@@ -553,7 +544,6 @@ class CrmMetricsRepositoryImpl(
                                 val split = it.monthYear.split("-")
 
                                 CalendarMonthYear(
-                                    id = split[0].toInt() + split[1].toInt(),
                                     month = split[0].toInt(),
                                     year = split[1].toInt(),
                                 )
@@ -610,7 +600,6 @@ class CrmMetricsRepositoryImpl(
                             val split = it.monthYear.split("-")
 
                             val monthYear = CalendarMonthYear(
-                                id = split[0].toInt() + split[1].toInt(),
                                 month = split[0].toInt(),
                                 year = split[1].toInt(),
                             )

@@ -1,13 +1,12 @@
 package com.fstengineering.leasilycrm.home.dashboard
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material.icons.outlined.BookmarkBorder
@@ -70,112 +69,141 @@ fun DashboardPage(
         viewModel.init()
     }
 
-    Column(
+    LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp)
-            .verticalScroll(scrollState)
     ) {
-        Row {
+        // Navigation cards
+        item {
+            Row {
+                HomeNavCard(
+                    icon = Icons.Default.Apartment,
+                    title = stringResource(R.string.home_properties_label),
+                    onSelect = onPropertiesSelect,
+                    modifier = Modifier.weight(1f)
+                )
+                HomeNavCard(
+                    icon = Icons.Outlined.Person,
+                    title = stringResource(R.string.home_property_owners_label),
+                    onSelect = onPropertyOwnersSelect,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+        item {
             HomeNavCard(
-                icon = Icons.Default.Apartment,
-                title = stringResource(R.string.home_properties_label),
-                onSelect = onPropertiesSelect,
-                modifier = Modifier
-                    .weight(1f)
-            )
-            HomeNavCard(
-                icon = Icons.Outlined.Person,
-                title = stringResource(R.string.home_property_owners_label),
-                onSelect = onPropertyOwnersSelect,
-                modifier = Modifier
-                    .weight(1f)
+                icon = Icons.Outlined.BookmarkBorder,
+                title = stringResource(R.string.home_customer_segments_label),
+                onSelect = onCustomerSegmentsSelect,
+                modifier = Modifier.fillMaxWidth()
             )
         }
-        HomeNavCard(
-            icon = Icons.Outlined.BookmarkBorder,
-            title = stringResource(R.string.home_customer_segments_label),
-            onSelect = onCustomerSegmentsSelect,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        HorizontalDivider()
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = stringResource(R.string.dashboard_my_metrics_title),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = stringResource(R.string.dashboard_leads_group_title),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-            color = MaterialTheme.colorScheme.primary,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MonthlyLeadGenerationMetricCard(
-            generatedLeadsPerMonth = generatedLeadsPerMonth,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        MonthlyLeadGenerationPerTenantSegmentMetricCard(
-            generatedLeadsPerTenantSegmentPerMonth = generatedLeadsPerTenantSegmentPerMonth,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        LeadContactChannelsDistributionPieChartCard(
-            leadContactChannelDistribution = leadContactChannelDistribution,
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        HorizontalDivider()
-        Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = stringResource(R.string.dashboard_stay_bookings_group_title),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-            color = MaterialTheme.colorScheme.primary,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MonthlyNewStayBookingsMetricCard(
-            newStayBookingsPerMonth = newStayBookingsPerMonth,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        MonthlyNewStayBookingsPerTenantSegmentMetricCard(
-            newStayBookingsPerTenantSegmentPerMonth = newStayBookingsPerTenantSegmentPerMonth,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
-            newStayBookingsPerPropertyOwnerSegmentPerMonth = newStayBookingsPerPropertyOwnerSegmentPerMonth,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
-            newStayBookingsPerTop3NeighborhoodsPerMonth = newStayBookingsPerTop3NeighborhoodsPerMonth,
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        HorizontalDivider()
-        Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = stringResource(R.string.dashboard_commission_invoice_group_title),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-            color = MaterialTheme.colorScheme.primary,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MonthlyCommissionInvoiceMetricCard(
-            commissionInvoicePerMonth = commissionInvoicePerMonth,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MonthlyCommissionInvoicePerTenantSegmentMetricCard(
-            commissionInvoicePerTenantSegmentPerMonth = commissionInvoicePerTenantSegmentPerMonth,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MonthlyCommissionInvoicePerPropertyOwnerSegmentMetricCard(
-            commissionInvoicePerPropertyOwnerSegmentPerMonth = commissionInvoicePerPropertyOwnerSegmentPerMonth,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MonthlyCommissionInvoicePerTop3NeighborhoodsMetricCard(
-            commissionInvoicePerTop3NeighborhoodsPerMonth = commissionInvoicePerTop3NeighborhoodsPerMonth,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        MonthlyAverageTicketMetricCard(
-            averageTicketPerMonth = averageTicketPerMonth,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+
+        item { Spacer(modifier = Modifier.height(24.dp)) }
+        item { HorizontalDivider() }
+        item { Spacer(modifier = Modifier.height(24.dp)) }
+
+        // Metrics section header
+        item {
+            Text(
+                text = stringResource(R.string.dashboard_my_metrics_title),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        // === Leads section ===
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item {
+            Text(
+                text = stringResource(R.string.dashboard_leads_group_title),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { MonthlyLeadGenerationMetricCard(generatedLeadsPerMonth) }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
+        item {
+            MonthlyLeadGenerationPerTenantSegmentMetricCard(
+                generatedLeadsPerTenantSegmentPerMonth
+            )
+        }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
+        item { LeadContactChannelsDistributionPieChartCard(leadContactChannelDistribution) }
+
+        item { Spacer(modifier = Modifier.height(32.dp)) }
+        item { HorizontalDivider() }
+        item { Spacer(modifier = Modifier.height(32.dp)) }
+
+        // === Bookings section ===
+        item {
+            Text(
+                text = stringResource(R.string.dashboard_stay_bookings_group_title),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { MonthlyNewStayBookingsMetricCard(newStayBookingsPerMonth) }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
+        item {
+            MonthlyNewStayBookingsPerTenantSegmentMetricCard(
+                newStayBookingsPerTenantSegmentPerMonth
+            )
+        }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
+        item {
+            MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
+                newStayBookingsPerPropertyOwnerSegmentPerMonth
+            )
+        }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
+        item {
+            MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
+                newStayBookingsPerTop3NeighborhoodsPerMonth
+            )
+        }
+
+        item { Spacer(modifier = Modifier.height(32.dp)) }
+        item { HorizontalDivider() }
+        item { Spacer(modifier = Modifier.height(32.dp)) }
+
+        // === Commission invoice section ===
+        item {
+            Text(
+                text = stringResource(R.string.dashboard_commission_invoice_group_title),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { MonthlyCommissionInvoiceMetricCard(commissionInvoicePerMonth) }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item {
+            MonthlyCommissionInvoicePerTenantSegmentMetricCard(
+                commissionInvoicePerTenantSegmentPerMonth
+            )
+        }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item {
+            MonthlyCommissionInvoicePerPropertyOwnerSegmentMetricCard(
+                commissionInvoicePerPropertyOwnerSegmentPerMonth
+            )
+        }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item {
+            MonthlyCommissionInvoicePerTop3NeighborhoodsMetricCard(
+                commissionInvoicePerTop3NeighborhoodsPerMonth
+            )
+        }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { MonthlyAverageTicketMetricCard(averageTicketPerMonth) }
+
+        item { Spacer(modifier = Modifier.height(8.dp)) }
     }
+
 }

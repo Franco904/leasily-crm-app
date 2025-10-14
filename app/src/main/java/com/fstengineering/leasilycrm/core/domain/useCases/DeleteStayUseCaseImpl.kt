@@ -8,6 +8,8 @@ import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteStayU
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
 
 class DeleteStayUseCaseImpl(
     private val stayRepository: StayRepository,
@@ -19,17 +21,21 @@ class DeleteStayUseCaseImpl(
         stayRepository.delete(id = stay.id!!)
             .onError { return AppResult.Error(error = it) }
 
-        val leadTenant = stay.tenant
-        val mustUpdateTenantStatus = leadTenant != null
-                && !leadTenant.hasUnfinishedStay()
+        val leadTenantWithoutStay = stay.tenant?.let { leadTenant ->
+            val newStays = leadTenant.stays.filter { it.id != stay.id }.toPersistentList()
+            leadTenant.copy(stays = newStays)
+        }
+
+        val mustUpdateTenantStatus = leadTenantWithoutStay != null
+                && !leadTenantWithoutStay.hasUnfinishedStay()
                 && !stay.isUnavailablePeriod
 
         if (mustUpdateTenantStatus) {
             val newStatus =
-                if (leadTenant.hasFinishedStays()) TenantStatus.Old
+                if (leadTenantWithoutStay.hasFinishedStays()) TenantStatus.Old
                 else TenantStatus.Lead
 
-            val updatedLeadTenant = leadTenant.copy(status = newStatus.id)
+            val updatedLeadTenant = leadTenantWithoutStay.copy(status = newStatus.id)
 
             tenantRepository.insertOrUpdate(updatedLeadTenant)
                 .onError { return AppResult.Error(error = it) }

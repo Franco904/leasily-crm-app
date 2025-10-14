@@ -247,8 +247,9 @@
     <!-- Property stays -->
     <string name="property_stays_top_app_bar_title">Estadias do imóvel</string>
 
-    <string name="property_stays_year_filter_field_placeholder">Ano</string>
-    <string name="property_stays_year_filter_field_empty_text">Nenhum ano</string>
+    <string name="property_stays_start_month_year_filter_field_placeholder">Início</string>
+    <string name="property_stays_end_month_year_filter_field_placeholder">Fim</string>
+    <string name="property_stays_month_year_filter_field_empty_text">Nenhum mês/ano para exibir</string>
 
     <!-- Property owners -->
     <string name="property_owners_top_app_bar_title">Proprietários</string>
@@ -591,6 +592,7 @@
     <string name="last_separator_label">e</string>
     <string name="na_label">na</string>
     <string name="no_label">no</string>
+    <string name="until_label">até</string>
 
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>

@@ -149,6 +149,7 @@ val viewModelModule = module {
             watchPropertyWithStaysTenantsUseCase = get(),
             propertyRepository = get(),
             userRepository = get(),
+            now = AppLazyDate.now(),
         )
     }
 

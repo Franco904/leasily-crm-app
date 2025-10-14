@@ -112,7 +112,6 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
         return allStayDates
             .groupBy { stayDate ->
                 CalendarMonthYear(
-                    id = stayDate.month.value + stayDate.year,
                     month = stayDate.month.value,
                     year = stayDate.year,
                 )

@@ -231,10 +231,11 @@ class CustomerSegmentsViewModel(
                     return@launch
                 }
 
-            _uiEvents.send(
+            val saveEvent =
                 if (isEditing) UiEvents.CustomerSegmentEditSuccess(messageId = R.string.snackbar_edit_customer_segment_succeeded)
-                else UiEvents.CustomerSegmentCreateSuccess,
-            )
+                else UiEvents.CustomerSegmentCreateSuccess
+
+            _uiEvents.send(saveEvent)
 
             onCustomerSegmentFormChange(form = null)
         }
