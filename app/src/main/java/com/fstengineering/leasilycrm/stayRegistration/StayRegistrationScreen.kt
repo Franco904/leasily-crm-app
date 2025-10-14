@@ -293,7 +293,10 @@ fun StayRegistrationScreen(
                                 totalPriceInput = totalPriceInput,
                                 onTotalPriceChange = { totalPriceInput = it },
                                 commissionInput = commissionInput,
-                                onCommissionChange = { commissionInput = it },
+                                onCommissionChange = {
+                                    commissionInput = it
+                                    viewModel.clearCommissionError()
+                                },
                                 stayFormErrors = stayFormErrors.errors,
                                 getPropertyAlreadySelectedDatesForStay = viewModel::getPropertyAlreadySelectedDatesForStay,
                                 transferForm = transferForm,

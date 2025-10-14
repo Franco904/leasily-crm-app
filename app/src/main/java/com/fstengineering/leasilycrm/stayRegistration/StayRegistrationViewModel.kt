@@ -240,15 +240,19 @@ class StayRegistrationViewModel(
                 if (stayForm.value.checkOutHourMinute != form.checkOutHourMinute) {
                     map[StayField.CheckOutTime] = null
                 }
-                if (stayForm.value.commission != form.commission) {
-                    map[StayField.Commission] = null
-                }
             }
 
             it.copy(errors = newErrors)
         }
 
         _stayForm.update { form }
+    }
+
+    fun clearCommissionError() {
+        _stayFormErrors.update {
+            val newErrors = it.errors.mutate { map -> map[StayField.Commission] = null }
+            it.copy(errors = newErrors)
+        }
     }
 
     fun getPropertyAlreadySelectedDatesForStay(
