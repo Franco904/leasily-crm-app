@@ -22,11 +22,11 @@ class StayValidatorImpl : StayValidator {
             .onError { e -> errors.add(e) }
 
         validatePeriod(
-            checkInDateTime = stay.checkInDateTime,
-            checkOutDateTime = stay.checkOutDateTime,
-            checkInDateTimeBeforeEdit = stayBeforeEdit?.checkInDateTime,
+            checkInDateTime = stay.checkInDateTime?.withHour(0)?.withMinute(0),
+            checkOutDateTime = stay.checkOutDateTime?.withHour(0)?.withMinute(0),
+            checkInDateTimeBeforeEdit = stayBeforeEdit?.checkInDateTime?.withHour(0)?.withMinute(0),
             propertyStayCheckInDateTimes = stay.property?.stays
-                ?.mapNotNull { it.checkInDateTime }
+                ?.mapNotNull { it.checkInDateTime?.withHour(0)?.withMinute(0) }
                 ?: emptyList(),
         )
             .onError { e -> errors.add(e) }
