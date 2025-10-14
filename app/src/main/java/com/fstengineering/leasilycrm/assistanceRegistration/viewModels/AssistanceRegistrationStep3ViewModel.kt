@@ -102,10 +102,11 @@ class AssistanceRegistrationStep3ViewModel(
                     return@launch
                 }
 
-            _uiEvents.send(
+            val saveEvent =
                 if (isEditing) UiEvents.InteractionEditSuccess(messageId = R.string.snackbar_edit_assistance_interaction_succeeded)
-                else UiEvents.InteractionCreateSuccess,
-            )
+                else UiEvents.InteractionCreateSuccess
+
+            _uiEvents.send(saveEvent)
         }
     }
 

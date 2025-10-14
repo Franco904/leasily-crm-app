@@ -271,10 +271,11 @@ class PropertyRegistrationViewModel(
                 )
             }
 
-            _uiEvents.send(
+            val saveEvent =
                 if (propertyToEdit != null) UiEvents.PropertyEditSuccess(messageId = R.string.snackbar_edit_property_succeeded)
-                else UiEvents.PropertyCreateSuccess,
-            )
+                else UiEvents.PropertyCreateSuccess
+
+            _uiEvents.send(saveEvent)
         }
     }
 

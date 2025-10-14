@@ -228,10 +228,11 @@ class AssistanceRegistrationViewModel(
                 )
             }
 
-            _uiEvents.send(
+            val saveEvent =
                 if (assistanceToEdit != null) UiEvents.AssistanceEditSuccess(messageId = R.string.snackbar_edit_assistance_succeeded)
-                else UiEvents.AssistanceCreateSuccess,
-            )
+                else UiEvents.AssistanceCreateSuccess
+
+            _uiEvents.send(saveEvent)
 
             if (assistanceForm.value.tenant?.status == TenantStatus.Old.id) {
                 val updatedTenant = assistanceForm.value.tenant

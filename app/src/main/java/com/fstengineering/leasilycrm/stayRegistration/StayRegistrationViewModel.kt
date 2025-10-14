@@ -373,10 +373,11 @@ class StayRegistrationViewModel(
             onStayTransferFormChange(form = null)
             transferFormBeforeEdit = null
 
-            _uiEvents.send(
+            val saveEvent =
                 if (stayToEdit != null) UiEvents.TransferEditSuccess(messageId = R.string.snackbar_edit_stay_succeeded)
-                else UiEvents.TransferCreateSuccess,
-            )
+                else UiEvents.TransferCreateSuccess
+
+            _uiEvents.send(saveEvent)
         }
     }
 
@@ -472,10 +473,11 @@ class StayRegistrationViewModel(
                 if (stayForm.value.isUnavailablePeriod) R.string.snackbar_edit_unavailable_period_succeeded
                 else R.string.snackbar_edit_stay_succeeded
 
-            _uiEvents.send(
+            val saveEvent =
                 if (stayToEdit != null) UiEvents.StayEditSuccess(messageId = editMessageId)
-                else UiEvents.StayCreateSuccess,
-            )
+                else UiEvents.StayCreateSuccess
+
+            _uiEvents.send(saveEvent)
         }
     }
 
