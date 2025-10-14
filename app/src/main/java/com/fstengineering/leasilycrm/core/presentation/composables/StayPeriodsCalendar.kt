@@ -573,7 +573,7 @@ fun StayPeriodsCalendarPreview(
             month = 1,
             year = 2026,
             selectedDatesWithMonthYear = Pair(
-                CalendarMonthYear(-1, 1, 2025),
+                CalendarMonthYear(1, 2025),
                 persistentListOf(
                     StayCalendarDate(
                         dayOfMonth = "4",

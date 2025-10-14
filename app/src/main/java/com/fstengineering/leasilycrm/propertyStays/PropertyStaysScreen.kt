@@ -48,7 +48,10 @@ fun PropertyStaysScreen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val property by viewModel.property.collectAsStateWithLifecycle()
-    val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
+
+    val monthYearOptions by viewModel.monthYearOptions.collectAsStateWithLifecycle()
+
+    val selectedPeriod by viewModel.selectedPeriod.collectAsStateWithLifecycle()
     val selectedYearStaysDates by viewModel.selectedYearStaysDates.collectAsStateWithLifecycle()
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
@@ -101,9 +104,17 @@ fun PropertyStaysScreen(
     ) { innerPadding ->
         PropertyStaysSection(
             property = property,
+            monthYearOptions = monthYearOptions,
             selectedYearStaysDates = selectedYearStaysDates,
-            selectedYear = selectedYear,
-            onYearSelect = viewModel::updatePropertyStaysSelectedYear,
+            selectedPeriod = selectedPeriod,
+            onPeriodSelect = {
+                viewModel.updatePropertyStaysSelectedYear(
+                    selectedStartMonth = it.first?.month,
+                    selectedStartYear = it.first?.year,
+                    selectedEndMonth = it.second?.month,
+                    selectedEndYear = it.second?.year,
+                )
+            },
             onViewStay = onViewStay,
             isLoading = isLoading,
             modifier = Modifier

@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -155,24 +156,49 @@ class PropertyRepositoryImpl(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override suspend fun watchPropertyStaysSelectedYear(): Flow<AppResult<Int, DataSourceError>> {
+    override suspend fun watchPropertyStaysSelectedPeriod(): Flow<AppResult<Pair<CalendarMonthYear?, CalendarMonthYear?>, DataSourceError>> {
         return plainPreferencesStorage.readPreferences()
             .fold(
                 onError = { error -> flow { emit(AppResult.Error(error = error)) } },
                 onSuccess = { prefsFlow ->
                     prefsFlow.mapLatest { prefs ->
-                        val selectedYear = prefs.propertyStaysSelectedYear ?: now.date().year
-                        AppResult.Success(data = selectedYear)
+                        val startMonth = prefs.propertyStaysSelectedPeriodStartMonth
+                        val startYear = prefs.propertyStaysSelectedPeriodStartYear
+                        val calendarStart = if (startMonth != null && startYear != null) {
+                            CalendarMonthYear(
+                                month = startMonth,
+                                year = startYear,
+                            )
+                        } else null
+
+                        val endMonth = prefs.propertyStaysSelectedPeriodEndMonth
+                        val endYear = prefs.propertyStaysSelectedPeriodEndYear
+                        val calendarEnd = if (endMonth != null && endYear != null) {
+                            CalendarMonthYear(
+                                month = endMonth,
+                                year = endYear,
+                            )
+                        } else null
+
+                        AppResult.Success(data = calendarStart to calendarEnd)
                     }
                 }
             )
     }
 
-    override suspend fun updatePropertyStaysSelectedYear(
-        selectedYear: Int,
+    override suspend fun updatePropertyStaysSelectedPeriod(
+        selectedStartMonth: Int?,
+        selectedStartYear: Int?,
+        selectedEndMonth: Int?,
+        selectedEndYear: Int?,
     ): AppResult<Unit, DataSourceError> {
         plainPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(propertyStaysSelectedYear = selectedYear)
+            prefs.copy(
+                propertyStaysSelectedPeriodStartMonth = selectedStartMonth,
+                propertyStaysSelectedPeriodStartYear = selectedStartYear,
+                propertyStaysSelectedPeriodEndMonth = selectedEndMonth,
+                propertyStaysSelectedPeriodEndYear = selectedEndYear,
+            )
         }
             .onError { return AppResult.Error(error = it) }
 

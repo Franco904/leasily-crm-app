@@ -298,9 +298,8 @@ fun LeadTenantDetailsScreen(
                             itemsIndexed(
                                 items = sortedInteractions.groupBy { interaction ->
                                     CalendarMonthYear(
-                                        id = interaction.interactionDate!!.monthValue + interaction.interactionDate.year,
-                                        month = interaction.interactionDate.monthValue,
-                                        year = interaction.interactionDate.year,
+                                        month = interaction.interactionDate?.monthValue ?: 0,
+                                        year = interaction.interactionDate?.year ?: 0,
                                     )
                                 },
                                 key = { i, (monthYear, _) -> monthYear.id },

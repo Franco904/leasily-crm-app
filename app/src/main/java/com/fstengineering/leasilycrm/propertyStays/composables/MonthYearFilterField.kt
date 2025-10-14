@@ -6,19 +6,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 
 @Composable
-fun YearFilterField(
-    selectedYear: Int,
+fun MonthYearFilterField(
+    placeholder: String,
+    monthYearValue: String,
     onTap: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FormTextField(
-        label = stringResource(R.string.property_stays_year_filter_field_placeholder),
-        value = selectedYear.toString(),
+        label = placeholder,
+        value = monthYearValue,
         suffix = {
             Icon(
                 imageVector = Icons.Outlined.ArrowDropDown,

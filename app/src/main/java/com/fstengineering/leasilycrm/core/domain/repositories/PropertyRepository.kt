@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.repositories
 
+import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
@@ -23,9 +24,13 @@ interface PropertyRepository {
 
     fun watchAll(): Flow<AppResult<ImmutableList<Property>, DataSourceError>>
 
-    suspend fun watchPropertyStaysSelectedYear(): Flow<AppResult<Int, DataSourceError>>
+    suspend fun watchPropertyStaysSelectedPeriod():
+            Flow<AppResult<Pair<CalendarMonthYear?, CalendarMonthYear?>, DataSourceError>>
 
-    suspend fun updatePropertyStaysSelectedYear(
-        selectedYear: Int,
+    suspend fun updatePropertyStaysSelectedPeriod(
+        selectedStartMonth: Int?,
+        selectedStartYear: Int?,
+        selectedEndMonth: Int?,
+        selectedEndYear: Int?,
     ): AppResult<Unit, DataSourceError>
 }

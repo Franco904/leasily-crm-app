@@ -226,9 +226,8 @@ fun StaysScreen(
                             itemsIndexed(
                                 items = stays.groupBy { stay ->
                                     CalendarMonthYear(
-                                        id = stay.checkInDateTime!!.monthValue + stay.checkInDateTime.year,
-                                        month = stay.checkInDateTime.monthValue,
-                                        year = stay.checkInDateTime.year,
+                                        month = stay.checkInDateTime?.monthValue ?: 0,
+                                        year = stay.checkInDateTime?.year ?: 0,
                                     )
                                 },
                                 key = { i, (monthYear, _) -> monthYear.id },
