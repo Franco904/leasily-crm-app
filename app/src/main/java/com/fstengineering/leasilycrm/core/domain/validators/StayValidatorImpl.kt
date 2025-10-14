@@ -93,8 +93,8 @@ class StayValidatorImpl : StayValidator {
                 val isThereAnyPropertyOverbooking = propertyStayCheckInDateTimes
                     .filter { it != checkInDateTimeBeforeEdit }
                     .any { existingStayCheckInDateTime ->
-                        checkInDateTime < existingStayCheckInDateTime
-                                && checkOutDateTime > existingStayCheckInDateTime
+                        checkInDateTime <= existingStayCheckInDateTime
+                                && checkOutDateTime >= existingStayCheckInDateTime
                     }
 
                 if (!isThereAnyPropertyOverbooking) return AppResult.Success(Unit)
