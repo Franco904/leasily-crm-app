@@ -34,15 +34,20 @@ class GetTodayCheckInsCheckOutsToNotifyToNotifyUseCaseImpl(
                 onError = { error -> AppResult.Success(data = persistentListOf()) },
                 onSuccess = { upcomingCheckInsAndCheckOuts ->
                     val todayCheckInsAndCheckOutsToNotify = upcomingCheckInsAndCheckOuts
+                        .filter {
+                            it.tenantName != null
+                                    && it.propertyTypeName != null
+                                    && it.propertyOwnerName != null
+                        }
                         .map {
                             val mustNotifyCheckIn =
                                 !it.isCheckInDone && it.checkInDateTime.isToday()
                             val mustNotifyCheckOut = it.checkOutDateTime.isToday()
 
                             StayCheckNotificationStatus(
-                                tenantName = it.tenantName,
-                                propertyTypeName = it.propertyTypeName,
-                                propertyOwnerName = it.propertyOwnerName,
+                                tenantName = it.tenantName ?: "",
+                                propertyTypeName = it.propertyTypeName ?: "",
+                                propertyOwnerName = it.propertyOwnerName ?: "",
                                 hourMinute = if (mustNotifyCheckIn) {
                                     it.checkInDateTime.toHourMinute()
                                 } else it.checkOutDateTime.toHourMinute(),

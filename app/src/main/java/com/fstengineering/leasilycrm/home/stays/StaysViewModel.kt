@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.home.stays
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -174,7 +175,7 @@ class StaysViewModel(
                         }
 
                         val staysAbleToCheckOutCount = upcomingCheckInsAndCheckOuts.count {
-                            now.isAfter(it.checkOutDateTime.toStartOfDay())
+                            it.isCheckInDone && now.isAfter(it.checkOutDateTime.toStartOfDay())
                         }
 
                         _staysAbleToCheckInCount.update { staysAbleToCheckInCount }
