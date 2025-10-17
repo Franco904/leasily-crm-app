@@ -16,15 +16,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.theme.customColors
+import com.fstengineering.leasilycrm.core.application.theme.grey
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppPieChart
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.labels.AppPieChartChunkedColoredLabels
 import ir.ehsannarmani.compose_charts.models.Pie
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -32,13 +35,17 @@ import kotlin.math.roundToInt
 
 @Composable
 fun LeadContactChannelsDistributionPieChartCard(
-    leadContactChannelDistribution: ImmutableMap<String, Double>,
+    leadContactChannelDistribution: ImmutableMap<String?, Double>,
     modifier: Modifier = Modifier,
 ) {
-    val pieColors = customColors
+    val context = LocalContext.current
+
+    val pieColors = customColors.filter { it != grey }
+    val greyColor = grey
 
     var pies by remember(leadContactChannelDistribution) {
         val pies = leadContactChannelDistribution.entries
+            .filter { it.key != null }
             .mapIndexed { i, (label, percent) ->
                 Pie(
                     label = label,
@@ -47,6 +54,20 @@ fun LeadContactChannelsDistributionPieChartCard(
                 )
             }
             .toPersistentList()
+            .mutate {
+                val noContactChannelPercent = leadContactChannelDistribution[null]
+
+                if (noContactChannelPercent != null) {
+                    val label = context.getString(R.string.not_registered_info_var_1_body_text)
+                    it.add(
+                        Pie(
+                            label = label,
+                            data = noContactChannelPercent,
+                            color = greyColor,
+                        )
+                    )
+                }
+            }
 
         mutableStateOf(pies)
     }

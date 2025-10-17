@@ -59,7 +59,7 @@ interface CrmMetricsDao {
             tcot.name AS lead_contact_channel_name,
             COUNT(*) AS lead_count
         FROM tenants t
-        INNER JOIN tenant_contact_origin_types tcot
+        LEFT JOIN tenant_contact_origin_types tcot
             ON t.tenant_contact_origin_type_id = tcot.id
             AND tcot.is_active = 1
         WHERE user_id = :userId

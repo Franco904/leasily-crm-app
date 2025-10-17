@@ -37,7 +37,7 @@ class DashboardViewModel(
         _generatedLeadsPerTenantSegmentPerMonth.asStateFlow()
 
     private val _leadContactChannelDistribution =
-        MutableStateFlow<ImmutableMap<String, Double>>(persistentMapOf())
+        MutableStateFlow<ImmutableMap<String?, Double>>(persistentMapOf())
     val leadContactChannelDistribution = _leadContactChannelDistribution.asStateFlow()
 
     // Stay bookings CRM metrics

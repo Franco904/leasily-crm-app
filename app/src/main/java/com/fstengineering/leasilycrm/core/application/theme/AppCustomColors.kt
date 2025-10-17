@@ -102,7 +102,6 @@ val customColors
         orange,
         blueGrey,
         amber,
-        grey,
     )
 
 val customColorsV2
@@ -110,7 +109,6 @@ val customColorsV2
         amber,
         teal,
         lightBlue,
-        grey,
         pink,
         brown,
         indigo,
@@ -135,7 +133,6 @@ val customColorsV3
         teal,
         deepPurple,
         amber,
-        grey,
         pink,
     )
 
@@ -150,7 +147,6 @@ val customColorsV4
         blueGrey,
         amber,
         deepPurple,
-        grey,
         indigo,
         lightBlue,
         orange,

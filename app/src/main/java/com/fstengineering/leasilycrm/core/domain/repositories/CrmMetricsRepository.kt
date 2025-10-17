@@ -15,7 +15,7 @@ interface CrmMetricsRepository {
             Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>>
 
     fun watchLeadContactChannelDistribution():
-            Flow<AppResult<ImmutableMap<String, Double>, DataSourceError>>
+            Flow<AppResult<ImmutableMap<String?, Double>, DataSourceError>>
 
     fun watchNewStayBookingsPerMonth():
             Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataSourceError>>

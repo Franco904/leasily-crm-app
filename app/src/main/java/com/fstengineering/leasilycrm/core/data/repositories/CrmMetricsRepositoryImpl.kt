@@ -124,7 +124,7 @@ class CrmMetricsRepositoryImpl(
             emitAll(generatedLeadsPerTenantSegmentPerMonthFlow)
         }
 
-    override fun watchLeadContactChannelDistribution(): Flow<AppResult<ImmutableMap<String, Double>, DataSourceError>> =
+    override fun watchLeadContactChannelDistribution(): Flow<AppResult<ImmutableMap<String?, Double>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -143,6 +143,7 @@ class CrmMetricsRepositoryImpl(
                     val totalLeads = leadContactChannelCounts.sumOf { it.leadCount }
 
                     val leadContactChannelDistribution = leadContactChannelCounts
+                        .sortedBy { it.leadContactChannelName }
                         .associate {
                             val roundedLeadsCount = (it.leadCount.toDouble() / totalLeads) * 100
                             it.leadContactChannelName to roundedLeadsCount.roundToInt().toDouble()
@@ -150,7 +151,7 @@ class CrmMetricsRepositoryImpl(
                         .filterValues { it > 0.0 }
                         .toPersistentMap()
 
-                    AppResult.Success<ImmutableMap<String, Double>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<String?, Double>, DataSourceError>(
                         data = leadContactChannelDistribution,
                     )
                 }

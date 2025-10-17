@@ -3,6 +3,6 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.entities.co
 import androidx.room.ColumnInfo
 
 data class LeadContactChannelCountCompound(
-    @ColumnInfo(name = "lead_contact_channel_name") val leadContactChannelName: String,
+    @ColumnInfo(name = "lead_contact_channel_name") val leadContactChannelName: String?,
     @ColumnInfo(name = "lead_count") val leadCount: Int,
 )
