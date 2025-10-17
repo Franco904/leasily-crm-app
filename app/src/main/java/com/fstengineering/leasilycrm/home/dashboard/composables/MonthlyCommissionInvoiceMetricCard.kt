@@ -103,7 +103,9 @@ fun MonthlyCommissionInvoiceMetricCard(
                         R.string.dashboard_plus_generic_body_text,
                         stringResource(
                             R.string.reais_currency_value,
-                            totalLast12Months,
+                            totalLast12Months
+                                .toString()
+                                .replace(".", ","),
                         ),
                     ),
                     style = MaterialTheme.typography.headlineLarge,

@@ -21,7 +21,9 @@ fun StayTotalPriceDetailsItem(
             totalPrice != null -> {
                 stringResource(
                     R.string.reais_currency_value,
-                    totalPrice.toString(),
+                    totalPrice
+                        .toString()
+                        .replace(".", ","),
                 )
             }
 

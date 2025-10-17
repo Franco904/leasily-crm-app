@@ -162,7 +162,9 @@ fun MaxAcceptedNightlyRateDetailsItem(
             else -> {
                 stringResource(
                     R.string.lead_tenant_assistance_details_max_accepted_nighly_rate,
-                    maxAcceptedNightlyRate.toString(),
+                    maxAcceptedNightlyRate
+                        .toString()
+                        .replace(".", ","),
                 )
             }
         },

@@ -19,7 +19,9 @@ fun StayCommissionDetailsItem(
             commission != null -> {
                 stringResource(
                     R.string.reais_currency_value,
-                    commission.toString(),
+                    commission
+                        .toString()
+                        .replace(".", ","),
                 )
             }
 

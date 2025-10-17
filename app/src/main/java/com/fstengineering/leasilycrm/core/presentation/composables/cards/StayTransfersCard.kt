@@ -27,6 +27,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOpt
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlin.toString
 
 @Composable
 fun StayTransfersCard(
@@ -107,7 +108,9 @@ fun StayTransfersCard(
                                 transfer.transferAmount != null -> {
                                     stringResource(
                                         id = R.string.reais_currency_value,
-                                        transfer.transferAmount,
+                                        transfer.transferAmount
+                                            .toString()
+                                            .replace(".", ","),
                                     )
                                 }
 

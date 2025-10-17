@@ -72,15 +72,15 @@
     <string name="dashboard_monthly_new_bookings_per_top3_neighborhoods_metric_title">Bairros mais alugados</string>
     <string name="dashboard_monthly_new_bookings_per_top3_neighborhoods_metric_description">Mede o número de novas reservas de estadia agendadas nos 3 bairros mais alugados pelo corretor em cada mês.</string>
 
-    <string name="dashboard_monthly_commission_invoice_metric_title">Faturamento total</string>
+    <string name="dashboard_monthly_commission_invoice_metric_title">Faturamento total (R$)</string>
     <string name="dashboard_monthly_commission_invoice_metric_description">Mede o faturamento total do corretor (comissão recebida) em estadias de aluguel de temporada em cada mês.</string>
-    <string name="dashboard_monthly_commission_invoice_per_tenant_segment_metric_title">Faturamento por segmento de inquilino</string>
+    <string name="dashboard_monthly_commission_invoice_per_tenant_segment_metric_title">Faturamento por segmento de inquilino (R$)</string>
     <string name="dashboard_monthly_commission_invoice_per_tenant_segment_metric_description">Mede o faturamento total do corretor (comissão recebida) em estadias de aluguel de temporada por segmento de inquilino em cada mês.</string>
-    <string name="dashboard_monthly_commission_invoice_per_property_owner_segment_metric_title">Faturamento por segmento de proprietário</string>
+    <string name="dashboard_monthly_commission_invoice_per_property_owner_segment_metric_title">Faturamento por segmento de proprietário (R$)</string>
     <string name="dashboard_monthly_commission_invoice_per_property_owner_segment_metric_description">Mede o faturamento total do corretor (comissão recebida) em estadias de aluguel de temporada por segmento de proprietário em cada mês.</string>
-    <string name="dashboard_monthly_commission_invoice_per_top3_neighborhoods_metric_title">Bairros mais rentáveis</string>
+    <string name="dashboard_monthly_commission_invoice_per_top3_neighborhoods_metric_title">Bairros mais rentáveis (R$)</string>
     <string name="dashboard_monthly_commission_invoice_per_top3_neighborhoods_metric_description">Mede o faturamento total do corretor (comissão recebida) em estadias de aluguel de temporada nos 3 bairros mais rentáveis de cada mês.</string>
-    <string name="dashboard_average_monthly_ticket_metric_title">Ticket médio</string>
+    <string name="dashboard_average_monthly_ticket_metric_title">Ticket médio (R$)</string>
     <string name="dashboard_average_monthly_ticket_metric_description">Mede o faturamento médio do corretor (comissão recebida) em cada mês, dividindo o faturamento total do mês pelo número de estadias de aluguel de temporada do mesmo período.</string>
 
     <string name="dashboard_last_12_months_body_text">Últimos 12 meses</string>

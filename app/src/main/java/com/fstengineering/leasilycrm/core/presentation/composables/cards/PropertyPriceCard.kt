@@ -49,6 +49,10 @@ fun PropertyPriceCard(
             )
             Spacer(modifier = Modifier.height(16.dp))
             monthPrices.forEach { price ->
+                val priceAmountFormatted = price.price
+                    .toString()
+                    .replace(".", ",")
+
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
@@ -67,7 +71,7 @@ fun PropertyPriceCard(
                             .weight(1f)
                     )
                     Text(
-                        text = "R$ ${price.price}",
+                        text = "R$ $priceAmountFormatted",
                         modifier = Modifier
                             .padding(end = if (hasMoreOptionsMenu) 0.dp else 4.dp)
                     )

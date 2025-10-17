@@ -48,11 +48,15 @@ fun PropertyDetailsFinancialPage(
     ) {
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
+            val cleaningServiceTaxFormatted = property.cleaningServiceTax
+                .toString()
+                .replace(".", ",")
+
             IconLabelValueDetailsItem(
                 icon = Icons.Outlined.CleaningServices,
                 label = stringResource(R.string.property_registration_cleaning_service_tax_label),
                 value = when {
-                    property.hasCleaningServiceIncluded == true -> "R$ ${property.cleaningServiceTax}"
+                    property.hasCleaningServiceIncluded == true -> "R$ $cleaningServiceTaxFormatted"
                     else -> stringResource(R.string.property_registration_does_not_include_cleaning_service_body_text)
                 },
                 isEmptyText = property.hasCleaningServiceIncluded != true,
@@ -62,7 +66,7 @@ fun PropertyDetailsFinancialPage(
         pricesDetailsItems(
             context = context,
             currentCalendar = currentCalendar,
-            prices = property.prices
+            prices = property.prices,
         )
         item { Spacer(modifier = Modifier.height(120.dp)) }
     }
