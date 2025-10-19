@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.home.stays
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

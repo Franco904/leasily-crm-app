@@ -27,7 +27,6 @@ import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOpt
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlin.toString
 
 @Composable
 fun StayTransfersCard(

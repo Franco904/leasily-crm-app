@@ -23,6 +23,7 @@ fun AssistanceSearchedNeighborhoodsDetailsItem(
             .mapNotNull { it.neighborhood }
             .run {
                 if (isEmpty()) return@run ""
+                if (size == 1) return@run first()
 
                 val subList = subList(0, size - 1)
                 "${subList.joinToString(separator = ", ")} ${context.getString(R.string.last_separator_label)} ${last()}"
