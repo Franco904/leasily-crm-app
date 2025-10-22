@@ -29,6 +29,10 @@ fun StayPeriodDetailsItem(
 ) {
     val defaultPeriodColor = MaterialTheme.colorScheme.secondaryContainer
 
+    val isUnavailablePeriod = stayStructuredDates.values.flatten()
+        .any { it.firstHalfPeriodIndex == -1 && it.secondHalfPeriodIndex == -1 }
+    val periodDailiesCount = stayStructuredDates.values.flatten().size - 1
+
     Column(
         modifier = modifier
     ) {
@@ -54,6 +58,7 @@ fun StayPeriodDetailsItem(
                 StayPeriodsCalendar(
                     month = monthYear.month,
                     year = monthYear.year,
+                    periodDailiesCount = if (isUnavailablePeriod) null else periodDailiesCount,
                     selectedDatesWithMonthYear = monthYear to stayDates,
                     singleStayPeriodColor = stayPeriodDateCircleColor ?: defaultPeriodColor,
                 )

@@ -341,8 +341,8 @@
 
     <string name="lead_tenant_assistance_details_no_searched_date_range">Período da estadia não informado.</string>
     <plurals name="lead_tenant_assistance_details_searched_date_range">
-        <item quantity="one">%1$s/%2$s/%3$s a %4$s/%5$s/%6$s (%7$s dia)</item>
-        <item quantity="other">%1$s/%2$s/%3$s a %4$s/%5$s/%6$s (%7$s dias)</item>
+        <item quantity="one">%1$s/%2$s/%3$s a %4$s/%5$s/%6$s (%7$s diária)</item>
+        <item quantity="other">%1$s/%2$s/%3$s a %4$s/%5$s/%6$s (%7$s diárias)</item>
     </plurals>
     <string name="lead_tenant_assistance_details_has_flexibility_for_period_label">Flexível</string>
 
@@ -390,7 +390,7 @@
     <string name="assistance_registration_step_2_title">Imóveis enviados</string>
     <string name="assistance_registration_step_3_title">Interações</string>
 
-    <string name="assistance_registration_date_range_label">Período</string>
+    <string name="assistance_registration_date_range_label">Período da estadia</string>
     <string name="assistance_registration_customer_has_flexibility_body_text">Cliente tem flexibilidade para o período</string>
     <string name="assistance_registration_max_accepted_nightly_rate_label">Preço máximo da diária (R$)</string>
 
@@ -542,6 +542,11 @@
     <plurals name="stay_details_qt_guests">
         <item quantity="one">%1$d hóspede</item>
         <item quantity="other">%1$d hóspedes</item>
+    </plurals>
+
+    <plurals name="stay_details_period_qt_dailies">
+        <item quantity="one">%1$s diária</item>
+        <item quantity="other">%1$s diárias</item>
     </plurals>
 
     <string name="stay_details_check_in_check_out_times_title">Horários</string>

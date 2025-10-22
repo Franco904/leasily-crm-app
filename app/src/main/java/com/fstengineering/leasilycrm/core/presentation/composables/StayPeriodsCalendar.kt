@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -42,6 +44,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,6 +52,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
@@ -72,6 +76,7 @@ fun StayPeriodsCalendar(
     month: Int,
     year: Int,
     modifier: Modifier = Modifier,
+    periodDailiesCount: Int? = null,
     selectedDatesWithMonthYear: Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>? = null,
     singleStayPeriodColor: Color? = null,
     onViewStay: ((Long) -> Unit)? = null,
@@ -111,7 +116,20 @@ fun StayPeriodsCalendar(
                     bottom = if (actions != null) 16.dp else 24.dp,
                 )
         ) {
-            MonthYearLabelSection(monthYearLabel = monthYearLabel)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                MonthYearLabelSection(
+                    monthYearLabel = monthYearLabel,
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                if (periodDailiesCount != null) {
+                    PeriodDailiesCountChipLabel(
+                        periodDailiesCount = periodDailiesCount,
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(16.dp))
             if (selectedDatesWithMonthYear?.second.isNullOrEmpty()) {
                 CurrentMonthStaysEmptySection(
@@ -162,6 +180,36 @@ fun MonthYearLabelSection(
         modifier = modifier
             .padding(start = 16.dp)
     )
+}
+
+@Composable
+fun PeriodDailiesCountChipLabel(
+    periodDailiesCount: Int,
+    modifier: Modifier = Modifier,
+) {
+    Card(
+        shape = MaterialTheme.shapes.small,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        ),
+        modifier = modifier
+    ) {
+        Text(
+            text = pluralStringResource(
+                R.plurals.stay_details_period_qt_dailies,
+                periodDailiesCount,
+                periodDailiesCount,
+            ),
+            style = MaterialTheme.typography.labelSmall.copy(
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 0.5.sp,
+            ),
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+    }
 }
 
 @Composable

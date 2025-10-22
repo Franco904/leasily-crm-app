@@ -20,7 +20,7 @@ fun SearchedStayDateRangeFormField(
     modifier: Modifier = Modifier,
 ) {
     FormTextField(
-        label = stringResource(R.string.property_registration_date_range_label),
+        label = stringResource(R.string.assistance_registration_date_range_label),
         value = when {
             searchedStartDate != null && searchedEndDate != null -> {
                 stringResource(
