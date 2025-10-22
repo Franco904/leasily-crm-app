@@ -58,7 +58,9 @@ fun AssistanceRegistrationStep3Screen(
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 

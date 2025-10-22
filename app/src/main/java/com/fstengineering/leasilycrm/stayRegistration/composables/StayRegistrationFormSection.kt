@@ -95,7 +95,9 @@ fun StayRegistrationFormSection(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
 
     val bringIntoViewRequesters = remember {
         StayField.entries.associateWith { BringIntoViewRequester() }
