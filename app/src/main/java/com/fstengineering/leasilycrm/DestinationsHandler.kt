@@ -70,7 +70,8 @@ object DestinationsHandler {
                 onSignInSuccess = {
                     onSignInSuccess()
 
-                    navController.navigate(Destinations.Home) {
+                    val destination = Destinations.Home(startedFromStayNotificationPopUp = false)
+                    navController.navigate(destination) {
                         val startDestination =
                             navController.graph.startDestinationRoute ?: return@navigate
 
