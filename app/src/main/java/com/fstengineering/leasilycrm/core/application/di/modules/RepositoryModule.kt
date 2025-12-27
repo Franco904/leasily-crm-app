@@ -227,7 +227,6 @@ val repositoryModule = module {
         TenantRepositoryProxy(
             cacheLocalDataSource = get(),
             tenantRepository = realRepository,
-            applicationScope = get(),
         )
     }
 

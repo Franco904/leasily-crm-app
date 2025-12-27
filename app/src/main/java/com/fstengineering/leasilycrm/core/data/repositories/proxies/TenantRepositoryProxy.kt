@@ -16,28 +16,10 @@ import kotlinx.coroutines.launch
 class TenantRepositoryProxy(
     private val cacheLocalDataSource: CacheLocalDataSource,
     private val tenantRepository: TenantRepository,
-    private val applicationScope: CoroutineScope,
 ) : TenantRepository {
-    init {
-        observeTenantChanges()
-    }
-
-    private fun observeTenantChanges() {
-        applicationScope.launch {
-            tenantRepository.watchAll()
-                .collect { result ->
-                    result
-                        .onError { _ -> return@collect }
-                        .onSuccess { _ ->
-                            cacheLocalDataSource.removeWhere<Tenant> { it is Tenant }
-                        }
-                }
-        }
-    }
-
     override suspend fun insertOrUpdate(tenant: Tenant): AppResult<Unit, DataSourceError> {
         return tenantRepository.insertOrUpdate(tenant)
-            .onSuccess { cacheLocalDataSource.get<Tenant>(key = tenant.id.toString()) }
+            .onSuccess { cacheLocalDataSource.removeWhere<Tenant> { it?.id == tenant.id } }
     }
 
     override suspend fun delete(id: Long): AppResult<Unit, DataSourceError> {

@@ -85,7 +85,6 @@ class TenantRepositoryImpl(
             order = orderTypeId,
         )
             .map { lead -> lead.toDomain() }
-            .filter { lead -> lead.isLead }
             .toPersistentList()
 
         return AppResult.Success(data = leads)
@@ -111,7 +110,6 @@ class TenantRepositoryImpl(
             order = orderTypeId,
         )
             .map { tenant -> tenant.toDomain() }
-            .filter { tenant -> !tenant.isLead }
             .toPersistentList()
 
         return AppResult.Success(data = tenants)
@@ -137,7 +135,6 @@ class TenantRepositoryImpl(
             currentTenantId = currentTenantId,
         )
             .map { tenant -> tenant.toDomain() }
-            .filter { tenant -> !tenant.hasUpcomingStay || tenant.id == currentTenantId }
             .toPersistentList()
 
         return AppResult.Success(data = tenants)
@@ -245,15 +242,6 @@ class TenantRepositoryImpl(
                 .map {
                     val tenants = it
                         .map { tenant -> tenant.toDomain() }
-                        .filter { tenant ->
-                            if (tenantStatusFilter == null) return@filter true
-
-                            return@filter when (tenantStatusFilter) {
-                                TenantStatus.Lead -> tenant.isLead
-                                TenantStatus.UpcomingStay -> tenant.hasUpcomingStay
-                                TenantStatus.Old -> tenant.isOld
-                            }
-                        }
                         .toPersistentList()
                     AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = tenants)
                 }
