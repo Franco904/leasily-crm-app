@@ -1,11 +1,10 @@
 package com.fstengineering.leasilycrm.core.presentation.models
 
-import androidx.annotation.StringRes
 import com.fstengineering.leasilycrm.R
 
 enum class LeadTenantOrderType(
     val id: Int,
-    @StringRes val label: Int?,
+    val label: Int?,
 ) {
     Name(1, R.string.order_by_name_text),
     LastUpdateDate(2, R.string.order_by_last_update_date_text);

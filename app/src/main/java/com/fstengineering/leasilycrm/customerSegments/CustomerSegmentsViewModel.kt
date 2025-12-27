@@ -274,13 +274,13 @@ class CustomerSegmentsViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+        data class DataSourceError(val messageId: Int) : UiEvents
 
         data object RedirectToSignIn : UiEvents
 
         data object CustomerSegmentCreateSuccess : UiEvents
 
-        data class CustomerSegmentEditSuccess(@StringRes val messageId: Int) : UiEvents
+        data class CustomerSegmentEditSuccess(val messageId: Int) : UiEvents
 
         data object CustomerSegmentDeleteSuccess : UiEvents
     }

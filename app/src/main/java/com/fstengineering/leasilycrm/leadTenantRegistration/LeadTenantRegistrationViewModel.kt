@@ -238,7 +238,7 @@ class LeadTenantRegistrationViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+        data class DataSourceError(val messageId: Int) : UiEvents
 
         data object RedirectToSignIn : UiEvents
 
@@ -246,6 +246,6 @@ class LeadTenantRegistrationViewModel(
 
         data object LeadCreateSuccess : UiEvents
 
-        data class LeadTenantEditSuccess(@StringRes val messageId: Int) : UiEvents
+        data class LeadTenantEditSuccess(val messageId: Int) : UiEvents
     }
 }

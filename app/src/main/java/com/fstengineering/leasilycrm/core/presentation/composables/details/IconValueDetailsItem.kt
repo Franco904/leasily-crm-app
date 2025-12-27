@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.core.presentation.composables.details
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
@@ -20,7 +19,7 @@ fun IconValueDetailsItem(
     value: String,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
-    @DrawableRes iconDrawable: Int? = null,
+    iconDrawable: Int? = null,
     isEmptyText: Boolean = false,
 ) {
     Row(

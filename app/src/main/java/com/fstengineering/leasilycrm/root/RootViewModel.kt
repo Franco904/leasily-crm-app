@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.root
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
@@ -50,7 +49,7 @@ class RootViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+        data class DataSourceError(val messageId: Int) : UiEvents
 
         data class SignInState(val isUserSignedIn: Boolean) : UiEvents
     }

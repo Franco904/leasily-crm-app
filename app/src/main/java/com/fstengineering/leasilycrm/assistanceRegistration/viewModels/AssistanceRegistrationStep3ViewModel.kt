@@ -117,6 +117,6 @@ class AssistanceRegistrationStep3ViewModel(
     sealed interface UiEvents {
         data object InteractionCreateSuccess : UiEvents
 
-        data class InteractionEditSuccess(@StringRes val messageId: Int) : UiEvents
+        data class InteractionEditSuccess(val messageId: Int) : UiEvents
     }
 }

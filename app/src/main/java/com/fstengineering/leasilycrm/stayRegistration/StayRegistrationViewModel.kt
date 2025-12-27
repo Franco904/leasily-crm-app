@@ -507,10 +507,10 @@ class StayRegistrationViewModel(
 
     sealed interface UiEvents {
 
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+        data class DataSourceError(val messageId: Int) : UiEvents
         data class ScrollToField(val field: StayField) : UiEvents
-        data class StayEditSuccess(@StringRes val messageId: Int) : UiEvents
-        data class TransferEditSuccess(@StringRes val messageId: Int) : UiEvents
+        data class StayEditSuccess(val messageId: Int) : UiEvents
+        data class TransferEditSuccess(val messageId: Int) : UiEvents
         data object RedirectToSignIn : UiEvents
         data object StayCreateSuccess : UiEvents
         data object TransferCreateSuccess : UiEvents

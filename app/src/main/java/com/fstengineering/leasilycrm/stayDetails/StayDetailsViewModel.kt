@@ -204,7 +204,7 @@ class StayDetailsViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+        data class DataSourceError(val messageId: Int) : UiEvents
 
         data object RedirectToSignIn : UiEvents
 

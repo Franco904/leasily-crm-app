@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.home.dashboard.composables
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CrmMetricChartEmptySection(
     icon: ImageVector,
-    @StringRes labelId: Int,
+    labelId: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(

@@ -245,13 +245,13 @@ class AssistanceRegistrationViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+        data class DataSourceError(val messageId: Int) : UiEvents
 
         data object RedirectToSignIn : UiEvents
 
         data object AssistanceCreateSuccess : UiEvents
 
-        data class AssistanceEditSuccess(@StringRes val messageId: Int) : UiEvents
+        data class AssistanceEditSuccess(val messageId: Int) : UiEvents
 
         data object ConvertOldTenantToLead : UiEvents
     }

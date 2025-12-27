@@ -280,12 +280,12 @@ class PropertyRegistrationViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+        data class DataSourceError(val messageId: Int) : UiEvents
 
         data object RedirectToSignIn : UiEvents
 
         data object PropertyCreateSuccess : UiEvents
 
-        data class PropertyEditSuccess(@StringRes val messageId: Int) : UiEvents
+        data class PropertyEditSuccess(val messageId: Int) : UiEvents
     }
 }

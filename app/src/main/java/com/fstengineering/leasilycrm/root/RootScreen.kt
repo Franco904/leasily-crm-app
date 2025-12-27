@@ -67,6 +67,7 @@ fun RootScreen(
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()

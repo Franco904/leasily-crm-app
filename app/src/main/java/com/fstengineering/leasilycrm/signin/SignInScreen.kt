@@ -78,6 +78,7 @@ fun SignInScreen(
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = primaryColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()

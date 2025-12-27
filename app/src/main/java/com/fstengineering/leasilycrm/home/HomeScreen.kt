@@ -127,6 +127,7 @@ fun HomeScreen(
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceContainerColor.toArgb()
