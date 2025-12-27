@@ -15,7 +15,7 @@ data class Tenant(
     val phone: String? = null,
     val email: String? = null,
     val observations: String? = null,
-    val status: Int = TenantStatus.Lead.id,
+    val status: TenantStatus = TenantStatus.Lead,
     val isDeleted: Boolean = false,
     val customerSegment: CustomerSegment? = null,
     val tenantContactOriginType: TenantContactOriginType? = null,
@@ -23,7 +23,6 @@ data class Tenant(
     val stays: ImmutableList<Stay> = persistentListOf(),
     val userId: Long? = null,
 ) {
-    val isLead = TenantStatus.fromId(id = status) == TenantStatus.Lead
-    val hasUpcomingStay = TenantStatus.fromId(id = status) == TenantStatus.UpcomingStay
-    val isOld = TenantStatus.fromId(id = status) == TenantStatus.Old
+    val isLead = status == TenantStatus.Lead
+    val isOld = status == TenantStatus.Old
 }

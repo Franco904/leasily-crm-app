@@ -8,6 +8,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Sta
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginTypeEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.views.TenantReadView
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import kotlinx.collections.immutable.toImmutableList
 
 data class TenantCompound(
@@ -52,7 +53,7 @@ data class TenantCompound(
         phone = tenant.phone,
         email = tenant.email,
         observations = tenant.observations,
-        status = tenant.status,
+        status = TenantStatus.fromId(id = tenant.status),
         isDeleted = tenant.isDeleted,
         customerSegment = customerSegment?.toDomain(),
         tenantContactOriginType = tenantContactOriginType?.toDomain(),
