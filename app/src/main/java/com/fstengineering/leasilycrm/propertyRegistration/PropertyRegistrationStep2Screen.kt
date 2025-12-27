@@ -94,7 +94,7 @@ fun PropertyRegistrationStep2Screen(
                     }
 
                     is ScrollToField -> {
-                        scrollToFieldFlow.send(uiEvent.field)
+                        scrollToFieldFlow.trySend(uiEvent.field)
                     }
 
                     is ValidateSuccess -> {

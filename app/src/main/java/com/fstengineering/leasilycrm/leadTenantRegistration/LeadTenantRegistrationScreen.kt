@@ -93,7 +93,7 @@ fun LeadTenantRegistrationScreen(
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.send(uiEvent.field)
+                    scrollToFieldFlow.trySend(uiEvent.field)
                 }
 
                 is LeadCreateSuccess -> {

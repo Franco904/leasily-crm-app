@@ -106,7 +106,7 @@ fun PropertyOwnerRegistrationScreen(
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.send(uiEvent.field)
+                    scrollToFieldFlow.trySend(uiEvent.field)
                 }
 
                 is PropertyOwnerCreateSuccess -> {

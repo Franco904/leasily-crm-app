@@ -138,7 +138,7 @@ fun StayRegistrationScreen(
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.send(uiEvent.field)
+                    scrollToFieldFlow.trySend(uiEvent.field)
                 }
 
                 is StayCreateSuccess -> {
