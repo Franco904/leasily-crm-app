@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
@@ -57,9 +58,11 @@ class TenantRepositoryImpl(
         tenantId: Long,
     ): AppResult<Tenant, DataSourceError> {
         val tenant = dao.getById(id = tenantId)
-            .toDomain()
+            ?.toDomain()
 
-        return AppResult.Success(data = tenant)
+        return tenant?.let { AppResult.Success(data = tenant) } ?: AppResult.Error(
+            DataSourceError.DatabaseError.NotFound,
+        )
     }
 
     override suspend fun getAllLeadsMatching(
@@ -81,7 +84,9 @@ class TenantRepositoryImpl(
             matching = matching,
             order = orderTypeId,
         )
-            .map { lead -> lead.toDomain() }.toPersistentList()
+            .map { lead -> lead.toDomain() }
+            .filter { lead -> lead.isLead }
+            .toPersistentList()
 
         return AppResult.Success(data = leads)
     }
@@ -105,7 +110,9 @@ class TenantRepositoryImpl(
             matching = matching,
             order = orderTypeId,
         )
-            .map { tenant -> tenant.toDomain() }.toPersistentList()
+            .map { tenant -> tenant.toDomain() }
+            .filter { tenant -> !tenant.isLead }
+            .toPersistentList()
 
         return AppResult.Success(data = tenants)
     }
@@ -129,7 +136,9 @@ class TenantRepositoryImpl(
             matching = matching,
             currentTenantId = currentTenantId,
         )
-            .map { tenant -> tenant.toDomain() }.toPersistentList()
+            .map { tenant -> tenant.toDomain() }
+            .filter { tenant -> !tenant.hasUpcomingStay || tenant.id == currentTenantId }
+            .toPersistentList()
 
         return AppResult.Success(data = tenants)
     }
@@ -207,63 +216,10 @@ class TenantRepositoryImpl(
         emitAll(tenantFlow)
     }
 
-    override fun watchAll(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> = flow {
-        val userRemoteId = encryptedPreferencesStorage.readPreferences()
-            .fold(
-                onError = {
-                    emit(AppResult.Error(error = it))
-                    return@flow
-                },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: run {
-                        emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        return@flow
-                    }
-                }
-            )
-
-        emitAll(
-            dao.watchAll(userId = userRemoteId)
-                .map {
-                    val leads = it.map { tenant -> tenant.toDomain() }.toPersistentList()
-                    AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = leads)
-                }
-                .distinctUntilChanged()
-        )
-    }
-
-    override fun watchAllLeads(
-        orderTypeId: Int,
-    ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
-        flow {
-            val userRemoteId = encryptedPreferencesStorage.readPreferences()
-                .fold(
-                    onError = {
-                        emit(AppResult.Error(error = it))
-                        return@flow
-                    },
-                    onSuccess = { prefsFlow ->
-                        prefsFlow.first().remoteId ?: run {
-                            emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                            return@flow
-                        }
-                    }
-                )
-
-            emitAll(
-                dao.watchAllLeads(userId = userRemoteId, order = orderTypeId)
-                    .map {
-                        val leads = it.map { tenant -> tenant.toDomain() }.toPersistentList()
-                        AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = leads)
-                    }
-                    .distinctUntilChanged()
-            )
-        }
-
-    override fun watchAllTenantsMatching(
-        orderTypeId: Int,
-        tenantFilterType: Int?,
+    override fun watchAll(
+        tenantStatusFilter: TenantStatus?,
         matching: String?,
+        orderTypeId: Int?,
     ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
@@ -280,14 +236,25 @@ class TenantRepositoryImpl(
                     }
                 )
 
-            val tenantsFlow = dao.watchAllTenants(
+            val tenantsFlow = dao.watchAll(
                 userId = userRemoteId,
-                order = orderTypeId,
-                tenantFilterType = tenantFilterType,
+                tenantStatusIdFilter = tenantStatusFilter?.id,
                 matching = matching,
+                orderTypeId = orderTypeId,
             )
                 .map {
-                    val tenants = it.map { tenant -> tenant.toDomain() }.toPersistentList()
+                    val tenants = it
+                        .map { tenant -> tenant.toDomain() }
+                        .filter { tenant ->
+                            if (tenantStatusFilter == null) return@filter true
+
+                            return@filter when (tenantStatusFilter) {
+                                TenantStatus.Lead -> tenant.isLead
+                                TenantStatus.UpcomingStay -> tenant.hasUpcomingStay
+                                TenantStatus.Old -> tenant.isOld
+                            }
+                        }
+                        .toPersistentList()
                     AppResult.Success<ImmutableList<Tenant>, DataSourceError>(data = tenants)
                 }
                 .distinctUntilChanged()

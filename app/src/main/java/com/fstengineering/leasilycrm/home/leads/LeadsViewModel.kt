@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -56,6 +57,10 @@ class LeadsViewModel(
         isInitialized = true
     }
 
+    fun onPause() {
+        isInitialized = false
+    }
+
     private fun watchSessionExpiration() {
         viewModelScope.launch {
             userRepository.watchSessionExpiration().collect { result ->
@@ -88,7 +93,8 @@ class LeadsViewModel(
 
             _orderType.update { LeadTenantOrderType.fromId(orderTypeId) }
 
-            tenantRepository.watchAllLeads(
+            tenantRepository.watchAll(
+                tenantStatusFilter = TenantStatus.Lead,
                 orderTypeId = orderTypeId,
             ).collect { result ->
                 result

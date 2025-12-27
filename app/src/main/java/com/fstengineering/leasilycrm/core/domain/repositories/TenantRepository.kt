@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.repositories
 
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import kotlinx.collections.immutable.ImmutableList
@@ -42,16 +43,10 @@ interface TenantRepository {
 
     fun watchById(tenantId: Long): Flow<AppResult<Tenant?, DataSourceError>>
 
-    fun watchAll(): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
-
-    fun watchAllLeads(
-        orderTypeId: Int,
-    ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
-
-    fun watchAllTenantsMatching(
-        orderTypeId: Int,
-        tenantFilterType: Int?,
-        matching: String?,
+    fun watchAll(
+        tenantStatusFilter: TenantStatus? = null,
+        matching: String? = null,
+        orderTypeId: Int? = null,
     ): Flow<AppResult<ImmutableList<Tenant>, DataSourceError>>
 
     suspend fun isThereTenantWithName(

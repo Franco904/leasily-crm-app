@@ -6,12 +6,12 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ass
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginTypeEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.views.TenantReadView
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import kotlinx.collections.immutable.toImmutableList
 
 data class TenantCompound(
-    @Embedded val tenant: TenantEntity,
+    @Embedded val tenant: TenantReadView,
     @Relation(
         parentColumn = "customer_segment_id",
         entityColumn = "id",

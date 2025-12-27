@@ -64,7 +64,7 @@ val viewModelModule = module {
 
     viewModel {
         HomeViewModel(
-            deleteCurrentAssistanceUseCase = get(),
+            assistanceRepository = get(),
             stayRepository = get(),
             userRepository = get(),
             now = AppLazyDateTime.now(),
@@ -196,8 +196,8 @@ val viewModelModule = module {
 
     viewModel {
         LeadTenantDetailsViewModel(
-            deleteCurrentAssistanceUseCase = get(),
             tenantRepository = get(),
+            assistanceRepository = get(),
             assistanceCharacteristicRepository = get(),
             userRepository = get(),
         )
@@ -245,7 +245,6 @@ val viewModelModule = module {
 
     viewModel {
         StaysViewModel(
-            deleteStayUseCase = get(),
             registerStayCheckOutUseCase = get(),
             undoRegisterStayCheckOutUseCase = get(),
             stayRepository = get(),
@@ -269,7 +268,6 @@ val viewModelModule = module {
 
     viewModel {
         StayDetailsViewModel(
-            deleteStayUseCase = get(),
             registerStayCheckOutUseCase = get(),
             undoRegisterStayCheckOutUseCase = get(),
             getStaysStructuredDatesUseCase = get(),

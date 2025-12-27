@@ -7,9 +7,9 @@ import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
+import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteCurrentAssistanceUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
@@ -24,8 +24,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LeadTenantDetailsViewModel(
-    private val deleteCurrentAssistanceUseCase: DeleteCurrentAssistanceUseCase,
     private val tenantRepository: TenantRepository,
+    private val assistanceRepository: AssistanceRepository,
     private val assistanceCharacteristicRepository: AssistanceCharacteristicRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {
@@ -133,10 +133,7 @@ class LeadTenantDetailsViewModel(
 
     fun deleteCurrentAssistance(currentAssistance: Assistance) {
         viewModelScope.launch {
-            deleteCurrentAssistanceUseCase(
-                currentAssistance = currentAssistance,
-                hasFinishedStays = leadTenant.value.hasFinishedStays(),
-            )
+            assistanceRepository.delete(id = currentAssistance.id!!)
                 .onError { error ->
                     if (error.isRedirectError()) {
                         userRepository.deleteCachedUser()

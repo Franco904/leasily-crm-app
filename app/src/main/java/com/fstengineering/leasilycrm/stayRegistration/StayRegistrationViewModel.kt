@@ -9,7 +9,6 @@ import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.StayFile
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
@@ -458,12 +457,8 @@ class StayRegistrationViewModel(
                 )
             }
 
-            if (stayForm.value.tenant != null) {
-                val updatedTenant = stayForm.value.tenant
-                    ?.copy(status = TenantStatus.UpcomingStay.id)
-                    ?: return@launch
-
-                tenantRepository.insertOrUpdate(updatedTenant)
+            stayForm.value.tenant?.let { tenant ->
+                tenantRepository.insertOrUpdate(tenant)
                     .onError { error ->
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                     }

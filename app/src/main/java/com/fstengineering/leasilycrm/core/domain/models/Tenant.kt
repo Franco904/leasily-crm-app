@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
@@ -14,7 +15,7 @@ data class Tenant(
     val phone: String? = null,
     val email: String? = null,
     val observations: String? = null,
-    val status: Int = 0,
+    val status: Int = TenantStatus.Lead.id,
     val isDeleted: Boolean = false,
     val customerSegment: CustomerSegment? = null,
     val tenantContactOriginType: TenantContactOriginType? = null,
@@ -22,9 +23,7 @@ data class Tenant(
     val stays: ImmutableList<Stay> = persistentListOf(),
     val userId: Long? = null,
 ) {
-    fun hasUnfinishedStay() = stays.any { !it.isCheckOutDone }
-
-    fun hasFinishedStays() = stays.any { it.isCheckOutDone }
-
-    fun hasFinishedAssistancesOrStays() = assistances.any { it.isFinished } || hasFinishedStays()
+    val isLead = TenantStatus.fromId(id = status) == TenantStatus.Lead
+    val hasUpcomingStay = TenantStatus.fromId(id = status) == TenantStatus.UpcomingStay
+    val isOld = TenantStatus.fromId(id = status) == TenantStatus.Old
 }

@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import java.time.LocalDateTime
 
@@ -42,7 +41,6 @@ data class TenantEntity(
     val phone: String?,
     val email: String?,
     val observations: String?,
-    val status: Int = TenantStatus.Lead.id,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Long?,
     @ColumnInfo(name = "tenant_contact_origin_type_id") val tenantContactOriginTypeId: Long?,
@@ -58,7 +56,6 @@ data class TenantEntity(
         phone = phone,
         email = email,
         observations = observations,
-        status = status,
         isDeleted = isDeleted,
         userId = userId,
         customerSegment = CustomerSegment(id = customerSegmentId),
@@ -80,7 +77,6 @@ data class TenantEntity(
                 phone = domain.phone,
                 email = domain.email,
                 observations = domain.observations,
-                status = domain.status,
                 isDeleted = domain.isDeleted,
                 customerSegmentId = domain.customerSegment?.id,
                 tenantContactOriginTypeId = domain.tenantContactOriginType?.id,

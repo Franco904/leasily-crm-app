@@ -30,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomsheet
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
@@ -125,7 +124,7 @@ fun LeadTenantRegistrationScreen(
         topBar = {
             LeadTenantRegistrationTopAppBar(
                 isEditing = leadTenantId != null,
-                isLead = leadTenantForm.status == TenantStatus.Lead.id,
+                isLead = leadTenantForm.isLead,
                 onBack = { mustShowConfirmLeaveRegistrationDialog = true },
                 onSaveLeadTenant = viewModel::saveLeadTenant,
             )

@@ -54,6 +54,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Sta
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransferEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginTypeEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.views.TenantReadView
 
 @Database(
     /*
@@ -85,6 +86,9 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ten
         StayTransferEntity::class,
         TenantEntity::class,
         TenantContactOriginTypeEntity::class,
+    ],
+    views = [
+        TenantReadView::class,
     ],
     version = AppDatabase.DB_VERSION,
 )

@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantCityDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantContactOriginTypeDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantEmailDetailsItem
@@ -54,7 +53,7 @@ fun LeadTenantDetailsIdentificationPage(
         Spacer(modifier = Modifier.height(24.dp))
         LeadTenantObservationsDetailsItem(
             observations = leadTenant.observations,
-            isLead = leadTenant.status == TenantStatus.Lead.id,
+            isLead = leadTenant.isLead,
         )
         Spacer(modifier = Modifier.height(120.dp))
     }

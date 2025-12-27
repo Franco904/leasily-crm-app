@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +35,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
@@ -69,6 +73,7 @@ fun StaysScreen(
     showActionSnackbar: (String, String, () -> Unit) -> Unit = { _, _, _ -> },
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val coroutineScope = rememberCoroutineScope()
     val horizontalScrollState = rememberScrollState()
@@ -160,6 +165,18 @@ fun StaysScreen(
                 scrollContainerCoords,
                 currentStayFilterTypeButtonCoords,
             )
+        }
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) viewModel.onPause()
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 

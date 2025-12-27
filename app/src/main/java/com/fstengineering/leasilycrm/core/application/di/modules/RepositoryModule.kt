@@ -29,6 +29,7 @@ import com.fstengineering.leasilycrm.core.data.repositories.StayTransferReposito
 import com.fstengineering.leasilycrm.core.data.repositories.TenantContactOriginTypeRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.TenantRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.UserRepositoryImpl
+import com.fstengineering.leasilycrm.core.data.repositories.proxies.TenantRepositoryProxy
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicAssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceInteractionRepository
@@ -217,10 +218,16 @@ val repositoryModule = module {
     }
 
     single<TenantRepository> {
-        TenantRepositoryImpl(
+        val realRepository = TenantRepositoryImpl(
             dao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
             plainPreferencesStorage = get(plainPreferencesQualifier),
+        )
+
+        TenantRepositoryProxy(
+            cacheLocalDataSource = get(),
+            tenantRepository = realRepository,
+            applicationScope = get(),
         )
     }
 

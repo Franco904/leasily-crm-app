@@ -1,15 +1,11 @@
 package com.fstengineering.leasilycrm.core.application.di.modules
 
 import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
-import com.fstengineering.leasilycrm.core.domain.useCases.DeleteCurrentAssistanceUseCaseImpl
-import com.fstengineering.leasilycrm.core.domain.useCases.DeleteStayUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.GetStaysStructuredDatesUseCaseImpl
-import com.fstengineering.leasilycrm.core.domain.useCases.GetTodayCheckInsCheckOutsToNotifyToNotifyUseCaseImpl
+import com.fstengineering.leasilycrm.core.domain.useCases.GetTodayCheckInsCheckOutsToNotifyUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.RegisterStayCheckOutUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.UndoRegisterStayCheckOutUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.WatchPropertyWithStaysTenantsUseCaseImpl
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteCurrentAssistanceUseCase
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteStayUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
@@ -18,25 +14,10 @@ import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchProper
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    single<DeleteCurrentAssistanceUseCase> {
-        DeleteCurrentAssistanceUseCaseImpl(
-            assistanceRepository = get(),
-            tenantRepository = get(),
-        )
-    }
-
-    single<DeleteStayUseCase> {
-        DeleteStayUseCaseImpl(
-            stayRepository = get(),
-            tenantRepository = get(),
-        )
-    }
-
     single<RegisterStayCheckOutUseCase> {
         RegisterStayCheckOutUseCaseImpl(
             stayRepository = get(),
             assistanceRepository = get(),
-            tenantRepository = get(),
         )
     }
 
@@ -44,7 +25,6 @@ val useCaseModule = module {
         UndoRegisterStayCheckOutUseCaseImpl(
             stayRepository = get(),
             assistanceRepository = get(),
-            tenantRepository = get(),
         )
     }
 
@@ -56,12 +36,11 @@ val useCaseModule = module {
         WatchPropertyWithStaysTenantsUseCaseImpl(
             propertyRepository = get(),
             tenantRepository = get(),
-            applicationScope = get(),
         )
     }
 
     single<GetTodayCheckInsCheckOutsToNotifyUseCase> {
-        GetTodayCheckInsCheckOutsToNotifyToNotifyUseCaseImpl(
+        GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
             stayRepository = get(),
             settingsRepository = get(),
             userRepository = get(),

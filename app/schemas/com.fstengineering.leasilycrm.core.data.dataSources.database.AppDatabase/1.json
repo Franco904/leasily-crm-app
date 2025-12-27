@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "26148a551480f2fa1587c15dbeefc8ab",
+    "identityHash": "65b61bbf643a2d72764dc8bf4d98ce4d",
     "entities": [
       {
         "tableName": "assistances",
@@ -1422,7 +1422,7 @@
       },
       {
         "tableName": "stays",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `is_from_other_realtor` INTEGER NOT NULL, `qt_guests` INTEGER, `total_price` TEXT, `check_in_date_time` INTEGER NOT NULL, `check_out_date_time` INTEGER NOT NULL, `is_auto_check_in` INTEGER NOT NULL, `is_auto_check_out` INTEGER NOT NULL, `is_check_in_done` INTEGER NOT NULL, `is_check_out_done` INTEGER NOT NULL, `commission` TEXT, `vehicle_make` TEXT, `vehicle_color` TEXT, `vehicle_license_plate` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `is_from_other_realtor` INTEGER NOT NULL, `qt_guests` INTEGER, `check_in_date_time` INTEGER NOT NULL, `check_out_date_time` INTEGER NOT NULL, `is_auto_check_in` INTEGER NOT NULL, `is_auto_check_out` INTEGER NOT NULL, `is_check_in_done` INTEGER NOT NULL, `is_check_out_done` INTEGER NOT NULL, `total_price` TEXT, `commission` TEXT, `vehicle_make` TEXT, `vehicle_color` TEXT, `vehicle_license_plate` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1451,11 +1451,6 @@
             "fieldPath": "qtGuests",
             "columnName": "qt_guests",
             "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "totalPrice",
-            "columnName": "total_price",
-            "affinity": "TEXT"
           },
           {
             "fieldPath": "checkInDateTime",
@@ -1492,6 +1487,11 @@
             "columnName": "is_check_out_done",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "totalPrice",
+            "columnName": "total_price",
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "commission",
@@ -1757,7 +1757,7 @@
       },
       {
         "tableName": "tenants",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `status` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1806,12 +1806,6 @@
             "fieldPath": "observations",
             "columnName": "observations",
             "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "status",
-            "columnName": "status",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
             "fieldPath": "isDeleted",
@@ -1926,9 +1920,15 @@
         }
       }
     ],
+    "views": [
+      {
+        "viewName": "tenants_read_view",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n            base.*,\n            CASE\n                WHEN base.has_no_stays OR (NOT base.has_upcoming_check_out AND base.has_unfinished_assistance) THEN 0\n                WHEN base.has_upcoming_check_out THEN 1\n                ELSE 2\n            END AS status\n        FROM (\n            SELECT\n            t.*,\n            NOT EXISTS (\n                SELECT 1 FROM stays s\n                WHERE (s.tenant_id = t.id AND s.is_deleted = 0)\n            ) AS has_no_stays,\n            EXISTS (\n                SELECT 1 FROM assistances a\n                WHERE (a.tenant_id = t.id AND a.is_deleted = 0)\n                AND a.is_finished = 0\n            ) AS has_unfinished_assistance,\n            EXISTS (\n                SELECT 1 FROM stays s\n                WHERE (s.tenant_id = t.id AND s.is_deleted = 0)\n                AND s.is_check_out_done = 0\n            ) AS has_upcoming_check_out\n            FROM tenants t\n        ) AS base"
+      }
+    ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '26148a551480f2fa1587c15dbeefc8ab')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '65b61bbf643a2d72764dc8bf4d98ce4d')"
     ]
   }
 }

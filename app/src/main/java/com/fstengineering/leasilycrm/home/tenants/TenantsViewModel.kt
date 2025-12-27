@@ -68,6 +68,10 @@ class TenantsViewModel(
         isInitialized = true
     }
 
+    fun onPause() {
+        isInitialized = false
+    }
+
     private fun watchSessionExpiration() {
         viewModelScope.launch {
             userRepository.watchSessionExpiration().collect { result ->
@@ -114,10 +118,10 @@ class TenantsViewModel(
                 .flatMapLatest { (order, filter, searchInput) ->
                     _isLoading.update { true }
 
-                    tenantRepository.watchAllTenantsMatching(
-                        orderTypeId = order.id,
-                        tenantFilterType = filter?.id,
+                    tenantRepository.watchAll(
+                        tenantStatusFilter = filter?.status,
                         matching = searchInput,
+                        orderTypeId = order.id,
                     )
                 }
                 .collect { result ->

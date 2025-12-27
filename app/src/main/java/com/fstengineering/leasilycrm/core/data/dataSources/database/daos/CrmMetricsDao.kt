@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.SkipQueryVerification
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.AverageTicketPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerCustomerSegmentPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerMonthCompound
@@ -33,13 +34,14 @@ interface CrmMetricsDao {
     )
     fun watchGeneratedLeadsPerMonth(userId: Long): Flow<List<GeneratedLeadsPerMonthCompound>>
 
+    @SkipQueryVerification
     @Query(
         """
         SELECT
             strftime('%m-%Y', datetime(t.create_date_time / 1000, 'unixepoch')) AS month_year,
             cs.name AS customer_segment_name,
             COUNT(*) AS total
-        FROM tenants t
+        FROM tenants_read_view t
         INNER JOIN customer_segments cs
             ON t.customer_segment_id = cs.id
             AND cs.customer_segment_type_id = 1
@@ -53,12 +55,13 @@ interface CrmMetricsDao {
     fun watchGeneratedLeadsPerTenantSegmentPerMonth(userId: Long):
             Flow<List<GeneratedLeadsPerTenantSegmentPerMonthCompound>>
 
+    @SkipQueryVerification
     @Query(
         """
         SELECT
             tcot.name AS lead_contact_channel_name,
             COUNT(*) AS lead_count
-        FROM tenants t
+        FROM tenants_read_view t
         LEFT JOIN tenant_contact_origin_types tcot
             ON t.tenant_contact_origin_type_id = tcot.id
             AND tcot.is_active = 1

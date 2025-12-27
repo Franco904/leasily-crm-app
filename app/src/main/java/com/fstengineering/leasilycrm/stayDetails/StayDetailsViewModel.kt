@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteStayUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class StayDetailsViewModel(
-    private val deleteStayUseCase: DeleteStayUseCase,
     private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
     private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
     private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
@@ -103,7 +101,7 @@ class StayDetailsViewModel(
 
     fun deleteStay() {
         viewModelScope.launch {
-            deleteStayUseCase(stay.value)
+            stayRepository.delete(id = stay.value.id!!)
                 .onError { error ->
                     if (error.isRedirectError()) {
                         userRepository.deleteCachedUser()

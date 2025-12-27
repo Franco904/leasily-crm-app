@@ -7,7 +7,6 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicAssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceInteractionRepository
@@ -234,12 +233,8 @@ class AssistanceRegistrationViewModel(
 
             _uiEvents.send(saveEvent)
 
-            if (assistanceForm.value.tenant?.status == TenantStatus.Old.id) {
-                val updatedTenant = assistanceForm.value.tenant
-                    ?.copy(status = TenantStatus.Lead.id)
-                    ?: return@launch
-
-                tenantRepository.insertOrUpdate(updatedTenant)
+            if (assistanceForm.value.tenant?.isOld == true) {
+                tenantRepository.insertOrUpdate(assistanceForm.value.tenant ?: return@launch)
                     .onError { error ->
                         _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                     }

@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransferEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.views.TenantReadView
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import kotlinx.collections.immutable.toImmutableList
 
@@ -21,7 +21,7 @@ data class StayCompound(
     @Relation(
         parentColumn = "tenant_id",
         entityColumn = "id",
-        entity = TenantEntity::class,
+        entity = TenantReadView::class,
     )
     val tenant: TenantCompound?,
     @Relation(

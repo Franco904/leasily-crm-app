@@ -60,7 +60,10 @@ data class AppLazyDateTime(
     }
 
     companion object {
-        fun now(): AppLazyDateTime = AppLazyDateTime { LocalDateTime.now() }
+        fun now(): AppLazyDateTime {
+            val now = LocalDateTime.now()
+            return AppLazyDateTime { now }
+        }
 
         fun fromMillis(millis: Long): AppLazyDateTime {
             val lazyDateTime = {

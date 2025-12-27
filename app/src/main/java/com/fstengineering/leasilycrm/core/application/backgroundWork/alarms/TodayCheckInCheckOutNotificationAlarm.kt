@@ -28,11 +28,11 @@ object TodayCheckInCheckOutNotificationAlarm {
             /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
-        val triggerAtMillis = AppLazyDateTime.now()
-            .withHourMinute(hour = 7, minute = 0)
+        val now = AppLazyDateTime.now()
+        val triggerAtMillis = now.withHourMinute(hour = 7, minute = 0)
 
         val triggerAtMillisAdjusted = (
-                triggerAtMillis.takeIf { it.isAfter(AppLazyDateTime.now()) }
+                triggerAtMillis.takeIf { it.isAfter(now) }
                     ?: triggerAtMillis.plusDays(daysToAdd = 1)
                 )
             .toEpochMillisLocalZone()

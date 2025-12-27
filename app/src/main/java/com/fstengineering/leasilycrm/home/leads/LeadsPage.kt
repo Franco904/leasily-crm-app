@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
@@ -63,6 +67,7 @@ fun LeadsPage(
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val lazyListState = rememberLazyListState()
 
@@ -105,6 +110,18 @@ fun LeadsPage(
 
     LaunchedEffect(searchInput) {
         viewModel.onSearchInputChange(searchInput = searchInput)
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) viewModel.onPause()
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 
     Scaffold(
