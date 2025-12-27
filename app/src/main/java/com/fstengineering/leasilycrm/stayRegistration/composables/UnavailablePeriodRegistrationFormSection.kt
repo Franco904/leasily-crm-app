@@ -58,7 +58,6 @@ fun UnavailablePeriodRegistrationFormSection(
     getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<LocalDate>,
     onSelectProperty: () -> Unit,
     onPeriodDisabledByPropertyUnselected: () -> Unit,
-    onLastTextFieldDone: () -> Unit,
     scrollToFieldFlow: Flow<StayField>,
     modifier: Modifier = Modifier,
 ) {
@@ -201,7 +200,6 @@ fun UnavailablePeriodRegistrationFormSection(
                 value = stayForm.observations,
                 onValueChange = { onStayFormChange(stayForm.copy(observations = it)) },
                 isUnavailablePeriod = true,
-                onDone = onLastTextFieldDone,
             )
         }
     }

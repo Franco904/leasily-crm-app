@@ -13,7 +13,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.textFields.Fo
 fun LeadTenantObservationsFormField(
     observations: String?,
     onObservationsChange: (String?) -> Unit,
-    onDone: () -> Unit,
     fieldFocusRequester: FocusRequester,
     isLead: Boolean,
     modifier: Modifier = Modifier,
@@ -29,7 +28,6 @@ fun LeadTenantObservationsFormField(
         onValueChange = onObservationsChange,
         isSingleLine = false,
         maxLength = 2000,
-        onDone = { onDone() },
         fieldFocusRequester = fieldFocusRequester,
         modifier = modifier
             .height(180.dp)
