@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import androidx.room.SkipQueryVerification
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.AverageTicketPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerCustomerSegmentPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerMonthCompound
@@ -34,7 +33,6 @@ interface CrmMetricsDao {
     )
     fun watchGeneratedLeadsPerMonth(userId: Long): Flow<List<GeneratedLeadsPerMonthCompound>>
 
-    @SkipQueryVerification
     @Query(
         """
         SELECT
@@ -55,7 +53,6 @@ interface CrmMetricsDao {
     fun watchGeneratedLeadsPerTenantSegmentPerMonth(userId: Long):
             Flow<List<GeneratedLeadsPerTenantSegmentPerMonthCompound>>
 
-    @SkipQueryVerification
     @Query(
         """
         SELECT
