@@ -39,7 +39,7 @@ interface CrmMetricsDao {
             strftime('%m-%Y', datetime(t.create_date_time / 1000, 'unixepoch')) AS month_year,
             cs.name AS customer_segment_name,
             COUNT(*) AS total
-        FROM tenants t
+        FROM tenants_read_view t
         INNER JOIN customer_segments cs
             ON t.customer_segment_id = cs.id
             AND cs.customer_segment_type_id = 1
@@ -58,7 +58,7 @@ interface CrmMetricsDao {
         SELECT
             tcot.name AS lead_contact_channel_name,
             COUNT(*) AS lead_count
-        FROM tenants t
+        FROM tenants_read_view t
         LEFT JOIN tenant_contact_origin_types tcot
             ON t.tenant_contact_origin_type_id = tcot.id
             AND tcot.is_active = 1

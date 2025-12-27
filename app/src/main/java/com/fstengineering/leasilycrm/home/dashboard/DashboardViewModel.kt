@@ -117,6 +117,10 @@ class DashboardViewModel(
         isInitialized = true
     }
 
+    fun onPause() {
+        isInitialized = false
+    }
+
     private fun watchGeneratedLeadsPerMonth() {
         viewModelScope.launch {
             crmMetricsRepository.watchGeneratedLeadsPerMonth().collect { result ->

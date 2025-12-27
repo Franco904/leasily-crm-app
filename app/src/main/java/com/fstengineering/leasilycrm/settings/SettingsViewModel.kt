@@ -72,13 +72,9 @@ class SettingsViewModel(
         }
     }
 
-    fun onIsTodayCheckInCheckOutNotificationEnabledChange(
-        isEnabled: Boolean,
-    ) {
+    fun onIsTodayCheckInCheckOutNotificationEnabledChange(isEnabled: Boolean) {
         viewModelScope.launch {
-            settingsRepository.setIsTodayCheckInCheckOutNotificationEnabled(
-                isEnabled = isEnabled,
-            )
+            settingsRepository.setIsTodayCheckInCheckOutNotificationEnabled(isEnabled = isEnabled)
                 .onError { error ->
                     _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
                 }

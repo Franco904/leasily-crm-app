@@ -1,12 +1,12 @@
 package com.fstengineering.leasilycrm.home.tenants.models
 
-import androidx.annotation.StringRes
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 
 enum class TenantFilterType(
-    val id: Int,
-    @StringRes val label: Int,
+    val status: TenantStatus,
+    val label: Int,
 ) {
-    UpcomingStay(1, R.string.tenants_upcoming_stays_filter_text),
-    Old(2, R.string.tenants_old_filter_text),
+    UpcomingStay(TenantStatus.UpcomingStay, R.string.tenants_upcoming_stays_filter_text),
+    Old(TenantStatus.Old, R.string.tenants_old_filter_text),
 }

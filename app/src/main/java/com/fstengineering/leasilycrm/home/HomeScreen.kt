@@ -256,11 +256,7 @@ fun HomeScreen(
         if (assistanceToDelete != null) {
             ConfirmDeleteAssistanceDialog(
                 onConfirmDelete = {
-                    viewModel.deleteCurrentAssistance(
-                        currentAssistance = assistanceToDelete!!,
-                        leadTenant = assistanceToDelete?.tenant!!,
-                    )
-
+                    viewModel.deleteCurrentAssistance(currentAssistance = assistanceToDelete!!)
                     assistanceToDelete = null
                 },
                 onCancel = { assistanceToDelete = null },

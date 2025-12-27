@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.first
 
-class GetTodayCheckInsCheckOutsToNotifyToNotifyUseCaseImpl(
+class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
     private val stayRepository: StayRepository,
     private val settingsRepository: SettingsRepository,
     private val userRepository: UserRepository,

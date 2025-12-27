@@ -7,7 +7,6 @@ import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.DeleteStayUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -31,7 +30,6 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class StaysViewModel(
-    private val deleteStayUseCase: DeleteStayUseCase,
     private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
     private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
     private val stayRepository: StayRepository,
@@ -77,6 +75,10 @@ class StaysViewModel(
         watchTodayCheckInsAndCheckouts()
 
         isInitialized = true
+    }
+
+    fun onPause() {
+        isInitialized = false
     }
 
     private fun watchSessionExpiration() {
@@ -196,7 +198,7 @@ class StaysViewModel(
         viewModelScope.launch {
             val stayToDelete = this@StaysViewModel.stayToDelete.value ?: return@launch
 
-            deleteStayUseCase(stayToDelete)
+            stayRepository.delete(id = stayToDelete.id!!)
                 .onError { error ->
                     if (error.isRedirectError()) {
                         userRepository.deleteCachedUser()
