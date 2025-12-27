@@ -280,6 +280,11 @@ fun StayRegistrationScreen(
                                 onSelectProperty = {
                                     listStatus = StayRegistrationListState.SelectingProperty
                                 },
+                                onPeriodDisabledByPropertyUnselected = {
+                                    showSnackbar(
+                                        context.getString(R.string.snackbar_register_first_select_property_warning)
+                                    )
+                                },
                                 onLastTextFieldDone = { focusManager.clearFocus() },
                                 scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
                                 modifier = Modifier
