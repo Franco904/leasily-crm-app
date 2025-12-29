@@ -16,7 +16,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,14 +28,15 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.external.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.ContinueSignOut
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.EditUserSuccess
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.profile.composables.ConfirmSignOutUserDialog
 import com.fstengineering.leasilycrm.profile.composables.EditUserDialog
 import com.fstengineering.leasilycrm.profile.composables.ProfileDataSection
 import com.fstengineering.leasilycrm.profile.composables.ProfileScreenTopBar
+import com.fstengineering.leasilycrm.profile.models.strategies.SignOutErrorBottomSheetDataPropertiesStrategy
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,8 +48,6 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
 ) {
     val activity = LocalActivity.current!!
-
-    val coroutineScope = rememberCoroutineScope()
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
@@ -67,9 +65,17 @@ fun ProfileScreen(
             when (uiEvent) {
                 is Error -> {
                     val errorData = uiEvent.error.toBottomSheetData(
-                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                        SignOutErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
+                }
+
+                is ContinueSignOut -> {
+                    launch {
+                        credentialManager.clearGoogleCredentialState(activityContext = activity)
+                            .onError { e -> onUiEvent(UiEvent.ShowErrorBottomSheet(e.toBottomSheetData())) }
+                            .onSuccess { viewModel.signOutUser() }
+                    }
                 }
 
                 is EditUserSuccess -> {
@@ -125,14 +131,7 @@ fun ProfileScreen(
                 ConfirmSignOutUserDialog(
                     onConfirmSignOut = {
                         isConfirmingSigningOut = false
-
-                        coroutineScope.launch {
-                            credentialManager.clearGoogleCredentialState(
-                                activityContext = activity,
-                            )
-                                .onError { e -> }
-                                .onSuccess { viewModel.signOutUser() }
-                        }
+                        viewModel.onSignOut()
                     },
                     onCancel = { isConfirmingSigningOut = false },
                 )

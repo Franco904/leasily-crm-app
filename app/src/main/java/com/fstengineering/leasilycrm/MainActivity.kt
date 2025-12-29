@@ -128,7 +128,7 @@ class MainActivity : ComponentActivity() {
                             sheetState = sheetState,
                             errorBottomSheetData = errorBottomSheetData!!,
                             onDismissRequest = { errorBottomSheetData = null },
-                            onSecondaryActionPress = {},
+                            onUiEvent = { uiEvent -> onUiEvent(uiEvent) }
                         )
                     }
                 }

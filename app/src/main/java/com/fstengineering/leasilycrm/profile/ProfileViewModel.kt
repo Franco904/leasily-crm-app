@@ -14,6 +14,7 @@ import com.fstengineering.leasilycrm.core.domain.validators.interfaces.UserValid
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.models.EditUserErrorUiState
 import com.fstengineering.leasilycrm.profile.models.UserUiState
+import com.fstengineering.leasilycrm.signin.SignInViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -118,6 +119,15 @@ class ProfileViewModel(
         _formErrors.update { EditUserErrorUiState() }
     }
 
+    fun onSignOut() {
+        viewModelScope.launch {
+            val event = if (userRepository.isDeviceConnectedToInternet()) UiEvents.ContinueSignOut
+            else UiEvents.Error(DataError.NoInternetError)
+
+            _uiEvents.send(event)
+        }
+    }
+
     fun signOutUser() {
         viewModelScope.launch {
             userSessionService.onUserInitiatedSignOut()
@@ -127,7 +137,7 @@ class ProfileViewModel(
 
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
-
         data class EditUserSuccess(val messageId: Int) : UiEvents
+        data object ContinueSignOut : UiEvents
     }
 }

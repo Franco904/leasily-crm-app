@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppOutlinedButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryButton
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,9 +31,11 @@ fun AppErrorBottomSheet(
     sheetState: SheetState,
     errorBottomSheetData: ErrorBottomSheetData,
     onDismissRequest: () -> Unit,
-    onSecondaryActionPress: () -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
@@ -62,13 +66,18 @@ fun AppErrorBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            AppOutlinedButton(
-                label = stringResource(R.string.contact_support_action_button_text),
-                onClick = onSecondaryActionPress,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
+            if (errorBottomSheetData.secondaryActionLabel != null && errorBottomSheetData.onSecondaryAction != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                AppOutlinedButton(
+                    label = stringResource(errorBottomSheetData.secondaryActionLabel),
+                    onClick = {
+                        onDismissRequest()
+                        errorBottomSheetData.onSecondaryAction(context) { a -> onUiEvent(a) }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -85,9 +94,11 @@ fun AppErrorBottomSheetPreview(
             errorBottomSheetData = ErrorBottomSheetData(
                 title = R.string.unknown_error_title,
                 description = R.string.unknown_error_description_default,
+                secondaryActionLabel = null,
+                onSecondaryAction = null,
             ),
             onDismissRequest = {},
-            onSecondaryActionPress = {},
+            onUiEvent = {},
             modifier = modifier
         )
     }
