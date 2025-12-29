@@ -20,7 +20,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
 import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueLazyWritesWorker
@@ -57,7 +59,9 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 val context = LocalContext.current
                 val coroutineScope = rememberCoroutineScope()
+
                 val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
 
                 var errorBottomSheetData: ErrorBottomSheetData? by remember { mutableStateOf(null) }
                 val sheetState = rememberModalBottomSheetState()
@@ -105,7 +109,19 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Scaffold(
-                    snackbarHost = { AppSnackbarHost(snackbarHostState = snackBarHostState) },
+                    snackbarHost = {
+                        val isHomeDest by remember(navBackStackEntry) {
+                            mutableStateOf(
+                                navBackStackEntry?.destination?.route?.contains("Home") == true
+                            )
+                        }
+
+                        AppSnackbarHost(
+                            snackbarHostState = snackBarHostState,
+                            modifier = Modifier
+                                .padding(bottom = if (isHomeDest) 48.dp else 0.dp)
+                        )
+                    },
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
