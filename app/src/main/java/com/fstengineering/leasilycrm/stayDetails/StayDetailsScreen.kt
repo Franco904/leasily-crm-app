@@ -17,24 +17,25 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
-import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.NavigateUp
-import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.RegisterCheckInSuccess
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.RegisterCheckOutSuccess
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel.UiEvents.StayDeleteSuccess
@@ -53,11 +54,8 @@ fun StayDetailsScreen(
     onViewPropertyDashboard: (Long) -> Unit,
     onViewTenantDetails: (Long) -> Unit,
     onBack: () -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
-    showActionSnackbar: (String, String, () -> Unit) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    stayPeriodDateCircleColor: Color? = null,
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current!!
@@ -70,10 +68,10 @@ fun StayDetailsScreen(
     val now by rememberNow()
 
     val checkInDateTimeStartOfDay = stay.checkInDateTime?.let {
-        AppLazyDateTime { it }.toStartOfDay()
+        AppDateTime { it }.toStartOfDay()
     }
     val checkOutDateTimeStartOfDay = stay.checkOutDateTime?.let {
-        AppLazyDateTime { it }.toStartOfDay()
+        AppDateTime { it }.toStartOfDay()
     }
 
     val canRegisterCheckIn = !stay.isCheckInDone
@@ -95,12 +93,11 @@ fun StayDetailsScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is StayDeleteSuccess -> {
@@ -108,22 +105,26 @@ fun StayDetailsScreen(
                         if (stay.isUnavailablePeriod) R.string.snackbar_delete_unavailable_period_succeeded
                         else R.string.snackbar_delete_stay_succeeded
 
-                    showSnackbar(context.getString(messageId))
+                    onUiEvent(UiEvent.ShowSnackBar(messageId))
                 }
 
                 RegisterCheckInSuccess -> {
-                    showActionSnackbar(
-                        context.getString(R.string.snackbar_register_check_in_stay_succeeded),
-                        context.getString(R.string.undo_button_text),
-                        viewModel::undoRegisterStayCheckIn,
+                    onUiEvent(
+                        UiEvent.ShowActionSnackBar(
+                            R.string.snackbar_register_check_in_stay_succeeded,
+                            R.string.undo_button_text,
+                            viewModel::undoRegisterStayCheckIn,
+                        )
                     )
                 }
 
                 RegisterCheckOutSuccess -> {
-                    showActionSnackbar(
-                        context.getString(R.string.snackbar_register_check_out_stay_succeeded),
-                        context.getString(R.string.undo_button_text),
-                        viewModel::undoRegisterStayCheckOut,
+                    onUiEvent(
+                        UiEvent.ShowActionSnackBar(
+                            R.string.snackbar_register_check_out_stay_succeeded,
+                            R.string.undo_button_text,
+                            viewModel::undoRegisterStayCheckOut,
+                        )
                     )
                 }
 
@@ -198,7 +199,6 @@ fun StayDetailsScreen(
                 StayDetailsSection(
                     stay = stay,
                     stayStructuredDates = stayStructuredDates,
-                    stayPeriodDateCircleColor = stayPeriodDateCircleColor,
                     onOpenStayFile = { file ->
                         context.openFileWithChooser(
                             uriString = file.uriString,

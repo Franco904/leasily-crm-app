@@ -24,17 +24,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyOwnerDialog
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
-import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.PropertyOwnerDeleteSuccess
-import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersEmptySection
 import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersTopAppBar
@@ -42,14 +43,12 @@ import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersTo
 @Composable
 fun PropertyOwnersScreen(
     viewModel: PropertyOwnersViewModel,
+    onBack: () -> Unit,
+    onRegisterPropertyOwner: (Long?) -> Unit,
+    onViewPropertyOwnerDetails: (Long) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    onBack: () -> Unit = {},
-    onRegisterPropertyOwner: (Long?) -> Unit = { _ -> },
-    onViewPropertyOwnerDetails: (Long) -> Unit = { _ -> },
-    onSignOut: () -> Unit = {},
-    showSnackbar: (String) -> Unit = { _ -> },
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
 
     val lazyListState = rememberLazyListState()
@@ -66,16 +65,15 @@ fun PropertyOwnersScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is PropertyOwnerDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_property_owner_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_property_owner_succeeded))
                 }
             }
         }

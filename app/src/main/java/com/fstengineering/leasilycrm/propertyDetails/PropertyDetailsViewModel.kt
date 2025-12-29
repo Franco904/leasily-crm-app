@@ -1,16 +1,14 @@
 package com.fstengineering.leasilycrm.propertyDetails
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Job
@@ -24,7 +22,6 @@ import kotlinx.coroutines.launch
 class PropertyDetailsViewModel(
     private val propertyRepository: PropertyRepository,
     private val propertyCharacteristicRepository: PropertyCharacteristicRepository,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -46,29 +43,11 @@ class PropertyDetailsViewModel(
     fun init(propertyId: Long) {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchProperty(propertyId = propertyId)
 
         getPropertyCharacteristics()
 
         isInitialized = true
-    }
-
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
     }
 
     private fun watchProperty(propertyId: Long) {
@@ -77,9 +56,7 @@ class PropertyDetailsViewModel(
         watchPropertyJob = viewModelScope.launch {
             propertyRepository.watchById(propertyId).collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { storedProperty ->
                         if (storedProperty == null) {
                             _uiEvents.send(UiEvents.NavigateUp)
@@ -96,12 +73,8 @@ class PropertyDetailsViewModel(
     private fun getPropertyCharacteristics() {
         viewModelScope.launch {
             propertyCharacteristicRepository.getAll()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
-                .onSuccess { storedCharacteristics ->
-                    _propertyCharacteristics.update { storedCharacteristics }
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess { characteristics -> _propertyCharacteristics.update { characteristics } }
 
             _isLoading.update { false }
         }
@@ -114,24 +87,13 @@ class PropertyDetailsViewModel(
 
         viewModelScope.launch {
             propertyRepository.delete(id = propertyId)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
-
-            _uiEvents.send(UiEvents.PropertyDeleteSuccess)
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess { _uiEvents.send(UiEvents.PropertyDeleteSuccess) }
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
+        data class Error(val error: DataError) : UiEvents
 
         data object NavigateUp : UiEvents
 

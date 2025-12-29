@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
@@ -15,11 +14,10 @@ import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceSearched
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceSentPropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
@@ -38,7 +36,6 @@ class AssistanceRegistrationViewModel(
     private val assistanceCharacteristicAssistanceRepository: AssistanceCharacteristicAssistanceRepository,
     private val assistanceSentPropertyRepository: AssistanceSentPropertyRepository,
     private val assistanceInteractionRepository: AssistanceInteractionRepository,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -77,8 +74,6 @@ class AssistanceRegistrationViewModel(
 
         _isLoading.update { true }
 
-        watchSessionExpiration()
-
         if (assistanceId != null) {
             getAssistanceToEdit(assistanceId)
             this.assistanceId = assistanceId
@@ -93,29 +88,10 @@ class AssistanceRegistrationViewModel(
         isInitialized = true
     }
 
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
-    }
-
     private fun getAssistanceToEdit(assistanceId: Long) {
         viewModelScope.launch {
             assistanceRepository.getById(assistanceId)
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedAssistance ->
                     _assistanceForm.update { storedAssistance }
                     assistanceToEdit = storedAssistance
@@ -128,9 +104,7 @@ class AssistanceRegistrationViewModel(
     private fun getAssistanceLeadTenant(leadTenantId: Long) {
         viewModelScope.launch {
             tenantRepository.getById(tenantId = leadTenantId)
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedLeadTenant ->
                     _assistanceForm.update { it.copy(tenant = storedLeadTenant) }
                 }
@@ -142,16 +116,8 @@ class AssistanceRegistrationViewModel(
     private fun getPastNeighborhoods() {
         viewModelScope.launch {
             assistanceRepository.getAllNeighborhoodNames()
-                .onError { error ->
-                    _uiEvents.send(
-                        UiEvents.DataSourceError(
-                            messageId = error.toUiMessage()
-                        )
-                    )
-                }
-                .onSuccess { neighborhoodNames ->
-                    _pastNeighborhoods.update { neighborhoodNames }
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess { neighborhoodNames -> _pastNeighborhoods.update { neighborhoodNames } }
 
             _isLoading.update { false }
         }
@@ -160,9 +126,7 @@ class AssistanceRegistrationViewModel(
     private fun getSeaProximityTypes() {
         viewModelScope.launch {
             propertySeaProximityTypeRepository.getAll()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedSeaProximityTypes ->
                     _seaProximityTypes.update { storedSeaProximityTypes }
                 }
@@ -172,9 +136,7 @@ class AssistanceRegistrationViewModel(
     private fun getAssistancePropertyCharacteristics() {
         viewModelScope.launch {
             assistanceCharacteristicRepository.getAll()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedAssistanceCharacteristics ->
                     _assistancePropertyCharacteristics.update { storedAssistanceCharacteristics }
                 }
@@ -196,10 +158,7 @@ class AssistanceRegistrationViewModel(
 
             val assistanceId = assistanceRepository.insertOrUpdate(assistanceForm.value)
                 .fold(
-                    onError = { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        return@launch
-                    },
+                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
                     onSuccess = { assistanceId -> assistanceId },
                 )
 
@@ -234,20 +193,13 @@ class AssistanceRegistrationViewModel(
             _uiEvents.send(saveEvent)
 
             if (assistanceForm.value.tenant?.isOld == true) {
-                tenantRepository.insertOrUpdate(assistanceForm.value.tenant ?: return@launch)
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-
                 _uiEvents.send(UiEvents.ConvertOldTenantToLead)
             }
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
+        data class Error(val error: DataError) : UiEvents
 
         data object AssistanceCreateSuccess : UiEvents
 

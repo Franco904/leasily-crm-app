@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.models.PropertyType
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyValidator
 import java.math.BigDecimal
@@ -14,8 +14,8 @@ import java.math.BigDecimal
 class PropertyValidatorImpl : PropertyValidator {
     override fun validate(
         property: Property,
-    ): AppResultCompound<Unit, ValidationError> {
-        val errors = mutableListOf<ValidationError>()
+    ): AppResultCompound<Unit, DomainError> {
+        val errors = mutableListOf<DomainError>()
 
         validatePropertyOwner(property.owner).onError { e -> errors.add(e) }
         validatePropertyType(property.type).onError { e -> errors.add(e) }
@@ -34,10 +34,10 @@ class PropertyValidatorImpl : PropertyValidator {
 
     private fun validatePropertyOwner(
         owner: PropertyOwner?,
-    ): AppResult<Unit, ValidationError.PropertyPropertyOwner> {
+    ): AppResult<Unit, DomainError.PropertyPropertyOwner> {
         return when {
             owner == null -> {
-                AppResult.Error(ValidationError.PropertyPropertyOwner.IsNull)
+                AppResult.Error(DomainError.PropertyPropertyOwner.IsNull)
             }
 
             else -> AppResult.Success(Unit)
@@ -46,10 +46,10 @@ class PropertyValidatorImpl : PropertyValidator {
 
     private fun validatePropertyType(
         type: PropertyType?,
-    ): AppResult<Unit, ValidationError.PropertyType> {
+    ): AppResult<Unit, DomainError.PropertyType> {
         return when {
             type == null -> {
-                AppResult.Error(ValidationError.PropertyType.IsNull)
+                AppResult.Error(DomainError.PropertyType.IsNull)
             }
 
             else -> AppResult.Success(Unit)
@@ -58,10 +58,10 @@ class PropertyValidatorImpl : PropertyValidator {
 
     private fun validateNeighborhood(
         neighborhood: String?,
-    ): AppResult<Unit, ValidationError.PropertyNeighborhood> {
+    ): AppResult<Unit, DomainError.PropertyNeighborhood> {
         return when {
             neighborhood.isNullOrBlank() -> {
-                AppResult.Error(ValidationError.PropertyNeighborhood.IsBlank)
+                AppResult.Error(DomainError.PropertyNeighborhood.IsBlank)
             }
 
             else -> AppResult.Success(Unit)
@@ -70,10 +70,10 @@ class PropertyValidatorImpl : PropertyValidator {
 
     private fun validateStreetAddress(
         streetAddress: String?,
-    ): AppResult<Unit, ValidationError.PropertyStreetAddress> {
+    ): AppResult<Unit, DomainError.PropertyStreetAddress> {
         return when {
             streetAddress.isNullOrBlank() -> {
-                AppResult.Error(ValidationError.PropertyStreetAddress.IsBlank)
+                AppResult.Error(DomainError.PropertyStreetAddress.IsBlank)
             }
 
             else -> AppResult.Success(Unit)
@@ -83,10 +83,10 @@ class PropertyValidatorImpl : PropertyValidator {
     private fun validateDistanceToSea(
         seaProximityTypeId: Long?,
         distanceToSea: BigDecimal?,
-    ): AppResult<Unit, ValidationError.PropertyDistanceToSea> {
+    ): AppResult<Unit, DomainError.PropertyDistanceToSea> {
         return when {
             seaProximityTypeId == DISTANCE_TO_SEA_PROXIMITY_TYPE_ID && distanceToSea == null -> {
-                AppResult.Error(ValidationError.PropertyDistanceToSea.IsBlank)
+                AppResult.Error(DomainError.PropertyDistanceToSea.IsBlank)
             }
 
             else -> AppResult.Success(Unit)

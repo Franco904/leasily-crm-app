@@ -2,8 +2,8 @@ package com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.i
 
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.domainTables.GetDomainTablesDto
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 interface DomainTablesApi {
-    suspend fun getDomainTables(): AppResult<GetDomainTablesDto, DataSourceError.RemoteBackendError>
+    suspend fun getDomainTables(): AppResult<GetDomainTablesDto, DataError>
 }

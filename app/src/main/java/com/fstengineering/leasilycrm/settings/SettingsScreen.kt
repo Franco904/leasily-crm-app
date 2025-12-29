@@ -19,18 +19,19 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.settings.SettingsViewModel.UiEvents.DataSourceError
-import com.fstengineering.leasilycrm.settings.SettingsViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.settings.SettingsViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.settings.composables.SettingsScreenTopBar
 import com.fstengineering.leasilycrm.settings.composables.SettingsSection
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,
+    onBack: () -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    onBack: () -> Unit = {},
-    onSignOut: () -> Unit = {},
-    showSnackbar: (String) -> Unit = { _ -> },
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current!!
@@ -45,12 +46,11 @@ fun SettingsScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
             }
         }
@@ -85,8 +85,7 @@ fun SettingsScreen(
                     viewModel.onIsTodayCheckInCheckOutNotificationEnabledChange(isEnabled)
                 },
                 onNotificationPermissionDenied = {
-                    val message = context.getString(R.string.snackbar_enable_notifications_warning)
-                    showSnackbar(message)
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_enable_notifications_warning))
                 },
                 modifier = Modifier
                     .padding(innerPadding)

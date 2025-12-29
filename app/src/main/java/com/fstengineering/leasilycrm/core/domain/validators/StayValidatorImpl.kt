@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayValidator
 import java.math.BigDecimal
@@ -15,8 +15,8 @@ class StayValidatorImpl : StayValidator {
     override fun validate(
         stay: Stay,
         stayBeforeEdit: Stay?,
-    ): AppResultCompound<Unit, ValidationError> {
-        val errors = mutableListOf<ValidationError>()
+    ): AppResultCompound<Unit, DomainError> {
+        val errors = mutableListOf<DomainError>()
 
         validateProperty(property = stay.property)
             .onError { e -> errors.add(e) }
@@ -52,10 +52,10 @@ class StayValidatorImpl : StayValidator {
 
     private fun validateProperty(
         property: Property?,
-    ): AppResult<Unit, ValidationError.StayProperty> {
+    ): AppResult<Unit, DomainError.StayProperty> {
         return when {
             property == null -> {
-                AppResult.Error(ValidationError.StayProperty.IsNull)
+                AppResult.Error(DomainError.StayProperty.IsNull)
             }
 
             else -> AppResult.Success(Unit)
@@ -64,10 +64,10 @@ class StayValidatorImpl : StayValidator {
 
     private fun validateTenant(
         tenant: Tenant?,
-    ): AppResult<Unit, ValidationError.StayTenant> {
+    ): AppResult<Unit, DomainError.StayTenant> {
         return when {
             tenant == null -> {
-                AppResult.Error(ValidationError.StayTenant.IsNull)
+                AppResult.Error(DomainError.StayTenant.IsNull)
             }
 
             else -> AppResult.Success(Unit)
@@ -79,14 +79,14 @@ class StayValidatorImpl : StayValidator {
         checkOutDateTime: LocalDateTime?,
         checkInDateTimeBeforeEdit: LocalDateTime?,
         propertyStayCheckInDateTimes: List<LocalDateTime>,
-    ): AppResult<Unit, ValidationError.StayPeriod> {
+    ): AppResult<Unit, DomainError.StayPeriod> {
         when {
             checkInDateTime == null || checkOutDateTime == null -> {
-                return AppResult.Error(ValidationError.StayPeriod.IsNull)
+                return AppResult.Error(DomainError.StayPeriod.IsNull)
             }
 
             checkInDateTime.toLocalDate() == checkOutDateTime.toLocalDate() -> {
-                return AppResult.Error(ValidationError.StayPeriod.StartAndEndDaysAreTheSame)
+                return AppResult.Error(DomainError.StayPeriod.StartAndEndDaysAreTheSame)
             }
 
             propertyStayCheckInDateTimes.isNotEmpty() -> {
@@ -99,7 +99,7 @@ class StayValidatorImpl : StayValidator {
 
                 if (!isThereAnyPropertyOverbooking) return AppResult.Success(Unit)
 
-                return AppResult.Error(ValidationError.StayPeriod.IsOverlappingOtherPropertyStayPeriod)
+                return AppResult.Error(DomainError.StayPeriod.IsOverlappingOtherPropertyStayPeriod)
             }
 
             else -> return AppResult.Success(Unit)
@@ -108,10 +108,10 @@ class StayValidatorImpl : StayValidator {
 
     private fun validateCheckInTime(
         checkInHourMinute: Pair<Int?, Int?>,
-    ): AppResult<Unit, ValidationError.StayCheckInTime> {
+    ): AppResult<Unit, DomainError.StayCheckInTime> {
         return when {
             checkInHourMinute.toList().any { it == null } -> {
-                AppResult.Error(ValidationError.StayCheckInTime.IsNull)
+                AppResult.Error(DomainError.StayCheckInTime.IsNull)
             }
 
             else -> AppResult.Success(Unit)
@@ -120,10 +120,10 @@ class StayValidatorImpl : StayValidator {
 
     private fun validateCheckOutTime(
         checkOutHourMinute: Pair<Int?, Int?>,
-    ): AppResult<Unit, ValidationError.StayCheckOutTime> {
+    ): AppResult<Unit, DomainError.StayCheckOutTime> {
         return when {
             checkOutHourMinute.toList().any { it == null } -> {
-                AppResult.Error(ValidationError.StayCheckOutTime.IsNull)
+                AppResult.Error(DomainError.StayCheckOutTime.IsNull)
             }
 
             else -> AppResult.Success(Unit)
@@ -132,10 +132,10 @@ class StayValidatorImpl : StayValidator {
 
     private fun validateCommission(
         commission: BigDecimal?,
-    ): AppResult<Unit, ValidationError.StayCommission> {
+    ): AppResult<Unit, DomainError.StayCommission> {
         return when {
             commission == null -> {
-                AppResult.Error(ValidationError.StayCommission.IsNull)
+                AppResult.Error(DomainError.StayCommission.IsNull)
             }
 
             else -> AppResult.Success(Unit)

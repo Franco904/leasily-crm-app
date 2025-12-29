@@ -7,7 +7,7 @@ sealed interface Destinations {
     data object Root
 
     @Serializable
-    data object SignIn
+    data class SignIn(val hasSessionExpired: Boolean)
 
     @Serializable
     data class Home(val startedFromStayNotificationPopUp: Boolean) {
@@ -29,9 +29,6 @@ sealed interface Destinations {
 
     @Serializable
     data object Profile
-
-    @Serializable
-    data object CustomerSegments
 
     @Serializable
     data object Properties

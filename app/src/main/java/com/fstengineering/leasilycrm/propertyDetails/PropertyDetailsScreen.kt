@@ -35,12 +35,14 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularPr
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
-import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.NavigateUp
 import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.PropertyDeleteSuccess
-import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyDetails.composables.PropertyDetailsFinancialPage
 import com.fstengineering.leasilycrm.propertyDetails.composables.PropertyDetailsIdentificationPage
 import com.fstengineering.leasilycrm.propertyDetails.composables.PropertyDetailsTopAppBar
@@ -52,10 +54,9 @@ fun PropertyDetailsScreen(
     propertyId: Long,
     viewModel: PropertyDetailsViewModel,
     onBack: () -> Unit,
-    onSignOut: () -> Unit,
     onEditProperty: () -> Unit,
     onNewStay: (Boolean) -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -81,12 +82,11 @@ fun PropertyDetailsScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is NavigateUp -> {
@@ -94,7 +94,7 @@ fun PropertyDetailsScreen(
                 }
 
                 is PropertyDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_property_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_property_succeeded))
                 }
             }
         }

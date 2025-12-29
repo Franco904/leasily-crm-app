@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.core.domain.validators
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceInteractionValidator
 import java.time.LocalDate
@@ -11,8 +11,8 @@ import java.time.LocalDate
 class AssistanceInteractionValidatorImpl : AssistanceInteractionValidator {
     override fun validate(
         interaction: AssistanceInteraction,
-    ): AppResultCompound<Unit, ValidationError> {
-        val errors = mutableListOf<ValidationError>()
+    ): AppResultCompound<Unit, DomainError> {
+        val errors = mutableListOf<DomainError>()
 
         validateInteractionDate(interactionDate = interaction.interactionDate)
             .onError { e -> errors.add(e) }
@@ -25,17 +25,17 @@ class AssistanceInteractionValidatorImpl : AssistanceInteractionValidator {
         } else AppResultCompound.Errors(errors.toList())
     }
 
-    private fun validateInteractionDate(interactionDate: LocalDate?): AppResult<Unit, ValidationError.AssistanceInteractionDate> {
+    private fun validateInteractionDate(interactionDate: LocalDate?): AppResult<Unit, DomainError.AssistanceInteractionDate> {
         return when {
-            interactionDate == null -> AppResult.Error(ValidationError.AssistanceInteractionDate.IsNull)
+            interactionDate == null -> AppResult.Error(DomainError.AssistanceInteractionDate.IsNull)
             else -> AppResult.Success(Unit)
         }
     }
 
-    private fun validateTitle(title: String?): AppResult<Unit, ValidationError.AssistanceInteractionTitle> {
+    private fun validateTitle(title: String?): AppResult<Unit, DomainError.AssistanceInteractionTitle> {
         return when {
             title.isNullOrBlank() -> {
-                AppResult.Error(ValidationError.AssistanceInteractionTitle.IsNullOrBlank)
+                AppResult.Error(DomainError.AssistanceInteractionTitle.IsNullOrBlank)
             }
 
             else -> AppResult.Success(Unit)

@@ -1,13 +1,12 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.viewModels
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.FlowPreview
@@ -52,12 +51,8 @@ class AssistanceRegistrationStep2ViewModel(
 
         viewModelScope.launch {
             propertyRepository.getAll()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
-                .onSuccess { properties ->
-                    _selectableProperties.update { properties }
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess { properties -> _selectableProperties.update { properties } }
 
             _isLoading.update { false }
         }
@@ -72,9 +67,7 @@ class AssistanceRegistrationStep2ViewModel(
                     _isLoading.update { true }
 
                     propertyRepository.getAllMatching(matching = searchInput)
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
+                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                         .onSuccess { matchingProperties ->
                             _selectableProperties.update { matchingProperties }
                             _isLoading.update { false }
@@ -88,8 +81,6 @@ class AssistanceRegistrationStep2ViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
+        data class Error(val error: DataError) : UiEvents
     }
 }

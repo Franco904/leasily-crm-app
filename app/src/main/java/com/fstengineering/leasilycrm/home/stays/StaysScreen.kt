@@ -49,11 +49,13 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayT
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberHorizontalCenterScroller
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
-import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.DataSourceError
-import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.StayDeleteSuccess
 import com.fstengineering.leasilycrm.home.stays.composables.StayCard
 import com.fstengineering.leasilycrm.home.stays.composables.StayFilterButtonGroup
@@ -67,10 +69,8 @@ fun StaysScreen(
     viewModel: StaysViewModel,
     onRegisterStayBlank: (Long?, Boolean) -> Unit,
     onViewStayDetails: (Long) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    onSignOut: () -> Unit = {},
-    showSnackbar: (String) -> Unit = { _ -> },
-    showActionSnackbar: (String, String, () -> Unit) -> Unit = { _, _, _ -> },
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -118,12 +118,11 @@ fun StaysScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is StayDeleteSuccess -> {
@@ -133,23 +132,27 @@ fun StaysScreen(
                         if (stayToDelete!!.isUnavailablePeriod) R.string.snackbar_delete_unavailable_period_succeeded
                         else R.string.snackbar_delete_stay_succeeded
 
-                    showSnackbar(context.getString(messageId))
+                    onUiEvent(UiEvent.ShowSnackBar(messageId))
                     viewModel.onDeleteStay(stay = null)
                 }
 
                 StaysViewModel.UiEvents.RegisterCheckInSuccess -> {
-                    showActionSnackbar(
-                        context.getString(R.string.snackbar_register_check_in_stay_succeeded),
-                        context.getString(R.string.undo_button_text),
-                        viewModel::undoRegisterStayCheckIn,
+                    onUiEvent(
+                        UiEvent.ShowActionSnackBar(
+                            R.string.snackbar_register_check_in_stay_succeeded,
+                            R.string.undo_button_text,
+                            viewModel::undoRegisterStayCheckIn,
+                        )
                     )
                 }
 
                 StaysViewModel.UiEvents.RegisterCheckOutSuccess -> {
-                    showActionSnackbar(
-                        context.getString(R.string.snackbar_register_check_out_stay_succeeded),
-                        context.getString(R.string.undo_button_text),
-                        viewModel::undoRegisterStayCheckOut,
+                    onUiEvent(
+                        UiEvent.ShowActionSnackBar(
+                            R.string.snackbar_register_check_out_stay_succeeded,
+                            R.string.undo_button_text,
+                            viewModel::undoRegisterStayCheckOut,
+                        )
                     )
                 }
             }

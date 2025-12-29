@@ -4,14 +4,14 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.TenantC
 import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantContactOriginTypeRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 class TenantContactOriginTypeRepositoryImpl(
     private val dao: TenantContactOriginTypeDao,
 ) : TenantContactOriginTypeRepository {
-    override suspend fun getAll(): AppResult<ImmutableList<TenantContactOriginType>, DataSourceError> {
+    override suspend fun getAll(): AppResult<ImmutableList<TenantContactOriginType>, DataError> {
         val tenantContactOriginTypes = dao.getAll()
             .map { it.toDomain() }
             .toPersistentList()

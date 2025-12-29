@@ -8,7 +8,6 @@ import com.fstengineering.leasilycrm.core.presentation.utils.CredentialsError
 interface CredentialManagerAdapter {
     suspend fun chooseGoogleAccount(
         activityContext: Activity,
-        isSignIn: Boolean,
         mustEnableAutoSelect: Boolean,
     ): AppResult<GoogleUserCredentials, CredentialsError>
 

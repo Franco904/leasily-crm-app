@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.propertyDetails.models
 
-import androidx.annotation.StringRes
 import com.fstengineering.leasilycrm.R
 
 enum class PropertyDetailsTab(

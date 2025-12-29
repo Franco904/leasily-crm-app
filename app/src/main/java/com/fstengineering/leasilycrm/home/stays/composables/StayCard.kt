@@ -36,7 +36,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
@@ -61,10 +61,10 @@ fun StayCard(
     val now by rememberNow()
 
     val checkInDateTimeStartOfDay = stay.checkInDateTime?.let {
-        AppLazyDateTime { it }.toStartOfDay()
+        AppDateTime { it }.toStartOfDay()
     }
     val checkOutDateTimeStartOfDay = stay.checkOutDateTime?.let {
-        AppLazyDateTime { it }.toStartOfDay()
+        AppDateTime { it }.toStartOfDay()
     }
 
     val canRegisterCheckIn = !stay.isCheckInDone

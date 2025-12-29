@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.data.adapters.interfaces.ConnectivityAdapter
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.UpdateUserDto
@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.core.data.models.SyncState
 import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -22,11 +22,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
+    private val connectivityAdapter: ConnectivityAdapter,
     private val api: UserApi,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
-    private val plainPreferencesStorage: PreferencesStorage<PlainPreferences>,
 ) : UserRepository {
-    override suspend fun isUserSignedIn(): AppResult<Boolean, DataSourceError> {
+    override suspend fun isUserSignedIn(): AppResult<Boolean, DataError> {
         return encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { error ->
@@ -40,25 +40,10 @@ class UserRepositoryImpl(
             )
     }
 
-    override suspend fun didUserExplicitlySignOut(): AppResult<Boolean, DataSourceError> {
-        return plainPreferencesStorage.readPreferences()
-            .fold(
-                onError = { error ->
-                    AppResult.Error(error = error)
-                },
-                onSuccess = { prefsFlow ->
-                    val didUserExplicitlySignOut =
-                        prefsFlow.first().didUserExplicitlySignOut != null
-
-                    AppResult.Success(data = didUserExplicitlySignOut)
-                }
-            )
-    }
-
     override suspend fun signInUser(
         idToken: String,
         user: User,
-    ): AppResult<Unit, DataSourceError> {
+    ): AppResult<Unit, DataError> {
         val requestDto = SignInRequestDto(idToken = idToken)
         val remoteUserId = api.signInUser(signInRequestDto = requestDto)
             .fold(
@@ -77,49 +62,26 @@ class UserRepositoryImpl(
         }
             .onError { return AppResult.Error(error = it) }
 
-        plainPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(
-                didUserExplicitlySignOut = false,
-                hasSessionExpired = false,
-            )
-        }
-            .onError { return AppResult.Error(error = it) }
-
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun watchSessionExpiration(): Flow<AppResult<Boolean, DataSourceError>> =
-        flow {
-            plainPreferencesStorage.readPreferences()
-                .onError { emit(AppResult.Error(error = it)) }
-                .onSuccess { prefsFlow ->
-                    val hasSessionExpiredFlow = prefsFlow.map {
-                        AppResult.Success<Boolean, DataSourceError>(data = it.hasSessionExpired == true)
-                    }
-
-                    emitAll(hasSessionExpiredFlow)
-                }
-        }
-
-    override suspend fun markSessionAsExpired(): AppResult<Unit, DataSourceError> {
-        return plainPreferencesStorage.savePreferences {
-            it.copy(hasSessionExpired = true)
-        }
-    }
-
-    override fun watchUser(): Flow<AppResult<User, DataSourceError>> = flow {
+    override fun watchUser(): Flow<AppResult<User, DataError>> = flow {
         encryptedPreferencesStorage.readPreferences()
             .onError { emit(AppResult.Error(error = it)) }
             .onSuccess { prefsFlow ->
                 emitAll(
                     prefsFlow
-                        .map { AppResult.Success<User, DataSourceError>(data = it.toUser()) }
+                        .map { AppResult.Success<User, DataError>(data = it.toUser()) }
                         .distinctUntilChanged()
                 )
             }
     }
 
-    override suspend fun getRemoteUser(): AppResult<User, DataSourceError> {
+    override suspend fun getRemoteUser(): AppResult<User, DataError> {
+        if (!isDeviceConnectedToInternet()) {
+            return AppResult.Error(error = DataError.NoInternetError)
+        }
+
         val fetchedUser = api.getUser()
             .fold(
                 onError = { return AppResult.Error(error = it) },
@@ -140,7 +102,7 @@ class UserRepositoryImpl(
 
     override suspend fun updateUser(
         user: User,
-    ): AppResult<Unit, DataSourceError> {
+    ): AppResult<Unit, DataError> {
         // Cache new user name
         encryptedPreferencesStorage.savePreferences { prefs ->
             prefs.copy(
@@ -175,7 +137,7 @@ class UserRepositoryImpl(
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun deleteCachedUser(): AppResult<Unit, DataSourceError> {
+    override suspend fun deleteCachedUser(): AppResult<Unit, DataError> {
         return encryptedPreferencesStorage.savePreferences { prefs ->
             prefs.copy(
                 sessionCookie = null,
@@ -187,7 +149,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun retryUserRemoteUpdate(): AppResult<Unit, DataSourceError> {
+    override suspend fun retryUserRemoteUpdate(): AppResult<Unit, DataError> {
         val prefs = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
@@ -223,5 +185,29 @@ class UserRepositoryImpl(
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun signOutUser() = api.signOutUser()
+    override suspend fun signOutUser(): AppResult<Unit, DataError> {
+        if (!connectivityAdapter.isDeviceConnectedToInternet(canUseMobile = true)) {
+            return AppResult.Error(error = DataError.NoInternetError)
+        }
+
+        api.signOutUser()
+            .onError { return AppResult.Error(error = it) }
+
+        encryptedPreferencesStorage.savePreferences { prefs ->
+            prefs.copy(
+                sessionCookie = null,
+                remoteId = null,
+                name = null,
+                creciNumber = null,
+                profilePictureUrl = null,
+            )
+        }
+            .onError { return AppResult.Error(error = it) }
+
+        return AppResult.Success(data = Unit)
+    }
+
+    override fun isDeviceConnectedToInternet(): Boolean {
+        return connectivityAdapter.isDeviceConnectedToInternet(canUseMobile = true)
+    }
 }

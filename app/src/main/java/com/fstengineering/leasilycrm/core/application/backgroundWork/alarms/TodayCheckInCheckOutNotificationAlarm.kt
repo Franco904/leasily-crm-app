@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.fstengineering.leasilycrm.core.application.backgroundWork.broadcastReceivers.TodayCheckInCheckOutNotificationBroadcastReceiver
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 
 object TodayCheckInCheckOutNotificationAlarm {
     private const val ALARM_INTENT_REQUEST_CODE = 0
@@ -28,7 +28,7 @@ object TodayCheckInCheckOutNotificationAlarm {
             /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
-        val now = AppLazyDateTime.now()
+        val now = AppDateTime.now()
         val triggerAtMillis = now.withHourMinute(hour = 7, minute = 0)
 
         val triggerAtMillisAdjusted = (

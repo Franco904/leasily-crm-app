@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interface
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -22,7 +22,7 @@ class AssistanceRepositoryImpl(
     private val dao: AssistanceDao,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
 ) : AssistanceRepository {
-    override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Long, DataSourceError> {
+    override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Long, DataError> {
         val assistanceEntity = AssistanceEntity.fromDomain(assistance)
 
         val id = dao.insertOrUpdate(assistanceEntity)
@@ -31,28 +31,24 @@ class AssistanceRepositoryImpl(
         return AppResult.Success(data = id)
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataSourceError> {
+    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
         dao.delete(id)
 
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun getById(assistanceId: Long): AppResult<Assistance, DataSourceError> {
+    override suspend fun getById(assistanceId: Long): AppResult<Assistance, DataError> {
         val property = dao.getById(id = assistanceId)
             .toDomain()
 
         return AppResult.Success(data = property)
     }
 
-    override suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>, DataSourceError> {
+    override suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>, DataError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: return AppResult.Error(
-                        error = DataSourceError.PreferencesError.NotFound,
-                    )
-                }
+                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
             )
 
         val neighborhoodNames =
@@ -61,11 +57,11 @@ class AssistanceRepositoryImpl(
         return AppResult.Success(data = neighborhoodNames)
     }
 
-    override fun watchById(assistanceId: Long): Flow<AppResult<Assistance?, DataSourceError>> =
+    override fun watchById(assistanceId: Long): Flow<AppResult<Assistance?, DataError>> =
         flow {
             val assistanceFlow = dao.watchById(id = assistanceId)
                 .map { assistance ->
-                    AppResult.Success<Assistance?, DataSourceError>(data = assistance?.toDomain())
+                    AppResult.Success<Assistance?, DataError>(data = assistance?.toDomain())
                 }
                 .distinctUntilChanged()
 
@@ -74,13 +70,13 @@ class AssistanceRepositoryImpl(
 
     override fun watchAllByTenant(
         tenantId: Long,
-    ): Flow<AppResult<ImmutableList<Assistance>, DataSourceError>> =
+    ): Flow<AppResult<ImmutableList<Assistance>, DataError>> =
         flow {
             val assistancesFlow = dao.watchAllByTenant(tenantId = tenantId)
                 .map {
                     val assistances =
                         it.map { assistance -> assistance.toDomain() }.toPersistentList()
-                    AppResult.Success<ImmutableList<Assistance>, DataSourceError>(data = assistances)
+                    AppResult.Success<ImmutableList<Assistance>, DataError>(data = assistances)
                 }
                 .distinctUntilChanged()
 

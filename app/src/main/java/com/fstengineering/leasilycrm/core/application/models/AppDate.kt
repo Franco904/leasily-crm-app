@@ -10,10 +10,10 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 import java.time.LocalDate
 
-data class AppLazyDate(
+data class AppDate(
     val date: () -> LocalDate,
 ) {
-    fun withMonthYear(month: Int, year: Int): AppLazyDate {
+    fun withMonthYear(month: Int, year: Int): AppDate {
         val updatedDate = date().withMonth(month).withYear(year)
         return copy(date = { updatedDate })
     }
@@ -35,20 +35,20 @@ data class AppLazyDate(
         return last12MonthsMap.toPersistentList()
     }
 
-    fun isAfter(other: AppLazyDate?): Boolean {
+    fun isAfter(other: AppDate?): Boolean {
         return other == null || date() >= other.date()
     }
 
-    fun isBefore(other: AppLazyDate?): Boolean {
+    fun isBefore(other: AppDate?): Boolean {
         return other == null || date() <= other.date()
     }
 
     companion object {
-        fun now(): AppLazyDate = AppLazyDate { LocalDate.now() }
+        fun lazyNow(): AppDate = AppDate { LocalDate.now() }
 
         fun getDatesWithMissingMonthsBetween(
-            startDate: AppLazyDate,
-            endDate: AppLazyDate,
+            startDate: AppDate,
+            endDate: AppDate,
             staysStructuredDatesMap: Map<CalendarMonthYear, PersistentList<StayCalendarDate>>,
         ): ImmutableMap<CalendarMonthYear, PersistentList<StayCalendarDate>> {
             val staysStructuredDatesWithMissingMonthsMap =

@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.CheckInCheckOutChipLabel
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
@@ -49,10 +49,10 @@ fun StayCheckInCheckOutDetailsItem(
     val now by rememberNow()
 
     val checkInDateTimeStartOfDay = checkInDateTime?.let {
-        AppLazyDateTime { it }.toStartOfDay()
+        AppDateTime { it }.toStartOfDay()
     }
     val checkOutDateTimeStartOfDay = checkOutDateTime?.let {
-        AppLazyDateTime { it }.toStartOfDay()
+        AppDateTime { it }.toStartOfDay()
     }
 
     var checkInChipWidthDp by remember { mutableStateOf(Dp.Unspecified) }

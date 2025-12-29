@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.StayCheckStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import kotlinx.collections.immutable.ImmutableList
@@ -29,15 +29,11 @@ class StayRepositoryImpl(
     private val plainPreferencesStorage: PreferencesStorage<PlainPreferences>,
     private val sharedStorage: SharedStorage,
 ) : StayRepository {
-    override suspend fun insertOrUpdate(stay: Stay): AppResult<Long, DataSourceError> {
+    override suspend fun insertOrUpdate(stay: Stay): AppResult<Long, DataError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: return AppResult.Error(
-                        error = DataSourceError.PreferencesError.NotFound,
-                    )
-                }
+                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
             )
 
         val stayWithUser = stay.copy(userId = userRemoteId)
@@ -49,22 +45,18 @@ class StayRepositoryImpl(
         return AppResult.Success(data = id)
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataSourceError> {
+    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
         dao.delete(id)
 
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun getById(stayId: Long): AppResult<Stay, DataSourceError> {
+    override suspend fun getById(stayId: Long): AppResult<Stay, DataError> {
         val stay = dao.getById(id = stayId)
             .toDomain()
 
         val filesWithNames = stay.files.map { file ->
             val fileName = sharedStorage.getFileName(contentUriString = file.uriString ?: "")
-                .fold(
-                    onError = { error -> return AppResult.Error(error = error) },
-                    onSuccess = { fileName -> fileName },
-                )
 
             file.copy(name = fileName)
         }.toImmutableList()
@@ -72,7 +64,7 @@ class StayRepositoryImpl(
         return AppResult.Success(data = stay.copy(files = filesWithNames))
     }
 
-    override fun watchById(stayId: Long): Flow<AppResult<Stay?, DataSourceError>> = flow {
+    override fun watchById(stayId: Long): Flow<AppResult<Stay?, DataError>> = flow {
         val stayFlow = dao.watchById(id = stayId)
             .map { stay ->
                 val domain = stay?.toDomain() ?: return@map AppResult.Success(data = null)
@@ -80,25 +72,18 @@ class StayRepositoryImpl(
                 val filesWithNames = domain.files.map { file ->
                     val fileName =
                         sharedStorage.getFileName(contentUriString = file.uriString ?: "")
-                            .fold(
-                                onError = { error ->
-                                    emit(AppResult.Error(error = error))
-                                    return@map file
-                                },
-                                onSuccess = { fileName -> fileName },
-                            )
 
                     file.copy(name = fileName)
                 }.toImmutableList()
 
-                AppResult.Success<Stay?, DataSourceError>(data = domain.copy(files = filesWithNames))
+                AppResult.Success<Stay?, DataError>(data = domain.copy(files = filesWithNames))
             }
             .distinctUntilChanged()
 
         emitAll(stayFlow)
     }
 
-    override fun watchAll(): Flow<AppResult<ImmutableList<Stay>, DataSourceError>> =
+    override fun watchAll(): Flow<AppResult<ImmutableList<Stay>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -106,25 +91,20 @@ class StayRepositoryImpl(
                         emit(AppResult.Error(error = it))
                         return@flow
                     },
-                    onSuccess = { prefsFlow ->
-                        prefsFlow.first().remoteId ?: run {
-                            emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                            return@flow
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
                 )
 
             val staysFlow = dao.watchAll(userId = userRemoteId)
                 .map {
                     val stays = it.map { stay -> stay.toDomain() }.toPersistentList()
-                    AppResult.Success<ImmutableList<Stay>, DataSourceError>(data = stays)
+                    AppResult.Success<ImmutableList<Stay>, DataError>(data = stays)
                 }
                 .distinctUntilChanged()
 
             emitAll(staysFlow)
         }
 
-    override fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<AppResult<ImmutableList<StayCheckStatus>, DataSourceError>> =
+    override fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<AppResult<ImmutableList<StayCheckStatus>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -132,26 +112,21 @@ class StayRepositoryImpl(
                         emit(AppResult.Error(error = it))
                         return@flow
                     },
-                    onSuccess = { prefsFlow ->
-                        prefsFlow.first().remoteId ?: run {
-                            emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                            return@flow
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
                 )
 
             val staysStatusFlow = dao.watchAllUpcomingCheckInsAndCheckOuts(userId = userRemoteId)
                 .map {
                     val staysStatus =
                         it.map { stayStatus -> stayStatus.toDomain() }.toPersistentList()
-                    AppResult.Success<ImmutableList<StayCheckStatus>, DataSourceError>(data = staysStatus)
+                    AppResult.Success<ImmutableList<StayCheckStatus>, DataError>(data = staysStatus)
                 }
                 .distinctUntilChanged()
 
             emitAll(staysStatusFlow)
         }
 
-    override fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, DataSourceError>> =
+    override fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, DataError>> =
         flow {
             plainPreferencesStorage.readPreferences()
                 .fold(
@@ -173,7 +148,7 @@ class StayRepositoryImpl(
 
     override suspend fun setMustNotShowCheckOutDialogAnymore(
         mustNotShowCheckOutDialogAnymore: Boolean,
-    ): AppResult<Unit, DataSourceError> {
+    ): AppResult<Unit, DataError> {
         plainPreferencesStorage.savePreferences { prefs ->
             prefs.copy(mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore)
         }

@@ -1,14 +1,12 @@
 package com.fstengineering.leasilycrm.settings
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Settings
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +16,6 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val settingsRepository: SettingsRepository,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -34,24 +31,9 @@ class SettingsViewModel(
     fun init() {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchSettings()
 
         isInitialized = true
-    }
-
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-            }
-        }
     }
 
     private fun watchSettings() {
@@ -60,12 +42,8 @@ class SettingsViewModel(
 
             settingsRepository.watchSettings().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { settings ->
-                        _settings.update { settings }
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                    .onSuccess { settings -> _settings.update { settings } }
 
                 _isLoading.update { false }
             }
@@ -75,15 +53,11 @@ class SettingsViewModel(
     fun onIsTodayCheckInCheckOutNotificationEnabledChange(isEnabled: Boolean) {
         viewModelScope.launch {
             settingsRepository.setIsTodayCheckInCheckOutNotificationEnabled(isEnabled = isEnabled)
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
+        data class Error(val error: DataError) : UiEvents
     }
 }

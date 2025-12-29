@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.core.application.di.modules
 
 import com.fstengineering.leasilycrm.core.application.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.application.di.qualifiers.plainPreferencesQualifier
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceCharacteristicAssistanceRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceCharacteristicRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceInteractionRepositoryImpl
@@ -100,7 +100,7 @@ val repositoryModule = module {
         CrmMetricsRepositoryImpl(
             crmMetricsDao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
-            now = AppLazyDate.now(),
+            now = AppDate.lazyNow(),
         )
     }
 
@@ -119,6 +119,7 @@ val repositoryModule = module {
 
     single<DomainTablesRepository> {
         DomainTablesRepositoryImpl(
+            connectivityAdapter = get(),
             api = get(),
             assistanceCharacteristicDao = get(),
             customerSegmentTypeDao = get(),
@@ -173,7 +174,6 @@ val repositoryModule = module {
             dao = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
             plainPreferencesStorage = get(plainPreferencesQualifier),
-            now = AppLazyDate.now(),
         )
     }
 
@@ -238,9 +238,9 @@ val repositoryModule = module {
 
     single<UserRepository> {
         UserRepositoryImpl(
+            connectivityAdapter = get(),
             api = get(),
             encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
-            plainPreferencesStorage = get(plainPreferencesQualifier),
         )
     }
 }

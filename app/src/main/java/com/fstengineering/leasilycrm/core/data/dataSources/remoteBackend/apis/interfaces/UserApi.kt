@@ -5,18 +5,18 @@ import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.request
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.user.GetUserDto
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.user.SignInUserResponseDto
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 interface UserApi {
     suspend fun signInUser(
         signInRequestDto: SignInRequestDto,
-    ): AppResult<SignInUserResponseDto, DataSourceError.RemoteBackendError>
+    ): AppResult<SignInUserResponseDto, DataError>
 
-    suspend fun getUser(): AppResult<GetUserDto, DataSourceError.RemoteBackendError>
+    suspend fun getUser(): AppResult<GetUserDto, DataError>
 
     suspend fun updateUser(
         updateUserDto: UpdateUserDto,
-    ): AppResult<Unit, DataSourceError.RemoteBackendError>
+    ): AppResult<Unit, DataError>
 
-    suspend fun signOutUser(): AppResult<Unit, DataSourceError.RemoteBackendError>
+    suspend fun signOutUser(): AppResult<Unit, DataError>
 }

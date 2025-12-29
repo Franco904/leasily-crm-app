@@ -5,9 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
-import com.fstengineering.leasilycrm.core.data.utils.toPreferencesError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.flow.Flow
 
@@ -16,7 +15,7 @@ class PlainPreferencesStorage(
 ) : PreferencesStorage<PlainPreferences> {
     override suspend fun savePreferences(
         onPreferencesFile: (PlainPreferences) -> PlainPreferences,
-    ): AppResult<Unit, DataSourceError.PreferencesError> {
+    ): AppResult<Unit, DataError> {
         try {
             dataStore.updateData { preferences -> onPreferencesFile(preferences) }
 
@@ -25,24 +24,22 @@ class PlainPreferencesStorage(
             if (e is CancellationException) throw e
             if (BuildConfig.DEBUG) e.printStackTrace()
 
-            return AppResult.Error(error = e.toPreferencesError())
+            return AppResult.Error(error = DataError.UnknownError)
         }
     }
 
-    override suspend fun readPreferences(): AppResult<Flow<PlainPreferences>, DataSourceError.PreferencesError> {
+    override suspend fun readPreferences(): AppResult<Flow<PlainPreferences>, DataError> {
         try {
             return AppResult.Success(data = dataStore.data)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             if (BuildConfig.DEBUG) e.printStackTrace()
 
-            return AppResult.Error(error = e.toPreferencesError())
+            return AppResult.Error(error = DataError.UnknownError)
         }
     }
 
     companion object {
-        private const val TAG = "PlainPreferencesStorage"
-
         val Context.plainDataStore: DataStore<PlainPreferences> by dataStore(
             fileName = "plain-preferences",
             serializer = PlainPreferencesSerializer,

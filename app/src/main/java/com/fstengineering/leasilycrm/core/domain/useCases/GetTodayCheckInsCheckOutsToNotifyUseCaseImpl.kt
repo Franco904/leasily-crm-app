@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.core.domain.useCases
 
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.StayCheckNotificationStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.first
@@ -16,16 +16,16 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
     private val stayRepository: StayRepository,
     private val settingsRepository: SettingsRepository,
     private val userRepository: UserRepository,
-    private val now: AppLazyDateTime,
+    private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
-    override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, DataSourceError> {
+    override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, DataError> {
         val isTodayCheckInCheckOutNotificationEnabled = settingsRepository.watchSettings().first()
             .fold(onError = { false }, onSuccess = { it.isTodayCheckInCheckOutNotificationEnabled })
 
-        val hasSessionExpired = userRepository.watchSessionExpiration().first()
-            .fold(onError = { true }, onSuccess = { it })
+        val isUserSignedIn = userRepository.isUserSignedIn()
+            .fold(onError = { false }, onSuccess = { it })
 
-        if (now.dateTime().hour > 9 || !isTodayCheckInCheckOutNotificationEnabled || hasSessionExpired) {
+        if (now.dateTime().hour > 9 || !isTodayCheckInCheckOutNotificationEnabled || !isUserSignedIn) {
             return AppResult.Success(data = emptyList())
         }
 

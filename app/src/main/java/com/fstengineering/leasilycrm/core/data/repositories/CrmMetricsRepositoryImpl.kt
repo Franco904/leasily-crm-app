@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CrmMetricsDao
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
@@ -23,19 +23,14 @@ import kotlin.math.roundToInt
 class CrmMetricsRepositoryImpl(
     private val crmMetricsDao: CrmMetricsDao,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
-    private val now: AppLazyDate,
+    private val now: AppDate,
 ) : CrmMetricsRepository {
-    override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataSourceError>> =
+    override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val generatedLeadsPerMonthFlow = crmMetricsDao
@@ -63,7 +58,7 @@ class CrmMetricsRepositoryImpl(
                         generatedLeadsWithMissingMonthsMap.put(monthYear, leadsCount ?: 0)
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, DataError>(
                         data = generatedLeadsWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -71,17 +66,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(generatedLeadsPerMonthFlow)
         }
 
-    override fun watchGeneratedLeadsPerTenantSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>> =
+    override fun watchGeneratedLeadsPerTenantSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val generatedLeadsPerTenantSegmentPerMonthFlow = crmMetricsDao
@@ -115,7 +105,7 @@ class CrmMetricsRepositoryImpl(
                             .put(monthYear, leadsCountPerTenantSegment ?: persistentMapOf())
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>(
                         data = generatedLeadsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -124,17 +114,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(generatedLeadsPerTenantSegmentPerMonthFlow)
         }
 
-    override fun watchLeadContactChannelDistribution(): Flow<AppResult<ImmutableMap<String?, Double>, DataSourceError>> =
+    override fun watchLeadContactChannelDistribution(): Flow<AppResult<ImmutableMap<String?, Double>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val leadContactChannelDistributionFlow = crmMetricsDao
@@ -151,7 +136,7 @@ class CrmMetricsRepositoryImpl(
                         .filterValues { it > 0.0 }
                         .toPersistentMap()
 
-                    AppResult.Success<ImmutableMap<String?, Double>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<String?, Double>, DataError>(
                         data = leadContactChannelDistribution,
                     )
                 }
@@ -159,17 +144,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(leadContactChannelDistributionFlow)
         }
 
-    override fun watchNewStayBookingsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataSourceError>> =
+    override fun watchNewStayBookingsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val newStayBookingsPerMonthFlow = crmMetricsDao
@@ -197,7 +177,7 @@ class CrmMetricsRepositoryImpl(
                         newStayBookingsWithMissingMonthsMap.put(monthYear, bookingsCount ?: 0)
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, DataError>(
                         data = newStayBookingsWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -205,17 +185,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(newStayBookingsPerMonthFlow)
         }
 
-    override fun watchNewStayBookingsPerTenantSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>> =
+    override fun watchNewStayBookingsPerTenantSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val newStayBookingsPerTenantSegmentPerMonthFlow = crmMetricsDao
@@ -249,7 +224,7 @@ class CrmMetricsRepositoryImpl(
                             .put(monthYear, bookingsCountPerTenantSegment ?: persistentMapOf())
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>(
                         data = newStayBookingsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -258,17 +233,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(newStayBookingsPerTenantSegmentPerMonthFlow)
         }
 
-    override fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>> =
+    override fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val newStayBookingsPerPropertyOwnerSegmentPerMonthFlow = crmMetricsDao
@@ -305,7 +275,7 @@ class CrmMetricsRepositoryImpl(
                             )
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>(
                         data = newStayBookingsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -314,17 +284,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(newStayBookingsPerPropertyOwnerSegmentPerMonthFlow)
         }
 
-    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>> =
+    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val newStayBookingsPerTop3NeighborhoodsPerMonthFlow = crmMetricsDao
@@ -359,7 +324,7 @@ class CrmMetricsRepositoryImpl(
                             .put(monthYear, bookingsCountPerTop3Neighborhoods ?: persistentMapOf())
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>(
                         data = newStayBookingsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -368,17 +333,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(newStayBookingsPerTop3NeighborhoodsPerMonthFlow)
         }
 
-    override fun watchCommissionInvoicePerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, BigDecimal>, DataSourceError>> =
+    override fun watchCommissionInvoicePerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val commissionInvoicePerMonthFlow = crmMetricsDao
@@ -409,7 +369,7 @@ class CrmMetricsRepositoryImpl(
                         )
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, BigDecimal>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>(
                         data = commissionInvoiceWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -417,17 +377,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerMonthFlow)
         }
 
-    override fun watchCommissionInvoicePerTenantSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataSourceError>> =
+    override fun watchCommissionInvoicePerTenantSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val commissionInvoicePerTenantSegmentPerMonthFlow = crmMetricsDao
@@ -461,7 +416,7 @@ class CrmMetricsRepositoryImpl(
                             .put(monthYear, commissionInvoicePerTenantSegment ?: persistentMapOf())
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -470,17 +425,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerTenantSegmentPerMonthFlow)
         }
 
-    override fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataSourceError>> =
+    override fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val commissionInvoicePerPropertyOwnerSegmentPerMonthFlow = crmMetricsDao
@@ -514,7 +464,7 @@ class CrmMetricsRepositoryImpl(
                             .put(monthYear, commissionInvoicePerTenantSegment ?: persistentMapOf())
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -523,17 +473,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerPropertyOwnerSegmentPerMonthFlow)
         }
 
-    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataSourceError>> =
+    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val commissionInvoicePerTop3NeighborhoodsPerMonthFlow = crmMetricsDao
@@ -571,7 +516,7 @@ class CrmMetricsRepositoryImpl(
                             )
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -580,17 +525,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerTop3NeighborhoodsPerMonthFlow)
         }
 
-    override fun watchAverageTicketPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, BigDecimal>, DataSourceError>> =
+    override fun watchAverageTicketPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow ->
-                        val remoteId = prefsFlow.first().remoteId
-                        remoteId ?: run {
-                            return@flow emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             val averageTicketPerMonthFlow = crmMetricsDao
@@ -621,7 +561,7 @@ class CrmMetricsRepositoryImpl(
                         )
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, BigDecimal>, DataSourceError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>(
                         data = averageTicketWithMissingMonthsMap.toPersistentMap(),
                     )
                 }

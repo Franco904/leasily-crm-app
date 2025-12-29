@@ -26,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -44,9 +43,11 @@ import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTen
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrderType
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
-import com.fstengineering.leasilycrm.home.leads.LeadsViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.home.leads.LeadsViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel.UiEvents.LeadDeleteSuccess
-import com.fstengineering.leasilycrm.home.leads.LeadsViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.home.leads.composables.LeadsEmptySection
 import kotlinx.collections.immutable.persistentListOf
 
@@ -61,11 +62,9 @@ fun LeadsPage(
     onDeleteAssistance: (Assistance) -> Unit,
     onNewStay: (Long) -> Unit,
     onViewStay: (Long) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    onSignOut: () -> Unit = {},
-    showSnackbar: (String) -> Unit = { _ -> },
 ) {
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -93,16 +92,15 @@ fun LeadsPage(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is LeadDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_lead_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_lead_succeeded))
                 }
             }
         }

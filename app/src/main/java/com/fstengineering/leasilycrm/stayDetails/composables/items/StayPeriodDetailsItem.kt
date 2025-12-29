@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,7 +24,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCa
 fun StayPeriodDetailsItem(
     stayStructuredDates: StaysStructuredDatesMap,
     modifier: Modifier = Modifier,
-    stayPeriodDateCircleColor: Color? = null,
 ) {
     val defaultPeriodColor = MaterialTheme.colorScheme.secondaryContainer
 
@@ -60,7 +58,7 @@ fun StayPeriodDetailsItem(
                     year = monthYear.year,
                     periodDailiesCount = if (isUnavailablePeriod) null else periodDailiesCount,
                     selectedDatesWithMonthYear = monthYear to stayDates,
-                    singleStayPeriodColor = stayPeriodDateCircleColor ?: defaultPeriodColor,
+                    singleStayPeriodColor = defaultPeriodColor,
                 )
             }
         }

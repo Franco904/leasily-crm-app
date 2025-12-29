@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.utils.hasNotificationPermission
-import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.DataSourceError
 import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.SignInState
 import kotlinx.coroutines.launch
 
@@ -26,9 +25,8 @@ import kotlinx.coroutines.launch
 fun RootScreen(
     viewModel: RootViewModel,
     startedFromStayNotificationPopUp: Boolean,
+    onNavigateToFirstDestination: (Any) -> Unit,
     modifier: Modifier = Modifier,
-    onNavigateToFirstDestination: (Any) -> Unit = { _ -> },
-    showSnackbar: (String, Boolean) -> Unit = { _, _ -> },
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current!!
@@ -41,19 +39,13 @@ fun RootScreen(
         launch {
             viewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is DataSourceError -> {
-                        showSnackbar(context.getString(uiEvent.messageId), false)
-
-                        onNavigateToFirstDestination(Destinations.SignIn)
-                    }
-
                     is SignInState -> {
                         val firstDestination = when {
                             uiEvent.isUserSignedIn -> {
                                 Destinations.Home(startedFromStayNotificationPopUp)
                             }
 
-                            else -> Destinations.SignIn
+                            else -> Destinations.SignIn(hasSessionExpired = false)
                         }
 
                         onNavigateToFirstDestination(firstDestination)

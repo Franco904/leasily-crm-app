@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interface
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import kotlinx.collections.immutable.ImmutableList
@@ -25,15 +25,11 @@ class CustomerSegmentRepositoryImpl(
 ) : CustomerSegmentRepository {
     override suspend fun insertOrUpdate(
         customerSegment: CustomerSegment,
-    ): AppResult<Unit, DataSourceError> {
+    ): AppResult<Unit, DataError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: return AppResult.Error(
-                        error = DataSourceError.PreferencesError.NotFound,
-                    )
-                }
+                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
             )
 
         val customerSegmentWithUser = customerSegment.copy(userId = userRemoteId)
@@ -44,21 +40,17 @@ class CustomerSegmentRepositoryImpl(
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataSourceError> {
+    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
         dao.delete(id)
 
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun getAllTenantType(): AppResult<ImmutableList<CustomerSegment>, DataSourceError> {
+    override suspend fun getAllTenantType(): AppResult<ImmutableList<CustomerSegment>, DataError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: run {
-                        return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
-                    }
-                }
+                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
             )
 
         val customerSegments = dao.getAllTenantType(userId = userRemoteId)
@@ -67,15 +59,11 @@ class CustomerSegmentRepositoryImpl(
         return AppResult.Success(data = customerSegments)
     }
 
-    override suspend fun getAllPropertyOwnerType(): AppResult<ImmutableList<CustomerSegment>, DataSourceError> {
+    override suspend fun getAllPropertyOwnerType(): AppResult<ImmutableList<CustomerSegment>, DataError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: run {
-                        return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
-                    }
-                }
+                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
             )
 
         val customerSegments = dao.getAllPropertyOwnerType(userId = userRemoteId)
@@ -84,7 +72,7 @@ class CustomerSegmentRepositoryImpl(
         return AppResult.Success(data = customerSegments)
     }
 
-    override fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataSourceError>> =
+    override fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -92,19 +80,14 @@ class CustomerSegmentRepositoryImpl(
                         emit(AppResult.Error(error = it))
                         return@flow
                     },
-                    onSuccess = { prefsFlow ->
-                        prefsFlow.first().remoteId ?: run {
-                            emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                            return@flow
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
                 )
 
             emitAll(
                 dao.watchAll(userId = userRemoteId)
                     .map {
                         val customerSegments = it.map { it.toDomain() }.toPersistentList()
-                        AppResult.Success<ImmutableList<CustomerSegment>, DataSourceError>(data = customerSegments)
+                        AppResult.Success<ImmutableList<CustomerSegment>, DataError>(data = customerSegments)
                     }
                     .distinctUntilChanged()
             )
@@ -114,15 +97,11 @@ class CustomerSegmentRepositoryImpl(
         customerSegmentName: String,
         customerSegmentTypeId: Long,
         currentStoredCustomerSegmentName: String?,
-    ): AppResult<Boolean, DataSourceError> {
+    ): AppResult<Boolean, DataError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: run {
-                        return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
-                    }
-                }
+                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
             )
 
         val count = dao.countCustomerSegmentsWithName(

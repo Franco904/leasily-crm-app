@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.data.adapters.interfaces.ConnectivityAdapter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceCharacteristicDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CustomerSegmentTypeDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyCharacteristicDao
@@ -16,13 +17,14 @@ import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.in
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.domainTables.GetDomainTablesDto
 import com.fstengineering.leasilycrm.core.domain.repositories.DomainTablesRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class DomainTablesRepositoryImpl(
+    private val connectivityAdapter: ConnectivityAdapter,
     private val api: DomainTablesApi,
     private val assistanceCharacteristicDao: AssistanceCharacteristicDao,
     private val customerSegmentTypeDao: CustomerSegmentTypeDao,
@@ -31,7 +33,11 @@ class DomainTablesRepositoryImpl(
     private val propertyTypeDao: PropertyTypeDao,
     private val tenantContactOriginTypeDao: TenantContactOriginTypeDao,
 ) : DomainTablesRepository {
-    override suspend fun getDomainTables(): AppResult<Unit, DataSourceError> = coroutineScope {
+    override suspend fun getDomainTables(): AppResult<Unit, DataError> = coroutineScope {
+        if (!connectivityAdapter.isDeviceConnectedToInternet(canUseMobile = true)) {
+            return@coroutineScope AppResult.Error(error = DataError.NoInternetError)
+        }
+
         val domainTablesDto = api.getDomainTables()
             .fold(
                 onError = { return@coroutineScope AppResult.Error(error = it) },

@@ -628,6 +628,7 @@
     <string name="cancel_action_button_text">Cancelar</string>
     <string name="close_action_button_text">Fechar</string>
     <string name="confirm_action_button_text">Confirmar</string>
+    <string name="contact_support_action_button_text">Contatar canal de suporte</string>
     <string name="delete_action_button_text">Excluir</string>
     <string name="delete_assistance_action_button_text">Excluir atendimento</string>
     <string name="edit_action_button_text">Editar</string>
@@ -642,6 +643,7 @@
     <string name="search_action_button_text">Buscar</string>
     <string name="sign_out_action_button_text">Sair</string>
     <string name="undo_button_text">Desfazer</string>
+    <string name="understand_button_text">Entendi</string>
     <string name="view_all_a_action_button_text">Ver todas</string>
     <string name="view_all_o_action_button_text">Ver todos</string>
     <string name="view_assistance_action_button_text">Ver atendimento</string>
@@ -724,29 +726,24 @@
     <string name="snackbar_register_stay_check_in_already_done_warning">O check-in desta estadia já foi registrado.</string>
 
     <!-- Snackbar errors -->
-    <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>
-    <string name="snackbar_credential_unsupported_type_error">Tipo de credencial inválido. Tente autenticar com a sua conta Google.</string>
-    <string name="snackbar_credential_unsupported_api_error">Falha ao verificar as credenciais. Tente reiniciar o aplicativo.</string>
-    <string name="snackbar_credential_no_credentials_found_error">Não há contas Google disponíveis neste dispositivo.</string>
+    <string name="user_cancellation_error_title">Login cancelado</string>
+    <string name="no_credentials_found_error_title">Crie uma conta Google</string>
+    <string name="no_credentials_found_error_description">Você não tem uma conta Google salva neste dispositivo ainda. Cadastre uma nova e tente novamente.</string>
 
-    <string name="snackbar_preferences_not_found_error">Usuário não encontrado.</string>
-    <string name="snackbar_preferences_serialization_error">Falha ao carregar os dados. Tente novamente mais tarde.</string>
-    <string name="snackbar_preferences_security_error">Falha inesperada na sessão. Tente sair e autenticar novamente.</string>
+    <string name="no_internet_error_title">Sem internet</string>
+    <string name="no_internet_error_description_default">Sua conexão com a internet foi perdida. Conecte-se a uma rede e tente novamente.</string>
+    <string name="no_internet_error_description_sign_in">É preciso ter uma conexão com a internet para entrar na conta. Conecte-se a uma rede e tente novamente.</string>
 
-    <string name="snackbar_http_bad_request_error">Dados com formato inválido. Verifique os dados preenchidos.</string>
-    <string name="snackbar_http_unauthorized_error">Sua sessão expirou.</string>
-    <string name="snackbar_http_forbidden_error">Sua sessão expirou.</string>
-    <string name="snackbar_http_not_found_error">Usuário não encontrado.</string>
-    <string name="snackbar_http_server_error">Falha inesperada do servidor. Tente novamente mais tarde.</string>
-    <string name="snackbar_http_unknown_http_response_error">Resposta inesperada do servidor. Tente novamente mais tarde.</string>
-    <string name="snackbar_http_serialization_error">Sua sessão expirou.</string>
-    <string name="snackbar_http_timeout_error">A requisição expirou. Verifique a sua conexão com a Internet e tente novamente.</string>
-    <string name="snackbar_http_network_internet">Sem conexão com a Internet. Verifique a sua conexão e tente novamente.</string>
+    <string name="time_out_error_title">Falha na conexão</string>
+    <string name="time_out_error_description">Estamos enfrentando problemas na rede de internet. Verifique a sua conexão com a internet e tente novamente mais tarde.</string>
 
-    <string name="snackbar_shared_storage_not_found_error">O arquivo não foi encontrado.</string>
-    <string name="snackbar_shared_storage_invalid_file_error">O arquivo tem um formato inválido.</string>
+    <string name="unauthorized_error_title">Sessão expirada</string>
+    <string name="unauthorized_error_description">Sua sessão expirou. Faça login novamente.</string>
 
-    <string name="snackbar_unknown_error">Falha inesperada. Tente reiniciar o aplicativo.</string>
+    <string name="unknown_error_title">Houve um problema</string>
+    <string name="unknown_error_description_default">Não foi possível realizar a última ação. Tente reiniciar o aplicativo e se o problema persistir contate o suporte.</string>
+    <string name="unknown_error_description_sign_in">Não foi possível realizar a última ação. Tente reiniciar o aplicativo, entrar na conta novamente e se o problema persistir contate o suporte.</string>
+    <string name="unknown_error_description_sign_out">Não foi possível realizar a última ação. Tente reiniciar o aplicativo, saia da conta novamente e se o problema persistir contate o suporte.</string>
 
     <!-- Notification -->
     <string name="upcoming_check_in_reminder_notification_title">Lembrete de check-in</string>

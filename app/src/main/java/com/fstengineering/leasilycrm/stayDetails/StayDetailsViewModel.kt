@@ -1,18 +1,16 @@
 package com.fstengineering.leasilycrm.stayDetails
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.channels.Channel
@@ -27,7 +25,6 @@ class StayDetailsViewModel(
     private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
     private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
     private val stayRepository: StayRepository,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -49,27 +46,9 @@ class StayDetailsViewModel(
     fun init(stayId: Long) {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchStay(stayId = stayId)
 
         isInitialized = true
-    }
-
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
     }
 
     private fun watchStay(stayId: Long) {
@@ -78,9 +57,7 @@ class StayDetailsViewModel(
         viewModelScope.launch {
             stayRepository.watchById(stayId).collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { storedStay ->
                         if (storedStay == null) {
                             _uiEvents.send(UiEvents.NavigateUp)
@@ -102,17 +79,8 @@ class StayDetailsViewModel(
     fun deleteStay() {
         viewModelScope.launch {
             stayRepository.delete(id = stay.value.id!!)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
-
-            _uiEvents.send(UiEvents.StayDeleteSuccess)
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess { _uiEvents.send(UiEvents.StayDeleteSuccess) }
         }
     }
 
@@ -121,18 +89,8 @@ class StayDetailsViewModel(
             val updatedStay = stay.value.copy(isCheckInDone = true)
 
             stayRepository.insertOrUpdate(stay = updatedStay)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
-                .onSuccess {
-                    _uiEvents.send(UiEvents.RegisterCheckInSuccess)
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess { _uiEvents.send(UiEvents.RegisterCheckInSuccess) }
         }
     }
 
@@ -141,15 +99,7 @@ class StayDetailsViewModel(
             val updatedStay = stay.value.copy(isCheckInDone = false)
 
             stayRepository.insertOrUpdate(stay = updatedStay)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
         }
     }
 
@@ -158,62 +108,30 @@ class StayDetailsViewModel(
     ) {
         viewModelScope.launch {
             registerStayCheckOutUseCase(stay = stay.value)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
-                .onSuccess {
-                    _uiEvents.send(UiEvents.RegisterCheckOutSuccess)
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess { _uiEvents.send(UiEvents.RegisterCheckOutSuccess) }
         }
 
         viewModelScope.launch {
             stayRepository.setMustNotShowCheckOutDialogAnymore(
                 mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore,
             )
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
         }
     }
 
     fun undoRegisterStayCheckOut() {
         viewModelScope.launch {
             undoRegisterStayCheckOutUseCase(stay = stay.value)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
-
+        data class Error(val error: DataError) : UiEvents
         data object NavigateUp : UiEvents
-
         data object StayDeleteSuccess : UiEvents
-
         data object RegisterCheckInSuccess : UiEvents
-
         data object RegisterCheckOutSuccess : UiEvents
     }
 }

@@ -5,14 +5,14 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ass
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristicAssistance
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicAssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 class AssistanceCharacteristicAssistanceRepositoryImpl(
     private val dao: AssistanceCharacteristicAssistanceCrossRefDao,
 ) : AssistanceCharacteristicAssistanceRepository {
     override suspend fun insertOrUpdate(
         characteristicAssistance: AssistanceCharacteristicAssistance,
-    ): AppResult<Unit, DataSourceError> {
+    ): AppResult<Unit, DataError> {
         val characteristicAssistanceEntity =
             AssistanceCharacteristicAssistanceCrossRefEntity.fromDomain(
                 domain = characteristicAssistance,

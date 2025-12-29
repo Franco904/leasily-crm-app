@@ -5,12 +5,12 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Sta
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.domain.repositories.StayTransferRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 class StayTransferRepositoryImpl(
     private val dao: StayTransferDao,
 ) : StayTransferRepository {
-    override suspend fun insertOrUpdate(transfer: StayTransfer): AppResult<Unit, DataSourceError> {
+    override suspend fun insertOrUpdate(transfer: StayTransfer): AppResult<Unit, DataError> {
         val transferEntity = StayTransferEntity.fromDomain(domain = transfer)
         dao.insertOrUpdate(transferEntity)
 

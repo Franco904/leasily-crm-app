@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
@@ -31,7 +30,6 @@ import com.fstengineering.leasilycrm.stayDetails.composables.items.stayDocuments
 fun StayDetailsSection(
     stay: Stay,
     stayStructuredDates: StaysStructuredDatesMap,
-    stayPeriodDateCircleColor: Color?,
     onOpenStayFile: (StayFile) -> Unit,
     cameFromProperty: Boolean,
     cameFromTenant: Boolean,
@@ -87,12 +85,7 @@ fun StayDetailsSection(
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item { StayQtGuestsDetailsItem(qtGuests = stay.qtGuests) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item {
-            StayPeriodDetailsItem(
-                stayStructuredDates = stayStructuredDates,
-                stayPeriodDateCircleColor = stayPeriodDateCircleColor,
-            )
-        }
+        item { StayPeriodDetailsItem(stayStructuredDates = stayStructuredDates) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
             StayCheckInCheckOutDetailsItem(

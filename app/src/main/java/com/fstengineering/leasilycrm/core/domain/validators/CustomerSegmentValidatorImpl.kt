@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegmentType
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.CustomerSegmentValidator
 
@@ -13,8 +13,8 @@ class CustomerSegmentValidatorImpl : CustomerSegmentValidator {
     override fun validate(
         customerSegment: CustomerSegment,
         isThereStoredCustomerSegmentWithSameName: Boolean,
-    ): AppResultCompound<Unit, ValidationError> {
-        val errors = mutableListOf<ValidationError>()
+    ): AppResultCompound<Unit, DomainError> {
+        val errors = mutableListOf<DomainError>()
 
         validateName(
             name = customerSegment.name,
@@ -33,25 +33,25 @@ class CustomerSegmentValidatorImpl : CustomerSegmentValidator {
         name: String?,
         type: CustomerSegmentType?,
         isThereStoredCustomerSegmentWithSameName: Boolean,
-    ): AppResult<Unit, ValidationError.CustomerSegmentName> {
+    ): AppResult<Unit, DomainError.CustomerSegmentName> {
         return when {
-            name.isNullOrBlank() -> AppResult.Error(ValidationError.CustomerSegmentName.IsBlank)
+            name.isNullOrBlank() -> AppResult.Error(DomainError.CustomerSegmentName.IsBlank)
             type != null && isThereStoredCustomerSegmentWithSameName -> {
                 if (type.id == TENANT_CUSTOMER_SEGMENT_TYPE_ID) {
-                    AppResult.Error(ValidationError.CustomerSegmentName.BelongsToOtherTenantSegment)
+                    AppResult.Error(DomainError.CustomerSegmentName.BelongsToOtherTenantSegment)
                 } else {
-                    AppResult.Error(ValidationError.CustomerSegmentName.BelongsToOtherPropertyOwnerSegment)
+                    AppResult.Error(DomainError.CustomerSegmentName.BelongsToOtherPropertyOwnerSegment)
                 }
             }
 
-            name.length > 75 -> AppResult.Error(ValidationError.CustomerSegmentName.LengthIsGreaterThan75Chars)
+            name.length > 75 -> AppResult.Error(DomainError.CustomerSegmentName.LengthIsGreaterThan75Chars)
             else -> AppResult.Success(Unit)
         }
     }
 
-    private fun validateType(type: CustomerSegmentType?): AppResult<Unit, ValidationError.CustomerSegmentType> {
+    private fun validateType(type: CustomerSegmentType?): AppResult<Unit, DomainError.CustomerSegmentType> {
         return when {
-            type == null || type.name == null -> AppResult.Error(ValidationError.CustomerSegmentType.IsNull)
+            type == null || type.name == null -> AppResult.Error(DomainError.CustomerSegmentType.IsNull)
             else -> AppResult.Success(Unit)
         }
     }

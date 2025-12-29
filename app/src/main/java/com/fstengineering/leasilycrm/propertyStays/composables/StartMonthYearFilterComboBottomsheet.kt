@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
-import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomsheet
+import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelAbbreviationByNumber
 import kotlinx.collections.immutable.ImmutableList
@@ -41,11 +41,11 @@ fun StartMonthYearFilterComboBottomsheet(
             .toPersistentMap()
     }
 
-    AppComboBottomsheet(
+    AppComboBottomSheet(
         sheetState = sheetState,
         options = monthYearOptionsMap.keys.toPersistentList(),
         onOptionSelect = { monthYearOption ->
-            val option = monthYearOptionsMap[monthYearOption] ?: return@AppComboBottomsheet
+            val option = monthYearOptionsMap[monthYearOption] ?: return@AppComboBottomSheet
             onMonthYearSelect(option)
         },
         onDismissRequest = onDismiss,

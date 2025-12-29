@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.leadTenantDetails.models
 
-import androidx.annotation.StringRes
 import com.fstengineering.leasilycrm.R
 
 enum class LeadTenantDetailsTab(

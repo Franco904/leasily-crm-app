@@ -33,10 +33,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
-import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.PropertyCreateSuccess
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.PropertyEditSuccess
-import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyRegistrationFormSectionStep4
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyRegistrationTopAppBar
 
@@ -46,8 +48,7 @@ fun PropertyRegistrationStep4Screen(
     parentViewModel: PropertyRegistrationViewModel,
     onLeaveRegistration: () -> Unit,
     onBack: () -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -79,22 +80,21 @@ fun PropertyRegistrationStep4Screen(
     LaunchedEffect(Unit) {
         parentViewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is PropertyCreateSuccess -> {
                     onLeaveRegistration()
-                    showSnackbar(context.getString(R.string.snackbar_create_property_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_create_property_succeeded))
                 }
 
                 is PropertyEditSuccess -> {
                     onLeaveRegistration()
-                    showSnackbar(context.getString(uiEvent.messageId))
+                    onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
             }
         }

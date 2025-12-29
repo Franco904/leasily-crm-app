@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.core.application.di.modules
 
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.LazyWritesWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.ReadsWorker
-import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.SessionExpirationWorker
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
 
@@ -20,14 +19,6 @@ val workerModule = module {
             applicationContext = get(),
             workerParameters = get(),
             domainTablesRepository = get(),
-            userRepository = get(),
-        )
-    }
-
-    worker<SessionExpirationWorker> {
-        SessionExpirationWorker(
-            applicationContext = get(),
-            workerParameters = get(),
             userRepository = get(),
         )
     }

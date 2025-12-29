@@ -26,8 +26,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceCreateSuccess
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceEditSuccess
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.ConvertOldTenantToLead
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.DataSourceError
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceInteractionRegistrationBottomsheet
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationFormSectionStep3
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationTopAppBar
@@ -39,6 +38,9 @@ import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomsheet
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
@@ -50,8 +52,7 @@ fun AssistanceRegistrationStep3Screen(
     stepViewModel: AssistanceRegistrationStep3ViewModel,
     onLeaveRegistration: () -> Unit,
     onBack: () -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -89,26 +90,25 @@ fun AssistanceRegistrationStep3Screen(
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is DataSourceError -> {
-                        showSnackbar(context.getString(uiEvent.messageId))
-                    }
-
-                    is RedirectToSignIn -> {
-                        onSignOut()
+                    is Error -> {
+                        val errorData = uiEvent.error.toBottomSheetData(
+                            DefaultErrorBottomSheetDataPropertiesStrategy,
+                        )
+                        onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
                     is AssistanceCreateSuccess -> {
                         onLeaveRegistration()
-                        showSnackbar(context.getString(R.string.snackbar_create_assistance_succeeded))
+                        onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_create_assistance_succeeded))
                     }
 
                     is AssistanceEditSuccess -> {
                         onLeaveRegistration()
-                        showSnackbar(context.getString(uiEvent.messageId))
+                        onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                     }
 
                     is ConvertOldTenantToLead -> {
-                        showSnackbar(context.getString(R.string.snackbar_convert_tenant_to_lead_succeeded))
+                        onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_convert_tenant_to_lead_succeeded))
                     }
                 }
             }
@@ -128,9 +128,7 @@ fun AssistanceRegistrationStep3Screen(
                         stepViewModel.onInteractionFormChange(form = null)
                         stepViewModel.onDismissInteraction()
 
-                        val message =
-                            context.getString(R.string.snackbar_create_assistance_interaction_succeeded)
-                        showSnackbar(message)
+                        onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_create_assistance_interaction_succeeded))
                     }
 
                     is InteractionEditSuccess -> {
@@ -147,7 +145,7 @@ fun AssistanceRegistrationStep3Screen(
                         stepViewModel.onInteractionFormChange(form = null)
                         stepViewModel.onDismissInteraction()
 
-                        showSnackbar(context.getString(uiEvent.messageId))
+                        onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                     }
                 }
             }

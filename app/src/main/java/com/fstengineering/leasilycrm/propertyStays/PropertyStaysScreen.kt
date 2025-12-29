@@ -17,16 +17,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
-import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel.UiEvents.NavigateUp
-import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyStays.composables.PropertyStaysSection
 import com.fstengineering.leasilycrm.propertyStays.composables.PropertyStaysTopAppBar
 
@@ -35,13 +36,11 @@ fun PropertyStaysScreen(
     propertyId: Long,
     viewModel: PropertyStaysViewModel,
     onBack: () -> Unit,
-    onSignOut: () -> Unit,
     onNewStay: (Boolean) -> Unit,
     onViewStay: (Long) -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
@@ -63,12 +62,11 @@ fun PropertyStaysScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is NavigateUp -> {

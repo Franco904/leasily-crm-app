@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppComboBottomsheet(
+fun AppComboBottomSheet(
     sheetState: SheetState,
     options: ImmutableList<String>,
     onOptionSelect: (String) -> Unit,

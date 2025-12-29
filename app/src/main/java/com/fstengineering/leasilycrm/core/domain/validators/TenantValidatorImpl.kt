@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.constants.EMAIL_REGEX
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.TenantValidator
 
@@ -12,8 +12,8 @@ class TenantValidatorImpl : TenantValidator {
     override fun validate(
         tenant: Tenant,
         isThereStoredTenantWithSameName: Boolean,
-    ): AppResultCompound<Unit, ValidationError> {
-        val errors = mutableListOf<ValidationError>()
+    ): AppResultCompound<Unit, DomainError> {
+        val errors = mutableListOf<DomainError>()
 
         validateName(
             name = tenant.name,
@@ -39,39 +39,39 @@ class TenantValidatorImpl : TenantValidator {
     private fun validateName(
         name: String?,
         isThereStoredTenantWithSameName: Boolean,
-    ): AppResult<Unit, ValidationError.TenantName> {
+    ): AppResult<Unit, DomainError.TenantName> {
         return when {
-            name.isNullOrBlank() -> AppResult.Error(ValidationError.TenantName.IsBlank)
+            name.isNullOrBlank() -> AppResult.Error(DomainError.TenantName.IsBlank)
             isThereStoredTenantWithSameName -> {
-                AppResult.Error(ValidationError.TenantName.BelongsToOtherTenant)
+                AppResult.Error(DomainError.TenantName.BelongsToOtherTenant)
             }
 
             name.length > 100 -> {
-                AppResult.Error(ValidationError.TenantName.LengthIsGreaterThan100Chars)
+                AppResult.Error(DomainError.TenantName.LengthIsGreaterThan100Chars)
             }
 
             else -> AppResult.Success(Unit)
         }
     }
 
-    private fun validatePhone(phone: String): AppResult<Unit, ValidationError.TenantPhone> {
+    private fun validatePhone(phone: String): AppResult<Unit, DomainError.TenantPhone> {
         return when {
             phone.length > 20 -> {
-                AppResult.Error(ValidationError.TenantPhone.LengthIsGreaterThan20Chars)
+                AppResult.Error(DomainError.TenantPhone.LengthIsGreaterThan20Chars)
             }
 
             else -> AppResult.Success(Unit)
         }
     }
 
-    private fun validateEmail(email: String): AppResult<Unit, ValidationError.TenantEmail> {
+    private fun validateEmail(email: String): AppResult<Unit, DomainError.TenantEmail> {
         return when {
             !email.trim().matches(Regex(EMAIL_REGEX, RegexOption.IGNORE_CASE)) -> {
-                AppResult.Error(ValidationError.TenantEmail.InvalidFormat)
+                AppResult.Error(DomainError.TenantEmail.InvalidFormat)
             }
 
             email.length > 100 -> {
-                AppResult.Error(ValidationError.TenantEmail.LengthIsGreaterThan120Chars)
+                AppResult.Error(DomainError.TenantEmail.LengthIsGreaterThan120Chars)
             }
 
             else -> AppResult.Success(Unit)

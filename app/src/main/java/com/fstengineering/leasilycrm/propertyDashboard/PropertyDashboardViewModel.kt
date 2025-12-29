@@ -1,19 +1,17 @@
 package com.fstengineering.leasilycrm.propertyDashboard
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
@@ -28,8 +26,7 @@ class PropertyDashboardViewModel(
     private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
     private val watchPropertyWithStaysTenantsUseCase: WatchPropertyWithStaysTenantsUseCase,
     private val propertyRepository: PropertyRepository,
-    private val userRepository: UserRepository,
-    private val now: AppLazyDate,
+    private val now: AppDate,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -51,27 +48,9 @@ class PropertyDashboardViewModel(
     fun init(propertyId: Long) {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchProperty(propertyId = propertyId)
 
         isInitialized = true
-    }
-
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
     }
 
     private fun watchProperty(propertyId: Long) {
@@ -80,9 +59,7 @@ class PropertyDashboardViewModel(
         viewModelScope.launch {
             watchPropertyWithStaysTenantsUseCase(propertyId).collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { storedProperty ->
                         if (storedProperty == null) {
                             _uiEvents.send(UiEvents.NavigateUp)
@@ -125,27 +102,14 @@ class PropertyDashboardViewModel(
 
         viewModelScope.launch {
             propertyRepository.delete(id = propertyId)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.NavigateUp)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
-
-            _uiEvents.send(UiEvents.PropertyDeleteSuccess)
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess { _uiEvents.send(UiEvents.PropertyDeleteSuccess) }
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
-
+        data class Error(val error: DataError) : UiEvents
         data object NavigateUp : UiEvents
-
         data object PropertyDeleteSuccess : UiEvents
     }
 }

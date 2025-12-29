@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -31,9 +29,6 @@ class RootViewModel(
     private fun checkIsUserSignedIn() {
         viewModelScope.launch {
             userRepository.isUserSignedIn()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
                 .onSuccess { isUserSignedIn ->
                     _uiEvents.send(UiEvents.SignInState(isUserSignedIn))
                 }
@@ -42,15 +37,11 @@ class RootViewModel(
 
     fun uncheckAppNotificationSettings() {
         viewModelScope.launch {
-            settingsRepository.setIsTodayCheckInCheckOutNotificationEnabled(
-                isEnabled = false,
-            )
+            settingsRepository.setIsTodayCheckInCheckOutNotificationEnabled(isEnabled = false)
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(val messageId: Int) : UiEvents
-
         data class SignInState(val isUserSignedIn: Boolean) : UiEvents
     }
 }

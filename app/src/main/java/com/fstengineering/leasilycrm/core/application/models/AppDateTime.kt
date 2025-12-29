@@ -5,20 +5,20 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 
-data class AppLazyDateTime(
+data class AppDateTime(
     val dateTime: () -> LocalDateTime,
 ) {
-    fun withHourMinute(hour: Int, minute: Int): AppLazyDateTime {
+    fun withHourMinute(hour: Int, minute: Int): AppDateTime {
         val updatedDateTime = dateTime().withHour(hour).withMinute(minute)
         return copy(dateTime = { updatedDateTime })
     }
 
-    fun toStartOfDay(): AppLazyDateTime {
+    fun toStartOfDay(): AppDateTime {
         val updatedDateTime = dateTime().withHour(0).withMinute(0)
         return copy(dateTime = { updatedDateTime })
     }
 
-    fun plusDays(daysToAdd: Long): AppLazyDateTime {
+    fun plusDays(daysToAdd: Long): AppDateTime {
         val updatedDateTime = dateTime().plusDays(daysToAdd)
         return copy(dateTime = { updatedDateTime })
     }
@@ -42,11 +42,11 @@ data class AppLazyDateTime(
         return dateTime.hour to dateTime.minute
     }
 
-    fun isAfter(other: AppLazyDateTime?): Boolean {
+    fun isAfter(other: AppDateTime?): Boolean {
         return other == null || dateTime() > other.dateTime()
     }
 
-    fun isBefore(other: AppLazyDateTime?): Boolean {
+    fun isBefore(other: AppDateTime?): Boolean {
         return other == null || dateTime() < other.dateTime()
     }
 
@@ -60,12 +60,14 @@ data class AppLazyDateTime(
     }
 
     companion object {
-        fun now(): AppLazyDateTime {
+        fun now(): AppDateTime {
             val now = LocalDateTime.now()
-            return AppLazyDateTime { now }
+            return AppDateTime { now }
         }
 
-        fun fromMillis(millis: Long): AppLazyDateTime {
+        fun lazyNow(): AppDateTime = AppDateTime { LocalDateTime.now() }
+
+        fun fromMillis(millis: Long): AppDateTime {
             val lazyDateTime = {
                 Instant
                     .ofEpochMilli(/* epochMilli = */ millis)
@@ -73,7 +75,7 @@ data class AppLazyDateTime(
                     .toLocalDateTime()
             }
 
-            return AppLazyDateTime(dateTime = lazyDateTime)
+            return AppDateTime(dateTime = lazyDateTime)
         }
     }
 }

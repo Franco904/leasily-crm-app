@@ -2,13 +2,11 @@ package com.fstengineering.leasilycrm.home.dashboard
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apartment
-import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -45,7 +43,6 @@ fun DashboardPage(
     viewModel: DashboardViewModel,
     onPropertiesSelect: () -> Unit,
     onPropertyOwnersSelect: () -> Unit,
-    onCustomerSegmentsSelect: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -104,14 +101,6 @@ fun DashboardPage(
                     modifier = Modifier.weight(1f)
                 )
             }
-        }
-        item {
-            HomeNavCard(
-                icon = Icons.Outlined.BookmarkBorder,
-                title = stringResource(R.string.home_customer_segments_label),
-                onSelect = onCustomerSegmentsSelect,
-                modifier = Modifier.fillMaxWidth()
-            )
         }
 
         item { Spacer(modifier = Modifier.height(24.dp)) }

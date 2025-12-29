@@ -5,14 +5,14 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicPropertyRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 class PropertyCharacteristicPropertyRepositoryImpl(
     private val dao: PropertyCharacteristicPropertyCrossRefDao,
 ) : PropertyCharacteristicPropertyRepository {
     override suspend fun insertOrUpdate(
         characteristicProperty: PropertyCharacteristicProperty,
-    ): AppResult<Unit, DataSourceError> {
+    ): AppResult<Unit, DataError> {
         val characteristicPropertyEntity = PropertyCharacteristicPropertyCrossRefEntity.fromDomain(
             domain = characteristicProperty,
         )

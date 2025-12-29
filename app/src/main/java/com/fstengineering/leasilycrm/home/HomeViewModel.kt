@@ -2,14 +2,14 @@ package com.fstengineering.leasilycrm.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +21,7 @@ class HomeViewModel(
     private val assistanceRepository: AssistanceRepository,
     private val stayRepository: StayRepository,
     private val userRepository: UserRepository,
-    private val now: AppLazyDateTime,
+    private val now: AppDateTime,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -37,45 +37,18 @@ class HomeViewModel(
     fun init() {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchUserProfilePictureUrl()
         watchTodayCheckInsAndCheckouts()
 
         isInitialized = true
     }
 
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
-    }
-
     fun watchUserProfilePictureUrl() {
         viewModelScope.launch {
             userRepository.watchUser().collect { result ->
                 result
-                    .onError { error ->
-                        if (error.isRedirectError()) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { user ->
-                        _userProfilePictureUrl.value = user.profilePictureUrl
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                    .onSuccess { user -> _userProfilePictureUrl.value = user.profilePictureUrl }
             }
         }
     }
@@ -84,14 +57,7 @@ class HomeViewModel(
         viewModelScope.launch {
             stayRepository.watchAllUpcomingCheckInsAndCheckOuts().collect { result ->
                 result
-                    .onError { error ->
-                        if (error.isRedirectError()) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { upcomingCheckInsAndCheckOuts ->
                         val todayCheckInsAndCheckoutsCount = upcomingCheckInsAndCheckOuts.count {
                             val canRegisterCheckIn = !it.isCheckInDone
@@ -111,24 +77,14 @@ class HomeViewModel(
     fun deleteCurrentAssistance(currentAssistance: Assistance) {
         viewModelScope.launch {
             assistanceRepository.delete(id = currentAssistance.id!!)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             _uiEvents.send(UiEvents.CurrentAssistanceDeleteSuccess)
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
+        data class Error(val error: DataError) : UiEvents
 
         data object CurrentAssistanceDeleteSuccess : UiEvents
     }

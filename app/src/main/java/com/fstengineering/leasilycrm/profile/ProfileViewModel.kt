@@ -1,16 +1,17 @@
 package com.fstengineering.leasilycrm.profile
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.UserValidator
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.models.EditUserErrorUiState
 import com.fstengineering.leasilycrm.profile.models.UserUiState
 import kotlinx.coroutines.channels.Channel
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     private val userValidator: UserValidator,
     private val userRepository: UserRepository,
+    private val userSessionService: UserSessionService,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -41,24 +43,9 @@ class ProfileViewModel(
     fun init() {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchUser()
 
         isInitialized = true
-    }
-
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-            }
-        }
     }
 
     private fun watchUser() {
@@ -67,15 +54,9 @@ class ProfileViewModel(
 
             userRepository.watchUser().collect { result ->
                 result
-                    .onError { error ->
-                        if (error.isRedirectError()) _uiEvents.send(UiEvents.RedirectToSignIn)
-
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { user ->
-                        if (user.isNull()) return@onSuccess
-
-                        _user.update { UserUiState.fromDomain(user) }
+                        if (!user.isNull()) _user.update { UserUiState.fromDomain(user) }
                     }
 
                 _isLoadingUser.update { false }
@@ -96,13 +77,13 @@ class ProfileViewModel(
 
             userValidator.validate(editedUser)
                 .onErrors { errors ->
-                    val nameError = errors.firstOrNull { it is ValidationError.UserName }
-                    val creciNumberError = errors.firstOrNull { it is ValidationError.CreciNumber }
+                    val nameError = errors.firstOrNull { it is DomainError.UserName }
+                    val creciNumberError = errors.firstOrNull { it is DomainError.CreciNumber }
 
                     _formErrors.update {
                         it.copy(
-                            nameError = nameError?.toUiMessage(),
-                            creciNumberError = creciNumberError?.toUiMessage(),
+                            nameError = nameError?.toInlineMessage(),
+                            creciNumberError = creciNumberError?.toInlineMessage(),
                         )
                     }
 
@@ -110,20 +91,11 @@ class ProfileViewModel(
                 }
 
             userRepository.updateUser(user = editedUser)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(
-                        UiEvents.DataSourceError(messageId = error.toUiMessage()),
-                    )
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess {
-                    _uiEvents.send(
+                    val event =
                         UiEvents.EditUserSuccess(messageId = R.string.snackbar_edit_user_succeeded)
-                    )
+                    _uiEvents.send(event)
                 }
         }
     }
@@ -148,22 +120,14 @@ class ProfileViewModel(
 
     fun signOutUser() {
         viewModelScope.launch {
-            userRepository.signOutUser()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
-                .onSuccess {
-                    userRepository.deleteCachedUser()
-                    _uiEvents.send(UiEvents.RedirectToSignIn)
-                }
+            userSessionService.onUserInitiatedSignOut()
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(val messageId: Int) : UiEvents
+        data class Error(val error: DataError) : UiEvents
 
         data class EditUserSuccess(val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
     }
 }

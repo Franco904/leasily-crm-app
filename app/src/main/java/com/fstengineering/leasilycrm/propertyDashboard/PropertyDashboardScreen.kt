@@ -17,17 +17,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
-import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.NavigateUp
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.PropertyDeleteSuccess
-import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyDashboard.composables.PropertyDashboardSection
 import com.fstengineering.leasilycrm.propertyDashboard.composables.PropertyDashboardTopAppBar
 
@@ -36,17 +37,15 @@ fun PropertyDashboardScreen(
     propertyId: Long,
     viewModel: PropertyDashboardViewModel,
     onBack: () -> Unit,
-    onSignOut: () -> Unit,
     onEditProperty: () -> Unit,
     onViewPropertyDetails: () -> Unit,
     onViewPropertyOwnerDetails: (Long) -> Unit,
     onViewAllPropertyStays: () -> Unit,
     onNewStay: (Boolean) -> Unit,
     onViewStay: (Long) -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
 
     val surfaceColor = MaterialTheme.colorScheme.surface
@@ -64,12 +63,11 @@ fun PropertyDashboardScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is NavigateUp -> {
@@ -77,7 +75,7 @@ fun PropertyDashboardScreen(
                 }
 
                 is PropertyDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_property_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_property_succeeded))
                 }
             }
         }
