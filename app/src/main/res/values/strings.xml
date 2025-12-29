@@ -85,21 +85,6 @@
     <string name="dashboard_crm_metric_chart_last_12_months_empty_text">Nenhum dado nos últimos 12 meses.</string>
     <string name="dashboard_crm_metric_chart_empty_text">Nenhum dado para exibir.</string>
 
-    <!-- Customer segments -->
-    <string name="customer_segments_top_app_bar_title">Segmentos de clientes</string>
-    <string name="customer_segments_property_owners_title">Proprietários</string>
-    <string name="customer_segments_property_owners_empty_text">Nenhum segmento de proprietário registrado.</string>
-    <string name="customer_segments_tenants_title">Inquilinos</string>
-    <string name="customer_segments_tenants_empty_text">Nenhum segmento de inquilino registrado.</string>
-
-    <string name="customer_segments_save_dialog_headline">Novo segmento de cliente</string>
-    <string name="customer_segments_edit_dialog_headline">Editar segmento de cliente</string>
-    <string name="customer_segments_save_edit_dialog_name_placeholder">Nome</string>
-    <string name="customer_segments_save_edit_dialog_type_title">Tipo</string>
-
-    <string name="customer_segments_delete_dialog_headline">Excluir segmento de cliente?</string>
-    <string name="customer_segments_delete_dialog_supporting_text">Se confirmada a exclusão, imóveis e inquilinos com este segmento serão desvinculados dele.</string>
-
     <!-- Properties -->
     <string name="properties_top_app_bar_title">Imóveis</string>
     <string name="properties_empty_text">Nenhum imóvel registrado.</string>

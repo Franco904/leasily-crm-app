@@ -43,7 +43,7 @@ fun AssistanceSearchedNeighborhoodRegistrationDialog(
             Text(
                 text = stringResource(
                     when {
-                        isEditing -> R.string.customer_segments_edit_dialog_headline
+                        isEditing -> R.string.assistance_registration_searched_neighborhood_edit_dialog_headline
                         else -> R.string.assistance_registration_searched_neighborhood_save_dialog_headline
                     }
                 ),
