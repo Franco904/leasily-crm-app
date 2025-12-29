@@ -54,7 +54,7 @@ fun EditCreciNumberDialog(
                 value = currentUserUiState.creciNumber ?: "",
                 onValueChange = { creciNumberInput ->
                     currentUserUiState = currentUserUiState.copy(
-                        creciNumber = creciNumberInput,
+                        creciNumber = creciNumberInput.takeIf { !it.isBlank() },
                     )
                     onUserUiStateChange(userUiState.copy(creciNumber = creciNumberInput))
                 },
