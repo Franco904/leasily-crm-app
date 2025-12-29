@@ -76,8 +76,8 @@ fun SignInScreen(
 
                                 onUiEvent(UiEvent.ShowErrorBottomSheet(e.toBottomSheetData()))
                             }
-                            .onSuccess { credentials ->
-                                viewModel.signInUser(credentials = credentials)
+                            .onSuccess { idToken ->
+                                viewModel.signInUser(idToken)
                             }
                     }
                 }

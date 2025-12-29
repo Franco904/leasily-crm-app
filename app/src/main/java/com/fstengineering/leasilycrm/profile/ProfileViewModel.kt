@@ -3,16 +3,17 @@ package com.fstengineering.leasilycrm.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.UserValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
-import com.fstengineering.leasilycrm.profile.models.EditUserErrorUiState
 import com.fstengineering.leasilycrm.profile.models.UserUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
+    private val authRepository: AuthRepository,
     private val userValidator: UserValidator,
     private val userRepository: UserRepository,
     private val userSessionService: UserSessionService,
@@ -34,8 +36,8 @@ class ProfileViewModel(
     private val _user = MutableStateFlow(UserUiState())
     val user = _user.asStateFlow()
 
-    private val _formErrors = MutableStateFlow(EditUserErrorUiState())
-    val formErrors = _formErrors.asStateFlow()
+    private val _creciFieldError = MutableStateFlow<Int?>(null)
+    val creciFieldError = _creciFieldError.asStateFlow()
 
     private val _isLoadingUser = MutableStateFlow(true)
     val isLoadingUser = _isLoadingUser.asStateFlow()
@@ -77,51 +79,39 @@ class ProfileViewModel(
 
             userValidator.validate(editedUser)
                 .onErrors { errors ->
-                    val nameError = errors.firstOrNull { it is DomainError.UserName }
                     val creciNumberError = errors.firstOrNull { it is DomainError.CreciNumber }
-
-                    _formErrors.update {
-                        it.copy(
-                            nameError = nameError?.toInlineMessage(),
-                            creciNumberError = creciNumberError?.toInlineMessage(),
-                        )
-                    }
+                    _creciFieldError.update { creciNumberError?.toInlineMessage() }
 
                     return@launch
                 }
 
-            userRepository.updateUser(user = editedUser)
+            userRepository.updateUserCreciNumber(creciNumber = editedUserState.creciNumber)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess {
                     val event =
-                        UiEvents.EditUserSuccess(messageId = R.string.edit_user_success_message)
+                        UiEvents.EditUserSuccess(messageId = R.string.edit_user_creci_success_message)
                     _uiEvents.send(event)
                 }
         }
     }
 
-    fun onUserChange(newUserData: UserUiState) {
-        if (newUserData.name != user.value.name) {
-            _formErrors.update {
-                it.copy(nameError = null)
-            }
-        }
-
+    fun onCreciNumberChange(newUserData: UserUiState) {
         if (newUserData.creciNumber != user.value.creciNumber) {
-            _formErrors.update {
-                it.copy(creciNumberError = null)
-            }
+            _creciFieldError.update { null }
         }
     }
 
     fun clearErrors() {
-        _formErrors.update { EditUserErrorUiState() }
+        _creciFieldError.update { null }
     }
 
     fun onSignOut() {
         viewModelScope.launch {
-            val event = if (userRepository.isDeviceConnectedToInternet()) UiEvents.ContinueSignOut
-            else UiEvents.Error(DataError.NoInternetError)
+            val event = authRepository.checkDeviceIsConnectedToInternet()
+                .fold(
+                    onError = { e -> UiEvents.Error(e) },
+                    onSuccess = { UiEvents.ContinueSignOut }
+                )
 
             _uiEvents.send(event)
         }

@@ -5,5 +5,5 @@ import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSession
 import org.koin.dsl.module
 
 val domainServiceModule = module {
-    single<UserSessionService> { UserSessionServiceImpl(userRepository = get()) }
+    single<UserSessionService> { UserSessionServiceImpl(authRepository = get()) }
 }

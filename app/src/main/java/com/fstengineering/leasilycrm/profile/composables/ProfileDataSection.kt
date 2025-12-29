@@ -63,7 +63,7 @@ fun ProfileDataSection(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = if (userUiState.creciNumber != null) "CRECI - ${userUiState.creciNumber}" else stringResource(
+                text = if (userUiState.creciNumber != null) "CRECI  ·  ${userUiState.creciNumber}" else stringResource(
                     R.string.profile_creci_blank_body_text
                 ),
                 style = MaterialTheme.typography.bodyMedium.copy(

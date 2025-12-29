@@ -10,7 +10,6 @@ import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.data.utils.CryptoUtils
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.presentation.external.interfaces.CredentialManagerAdapter
-import com.fstengineering.leasilycrm.core.presentation.external.models.GoogleUserCredentials
 import com.fstengineering.leasilycrm.core.presentation.utils.CredentialsError
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toCredentialsError
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -21,7 +20,7 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
     override suspend fun chooseGoogleAccount(
         activityContext: Activity,
         mustEnableAutoSelect: Boolean,
-    ): AppResult<GoogleUserCredentials, CredentialsError> {
+    ): AppResult<String, CredentialsError> {
         val credentialManager = CredentialManager.create(activityContext)
 
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
@@ -55,13 +54,7 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
             val googleIdTokenCredential = GoogleIdTokenCredential
                 .createFrom(credential.data)
 
-            val googleCredentials = GoogleUserCredentials(
-                idToken = googleIdTokenCredential.idToken,
-                name = googleIdTokenCredential.displayName,
-                profilePictureUrl = googleIdTokenCredential.profilePictureUri?.toString(),
-            )
-
-            return AppResult.Success(data = googleCredentials)
+            return AppResult.Success(data = googleIdTokenCredential.idToken)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             if (BuildConfig.DEBUG) e.printStackTrace()

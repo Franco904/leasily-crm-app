@@ -43,7 +43,7 @@ val useCaseModule = module {
         GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
             stayRepository = get(),
             settingsRepository = get(),
-            userRepository = get(),
+            authRepository = get(),
             now = AppDateTime.lazyNow(),
         )
     }

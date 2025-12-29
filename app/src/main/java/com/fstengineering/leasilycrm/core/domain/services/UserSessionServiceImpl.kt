@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.services
 
+import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService.UserSessionEvent
@@ -11,18 +12,18 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 class UserSessionServiceImpl(
-    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ) : UserSessionService {
     private val _userSessionEvents = MutableSharedFlow<UserSessionEvent>()
     override val userSessionEvents: Flow<UserSessionEvent> = _userSessionEvents.asSharedFlow()
 
     override suspend fun onUserInitiatedSignOut(): AppResult<Unit, DataError> {
-        return userRepository.signOutUser()
+        return authRepository.signOut()
             .onSuccess { _userSessionEvents.emit(UserSessionEvent.UserInitiatedSignOutEvent) }
     }
 
     override suspend fun onSessionExpired(): AppResult<Unit, DataError> {
-        return userRepository.signOutUser()
+        return authRepository.signOut()
             .onSuccess { _userSessionEvents.emit(UserSessionEvent.SessionExpiredEvent) }
     }
 }

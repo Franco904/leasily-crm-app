@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.domain.useCases
 
 import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.StayCheckNotificationStatus
+import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
@@ -13,19 +14,19 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.first
 
 class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
+    private val authRepository: AuthRepository,
     private val stayRepository: StayRepository,
     private val settingsRepository: SettingsRepository,
-    private val userRepository: UserRepository,
     private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
     override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, DataError> {
         val isTodayCheckInCheckOutNotificationEnabled = settingsRepository.watchSettings().first()
             .fold(onError = { false }, onSuccess = { it.isTodayCheckInCheckOutNotificationEnabled })
 
-        val isUserSignedIn = userRepository.isUserSignedIn()
+        val isSessionAlive = authRepository.isSessionAlive()
             .fold(onError = { false }, onSuccess = { it })
 
-        if (now.dateTime().hour > 9 || !isTodayCheckInCheckOutNotificationEnabled || !isUserSignedIn) {
+        if (now.dateTime().hour > 9 || !isTodayCheckInCheckOutNotificationEnabled || !isSessionAlive) {
             return AppResult.Success(data = emptyList())
         }
 

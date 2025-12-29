@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpCli
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.UpdateUserDto
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.user.GetUserDto
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.responseDtos.user.SignInUserResponseDto
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
@@ -22,17 +21,6 @@ class UserApiImpl(
             url = "$ROUTE/sign-in",
             method = HttpMethod.Post,
             body = signInRequestDto,
-        )
-            .fold(
-                onError = { AppResult.Error(error = it) },
-                onSuccess = { response -> AppResult.Success(data = response.body()) },
-            )
-    }
-
-    override suspend fun getUser(): AppResult<GetUserDto, DataError> {
-        return client.request(
-            url = ROUTE,
-            method = HttpMethod.Get,
         )
             .fold(
                 onError = { AppResult.Error(error = it) },

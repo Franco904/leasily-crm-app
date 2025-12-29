@@ -1,14 +1,13 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.adapters.interfaces.ConnectivityAdapter
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.data.models.SyncState
 import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -22,38 +21,14 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
-    private val connectivityAdapter: ConnectivityAdapter,
     private val api: UserApi,
     private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
+    private val userSessionService: UserSessionService,
 ) : UserRepository {
-    override suspend fun isUserSignedIn(): AppResult<Boolean, DataError> {
-        return encryptedPreferencesStorage.readPreferences()
-            .fold(
-                onError = { error ->
-                    AppResult.Error(error = error)
-                },
-                onSuccess = { prefsFlow ->
-                    val isSignedIn = prefsFlow.first().sessionCookie != null
-
-                    AppResult.Success(data = isSignedIn)
-                }
-            )
-    }
-
-    override suspend fun signInUser(
-        idToken: String,
-        user: User,
-    ): AppResult<Unit, DataError> {
-        val requestDto = SignInRequestDto(idToken = idToken)
-        val remoteUserId = api.signInUser(signInRequestDto = requestDto)
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { responseDto -> responseDto.id }
-            )
-
+    override suspend fun storeUser(user: User): AppResult<Unit, DataError> {
         encryptedPreferencesStorage.savePreferences { prefs ->
             prefs.copy(
-                remoteId = remoteUserId,
+                remoteId = user.remoteId,
                 name = user.name,
                 creciNumber = user.creciNumber,
                 profilePictureUrl = user.profilePictureUrl,
@@ -77,55 +52,25 @@ class UserRepositoryImpl(
             }
     }
 
-    override suspend fun getRemoteUser(): AppResult<User, DataError> {
-        if (!isDeviceConnectedToInternet()) {
-            return AppResult.Error(error = DataError.NoInternetError)
-        }
-
-        val fetchedUser = api.getUser()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { responseDto -> responseDto.toUser() }
-            )
-
-        encryptedPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(
-                name = fetchedUser.name,
-                creciNumber = fetchedUser.creciNumber,
-                profilePictureUrl = fetchedUser.profilePictureUrl,
-            )
-        }
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = fetchedUser)
-    }
-
-    override suspend fun updateUser(
-        user: User,
+    override suspend fun updateUserCreciNumber(
+        creciNumber: String?,
     ): AppResult<Unit, DataError> {
         // Cache new user name
         encryptedPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(
-                name = user.name,
-                creciNumber = user.creciNumber,
-            )
+            prefs.copy(creciNumber = creciNumber)
         }
             .onError { return AppResult.Error(error = it) }
 
         // Try to send new user name to remote backend API
-        val updateUserDto = UpdateUserDto(
-            name = user.name!!,
-            creciNumber = user.creciNumber,
-        )
-
-        api.updateUser(updateUserDto = updateUserDto)
-            .onError { remoteBackendError ->
+        api.updateUser(updateUserDto = UpdateUserDto(creciNumber = creciNumber))
+            .onError { e ->
                 encryptedPreferencesStorage.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Dirty.id)
                 }
-                    .onError { return AppResult.Error(error = it) }
 
-                return AppResult.Error(error = remoteBackendError)
+                if (e is DataError.UnauthorizedError) userSessionService.onSessionExpired()
+
+                return AppResult.Error(error = e)
             }
             .onSuccess {
                 encryptedPreferencesStorage.savePreferences { prefs ->
@@ -137,36 +82,19 @@ class UserRepositoryImpl(
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun deleteCachedUser(): AppResult<Unit, DataError> {
-        return encryptedPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(
-                sessionCookie = null,
-                remoteId = null,
-                name = null,
-                creciNumber = null,
-                profilePictureUrl = null,
-            )
-        }
-    }
-
-    override suspend fun retryUserRemoteUpdate(): AppResult<Unit, DataError> {
+    override suspend fun retryUserUpdate(): AppResult<Unit, DataError> {
         val prefs = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow -> prefsFlow.first() },
             )
 
-        if (prefs.sessionCookie == null || prefs.userSyncStateId != SyncState.Dirty.id) {
+        if (prefs.userSyncStateId != SyncState.Dirty.id) {
             return AppResult.Success(data = Unit) // no update needed
         }
 
         val cachedUser = prefs.toUser()
-        val updateUserDto = UpdateUserDto(
-            name = cachedUser.name!!,
-            creciNumber = cachedUser.creciNumber,
-        )
-
-        api.updateUser(updateUserDto = updateUserDto)
+        api.updateUser(updateUserDto = UpdateUserDto(cachedUser.creciNumber))
             .onError { remoteBackendError ->
                 encryptedPreferencesStorage.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Dirty.id)
@@ -183,31 +111,5 @@ class UserRepositoryImpl(
             }
 
         return AppResult.Success(data = Unit)
-    }
-
-    override suspend fun signOutUser(): AppResult<Unit, DataError> {
-        if (!connectivityAdapter.isDeviceConnectedToInternet(canUseMobile = true)) {
-            return AppResult.Error(error = DataError.NoInternetError)
-        }
-
-        api.signOutUser()
-            .onError { return AppResult.Error(error = it) }
-
-        encryptedPreferencesStorage.savePreferences { prefs ->
-            prefs.copy(
-                sessionCookie = null,
-                remoteId = null,
-                name = null,
-                creciNumber = null,
-                profilePictureUrl = null,
-            )
-        }
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
-    }
-
-    override fun isDeviceConnectedToInternet(): Boolean {
-        return connectivityAdapter.isDeviceConnectedToInternet(canUseMobile = true)
     }
 }

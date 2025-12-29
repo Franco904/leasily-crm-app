@@ -35,7 +35,7 @@ import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.EditUserS
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.SignOutSuccess
 import com.fstengineering.leasilycrm.profile.composables.ConfirmSignOutUserDialog
-import com.fstengineering.leasilycrm.profile.composables.EditUserDialog
+import com.fstengineering.leasilycrm.profile.composables.EditCreciNumberDialog
 import com.fstengineering.leasilycrm.profile.composables.ProfileDataSection
 import com.fstengineering.leasilycrm.profile.composables.ProfileScreenTopBar
 import com.fstengineering.leasilycrm.profile.models.strategies.SignOutErrorBottomSheetDataPropertiesStrategy
@@ -54,7 +54,7 @@ fun ProfileScreen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val userUiState by viewModel.user.collectAsStateWithLifecycle()
-    val editUserFormUiState by viewModel.formErrors.collectAsStateWithLifecycle()
+    val creciFieldError by viewModel.creciFieldError.collectAsStateWithLifecycle()
     val isLoadingUser by viewModel.isLoadingUser.collectAsStateWithLifecycle()
 
     var isSigningOut by remember { mutableStateOf(false) }
@@ -125,10 +125,10 @@ fun ProfileScreen(
                 )
         ) {
             if (isEditingUser) {
-                EditUserDialog(
+                EditCreciNumberDialog(
                     userUiState = userUiState,
-                    editUserErrorUiState = editUserFormUiState,
-                    onUserUiStateChange = viewModel::onUserChange,
+                    onUserUiStateChange = viewModel::onCreciNumberChange,
+                    creciNumberError = creciFieldError,
                     onEdit = { editedUser ->
                         isEditingUser = false
 

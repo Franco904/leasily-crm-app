@@ -41,7 +41,7 @@ fun RootScreen(
                 when (uiEvent) {
                     is SignInState -> {
                         val firstDestination = when {
-                            uiEvent.isUserSignedIn -> {
+                            uiEvent.isSessionAlive -> {
                                 Destinations.Home(startedFromStayNotificationPopUp)
                             }
 

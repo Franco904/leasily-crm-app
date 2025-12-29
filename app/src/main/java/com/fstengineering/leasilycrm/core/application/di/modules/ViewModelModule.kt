@@ -36,13 +36,14 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel {
         RootViewModel(
+            authRepository = get(),
             settingsRepository = get(),
-            userRepository = get(),
         )
     }
 
     viewModel {
         SignInViewModel(
+            authRepository = get(),
             userRepository = get(),
         )
     }
@@ -55,6 +56,7 @@ val viewModelModule = module {
 
     viewModel {
         ProfileViewModel(
+            authRepository = get(),
             userValidator = get(),
             userRepository = get(),
             userSessionService = get(),

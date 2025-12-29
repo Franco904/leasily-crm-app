@@ -12,7 +12,7 @@ class LazyWritesWorker(
     private val userRepository: UserRepository,
 ) : CoroutineWorker(applicationContext, workerParameters) {
     override suspend fun doWork(): Result {
-        val result = userRepository.retryUserRemoteUpdate()
+        val result = userRepository.retryUserUpdate()
 
         return if (result.hasError()) Result.retry() else Result.success()
     }

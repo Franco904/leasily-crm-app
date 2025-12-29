@@ -34,11 +34,8 @@
     <string name="profile_sign_out_dialog_headline">Sair da conta?</string>
     <string name="profile_sign_out_dialog_supporting_text">A sua conta será desconectada e você precisará autenticar-se novamente.</string>
 
-    <string name="profile_edit_user_dialog_headline">Editar perfil</string>
-    <string name="profile_edit_user_dialog_name_field_placeholder">Nome</string>
+    <string name="profile_edit_user_creci_dialog_headline">Editar CRECI</string>
     <string name="profile_edit_user_dialog_creci_field_placeholder">Número CRECI</string>
-    <string name="profile_edit_user_dialog_required_helper_text">Obrigatório</string>
-
     <string name="profile_creci_blank_body_text">CRECI não informado</string>
 
     <!-- Dashboard -->
@@ -674,7 +671,7 @@
     <!-- Success messages -->
     <string name="no_data_changed_success_message">Nenhum dado foi editado.</string>
 
-    <string name="edit_user_success_message">Perfil editado.</string>
+    <string name="edit_user_creci_success_message">Número de CRECI editado.</string>
 
     <string name="create_property_success_message">Imóvel criado.</string>
     <string name="edit_property_success_message">Imóvel editado.</string>
