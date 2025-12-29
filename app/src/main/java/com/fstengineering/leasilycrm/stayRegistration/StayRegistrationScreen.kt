@@ -145,8 +145,8 @@ fun StayRegistrationScreen(
                     onBack(true)
 
                     val messageId =
-                        if (isUnavailablePeriod) R.string.snackbar_create_unavailable_period_succeeded
-                        else R.string.snackbar_create_stay_succeeded
+                        if (isUnavailablePeriod) R.string.create_unavailable_period_success_message
+                        else R.string.create_stay_success_message
                     onUiEvent(UiEvent.ShowSnackBar(messageId))
                 }
 
@@ -157,7 +157,7 @@ fun StayRegistrationScreen(
                 }
 
                 is TransferCreateSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_create_stay_transfer_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_stay_transfer_success_message))
                 }
 
                 is TransferEditSuccess -> {
@@ -282,7 +282,7 @@ fun StayRegistrationScreen(
                                     listStatus = StayRegistrationListState.SelectingProperty
                                 },
                                 onPeriodDisabledByPropertyUnselected = {
-                                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_register_first_select_property_warning))
+                                    onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
                                 },
                                 scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
                                 modifier = Modifier
@@ -309,21 +309,21 @@ fun StayRegistrationScreen(
                                     if (isEnabled) {
                                         listStatus = StayRegistrationListState.SelectingProperty
                                     } else {
-                                        onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_register_stay_check_in_already_done_warning))
+                                        onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
                                     }
                                 },
                                 onSelectTenant = { isEnabled ->
                                     if (isEnabled) {
                                         listStatus = StayRegistrationListState.SelectingTenant
                                     } else {
-                                        onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_register_stay_check_in_already_done_warning))
+                                        onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
                                     }
                                 },
                                 onPeriodDisabledByPropertyUnselected = {
-                                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_register_first_select_property_warning))
+                                    onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
                                 },
                                 onPeriodDisabledByCheckInDone = {
-                                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_register_stay_check_in_already_done_warning))
+                                    onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
                                 },
                                 onLastTextFieldDone = { focusManager.clearFocus() },
                                 onAddTransfer = {

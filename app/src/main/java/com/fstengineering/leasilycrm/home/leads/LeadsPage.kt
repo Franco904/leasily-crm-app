@@ -100,7 +100,7 @@ fun LeadsPage(
                 }
 
                 is LeadDeleteSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_lead_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_lead_success_message))
                 }
             }
         }

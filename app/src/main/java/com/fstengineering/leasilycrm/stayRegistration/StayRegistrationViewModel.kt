@@ -313,7 +313,7 @@ class StayRegistrationViewModel(
 
                 if (transferForm.value == storedTransfer) {
                     _uiEvents.send(
-                        UiEvents.TransferEditSuccess(messageId = R.string.snackbar_no_data_changed)
+                        UiEvents.TransferEditSuccess(messageId = R.string.no_data_changed_success_message)
                     )
                     return@launch
                 }
@@ -343,7 +343,7 @@ class StayRegistrationViewModel(
             transferFormBeforeEdit = null
 
             val saveEvent =
-                if (stayToEdit != null) UiEvents.TransferEditSuccess(messageId = R.string.snackbar_edit_stay_succeeded)
+                if (stayToEdit != null) UiEvents.TransferEditSuccess(messageId = R.string.edit_stay_success_message)
                 else UiEvents.TransferCreateSuccess
 
             _uiEvents.send(saveEvent)
@@ -390,7 +390,7 @@ class StayRegistrationViewModel(
     fun saveStay() {
         viewModelScope.launch {
             if (stayToEdit != null && stayForm.value == stayToEdit) {
-                _uiEvents.send(UiEvents.StayEditSuccess(messageId = R.string.snackbar_no_data_changed))
+                _uiEvents.send(UiEvents.StayEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
 
@@ -427,8 +427,8 @@ class StayRegistrationViewModel(
             }
 
             val editMessageId =
-                if (stayForm.value.isUnavailablePeriod) R.string.snackbar_edit_unavailable_period_succeeded
-                else R.string.snackbar_edit_stay_succeeded
+                if (stayForm.value.isUnavailablePeriod) R.string.edit_unavailable_period_success_message
+                else R.string.edit_stay_success_message
 
             val saveEvent =
                 if (stayToEdit != null) UiEvents.StayEditSuccess(messageId = editMessageId)

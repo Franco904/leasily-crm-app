@@ -73,7 +73,7 @@ fun PropertyOwnersScreen(
                 }
 
                 is PropertyOwnerDeleteSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_property_owner_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_owner_success_message))
                 }
             }
         }

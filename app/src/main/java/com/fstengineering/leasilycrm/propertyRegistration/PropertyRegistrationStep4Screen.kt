@@ -89,7 +89,7 @@ fun PropertyRegistrationStep4Screen(
 
                 is PropertyCreateSuccess -> {
                     onLeaveRegistration()
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_create_property_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_property_success_message))
                 }
 
                 is PropertyEditSuccess -> {

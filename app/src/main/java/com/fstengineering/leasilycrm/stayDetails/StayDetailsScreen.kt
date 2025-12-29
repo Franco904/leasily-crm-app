@@ -102,8 +102,8 @@ fun StayDetailsScreen(
 
                 is StayDeleteSuccess -> {
                     val messageId =
-                        if (stay.isUnavailablePeriod) R.string.snackbar_delete_unavailable_period_succeeded
-                        else R.string.snackbar_delete_stay_succeeded
+                        if (stay.isUnavailablePeriod) R.string.delete_unavailable_period_success_message
+                        else R.string.delete_stay_success_message
 
                     onUiEvent(UiEvent.ShowSnackBar(messageId))
                 }
@@ -111,7 +111,7 @@ fun StayDetailsScreen(
                 RegisterCheckInSuccess -> {
                     onUiEvent(
                         UiEvent.ShowActionSnackBar(
-                            R.string.snackbar_register_check_in_stay_succeeded,
+                            R.string.register_check_in_stay_success_message,
                             R.string.undo_button_text,
                             viewModel::undoRegisterStayCheckIn,
                         )
@@ -121,7 +121,7 @@ fun StayDetailsScreen(
                 RegisterCheckOutSuccess -> {
                     onUiEvent(
                         UiEvent.ShowActionSnackBar(
-                            R.string.snackbar_register_check_out_stay_succeeded,
+                            R.string.register_check_out_stay_success_message,
                             R.string.undo_button_text,
                             viewModel::undoRegisterStayCheckOut,
                         )

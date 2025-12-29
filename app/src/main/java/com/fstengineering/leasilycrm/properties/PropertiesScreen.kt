@@ -103,7 +103,7 @@ fun PropertiesScreen(
                 }
 
                 is PropertyDeleteSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_property_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_success_message))
                 }
             }
         }

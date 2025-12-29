@@ -42,8 +42,8 @@ object TodayCheckInCheckOutNotification {
         }
 
         val textId =
-            if (status.mustNotifyCheckIn) R.string.upcoming_check_in_reminder_notification_text
-            else R.string.upcoming_check_out_reminder_notification_text
+            if (status.mustNotifyCheckIn) R.string.upcoming_check_in_reminder_notification_description
+            else R.string.upcoming_check_out_reminder_notification_description
 
         val propertyTypeName = if (status.propertyTypeName == APARTMENT_PROPERTY_TYPE_NAME) {
             context.getString(R.string.no_label)

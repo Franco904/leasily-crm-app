@@ -97,7 +97,7 @@ fun LeadTenantRegistrationScreen(
                 is LeadCreateSuccess -> {
                     onBack()
 
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_create_lead_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_lead_success_message))
                 }
 
                 is LeadTenantEditSuccess -> {

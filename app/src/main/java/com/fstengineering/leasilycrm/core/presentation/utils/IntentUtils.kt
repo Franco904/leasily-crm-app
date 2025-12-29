@@ -68,7 +68,7 @@ fun Context.openAddGoogleAccountSettingsApp(onNoSettingsClientsInstalled: (UiEve
     try {
         startActivity(intent)
     } catch (_: ActivityNotFoundException) {
-        val uiEvent = UiEvent.ShowSnackBar(R.string.no_app_to_open_intent)
+        val uiEvent = UiEvent.ShowSnackBar(R.string.no_app_to_open_intent_error_message)
         onNoSettingsClientsInstalled(uiEvent)
     }
 }
@@ -89,7 +89,7 @@ fun Context.mailToSupportChannel(onNoEmailClientsInstalled: (UiEvent) -> Unit) {
     try {
         startActivity(chooser)
     } catch (_: ActivityNotFoundException) {
-        val uiEvent = UiEvent.ShowSnackBar(R.string.no_app_to_open_intent)
+        val uiEvent = UiEvent.ShowSnackBar(R.string.no_app_to_open_intent_error_message)
         onNoEmailClientsInstalled(uiEvent)
     }
 }

@@ -152,7 +152,7 @@ class AssistanceRegistrationViewModel(
     fun saveAssistance() {
         viewModelScope.launch {
             if (assistanceToEdit != null && assistanceForm.value == assistanceToEdit) {
-                _uiEvents.send(UiEvents.AssistanceEditSuccess(messageId = R.string.snackbar_no_data_changed))
+                _uiEvents.send(UiEvents.AssistanceEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
 
@@ -187,7 +187,7 @@ class AssistanceRegistrationViewModel(
             }
 
             val saveEvent =
-                if (assistanceToEdit != null) UiEvents.AssistanceEditSuccess(messageId = R.string.snackbar_edit_assistance_succeeded)
+                if (assistanceToEdit != null) UiEvents.AssistanceEditSuccess(messageId = R.string.edit_assistance_success_message)
                 else UiEvents.AssistanceCreateSuccess
 
             _uiEvents.send(saveEvent)

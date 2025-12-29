@@ -93,7 +93,7 @@ fun TenantsPage(
                 }
 
                 is LeadDeleteSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_tenant_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_tenant_success_message))
                 }
             }
         }

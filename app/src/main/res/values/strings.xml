@@ -673,58 +673,54 @@
     <string name="inline_period_is_overlapping_other_property_price_period">Imóvel já possui um preço fixado neste período</string>
 
     <!-- Success messages -->
-    <string name="snackbar_no_data_changed">Nenhum dado foi editado.</string>
+    <string name="no_data_changed_success_message">Nenhum dado foi editado.</string>
 
-    <string name="snackbar_edit_user_succeeded">Perfil editado.</string>
+    <string name="edit_user_success_message">Perfil editado.</string>
 
-    <string name="snackbar_create_customer_segment_succeeded">Segmento de cliente criado.</string>
-    <string name="snackbar_edit_customer_segment_succeeded">Segmento de cliente editado.</string>
-    <string name="snackbar_delete_customer_segment_succeeded">Segmento de cliente excluído.</string>
+    <string name="create_property_success_message">Imóvel criado.</string>
+    <string name="edit_property_success_message">Imóvel editado.</string>
+    <string name="delete_property_success_message">Imóvel excluído.</string>
 
-    <string name="snackbar_create_property_succeeded">Imóvel criado.</string>
-    <string name="snackbar_edit_property_succeeded">Imóvel editado.</string>
-    <string name="snackbar_delete_property_succeeded">Imóvel excluído.</string>
+    <string name="create_property_owner_success_message">Proprietário criado.</string>
+    <string name="edit_property_owner_success_message">Proprietário editado.</string>
+    <string name="delete_property_owner_success_message">Proprietário excluído.</string>
 
-    <string name="snackbar_create_property_owner_succeeded">Proprietário criado.</string>
-    <string name="snackbar_edit_property_owner_succeeded">Proprietário editado.</string>
-    <string name="snackbar_delete_property_owner_succeeded">Proprietário excluído.</string>
+    <string name="create_lead_success_message">Lead criado.</string>
+    <string name="edit_lead_success_message">Lead editado.</string>
+    <string name="edit_tenant_success_message">Inquilino editado.</string>
+    <string name="delete_lead_success_message">Lead excluído.</string>
+    <string name="delete_tenant_success_message">Inquilino excluído.</string>
 
-    <string name="snackbar_create_lead_succeeded">Lead criado.</string>
-    <string name="snackbar_edit_lead_succeeded">Lead editado.</string>
-    <string name="snackbar_edit_tenant_succeeded">Inquilino editado.</string>
-    <string name="snackbar_delete_lead_succeeded">Lead excluído.</string>
-    <string name="snackbar_delete_tenant_succeeded">Inquilino excluído.</string>
+    <string name="create_assistance_interaction_success_message">Interação criada.</string>
+    <string name="edit_assistance_interaction_success_message">Interação editada.</string>
+    <string name="delete_assistance_interaction_success_message">Interação excluída.</string>
 
-    <string name="snackbar_create_assistance_interaction_succeeded">Interação criada.</string>
-    <string name="snackbar_edit_assistance_interaction_succeeded">Interação editada.</string>
-    <string name="snackbar_delete_assistance_interaction_succeeded">Interação excluída.</string>
+    <string name="create_assistance_success_message">Atendimento criado.</string>
+    <string name="edit_assistance_success_message">Atendimento editado.</string>
+    <string name="delete_assistance_success_message">Atendimento excluído.</string>
 
-    <string name="snackbar_create_assistance_succeeded">Atendimento criado.</string>
-    <string name="snackbar_edit_assistance_succeeded">Atendimento editado.</string>
-    <string name="snackbar_delete_assistance_succeeded">Atendimento excluído.</string>
+    <string name="create_stay_success_message">Estadia criada.</string>
+    <string name="edit_stay_success_message">Estadia editada.</string>
+    <string name="delete_stay_success_message">Estadia excluída.</string>
 
-    <string name="snackbar_create_stay_succeeded">Estadia criada.</string>
-    <string name="snackbar_edit_stay_succeeded">Estadia editada.</string>
-    <string name="snackbar_delete_stay_succeeded">Estadia excluída.</string>
+    <string name="create_unavailable_period_success_message">Período criado.</string>
+    <string name="edit_unavailable_period_success_message">Período editado.</string>
+    <string name="delete_unavailable_period_success_message">Período excluído.</string>
 
-    <string name="snackbar_create_unavailable_period_succeeded">Período criado.</string>
-    <string name="snackbar_edit_unavailable_period_succeeded">Período editado.</string>
-    <string name="snackbar_delete_unavailable_period_succeeded">Período excluído.</string>
+    <string name="convert_tenant_to_lead_success_message">Inquilino movido para \"Leads\".</string>
+    <string name="convert_tenant_to_with_upcoming_stay_success_message">Inquilino movido para \"Estadia agendada\".</string>
+    <string name="convert_tenant_to_old_success_message">Inquilino movido para \"Antigos\".</string>
+    <string name="register_check_in_stay_success_message">Estadia movida para \"Em andamento\".</string>
+    <string name="register_check_out_stay_success_message">Estadia movida para \"Finalizadas\".</string>
 
-    <string name="snackbar_convert_tenant_to_lead_succeeded">Inquilino movido para \"Leads\".</string>
-    <string name="snackbar_convert_tenant_to_with_upcoming_stay_succeeded">Inquilino movido para \"Estadia agendada\".</string>
-    <string name="snackbar_convert_tenant_to_old_succeeded">Inquilino movido para \"Antigos\".</string>
-    <string name="snackbar_register_check_in_stay_succeeded">Estadia movida para \"Em andamento\".</string>
-    <string name="snackbar_register_check_out_stay_succeeded">Estadia movida para \"Finalizadas\".</string>
-
-    <string name="snackbar_create_stay_transfer_succeeded">Transferência criada.</string>
-    <string name="snackbar_edit_stay_transfer_succeeded">Transferência editada.</string>
-    <string name="snackbar_delete_stay_transfer_succeeded">Transferência excluída.</string>
+    <string name="create_stay_transfer_success_message">Transferência criada.</string>
+    <string name="edit_stay_transfer_success_message">Transferência editada.</string>
+    <string name="delete_stay_transfer_success_message">Transferência excluída.</string>
 
     <!-- Warning messages -->
-    <string name="snackbar_enable_notifications_warning">Habilite as notificações para poder ativar a configuração.</string>
-    <string name="snackbar_register_first_select_property_warning">Selecione o imóvel primeiro.</string>
-    <string name="snackbar_register_stay_check_in_already_done_warning">O check-in desta estadia já foi registrado.</string>
+    <string name="enable_notifications_warning_message">Habilite as notificações para poder ativar a configuração.</string>
+    <string name="register_first_select_property_warning_message">Selecione o imóvel primeiro.</string>
+    <string name="register_stay_check_in_already_done_warning_message">O check-in desta estadia já foi registrado.</string>
 
     <!-- Error messages -->
     <string name="no_credentials_found_error_title">Cadastre uma conta Google</string>
@@ -745,12 +741,12 @@
     <string name="unknown_error_description_sign_in">Não foi possível realizar a última ação. Tente reiniciar o aplicativo, entrar na conta novamente e se o problema persistir contate o suporte.</string>
     <string name="unknown_error_description_sign_out">Não foi possível realizar a última ação. Tente reiniciar o aplicativo, saia da conta novamente e se o problema persistir contate o suporte.</string>
 
-    <string name="no_app_to_open_intent">Nenhum app instalado conseguiu abrir a solicitação</string>
+    <string name="no_app_to_open_intent_error_message">Nenhum app instalado conseguiu abrir a solicitação</string>
 
-    <!-- Notification -->
+    <!-- Notification messages -->
     <string name="upcoming_check_in_reminder_notification_title">Lembrete de check-in</string>
-    <string name="upcoming_check_in_reminder_notification_text">O check-in de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
+    <string name="upcoming_check_in_reminder_notification_description">O check-in de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
 
     <string name="upcoming_check_out_reminder_notification_title">Lembrete de check-out</string>
-    <string name="upcoming_check_out_reminder_notification_text">O check-out de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
+    <string name="upcoming_check_out_reminder_notification_description">O check-out de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
 </resources>

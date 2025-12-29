@@ -177,7 +177,7 @@ class PropertyRegistrationViewModel(
     fun saveProperty() {
         viewModelScope.launch {
             if (propertyToEdit != null && propertyForm.value == propertyToEdit) {
-                _uiEvents.send(UiEvents.PropertyEditSuccess(messageId = R.string.snackbar_no_data_changed))
+                _uiEvents.send(UiEvents.PropertyEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
 
@@ -206,7 +206,7 @@ class PropertyRegistrationViewModel(
             }
 
             val saveEvent =
-                if (propertyToEdit != null) UiEvents.PropertyEditSuccess(messageId = R.string.snackbar_edit_property_succeeded)
+                if (propertyToEdit != null) UiEvents.PropertyEditSuccess(messageId = R.string.edit_property_success_message)
                 else UiEvents.PropertyCreateSuccess
 
             _uiEvents.send(saveEvent)

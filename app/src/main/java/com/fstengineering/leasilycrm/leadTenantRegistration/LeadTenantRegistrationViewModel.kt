@@ -147,7 +147,7 @@ class LeadTenantRegistrationViewModel(
             val leadTenant = leadTenantForm.value
 
             if (leadTenantToEdit != null && leadTenant == leadTenantToEdit) {
-                _uiEvents.send(UiEvents.LeadTenantEditSuccess(messageId = R.string.snackbar_no_data_changed))
+                _uiEvents.send(UiEvents.LeadTenantEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
 
@@ -175,8 +175,8 @@ class LeadTenantRegistrationViewModel(
                 if (leadTenantToEdit != null) {
                     UiEvents.LeadTenantEditSuccess(
                         messageId = if (leadTenant.isLead) {
-                            R.string.snackbar_edit_lead_succeeded
-                        } else R.string.snackbar_edit_tenant_succeeded,
+                            R.string.edit_lead_success_message
+                        } else R.string.edit_tenant_success_message,
                     )
                 } else UiEvents.LeadCreateSuccess
 

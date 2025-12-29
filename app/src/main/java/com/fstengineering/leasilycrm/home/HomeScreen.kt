@@ -105,7 +105,7 @@ fun HomeScreen(
                 }
 
                 is CurrentAssistanceDeleteSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_assistance_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_assistance_success_message))
                 }
             }
         }

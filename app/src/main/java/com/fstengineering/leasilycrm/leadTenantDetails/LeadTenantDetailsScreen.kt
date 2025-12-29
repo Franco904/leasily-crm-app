@@ -155,15 +155,15 @@ fun LeadTenantDetailsScreen(
 
                 is LeadTenantDeleteSuccess -> {
                     val deleteMessageId = when {
-                        leadTenant.isLead -> R.string.snackbar_delete_lead_succeeded
-                        else -> R.string.snackbar_delete_tenant_succeeded
+                        leadTenant.isLead -> R.string.delete_lead_success_message
+                        else -> R.string.delete_tenant_success_message
                     }
 
                     onUiEvent(UiEvent.ShowSnackBar(deleteMessageId))
                 }
 
                 is CurrentAssistanceDeleteSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_delete_assistance_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_assistance_success_message))
                 }
             }
         }

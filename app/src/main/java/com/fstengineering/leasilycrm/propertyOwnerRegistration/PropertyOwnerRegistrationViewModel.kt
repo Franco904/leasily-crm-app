@@ -136,7 +136,7 @@ class PropertyOwnerRegistrationViewModel(
             val propertyOwner = propertyOwnerForm.value
 
             if (propertyOwnerToEdit != null && propertyOwner == propertyOwnerToEdit) {
-                _uiEvents.send(UiEvents.PropertyOwnerEditSuccess(messageId = R.string.snackbar_no_data_changed))
+                _uiEvents.send(UiEvents.PropertyOwnerEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
 
@@ -170,7 +170,7 @@ class PropertyOwnerRegistrationViewModel(
             }
 
             val saveEvent =
-                if (propertyOwnerToEdit != null) UiEvents.PropertyOwnerEditSuccess(messageId = R.string.snackbar_edit_property_owner_succeeded)
+                if (propertyOwnerToEdit != null) UiEvents.PropertyOwnerEditSuccess(messageId = R.string.edit_property_owner_success_message)
                 else UiEvents.PropertyOwnerCreateSuccess
 
             _uiEvents.send(saveEvent)

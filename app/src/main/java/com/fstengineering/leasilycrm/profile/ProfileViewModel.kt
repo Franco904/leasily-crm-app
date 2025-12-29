@@ -14,7 +14,6 @@ import com.fstengineering.leasilycrm.core.domain.validators.interfaces.UserValid
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.models.EditUserErrorUiState
 import com.fstengineering.leasilycrm.profile.models.UserUiState
-import com.fstengineering.leasilycrm.signin.SignInViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -69,7 +68,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             if (editedUserState == user.value) {
                 _uiEvents.send(
-                    UiEvents.EditUserSuccess(messageId = R.string.snackbar_no_data_changed)
+                    UiEvents.EditUserSuccess(messageId = R.string.no_data_changed_success_message)
                 )
                 return@launch
             }
@@ -95,7 +94,7 @@ class ProfileViewModel(
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess {
                     val event =
-                        UiEvents.EditUserSuccess(messageId = R.string.snackbar_edit_user_succeeded)
+                        UiEvents.EditUserSuccess(messageId = R.string.edit_user_success_message)
                     _uiEvents.send(event)
                 }
         }

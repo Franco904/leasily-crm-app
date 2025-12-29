@@ -99,7 +99,7 @@ fun AssistanceRegistrationStep3Screen(
 
                     is AssistanceCreateSuccess -> {
                         onLeaveRegistration()
-                        onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_create_assistance_succeeded))
+                        onUiEvent(UiEvent.ShowSnackBar(R.string.create_assistance_success_message))
                     }
 
                     is AssistanceEditSuccess -> {
@@ -108,7 +108,7 @@ fun AssistanceRegistrationStep3Screen(
                     }
 
                     is ConvertOldTenantToLead -> {
-                        onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_convert_tenant_to_lead_succeeded))
+                        onUiEvent(UiEvent.ShowSnackBar(R.string.convert_tenant_to_lead_success_message))
                     }
                 }
             }
@@ -128,7 +128,7 @@ fun AssistanceRegistrationStep3Screen(
                         stepViewModel.onInteractionFormChange(form = null)
                         stepViewModel.onDismissInteraction()
 
-                        onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_create_assistance_interaction_succeeded))
+                        onUiEvent(UiEvent.ShowSnackBar(R.string.create_assistance_interaction_success_message))
                     }
 
                     is InteractionEditSuccess -> {

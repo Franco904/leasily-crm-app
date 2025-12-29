@@ -112,7 +112,7 @@ fun PropertyOwnerRegistrationScreen(
                 is PropertyOwnerCreateSuccess -> {
                     onBack()
 
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_create_property_owner_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_property_owner_success_message))
                 }
 
                 is PropertyOwnerEditSuccess -> {

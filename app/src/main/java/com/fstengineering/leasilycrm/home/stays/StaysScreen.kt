@@ -129,8 +129,8 @@ fun StaysScreen(
                     if (stayToDelete == null) return@collect
 
                     val messageId =
-                        if (stayToDelete!!.isUnavailablePeriod) R.string.snackbar_delete_unavailable_period_succeeded
-                        else R.string.snackbar_delete_stay_succeeded
+                        if (stayToDelete!!.isUnavailablePeriod) R.string.delete_unavailable_period_success_message
+                        else R.string.delete_stay_success_message
 
                     onUiEvent(UiEvent.ShowSnackBar(messageId))
                     viewModel.onDeleteStay(stay = null)
@@ -139,7 +139,7 @@ fun StaysScreen(
                 StaysViewModel.UiEvents.RegisterCheckInSuccess -> {
                     onUiEvent(
                         UiEvent.ShowActionSnackBar(
-                            R.string.snackbar_register_check_in_stay_succeeded,
+                            R.string.register_check_in_stay_success_message,
                             R.string.undo_button_text,
                             viewModel::undoRegisterStayCheckIn,
                         )
@@ -149,7 +149,7 @@ fun StaysScreen(
                 StaysViewModel.UiEvents.RegisterCheckOutSuccess -> {
                     onUiEvent(
                         UiEvent.ShowActionSnackBar(
-                            R.string.snackbar_register_check_out_stay_succeeded,
+                            R.string.register_check_out_stay_success_message,
                             R.string.undo_button_text,
                             viewModel::undoRegisterStayCheckOut,
                         )

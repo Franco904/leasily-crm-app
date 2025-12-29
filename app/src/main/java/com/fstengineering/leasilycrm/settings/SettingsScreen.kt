@@ -85,7 +85,7 @@ fun SettingsScreen(
                     viewModel.onIsTodayCheckInCheckOutNotificationEnabledChange(isEnabled)
                 },
                 onNotificationPermissionDenied = {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.snackbar_enable_notifications_warning))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.enable_notifications_warning_message))
                 },
                 modifier = Modifier
                     .padding(innerPadding)

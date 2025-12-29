@@ -75,7 +75,7 @@ class AssistanceRegistrationStep3ViewModel(
 
                 if (interactionFromForm == storedInteraction) {
                     _uiEvents.send(
-                        UiEvents.InteractionEditSuccess(messageId = R.string.snackbar_no_data_changed)
+                        UiEvents.InteractionEditSuccess(messageId = R.string.no_data_changed_success_message)
                     )
                     return@launch
                 }
@@ -102,7 +102,7 @@ class AssistanceRegistrationStep3ViewModel(
                 }
 
             val saveEvent =
-                if (isEditing) UiEvents.InteractionEditSuccess(messageId = R.string.snackbar_edit_assistance_interaction_succeeded)
+                if (isEditing) UiEvents.InteractionEditSuccess(messageId = R.string.edit_assistance_interaction_success_message)
                 else UiEvents.InteractionCreateSuccess
 
             _uiEvents.send(saveEvent)
