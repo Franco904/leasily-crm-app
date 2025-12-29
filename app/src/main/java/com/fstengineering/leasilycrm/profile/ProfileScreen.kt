@@ -28,10 +28,12 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.external.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.*
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.ContinueSignOut
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.EditUserSuccess
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.SignOutSuccess
 import com.fstengineering.leasilycrm.profile.composables.ConfirmSignOutUserDialog
 import com.fstengineering.leasilycrm.profile.composables.EditUserDialog
 import com.fstengineering.leasilycrm.profile.composables.ProfileDataSection
@@ -55,6 +57,7 @@ fun ProfileScreen(
     val editUserFormUiState by viewModel.formErrors.collectAsStateWithLifecycle()
     val isLoadingUser by viewModel.isLoadingUser.collectAsStateWithLifecycle()
 
+    var isSigningOut by remember { mutableStateOf(false) }
     var isConfirmingSigningOut by remember { mutableStateOf(false) }
     var isEditingUser by remember { mutableStateOf(false) }
 
@@ -64,22 +67,31 @@ fun ProfileScreen(
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
                 is Error -> {
+                    isSigningOut = false
+
                     val errorData = uiEvent.error.toBottomSheetData(
                         SignOutErrorBottomSheetDataPropertiesStrategy,
                     )
-                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
+                    onUiEvent(ShowErrorBottomSheet(errorData))
+                }
+
+                is EditUserSuccess -> {
+                    onUiEvent(ShowSnackBar(uiEvent.messageId))
                 }
 
                 is ContinueSignOut -> {
                     launch {
                         credentialManager.clearGoogleCredentialState(activityContext = activity)
-                            .onError { e -> onUiEvent(UiEvent.ShowErrorBottomSheet(e.toBottomSheetData())) }
+                            .onError { e ->
+                                isSigningOut = false
+                                onUiEvent(ShowErrorBottomSheet(e.toBottomSheetData()))
+                            }
                             .onSuccess { viewModel.signOutUser() }
                     }
                 }
 
-                is EditUserSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
+                is SignOutSuccess -> {
+                    isSigningOut = false
                 }
             }
         }
@@ -93,7 +105,10 @@ fun ProfileScreen(
 
     Scaffold(
         topBar = {
-            ProfileScreenTopBar(onBack = onBack)
+            ProfileScreenTopBar(
+                isSigningOut = isSigningOut,
+                onBack = onBack,
+            )
         },
         modifier = modifier
     ) { innerPadding ->
@@ -131,6 +146,8 @@ fun ProfileScreen(
                 ConfirmSignOutUserDialog(
                     onConfirmSignOut = {
                         isConfirmingSigningOut = false
+                        isSigningOut = true
+
                         viewModel.onSignOut()
                     },
                     onCancel = { isConfirmingSigningOut = false },
@@ -145,10 +162,9 @@ fun ProfileScreen(
             } else {
                 ProfileDataSection(
                     userUiState = userUiState,
+                    isSigningOut = isSigningOut,
                     onSignOut = { isConfirmingSigningOut = true },
-                    onEditUser = {
-                        if (!isEditingUser) isEditingUser = true
-                    }
+                    onEditUser = { if (!isEditingUser) isEditingUser = true }
                 )
             }
         }

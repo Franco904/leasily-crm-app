@@ -6,7 +6,6 @@ import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import androidx.credentials.exceptions.NoCredentialException
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.data.utils.CryptoUtils
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

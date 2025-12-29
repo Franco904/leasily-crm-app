@@ -131,6 +131,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             userSessionService.onUserInitiatedSignOut()
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess { _uiEvents.send(UiEvents.SignOutSuccess) }
         }
     }
 
@@ -138,5 +139,6 @@ class ProfileViewModel(
         data class Error(val error: DataError) : UiEvents
         data class EditUserSuccess(val messageId: Int) : UiEvents
         data object ContinueSignOut : UiEvents
+        data object SignOutSuccess : UiEvents
     }
 }

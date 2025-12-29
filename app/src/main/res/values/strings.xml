@@ -4,7 +4,6 @@
     <!-- Sign in -->
     <string name="sign_in_welcome_text">Boas-vindas ao Leasily CRM.</string>
     <string name="sign_in_welcome_description">Cadastre-se com sua conta Google pelo botão abaixo.</string>
-    <string name="sign_in_await">Aguarde…</string>
     <string name="sign_in_sign_in_with_google">Entrar com Google</string>
 
     <!-- Home -->
