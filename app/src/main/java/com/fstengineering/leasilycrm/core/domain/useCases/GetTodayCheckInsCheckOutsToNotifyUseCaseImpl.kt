@@ -5,7 +5,6 @@ import com.fstengineering.leasilycrm.core.domain.models.StayCheckNotificationSta
 import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError

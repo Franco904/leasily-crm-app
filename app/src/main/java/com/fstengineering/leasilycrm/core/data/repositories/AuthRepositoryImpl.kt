@@ -5,7 +5,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.SignInRequestDto
-import com.fstengineering.leasilycrm.core.data.models.SyncState
 import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

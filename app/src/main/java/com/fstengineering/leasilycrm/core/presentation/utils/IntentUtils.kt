@@ -78,7 +78,8 @@ fun Context.mailToSupportChannel(onNoEmailClientsInstalled: (UiEvent) -> Unit) {
     val subject = "Problema inesperado"
     val body = "Olá, estou tendo um problema inesperado na tela X ao realizar a ação Y"
 
-    val mailtoUri = "mailto:$recipient?subject=${Uri.encode(subject)}&body=${Uri.encode(body)}".toUri()
+    val mailtoUri =
+        "mailto:$recipient?subject=${Uri.encode(subject)}&body=${Uri.encode(body)}".toUri()
 
     val intent = Intent(Intent.ACTION_SENDTO, mailtoUri)
     val chooser = Intent.createChooser(

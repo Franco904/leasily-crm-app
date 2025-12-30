@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.services
 
 import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService.UserSessionEvent
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
