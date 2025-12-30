@@ -12,7 +12,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.textFields.Fo
 fun StaysObservationsFormField(
     value: String?,
     onValueChange: (String) -> Unit,
-    onDone: () -> Unit,
     modifier: Modifier = Modifier,
     isUnavailablePeriod: Boolean = false,
 ) {
@@ -25,7 +24,6 @@ fun StaysObservationsFormField(
         onValueChange = onValueChange,
         isSingleLine = false,
         maxLength = 2000,
-        onDone = { onDone() },
         modifier = modifier
             .height(180.dp)
     )

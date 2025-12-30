@@ -52,14 +52,16 @@ import com.fstengineering.leasilycrm.core.presentation.composables.cards.Propert
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteTenantDialog
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.CurrentAssistanceDeleteSuccess
-import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.LeadTenantDeleteSuccess
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.NavigateUp
-import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDetailsCurrentAssistancePage
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDetailsHistoryPage
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDetailsIdentificationPage
@@ -81,8 +83,7 @@ fun LeadTenantDetailsScreen(
     onViewStay: (Long) -> Unit,
     onViewSentPropertyDetails: (Long) -> Unit,
     onBack: () -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -141,12 +142,11 @@ fun LeadTenantDetailsScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is NavigateUp -> {
@@ -155,20 +155,21 @@ fun LeadTenantDetailsScreen(
 
                 is LeadTenantDeleteSuccess -> {
                     val deleteMessageId = when {
-                        leadTenant.isLead -> R.string.snackbar_delete_lead_succeeded
-                        else -> R.string.snackbar_delete_tenant_succeeded
+                        leadTenant.isLead -> R.string.delete_lead_success_message
+                        else -> R.string.delete_tenant_success_message
                     }
 
-                    showSnackbar(context.getString(deleteMessageId))
+                    onUiEvent(UiEvent.ShowSnackBar(deleteMessageId))
                 }
 
                 is CurrentAssistanceDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_assistance_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_assistance_success_message))
                 }
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()

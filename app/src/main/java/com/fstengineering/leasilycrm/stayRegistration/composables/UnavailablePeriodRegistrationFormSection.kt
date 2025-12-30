@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,6 +45,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Calendar
 
@@ -55,10 +57,11 @@ fun UnavailablePeriodRegistrationFormSection(
     stayFormErrors: ImmutableMap<StayField, Int?>,
     getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<LocalDate>,
     onSelectProperty: () -> Unit,
-    onLastTextFieldDone: () -> Unit,
+    onPeriodDisabledByPropertyUnselected: () -> Unit,
     scrollToFieldFlow: Flow<StayField>,
     modifier: Modifier = Modifier,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
 
     val bringIntoViewRequesters = remember {
@@ -129,12 +132,29 @@ fun UnavailablePeriodRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Period))
             ) {
+                val isEnabled = stayForm.property != null
+
                 StayPeriodFormField(
                     checkInDateTime = stayForm.checkInDateTime,
                     checkOutDateTime = stayForm.checkOutDateTime,
                     error = stayFormErrors[StayField.Period],
-                    isEnabled = stayForm.property != null,
-                    onTap = { mustShowStayDateRangePickerDialog = true },
+                    isEnabled = isEnabled,
+                    onTap = {
+                        if (isEnabled) {
+                            mustShowStayDateRangePickerDialog = true
+                            return@StayPeriodFormField
+                        }
+
+                        coroutineScope.launch {
+                            centerVisibleLazyItemByKey(
+                                lazyListState = lazyListState,
+                                key = StayField.Property,
+                                fallbackIndex = StayField.Property.scrollIndex,
+                            )
+
+                            onPeriodDisabledByPropertyUnselected()
+                        }
+                    },
                 )
             }
         }
@@ -180,7 +200,6 @@ fun UnavailablePeriodRegistrationFormSection(
                 value = stayForm.observations,
                 onValueChange = { onStayFormChange(stayForm.copy(observations = it)) },
                 isUnavailablePeriod = true,
-                onDone = onLastTextFieldDone,
             )
         }
     }

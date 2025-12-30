@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.leadTenantDetails
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
@@ -9,10 +8,9 @@ import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Job
@@ -27,7 +25,6 @@ class LeadTenantDetailsViewModel(
     private val tenantRepository: TenantRepository,
     private val assistanceRepository: AssistanceRepository,
     private val assistanceCharacteristicRepository: AssistanceCharacteristicRepository,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -49,29 +46,10 @@ class LeadTenantDetailsViewModel(
     fun init(propertyId: Long) {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchLeadTenant(leadTenantId = propertyId)
-
         getAssistancePropertyCharacteristics()
 
         isInitialized = true
-    }
-
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
     }
 
     private fun watchLeadTenant(leadTenantId: Long) {
@@ -80,9 +58,7 @@ class LeadTenantDetailsViewModel(
         watchTenantJob = viewModelScope.launch {
             tenantRepository.watchById(leadTenantId).collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { storedLeadTenant ->
                         if (storedLeadTenant == null) {
                             _uiEvents.send(UiEvents.NavigateUp)
@@ -99,9 +75,7 @@ class LeadTenantDetailsViewModel(
     private fun getAssistancePropertyCharacteristics() {
         viewModelScope.launch {
             assistanceCharacteristicRepository.getAll()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedCharacteristics ->
                     _assistancePropertyCharacteristics.update { storedCharacteristics }
                 }
@@ -117,15 +91,7 @@ class LeadTenantDetailsViewModel(
 
         viewModelScope.launch {
             tenantRepository.delete(id = leadTenantId)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             _uiEvents.send(UiEvents.LeadTenantDeleteSuccess)
         }
@@ -134,24 +100,14 @@ class LeadTenantDetailsViewModel(
     fun deleteCurrentAssistance(currentAssistance: Assistance) {
         viewModelScope.launch {
             assistanceRepository.delete(id = currentAssistance.id!!)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             _uiEvents.send(UiEvents.CurrentAssistanceDeleteSuccess)
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
+        data class Error(val error: DataError) : UiEvents
 
         data object NavigateUp : UiEvents
 

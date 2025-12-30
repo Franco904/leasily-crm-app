@@ -1,11 +1,10 @@
 package com.fstengineering.leasilycrm.leadTenantDetails.models
 
-import androidx.annotation.StringRes
 import com.fstengineering.leasilycrm.R
 
 enum class LeadTenantDetailsTab(
     val id: Int,
-    @StringRes val labelId: Int,
+    val labelId: Int,
 ) {
     Details(1, R.string.lead_tenant_details_tab_details_label_title),
     CurrentAssistance(2, R.string.lead_tenant_details_top_current_assistance_label_title),

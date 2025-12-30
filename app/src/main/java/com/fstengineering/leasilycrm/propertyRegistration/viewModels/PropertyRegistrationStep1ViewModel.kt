@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.propertyRegistration.viewModels
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyValidator
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyRegistration.models.PropertyStep1ErrorUiState
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep1Field
 import kotlinx.collections.immutable.mutate
@@ -53,37 +53,32 @@ class PropertyRegistrationStep1ViewModel(
         }
     }
 
-    fun validatePropertyStep1(
-        propertyForm: Property,
-    ) {
+    fun validatePropertyStep1(propertyForm: Property) {
         viewModelScope.launch {
             propertyValidator.validate(property = propertyForm)
-                .onErrors { errors ->
-                    setFieldErrors(errors)
-                    return@launch
-                }
-
-            _uiEvents.send(UiEvents.ValidateSuccess)
+                .onErrors { errors -> setFieldErrors(errors) }
+                .onSuccess { _uiEvents.send(UiEvents.ValidateSuccess) }
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ValidationError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _formErrors.update { PropertyStep1ErrorUiState() }
         delay(150.milliseconds)
 
-        val propertyOwnerError = errors.firstOrNull { it is ValidationError.PropertyPropertyOwner }
-        val propertyTypeError = errors.firstOrNull { it is ValidationError.PropertyType }
+        val propertyOwnerError = errors.firstOrNull { it is DomainError.PropertyPropertyOwner }
+        val propertyTypeError = errors.firstOrNull { it is DomainError.PropertyType }
         val propertyNeighborhoodError =
-            errors.firstOrNull { it is ValidationError.PropertyNeighborhood }
+            errors.firstOrNull { it is DomainError.PropertyNeighborhood }
         val propertyStreetAddressError =
-            errors.firstOrNull { it is ValidationError.PropertyStreetAddress }
+            errors.firstOrNull { it is DomainError.PropertyStreetAddress }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                map[PropertyStep1Field.PropertyOwner] = propertyOwnerError?.toUiMessage()
-                map[PropertyStep1Field.PropertyType] = propertyTypeError?.toUiMessage()
-                map[PropertyStep1Field.Neighborhood] = propertyNeighborhoodError?.toUiMessage()
-                map[PropertyStep1Field.StreetAddress] = propertyStreetAddressError?.toUiMessage()
+                map[PropertyStep1Field.PropertyOwner] = propertyOwnerError?.toInlineMessage()
+                map[PropertyStep1Field.PropertyType] = propertyTypeError?.toInlineMessage()
+                map[PropertyStep1Field.Neighborhood] = propertyNeighborhoodError?.toInlineMessage()
+                map[PropertyStep1Field.StreetAddress] =
+                    propertyStreetAddressError?.toInlineMessage()
             }
 
             it.copy(errors = newErrors)
@@ -94,10 +89,7 @@ class PropertyRegistrationStep1ViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
         data class ScrollToField(val field: PropertyStep1Field) : UiEvents
-
         data object ValidateSuccess : UiEvents
     }
 }

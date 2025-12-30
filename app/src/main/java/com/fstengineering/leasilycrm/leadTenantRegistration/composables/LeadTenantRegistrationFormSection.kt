@@ -145,7 +145,6 @@ fun LeadTenantRegistrationFormSection(
             onObservationsChange = {
                 onLeadTenantFormChange(leadTenantForm.copy(observations = it))
             },
-            onDone = onLastTextFieldDone,
             isLead = leadTenantForm.isLead,
             fieldFocusRequester = observationsFieldFocusRequester,
         )

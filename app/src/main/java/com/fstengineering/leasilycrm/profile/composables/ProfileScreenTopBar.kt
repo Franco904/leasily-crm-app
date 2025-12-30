@@ -22,16 +22,22 @@ import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreenTopBar(
+    isSigningOut: Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         navigationIcon = {
-            IconButton(onClick = onBack) {
+            IconButton(
+                enabled = !isSigningOut,
+                onClick = onBack,
+            ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.ArrowBack,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = if (isSigningOut) {
+                        MaterialTheme.colorScheme.outlineVariant
+                    } else MaterialTheme.colorScheme.onSurface,
                 )
             }
         },
@@ -59,6 +65,7 @@ fun ProfileScreenTopBarPreview(
 ) {
     AppTheme {
         ProfileScreenTopBar(
+            isSigningOut = true,
             onBack = {},
             modifier = modifier
         )

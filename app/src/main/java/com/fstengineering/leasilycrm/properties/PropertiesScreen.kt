@@ -34,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
@@ -46,24 +45,24 @@ import com.fstengineering.leasilycrm.core.presentation.composables.cards.Propert
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
-import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.PropertyDeleteSuccess
-import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.properties.composables.PropertiesTopAppBar
 
 @Composable
 fun PropertiesScreen(
     viewModel: PropertiesViewModel,
+    onBack: () -> Unit,
+    onRegisterProperty: (Long?) -> Unit,
+    onViewPropertyDashboard: (Long) -> Unit,
+    onViewPropertyDetails: (Long) -> Unit,
+    onNewStay: (Long, Boolean) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    onBack: () -> Unit = {},
-    onRegisterProperty: (Long?) -> Unit = { _ -> },
-    onViewPropertyDashboard: (Long) -> Unit = { _ -> },
-    onViewPropertyDetails: (Long) -> Unit = { _ -> },
-    onNewStay: (Long, Boolean) -> Unit = { _, _ -> },
-    onSignOut: () -> Unit = {},
-    showSnackbar: (String) -> Unit = { _ -> },
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
@@ -96,21 +95,21 @@ fun PropertiesScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is PropertyDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_property_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_success_message))
                 }
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()

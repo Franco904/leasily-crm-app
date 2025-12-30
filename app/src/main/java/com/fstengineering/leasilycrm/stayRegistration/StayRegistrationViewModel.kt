@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.stayRegistration
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
@@ -14,15 +13,15 @@ import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayTransferRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayTransferValidator
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayValidator
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.stayRegistration.models.StayErrorUiState
 import com.fstengineering.leasilycrm.stayRegistration.models.StayField
 import com.fstengineering.leasilycrm.stayRegistration.models.StayTransferErrorUiState
@@ -51,7 +50,6 @@ class StayRegistrationViewModel(
     private val tenantRepository: TenantRepository,
     private val stayTransferRepository: StayTransferRepository,
     private val stayFileRepository: StayFileRepository,
-    private val userRepository: UserRepository,
     private val stayValidator: StayValidator,
     private val stayTransferValidator: StayTransferValidator,
 ) : ViewModel() {
@@ -102,7 +100,6 @@ class StayRegistrationViewModel(
 
         _isLoading.update { true }
 
-        watchSessionExpiration()
         if (stayId != null) getStayToEdit(stayId)
 
         if (stayId == null && propertyId != null) getPropertyToAutofill(propertyId)
@@ -116,29 +113,10 @@ class StayRegistrationViewModel(
         isInitialized = true
     }
 
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
-    }
-
     private fun getStayToEdit(stayId: Long) {
         viewModelScope.launch {
             stayRepository.getById(stayId)
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedStay ->
                     _stayForm.update { storedStay }
                     stayToEdit = storedStay
@@ -149,9 +127,7 @@ class StayRegistrationViewModel(
     private fun getPropertyToAutofill(propertyId: Long) {
         viewModelScope.launch {
             propertyRepository.getById(propertyId)
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedProperty ->
                     _stayForm.update { it.copy(property = storedProperty) }
                 }
@@ -161,9 +137,7 @@ class StayRegistrationViewModel(
     private fun getTenantToAutofill(tenantId: Long) {
         viewModelScope.launch {
             tenantRepository.getById(tenantId)
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedTenant ->
                     _stayForm.update { it.copy(tenant = storedTenant) }
                 }
@@ -179,9 +153,7 @@ class StayRegistrationViewModel(
                     _isLoading.update { true }
 
                     propertyRepository.getAllMatching(matching = searchInput)
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
+                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                         .onSuccess { matchingProperties ->
                             _properties.update { matchingProperties }
                             _isLoading.update { false }
@@ -202,9 +174,7 @@ class StayRegistrationViewModel(
                         matching = searchInput,
                         currentTenantId = stayToEdit?.tenant?.id,
                     )
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
+                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                         .onSuccess { matchingTenants ->
                             _tenants.update { matchingTenants }
                             _isLoading.update { false }
@@ -343,7 +313,7 @@ class StayRegistrationViewModel(
 
                 if (transferForm.value == storedTransfer) {
                     _uiEvents.send(
-                        UiEvents.TransferEditSuccess(messageId = R.string.snackbar_no_data_changed)
+                        UiEvents.TransferEditSuccess(messageId = R.string.no_data_changed_success_message)
                     )
                     return@launch
                 }
@@ -373,24 +343,24 @@ class StayRegistrationViewModel(
             transferFormBeforeEdit = null
 
             val saveEvent =
-                if (stayToEdit != null) UiEvents.TransferEditSuccess(messageId = R.string.snackbar_edit_stay_succeeded)
+                if (stayToEdit != null) UiEvents.TransferEditSuccess(messageId = R.string.edit_stay_success_message)
                 else UiEvents.TransferCreateSuccess
 
             _uiEvents.send(saveEvent)
         }
     }
 
-    private suspend fun setTransferFieldErrors(errors: List<ValidationError>) {
+    private suspend fun setTransferFieldErrors(errors: List<DomainError>) {
         _transferFormErrors.update { StayTransferErrorUiState() }
         delay(150.milliseconds)
 
-        val transferDateError = errors.firstOrNull { it is ValidationError.StayTransferDate }
-        val transferAmountError = errors.firstOrNull { it is ValidationError.StayTransferAmount }
+        val transferDateError = errors.firstOrNull { it is DomainError.StayTransferDate }
+        val transferAmountError = errors.firstOrNull { it is DomainError.StayTransferAmount }
 
         _transferFormErrors.update {
             val newErrors = it.errors.mutate { map ->
-                map[StayTransferField.TransferDate] = transferDateError?.toUiMessage()
-                map[StayTransferField.TransferAmount] = transferAmountError?.toUiMessage()
+                map[StayTransferField.TransferDate] = transferDateError?.toInlineMessage()
+                map[StayTransferField.TransferAmount] = transferAmountError?.toInlineMessage()
             }
 
             it.copy(errors = newErrors)
@@ -407,10 +377,7 @@ class StayRegistrationViewModel(
 
             val fileName = stayFileRepository.getFileName(file = newFile)
                 .fold(
-                    onError = { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        return@launch
-                    },
+                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
                     onSuccess = { fileName -> fileName },
                 )
 
@@ -423,7 +390,7 @@ class StayRegistrationViewModel(
     fun saveStay() {
         viewModelScope.launch {
             if (stayToEdit != null && stayForm.value == stayToEdit) {
-                _uiEvents.send(UiEvents.StayEditSuccess(messageId = R.string.snackbar_no_data_changed))
+                _uiEvents.send(UiEvents.StayEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
 
@@ -438,10 +405,7 @@ class StayRegistrationViewModel(
 
             val stayId = stayRepository.insertOrUpdate(stayForm.value)
                 .fold(
-                    onError = { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        return@launch
-                    },
+                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
                     onSuccess = { stayId -> stayId },
                 )
 
@@ -459,14 +423,12 @@ class StayRegistrationViewModel(
 
             stayForm.value.tenant?.let { tenant ->
                 tenantRepository.insertOrUpdate(tenant)
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
             }
 
             val editMessageId =
-                if (stayForm.value.isUnavailablePeriod) R.string.snackbar_edit_unavailable_period_succeeded
-                else R.string.snackbar_edit_stay_succeeded
+                if (stayForm.value.isUnavailablePeriod) R.string.edit_unavailable_period_success_message
+                else R.string.edit_stay_success_message
 
             val saveEvent =
                 if (stayToEdit != null) UiEvents.StayEditSuccess(messageId = editMessageId)
@@ -476,25 +438,25 @@ class StayRegistrationViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ValidationError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _stayFormErrors.update { StayErrorUiState() }
         delay(150.milliseconds)
 
-        val stayPropertyError = errors.firstOrNull { it is ValidationError.StayProperty }
-        val stayTenantError = errors.firstOrNull { it is ValidationError.StayTenant }
-        val periodError = errors.firstOrNull { it is ValidationError.StayPeriod }
-        val checkInTimeError = errors.firstOrNull { it is ValidationError.StayCheckInTime }
-        val checkOutTimeError = errors.firstOrNull { it is ValidationError.StayCheckOutTime }
-        val commissionError = errors.firstOrNull { it is ValidationError.StayCommission }
+        val stayPropertyError = errors.firstOrNull { it is DomainError.StayProperty }
+        val stayTenantError = errors.firstOrNull { it is DomainError.StayTenant }
+        val periodError = errors.firstOrNull { it is DomainError.StayPeriod }
+        val checkInTimeError = errors.firstOrNull { it is DomainError.StayCheckInTime }
+        val checkOutTimeError = errors.firstOrNull { it is DomainError.StayCheckOutTime }
+        val commissionError = errors.firstOrNull { it is DomainError.StayCommission }
 
         _stayFormErrors.update {
             val newErrors = it.errors.mutate { map ->
-                map[StayField.Property] = stayPropertyError?.toUiMessage()
-                map[StayField.Tenant] = stayTenantError?.toUiMessage()
-                map[StayField.Period] = periodError?.toUiMessage()
-                map[StayField.CheckInTime] = checkInTimeError?.toUiMessage()
-                map[StayField.CheckOutTime] = checkOutTimeError?.toUiMessage()
-                map[StayField.Commission] = commissionError?.toUiMessage()
+                map[StayField.Property] = stayPropertyError?.toInlineMessage()
+                map[StayField.Tenant] = stayTenantError?.toInlineMessage()
+                map[StayField.Period] = periodError?.toInlineMessage()
+                map[StayField.CheckInTime] = checkInTimeError?.toInlineMessage()
+                map[StayField.CheckOutTime] = checkOutTimeError?.toInlineMessage()
+                map[StayField.Commission] = commissionError?.toInlineMessage()
             }
 
             it.copy(errors = newErrors)
@@ -506,12 +468,10 @@ class StayRegistrationViewModel(
     }
 
     sealed interface UiEvents {
-
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
+        data class Error(val error: DataError) : UiEvents
         data class ScrollToField(val field: StayField) : UiEvents
-        data class StayEditSuccess(@StringRes val messageId: Int) : UiEvents
-        data class TransferEditSuccess(@StringRes val messageId: Int) : UiEvents
-        data object RedirectToSignIn : UiEvents
+        data class StayEditSuccess(val messageId: Int) : UiEvents
+        data class TransferEditSuccess(val messageId: Int) : UiEvents
         data object StayCreateSuccess : UiEvents
         data object TransferCreateSuccess : UiEvents
     }

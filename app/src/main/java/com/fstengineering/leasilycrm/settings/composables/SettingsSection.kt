@@ -90,9 +90,12 @@ fun SettingsSection(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                if (!context.hasNotificationPermission()) onIsTodayCheckInCheckOutNotificationEnabledChange(false)
+                if (!context.hasNotificationPermission()) onIsTodayCheckInCheckOutNotificationEnabledChange(
+                    false
+                )
 
-                val mustReloadNotificationSettings = isAndroid13OrHigher && hasOpenSettingsToAllowPermission
+                val mustReloadNotificationSettings =
+                    isAndroid13OrHigher && hasOpenSettingsToAllowPermission
                 if (mustReloadNotificationSettings) onSettingChange()
             }
         }

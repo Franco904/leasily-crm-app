@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXI
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceValidator
 import java.math.BigDecimal
@@ -12,8 +12,8 @@ import java.math.BigDecimal
 class AssistanceValidatorImpl : AssistanceValidator {
     override fun validate(
         assistance: Assistance,
-    ): AppResultCompound<Unit, ValidationError> {
-        val errors = mutableListOf<ValidationError>()
+    ): AppResultCompound<Unit, DomainError> {
+        val errors = mutableListOf<DomainError>()
 
         validateDistanceToSea(
             seaProximityTypeId = assistance.seaProximityType?.id,
@@ -28,10 +28,10 @@ class AssistanceValidatorImpl : AssistanceValidator {
     private fun validateDistanceToSea(
         seaProximityTypeId: Long?,
         distanceToSea: BigDecimal?,
-    ): AppResult<Unit, ValidationError.PropertyDistanceToSea> {
+    ): AppResult<Unit, DomainError.PropertyDistanceToSea> {
         return when {
             seaProximityTypeId == DISTANCE_TO_SEA_PROXIMITY_TYPE_ID && distanceToSea == null -> {
-                AppResult.Error(ValidationError.PropertyDistanceToSea.IsBlank)
+                AppResult.Error(DomainError.PropertyDistanceToSea.IsBlank)
             }
 
             else -> AppResult.Success(Unit)

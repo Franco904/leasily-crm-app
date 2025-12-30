@@ -10,7 +10,6 @@ import androidx.work.WorkManager
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.LazyWritesWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.ReadsWorker
-import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.SessionExpirationWorker
 import java.util.concurrent.TimeUnit
 
 fun WorkManager.enqueueLazyWritesWorker() {
@@ -39,18 +38,6 @@ fun WorkManager.enqueueReadsWorker() {
 
     enqueueUniqueWork(
         ReadsWorker.UNIQUE_NAME,
-        ExistingWorkPolicy.REPLACE,
-        workRequest,
-    )
-}
-
-fun WorkManager.enqueueSessionExpirationWorker() {
-    val workRequest = OneTimeWorkRequestBuilder<SessionExpirationWorker>()
-        .setInitialDelay(1, TimeUnit.HOURS)
-        .build()
-
-    enqueueUniqueWork(
-        SessionExpirationWorker.UNIQUE_NAME,
         ExistingWorkPolicy.REPLACE,
         workRequest,
     )

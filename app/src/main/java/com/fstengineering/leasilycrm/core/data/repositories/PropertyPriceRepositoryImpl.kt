@@ -5,12 +5,12 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyPriceRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 class PropertyPriceRepositoryImpl(
     private val dao: PropertyPriceDao,
 ) : PropertyPriceRepository {
-    override suspend fun insertOrUpdate(price: PropertyPrice): AppResult<Unit, DataSourceError> {
+    override suspend fun insertOrUpdate(price: PropertyPrice): AppResult<Unit, DataError> {
         val priceEntity = PropertyPriceEntity.fromDomain(domain = price)
         dao.insertOrUpdate(priceEntity)
 

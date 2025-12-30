@@ -14,7 +14,6 @@ fun StayTransferDescriptionFormField(
     value: String?,
     onValueChange: (String) -> Unit,
     fieldFocusRequester: FocusRequester,
-    onDone: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     FormTextField(
@@ -24,7 +23,6 @@ fun StayTransferDescriptionFormField(
         isSingleLine = false,
         maxLength = 2000,
         fieldFocusRequester = fieldFocusRequester,
-        onDone = { onDone() },
         modifier = modifier
             .height(180.dp)
     )

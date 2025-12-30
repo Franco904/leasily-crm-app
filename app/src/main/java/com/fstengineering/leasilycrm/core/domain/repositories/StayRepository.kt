@@ -3,26 +3,26 @@ package com.fstengineering.leasilycrm.core.domain.repositories
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.StayCheckStatus
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface StayRepository {
-    suspend fun insertOrUpdate(stay: Stay): AppResult<Long, DataSourceError>
+    suspend fun insertOrUpdate(stay: Stay): AppResult<Long, DataError>
 
-    suspend fun delete(id: Long): AppResult<Unit, DataSourceError>
+    suspend fun delete(id: Long): AppResult<Unit, DataError>
 
-    suspend fun getById(stayId: Long): AppResult<Stay, DataSourceError>
+    suspend fun getById(stayId: Long): AppResult<Stay, DataError>
 
-    fun watchById(stayId: Long): Flow<AppResult<Stay?, DataSourceError>>
+    fun watchById(stayId: Long): Flow<AppResult<Stay?, DataError>>
 
-    fun watchAll(): Flow<AppResult<ImmutableList<Stay>, DataSourceError>>
+    fun watchAll(): Flow<AppResult<ImmutableList<Stay>, DataError>>
 
-    fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<AppResult<ImmutableList<StayCheckStatus>, DataSourceError>>
+    fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<AppResult<ImmutableList<StayCheckStatus>, DataError>>
 
-    fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, DataSourceError>>
+    fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, DataError>>
 
     suspend fun setMustNotShowCheckOutDialogAnymore(
         mustNotShowCheckOutDialogAnymore: Boolean,
-    ): AppResult<Unit, DataSourceError>
+    ): AppResult<Unit, DataError>
 }

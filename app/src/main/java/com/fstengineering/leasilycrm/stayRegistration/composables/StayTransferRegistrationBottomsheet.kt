@@ -48,7 +48,6 @@ fun StayTransferRegistrationBottomsheet(
     transferForm: StayTransfer,
     onTransferFormChange: (StayTransfer) -> Unit,
     formErrors: ImmutableMap<StayTransferField, Int?>,
-    onLastTextFieldDone: () -> Unit,
     onDismissRequest: () -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
@@ -138,7 +137,6 @@ fun StayTransferRegistrationBottomsheet(
                 value = transferForm.transferDescription,
                 onValueChange = { onTransferFormChange(transferForm.copy(transferDescription = it)) },
                 fieldFocusRequester = transferDescriptionFieldFocusRequester,
-                onDone = { onLastTextFieldDone() },
             )
             Spacer(modifier = Modifier.height(72.dp))
         }

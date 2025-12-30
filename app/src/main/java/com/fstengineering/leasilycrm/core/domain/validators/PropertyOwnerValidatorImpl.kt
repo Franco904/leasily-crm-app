@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.constants.EMAIL_REGEX
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyOwnerValidator
 
@@ -12,8 +12,8 @@ class PropertyOwnerValidatorImpl : PropertyOwnerValidator {
     override fun validate(
         propertyOwner: PropertyOwner,
         isThereStoredPropertyOwnerWithSameName: Boolean,
-    ): AppResultCompound<Unit, ValidationError> {
-        val errors = mutableListOf<ValidationError>()
+    ): AppResultCompound<Unit, DomainError> {
+        val errors = mutableListOf<DomainError>()
 
         validateName(
             name = propertyOwner.name,
@@ -44,49 +44,49 @@ class PropertyOwnerValidatorImpl : PropertyOwnerValidator {
     private fun validateName(
         name: String?,
         isThereStoredPropertyOwnerWithSameName: Boolean,
-    ): AppResult<Unit, ValidationError.PropertyOwnerName> {
+    ): AppResult<Unit, DomainError.PropertyOwnerName> {
         return when {
-            name.isNullOrBlank() -> AppResult.Error(ValidationError.PropertyOwnerName.IsBlank)
+            name.isNullOrBlank() -> AppResult.Error(DomainError.PropertyOwnerName.IsBlank)
             isThereStoredPropertyOwnerWithSameName -> {
-                AppResult.Error(ValidationError.PropertyOwnerName.BelongsToOtherPropertyOwner)
+                AppResult.Error(DomainError.PropertyOwnerName.BelongsToOtherPropertyOwner)
             }
 
             name.length > 100 -> {
-                AppResult.Error(ValidationError.PropertyOwnerName.LengthIsGreaterThan100Chars)
+                AppResult.Error(DomainError.PropertyOwnerName.LengthIsGreaterThan100Chars)
             }
 
             else -> AppResult.Success(Unit)
         }
     }
 
-    private fun validatePhone(phone: String): AppResult<Unit, ValidationError.PropertyOwnerPhone> {
+    private fun validatePhone(phone: String): AppResult<Unit, DomainError.PropertyOwnerPhone> {
         return when {
             phone.length > 20 -> {
-                AppResult.Error(ValidationError.PropertyOwnerPhone.LengthIsGreaterThan20Chars)
+                AppResult.Error(DomainError.PropertyOwnerPhone.LengthIsGreaterThan20Chars)
             }
 
             else -> AppResult.Success(Unit)
         }
     }
 
-    private fun validateEmail(email: String): AppResult<Unit, ValidationError.PropertyOwnerEmail> {
+    private fun validateEmail(email: String): AppResult<Unit, DomainError.PropertyOwnerEmail> {
         return when {
             !email.trim().matches(Regex(EMAIL_REGEX, RegexOption.IGNORE_CASE)) -> {
-                AppResult.Error(ValidationError.PropertyOwnerEmail.InvalidFormat)
+                AppResult.Error(DomainError.PropertyOwnerEmail.InvalidFormat)
             }
 
             email.length > 100 -> {
-                AppResult.Error(ValidationError.PropertyOwnerEmail.LengthIsGreaterThan120Chars)
+                AppResult.Error(DomainError.PropertyOwnerEmail.LengthIsGreaterThan120Chars)
             }
 
             else -> AppResult.Success(Unit)
         }
     }
 
-    private fun validatePaymentKey(paymentKey: String): AppResult<Unit, ValidationError.PropertyOwnerPaymentKey> {
+    private fun validatePaymentKey(paymentKey: String): AppResult<Unit, DomainError.PropertyOwnerPaymentKey> {
         return when {
             paymentKey.length > 120 -> {
-                AppResult.Error(ValidationError.PropertyOwnerPaymentKey.LengthIsGreaterThan120Chars)
+                AppResult.Error(DomainError.PropertyOwnerPaymentKey.LengthIsGreaterThan120Chars)
             }
 
             else -> AppResult.Success(Unit)

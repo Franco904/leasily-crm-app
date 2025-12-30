@@ -1,0 +1,3 @@
+package com.fstengineering.leasilycrm.core.presentation.models.strategies
+
+data object DefaultErrorBottomSheetDataPropertiesStrategy : ErrorBottomSheetDataPropertiesStrategy

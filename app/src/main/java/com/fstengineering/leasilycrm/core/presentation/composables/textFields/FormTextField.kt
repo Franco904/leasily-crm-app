@@ -142,10 +142,10 @@ fun FormTextField(
         },
         singleLine = isSingleLine,
         keyboardActions = KeyboardActions(
-            onDone = onDone,
+            onDone = if (isSingleLine) onDone else null,
         ),
         keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Done,
+            imeAction = if (isSingleLine) ImeAction.Done else ImeAction.Default,
             keyboardType = keyboardType,
         ),
         interactionSource = interactionSource,

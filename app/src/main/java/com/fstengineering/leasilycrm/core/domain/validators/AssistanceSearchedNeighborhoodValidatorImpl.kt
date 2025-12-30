@@ -3,15 +3,15 @@ package com.fstengineering.leasilycrm.core.domain.validators
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceSearchedNeighborhoodValidator
 
 class AssistanceSearchedNeighborhoodValidatorImpl : AssistanceSearchedNeighborhoodValidator {
     override fun validate(
         searchedNeighborhood: AssistanceSearchedNeighborhood,
-    ): AppResultCompound<Unit, ValidationError> {
-        val errors = mutableListOf<ValidationError>()
+    ): AppResultCompound<Unit, DomainError> {
+        val errors = mutableListOf<DomainError>()
 
         validateNeighborhoodName(neighborhoodName = searchedNeighborhood.neighborhood)
             .onError { e -> errors.add(e) }
@@ -23,10 +23,10 @@ class AssistanceSearchedNeighborhoodValidatorImpl : AssistanceSearchedNeighborho
 
     private fun validateNeighborhoodName(
         neighborhoodName: String?,
-    ): AppResult<Unit, ValidationError.AssistanceSearchedNeighborhoodName> {
+    ): AppResult<Unit, DomainError.AssistanceSearchedNeighborhoodName> {
         return when {
             neighborhoodName.isNullOrBlank() -> {
-                AppResult.Error(ValidationError.AssistanceSearchedNeighborhoodName.IsNullOrBlank)
+                AppResult.Error(DomainError.AssistanceSearchedNeighborhoodName.IsNullOrBlank)
             }
 
             else -> AppResult.Success(Unit)

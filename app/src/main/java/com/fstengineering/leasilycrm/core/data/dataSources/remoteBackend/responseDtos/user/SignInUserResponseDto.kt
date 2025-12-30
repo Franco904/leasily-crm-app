@@ -4,5 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignInUserResponseDto(
-    val id: Long?,
+    val id: Long,
+    val name: String,
+    val creciNumber: String? = null,
+    val profilePictureUrl: String,
 )

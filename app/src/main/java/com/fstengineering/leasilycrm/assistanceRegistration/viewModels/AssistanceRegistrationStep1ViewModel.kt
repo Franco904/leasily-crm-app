@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.viewModels
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceSearchedNeighborhoodErrorUiState
@@ -9,11 +8,11 @@ import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.Assist
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceSearchedNeighborhoodValidator
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceValidator
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -83,11 +82,12 @@ class AssistanceRegistrationStep1ViewModel(
             assistanceSearchedNeighborhoodValidator.validate(newSearchedNeighborhood)
                 .onErrors { errors ->
                     val nameError =
-                        errors.firstOrNull { it is ValidationError.AssistanceSearchedNeighborhoodName }
+                        errors.firstOrNull { it is DomainError.AssistanceSearchedNeighborhoodName }
 
                     _searchedNeighborhoodErrors.update {
                         val newErrors = it.errors.mutate { map ->
-                            map[AssistanceNeighborhoodField.Neighborhood] = nameError?.toUiMessage()
+                            map[AssistanceNeighborhoodField.Neighborhood] =
+                                nameError?.toInlineMessage()
                         }
 
                         it.copy(errors = newErrors)
@@ -105,17 +105,17 @@ class AssistanceRegistrationStep1ViewModel(
         _searchedNeighborhoodErrors.update { AssistanceSearchedNeighborhoodErrorUiState() }
     }
 
-    private suspend fun setFieldErrors(errors: List<ValidationError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _formErrors.update { AssistanceStep1ErrorUiState() }
         delay(150.milliseconds)
 
         val propertyDistanceToSeaError =
-            errors.firstOrNull { it is ValidationError.PropertyDistanceToSea }
+            errors.firstOrNull { it is DomainError.PropertyDistanceToSea }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
                 map[AssistanceStep1Field.DistanceToSea] =
-                    propertyDistanceToSeaError?.toUiMessage()
+                    propertyDistanceToSeaError?.toInlineMessage()
             }
 
             it.copy(errors = newErrors)
@@ -126,8 +126,6 @@ class AssistanceRegistrationStep1ViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
         data class ScrollToField(val field: AssistanceStep1Field) : UiEvents
 
         data object ValidateSuccess : UiEvents

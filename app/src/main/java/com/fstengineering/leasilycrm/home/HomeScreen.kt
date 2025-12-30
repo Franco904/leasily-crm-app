@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -35,9 +34,11 @@ import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.CurrentAssistanceDeleteSuccess
-import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.DataSourceError
-import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.home.composables.HomeBottomNavigationBar
 import com.fstengineering.leasilycrm.home.composables.HomeTopAppBar
 import com.fstengineering.leasilycrm.home.dashboard.DashboardPage
@@ -56,19 +57,15 @@ fun HomeScreen(
     onProfileSelect: () -> Unit,
     onPropertiesSelect: () -> Unit,
     onPropertyOwnersSelect: () -> Unit,
-    onCustomerSegmentsSelect: () -> Unit,
     onRegisterLeadTenant: (Long?) -> Unit,
     onViewLeadTenantDetails: (Long) -> Unit,
     onRegisterAssistance: (Long, Long?) -> Unit,
     onNewStayWithLeadTenant: (Long) -> Unit,
     onRegisterStayBlank: (Long?, Boolean) -> Unit,
     onViewStay: (Long, cameFromLeadTenant: Boolean) -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
-    showActionSnackbar: (String, String, () -> Unit) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
@@ -100,16 +97,15 @@ fun HomeScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is CurrentAssistanceDeleteSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_delete_assistance_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_assistance_success_message))
                 }
             }
         }
@@ -127,6 +123,7 @@ fun HomeScreen(
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceContainerColor.toArgb()
@@ -206,7 +203,6 @@ fun HomeScreen(
                         viewModel = koinViewModel(),
                         onPropertiesSelect = onPropertiesSelect,
                         onPropertyOwnersSelect = onPropertyOwnersSelect,
-                        onCustomerSegmentsSelect = onCustomerSegmentsSelect,
                     )
                 }
                 composable<Destinations.Home.Leads> {
@@ -220,8 +216,7 @@ fun HomeScreen(
                         onDeleteAssistance = { assistanceToDelete = it },
                         onNewStay = onNewStayWithLeadTenant,
                         onViewStay = { stayId -> onViewStay(stayId, true) },
-                        onSignOut = onSignOut,
-                        showSnackbar = showSnackbar,
+                        onUiEvent = onUiEvent,
                     )
                 }
                 composable<Destinations.Home.Tenants> {
@@ -235,8 +230,7 @@ fun HomeScreen(
                         onDeleteAssistance = { assistanceToDelete = it },
                         onNewStay = onNewStayWithLeadTenant,
                         onViewStay = { stayId -> onViewStay(stayId, true) },
-                        onSignOut = onSignOut,
-                        showSnackbar = showSnackbar,
+                        onUiEvent = onUiEvent,
                     )
                 }
                 composable<Destinations.Home.Stays> {
@@ -246,9 +240,7 @@ fun HomeScreen(
                             onRegisterStayBlank(stayId, isUnavailablePeriod)
                         },
                         onViewStayDetails = { stayId -> onViewStay(stayId, false) },
-                        onSignOut = onSignOut,
-                        showSnackbar = showSnackbar,
-                        showActionSnackbar = showActionSnackbar,
+                        onUiEvent = onUiEvent,
                     )
                 }
             }

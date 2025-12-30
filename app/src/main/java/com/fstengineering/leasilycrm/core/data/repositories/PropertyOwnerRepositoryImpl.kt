@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.sharedStorage.interfa
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import kotlinx.collections.immutable.ImmutableList
@@ -28,15 +28,11 @@ class PropertyOwnerRepositoryImpl(
 ) : PropertyOwnerRepository {
     override suspend fun insertOrUpdate(
         propertyOwner: PropertyOwner,
-    ): AppResult<Long, DataSourceError> {
+    ): AppResult<Long, DataError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: return AppResult.Error(
-                        error = DataSourceError.PreferencesError.NotFound,
-                    )
-                }
+                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 }
             )
 
         val propertyOwnerWithUser = propertyOwner.copy(userId = userRemoteId)
@@ -48,7 +44,7 @@ class PropertyOwnerRepositoryImpl(
         return AppResult.Success(data = id)
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataSourceError> {
+    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
         dao.delete(id)
 
         return AppResult.Success(data = Unit)
@@ -56,16 +52,12 @@ class PropertyOwnerRepositoryImpl(
 
     override suspend fun getById(
         propertyOwnerId: Long,
-    ): AppResult<PropertyOwner, DataSourceError> {
+    ): AppResult<PropertyOwner, DataError> {
         val propertyOwner = dao.getById(id = propertyOwnerId)
             .toDomain()
 
         val filesWithNames = propertyOwner.files.map { file ->
             val fileName = sharedStorage.getFileName(contentUriString = file.uriString ?: "")
-                .fold(
-                    onError = { error -> return AppResult.Error(error = error) },
-                    onSuccess = { fileName -> fileName },
-                )
 
             file.copy(name = fileName)
         }.toImmutableList()
@@ -75,7 +67,7 @@ class PropertyOwnerRepositoryImpl(
 
     override fun watchById(
         propertyOwnerId: Long,
-    ): Flow<AppResult<PropertyOwner, DataSourceError>> = flow {
+    ): Flow<AppResult<PropertyOwner, DataError>> = flow {
         val propertyOwnerFlow = dao.watchById(id = propertyOwnerId)
             .map { propertyOwner ->
                 val domain = propertyOwner.toDomain()
@@ -83,18 +75,11 @@ class PropertyOwnerRepositoryImpl(
                 val filesWithNames = domain.files.map { file ->
                     val fileName =
                         sharedStorage.getFileName(contentUriString = file.uriString ?: "")
-                            .fold(
-                                onError = { error ->
-                                    emit(AppResult.Error(error = error))
-                                    return@map file
-                                },
-                                onSuccess = { fileName -> fileName },
-                            )
 
                     file.copy(name = fileName)
                 }.toImmutableList()
 
-                AppResult.Success<PropertyOwner, DataSourceError>(
+                AppResult.Success<PropertyOwner, DataError>(
                     data = domain.copy(files = filesWithNames),
                 )
             }
@@ -103,7 +88,7 @@ class PropertyOwnerRepositoryImpl(
         emitAll(propertyOwnerFlow)
     }
 
-    override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataSourceError>> =
+    override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -111,19 +96,14 @@ class PropertyOwnerRepositoryImpl(
                         emit(AppResult.Error(error = it))
                         return@flow
                     },
-                    onSuccess = { prefsFlow ->
-                        prefsFlow.first().remoteId ?: run {
-                            emit(AppResult.Error(error = DataSourceError.PreferencesError.NotFound))
-                            return@flow
-                        }
-                    }
+                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
                 )
 
             emitAll(
                 dao.watchAll(userId = userRemoteId)
                     .map {
                         val propertyOwners = it.map { owner -> owner.toDomain() }.toPersistentList()
-                        AppResult.Success<ImmutableList<PropertyOwner>, DataSourceError>(data = propertyOwners)
+                        AppResult.Success<ImmutableList<PropertyOwner>, DataError>(data = propertyOwners)
                     }
                     .distinctUntilChanged()
             )
@@ -132,15 +112,11 @@ class PropertyOwnerRepositoryImpl(
     override suspend fun isTherePropertyOwnerWithName(
         propertyOwnerName: String,
         currentStoredPropertyOwnerName: String?,
-    ): AppResult<Boolean, DataSourceError> {
+    ): AppResult<Boolean, DataError> {
         val userRemoteId = encryptedPreferencesStorage.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.first().remoteId ?: run {
-                        return AppResult.Error(error = DataSourceError.PreferencesError.NotFound)
-                    }
-                }
+                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
             )
 
         val count = dao.countPropertyOwnersWithName(

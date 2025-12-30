@@ -34,12 +34,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomsheet
+import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationFormSection
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationTopAppBar
@@ -54,8 +56,7 @@ fun PropertyOwnerRegistrationScreen(
     propertyOwnerId: Long?,
     viewModel: PropertyOwnerRegistrationViewModel,
     onBack: () -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -97,33 +98,33 @@ fun PropertyOwnerRegistrationScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.send(uiEvent.field)
+                    scrollToFieldFlow.trySend(uiEvent.field)
                 }
 
                 is PropertyOwnerCreateSuccess -> {
                     onBack()
 
-                    showSnackbar(context.getString(R.string.snackbar_create_property_owner_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_property_owner_success_message))
                 }
 
                 is PropertyOwnerEditSuccess -> {
                     onBack()
 
-                    showSnackbar(context.getString(uiEvent.messageId))
+                    onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()
@@ -176,7 +177,7 @@ fun PropertyOwnerRegistrationScreen(
             )
         }
         if (mustShowCustomerSegmentComboBottomsheet) {
-            AppComboBottomsheet(
+            AppComboBottomSheet(
                 sheetState = sheetState,
                 options = propertyOwnerSegments.map { it.name ?: "" }.toPersistentList(),
                 onOptionSelect = { customerSegmentName ->

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
@@ -10,14 +9,14 @@ import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
 import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantContactOriginTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.TenantValidator
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantErrorUiState
 import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantField
 import kotlinx.collections.immutable.ImmutableList
@@ -36,7 +35,6 @@ class LeadTenantRegistrationViewModel(
     private val tenantRepository: TenantRepository,
     private val customerSegmentRepository: CustomerSegmentRepository,
     private val tenantContactOriginTypeRepository: TenantContactOriginTypeRepository,
-    private val userRepository: UserRepository,
     private val tenantValidator: TenantValidator,
 ) : ViewModel() {
     private var isInitialized = false
@@ -72,7 +70,6 @@ class LeadTenantRegistrationViewModel(
 
         _isLoading.update { true }
 
-        watchSessionExpiration()
         if (leadTenantId != null) getLeadTenantToEdit(leadTenantId)
 
         getTenantSegments()
@@ -82,29 +79,10 @@ class LeadTenantRegistrationViewModel(
         isInitialized = true
     }
 
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
-    }
-
     private fun getLeadTenantToEdit(leadTenantId: Long) {
         viewModelScope.launch {
             tenantRepository.getById(leadTenantId)
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedLeadTenant ->
                     _leadTenantForm.update { storedLeadTenant }
                     leadTenantToEdit = storedLeadTenant
@@ -115,9 +93,7 @@ class LeadTenantRegistrationViewModel(
     private fun getTenantSegments() {
         viewModelScope.launch {
             customerSegmentRepository.getAllTenantType()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedCustomerSegments ->
                     _tenantSegments.update { storedCustomerSegments }
                 }
@@ -127,9 +103,7 @@ class LeadTenantRegistrationViewModel(
     private fun getPastCities() {
         viewModelScope.launch {
             tenantRepository.getAllCityNames()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedCities ->
                     _pastCities.update { storedCities }
                 }
@@ -139,9 +113,7 @@ class LeadTenantRegistrationViewModel(
     private fun getTenantContactOriginTypes() {
         viewModelScope.launch {
             tenantContactOriginTypeRepository.getAll()
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedTenantContactOriginTypes ->
                     _tenantContactOriginTypes.update { storedTenantContactOriginTypes }
                 }
@@ -175,7 +147,7 @@ class LeadTenantRegistrationViewModel(
             val leadTenant = leadTenantForm.value
 
             if (leadTenantToEdit != null && leadTenant == leadTenantToEdit) {
-                _uiEvents.send(UiEvents.LeadTenantEditSuccess(messageId = R.string.snackbar_no_data_changed))
+                _uiEvents.send(UiEvents.LeadTenantEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
 
@@ -197,17 +169,14 @@ class LeadTenantRegistrationViewModel(
                 }
 
             tenantRepository.insertOrUpdate(leadTenant)
-                .onError { error ->
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    return@launch
-                }
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             val saveEvent =
                 if (leadTenantToEdit != null) {
                     UiEvents.LeadTenantEditSuccess(
                         messageId = if (leadTenant.isLead) {
-                            R.string.snackbar_edit_lead_succeeded
-                        } else R.string.snackbar_edit_tenant_succeeded,
+                            R.string.edit_lead_success_message
+                        } else R.string.edit_tenant_success_message,
                     )
                 } else UiEvents.LeadCreateSuccess
 
@@ -215,19 +184,19 @@ class LeadTenantRegistrationViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ValidationError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _formErrors.update { LeadTenantErrorUiState() }
         delay(150.milliseconds)
 
-        val nameError = errors.firstOrNull { it is ValidationError.TenantName }
-        val phoneError = errors.firstOrNull { it is ValidationError.TenantPhone }
-        val emailError = errors.firstOrNull { it is ValidationError.TenantEmail }
+        val nameError = errors.firstOrNull { it is DomainError.TenantName }
+        val phoneError = errors.firstOrNull { it is DomainError.TenantPhone }
+        val emailError = errors.firstOrNull { it is DomainError.TenantEmail }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                map[LeadTenantField.Name] = nameError?.toUiMessage()
-                map[LeadTenantField.Phone] = phoneError?.toUiMessage()
-                map[LeadTenantField.Email] = emailError?.toUiMessage()
+                map[LeadTenantField.Name] = nameError?.toInlineMessage()
+                map[LeadTenantField.Phone] = phoneError?.toInlineMessage()
+                map[LeadTenantField.Email] = emailError?.toInlineMessage()
             }
 
             it.copy(errors = newErrors)
@@ -238,14 +207,12 @@ class LeadTenantRegistrationViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
+        data class Error(val error: DataError) : UiEvents
 
         data class ScrollToField(val field: LeadTenantField) : UiEvents
 
         data object LeadCreateSuccess : UiEvents
 
-        data class LeadTenantEditSuccess(@StringRes val messageId: Int) : UiEvents
+        data class LeadTenantEditSuccess(val messageId: Int) : UiEvents
     }
 }

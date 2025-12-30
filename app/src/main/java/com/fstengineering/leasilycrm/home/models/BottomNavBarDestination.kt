@@ -1,7 +1,5 @@
 package com.fstengineering.leasilycrm.home.models
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Group
@@ -14,11 +12,11 @@ import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 
 enum class BottomNavBarDestination(
-    @StringRes val textId: Int,
+    val textId: Int,
     val icon: ImageVector? = null,
     val selectedIcon: ImageVector? = null,
-    @DrawableRes val iconDrawable: Int? = null,
-    @DrawableRes val selectedIconDrawable: Int? = null,
+    val iconDrawable: Int? = null,
+    val selectedIconDrawable: Int? = null,
     val navDestination: Any,
 ) {
     Dashboard(

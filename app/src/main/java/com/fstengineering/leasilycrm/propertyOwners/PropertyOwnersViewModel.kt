@@ -1,14 +1,12 @@
 package com.fstengineering.leasilycrm.propertyOwners
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
@@ -20,7 +18,6 @@ import kotlinx.coroutines.launch
 
 class PropertyOwnersViewModel(
     private val propertyOwnerRepository: PropertyOwnerRepository,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -40,27 +37,9 @@ class PropertyOwnersViewModel(
     fun init() {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchPropertyOwners()
 
         isInitialized = true
-    }
-
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
     }
 
     private fun watchPropertyOwners() {
@@ -69,21 +48,15 @@ class PropertyOwnersViewModel(
         viewModelScope.launch {
             propertyOwnerRepository.watchAll().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { propertyOwners ->
-                        _propertyOwners.update { propertyOwners }
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                    .onSuccess { propertyOwners -> _propertyOwners.update { propertyOwners } }
 
                 _isLoading.update { false }
             }
         }
     }
 
-    fun onDeletePropertyOwner(
-        propertyOwner: PropertyOwner?,
-    ) {
+    fun onDeletePropertyOwner(propertyOwner: PropertyOwner?) {
         _propertyOwnerToDelete.update { propertyOwner }
     }
 
@@ -92,28 +65,17 @@ class PropertyOwnersViewModel(
             val id = propertyOwnerToDelete.value?.id ?: return@launch
 
             propertyOwnerRepository.delete(id)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess {
+                    _uiEvents.send(UiEvents.PropertyOwnerDeleteSuccess)
 
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-
-                    return@launch
+                    onDeletePropertyOwner(propertyOwner = null)
                 }
-
-            _uiEvents.send(UiEvents.PropertyOwnerDeleteSuccess)
-
-            onDeletePropertyOwner(propertyOwner = null)
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
-
+        data class Error(val error: DataError) : UiEvents
         data object PropertyOwnerDeleteSuccess : UiEvents
     }
 }

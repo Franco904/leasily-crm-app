@@ -3,34 +3,34 @@ package com.fstengineering.leasilycrm.core.domain.repositories
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyRepository {
-    suspend fun insertOrUpdate(property: Property): AppResult<Long, DataSourceError>
+    suspend fun insertOrUpdate(property: Property): AppResult<Long, DataError>
 
-    suspend fun delete(id: Long): AppResult<Unit, DataSourceError>
+    suspend fun delete(id: Long): AppResult<Unit, DataError>
 
-    suspend fun getById(propertyId: Long): AppResult<Property, DataSourceError>
+    suspend fun getById(propertyId: Long): AppResult<Property, DataError>
 
-    suspend fun getAll(): AppResult<ImmutableList<Property>, DataSourceError>
+    suspend fun getAll(): AppResult<ImmutableList<Property>, DataError>
 
-    suspend fun getAllMatching(matching: String?): AppResult<ImmutableList<Property>, DataSourceError>
+    suspend fun getAllMatching(matching: String?): AppResult<ImmutableList<Property>, DataError>
 
-    suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, DataSourceError>
+    suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, DataError>
 
-    fun watchById(propertyId: Long): Flow<AppResult<Property?, DataSourceError>>
+    fun watchById(propertyId: Long): Flow<AppResult<Property?, DataError>>
 
-    fun watchAll(): Flow<AppResult<ImmutableList<Property>, DataSourceError>>
+    fun watchAll(): Flow<AppResult<ImmutableList<Property>, DataError>>
 
     suspend fun watchPropertyStaysSelectedPeriod():
-            Flow<AppResult<Pair<CalendarMonthYear?, CalendarMonthYear?>, DataSourceError>>
+            Flow<AppResult<Pair<CalendarMonthYear?, CalendarMonthYear?>, DataError>>
 
     suspend fun updatePropertyStaysSelectedPeriod(
         selectedStartMonth: Int?,
         selectedStartYear: Int?,
         selectedEndMonth: Int?,
         selectedEndYear: Int?,
-    ): AppResult<Unit, DataSourceError>
+    ): AppResult<Unit, DataError>
 }

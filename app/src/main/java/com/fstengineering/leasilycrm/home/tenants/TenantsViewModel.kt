@@ -1,16 +1,14 @@
 package com.fstengineering.leasilycrm.home.tenants
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrderType
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import com.fstengineering.leasilycrm.home.tenants.models.TenantFilterType
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -29,7 +27,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class TenantsViewModel(
     private val tenantRepository: TenantRepository,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -60,8 +57,6 @@ class TenantsViewModel(
     fun init() {
         if (isInitialized) return
 
-        watchSessionExpiration()
-
         getPreferredTenantsOrderTypeId()
         watchTenants()
 
@@ -72,31 +67,11 @@ class TenantsViewModel(
         isInitialized = false
     }
 
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
-    }
-
     private fun getPreferredTenantsOrderTypeId() {
         viewModelScope.launch {
             val orderTypeId = tenantRepository.getPreferredTenantsOrderTypeId()
                 .fold(
-                    onError = { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        return@launch
-                    },
+                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
                     onSuccess = { orderTypeId -> orderTypeId },
                 )
 
@@ -126,12 +101,8 @@ class TenantsViewModel(
                 }
                 .collect { result ->
                     result
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
-                        .onSuccess { tenants ->
-                            _tenants.update { tenants }
-                        }
+                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                        .onSuccess { tenants -> _tenants.update { tenants } }
 
                     _isLoading.update { false }
                 }
@@ -165,16 +136,7 @@ class TenantsViewModel(
             val tenantToDelete = this@TenantsViewModel.tenantToDelete.value ?: return@launch
 
             tenantRepository.delete(tenantToDelete.id!!)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-
-                    return@launch
-                }
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             _uiEvents.send(UiEvents.LeadDeleteSuccess)
             onDeleteTenant(tenant = null)
@@ -182,10 +144,7 @@ class TenantsViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
-
+        data class Error(val error: DataError) : UiEvents
         data object LeadDeleteSuccess : UiEvents
     }
 }

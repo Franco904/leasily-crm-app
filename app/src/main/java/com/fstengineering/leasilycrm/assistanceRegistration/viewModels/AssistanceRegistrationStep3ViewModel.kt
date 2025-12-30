@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.viewModels
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
@@ -8,10 +7,10 @@ import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceInt
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceInteractionField
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceInteractionValidator
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,7 +75,7 @@ class AssistanceRegistrationStep3ViewModel(
 
                 if (interactionFromForm == storedInteraction) {
                     _uiEvents.send(
-                        UiEvents.InteractionEditSuccess(messageId = R.string.snackbar_no_data_changed)
+                        UiEvents.InteractionEditSuccess(messageId = R.string.no_data_changed_success_message)
                     )
                     return@launch
                 }
@@ -85,15 +84,15 @@ class AssistanceRegistrationStep3ViewModel(
             assistanceInteractionValidator.validate(interactionFromForm)
                 .onErrors { errors ->
                     val interactionDateError =
-                        errors.firstOrNull { it is ValidationError.AssistanceInteractionDate }
+                        errors.firstOrNull { it is DomainError.AssistanceInteractionDate }
                     val titleError =
-                        errors.firstOrNull { it is ValidationError.AssistanceInteractionTitle }
+                        errors.firstOrNull { it is DomainError.AssistanceInteractionTitle }
 
                     _formErrors.update {
                         val newErrors = it.errors.mutate { map ->
                             map[AssistanceInteractionField.InteractionDate] =
-                                interactionDateError?.toUiMessage()
-                            map[AssistanceInteractionField.Title] = titleError?.toUiMessage()
+                                interactionDateError?.toInlineMessage()
+                            map[AssistanceInteractionField.Title] = titleError?.toInlineMessage()
                         }
 
                         it.copy(errors = newErrors)
@@ -103,7 +102,7 @@ class AssistanceRegistrationStep3ViewModel(
                 }
 
             val saveEvent =
-                if (isEditing) UiEvents.InteractionEditSuccess(messageId = R.string.snackbar_edit_assistance_interaction_succeeded)
+                if (isEditing) UiEvents.InteractionEditSuccess(messageId = R.string.edit_assistance_interaction_success_message)
                 else UiEvents.InteractionCreateSuccess
 
             _uiEvents.send(saveEvent)
@@ -117,6 +116,6 @@ class AssistanceRegistrationStep3ViewModel(
     sealed interface UiEvents {
         data object InteractionCreateSuccess : UiEvents
 
-        data class InteractionEditSuccess(@StringRes val messageId: Int) : UiEvents
+        data class InteractionEditSuccess(val messageId: Int) : UiEvents
     }
 }

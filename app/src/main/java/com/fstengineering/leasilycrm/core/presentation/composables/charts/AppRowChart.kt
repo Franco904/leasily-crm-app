@@ -1,12 +1,17 @@
 package com.fstengineering.leasilycrm.core.presentation.composables.charts
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ir.ehsannarmani.compose_charts.RowChart
@@ -27,6 +32,8 @@ fun AppRowChart(
     modifier: Modifier = Modifier,
     rowThickness: Dp = 28.dp,
 ) {
+    var showAnimation by rememberSaveable { mutableStateOf(true) }
+
     RowChart(
         data = rows,
         barProperties = BarProperties(
@@ -69,11 +76,11 @@ fun AppRowChart(
                 ),
             ),
         ),
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioNoBouncy,
-            stiffness = Spring.StiffnessLow,
-        ),
+        animationSpec = if (showAnimation) tween(500) else snap(),
         modifier = modifier
             .size(width = 360.dp, height = height)
+            .onGloballyPositioned {
+                showAnimation = false
+            }
     )
 }

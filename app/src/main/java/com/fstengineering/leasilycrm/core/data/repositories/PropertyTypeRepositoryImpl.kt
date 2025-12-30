@@ -4,14 +4,14 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.Propert
 import com.fstengineering.leasilycrm.core.domain.models.PropertyType
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyTypeRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 class PropertyTypeRepositoryImpl(
     private val dao: PropertyTypeDao,
 ) : PropertyTypeRepository {
-    override suspend fun getAll(): AppResult<ImmutableList<PropertyType>, DataSourceError> {
+    override suspend fun getAll(): AppResult<ImmutableList<PropertyType>, DataError> {
         val propertyTypes = dao.getAll()
             .map { it.toDomain() }
             .toPersistentList()

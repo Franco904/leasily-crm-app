@@ -4,7 +4,6 @@
     <!-- Sign in -->
     <string name="sign_in_welcome_text">Boas-vindas ao Leasily CRM.</string>
     <string name="sign_in_welcome_description">Cadastre-se com sua conta Google pelo botão abaixo.</string>
-    <string name="sign_in_await">Aguarde…</string>
     <string name="sign_in_sign_in_with_google">Entrar com Google</string>
 
     <!-- Home -->
@@ -30,16 +29,13 @@
     <string name="settings_today_check_in_check_out_notification_description">Alerta, no início da manhã, sobre a ocorrência de check-ins e check-outs no dia atual.</string>
 
     <!-- Profile -->
-    <string name="profile_top_app_bar_title">Perfil</string>
+    <string name="profile_top_app_bar_title">Conta</string>
 
-    <string name="profile_sign_out_dialog_headline">Sair do perfil?</string>
-    <string name="profile_sign_out_dialog_supporting_text">O seu perfil será desconectado e será necessário autenticar novamente.</string>
+    <string name="profile_sign_out_dialog_headline">Sair da conta?</string>
+    <string name="profile_sign_out_dialog_supporting_text">A sua conta será desconectada e você precisará autenticar-se novamente.</string>
 
-    <string name="profile_edit_user_dialog_headline">Editar perfil</string>
-    <string name="profile_edit_user_dialog_name_field_placeholder">Nome</string>
+    <string name="profile_edit_user_creci_dialog_headline">Editar CRECI</string>
     <string name="profile_edit_user_dialog_creci_field_placeholder">Número CRECI</string>
-    <string name="profile_edit_user_dialog_required_helper_text">Obrigatório</string>
-
     <string name="profile_creci_blank_body_text">CRECI não informado</string>
 
     <!-- Dashboard -->
@@ -88,21 +84,6 @@
 
     <string name="dashboard_crm_metric_chart_last_12_months_empty_text">Nenhum dado nos últimos 12 meses.</string>
     <string name="dashboard_crm_metric_chart_empty_text">Nenhum dado para exibir.</string>
-
-    <!-- Customer segments -->
-    <string name="customer_segments_top_app_bar_title">Segmentos de clientes</string>
-    <string name="customer_segments_property_owners_title">Proprietários</string>
-    <string name="customer_segments_property_owners_empty_text">Nenhum segmento de proprietário registrado.</string>
-    <string name="customer_segments_tenants_title">Inquilinos</string>
-    <string name="customer_segments_tenants_empty_text">Nenhum segmento de inquilino registrado.</string>
-
-    <string name="customer_segments_save_dialog_headline">Novo segmento de cliente</string>
-    <string name="customer_segments_edit_dialog_headline">Editar segmento de cliente</string>
-    <string name="customer_segments_save_edit_dialog_name_placeholder">Nome</string>
-    <string name="customer_segments_save_edit_dialog_type_title">Tipo</string>
-
-    <string name="customer_segments_delete_dialog_headline">Excluir segmento de cliente?</string>
-    <string name="customer_segments_delete_dialog_supporting_text">Se confirmada a exclusão, imóveis e inquilinos com este segmento serão desvinculados dele.</string>
 
     <!-- Properties -->
     <string name="properties_top_app_bar_title">Imóveis</string>
@@ -628,12 +609,14 @@
     <string name="cancel_action_button_text">Cancelar</string>
     <string name="close_action_button_text">Fechar</string>
     <string name="confirm_action_button_text">Confirmar</string>
+    <string name="contact_support_action_button_text">Contatar canal de suporte</string>
     <string name="delete_action_button_text">Excluir</string>
     <string name="delete_assistance_action_button_text">Excluir atendimento</string>
     <string name="edit_action_button_text">Editar</string>
     <string name="edit_assistance_action_button_text">Editar atendimento</string>
     <string name="new_property_stay_action_button_text">Nova estadia</string>
     <string name="register_action_button_text">Cadastrar</string>
+    <string name="register_account_action_button_text">Cadastrar conta</string>
     <string name="register_button_text">Registrar</string>
     <string name="register_check_in_button_text">Registrar check-in</string>
     <string name="register_check_out_button_text">Registrar check-out</string>
@@ -642,6 +625,7 @@
     <string name="search_action_button_text">Buscar</string>
     <string name="sign_out_action_button_text">Sair</string>
     <string name="undo_button_text">Desfazer</string>
+    <string name="understand_button_text">Entendi</string>
     <string name="view_all_a_action_button_text">Ver todas</string>
     <string name="view_all_o_action_button_text">Ver todos</string>
     <string name="view_assistance_action_button_text">Ver atendimento</string>
@@ -649,7 +633,7 @@
     <string name="view_property_stay_action_button_text">Ver estadia</string>
     <string name="view_unvailable_period_action_button_text">Ver período</string>
 
-    <!-- Inline errors -->
+    <!-- Validation messages -->
     <string name="inline_required">Obrigatório</string>
 
     <string name="inline_too_big_8_chars">Deve ter no máximo 8 caracteres</string>
@@ -669,89 +653,81 @@
     <string name="inline_period_is_overlapping_other_property_stay_period">Imóvel está ocupado por outra estadia neste período</string>
     <string name="inline_period_is_overlapping_other_property_price_period">Imóvel já possui um preço fixado neste período</string>
 
-    <!-- Snackbar success -->
-    <string name="snackbar_no_data_changed">Nenhum dado foi editado.</string>
+    <!-- Success messages -->
+    <string name="no_data_changed_success_message">Nenhum dado foi editado.</string>
 
-    <string name="snackbar_edit_user_succeeded">Perfil editado.</string>
+    <string name="edit_user_creci_success_message">Número de CRECI editado.</string>
 
-    <string name="snackbar_create_customer_segment_succeeded">Segmento de cliente criado.</string>
-    <string name="snackbar_edit_customer_segment_succeeded">Segmento de cliente editado.</string>
-    <string name="snackbar_delete_customer_segment_succeeded">Segmento de cliente excluído.</string>
+    <string name="create_property_success_message">Imóvel criado.</string>
+    <string name="edit_property_success_message">Imóvel editado.</string>
+    <string name="delete_property_success_message">Imóvel excluído.</string>
 
-    <string name="snackbar_create_property_succeeded">Imóvel criado.</string>
-    <string name="snackbar_edit_property_succeeded">Imóvel editado.</string>
-    <string name="snackbar_delete_property_succeeded">Imóvel excluído.</string>
+    <string name="create_property_owner_success_message">Proprietário criado.</string>
+    <string name="edit_property_owner_success_message">Proprietário editado.</string>
+    <string name="delete_property_owner_success_message">Proprietário excluído.</string>
 
-    <string name="snackbar_create_property_owner_succeeded">Proprietário criado.</string>
-    <string name="snackbar_edit_property_owner_succeeded">Proprietário editado.</string>
-    <string name="snackbar_delete_property_owner_succeeded">Proprietário excluído.</string>
+    <string name="create_lead_success_message">Lead criado.</string>
+    <string name="edit_lead_success_message">Lead editado.</string>
+    <string name="edit_tenant_success_message">Inquilino editado.</string>
+    <string name="delete_lead_success_message">Lead excluído.</string>
+    <string name="delete_tenant_success_message">Inquilino excluído.</string>
 
-    <string name="snackbar_create_lead_succeeded">Lead criado.</string>
-    <string name="snackbar_edit_lead_succeeded">Lead editado.</string>
-    <string name="snackbar_edit_tenant_succeeded">Inquilino editado.</string>
-    <string name="snackbar_delete_lead_succeeded">Lead excluído.</string>
-    <string name="snackbar_delete_tenant_succeeded">Inquilino excluído.</string>
+    <string name="create_assistance_interaction_success_message">Interação criada.</string>
+    <string name="edit_assistance_interaction_success_message">Interação editada.</string>
+    <string name="delete_assistance_interaction_success_message">Interação excluída.</string>
 
-    <string name="snackbar_create_assistance_interaction_succeeded">Interação criada.</string>
-    <string name="snackbar_edit_assistance_interaction_succeeded">Interação editada.</string>
-    <string name="snackbar_delete_assistance_interaction_succeeded">Interação excluída.</string>
+    <string name="create_assistance_success_message">Atendimento criado.</string>
+    <string name="edit_assistance_success_message">Atendimento editado.</string>
+    <string name="delete_assistance_success_message">Atendimento excluído.</string>
 
-    <string name="snackbar_create_assistance_succeeded">Atendimento criado.</string>
-    <string name="snackbar_edit_assistance_succeeded">Atendimento editado.</string>
-    <string name="snackbar_delete_assistance_succeeded">Atendimento excluído.</string>
+    <string name="create_stay_success_message">Estadia criada.</string>
+    <string name="edit_stay_success_message">Estadia editada.</string>
+    <string name="delete_stay_success_message">Estadia excluída.</string>
 
-    <string name="snackbar_create_stay_succeeded">Estadia criada.</string>
-    <string name="snackbar_edit_stay_succeeded">Estadia editada.</string>
-    <string name="snackbar_delete_stay_succeeded">Estadia excluída.</string>
+    <string name="create_unavailable_period_success_message">Período criado.</string>
+    <string name="edit_unavailable_period_success_message">Período editado.</string>
+    <string name="delete_unavailable_period_success_message">Período excluído.</string>
 
-    <string name="snackbar_create_unavailable_period_succeeded">Período criado.</string>
-    <string name="snackbar_edit_unavailable_period_succeeded">Período editado.</string>
-    <string name="snackbar_delete_unavailable_period_succeeded">Período excluído.</string>
+    <string name="convert_tenant_to_lead_success_message">Inquilino movido para \"Leads\".</string>
+    <string name="convert_tenant_to_with_upcoming_stay_success_message">Inquilino movido para \"Estadia agendada\".</string>
+    <string name="convert_tenant_to_old_success_message">Inquilino movido para \"Antigos\".</string>
+    <string name="register_check_in_stay_success_message">Estadia movida para \"Em andamento\".</string>
+    <string name="register_check_out_stay_success_message">Estadia movida para \"Finalizadas\".</string>
 
-    <string name="snackbar_convert_tenant_to_lead_succeeded">Inquilino movido para \"Leads\".</string>
-    <string name="snackbar_convert_tenant_to_with_upcoming_stay_succeeded">Inquilino movido para \"Estadia agendada\".</string>
-    <string name="snackbar_convert_tenant_to_old_succeeded">Inquilino movido para \"Antigos\".</string>
-    <string name="snackbar_register_check_in_stay_succeeded">Estadia movida para \"Em andamento\".</string>
-    <string name="snackbar_register_check_out_stay_succeeded">Estadia movida para \"Finalizadas\".</string>
+    <string name="create_stay_transfer_success_message">Transferência criada.</string>
+    <string name="edit_stay_transfer_success_message">Transferência editada.</string>
+    <string name="delete_stay_transfer_success_message">Transferência excluída.</string>
 
-    <string name="snackbar_create_stay_transfer_succeeded">Transferência criada.</string>
-    <string name="snackbar_edit_stay_transfer_succeeded">Transferência editada.</string>
-    <string name="snackbar_delete_stay_transfer_succeeded">Transferência excluída.</string>
+    <!-- Warning messages -->
+    <string name="enable_notifications_warning_message">Habilite as notificações para poder ativar a configuração.</string>
+    <string name="register_first_select_property_warning_message">Selecione o imóvel primeiro.</string>
+    <string name="register_stay_check_in_already_done_warning_message">O check-in desta estadia já foi registrado.</string>
 
-    <!-- Snackbar warnings -->
-    <string name="snackbar_enable_notifications_warning">Habilite as notificações para poder ativar a configuração.</string>
-    <string name="snackbar_register_first_select_property_warning">Selecione o imóvel primeiro.</string>
-    <string name="snackbar_register_stay_check_in_already_done_warning">O check-in desta estadia já foi registrado.</string>
+    <!-- Error messages -->
+    <string name="no_credentials_found_error_title">Cadastre uma conta Google</string>
+    <string name="no_credentials_found_error_description">Você não tem uma conta Google salva neste dispositivo ainda. Cadastre uma nova e tente novamente.</string>
 
-    <!-- Snackbar errors -->
-    <string name="snackbar_credential_user_cancellation_error">Login cancelado.</string>
-    <string name="snackbar_credential_unsupported_type_error">Tipo de credencial inválido. Tente autenticar com a sua conta Google.</string>
-    <string name="snackbar_credential_unsupported_api_error">Falha ao verificar as credenciais. Tente reiniciar o aplicativo.</string>
-    <string name="snackbar_credential_no_credentials_found_error">Não há contas Google disponíveis neste dispositivo.</string>
+    <string name="no_internet_error_title">Sem internet</string>
+    <string name="no_internet_error_description_default">Sua conexão com a internet foi perdida. Conecte-se a uma rede e tente novamente.</string>
+    <string name="no_internet_error_description_sign_in">É preciso ter uma conexão com a internet para entrar na conta. Conecte-se a uma rede e tente novamente.</string>
 
-    <string name="snackbar_preferences_not_found_error">Usuário não encontrado.</string>
-    <string name="snackbar_preferences_serialization_error">Falha ao carregar os dados. Tente novamente mais tarde.</string>
-    <string name="snackbar_preferences_security_error">Falha inesperada na sessão. Tente sair e autenticar novamente.</string>
+    <string name="time_out_error_title">Falha na conexão</string>
+    <string name="time_out_error_description">Estamos enfrentando problemas na rede de internet. Verifique a sua conexão com a internet e tente novamente mais tarde.</string>
 
-    <string name="snackbar_http_bad_request_error">Dados com formato inválido. Verifique os dados preenchidos.</string>
-    <string name="snackbar_http_unauthorized_error">Sua sessão expirou.</string>
-    <string name="snackbar_http_forbidden_error">Sua sessão expirou.</string>
-    <string name="snackbar_http_not_found_error">Usuário não encontrado.</string>
-    <string name="snackbar_http_server_error">Falha inesperada do servidor. Tente novamente mais tarde.</string>
-    <string name="snackbar_http_unknown_http_response_error">Resposta inesperada do servidor. Tente novamente mais tarde.</string>
-    <string name="snackbar_http_serialization_error">Sua sessão expirou.</string>
-    <string name="snackbar_http_timeout_error">A requisição expirou. Verifique a sua conexão com a Internet e tente novamente.</string>
-    <string name="snackbar_http_network_internet">Sem conexão com a Internet. Verifique a sua conexão e tente novamente.</string>
+    <string name="unauthorized_error_title">Sessão expirada</string>
+    <string name="unauthorized_error_description">Sua sessão expirou. Faça login novamente.</string>
 
-    <string name="snackbar_shared_storage_not_found_error">O arquivo não foi encontrado.</string>
-    <string name="snackbar_shared_storage_invalid_file_error">O arquivo tem um formato inválido.</string>
+    <string name="unknown_error_title">Houve um problema</string>
+    <string name="unknown_error_description_default">Não foi possível realizar a última ação. Tente reiniciar o aplicativo e se o problema persistir contate o suporte.</string>
+    <string name="unknown_error_description_sign_in">Não foi possível realizar a última ação. Tente reiniciar o aplicativo, entrar na conta novamente e se o problema persistir contate o suporte.</string>
+    <string name="unknown_error_description_sign_out">Não foi possível realizar a última ação. Tente reiniciar o aplicativo, sair da conta novamente e se o problema persistir contate o suporte.</string>
 
-    <string name="snackbar_unknown_error">Falha inesperada. Tente reiniciar o aplicativo.</string>
+    <string name="no_app_to_open_intent_error_message">Nenhum app instalado conseguiu abrir a solicitação</string>
 
-    <!-- Notification -->
+    <!-- Notification messages -->
     <string name="upcoming_check_in_reminder_notification_title">Lembrete de check-in</string>
-    <string name="upcoming_check_in_reminder_notification_text">O check-in de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
+    <string name="upcoming_check_in_reminder_notification_description">O check-in de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
 
     <string name="upcoming_check_out_reminder_notification_title">Lembrete de check-out</string>
-    <string name="upcoming_check_out_reminder_notification_text">O check-out de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
+    <string name="upcoming_check_out_reminder_notification_description">O check-out de %1$s %2$s %3$s de %4$s é hoje às %5$sh%6$s.</string>
 </resources>

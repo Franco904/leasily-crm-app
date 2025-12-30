@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.core.application.di.modules
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.application.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.data.dataSources.cookieStorage.AppCookieStorage
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientManager
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientManagerImpl
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientAdapter
+import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.HttpClientAdapterImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.DomainTablesApiImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.UserApiImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.DomainTablesApi
@@ -63,7 +63,7 @@ val remoteBackendModule = module {
         }
     }
 
-    single<HttpClientManager> { HttpClientManagerImpl(client = get()) }
+    single<HttpClientAdapter> { HttpClientAdapterImpl(client = get()) }
 
     single<DomainTablesApi> { DomainTablesApiImpl(client = get()) }
     single<UserApi> { UserApiImpl(client = get()) }

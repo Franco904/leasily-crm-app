@@ -18,16 +18,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.DataSourceError
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationFormSectionStep2
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationTopAppBar
 import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceRegistrationStep2ListState
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,11 +39,9 @@ fun AssistanceRegistrationStep2Screen(
     onLeaveRegistration: () -> Unit,
     onBack: () -> Unit,
     onNext: () -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
@@ -80,12 +79,11 @@ fun AssistanceRegistrationStep2Screen(
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is DataSourceError -> {
-                        showSnackbar(context.getString(uiEvent.messageId))
-                    }
-
-                    is RedirectToSignIn -> {
-                        onSignOut()
+                    is Error -> {
+                        val errorData = uiEvent.error.toBottomSheetData(
+                            DefaultErrorBottomSheetDataPropertiesStrategy,
+                        )
+                        onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
                     else -> {}
@@ -96,18 +94,18 @@ fun AssistanceRegistrationStep2Screen(
         launch {
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is AssistanceRegistrationStep2ViewModel.UiEvents.DataSourceError -> {
-                        showSnackbar(context.getString(uiEvent.messageId))
-                    }
-
-                    is AssistanceRegistrationStep2ViewModel.UiEvents.RedirectToSignIn -> {
-                        onSignOut()
+                    is AssistanceRegistrationStep2ViewModel.UiEvents.Error -> {
+                        val errorData = uiEvent.error.toBottomSheetData(
+                            DefaultErrorBottomSheetDataPropertiesStrategy,
+                        )
+                        onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
                 }
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()

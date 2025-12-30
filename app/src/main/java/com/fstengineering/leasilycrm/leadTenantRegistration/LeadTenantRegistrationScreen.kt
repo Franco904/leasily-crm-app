@@ -24,19 +24,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomsheet
+import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
-import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.LeadCreateSuccess
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.LeadTenantEditSuccess
-import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.RedirectToSignIn
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationFormSection
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationTopAppBar
@@ -53,11 +54,9 @@ fun LeadTenantRegistrationScreen(
     leadTenantId: Long?,
     viewModel: LeadTenantRegistrationViewModel,
     onBack: () -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
@@ -84,33 +83,33 @@ fun LeadTenantRegistrationScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.send(uiEvent.field)
+                    scrollToFieldFlow.trySend(uiEvent.field)
                 }
 
                 is LeadCreateSuccess -> {
                     onBack()
 
-                    showSnackbar(context.getString(R.string.snackbar_create_lead_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_lead_success_message))
                 }
 
                 is LeadTenantEditSuccess -> {
                     onBack()
 
-                    showSnackbar(context.getString(uiEvent.messageId))
+                    onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()
@@ -166,7 +165,7 @@ fun LeadTenantRegistrationScreen(
             )
         }
         if (showingComboBottomsheetType != null) {
-            AppComboBottomsheet(
+            AppComboBottomSheet(
                 sheetState = sheetState,
                 options = when (showingComboBottomsheetType) {
                     LeadTenantComboType.TenantSegment -> {

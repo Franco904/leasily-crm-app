@@ -378,7 +378,6 @@ fun StayRegistrationFormSection(
             StaysObservationsFormField(
                 value = stayForm.observations,
                 onValueChange = { onStayFormChange(stayForm.copy(observations = it)) },
-                onDone = onLastTextFieldDone,
             )
         }
     }
@@ -438,7 +437,6 @@ fun StayRegistrationFormSection(
             transferForm = transferForm,
             onTransferFormChange = { onTransferFormChange(it) },
             formErrors = transferFormErrors,
-            onLastTextFieldDone = onLastTextFieldDone,
             onSave = onSaveTransfer,
             onDismissRequest = onDismissTransfer,
         )

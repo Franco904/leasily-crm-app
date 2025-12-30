@@ -17,9 +17,6 @@ class ReadsWorker(
         domainTablesRepository.getDomainTables()
             .onError { return Result.retry() }
 
-        userRepository.getRemoteUser()
-            .onError { return Result.retry() }
-
         return Result.success()
     }
 

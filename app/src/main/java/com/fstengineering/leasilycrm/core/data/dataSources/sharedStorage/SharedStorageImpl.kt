@@ -4,16 +4,18 @@ import android.content.Context
 import android.provider.OpenableColumns
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.BuildConfig
+import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.data.dataSources.sharedStorage.interfaces.SharedStorage
-import com.fstengineering.leasilycrm.core.data.utils.toSharedStorageError
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataSourceError
 import io.ktor.utils.io.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class SharedStorageImpl(
     private val appContext: Context,
 ) : SharedStorage {
-    override suspend fun getFileName(contentUriString: String): AppResult<String, DataSourceError> {
+    override suspend fun getFileName(
+        contentUriString: String,
+    ): String = withContext(Dispatchers.IO) {
         try {
             val query = appContext.contentResolver.query(
                 /* uri = */ contentUriString.toUri(),
@@ -23,19 +25,16 @@ class SharedStorageImpl(
                 /* sortOrder = */ null,
             )
 
-            val name = query?.use { c ->
-                if (c.moveToFirst()) c.getString(0) else null
+            val name = query?.use { cursor ->
+                if (cursor.moveToFirst()) cursor.getString(0) else null
             }
 
-            return when {
-                name == null -> AppResult.Error(error = DataSourceError.SharedStorageError.NotFound)
-                else -> AppResult.Success(data = name)
-            }
+            name ?: appContext.getString(R.string.unknown_text).lowercase()
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             if (BuildConfig.DEBUG) e.printStackTrace()
 
-            return AppResult.Error(error = e.toSharedStorageError())
+            appContext.getString(R.string.unknown_text).lowercase()
         }
     }
 }

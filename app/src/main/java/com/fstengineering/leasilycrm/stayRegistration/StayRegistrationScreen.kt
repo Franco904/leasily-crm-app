@@ -35,9 +35,11 @@ import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.home.tenants.composables.TenantsEmptySection
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.DataSourceError
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.StayCreateSuccess
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.StayEditSuccess
@@ -65,8 +67,7 @@ fun StayRegistrationScreen(
     isUnavailablePeriod: Boolean,
     viewModel: StayRegistrationViewModel,
     onBack: (success: Boolean) -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -129,44 +130,44 @@ fun StayRegistrationScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-                }
-
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is Error -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.send(uiEvent.field)
+                    scrollToFieldFlow.trySend(uiEvent.field)
                 }
 
                 is StayCreateSuccess -> {
                     onBack(true)
 
                     val messageId =
-                        if (isUnavailablePeriod) R.string.snackbar_create_unavailable_period_succeeded
-                        else R.string.snackbar_create_stay_succeeded
-                    showSnackbar(context.getString(messageId))
+                        if (isUnavailablePeriod) R.string.create_unavailable_period_success_message
+                        else R.string.create_stay_success_message
+                    onUiEvent(UiEvent.ShowSnackBar(messageId))
                 }
 
                 is StayEditSuccess -> {
                     onBack(true)
 
-                    showSnackbar(context.getString(uiEvent.messageId))
+                    onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
 
                 is TransferCreateSuccess -> {
-                    showSnackbar(context.getString(R.string.snackbar_create_stay_transfer_succeeded))
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_stay_transfer_success_message))
                 }
 
                 is TransferEditSuccess -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
+                    onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()
@@ -280,7 +281,9 @@ fun StayRegistrationScreen(
                                 onSelectProperty = {
                                     listStatus = StayRegistrationListState.SelectingProperty
                                 },
-                                onLastTextFieldDone = { focusManager.clearFocus() },
+                                onPeriodDisabledByPropertyUnselected = {
+                                    onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
+                                },
                                 scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
                                 modifier = Modifier
                                     .padding(innerPadding)
@@ -306,29 +309,21 @@ fun StayRegistrationScreen(
                                     if (isEnabled) {
                                         listStatus = StayRegistrationListState.SelectingProperty
                                     } else {
-                                        showSnackbar(
-                                            context.getString(R.string.snackbar_register_stay_check_in_already_done_warning)
-                                        )
+                                        onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
                                     }
                                 },
                                 onSelectTenant = { isEnabled ->
                                     if (isEnabled) {
                                         listStatus = StayRegistrationListState.SelectingTenant
                                     } else {
-                                        showSnackbar(
-                                            context.getString(R.string.snackbar_register_stay_check_in_already_done_warning)
-                                        )
+                                        onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
                                     }
                                 },
                                 onPeriodDisabledByPropertyUnselected = {
-                                    showSnackbar(
-                                        context.getString(R.string.snackbar_register_first_select_property_warning)
-                                    )
+                                    onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
                                 },
                                 onPeriodDisabledByCheckInDone = {
-                                    showSnackbar(
-                                        context.getString(R.string.snackbar_register_stay_check_in_already_done_warning)
-                                    )
+                                    onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
                                 },
                                 onLastTextFieldDone = { focusManager.clearFocus() },
                                 onAddTransfer = {

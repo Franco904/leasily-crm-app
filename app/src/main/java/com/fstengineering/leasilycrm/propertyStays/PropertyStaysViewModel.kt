@@ -1,20 +1,16 @@
 package com.fstengineering.leasilycrm.propertyStays
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
@@ -31,8 +27,7 @@ class PropertyStaysViewModel(
     private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
     private val watchPropertyWithStaysTenantsUseCase: WatchPropertyWithStaysTenantsUseCase,
     private val propertyRepository: PropertyRepository,
-    private val userRepository: UserRepository,
-    private val now: AppLazyDate,
+    private val now: AppDate,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -60,27 +55,9 @@ class PropertyStaysViewModel(
     fun init(propertyId: Long) {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchProperty(propertyId = propertyId)
 
         isInitialized = true
-    }
-
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
     }
 
     private fun watchProperty(propertyId: Long) {
@@ -97,10 +74,7 @@ class PropertyStaysViewModel(
 
                     val storedProperty = watchPropertyResult
                         .fold(
-                            onError = { error ->
-                                _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                                return@collect
-                            },
+                            onError = { e -> return@collect _uiEvents.send(UiEvents.Error(e)) },
                             onSuccess = { storedProperty ->
                                 if (storedProperty == null) {
                                     _uiEvents.send(UiEvents.NavigateUp)
@@ -113,10 +87,7 @@ class PropertyStaysViewModel(
 
                     val (calendarStart, calendarEnd) = selectedPeriodResult
                         .fold(
-                            onError = { error ->
-                                _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                                return@collect
-                            },
+                            onError = { e -> return@collect _uiEvents.send(UiEvents.Error(e)) },
                             onSuccess = { selectedYear -> selectedYear },
                         )
 
@@ -132,7 +103,6 @@ class PropertyStaysViewModel(
 
                     _selectedPeriod.update { calendarStart to calendarEnd }
                     _selectedYearStaysDates.update { selectedYearStaysDates }
-
 
                     _isLoading.update { false }
                 }
@@ -168,7 +138,7 @@ class PropertyStaysViewModel(
             }
             ?: return persistentMapOf()
 
-        val staysStructuredDatesWithMissingMonthsMap = AppLazyDate.getDatesWithMissingMonthsBetween(
+        val staysStructuredDatesWithMissingMonthsMap = AppDate.getDatesWithMissingMonthsBetween(
             startDate = now.withMonthYear(selectedStartMonth!!, selectedStartYear!!),
             endDate = now.withMonthYear(selectedEndMonth!!, selectedEndYear!!),
             staysStructuredDatesMap = staysStructuredDatesMap,
@@ -194,10 +164,7 @@ class PropertyStaysViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
-
+        data class Error(val error: DataError) : UiEvents
         data object NavigateUp : UiEvents
     }
 }

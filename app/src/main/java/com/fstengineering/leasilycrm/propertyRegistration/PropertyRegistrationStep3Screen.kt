@@ -22,15 +22,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
-import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.DataSourceError
-import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.propertyRegistration.composables.ConfirmDeletePropertyPriceDialog
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyPriceRegistrationDialog
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyRegistrationFormSectionStep3
@@ -50,11 +51,9 @@ fun PropertyRegistrationStep3Screen(
     onLeaveRegistration: () -> Unit,
     onBack: () -> Unit,
     onNext: () -> Unit,
-    onSignOut: () -> Unit,
-    showSnackbar: (String) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
@@ -78,12 +77,11 @@ fun PropertyRegistrationStep3Screen(
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is DataSourceError -> {
-                        showSnackbar(context.getString(uiEvent.messageId))
-                    }
-
-                    is RedirectToSignIn -> {
-                        onSignOut()
+                    is Error -> {
+                        val errorData = uiEvent.error.toBottomSheetData(
+                            DefaultErrorBottomSheetDataPropertiesStrategy,
+                        )
+                        onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
                     else -> {}
@@ -94,10 +92,6 @@ fun PropertyRegistrationStep3Screen(
         launch {
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is PropertyRegistrationStep3ViewModel.UiEvents.DataSourceError -> {
-                        showSnackbar(context.getString(uiEvent.messageId))
-                    }
-
                     is PropertyPriceValidateSuccess -> {
                         if (propertyPriceForm == null) return@collect
 
@@ -124,6 +118,7 @@ fun PropertyRegistrationStep3Screen(
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()

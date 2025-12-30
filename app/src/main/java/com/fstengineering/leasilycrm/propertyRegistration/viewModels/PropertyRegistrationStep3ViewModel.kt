@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.propertyRegistration.viewModels
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyPriceValidator
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyRegistration.models.PropertyPriceErrorUiState
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyPriceField
 import kotlinx.collections.immutable.mutate
@@ -73,28 +73,24 @@ class PropertyRegistrationStep3ViewModel(
                 propertyPriceBeforeEdit = propertyPriceToEdit,
                 otherPropertyPrices = otherPropertyPrices,
             )
-                .onErrors { errors ->
-                    setFieldErrors(errors)
-                    return@launch
-                }
-
-            _uiEvents.send(UiEvents.PropertyPriceValidateSuccess)
+                .onErrors { errors -> setFieldErrors(errors) }
+                .onSuccess { _uiEvents.send(UiEvents.PropertyPriceValidateSuccess) }
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ValidationError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _priceFormErrors.update { PropertyPriceErrorUiState() }
         delay(150.milliseconds)
 
         val priceDateRangeError =
-            errors.firstOrNull { it is ValidationError.PropertyPricePeriod }
+            errors.firstOrNull { it is DomainError.PropertyPricePeriod }
         val priceAmountError =
-            errors.firstOrNull { it is ValidationError.PropertyPriceAmount }
+            errors.firstOrNull { it is DomainError.PropertyPriceAmount }
 
         _priceFormErrors.update {
             val newErrors = it.errors.mutate { map ->
-                map[PropertyPriceField.DateRange] = priceDateRangeError?.toUiMessage()
-                map[PropertyPriceField.Amount] = priceAmountError?.toUiMessage()
+                map[PropertyPriceField.DateRange] = priceDateRangeError?.toInlineMessage()
+                map[PropertyPriceField.Amount] = priceAmountError?.toInlineMessage()
             }
 
             it.copy(errors = newErrors)
@@ -112,8 +108,6 @@ class PropertyRegistrationStep3ViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
         data object PropertyPriceValidateSuccess : UiEvents
     }
 }

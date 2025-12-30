@@ -1,17 +1,15 @@
 package com.fstengineering.leasilycrm.home.leads
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantOrderType
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.FlowPreview
@@ -26,7 +24,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class LeadsViewModel(
     private val tenantRepository: TenantRepository,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -50,7 +47,6 @@ class LeadsViewModel(
     fun init() {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchLeads()
         watchSearchInput()
 
@@ -61,33 +57,13 @@ class LeadsViewModel(
         isInitialized = false
     }
 
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
-    }
-
     private fun watchLeads() {
         _isLoading.update { true }
 
         viewModelScope.launch {
             val orderTypeId = tenantRepository.getPreferredLeadsOrderTypeId()
                 .fold(
-                    onError = { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        return@launch
-                    },
+                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
                     onSuccess = { orderTypeId -> orderTypeId },
                 )
 
@@ -98,12 +74,8 @@ class LeadsViewModel(
                 orderTypeId = orderTypeId,
             ).collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { leads ->
-                        _leads.update { leads }
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                    .onSuccess { leads -> _leads.update { leads } }
 
                 _isLoading.update { false }
             }
@@ -122,9 +94,7 @@ class LeadsViewModel(
                         matching = searchInput,
                         orderTypeId = orderType.value.id,
                     )
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
+                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                         .onSuccess { matchingLeads ->
                             _leads.update { matchingLeads }
                             _isLoading.update { false }
@@ -154,16 +124,7 @@ class LeadsViewModel(
             val leadToDelete = leadToDelete.value ?: return@launch
 
             tenantRepository.delete(leadToDelete.id!!)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
-
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-
-                    return@launch
-                }
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             _uiEvents.send(UiEvents.LeadDeleteSuccess)
             onDeleteLead(lead = null)
@@ -171,9 +132,7 @@ class LeadsViewModel(
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
+        data class Error(val error: DataError) : UiEvents
 
         data object LeadDeleteSuccess : UiEvents
     }

@@ -1,14 +1,12 @@
 package com.fstengineering.leasilycrm.properties
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.FlowPreview
@@ -23,7 +21,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class PropertiesViewModel(
     private val propertyRepository: PropertyRepository,
-    private val userRepository: UserRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -45,28 +42,10 @@ class PropertiesViewModel(
     fun init() {
         if (isInitialized) return
 
-        watchSessionExpiration()
         watchProperties()
         watchSearchInput()
 
         isInitialized = true
-    }
-
-    private fun watchSessionExpiration() {
-        viewModelScope.launch {
-            userRepository.watchSessionExpiration().collect { result ->
-                result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
-                    .onSuccess { hasSessionExpired ->
-                        if (hasSessionExpired) {
-                            userRepository.deleteCachedUser()
-                            _uiEvents.send(UiEvents.RedirectToSignIn)
-                        }
-                    }
-            }
-        }
     }
 
     private fun watchProperties() {
@@ -75,9 +54,7 @@ class PropertiesViewModel(
         viewModelScope.launch {
             propertyRepository.watchAll().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
+                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { properties ->
                         _properties.update { properties }
                     }
@@ -96,9 +73,7 @@ class PropertiesViewModel(
                     _isLoading.update { true }
 
                     propertyRepository.getAllMatching(matching = searchInput)
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
+                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                         .onSuccess { matchingProperties ->
                             _properties.update { matchingProperties }
                             _isLoading.update { false }
@@ -111,9 +86,7 @@ class PropertiesViewModel(
         _searchInput.update { searchInput?.ifBlank { null } }
     }
 
-    fun onDeleteProperty(
-        property: Property?,
-    ) {
+    fun onDeleteProperty(property: Property?) {
         _propertyToDelete.update { property }
     }
 
@@ -122,28 +95,17 @@ class PropertiesViewModel(
             val id = propertyToDelete.value?.id ?: return@launch
 
             propertyRepository.delete(id)
-                .onError { error ->
-                    if (error.isRedirectError()) {
-                        userRepository.deleteCachedUser()
-                        _uiEvents.send(UiEvents.RedirectToSignIn)
-                    }
+                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onSuccess {
+                    _uiEvents.send(UiEvents.PropertyDeleteSuccess)
 
-                    _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-
-                    return@launch
+                    onDeleteProperty(property = null)
                 }
-
-            _uiEvents.send(UiEvents.PropertyDeleteSuccess)
-
-            onDeleteProperty(property = null)
         }
     }
 
     sealed interface UiEvents {
-        data class DataSourceError(@StringRes val messageId: Int) : UiEvents
-
-        data object RedirectToSignIn : UiEvents
-
+        data class Error(val error: DataError) : UiEvents
         data object PropertyDeleteSuccess : UiEvents
     }
 }

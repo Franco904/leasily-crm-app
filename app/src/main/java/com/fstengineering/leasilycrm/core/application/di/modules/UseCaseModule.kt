@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.application.di.modules
 
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.useCases.GetStaysStructuredDatesUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.GetTodayCheckInsCheckOutsToNotifyUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.RegisterStayCheckOutUseCaseImpl
@@ -43,8 +43,8 @@ val useCaseModule = module {
         GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
             stayRepository = get(),
             settingsRepository = get(),
-            userRepository = get(),
-            now = AppLazyDateTime.now(),
+            authRepository = get(),
+            now = AppDateTime.lazyNow(),
         )
     }
 }

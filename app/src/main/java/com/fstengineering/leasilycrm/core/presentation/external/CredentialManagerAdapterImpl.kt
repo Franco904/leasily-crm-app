@@ -10,9 +10,8 @@ import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.data.utils.CryptoUtils
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.presentation.external.interfaces.CredentialManagerAdapter
-import com.fstengineering.leasilycrm.core.presentation.external.models.GoogleUserCredentials
 import com.fstengineering.leasilycrm.core.presentation.utils.CredentialsError
-import com.fstengineering.leasilycrm.core.presentation.utils.toCredentialsError
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toCredentialsError
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import io.ktor.utils.io.CancellationException
@@ -20,14 +19,13 @@ import io.ktor.utils.io.CancellationException
 class CredentialManagerAdapterImpl : CredentialManagerAdapter {
     override suspend fun chooseGoogleAccount(
         activityContext: Activity,
-        isSignIn: Boolean,
         mustEnableAutoSelect: Boolean,
-    ): AppResult<GoogleUserCredentials, CredentialsError> {
+    ): AppResult<String, CredentialsError> {
         val credentialManager = CredentialManager.create(activityContext)
 
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setServerClientId(BuildConfig.CLIENT_ID)
-            .setFilterByAuthorizedAccounts(isSignIn)
+            .setFilterByAuthorizedAccounts(false)
             .setAutoSelectEnabled(mustEnableAutoSelect)
             .setNonce(CryptoUtils.generateNonce())
             .build()
@@ -49,20 +47,14 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
             if (!isSupportedCredentialType) {
                 if (BuildConfig.DEBUG) Log.e(TAG, "Unsupported credential type: ${credential.type}")
 
-                return AppResult.Error(error = CredentialsError.UnsupportedCrendentialType)
+                return AppResult.Error(error = CredentialsError.UnknownError)
             }
 
             // Extracting the ID token to validate and authenticate on the back-end server.
             val googleIdTokenCredential = GoogleIdTokenCredential
                 .createFrom(credential.data)
 
-            val googleCredentials = GoogleUserCredentials(
-                idToken = googleIdTokenCredential.idToken,
-                name = googleIdTokenCredential.displayName,
-                profilePictureUrl = googleIdTokenCredential.profilePictureUri?.toString(),
-            )
-
-            return AppResult.Success(data = googleCredentials)
+            return AppResult.Success(data = googleIdTokenCredential.idToken)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             if (BuildConfig.DEBUG) e.printStackTrace()

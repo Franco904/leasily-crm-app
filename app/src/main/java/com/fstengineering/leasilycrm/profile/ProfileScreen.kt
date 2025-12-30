@@ -16,57 +16,50 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.external.interfaces.CredentialManagerAdapter
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.DataSourceError
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.ContinueSignOut
 import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.EditUserSuccess
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.RedirectToSignIn
+import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.SignOutSuccess
 import com.fstengineering.leasilycrm.profile.composables.ConfirmSignOutUserDialog
-import com.fstengineering.leasilycrm.profile.composables.EditUserDialog
+import com.fstengineering.leasilycrm.profile.composables.EditCreciNumberDialog
 import com.fstengineering.leasilycrm.profile.composables.ProfileDataSection
 import com.fstengineering.leasilycrm.profile.composables.ProfileScreenTopBar
+import com.fstengineering.leasilycrm.profile.models.strategies.SignOutErrorBottomSheetDataPropertiesStrategy
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 
 @Composable
 fun ProfileScreen(
     viewModel: ProfileViewModel,
     credentialManager: CredentialManagerAdapter,
+    onBack: () -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
-    onBack: () -> Unit = {},
-    onSignOut: () -> Unit = {},
-    showSnackbar: (String) -> Unit = { _ -> },
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
-
-    val coroutineScope = rememberCoroutineScope()
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val userUiState by viewModel.user.collectAsStateWithLifecycle()
-    val editUserFormUiState by viewModel.formErrors.collectAsStateWithLifecycle()
+    val creciFieldError by viewModel.creciFieldError.collectAsStateWithLifecycle()
     val isLoadingUser by viewModel.isLoadingUser.collectAsStateWithLifecycle()
 
-    var isConfirmingSigningOut by remember { mutableStateOf(false) }
-    var isEditingUserByDialog by remember { mutableStateOf(false) }
-
     var isSigningOut by remember { mutableStateOf(false) }
+    var isConfirmingSigningOut by remember { mutableStateOf(false) }
     var isEditingUser by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -74,28 +67,38 @@ fun ProfileScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is DataSourceError -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-
-                    isEditingUser = false
+                is Error -> {
                     isSigningOut = false
+
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        SignOutErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(ShowErrorBottomSheet(errorData))
                 }
 
                 is EditUserSuccess -> {
-                    showSnackbar(context.getString(uiEvent.messageId))
-
-                    isEditingUser = false
+                    onUiEvent(ShowSnackBar(uiEvent.messageId))
                 }
 
-                is RedirectToSignIn -> {
-                    onSignOut()
+                is ContinueSignOut -> {
+                    launch {
+                        credentialManager.clearGoogleCredentialState(activityContext = activity)
+                            .onError { e ->
+                                isSigningOut = false
+                                onUiEvent(ShowErrorBottomSheet(e.toBottomSheetData()))
+                            }
+                            .onSuccess { viewModel.signOutUser() }
+                    }
+                }
 
+                is SignOutSuccess -> {
                     isSigningOut = false
                 }
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     SideEffect {
         activity.window.statusBarColor = surfaceColor.toArgb()
         activity.window.navigationBarColor = surfaceColor.toArgb()
@@ -103,7 +106,10 @@ fun ProfileScreen(
 
     Scaffold(
         topBar = {
-            ProfileScreenTopBar(onBack = onBack)
+            ProfileScreenTopBar(
+                isSigningOut = isSigningOut,
+                onBack = onBack,
+            )
         },
         modifier = modifier
     ) { innerPadding ->
@@ -119,19 +125,18 @@ fun ProfileScreen(
                     bottom = innerPadding.calculateBottomPadding(),
                 )
         ) {
-            if (isEditingUserByDialog) {
-                EditUserDialog(
+            if (isEditingUser) {
+                EditCreciNumberDialog(
                     userUiState = userUiState,
-                    editUserErrorUiState = editUserFormUiState,
-                    onUserUiStateChange = viewModel::onUserChange,
+                    onUserUiStateChange = viewModel::onCreciNumberChange,
+                    creciNumberError = creciFieldError,
                     onEdit = { editedUser ->
-                        isEditingUser = true
-                        isEditingUserByDialog = false
+                        isEditingUser = false
 
                         viewModel.editUser(editedUser)
                     },
                     onCancel = {
-                        isEditingUserByDialog = false
+                        isEditingUser = false
 
                         viewModel.clearErrors()
                     },
@@ -141,21 +146,10 @@ fun ProfileScreen(
             if (isConfirmingSigningOut) {
                 ConfirmSignOutUserDialog(
                     onConfirmSignOut = {
-                        isSigningOut = true
                         isConfirmingSigningOut = false
+                        isSigningOut = true
 
-                        coroutineScope.launch {
-                            credentialManager.clearGoogleCredentialState(
-                                activityContext = activity,
-                            )
-                                .onError { e ->
-                                    showSnackbar(context.getString(e.toUiMessage()))
-                                    isSigningOut = false
-                                }
-                                .onSuccess {
-                                    viewModel.signOutUser()
-                                }
-                        }
+                        viewModel.onSignOut()
                     },
                     onCancel = { isConfirmingSigningOut = false },
                 )
@@ -169,26 +163,11 @@ fun ProfileScreen(
             } else {
                 ProfileDataSection(
                     userUiState = userUiState,
+                    isSigningOut = isSigningOut,
                     onSignOut = { isConfirmingSigningOut = true },
-                    onEditUser = {
-                        if (!isEditingUserByDialog) isEditingUserByDialog = true
-                    }
+                    onEditUser = { if (!isEditingUser) isEditingUser = true }
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun ProfileScreenPreview(
-    modifier: Modifier = Modifier,
-) {
-    AppTheme {
-        ProfileScreen(
-            viewModel = koinViewModel(),
-            credentialManager = koinInject(),
-            modifier = modifier
-        )
     }
 }

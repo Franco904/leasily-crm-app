@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.signin.composables
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -37,35 +37,34 @@ fun GoogleSignInButton(
         onClick = onSignIn,
         modifier = modifier
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .padding(
-                    vertical = 8.dp,
-                    horizontal = 16.dp,
+        AnimatedContent(
+            targetState = isSigningIn,
+            modifier = Modifier.padding(
+                horizontal = 24.dp,
+                vertical = 8.dp,
+            )
+        ) { isSigningIn ->
+            if (isSigningIn) {
+                AppCircularProgressIndicator(
+                    strokeWidth = 2.dp,
+                    modifier = Modifier
+                        .size(16.dp)
                 )
-        ) {
-            Image(
-                painter = painterResource(R.drawable.ic_google_logo),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(32.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(
-                    if (isSigningIn) R.string.sign_in_await else R.string.sign_in_sign_in_with_google,
-                ),
-                style = MaterialTheme.typography.labelLarge,
-            )
-            AnimatedVisibility(isSigningIn) {
-                Row {
-                    Spacer(modifier = Modifier.width(12.dp))
-                    AppCircularProgressIndicator(
-                        strokeWidth = 2.dp,
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_google_logo),
+                        contentDescription = null,
                         modifier = Modifier
-                            .size(16.dp)
+                            .size(32.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.sign_in_sign_in_with_google),
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 }
             }

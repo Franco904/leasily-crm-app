@@ -4,9 +4,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDate
-import com.fstengineering.leasilycrm.core.application.models.AppLazyDateTime
-import com.fstengineering.leasilycrm.customerSegments.CustomerSegmentsViewModel
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.dashboard.DashboardViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
@@ -37,13 +36,14 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel {
         RootViewModel(
+            authRepository = get(),
             settingsRepository = get(),
-            userRepository = get(),
         )
     }
 
     viewModel {
         SignInViewModel(
+            authRepository = get(),
             userRepository = get(),
         )
     }
@@ -51,14 +51,15 @@ val viewModelModule = module {
     viewModel {
         SettingsViewModel(
             settingsRepository = get(),
-            userRepository = get(),
         )
     }
 
     viewModel {
         ProfileViewModel(
+            authRepository = get(),
             userValidator = get(),
             userRepository = get(),
+            userSessionService = get(),
         )
     }
 
@@ -67,7 +68,7 @@ val viewModelModule = module {
             assistanceRepository = get(),
             stayRepository = get(),
             userRepository = get(),
-            now = AppLazyDateTime.now(),
+            now = AppDateTime.lazyNow(),
         )
     }
 
@@ -78,18 +79,8 @@ val viewModelModule = module {
     }
 
     viewModel {
-        CustomerSegmentsViewModel(
-            customerSegmentRepository = get(),
-            customerSegmentTypeRepository = get(),
-            userRepository = get(),
-            customerSegmentValidator = get(),
-        )
-    }
-
-    viewModel {
         PropertiesViewModel(
             propertyRepository = get(),
-            userRepository = get(),
         )
     }
 
@@ -103,7 +94,6 @@ val viewModelModule = module {
             propertyCharacteristicPropertyRepository = get(),
             propertyPriceRepository = get(),
             propertyFileRepository = get(),
-            userRepository = get(),
         )
     }
 
@@ -130,8 +120,7 @@ val viewModelModule = module {
             getStaysStructuredDatesUseCase = get(),
             watchPropertyWithStaysTenantsUseCase = get(),
             propertyRepository = get(),
-            userRepository = get(),
-            now = AppLazyDate.now(),
+            now = AppDate.lazyNow(),
         )
     }
 
@@ -139,7 +128,6 @@ val viewModelModule = module {
         PropertyDetailsViewModel(
             propertyRepository = get(),
             propertyCharacteristicRepository = get(),
-            userRepository = get(),
         )
     }
 
@@ -148,15 +136,13 @@ val viewModelModule = module {
             getStaysStructuredDatesUseCase = get(),
             watchPropertyWithStaysTenantsUseCase = get(),
             propertyRepository = get(),
-            userRepository = get(),
-            now = AppLazyDate.now(),
+            now = AppDate.lazyNow(),
         )
     }
 
     viewModel {
         PropertyOwnersViewModel(
             propertyOwnerRepository = get(),
-            userRepository = get(),
         )
     }
 
@@ -165,7 +151,6 @@ val viewModelModule = module {
             propertyOwnerRepository = get(),
             propertyOwnerFileRepository = get(),
             customerSegmentRepository = get(),
-            userRepository = get(),
             propertyOwnerValidator = get(),
         )
     }
@@ -173,14 +158,12 @@ val viewModelModule = module {
     viewModel {
         LeadsViewModel(
             tenantRepository = get(),
-            userRepository = get(),
         )
     }
 
     viewModel {
         TenantsViewModel(
             tenantRepository = get(),
-            userRepository = get(),
         )
     }
 
@@ -189,7 +172,6 @@ val viewModelModule = module {
             tenantRepository = get(),
             customerSegmentRepository = get(),
             tenantContactOriginTypeRepository = get(),
-            userRepository = get(),
             tenantValidator = get(),
         )
     }
@@ -199,14 +181,12 @@ val viewModelModule = module {
             tenantRepository = get(),
             assistanceRepository = get(),
             assistanceCharacteristicRepository = get(),
-            userRepository = get(),
         )
     }
 
     viewModel {
         PropertyOwnerDetailsViewModel(
             propertyOwnerRepository = get(),
-            userRepository = get(),
         )
     }
 
@@ -220,7 +200,6 @@ val viewModelModule = module {
             assistanceCharacteristicAssistanceRepository = get(),
             assistanceSentPropertyRepository = get(),
             assistanceInteractionRepository = get(),
-            userRepository = get(),
         )
     }
 
@@ -248,8 +227,7 @@ val viewModelModule = module {
             registerStayCheckOutUseCase = get(),
             undoRegisterStayCheckOutUseCase = get(),
             stayRepository = get(),
-            userRepository = get(),
-            now = AppLazyDateTime.now(),
+            now = AppDateTime.lazyNow(),
         )
     }
 
@@ -260,7 +238,6 @@ val viewModelModule = module {
             tenantRepository = get(),
             stayTransferRepository = get(),
             stayFileRepository = get(),
-            userRepository = get(),
             stayValidator = get(),
             stayTransferValidator = get(),
         )
@@ -272,7 +249,6 @@ val viewModelModule = module {
             undoRegisterStayCheckOutUseCase = get(),
             getStaysStructuredDatesUseCase = get(),
             stayRepository = get(),
-            userRepository = get(),
         )
     }
 }

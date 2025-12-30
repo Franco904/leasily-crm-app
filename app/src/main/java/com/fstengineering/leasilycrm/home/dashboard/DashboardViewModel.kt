@@ -4,16 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
-import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toUiMessage
-import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -22,9 +17,6 @@ class DashboardViewModel(
     private val crmMetricsRepository: CrmMetricsRepository,
 ) : ViewModel() {
     private var isInitialized = false
-
-    private val _uiEvents = Channel<UiEvents>()
-    val uiEvents = _uiEvents.receiveAsFlow()
 
     // Leads CRM metrics
     private val _generatedLeadsPerMonth =
@@ -125,9 +117,6 @@ class DashboardViewModel(
         viewModelScope.launch {
             crmMetricsRepository.watchGeneratedLeadsPerMonth().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
                     .onSuccess { generatedLeadsPerMonth ->
                         _generatedLeadsPerMonth.update { generatedLeadsPerMonth }
                     }
@@ -139,9 +128,6 @@ class DashboardViewModel(
         viewModelScope.launch {
             crmMetricsRepository.watchGeneratedLeadsPerTenantSegmentPerMonth().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
                     .onSuccess { generatedLeadsPerTenantSegmentPerMonth ->
                         _generatedLeadsPerTenantSegmentPerMonth.update {
                             generatedLeadsPerTenantSegmentPerMonth
@@ -155,9 +141,6 @@ class DashboardViewModel(
         viewModelScope.launch {
             crmMetricsRepository.watchLeadContactChannelDistribution().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
                     .onSuccess { leadContactChannelDistribution ->
                         _leadContactChannelDistribution.update { leadContactChannelDistribution }
                     }
@@ -169,9 +152,6 @@ class DashboardViewModel(
         viewModelScope.launch {
             crmMetricsRepository.watchNewStayBookingsPerMonth().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
                     .onSuccess { newStayBookingsPerMonth ->
                         _newStayBookingsPerMonth.update { newStayBookingsPerMonth }
                     }
@@ -183,9 +163,6 @@ class DashboardViewModel(
         viewModelScope.launch {
             crmMetricsRepository.watchNewStayBookingsPerTenantSegmentPerMonth().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
                     .onSuccess { newStayBookingsPerTenantSegmentPerMonth ->
                         _newStayBookingsPerTenantSegmentPerMonth.update {
                             newStayBookingsPerTenantSegmentPerMonth
@@ -200,9 +177,6 @@ class DashboardViewModel(
             crmMetricsRepository.watchNewStayBookingsPerPropertyOwnerSegmentPerMonth()
                 .collect { result ->
                     result
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
                         .onSuccess { newStayBookingsPerPropertyOwnerSegmentPerMonth ->
                             _newStayBookingsPerPropertyOwnerSegmentPerMonth.update {
                                 newStayBookingsPerPropertyOwnerSegmentPerMonth
@@ -217,9 +191,6 @@ class DashboardViewModel(
             crmMetricsRepository.watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
                 .collect { result ->
                     result
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
                         .onSuccess { newStayBookingsPerTop3NeighborhoodsPerMonth ->
                             _newStayBookingsPerTop3NeighborhoodsPerMonth.update {
                                 newStayBookingsPerTop3NeighborhoodsPerMonth
@@ -233,9 +204,6 @@ class DashboardViewModel(
         viewModelScope.launch {
             crmMetricsRepository.watchCommissionInvoicePerMonth().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
                     .onSuccess { commissionInvoicePerMonth ->
                         _commissionInvoicePerMonth.update { commissionInvoicePerMonth }
                     }
@@ -248,9 +216,6 @@ class DashboardViewModel(
             crmMetricsRepository.watchCommissionInvoicePerTenantSegmentPerMonth()
                 .collect { result ->
                     result
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
                         .onSuccess { commissionInvoicePerTenantSegmentPerMonth ->
                             _commissionInvoicePerTenantSegmentPerMonth.update {
                                 commissionInvoicePerTenantSegmentPerMonth
@@ -265,9 +230,6 @@ class DashboardViewModel(
             crmMetricsRepository.watchCommissionInvoicePerPropertyOwnerSegmentPerMonth()
                 .collect { result ->
                     result
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
                         .onSuccess { commissionInvoicePerPropertyOwnerSegmentPerMonth ->
                             _commissionInvoicePerPropertyOwnerSegmentPerMonth.update {
                                 commissionInvoicePerPropertyOwnerSegmentPerMonth
@@ -282,9 +244,6 @@ class DashboardViewModel(
             crmMetricsRepository.watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
                 .collect { result ->
                     result
-                        .onError { error ->
-                            _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                        }
                         .onSuccess { commissionInvoicePerTop3NeighborhoodsPerMonth ->
                             _commissionInvoicePerTop3NeighborhoodsPerMonth.update {
                                 commissionInvoicePerTop3NeighborhoodsPerMonth
@@ -298,9 +257,6 @@ class DashboardViewModel(
         viewModelScope.launch {
             crmMetricsRepository.watchAverageTicketPerMonth().collect { result ->
                 result
-                    .onError { error ->
-                        _uiEvents.send(UiEvents.DataSourceError(messageId = error.toUiMessage()))
-                    }
                     .onSuccess { averageTicketPerMonth ->
                         _averageTicketPerMonth.update { averageTicketPerMonth }
                     }

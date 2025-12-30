@@ -1,10 +1,9 @@
 package com.fstengineering.leasilycrm.core.presentation.models
 
-import androidx.annotation.StringRes
 import com.fstengineering.leasilycrm.R
 
 enum class StayFilterType(
-    @StringRes val label: Int,
+    val label: Int,
 ) {
     UpcomingCheckIn(R.string.stays_upcoming_check_in_filter_text),
     UpcomingCheckOut(R.string.stays_upcoming_check_out_filter_text),
