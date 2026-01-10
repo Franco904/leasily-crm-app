@@ -9,6 +9,7 @@ interface HttpClientAdapter {
     suspend fun request(
         url: String,
         method: HttpMethod,
+        headers: Map<String, String>? = null,
         body: Any? = null,
     ): AppResult<HttpResponse, DataError>
 }

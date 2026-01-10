@@ -9,6 +9,7 @@ import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpMethod
+import io.ktor.http.append
 import io.ktor.utils.io.CancellationException
 
 class HttpClientAdapterImpl(
@@ -17,11 +18,17 @@ class HttpClientAdapterImpl(
     override suspend fun request(
         url: String,
         method: HttpMethod,
+        headers: Map<String, String>?,
         body: Any?,
     ): AppResult<HttpResponse, DataError> {
         try {
             val response = client.request(url) {
                 this.method = method
+
+                headers?.entries?.forEach { header ->
+                    this.headers.append(header.key, header.value)
+                }
+
                 if (body != null) setBody(body)
             }
 
