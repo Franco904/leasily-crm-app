@@ -1,6 +1,8 @@
 package com.fstengineering.leasilycrm.core.data.models
 
 enum class SyncState(val id: Int) {
-    Clean(id = 0),
-    Dirty(id = 1);
+    Synced(id = 0),
+    PendingSync(id = 1),
+    Conflict(id = 2),
+    Rejected(id = 3),
 }

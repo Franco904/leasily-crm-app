@@ -32,7 +32,7 @@ class UserRepositoryImpl(
                 name = user.name,
                 creciNumber = user.creciNumber,
                 profilePictureUrl = user.profilePictureUrl,
-                userSyncStateId = SyncState.Clean.id,
+                userSyncStateId = SyncState.Synced.id,
             )
         }
             .onError { return AppResult.Error(error = it) }
@@ -65,7 +65,7 @@ class UserRepositoryImpl(
         api.updateUser(updateUserDto = UpdateUserDto(creciNumber = creciNumber))
             .onError { e ->
                 encryptedPreferencesStorage.savePreferences { prefs ->
-                    prefs.copy(userSyncStateId = SyncState.Dirty.id)
+                    prefs.copy(userSyncStateId = SyncState.PendingSync.id)
                 }
 
                 if (e is DataError.UnauthorizedError) userSessionService.onSessionExpired()
@@ -74,7 +74,7 @@ class UserRepositoryImpl(
             }
             .onSuccess {
                 encryptedPreferencesStorage.savePreferences { prefs ->
-                    prefs.copy(userSyncStateId = SyncState.Clean.id)
+                    prefs.copy(userSyncStateId = SyncState.Synced.id)
                 }
                     .onError { return AppResult.Error(error = it) }
             }
@@ -89,7 +89,7 @@ class UserRepositoryImpl(
                 onSuccess = { prefsFlow -> prefsFlow.first() },
             )
 
-        if (prefs.userSyncStateId != SyncState.Dirty.id) {
+        if (prefs.userSyncStateId != SyncState.PendingSync.id) {
             return AppResult.Success(data = Unit) // no update needed
         }
 
@@ -97,7 +97,7 @@ class UserRepositoryImpl(
         api.updateUser(updateUserDto = UpdateUserDto(cachedUser.creciNumber))
             .onError { remoteBackendError ->
                 encryptedPreferencesStorage.savePreferences { prefs ->
-                    prefs.copy(userSyncStateId = SyncState.Dirty.id)
+                    prefs.copy(userSyncStateId = SyncState.PendingSync.id)
                 }
                     .onError { return AppResult.Error(error = it) }
 
@@ -105,7 +105,7 @@ class UserRepositoryImpl(
             }
             .onSuccess {
                 encryptedPreferencesStorage.savePreferences { prefs ->
-                    prefs.copy(userSyncStateId = SyncState.Clean.id)
+                    prefs.copy(userSyncStateId = SyncState.Synced.id)
                 }
                     .onError { return AppResult.Error(error = it) }
             }
