@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "65b61bbf643a2d72764dc8bf4d98ce4d",
+    "identityHash": "1df193b50cc56d50f9324ce62f488c1b",
     "entities": [
       {
         "tableName": "assistances",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `searched_start_date` TEXT, `searched_end_date` TEXT, `has_flexibility_for_period` INTEGER NOT NULL, `max_accepted_nightly_rate` TEXT, `qt_adult_guests` INTEGER NOT NULL, `qt_kid_guests` INTEGER NOT NULL, `qt_baby_guests` INTEGER NOT NULL, `qt_animal_guests` INTEGER NOT NULL, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `distance_to_sea` TEXT, `observations` TEXT, `is_finished` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER, `tenant_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `searched_start_date` INTEGER, `searched_end_date` INTEGER, `has_flexibility_for_period` INTEGER NOT NULL, `max_accepted_nightly_rate` TEXT, `qt_adult_guests` INTEGER NOT NULL, `qt_kid_guests` INTEGER NOT NULL, `qt_baby_guests` INTEGER NOT NULL, `qt_animal_guests` INTEGER NOT NULL, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `distance_to_sea` TEXT, `observations` TEXT, `is_finished` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER, `tenant_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -28,12 +28,12 @@
           {
             "fieldPath": "searchedStartDate",
             "columnName": "searched_start_date",
-            "affinity": "TEXT"
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "searchedEndDate",
             "columnName": "searched_end_date",
-            "affinity": "TEXT"
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "hasFlexibilityForPeriod",
@@ -309,7 +309,7 @@
       },
       {
         "tableName": "assistance_interactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `interaction_date` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `is_deleted` INTEGER NOT NULL, `assistance_id` INTEGER NOT NULL, FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `interaction_date` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `is_deleted` INTEGER NOT NULL, `assistance_id` INTEGER NOT NULL, FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -331,7 +331,7 @@
           {
             "fieldPath": "interactionDate",
             "columnName": "interaction_date",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -1281,7 +1281,7 @@
       },
       {
         "tableName": "property_prices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `start_date` TEXT NOT NULL, `end_date` TEXT NOT NULL, `price` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `start_date` INTEGER NOT NULL, `end_date` INTEGER NOT NULL, `price` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1303,13 +1303,13 @@
           {
             "fieldPath": "startDate",
             "columnName": "start_date",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "endDate",
             "columnName": "end_date",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -1675,7 +1675,7 @@
       },
       {
         "tableName": "stay_transfers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `transfer_date` TEXT NOT NULL, `transfer_amount` TEXT NOT NULL, `transfer_description` TEXT, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `transfer_date` INTEGER NOT NULL, `transfer_amount` TEXT NOT NULL, `transfer_description` TEXT, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1697,7 +1697,7 @@
           {
             "fieldPath": "transferDate",
             "columnName": "transfer_date",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -1928,7 +1928,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '65b61bbf643a2d72764dc8bf4d98ce4d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1df193b50cc56d50f9324ce62f488c1b')"
     ]
   }
 }

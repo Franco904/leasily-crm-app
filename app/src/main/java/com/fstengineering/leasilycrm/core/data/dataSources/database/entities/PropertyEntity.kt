@@ -5,13 +5,13 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.domain.models.PropertyType
 import kotlinx.collections.immutable.persistentListOf
-import java.math.BigDecimal
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "properties",
@@ -41,8 +41,8 @@ import java.time.LocalDateTime
 )
 data class PropertyEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     val neighborhood: String,
     @ColumnInfo(name = "street_address") val streetAddress: String,
     @ColumnInfo(name = "cep_postal_code") val cepPostalCode: String?,
@@ -59,10 +59,10 @@ data class PropertyEntity(
     @ColumnInfo(name = "qt_parking_spots") val qtParkingSpots: Int,
     @ColumnInfo(name = "qt_air_conditioners") val qtAirConditioners: Int,
     @ColumnInfo(name = "qt_max_guests") val qtMaxGuests: Int,
-    @ColumnInfo(name = "distance_to_sea") val distanceToSea: BigDecimal?,
+    @ColumnInfo(name = "distance_to_sea") val distanceToSea: AppDecimal?,
     @ColumnInfo(name = "included_items") val includedItems: String?,
     @ColumnInfo(name = "has_included_items") val hasIncludedItems: Boolean,
-    @ColumnInfo(name = "cleaning_service_tax") val cleaningServiceTax: BigDecimal?,
+    @ColumnInfo(name = "cleaning_service_tax") val cleaningServiceTax: AppDecimal?,
     @ColumnInfo(name = "has_cleaning_service_included") val hasCleaningServiceIncluded: Boolean,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
@@ -128,8 +128,8 @@ data class PropertyEntity(
 
             return PropertyEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 neighborhood = domain.neighborhood,
                 streetAddress = domain.streetAddress,
                 cepPostalCode = domain.cepPostalCode,

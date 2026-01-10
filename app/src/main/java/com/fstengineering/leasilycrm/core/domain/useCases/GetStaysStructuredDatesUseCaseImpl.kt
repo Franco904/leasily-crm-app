@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.useCases
 
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Stay
@@ -11,7 +12,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
-import java.time.LocalDate
 
 class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
     override operator fun invoke(
@@ -25,7 +25,7 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
         var previousIndex: Int? = null
         var stayIndex = 0
 
-        val sortedStays = stays.sortedBy { it.checkInDateTime }
+        val sortedStays = stays.sortedBy { it.checkInDateTime?.dateTime() }
 
         sortedStays
             .forEachIndexed { i, stay ->
@@ -48,8 +48,8 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
                     previousIndex = previousIndex,
                     currentIndex = currentIndex,
                     nextIndex = nextIndex,
-                    checkInDate = stay.checkInDateTime?.toLocalDate()!!,
-                    checkOutDate = stay.checkOutDateTime?.toLocalDate()!!,
+                    checkInDate = stay.checkInDateTime?.toDate()!!,
+                    checkOutDate = stay.checkOutDateTime?.toDate()!!,
                     stayId = stay.id!!,
                 )
 
@@ -89,21 +89,21 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
         previousIndex: Int?,
         currentIndex: Int,
         nextIndex: Int?,
-        checkInDate: LocalDate,
-        checkOutDate: LocalDate,
+        checkInDate: AppDate,
+        checkOutDate: AppDate,
         stayId: Long,
     ): StaysStructuredDatesMap {
         val checkInDayOfMonth = checkInDate.dayOfMonth
-        val checkInMonth = checkInDate.monthValue
+        val checkInMonth = checkInDate.month
         val checkInYear = checkInDate.year
 
         val checkOutDayOfMonth = checkOutDate.dayOfMonth
-        val checkOutMonth = checkOutDate.monthValue
+        val checkOutMonth = checkOutDate.month
         val checkOutYear = checkOutDate.year
 
         var currentStayDate = checkInDate
 
-        val allStayDates = mutableListOf<LocalDate>()
+        val allStayDates = mutableListOf<AppDate>()
         while (currentStayDate <= checkOutDate) {
             allStayDates.add(currentStayDate)
             currentStayDate = currentStayDate.plusDays(1)
@@ -112,7 +112,7 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
         return allStayDates
             .groupBy { stayDate ->
                 CalendarMonthYear(
-                    month = stayDate.month.value,
+                    month = stayDate.month,
                     year = stayDate.year,
                 )
             }
@@ -121,12 +121,12 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
                     .toMutableList()
                     .map { stayDate ->
                         val isCheckInDate = stayDate.dayOfMonth == checkInDayOfMonth
-                                && stayDate.month.value == checkInMonth
+                                && stayDate.month == checkInMonth
                                 && stayDate.year == checkInYear
 
                         val isCheckOutDate = allStayDates.size > 1
                                 && stayDate.dayOfMonth == checkOutDayOfMonth
-                                && stayDate.month.value == checkOutMonth
+                                && stayDate.month == checkOutMonth
                                 && stayDate.year == checkOutYear
 
                         StayCalendarDate(

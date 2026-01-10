@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "customer_segments",
@@ -26,8 +26,8 @@ import java.time.LocalDateTime
 )
 data class CustomerSegmentEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     val name: String,
     @ColumnInfo(name = "customer_segment_type_id") val customerSegmentTypeId: Long,
     @ColumnInfo(name = "user_id") val userId: Long,
@@ -41,8 +41,8 @@ data class CustomerSegmentEntity(
 
             return CustomerSegmentEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 name = domain.name.normalizeEncoding(),
                 customerSegmentTypeId = domain.type.id,
                 userId = domain.userId,

@@ -1,14 +1,14 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import java.math.BigDecimal
-import java.time.LocalDateTime
 
 data class Property(
     val id: Long? = null,
-    val createDateTime: LocalDateTime? = null,
-    val updateDateTime: LocalDateTime? = null,
+    val createDateTime: AppDateTime? = null,
+    val updateDateTime: AppDateTime? = null,
     val neighborhood: String? = null,
     val streetAddress: String? = null,
     val cepPostalCode: String? = null,
@@ -25,10 +25,10 @@ data class Property(
     val qtParkingSpots: Int = 0,
     val qtAirConditioners: Int = 0,
     val qtMaxGuests: Int = 0,
-    val distanceToSea: BigDecimal? = null,
+    val distanceToSea: AppDecimal? = null,
     val includedItems: String? = null,
     val hasIncludedItems: Boolean? = null,
-    val cleaningServiceTax: BigDecimal? = null,
+    val cleaningServiceTax: AppDecimal? = null,
     val hasCleaningServiceIncluded: Boolean? = null,
     val observations: String? = null,
     val isDeleted: Boolean = false,

@@ -1,5 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.validators
 
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
@@ -8,8 +10,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayValidator
-import java.math.BigDecimal
-import java.time.LocalDateTime
 
 class StayValidatorImpl : StayValidator {
     override fun validate(
@@ -22,11 +22,11 @@ class StayValidatorImpl : StayValidator {
             .onError { e -> errors.add(e) }
 
         validatePeriod(
-            checkInDateTime = stay.checkInDateTime?.withHour(0)?.withMinute(0),
-            checkOutDateTime = stay.checkOutDateTime?.withHour(0)?.withMinute(0),
-            checkInDateTimeBeforeEdit = stayBeforeEdit?.checkInDateTime?.withHour(0)?.withMinute(0),
+            checkInDateTime = stay.checkInDateTime?.withHourMinute(0, 0),
+            checkOutDateTime = stay.checkOutDateTime?.withHourMinute(0, 0),
+            checkInDateTimeBeforeEdit = stayBeforeEdit?.checkInDateTime?.withHourMinute(0, 0),
             propertyStayCheckInDateTimes = stay.property?.stays
-                ?.mapNotNull { it.checkInDateTime?.withHour(0)?.withMinute(0) }
+                ?.mapNotNull { it.checkInDateTime?.withHourMinute(0, 0) }
                 ?: emptyList(),
         )
             .onError { e -> errors.add(e) }
@@ -75,17 +75,17 @@ class StayValidatorImpl : StayValidator {
     }
 
     private fun validatePeriod(
-        checkInDateTime: LocalDateTime?,
-        checkOutDateTime: LocalDateTime?,
-        checkInDateTimeBeforeEdit: LocalDateTime?,
-        propertyStayCheckInDateTimes: List<LocalDateTime>,
+        checkInDateTime: AppDateTime?,
+        checkOutDateTime: AppDateTime?,
+        checkInDateTimeBeforeEdit: AppDateTime?,
+        propertyStayCheckInDateTimes: List<AppDateTime>,
     ): AppResult<Unit, DomainError.StayPeriod> {
         when {
             checkInDateTime == null || checkOutDateTime == null -> {
                 return AppResult.Error(DomainError.StayPeriod.IsNull)
             }
 
-            checkInDateTime.toLocalDate() == checkOutDateTime.toLocalDate() -> {
+            checkInDateTime.toDate() == checkOutDateTime.toDate() -> {
                 return AppResult.Error(DomainError.StayPeriod.StartAndEndDaysAreTheSame)
             }
 
@@ -131,7 +131,7 @@ class StayValidatorImpl : StayValidator {
     }
 
     private fun validateCommission(
-        commission: BigDecimal?,
+        commission: AppDecimal?,
     ): AppResult<Unit, DomainError.StayCommission> {
         return when {
             commission == null -> {

@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.core.domain.validators
 
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyPriceValidator
-import java.math.BigDecimal
-import java.time.LocalDate
 
 class PropertyPriceValidatorImpl : PropertyPriceValidator {
     override fun validate(
@@ -33,10 +33,10 @@ class PropertyPriceValidatorImpl : PropertyPriceValidator {
     }
 
     private fun validatePeriod(
-        startDate: LocalDate?,
-        endDate: LocalDate?,
-        startDateBeforeEdit: LocalDate?,
-        otherPropertyPricesStartDates: List<LocalDate>,
+        startDate: AppDate?,
+        endDate: AppDate?,
+        startDateBeforeEdit: AppDate?,
+        otherPropertyPricesStartDates: List<AppDate>,
     ): AppResult<Unit, DomainError.PropertyPricePeriod> {
         return when {
             startDate == null || endDate == null -> {
@@ -64,7 +64,7 @@ class PropertyPriceValidatorImpl : PropertyPriceValidator {
     }
 
     private fun validateAmount(
-        amount: BigDecimal?,
+        amount: AppDecimal?,
     ): AppResult<Unit, DomainError.PropertyPriceAmount> {
         return when {
             amount == null -> {

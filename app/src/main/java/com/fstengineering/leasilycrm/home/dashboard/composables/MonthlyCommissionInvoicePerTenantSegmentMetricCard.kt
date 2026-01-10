@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.application.theme.customColorsV2
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
@@ -32,12 +33,11 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.collections.immutable.toPersistentSet
-import java.math.BigDecimal
 import kotlin.math.roundToInt
 
 @Composable
 fun MonthlyCommissionInvoicePerTenantSegmentMetricCard(
-    commissionInvoicePerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>,
+    commissionInvoicePerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current

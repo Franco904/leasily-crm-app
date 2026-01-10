@@ -40,6 +40,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.StaysEmptySection
@@ -62,7 +63,6 @@ import com.fstengineering.leasilycrm.home.stays.composables.StayFilterButtonGrou
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 @Composable
 fun StaysScreen(
@@ -89,8 +89,8 @@ fun StaysScreen(
         )
     }
 
-    val currentMonth = remember { LocalDate.now().monthValue }
-    val currentYear = remember { LocalDate.now().year }
+    val currentMonth = remember { AppDate.now().month }
+    val currentYear = remember { AppDate.now().year }
 
     val stays by viewModel.stays.collectAsStateWithLifecycle()
     val stayToDelete by viewModel.stayToDelete.collectAsStateWithLifecycle()
@@ -246,7 +246,7 @@ fun StaysScreen(
                             itemsIndexed(
                                 items = stays.groupBy { stay ->
                                     CalendarMonthYear(
-                                        month = stay.checkInDateTime?.monthValue ?: 0,
+                                        month = stay.checkInDateTime?.month ?: 0,
                                         year = stay.checkInDateTime?.year ?: 0,
                                     )
                                 },

@@ -16,14 +16,14 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDate
-import java.time.LocalDate
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.toDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerDialog(
     initialDisplayedMonthMillis: Long,
-    onDateSelected: (LocalDate) -> Unit,
+    onDateSelected: (AppDate) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     selectableDates: SelectableDates? = null,
@@ -42,7 +42,7 @@ fun DatePickerDialog(
                         return@TextButton
                     }
 
-                    val selectedDate = datePickerState.selectedDateMillis!!.timestampToLocalDate()
+                    val selectedDate = datePickerState.selectedDateMillis!!.toDate()
 
                     onDateSelected(selectedDate)
                     onDismiss()

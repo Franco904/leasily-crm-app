@@ -5,11 +5,11 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "tenants",
@@ -33,8 +33,8 @@ import java.time.LocalDateTime
 )
 data class TenantEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     val name: String,
     val city: String?,
     @ColumnInfo(name = "identity_document") val identityDocument: String?,
@@ -69,8 +69,8 @@ data class TenantEntity(
 
             return TenantEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 name = domain.name,
                 city = domain.city,
                 identityDocument = domain.identityDocument,

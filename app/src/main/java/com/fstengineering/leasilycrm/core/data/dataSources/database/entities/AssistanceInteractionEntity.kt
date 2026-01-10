@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "assistance_interactions",
@@ -22,9 +22,9 @@ import java.time.LocalDateTime
 )
 data class AssistanceInteractionEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
-    @ColumnInfo(name = "interaction_date") val interactionDate: LocalDate,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
+    @ColumnInfo(name = "interaction_date") val interactionDate: AppDate,
     val title: String,
     val description: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
@@ -47,8 +47,8 @@ data class AssistanceInteractionEntity(
 
             return AssistanceInteractionEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 interactionDate = domain.interactionDate,
                 title = domain.title,
                 description = domain.description,

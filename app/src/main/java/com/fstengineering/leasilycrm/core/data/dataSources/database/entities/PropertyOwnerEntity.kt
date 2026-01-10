@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "property_owners",
@@ -26,8 +26,8 @@ import java.time.LocalDateTime
 )
 data class PropertyOwnerEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     val name: String,
     val phone: String?,
     val email: String?,
@@ -43,8 +43,8 @@ data class PropertyOwnerEntity(
 
             return PropertyOwnerEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 name = domain.name.normalizeEncoding(),
                 phone = domain.phone,
                 email = domain.email,

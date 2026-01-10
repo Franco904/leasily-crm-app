@@ -8,13 +8,23 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
 
-data class AppDate(
-    val date: () -> LocalDate,
-) {
+data class AppDate(val date: () -> LocalDate) : Comparable<AppDate> {
+    val year get() = date().year
+    val month get() = date().monthValue
+    val dayOfMonth get() = date().dayOfMonth
+
     fun withMonthYear(month: Int, year: Int): AppDate {
         val updatedDate = date().withMonth(month).withYear(year)
+        return copy(date = { updatedDate })
+    }
+
+    fun plusDays(daysToAdd: Long): AppDate {
+        val updatedDate = date().plusDays(daysToAdd)
         return copy(date = { updatedDate })
     }
 
@@ -35,6 +45,13 @@ data class AppDate(
         return last12MonthsMap.toPersistentList()
     }
 
+    fun toEpochMillisUTC(): Long {
+        return date()
+            .atStartOfDay(ZoneOffset.UTC)
+            .toInstant()
+            .toEpochMilli()
+    }
+
     fun isAfter(other: AppDate?): Boolean {
         return other == null || date() >= other.date()
     }
@@ -43,8 +60,46 @@ data class AppDate(
         return other == null || date() <= other.date()
     }
 
+    fun daysBetween(other: AppDate): Int {
+        return ChronoUnit.DAYS
+            .between(date(), other.date())
+            .toInt()
+    }
+
+    override fun compareTo(other: AppDate): Int {
+        return date().compareTo(other.date())
+    }
+
     companion object {
+        fun now(): AppDate {
+            val now = LocalDate.now()
+            return AppDate { now }
+        }
+
         fun lazyNow(): AppDate = AppDate { LocalDate.now() }
+
+        fun fromMillis(millis: Long): AppDate {
+            val lazyDate = {
+                Instant
+                    .ofEpochMilli(/* epochMilli = */ millis)
+                    .atZone(ZoneOffset.UTC)
+                    .toLocalDate()
+            }
+
+            return AppDate(date = lazyDate)
+        }
+
+        fun of(
+            year: Int,
+            month: Int,
+            dayOfMonth: Int,
+        ): AppDate {
+            return AppDate {
+                LocalDate.of(year, month, dayOfMonth)
+                    .atStartOfDay(ZoneOffset.UTC)
+                    .toLocalDate()
+            }
+        }
 
         fun getDatesWithMissingMonthsBetween(
             startDate: AppDate,
@@ -79,3 +134,5 @@ data class AppDate(
         }
     }
 }
+
+fun Long.toDate() = AppDate.fromMillis(millis = this)

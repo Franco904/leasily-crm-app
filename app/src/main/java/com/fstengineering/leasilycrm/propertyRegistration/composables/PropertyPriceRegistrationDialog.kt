@@ -20,11 +20,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.toDate
+import com.fstengineering.leasilycrm.core.application.models.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
-import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDate
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyPriceAmountFormField
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.PropertyPriceDateRangeFormField
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyPriceField
@@ -32,7 +34,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.toPersistentSet
-import java.time.LocalDate
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,7 +102,7 @@ fun PropertyPriceRegistrationDialog(
             TextButton(
                 onClick = {
                     val priceAmount = priceAmountInput
-                        .replace(',', '.').toBigDecimalOrNull()
+                        .replace(',', '.').toDecimalOrNull()
                     onPropertyPriceFormChange(propertyPriceForm.copy(price = priceAmount))
 
                     onSave()
@@ -152,8 +153,8 @@ fun PropertyPriceRegistrationDialog(
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onPropertyPriceFormChange(
                     propertyPriceForm.copy(
-                        startDate = startDateTimestamp.timestampToLocalDate(),
-                        endDate = endDateTimestamp.timestampToLocalDate(),
+                        startDate = startDateTimestamp.toDate(),
+                        endDate = endDateTimestamp.toDate(),
                     )
                 )
 
@@ -171,8 +172,8 @@ fun PropertyPriceRegistrationDialog(
 
 fun ImmutableList<PropertyPrice>.getPropertyPriceAlreadySelectedDates(
     isEditing: Boolean,
-    priceFormStartDate: LocalDate?,
-): ImmutableSet<LocalDate> {
+    priceFormStartDate: AppDate?,
+): ImmutableSet<AppDate> {
     return this.asSequence()
         .filter {
             if (isEditing && it.startDate == priceFormStartDate) {

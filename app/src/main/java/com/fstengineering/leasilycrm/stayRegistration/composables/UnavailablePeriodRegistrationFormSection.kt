@@ -27,13 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.toDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.TimePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
-import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDateTime
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckInTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckOutTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPeriodFormField
@@ -46,7 +47,6 @@ import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +55,7 @@ fun UnavailablePeriodRegistrationFormSection(
     stayForm: Stay,
     onStayFormChange: (Stay) -> Unit,
     stayFormErrors: ImmutableMap<StayField, Int?>,
-    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<LocalDate>,
+    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<AppDate>,
     onSelectProperty: () -> Unit,
     onPeriodDisabledByPropertyUnselected: () -> Unit,
     scrollToFieldFlow: Flow<StayField>,
@@ -220,8 +220,8 @@ fun UnavailablePeriodRegistrationFormSection(
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onStayFormChange(
                     stayForm.copy(
-                        checkInDateTime = startDateTimestamp.timestampToLocalDateTime(),
-                        checkOutDateTime = endDateTimestamp.timestampToLocalDateTime(),
+                        checkInDateTime = startDateTimestamp.toDateTime(),
+                        checkOutDateTime = endDateTimestamp.toDateTime(),
                     )
                 )
 

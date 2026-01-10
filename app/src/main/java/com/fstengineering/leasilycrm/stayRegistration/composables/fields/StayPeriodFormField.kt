@@ -8,14 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
-import java.time.LocalDateTime
 
 @Composable
 fun StayPeriodFormField(
-    checkInDateTime: LocalDateTime?,
-    checkOutDateTime: LocalDateTime?,
+    checkInDateTime: AppDateTime?,
+    checkOutDateTime: AppDateTime?,
     error: Int?,
     isEnabled: Boolean,
     onTap: () -> Unit,
@@ -28,10 +28,10 @@ fun StayPeriodFormField(
                 stringResource(
                     R.string.stay_registration_date_range_value,
                     checkInDateTime.dayOfMonth.formatToTwoDigitsDateTime(),
-                    checkInDateTime.monthValue.formatToTwoDigitsDateTime(),
+                    checkInDateTime.month.formatToTwoDigitsDateTime(),
                     checkInDateTime.year.toString(),
                     checkOutDateTime.dayOfMonth.formatToTwoDigitsDateTime(),
-                    checkOutDateTime.monthValue.formatToTwoDigitsDateTime(),
+                    checkOutDateTime.month.formatToTwoDigitsDateTime(),
                     checkOutDateTime.year.toString(),
                 )
             }

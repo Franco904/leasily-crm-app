@@ -1,6 +1,8 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
 import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
+import com.fstengineering.leasilycrm.core.application.models.toDecimal
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CrmMetricsDao
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
@@ -17,7 +19,6 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import java.math.BigDecimal
 import kotlin.math.roundToInt
 
 class CrmMetricsRepositoryImpl(
@@ -333,7 +334,7 @@ class CrmMetricsRepositoryImpl(
             emitAll(newStayBookingsPerTop3NeighborhoodsPerMonthFlow)
         }
 
-    override fun watchCommissionInvoicePerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>> =
+    override fun watchCommissionInvoicePerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -358,18 +359,18 @@ class CrmMetricsRepositoryImpl(
                         .toPersistentMap()
 
                     val commissionInvoiceWithMissingMonthsMap = now.getLast12Months()
-                        .associateWith { 0.toBigDecimal() }
+                        .associateWith { 0.toDecimal() }
                         .toMutableMap()
 
                     commissionInvoiceWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val commissionInvoice = commissionInvoicePerMonthMap[monthYear]
                         commissionInvoiceWithMissingMonthsMap.put(
                             monthYear,
-                            commissionInvoice ?: 0.toBigDecimal()
+                            commissionInvoice ?: 0.toDecimal()
                         )
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>(
                         data = commissionInvoiceWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -377,7 +378,7 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerMonthFlow)
         }
 
-    override fun watchCommissionInvoicePerTenantSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>> =
+    override fun watchCommissionInvoicePerTenantSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -406,7 +407,7 @@ class CrmMetricsRepositoryImpl(
                             .toPersistentMap()
 
                     val commissionInvoiceWithMissingMonthsMap = now.getLast12Months()
-                        .associateWith { persistentMapOf<String, BigDecimal>() }
+                        .associateWith { persistentMapOf<String, AppDecimal>() }
                         .toMutableMap()
 
                     commissionInvoiceWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
@@ -416,7 +417,7 @@ class CrmMetricsRepositoryImpl(
                             .put(monthYear, commissionInvoicePerTenantSegment ?: persistentMapOf())
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -425,7 +426,7 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerTenantSegmentPerMonthFlow)
         }
 
-    override fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>> =
+    override fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -454,7 +455,7 @@ class CrmMetricsRepositoryImpl(
                             .toPersistentMap()
 
                     val commissionInvoiceWithMissingMonthsMap = now.getLast12Months()
-                        .associateWith { persistentMapOf<String, BigDecimal>() }
+                        .associateWith { persistentMapOf<String, AppDecimal>() }
                         .toMutableMap()
 
                     commissionInvoiceWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
@@ -464,7 +465,7 @@ class CrmMetricsRepositoryImpl(
                             .put(monthYear, commissionInvoicePerTenantSegment ?: persistentMapOf())
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -473,7 +474,7 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerPropertyOwnerSegmentPerMonthFlow)
         }
 
-    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>> =
+    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -503,7 +504,7 @@ class CrmMetricsRepositoryImpl(
                             .toPersistentMap()
 
                     val commissionInvoiceWithMissingMonthsMap = now.getLast12Months()
-                        .associateWith { persistentMapOf<String, BigDecimal>() }
+                        .associateWith { persistentMapOf<String, AppDecimal>() }
                         .toMutableMap()
 
                     commissionInvoiceWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
@@ -516,7 +517,7 @@ class CrmMetricsRepositoryImpl(
                             )
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -525,7 +526,7 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerTop3NeighborhoodsPerMonthFlow)
         }
 
-    override fun watchAverageTicketPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>> =
+    override fun watchAverageTicketPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>> =
         flow {
             val userRemoteId = encryptedPreferencesStorage.readPreferences()
                 .fold(
@@ -550,18 +551,18 @@ class CrmMetricsRepositoryImpl(
                         .toPersistentMap()
 
                     val averageTicketWithMissingMonthsMap = now.getLast12Months()
-                        .associateWith { 0.toBigDecimal() }
+                        .associateWith { 0.toDecimal() }
                         .toMutableMap()
 
                     averageTicketWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val averageTicket = averageTicketPerMonthMap[monthYear]
                         averageTicketWithMissingMonthsMap.put(
                             monthYear,
-                            averageTicket ?: 0.toBigDecimal()
+                            averageTicket ?: 0.toDecimal()
                         )
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>(
                         data = averageTicketWithMissingMonthsMap.toPersistentMap(),
                     )
                 }

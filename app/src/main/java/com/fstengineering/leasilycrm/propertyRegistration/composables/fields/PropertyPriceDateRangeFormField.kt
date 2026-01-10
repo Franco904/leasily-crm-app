@@ -8,14 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
-import java.time.LocalDate
 
 @Composable
 fun PropertyPriceDateRangeFormField(
-    priceStartDate: LocalDate?,
-    priceEndDate: LocalDate?,
+    priceStartDate: AppDate?,
+    priceEndDate: AppDate?,
     error: Int?,
     onTap: () -> Unit,
     modifier: Modifier = Modifier,
@@ -27,9 +27,9 @@ fun PropertyPriceDateRangeFormField(
                 stringResource(
                     R.string.property_registration_date_range_value,
                     priceStartDate.dayOfMonth.formatToTwoDigitsDateTime(),
-                    priceStartDate.monthValue.formatToTwoDigitsDateTime(),
+                    priceStartDate.month.formatToTwoDigitsDateTime(),
                     priceEndDate.dayOfMonth.formatToTwoDigitsDateTime(),
-                    priceEndDate.monthValue.formatToTwoDigitsDateTime(),
+                    priceEndDate.month.formatToTwoDigitsDateTime(),
                 )
             }
 

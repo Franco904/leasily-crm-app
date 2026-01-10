@@ -1,19 +1,19 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 data class Assistance(
     val id: Long? = null,
-    val createDateTime: LocalDateTime? = null,
-    val updateDateTime: LocalDateTime? = null,
-    val searchedStartDate: LocalDate? = null,
-    val searchedEndDate: LocalDate? = null,
+    val createDateTime: AppDateTime? = null,
+    val updateDateTime: AppDateTime? = null,
+    val searchedStartDate: AppDate? = null,
+    val searchedEndDate: AppDate? = null,
     val hasFlexibilityForPeriod: Boolean = false,
-    val maxAcceptedNightlyRate: BigDecimal? = null,
+    val maxAcceptedNightlyRate: AppDecimal? = null,
     val qtAdultGuests: Int = 0,
     val qtKidGuests: Int = 0,
     val qtBabyGuests: Int = 0,
@@ -25,7 +25,7 @@ data class Assistance(
     val qtBathrooms: Int = 0,
     val qtParkingSpots: Int = 0,
     val seaProximityType: PropertySeaProximityType? = null,
-    val distanceToSea: BigDecimal? = null,
+    val distanceToSea: AppDecimal? = null,
     val isFinished: Boolean = false,
     val isDeleted: Boolean = false,
     val searchedNeighborhoods: ImmutableList<AssistanceSearchedNeighborhood> = persistentListOf(),

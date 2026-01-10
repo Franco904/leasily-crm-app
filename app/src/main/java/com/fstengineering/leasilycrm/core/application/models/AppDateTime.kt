@@ -2,12 +2,16 @@ package com.fstengineering.leasilycrm.core.application.models
 
 import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 
-data class AppDateTime(
-    val dateTime: () -> LocalDateTime,
-) {
+data class AppDateTime(val dateTime: () -> LocalDateTime) : Comparable<AppDateTime> {
+    val year get() = dateTime().year
+    val month get() = dateTime().monthValue
+    val dayOfMonth get() = dateTime().dayOfMonth
+    val hour get() = dateTime().hour
+    val minute get() = dateTime().minute
+    val second get() = dateTime().second
+
     fun withHourMinute(hour: Int, minute: Int): AppDateTime {
         val updatedDateTime = dateTime().withHour(hour).withMinute(minute)
         return copy(dateTime = { updatedDateTime })
@@ -23,6 +27,11 @@ data class AppDateTime(
         return copy(dateTime = { updatedDateTime })
     }
 
+    fun minusDays(daysToSubtract: Long): AppDateTime {
+        val updatedDateTime = dateTime().minusDays(daysToSubtract)
+        return copy(dateTime = { updatedDateTime })
+    }
+
     fun toEpochMillisUTC(): Long {
         return dateTime()
             .atZone(ZoneOffset.UTC)
@@ -32,7 +41,7 @@ data class AppDateTime(
 
     fun toEpochMillisLocalZone(): Long {
         return dateTime()
-            .atZone(ZoneId.systemDefault())
+            .atZone(ZoneOffset.UTC)
             .toInstant()
             .toEpochMilli()
     }
@@ -40,6 +49,10 @@ data class AppDateTime(
     fun toHourMinute(): Pair<Int, Int> {
         val dateTime = dateTime()
         return dateTime.hour to dateTime.minute
+    }
+
+    fun toDate(): AppDate {
+        return AppDate { dateTime().toLocalDate() }
     }
 
     fun isAfter(other: AppDateTime?): Boolean {
@@ -57,6 +70,10 @@ data class AppDateTime(
         return dateTime.dayOfMonth == todayDateTime.dateTime().dayOfMonth
                 && dateTime.month == todayDateTime.dateTime().month
                 && dateTime.year == todayDateTime.dateTime().year
+    }
+
+    override fun compareTo(other: AppDateTime): Int {
+        return dateTime().compareTo(other.dateTime())
     }
 
     companion object {
@@ -79,3 +96,5 @@ data class AppDateTime(
         }
     }
 }
+
+fun Long.toDateTime() = AppDateTime.fromMillis(millis = this)

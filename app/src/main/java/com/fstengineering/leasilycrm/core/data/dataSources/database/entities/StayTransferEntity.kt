@@ -5,10 +5,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "stay_transfers",
@@ -23,10 +23,10 @@ import java.time.LocalDateTime
 )
 data class StayTransferEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
-    @ColumnInfo(name = "transfer_date") val transferDate: LocalDate,
-    @ColumnInfo(name = "transfer_amount") val transferAmount: BigDecimal,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
+    @ColumnInfo(name = "transfer_date") val transferDate: AppDate,
+    @ColumnInfo(name = "transfer_amount") val transferAmount: AppDecimal,
     @ColumnInfo(name = "transfer_description") val transferDescription: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "stay_id") val stayId: Long,
@@ -50,8 +50,8 @@ data class StayTransferEntity(
 
             return StayTransferEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 transferDate = domain.transferDate,
                 transferAmount = domain.transferAmount,
                 transferDescription = domain.transferDescription,

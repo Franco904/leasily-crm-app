@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.stayRegistration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.StayFile
@@ -41,7 +42,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import kotlin.time.Duration.Companion.milliseconds
 
 class StayRegistrationViewModel(
@@ -226,11 +226,11 @@ class StayRegistrationViewModel(
 
     fun getPropertyAlreadySelectedDatesForStay(
         propertyStays: ImmutableList<Stay>,
-    ): ImmutableSet<LocalDate> {
+    ): ImmutableSet<AppDate> {
         val isEditing = stayToEdit != null
 
         val sortedPropertyStays = propertyStays
-            .sortedBy { it.checkInDateTime }
+            .sortedBy { it.checkInDateTime?.dateTime() }
 
         val propertyAlreadySelectedDatesForStay = sortedPropertyStays
             .asSequence()
@@ -239,7 +239,7 @@ class StayRegistrationViewModel(
 
                 val isSelectedDate =
                     it.checkInDateTime?.dayOfMonth == stayForm.value.checkInDateTime?.dayOfMonth &&
-                            it.checkInDateTime?.monthValue == stayForm.value.checkInDateTime?.monthValue &&
+                            it.checkInDateTime?.month == stayForm.value.checkInDateTime?.month &&
                             it.checkInDateTime?.year == stayForm.value.checkInDateTime?.year
 
                 if (isEditing && isSelectedDate) return@filter false
@@ -251,11 +251,11 @@ class StayRegistrationViewModel(
                 val checkOutDateTime = stay.checkOutDateTime!!
 
                 val isCheckInAlsoACheckOut = sortedPropertyStays.any { anyStay ->
-                    checkInDateTime.toLocalDate() == anyStay.checkOutDateTime?.toLocalDate()
+                    checkInDateTime.toDate() == anyStay.checkOutDateTime?.toDate()
                 }
 
                 val isCheckOutAlsoACheckIn = sortedPropertyStays.any { anyStay ->
-                    checkOutDateTime.toLocalDate() == anyStay.checkInDateTime?.toLocalDate()
+                    checkOutDateTime.toDate() == anyStay.checkInDateTime?.toDate()
                 }
 
                 val startDateTime =
@@ -268,7 +268,7 @@ class StayRegistrationViewModel(
 
                 generateSequence(startDateTime) { it.plusDays(1) }
                     .takeWhile { it <= endDateTime }
-                    .map { it.toLocalDate() }
+                    .map { it.toDate() }
             }
             .toPersistentSet()
 

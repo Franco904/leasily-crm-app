@@ -21,13 +21,11 @@ class AuthRepositoryImpl(
     override suspend fun isSessionAlive(): AppResult<Boolean, DataError> {
         return encryptedPreferencesStorage.readPreferences()
             .fold(
-                onError = { error ->
-                    AppResult.Error(error = error)
-                },
+                onError = { error -> AppResult.Error(error = error) },
                 onSuccess = { prefsFlow ->
-                    val isSignedIn = prefsFlow.first().sessionCookie != null
+                    val isSessionAlive = prefsFlow.first().sessionCookie != null
 
-                    AppResult.Success(data = isSignedIn)
+                    AppResult.Success(data = isSessionAlive)
                 }
             )
     }

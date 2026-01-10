@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
@@ -70,7 +71,6 @@ import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDet
 import com.fstengineering.leasilycrm.leadTenantDetails.models.LeadTenantDetailsTab
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,7 +94,7 @@ fun LeadTenantDetailsScreen(
     val lazyListState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
 
-    val currentMonth = remember { LocalDate.now().monthValue }
+    val currentMonth = remember { AppDate.now().month }
 
     var selectedTabId by rememberSaveable {
         mutableIntStateOf(LeadTenantDetailsTab.Details.id)
@@ -112,14 +112,14 @@ fun LeadTenantDetailsScreen(
 
     val sortedSentProperties = remember(currentAssistance?.sentProperties) {
         currentAssistance?.sentProperties
-            ?.sortedByDescending { it.updateDateTime }
+            ?.sortedByDescending { it.updateDateTime?.dateTime() }
             ?.map { it.property }
             ?: persistentListOf()
     }
 
     val sortedInteractions = remember(currentAssistance?.interactions) {
         currentAssistance?.interactions
-            ?.sortedByDescending { it.interactionDate }
+            ?.sortedByDescending { it.interactionDate?.date() }
             ?.toPersistentList()
             ?: persistentListOf()
     }
@@ -296,7 +296,7 @@ fun LeadTenantDetailsScreen(
                             itemsIndexed(
                                 items = sortedInteractions.groupBy { interaction ->
                                     CalendarMonthYear(
-                                        month = interaction.interactionDate?.monthValue ?: 0,
+                                        month = interaction.interactionDate?.month ?: 0,
                                         year = interaction.interactionDate?.year ?: 0,
                                     )
                                 },

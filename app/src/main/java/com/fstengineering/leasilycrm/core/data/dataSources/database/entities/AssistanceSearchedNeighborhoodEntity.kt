@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "assistance_searched_neighborhoods",
@@ -21,8 +21,8 @@ import java.time.LocalDateTime
 )
 data class AssistanceSearchedNeighborhoodEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     val neighborhood: String,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
@@ -41,8 +41,8 @@ data class AssistanceSearchedNeighborhoodEntity(
 
             return AssistanceSearchedNeighborhoodEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 neighborhood = domain.neighborhood,
                 assistanceId = domain.assistanceId,
                 isDeleted = domain.isDeleted,

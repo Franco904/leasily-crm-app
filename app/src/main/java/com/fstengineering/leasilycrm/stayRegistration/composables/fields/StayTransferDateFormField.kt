@@ -8,13 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
-import java.time.LocalDate
 
 @Composable
 fun StayTransferDateFormField(
-    transferDate: LocalDate?,
+    transferDate: AppDate?,
     error: Int?,
     onTap: () -> Unit,
     modifier: Modifier = Modifier,
@@ -26,7 +26,7 @@ fun StayTransferDateFormField(
                 stringResource(
                     R.string.assistance_registration_interaction_registration_interaction_date_value,
                     transferDate.dayOfMonth.formatToTwoDigitsDateTime(),
-                    transferDate.monthValue.formatToTwoDigitsDateTime(),
+                    transferDate.month.formatToTwoDigitsDateTime(),
                     transferDate.year,
                 )
             }

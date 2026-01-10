@@ -29,12 +29,11 @@ import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.CheckInCheckOutChipLabel
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
-import java.time.LocalDateTime
 
 @Composable
 fun StayCheckInCheckOutDetailsItem(
-    checkInDateTime: LocalDateTime?,
-    checkOutDateTime: LocalDateTime?,
+    checkInDateTime: AppDateTime?,
+    checkOutDateTime: AppDateTime?,
     checkInHourMinute: Pair<Int?, Int?>,
     checkOutHourMinute: Pair<Int?, Int?>,
     isAutoCheckIn: Boolean,
@@ -48,12 +47,8 @@ fun StayCheckInCheckOutDetailsItem(
 
     val now by rememberNow()
 
-    val checkInDateTimeStartOfDay = checkInDateTime?.let {
-        AppDateTime { it }.toStartOfDay()
-    }
-    val checkOutDateTimeStartOfDay = checkOutDateTime?.let {
-        AppDateTime { it }.toStartOfDay()
-    }
+    val checkInDateTimeStartOfDay = checkInDateTime?.toStartOfDay()
+    val checkOutDateTimeStartOfDay = checkOutDateTime?.toStartOfDay()
 
     var checkInChipWidthDp by remember { mutableStateOf(Dp.Unspecified) }
     var checkOutChipWidthDp by remember { mutableStateOf(Dp.Unspecified) }

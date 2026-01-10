@@ -1,11 +1,11 @@
 package com.fstengineering.leasilycrm.core.domain.repositories
 
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.flow.Flow
-import java.math.BigDecimal
 
 interface CrmMetricsRepository {
     fun watchGeneratedLeadsPerMonth():
@@ -30,17 +30,17 @@ interface CrmMetricsRepository {
             Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>>
 
     fun watchCommissionInvoicePerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>>
+            Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>>
 
     fun watchCommissionInvoicePerTenantSegmentPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>>
+            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>>
 
     fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>>
+            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>>
 
     fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>, DataError>>
+            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>>
 
     fun watchAverageTicketPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, BigDecimal>, DataError>>
+            Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>>
 }

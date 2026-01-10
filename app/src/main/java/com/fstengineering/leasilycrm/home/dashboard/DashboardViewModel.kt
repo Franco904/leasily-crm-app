@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.home.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 
 class DashboardViewModel(
     private val crmMetricsRepository: CrmMetricsRepository,
@@ -54,32 +54,32 @@ class DashboardViewModel(
 
     // Commission invoice CRM metrics
     private val _commissionInvoicePerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, BigDecimal>>(persistentMapOf())
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, AppDecimal>>(persistentMapOf())
     val commissionInvoicePerMonth = _commissionInvoicePerMonth.asStateFlow()
 
     private val _commissionInvoicePerTenantSegmentPerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>>(
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>(
             persistentMapOf()
         )
     val commissionInvoicePerTenantSegmentPerMonth =
         _commissionInvoicePerTenantSegmentPerMonth.asStateFlow()
 
     private val _commissionInvoicePerPropertyOwnerSegmentPerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>>(
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>(
             persistentMapOf()
         )
     val commissionInvoicePerPropertyOwnerSegmentPerMonth =
         _commissionInvoicePerPropertyOwnerSegmentPerMonth.asStateFlow()
 
     private val _commissionInvoicePerTop3NeighborhoodsPerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>>(
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>(
             persistentMapOf()
         )
     val commissionInvoicePerTop3NeighborhoodsPerMonth =
         _commissionInvoicePerTop3NeighborhoodsPerMonth.asStateFlow()
 
     private val _averageTicketPerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, BigDecimal>>(persistentMapOf())
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, AppDecimal>>(persistentMapOf())
     val averageTicketPerMonth = _averageTicketPerMonth.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)

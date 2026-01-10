@@ -1,12 +1,12 @@
 package com.fstengineering.leasilycrm.core.domain.validators
 
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceInteractionValidator
-import java.time.LocalDate
 
 class AssistanceInteractionValidatorImpl : AssistanceInteractionValidator {
     override fun validate(
@@ -25,7 +25,7 @@ class AssistanceInteractionValidatorImpl : AssistanceInteractionValidator {
         } else AppResultCompound.Errors(errors.toList())
     }
 
-    private fun validateInteractionDate(interactionDate: LocalDate?): AppResult<Unit, DomainError.AssistanceInteractionDate> {
+    private fun validateInteractionDate(interactionDate: AppDate?): AppResult<Unit, DomainError.AssistanceInteractionDate> {
         return when {
             interactionDate == null -> AppResult.Error(DomainError.AssistanceInteractionDate.IsNull)
             else -> AppResult.Success(Unit)

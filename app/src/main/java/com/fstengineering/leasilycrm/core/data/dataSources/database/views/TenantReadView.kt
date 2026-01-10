@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.views
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.room.PrimaryKey
-import java.time.LocalDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 
 @DatabaseView(
     viewName = "tenants_read_view",
@@ -38,8 +38,8 @@ import java.time.LocalDateTime
 )
 data class TenantReadView(
     @PrimaryKey val id: Long?,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     val name: String,
     val city: String?,
     @ColumnInfo(name = "identity_document") val identityDocument: String?,

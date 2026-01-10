@@ -5,10 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.AppLazyDateTimeTypeConverter
-import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.BigDecimalConverter
-import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.LocalDateTimeTypeConverter
-import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.LocalDateTypeConverter
+import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.AppDateTimeTypeConverter
+import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.AppDateTypeConverter
+import com.fstengineering.leasilycrm.core.data.dataSources.database.converters.AppDecimalConverter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceCharacteristicDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceDao
@@ -94,10 +93,9 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.views.Tenant
 )
 @TypeConverters(
     value = [
-        AppLazyDateTimeTypeConverter::class,
-        BigDecimalConverter::class,
-        LocalDateTimeTypeConverter::class,
-        LocalDateTypeConverter::class,
+        AppDateTimeTypeConverter::class,
+        AppDateTypeConverter::class,
+        AppDecimalConverter::class,
     ]
 )
 abstract class AppDatabase : RoomDatabase() {

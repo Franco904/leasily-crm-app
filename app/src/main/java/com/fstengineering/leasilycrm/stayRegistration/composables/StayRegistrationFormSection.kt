@@ -30,6 +30,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.toDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
@@ -39,7 +41,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateR
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.TimePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
-import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDateTime
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckInTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckOutTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCommissionFormField
@@ -62,7 +63,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +78,7 @@ fun StayRegistrationFormSection(
     transferForm: StayTransfer?,
     onTransferFormChange: (StayTransfer) -> Unit,
     transferFormErrors: ImmutableMap<StayTransferField, Int?>,
-    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<LocalDate>,
+    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<AppDate>,
     onSelectProperty: (isEnabled: Boolean) -> Unit,
     onSelectTenant: (isEnabled: Boolean) -> Unit,
     onPeriodDisabledByPropertyUnselected: () -> Unit,
@@ -124,7 +124,7 @@ fun StayRegistrationFormSection(
     val stayNotDeletedTransfers = remember(stayForm.transfers) {
         stayForm.transfers
             .filter { !it.isDeleted }
-            .sortedByDescending { it.transferDate }
+            .sortedByDescending { it.transferDate?.date() }
             .toPersistentList()
     }
 
@@ -398,8 +398,8 @@ fun StayRegistrationFormSection(
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onStayFormChange(
                     stayForm.copy(
-                        checkInDateTime = startDateTimestamp.timestampToLocalDateTime(),
-                        checkOutDateTime = endDateTimestamp.timestampToLocalDateTime(),
+                        checkInDateTime = startDateTimestamp.toDateTime(),
+                        checkOutDateTime = endDateTimestamp.toDateTime(),
                     )
                 )
 

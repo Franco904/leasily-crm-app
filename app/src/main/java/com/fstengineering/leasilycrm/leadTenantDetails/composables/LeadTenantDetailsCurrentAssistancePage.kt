@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
@@ -29,7 +30,6 @@ import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.Assista
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceSearchedNeighborhoodsDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.PreferredSeaProximityTypeDetailsItem
 import kotlinx.collections.immutable.ImmutableList
-import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,7 +79,7 @@ fun LeadTenantDetailsCurrentAssistancePage(
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
                 AssistanceLastUpdateDateDetailsItem(
-                    updateDateTime = currentAssistance.updateDateTime ?: LocalDateTime.now(),
+                    updateDateTime = currentAssistance.updateDateTime ?: AppDateTime.now(),
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 AssistanceQuantityCharacteristicsDetailsItems(assistance = currentAssistance)

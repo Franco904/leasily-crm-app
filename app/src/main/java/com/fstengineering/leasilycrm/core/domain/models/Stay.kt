@@ -1,24 +1,24 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import java.math.BigDecimal
-import java.time.LocalDateTime
 
 data class Stay(
     val id: Long? = null,
-    val createDateTime: LocalDateTime? = null,
-    val updateDateTime: LocalDateTime? = null,
+    val createDateTime: AppDateTime? = null,
+    val updateDateTime: AppDateTime? = null,
     val isUnavailablePeriod: Boolean = false,
     val qtGuests: Int? = 1,
-    val checkInDateTime: LocalDateTime? = null,
+    val checkInDateTime: AppDateTime? = null,
     val checkInHourMinute: Pair<Int?, Int?> = null to null,
-    val checkOutDateTime: LocalDateTime? = null,
+    val checkOutDateTime: AppDateTime? = null,
     val checkOutHourMinute: Pair<Int?, Int?> = null to null,
     val isAutoCheckIn: Boolean = false,
     val isAutoCheckOut: Boolean = false,
-    val totalPrice: BigDecimal? = null,
-    val commission: BigDecimal? = null,
+    val totalPrice: AppDecimal? = null,
+    val commission: AppDecimal? = null,
     val vehicleMake: String? = null,
     val vehicleColor: String? = null,
     val vehicleLicensePlate: String? = null,

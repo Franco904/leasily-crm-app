@@ -17,12 +17,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import kotlinx.collections.immutable.toPersistentMap
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Composable
 fun LeadTenantDetailsHistoryPage(
@@ -32,10 +32,10 @@ fun LeadTenantDetailsHistoryPage(
 ) {
     val lazyListState = rememberLazyListState()
 
-    val currentYear = remember { LocalDate.now().year }
+    val currentYear = remember { AppDate.now().year }
 
     val history = remember(leadTenant) {
-        val now = LocalDateTime.now()
+        val now = AppDateTime.now()
 
         val assistancesDateTimes = leadTenant.assistances
             .filter { it.isFinished }
@@ -60,7 +60,7 @@ fun LeadTenantDetailsHistoryPage(
         val history = assistancesDateTimes + staysDateTimes
 
         history
-            .sortedByDescending { historyItem -> historyItem.dateTime }
+            .sortedByDescending { historyItem -> historyItem.dateTime.dateTime() }
             .groupBy { historyItem -> historyItem.dateTime.year }
             .toPersistentMap()
     }
@@ -98,7 +98,7 @@ fun LeadTenantDetailsHistoryPage(
                         label = stringResource(
                             labelStringId,
                             historyItem.dateTime.dayOfMonth,
-                            historyItem.dateTime.monthValue,
+                            historyItem.dateTime.month,
                             historyItem.dateTime.year,
                         ),
                         onViewHistoryItem = {
@@ -136,5 +136,5 @@ fun LeadTenantDetailsHistoryCard(
 data class LeadTenantHistoryItem(
     val id: Long,
     val isAssistance: Boolean,
-    val dateTime: LocalDateTime,
+    val dateTime: AppDateTime,
 )

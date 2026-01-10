@@ -25,6 +25,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
@@ -41,7 +42,6 @@ import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyReg
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +67,7 @@ fun PropertyRegistrationStep3Screen(
     var isRegisteringNewPropertyPrice by remember { mutableStateOf(false) }
 
     val propertyPriceForm by stepViewModel.propertyPriceForm.collectAsStateWithLifecycle()
-    var propertyPriceFormStartDate: LocalDate? by rememberSaveable { mutableStateOf(null) }
+    var propertyPriceFormStartDate: AppDate? by rememberSaveable { mutableStateOf(null) }
 
     val propertyPriceToDelete by stepViewModel.propertyPriceToDelete.collectAsStateWithLifecycle()
 

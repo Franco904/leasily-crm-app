@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DatePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
@@ -105,7 +106,7 @@ fun StayTransferRegistrationBottomsheet(
                 OutlinedButton(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                     onClick = {
-                        val amount = transferAmountInput.replace(',', '.').toBigDecimalOrNull()
+                        val amount = transferAmountInput.replace(',', '.').toDecimalOrNull()
                         onTransferFormChange(transferForm.copy(transferAmount = amount))
 
                         onSave()

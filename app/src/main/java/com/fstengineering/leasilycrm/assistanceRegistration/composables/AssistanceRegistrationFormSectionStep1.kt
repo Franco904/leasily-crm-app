@@ -44,6 +44,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.P
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.PreferredSeaProximityTypeFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.SearchedStayDateRangeFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
+import com.fstengineering.leasilycrm.core.application.models.toDate
+import com.fstengineering.leasilycrm.core.application.models.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
@@ -54,7 +56,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.centerVisible
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
-import com.fstengineering.leasilycrm.core.presentation.utils.timestampToLocalDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentSetOf
@@ -319,7 +320,7 @@ fun AssistanceRegistrationFormSectionStep1(
                 Spacer(modifier = Modifier.weight(1f))
                 NextStepButton(onNext = {
                     val maxAcceptedNightlyRate = maxAcceptedNightlyRateInput
-                        .replace(',', '.').toBigDecimalOrNull()
+                        .replace(',', '.').toDecimalOrNull()
                     onAssistanceFormChange(assistanceForm.copy(maxAcceptedNightlyRate = maxAcceptedNightlyRate))
 
                     onNext()
@@ -344,8 +345,8 @@ fun AssistanceRegistrationFormSectionStep1(
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onAssistanceFormChange(
                     assistanceForm.copy(
-                        searchedStartDate = startDateTimestamp.timestampToLocalDate(),
-                        searchedEndDate = endDateTimestamp.timestampToLocalDate(),
+                        searchedStartDate = startDateTimestamp.toDate(),
+                        searchedEndDate = endDateTimestamp.toDate(),
                     )
                 )
 
