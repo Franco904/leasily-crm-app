@@ -1,5 +1,7 @@
 package com.fstengineering.leasilycrm.core.application.di.modules
 
+import com.fstengineering.leasilycrm.core.data.adapters.DatabaseAdapterImpl
+import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.AssistanceCharacteristicDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.AssistanceDatabaseDataSourceImpl
@@ -8,7 +10,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.AssistanceSe
 import com.fstengineering.leasilycrm.core.data.dataSources.database.AssistanceSentPropertyCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.CrmMetricsDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.CustomerSegmentDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.data.dataSources.database.CustomerSegmentTypeDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.PropertyCharacteristicDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.PropertyCharacteristicPropertyCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.PropertyDatabaseDataSourceImpl
@@ -31,7 +32,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.A
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.AssistanceSentPropertyCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.CustomerSegmentDatabaseDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.CustomerSegmentTypeDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyCharacteristicDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyCharacteristicPropertyCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyDatabaseDataSource
@@ -49,6 +49,8 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.T
 import org.koin.dsl.module
 
 val databaseDataSourceModule = module {
+    single<DatabaseAdapter> { DatabaseAdapterImpl(db = get()) }
+
     single<AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource> {
         AssistanceCharacteristicAssistanceCrossRefDatabaseDataSourceImpl(dao = get())
     }
@@ -79,10 +81,6 @@ val databaseDataSourceModule = module {
 
     single<CustomerSegmentDatabaseDataSource> {
         CustomerSegmentDatabaseDataSourceImpl(dao = get())
-    }
-
-    single<CustomerSegmentTypeDatabaseDataSource> {
-        CustomerSegmentTypeDatabaseDataSourceImpl(dao = get())
     }
 
     single<PropertyCharacteristicDatabaseDataSource> {

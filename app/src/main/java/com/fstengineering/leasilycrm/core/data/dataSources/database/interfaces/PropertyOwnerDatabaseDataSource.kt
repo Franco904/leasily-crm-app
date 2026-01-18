@@ -7,9 +7,9 @@ import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyOwnerDatabaseDataSource {
-    suspend fun insertOrUpdate(propertyOwner: PropertyOwnerEntity): AppResult<Long, DataError>
+    suspend fun insertOrUpdate(propertyOwner: PropertyOwnerEntity): Long
 
-    suspend fun delete(id: Long): AppResult<Unit, DataError>
+    suspend fun delete(id: Long)
 
     suspend fun getById(id: Long): AppResult<PropertyOwnerCompound, DataError>
 

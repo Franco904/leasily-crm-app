@@ -16,6 +16,7 @@ interface TenantDao {
     @Query("UPDATE tenants SET is_deleted = 1 WHERE id = :id")
     suspend fun delete(id: Long)
 
+    @Transaction
     @Query("SELECT * FROM tenants_read_view WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): TenantCompound?
 

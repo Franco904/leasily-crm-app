@@ -5,7 +5,5 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 interface StayFileRepository {
-    suspend fun insertOrUpdate(file: StayFile): AppResult<Unit, DataError>
-
     suspend fun getFileName(file: StayFile): AppResult<String, DataError>
 }

@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Sta
 @Dao
 interface StayTransferDao {
     @Upsert
-    suspend fun insertOrUpdate(stayTransfer: StayTransferEntity): Long
+    suspend fun insertOrUpdate(stayTransfer: StayTransferEntity)
 }

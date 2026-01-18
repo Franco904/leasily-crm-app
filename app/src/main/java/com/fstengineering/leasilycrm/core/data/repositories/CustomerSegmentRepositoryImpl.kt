@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.CustomerSegmentDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
@@ -9,7 +10,6 @@ import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRep
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class CustomerSegmentRepositoryImpl(
+    private val databaseAdapter: DatabaseAdapter,
     private val databaseDataSource: CustomerSegmentDatabaseDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
 ) : CustomerSegmentRepository {
@@ -36,103 +37,29 @@ class CustomerSegmentRepositoryImpl(
         val customerSegmentWithUser = customerSegment.copy(userId = userRemoteId)
         val entity = CustomerSegmentEntity.fromDomain(customerSegmentWithUser)
 
-        databaseDataSource.insertOrUpdate(entity)
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
-    }
-
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        databaseDataSource.delete(id)
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
-    }
-
-    override suspend fun getAllTenantType(): AppResult<ImmutableList<CustomerSegment>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-            )
-
-        val customerSegments = databaseDataSource.getAllTenantType(userId = userRemoteId)
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { customerSegments ->
-                    customerSegments.map { it.toDomain() }.toPersistentList()
-                }
-            )
-
-        return AppResult.Success(data = customerSegments)
-    }
-
-    override suspend fun getAllPropertyOwnerType(): AppResult<ImmutableList<CustomerSegment>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-            )
-
-        val customerSegments = databaseDataSource.getAllPropertyOwnerType(userId = userRemoteId)
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { customerSegments ->
-                    customerSegments.map { it.toDomain() }.toPersistentList()
-                }
-            )
-
-        return AppResult.Success(data = customerSegments)
-    }
-
-    override fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataError>> =
-        flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = {
-                        emit(AppResult.Error(error = it))
-                        return@flow
-                    },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
-            val customerSegmentsFlow = databaseDataSource.watchAll(userId = userRemoteId)
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { it }
-                )
-
-            val customerSegmentsFlowMapped = customerSegmentsFlow.map {
-                val customerSegments = it.map { segment -> segment.toDomain() }.toPersistentList()
-                AppResult.Success<ImmutableList<CustomerSegment>, DataError>(data = customerSegments)
-            }
-            .distinctUntilChanged()
-
-            emitAll(customerSegmentsFlowMapped)
+        return databaseAdapter.withTransaction {
+            databaseDataSource.insertOrUpdate(entity)
         }
+    }
 
-    override suspend fun isThereCustomerSegmentWithName(
-        customerSegmentName: String,
-        customerSegmentTypeId: Long,
-        currentStoredCustomerSegmentName: String?,
-    ): AppResult<Boolean, DataError> {
+    override suspend fun delete(id: Long): AppResult<Unit, DataError> =
+        databaseAdapter.withTransaction { databaseDataSource.delete(id) }
+
+    override suspend fun getAll(): AppResult<ImmutableList<CustomerSegment>, DataError> {
         val userRemoteId = encryptedPreferencesDataSource.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
             )
 
-        val count = databaseDataSource.countCustomerSegmentsWithName(
-            userId = userRemoteId,
-            customerSegmentName = customerSegmentName.normalizeEncoding(),
-            customerSegmentTypeId = customerSegmentTypeId,
-            currentStoredCustomerSegmentName = currentStoredCustomerSegmentName,
-        )
+        val customerSegments = databaseDataSource.getAll(userId = userRemoteId)
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { count -> count }
+                onSuccess = { customerSegments ->
+                    customerSegments.map { it.toDomain() }.toPersistentList()
+                }
             )
 
-        return AppResult.Success(data = count > 0)
+        return AppResult.Success(data = customerSegments)
     }
 }

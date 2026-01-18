@@ -11,6 +11,6 @@ class PropertyOwnerFileDatabaseDataSourceImpl(
 ) : PropertyOwnerFileDatabaseDataSource {
     override suspend fun insertOrUpdate(
         propertyOwnerFile: PropertyOwnerFileEntity,
-    ): AppResult<Unit, DataError> =
-        onDatabase { dao.insertOrUpdate(propertyOwnerFile) }
+    ) =
+        dao.insertOrUpdate(propertyOwnerFile)
 }

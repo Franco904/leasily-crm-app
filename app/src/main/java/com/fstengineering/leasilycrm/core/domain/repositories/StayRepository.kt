@@ -8,7 +8,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface StayRepository {
-    suspend fun insertOrUpdate(stay: Stay): AppResult<Long, DataError>
+    suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, DataError>
 
     suspend fun delete(id: Long): AppResult<Unit, DataError>
 

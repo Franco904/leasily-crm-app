@@ -1,7 +1,10 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyOwnerDatabaseDataSource
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyOwnerFileDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.sharedStorage.interfaces.SharedStorageDataSource
@@ -10,7 +13,6 @@ import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepos
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -23,13 +25,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class PropertyOwnerRepositoryImpl(
-    private val databaseDataSource: PropertyOwnerDatabaseDataSource,
+    private val databaseAdapter: DatabaseAdapter,
+    private val propertyOwnerDatabaseDataSource: PropertyOwnerDatabaseDataSource,
+    private val propertyOwnerFileDatabaseDataSource: PropertyOwnerFileDatabaseDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
     private val sharedStorageDataSource: SharedStorageDataSource,
 ) : PropertyOwnerRepository {
     override suspend fun insertOrUpdate(
         propertyOwner: PropertyOwner,
-    ): AppResult<Long, DataError> {
+    ): AppResult<Unit, DataError> {
         val userRemoteId = encryptedPreferencesDataSource.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
@@ -37,29 +41,34 @@ class PropertyOwnerRepositoryImpl(
             )
 
         val propertyOwnerWithUser = propertyOwner.copy(userId = userRemoteId)
-        val propertyOwnerEntity = PropertyOwnerEntity.fromDomain(propertyOwnerWithUser)
 
-        val id = databaseDataSource.insertOrUpdate(propertyOwnerEntity)
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { it },
-            )
+        return databaseAdapter.withTransaction {
+            saveDataInDatabase(propertyOwnerWithUser)
+        }
+    }
+
+    private suspend fun saveDataInDatabase(propertyOwner: PropertyOwner) {
+        val propertyOwnerEntity = PropertyOwnerEntity.fromDomain(propertyOwner)
+
+        val propertyOwnerId = propertyOwnerDatabaseDataSource.insertOrUpdate(propertyOwnerEntity)
             .let { id -> propertyOwner.id ?: id }
 
-        return AppResult.Success(data = id)
+        propertyOwner.files.forEach {
+            val file = PropertyOwnerFileEntity.fromDomain(domain = it)
+                .copy(propertyOwnerId = propertyOwnerId)
+            propertyOwnerFileDatabaseDataSource.insertOrUpdate(file)
+        }
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        databaseDataSource.delete(id)
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
-    }
+    override suspend fun delete(id: Long): AppResult<Unit, DataError> =
+        databaseAdapter.withTransaction {
+            propertyOwnerDatabaseDataSource.delete(id)
+        }
 
     override suspend fun getById(
         propertyOwnerId: Long,
     ): AppResult<PropertyOwner, DataError> {
-        val propertyOwner = databaseDataSource.getById(id = propertyOwnerId)
+        val propertyOwner = propertyOwnerDatabaseDataSource.getById(id = propertyOwnerId)
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { it }
@@ -67,7 +76,8 @@ class PropertyOwnerRepositoryImpl(
             .toDomain()
 
         val filesWithNames = propertyOwner.files.map { file ->
-            val fileName = sharedStorageDataSource.getFileName(contentUriString = file.uriString ?: "")
+            val fileName =
+                sharedStorageDataSource.getFileName(contentUriString = file.uriString ?: "")
 
             file.copy(name = fileName)
         }.toImmutableList()
@@ -78,7 +88,7 @@ class PropertyOwnerRepositoryImpl(
     override fun watchById(
         propertyOwnerId: Long,
     ): Flow<AppResult<PropertyOwner, DataError>> = flow {
-        val propertyOwnerFlow = databaseDataSource.watchById(id = propertyOwnerId)
+        val propertyOwnerFlow = propertyOwnerDatabaseDataSource.watchById(id = propertyOwnerId)
             .fold(
                 onError = { return@flow emit(AppResult.Error(error = it)) },
                 onSuccess = { it }
@@ -114,7 +124,7 @@ class PropertyOwnerRepositoryImpl(
                 )
 
             emitAll(
-                databaseDataSource.watchAll(userId = userRemoteId)
+                propertyOwnerDatabaseDataSource.watchAll(userId = userRemoteId)
                     .fold(
                         onError = { return@flow emit(AppResult.Error(error = it)) },
                         onSuccess = { it }
@@ -137,7 +147,7 @@ class PropertyOwnerRepositoryImpl(
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
-        val count = databaseDataSource.countPropertyOwnersWithName(
+        val count = propertyOwnerDatabaseDataSource.countPropertyOwnersWithName(
             userId = userRemoteId,
             propertyOwnerName = propertyOwnerName.normalizeEncoding(),
             currentStoredPropertyOwnerName = currentStoredPropertyOwnerName,

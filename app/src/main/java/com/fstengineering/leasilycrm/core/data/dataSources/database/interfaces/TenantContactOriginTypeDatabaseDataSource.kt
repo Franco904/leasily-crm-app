@@ -5,9 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 interface TenantContactOriginTypeDatabaseDataSource {
-    suspend fun insertOrUpdate(
-        tenantContactOriginType: TenantContactOriginTypeEntity,
-    ): AppResult<Unit, DataError>
+    suspend fun insertOrUpdate(tenantContactOriginType: TenantContactOriginTypeEntity)
 
     suspend fun getAll(): AppResult<List<TenantContactOriginTypeEntity>, DataError>
 }

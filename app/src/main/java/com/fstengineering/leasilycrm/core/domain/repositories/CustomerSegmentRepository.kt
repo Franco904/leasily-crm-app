@@ -13,15 +13,5 @@ interface CustomerSegmentRepository {
 
     suspend fun delete(id: Long): AppResult<Unit, DataError>
 
-    suspend fun getAllTenantType(): AppResult<ImmutableList<CustomerSegment>, DataError>
-
-    suspend fun getAllPropertyOwnerType(): AppResult<ImmutableList<CustomerSegment>, DataError>
-
-    fun watchAll(): Flow<AppResult<ImmutableList<CustomerSegment>, DataError>>
-
-    suspend fun isThereCustomerSegmentWithName(
-        customerSegmentName: String,
-        customerSegmentTypeId: Long,
-        currentStoredCustomerSegmentName: String?,
-    ): AppResult<Boolean, DataError>
+    suspend fun getAll(): AppResult<ImmutableList<CustomerSegment>, DataError>
 }

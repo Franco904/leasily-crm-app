@@ -11,9 +11,9 @@ class PropertyTypeDatabaseDataSourceImpl(
 ) : PropertyTypeDatabaseDataSource {
     override suspend fun insertOrUpdate(
         propertyType: PropertyTypeEntity,
-    ): AppResult<Unit, DataError> =
-        onDatabase { dao.insertOrUpdate(propertyType) }
+    ) =
+        dao.insertOrUpdate(propertyType)
 
     override suspend fun getAll(): AppResult<List<PropertyTypeEntity>, DataError> =
-        onDatabase { dao.getAll() }
+        onDatabaseSafe { dao.getAll() }
 }

@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.domain.utils.DataError
 interface PropertyCharacteristicPropertyCrossRefDatabaseDataSource {
     suspend fun insertOrUpdate(
         crossRef: PropertyCharacteristicPropertyCrossRefEntity,
-    ): AppResult<Unit, DataError>
+    )
 }

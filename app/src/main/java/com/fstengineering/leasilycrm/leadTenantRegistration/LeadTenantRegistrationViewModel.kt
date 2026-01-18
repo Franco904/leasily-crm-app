@@ -92,7 +92,7 @@ class LeadTenantRegistrationViewModel(
 
     private fun getTenantSegments() {
         viewModelScope.launch {
-            customerSegmentRepository.getAllTenantType()
+            customerSegmentRepository.getAll()
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedCustomerSegments ->
                     _tenantSegments.update { storedCustomerSegments }

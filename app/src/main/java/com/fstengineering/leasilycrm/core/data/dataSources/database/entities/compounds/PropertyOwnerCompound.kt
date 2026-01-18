@@ -11,12 +11,6 @@ import kotlinx.collections.immutable.toImmutableList
 data class PropertyOwnerCompound(
     @Embedded val propertyOwner: PropertyOwnerEntity,
     @Relation(
-        parentColumn = "customer_segment_id",
-        entityColumn = "id",
-        entity = CustomerSegmentEntity::class,
-    )
-    val customerSegment: CustomerSegmentCompound?,
-    @Relation(
         parentColumn = "id",
         entityColumn = "property_owner_id",
         entity = PropertyOwnerFileEntity::class,
@@ -35,7 +29,6 @@ data class PropertyOwnerCompound(
         email = propertyOwner.email,
         paymentKey = propertyOwner.paymentKey,
         isDeleted = propertyOwner.isDeleted,
-        customerSegment = customerSegment?.toDomain(),
         files = activeFiles.map { it.toDomain() }.toImmutableList(),
         userId = propertyOwner.userId,
     )

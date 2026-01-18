@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 @Dao
 interface PropertyTypeDao {
     @Upsert
-    suspend fun insertOrUpdate(propertyType: PropertyTypeEntity): Long
+    suspend fun insertOrUpdate(propertyType: PropertyTypeEntity)
 
     @Query("SELECT * FROM property_types")
     suspend fun getAll(): List<PropertyTypeEntity>

@@ -35,7 +35,6 @@ import kotlin.time.Duration.Companion.milliseconds
 class PropertyOwnerRegistrationViewModel(
     private val propertyOwnerRepository: PropertyOwnerRepository,
     private val propertyOwnerFileRepository: PropertyOwnerFileRepository,
-    private val customerSegmentRepository: CustomerSegmentRepository,
     private val propertyOwnerValidator: PropertyOwnerValidator,
 ) : ViewModel() {
     private var isInitialized = false
@@ -66,8 +65,6 @@ class PropertyOwnerRegistrationViewModel(
 
         if (propertyOwnerId != null) getPropertyOwnerToEdit(propertyOwnerId)
 
-        getPropertyOwnerSegments()
-
         isInitialized = true
     }
 
@@ -79,16 +76,6 @@ class PropertyOwnerRegistrationViewModel(
                     _propertyOwnerForm.update { storedPropertyOwner }
                     propertyOwnerToEdit = storedPropertyOwner
                 }
-        }
-    }
-
-    private fun getPropertyOwnerSegments() {
-        viewModelScope.launch {
-            customerSegmentRepository.getAllPropertyOwnerType()
-                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { segments -> _propertyOwnerSegments.update { segments } }
-
-            _isLoading.update { false }
         }
     }
 
@@ -157,17 +144,8 @@ class PropertyOwnerRegistrationViewModel(
                     return@launch
                 }
 
-            val propertyOwnerId = propertyOwnerRepository.insertOrUpdate(propertyOwner)
-                .fold(
-                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
-                    onSuccess = { propertyOwnerId -> propertyOwnerId },
-                )
-
-            propertyOwner.files.forEach { file ->
-                propertyOwnerFileRepository.insertOrUpdate(
-                    file = file.copy(propertyOwnerId = propertyOwnerId),
-                )
-            }
+            propertyOwnerRepository.insertOrUpdate(propertyOwner)
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             val saveEvent =
                 if (propertyOwnerToEdit != null) UiEvents.PropertyOwnerEditSuccess(messageId = R.string.edit_property_owner_success_message)

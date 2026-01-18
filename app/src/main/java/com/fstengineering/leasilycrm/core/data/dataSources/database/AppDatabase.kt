@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database
 
 import android.content.Context
 import androidx.room.Database
+import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -16,7 +17,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.Assista
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceSentPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CrmMetricsDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CustomerSegmentDao
-import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CustomerSegmentTypeDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyCharacteristicDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyCharacteristicPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyDao
@@ -38,7 +38,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ass
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentTypeEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
@@ -59,7 +58,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.views.Tenant
     /*
      * Domain tables:
      *
-     * assistance_characteristics, customer_segment_types, property_characteristics,
+     * assistance_characteristics, property_characteristics,
      * property_sea_proximity_types, property_types and tenant_contact_origin_types.
      */
     entities = [
@@ -70,7 +69,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.views.Tenant
         AssistanceSearchedNeighborhoodEntity::class,
         AssistanceSentPropertyCrossRefEntity::class,
         CustomerSegmentEntity::class,
-        CustomerSegmentTypeEntity::class,
         PropertyEntity::class,
         PropertyCharacteristicEntity::class,
         PropertyCharacteristicPropertyCrossRefEntity::class,
@@ -98,6 +96,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.views.Tenant
         AppDecimalConverter::class,
     ]
 )
+@RewriteQueriesToDropUnusedColumns
 abstract class AppDatabase : RoomDatabase() {
     abstract fun assistanceDao(): AssistanceDao
 
@@ -114,8 +113,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun crmMetricsDao(): CrmMetricsDao
 
     abstract fun customerSegmentDao(): CustomerSegmentDao
-
-    abstract fun customerSegmentTypeDao(): CustomerSegmentTypeDao
 
     abstract fun propertyDao(): PropertyDao
 
@@ -158,13 +155,13 @@ abstract class AppDatabase : RoomDatabase() {
                 .build()
         }
 
-        fun buildInMemoryDatabase(appContext: Context): AppDatabase {
-            return Room.inMemoryDatabaseBuilder(
-                context = appContext,
-                klass = AppDatabase::class.java,
-            )
-                .allowMainThreadQueries()
-                .build()
-        }
+//        fun buildInMemoryDatabase(appContext: Context): AppDatabase {
+//            return Room.inMemoryDatabaseBuilder(
+//                context = appContext,
+//                klass = AppDatabase::class.java,
+//            )
+//                .allowMainThreadQueries()
+//                .build()
+//        }
     }
 }

@@ -6,9 +6,9 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 interface AssistanceDatabaseDataSource {
-    suspend fun insertOrUpdate(assistance: AssistanceEntity): AppResult<Long, DataError>
+    suspend fun insertOrUpdate(assistance: AssistanceEntity): Long
 
-    suspend fun delete(id: Long): AppResult<Unit, DataError>
+    suspend fun delete(id: Long)
 
     suspend fun getById(id: Long): AppResult<AssistanceCompound, DataError>
 

@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.entities.co
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import androidx.room.RewriteQueriesToDropUnusedColumns
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
@@ -13,12 +14,6 @@ import kotlinx.collections.immutable.toImmutableList
 
 data class TenantCompound(
     @Embedded val tenant: TenantReadView,
-    @Relation(
-        parentColumn = "customer_segment_id",
-        entityColumn = "id",
-        entity = CustomerSegmentEntity::class,
-    )
-    val customerSegment: CustomerSegmentCompound?,
     @Relation(
         parentColumn = "tenant_contact_origin_type_id",
         entityColumn = "id",
@@ -55,7 +50,6 @@ data class TenantCompound(
         observations = tenant.observations,
         status = TenantStatus.fromId(id = tenant.status),
         isDeleted = tenant.isDeleted,
-        customerSegment = customerSegment?.toDomain(),
         tenantContactOriginType = tenantContactOriginType?.toDomain(),
         assistances = activeAssistances.map { it.toDomain() }.toImmutableList(),
         stays = activeStays.map { it.toDomain() }.toImmutableList(),

@@ -5,5 +5,5 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 interface StayTransferDatabaseDataSource {
-    suspend fun insertOrUpdate(stayTransfer: StayTransferEntity): AppResult<Unit, DataError>
+    suspend fun insertOrUpdate(stayTransfer: StayTransferEntity)
 }

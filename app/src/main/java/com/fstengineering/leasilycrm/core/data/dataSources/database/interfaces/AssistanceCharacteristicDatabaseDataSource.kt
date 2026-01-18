@@ -5,9 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 interface AssistanceCharacteristicDatabaseDataSource {
-    suspend fun insertOrUpdate(
-        assistanceCharacteristic: AssistanceCharacteristicEntity,
-    ): AppResult<Unit, DataError>
+    suspend fun insertOrUpdate(assistanceCharacteristic: AssistanceCharacteristicEntity)
 
     suspend fun getAll(): AppResult<List<AssistanceCharacteristicEntity>, DataError>
 }

@@ -5,5 +5,5 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 interface PropertyPriceDatabaseDataSource {
-    suspend fun insertOrUpdate(propertyPrice: PropertyPriceEntity): AppResult<Unit, DataError>
+    suspend fun insertOrUpdate(propertyPrice: PropertyPriceEntity)
 }

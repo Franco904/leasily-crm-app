@@ -1,8 +1,5 @@
 package com.fstengineering.leasilycrm.core.domain.constants
 
-const val TENANT_CUSTOMER_SEGMENT_TYPE_ID = 1L
-const val PROPERTY_OWNER_CUSTOMER_SEGMENT_TYPE_ID = 2L
-
 const val APARTMENT_PROPERTY_TYPE_ID = 1L
 const val APARTMENT_PROPERTY_TYPE_NAME = "Apartamento"
 

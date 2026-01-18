@@ -11,7 +11,6 @@ class AssistanceCharacteristicAssistanceCrossRefDatabaseDataSourceImpl(
 ) : AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource {
     override suspend fun insertOrUpdate(
         crossRef: AssistanceCharacteristicAssistanceCrossRefEntity,
-    ): AppResult<Unit, DataError> {
-        return onDatabase { dao.insertOrUpdate(crossRef) }
-    }
+    ) =
+        dao.insertOrUpdate(crossRef)
 }

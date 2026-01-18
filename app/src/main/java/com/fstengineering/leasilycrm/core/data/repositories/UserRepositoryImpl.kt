@@ -21,9 +21,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
+    private val userSessionService: UserSessionService,
     private val remoteDataSource: UserRemoteDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
-    private val userSessionService: UserSessionService,
 ) : UserRepository {
     override suspend fun storeUser(user: User): AppResult<Unit, DataError> {
         encryptedPreferencesDataSource.savePreferences { prefs ->
@@ -67,7 +67,9 @@ class UserRepositoryImpl(
                     prefs.copy(userSyncStateId = SyncState.PendingSync.id)
                 }
 
-                if (e is DataError.UnauthorizedError) userSessionService.onSessionExpired()
+                if (e is DataError.UnauthorizedError) {
+                    userSessionService.onSessionExpired()
+                }
 
                 return AppResult.Error(error = e)
             }

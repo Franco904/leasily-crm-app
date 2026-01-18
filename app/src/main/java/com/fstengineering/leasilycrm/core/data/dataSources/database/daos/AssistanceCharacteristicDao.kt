@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ass
 @Dao
 interface AssistanceCharacteristicDao {
     @Upsert
-    suspend fun insertOrUpdate(assistanceCharacteristic: AssistanceCharacteristicEntity): Long
+    suspend fun insertOrUpdate(assistanceCharacteristic: AssistanceCharacteristicEntity)
 
     @Query("SELECT * FROM assistance_characteristics")
     suspend fun getAll(): List<AssistanceCharacteristicEntity>

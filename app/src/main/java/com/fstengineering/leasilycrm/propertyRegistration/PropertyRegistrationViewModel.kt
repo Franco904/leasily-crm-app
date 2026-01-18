@@ -9,11 +9,8 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyFile
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.domain.models.PropertyType
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicPropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyPriceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyTypeRepository
@@ -37,9 +34,6 @@ class PropertyRegistrationViewModel(
     private val propertyTypeRepository: PropertyTypeRepository,
     private val propertySeaProximityTypeRepository: PropertySeaProximityTypeRepository,
     private val propertyCharacteristicRepository: PropertyCharacteristicRepository,
-    private val propertyCharacteristicPropertyRepository: PropertyCharacteristicPropertyRepository,
-    private val propertyPriceRepository: PropertyPriceRepository,
-    private val propertyFileRepository: PropertyFileRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -181,32 +175,8 @@ class PropertyRegistrationViewModel(
                 return@launch
             }
 
-            val propertyId = propertyRepository.insertOrUpdate(propertyForm.value)
-                .fold(
-                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
-                    onSuccess = { propertyId -> propertyId },
-                )
-
-            propertyForm.value.characteristics.forEach { characteristic ->
-                propertyCharacteristicPropertyRepository.insertOrUpdate(
-                    characteristicProperty = characteristic.copy(propertyId = propertyId),
-                )
-                    .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
-            }
-
-            propertyForm.value.prices.forEach { price ->
-                propertyPriceRepository.insertOrUpdate(
-                    price = price.copy(propertyId = propertyId),
-                )
-                    .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
-            }
-
-            propertyForm.value.files.forEach { file ->
-                propertyFileRepository.insertOrUpdate(
-                    file = file.copy(propertyId = propertyId),
-                )
-                    .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
-            }
+            propertyRepository.insertOrUpdate(propertyForm.value)
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             val saveEvent =
                 if (propertyToEdit != null) UiEvents.PropertyEditSuccess(messageId = R.string.edit_property_success_message)

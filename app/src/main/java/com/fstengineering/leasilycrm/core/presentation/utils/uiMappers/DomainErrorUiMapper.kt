@@ -16,26 +16,6 @@ fun DomainError.toInlineMessage() = when (this) {
         R.string.inline_required
     }
 
-    DomainError.CustomerSegmentName.IsBlank -> {
-        R.string.inline_required
-    }
-
-    DomainError.CustomerSegmentName.BelongsToOtherTenantSegment -> {
-        R.string.inline_name_belongs_other_tenant_segment
-    }
-
-    DomainError.CustomerSegmentName.BelongsToOtherPropertyOwnerSegment -> {
-        R.string.inline_name_belongs_other_property_owner_segment
-    }
-
-    DomainError.CustomerSegmentName.LengthIsGreaterThan75Chars -> {
-        R.string.inline_too_big_75_chars
-    }
-
-    DomainError.CustomerSegmentType.IsNull -> {
-        R.string.inline_required
-    }
-
     DomainError.PropertyPropertyOwner.IsNull -> {
         R.string.inline_required
     }

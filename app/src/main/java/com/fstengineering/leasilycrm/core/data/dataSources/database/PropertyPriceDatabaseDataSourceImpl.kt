@@ -11,6 +11,6 @@ class PropertyPriceDatabaseDataSourceImpl(
 ) : PropertyPriceDatabaseDataSource {
     override suspend fun insertOrUpdate(
         propertyPrice: PropertyPriceEntity,
-    ): AppResult<Unit, DataError> =
-        onDatabase { dao.insertOrUpdate(propertyPrice) }
+    ) =
+        dao.insertOrUpdate(propertyPrice)
 }

@@ -11,9 +11,9 @@ class TenantContactOriginTypeDatabaseDataSourceImpl(
 ) : TenantContactOriginTypeDatabaseDataSource {
     override suspend fun insertOrUpdate(
         tenantContactOriginType: TenantContactOriginTypeEntity,
-    ): AppResult<Unit, DataError> =
-        onDatabase { dao.insertOrUpdate(tenantContactOriginType) }
+    ) =
+        dao.insertOrUpdate(tenantContactOriginType)
 
     override suspend fun getAll(): AppResult<List<TenantContactOriginTypeEntity>, DataError> =
-        onDatabase { dao.getAll() }
+        onDatabaseSafe { dao.getAll() }
 }

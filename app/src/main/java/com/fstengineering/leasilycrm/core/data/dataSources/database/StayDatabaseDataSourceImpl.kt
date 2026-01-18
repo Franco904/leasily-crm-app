@@ -12,27 +12,25 @@ import kotlinx.coroutines.flow.Flow
 class StayDatabaseDataSourceImpl(
     private val dao: StayDao,
 ) : StayDatabaseDataSource {
-    override suspend fun insertOrUpdate(stay: StayEntity): AppResult<Long, DataError> {
-        return onDatabase { dao.insertOrUpdate(stay) }
-    }
+    override suspend fun insertOrUpdate(stay: StayEntity): Long =
+        dao.insertOrUpdate(stay)
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        return onDatabase { dao.delete(id) }
-    }
+    override suspend fun delete(id: Long) =
+        dao.delete(id)
 
     override suspend fun getById(id: Long): AppResult<StayCompound, DataError> {
-        return onDatabase { dao.getById(id) }
+        return onDatabaseSafe { dao.getById(id) }
     }
 
     override fun watchById(id: Long): AppResult<Flow<StayCompound?>, DataError> {
-        return onDatabase { dao.watchById(id) }
+        return onDatabaseSafe { dao.watchById(id) }
     }
 
     override fun watchAll(userId: Long): AppResult<Flow<List<StayCompound>>, DataError> {
-        return onDatabase { dao.watchAll(userId) }
+        return onDatabaseSafe { dao.watchAll(userId) }
     }
 
     override fun watchAllUpcomingCheckInsAndCheckOuts(userId: Long): AppResult<Flow<List<StayCheckStatusCompound>>, DataError> {
-        return onDatabase { dao.watchAllUpcomingCheckInsAndCheckOuts(userId) }
+        return onDatabaseSafe { dao.watchAllUpcomingCheckInsAndCheckOuts(userId) }
     }
 }

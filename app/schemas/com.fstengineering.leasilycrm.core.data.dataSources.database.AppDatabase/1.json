@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1df193b50cc56d50f9324ce62f488c1b",
+    "identityHash": "2805cbf99b28ebe029f3be59dfc0d6cc",
     "entities": [
       {
         "tableName": "assistances",
@@ -549,7 +549,7 @@
       },
       {
         "tableName": "customer_segments",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `customer_segment_type_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_type_id`) REFERENCES `customer_segment_types`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `user_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -575,12 +575,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "customerSegmentTypeId",
-            "columnName": "customer_segment_type_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "userId",
             "columnName": "user_id",
             "affinity": "INTEGER",
@@ -589,68 +583,6 @@
           {
             "fieldPath": "isDeleted",
             "columnName": "is_deleted",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [
-          {
-            "name": "index_customer_segments_customer_segment_type_id",
-            "unique": false,
-            "columnNames": [
-              "customer_segment_type_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_customer_segments_customer_segment_type_id` ON `${TABLE_NAME}` (`customer_segment_type_id`)"
-          },
-          {
-            "name": "index_customer_segments_user_id",
-            "unique": false,
-            "columnNames": [
-              "user_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_customer_segments_user_id` ON `${TABLE_NAME}` (`user_id`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "customer_segment_types",
-            "onDelete": "RESTRICT",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "customer_segment_type_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
-      },
-      {
-        "tableName": "customer_segment_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isActive",
-            "columnName": "is_active",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1928,7 +1860,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1df193b50cc56d50f9324ce62f488c1b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2805cbf99b28ebe029f3be59dfc0d6cc')"
     ]
   }
 }

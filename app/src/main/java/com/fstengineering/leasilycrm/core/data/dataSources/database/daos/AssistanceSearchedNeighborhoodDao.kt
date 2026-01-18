@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ass
 @Dao
 interface AssistanceSearchedNeighborhoodDao {
     @Upsert
-    suspend fun insertOrUpdate(neighborhood: AssistanceSearchedNeighborhoodEntity): Long
+    suspend fun insertOrUpdate(neighborhood: AssistanceSearchedNeighborhoodEntity)
 }

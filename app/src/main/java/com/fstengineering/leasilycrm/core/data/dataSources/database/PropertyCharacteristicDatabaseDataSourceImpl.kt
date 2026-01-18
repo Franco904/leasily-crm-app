@@ -11,9 +11,9 @@ class PropertyCharacteristicDatabaseDataSourceImpl(
 ) : PropertyCharacteristicDatabaseDataSource {
     override suspend fun insertOrUpdate(
         propertyCharacteristic: PropertyCharacteristicEntity,
-    ): AppResult<Long, DataError> =
-        onDatabase { dao.insertOrUpdate(propertyCharacteristic) }
+    ) =
+        dao.insertOrUpdate(propertyCharacteristic)
 
     override suspend fun getAll(): AppResult<List<PropertyCharacteristicEntity>, DataError> =
-        onDatabase { dao.getAll() }
+        onDatabaseSafe { dao.getAll() }
 }

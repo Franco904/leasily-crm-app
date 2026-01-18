@@ -42,7 +42,6 @@ interface CrmMetricsDao {
         FROM tenants_read_view t
         INNER JOIN customer_segments cs
             ON t.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 1
             AND cs.is_deleted = 0
         WHERE t.user_id = :userId
             AND t.is_deleted = 0
@@ -100,7 +99,6 @@ interface CrmMetricsDao {
             AND t.is_deleted = 0
         INNER JOIN customer_segments cs
             ON t.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 1
             AND cs.is_deleted = 0
         WHERE s.user_id = :userId
             AND s.is_deleted = 0
@@ -126,7 +124,6 @@ interface CrmMetricsDao {
             AND po.is_deleted = 0
         INNER JOIN customer_segments cs
             ON po.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 2
             AND cs.is_deleted = 0
         WHERE s.user_id = :userId
             AND s.is_deleted = 0
@@ -190,7 +187,6 @@ interface CrmMetricsDao {
             AND t.is_deleted = 0
         INNER JOIN customer_segments cs
             ON t.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 1
             AND cs.is_deleted = 0
         WHERE s.user_id = :userId
             AND s.is_deleted = 0
@@ -217,7 +213,6 @@ interface CrmMetricsDao {
             AND po.is_deleted = 0
         INNER JOIN customer_segments cs
             ON po.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 2
             AND cs.is_deleted = 0
         WHERE s.user_id = :userId
             AND s.is_deleted = 0

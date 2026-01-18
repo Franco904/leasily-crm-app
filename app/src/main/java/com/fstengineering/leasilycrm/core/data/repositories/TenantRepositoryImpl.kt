@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.TenantDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class TenantRepositoryImpl(
+    private val databaseAdapter: DatabaseAdapter,
     private val databaseDataSource: TenantDatabaseDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
@@ -39,18 +41,15 @@ class TenantRepositoryImpl(
         val tenantWithUser = tenant.copy(userId = userRemoteId)
         val tenantEntity = TenantEntity.fromDomain(tenantWithUser)
 
-        databaseDataSource.insertOrUpdate(tenantEntity)
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
+        return databaseAdapter.withTransaction {
+            databaseDataSource.insertOrUpdate(tenantEntity)
+        }
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        databaseDataSource.delete(id)
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
-    }
+    override suspend fun delete(id: Long): AppResult<Unit, DataError> =
+        databaseAdapter.withTransaction {
+            databaseDataSource.delete(id)
+        }
 
     override suspend fun getById(
         tenantId: Long,

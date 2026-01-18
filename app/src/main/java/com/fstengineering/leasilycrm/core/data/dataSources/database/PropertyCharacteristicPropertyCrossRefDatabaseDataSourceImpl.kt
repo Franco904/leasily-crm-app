@@ -11,6 +11,6 @@ class PropertyCharacteristicPropertyCrossRefDatabaseDataSourceImpl(
 ) : PropertyCharacteristicPropertyCrossRefDatabaseDataSource {
     override suspend fun insertOrUpdate(
         crossRef: PropertyCharacteristicPropertyCrossRefEntity,
-    ): AppResult<Unit, DataError> =
-        onDatabase { dao.insertOrUpdate(crossRef) }
+    ) =
+        dao.insertOrUpdate(crossRef)
 }

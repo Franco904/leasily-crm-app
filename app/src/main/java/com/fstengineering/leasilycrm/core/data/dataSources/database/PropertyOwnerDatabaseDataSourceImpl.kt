@@ -11,24 +11,22 @@ import kotlinx.coroutines.flow.Flow
 class PropertyOwnerDatabaseDataSourceImpl(
     private val dao: PropertyOwnerDao,
 ) : PropertyOwnerDatabaseDataSource {
-    override suspend fun insertOrUpdate(propertyOwner: PropertyOwnerEntity): AppResult<Long, DataError> {
-        return onDatabase { dao.insertOrUpdate(propertyOwner) }
-    }
+    override suspend fun insertOrUpdate(propertyOwner: PropertyOwnerEntity): Long =
+        dao.insertOrUpdate(propertyOwner)
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        return onDatabase { dao.delete(id) }
-    }
+    override suspend fun delete(id: Long) =
+        dao.delete(id)
 
     override suspend fun getById(id: Long): AppResult<PropertyOwnerCompound, DataError> {
-        return onDatabase { dao.getById(id) }
+        return onDatabaseSafe { dao.getById(id) }
     }
 
     override fun watchById(id: Long): AppResult<Flow<PropertyOwnerCompound>, DataError> {
-        return onDatabase { dao.watchById(id) }
+        return onDatabaseSafe { dao.watchById(id) }
     }
 
     override fun watchAll(userId: Long): AppResult<Flow<List<PropertyOwnerCompound>>, DataError> {
-        return onDatabase { dao.watchAll(userId) }
+        return onDatabaseSafe { dao.watchAll(userId) }
     }
 
     override suspend fun countPropertyOwnersWithName(
@@ -36,7 +34,7 @@ class PropertyOwnerDatabaseDataSourceImpl(
         propertyOwnerName: String,
         currentStoredPropertyOwnerName: String?
     ): AppResult<Int, DataError> {
-        return onDatabase {
+        return onDatabaseSafe {
             dao.countPropertyOwnersWithName(
                 userId = userId,
                 propertyOwnerName = propertyOwnerName,

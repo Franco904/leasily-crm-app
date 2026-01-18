@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetDomainTablesDto(
     val assistanceCharacteristics: List<GetAssistanceCharacteristicDto>,
-    val customerSegmentTypes: List<GetCustomerSegmentTypeDto>,
     val propertyCharacteristics: List<GetPropertyCharacteristicDto>,
     val propertySeaProximityTypes: List<GetPropertySeaProximityTypeDto>,
     val propertyTypes: List<GetPropertyTypeDto>,

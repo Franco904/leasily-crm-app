@@ -8,6 +8,5 @@ data class CustomerSegment(
     val updateDateTime: AppDateTime? = null,
     val name: String? = null,
     val isDeleted: Boolean = false,
-    val type: CustomerSegmentType? = null,
     val userId: Long? = null,
 )

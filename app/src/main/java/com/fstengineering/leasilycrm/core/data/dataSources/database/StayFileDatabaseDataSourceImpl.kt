@@ -11,6 +11,6 @@ class StayFileDatabaseDataSourceImpl(
 ) : StayFileDatabaseDataSource {
     override suspend fun insertOrUpdate(
         stayFile: StayFileEntity,
-    ): AppResult<Unit, DataError> =
-        onDatabase { dao.insertOrUpdate(stayFile) }
+    ) =
+        dao.insertOrUpdate(stayFile)
 }

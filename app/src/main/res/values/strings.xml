@@ -644,8 +644,6 @@
 
     <string name="inline_invalid_email">Email inválido</string>
 
-    <string name="inline_name_belongs_other_tenant_segment">Já existe um segmento de inquilino com este nome</string>
-    <string name="inline_name_belongs_other_property_owner_segment">Já existe um segmento de proprietário com este nome</string>
     <string name="inline_name_belongs_other_property_owner">Já existe um proprietário com este nome</string>
     <string name="inline_name_belongs_other_tenant">Já existe um lead ou inquilino com este nome</string>
 

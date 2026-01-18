@@ -11,7 +11,6 @@ class AssistanceSearchedNeighborhoodDatabaseDataSourceImpl(
 ) : AssistanceSearchedNeighborhoodDatabaseDataSource {
     override suspend fun insertOrUpdate(
         neighborhood: AssistanceSearchedNeighborhoodEntity,
-    ): AppResult<Unit, DataError> {
-        return onDatabase { dao.insertOrUpdate(neighborhood) }
-    }
+    ) =
+        dao.insertOrUpdate(neighborhood)
 }

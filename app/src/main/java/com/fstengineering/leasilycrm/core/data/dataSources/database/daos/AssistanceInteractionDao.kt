@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ass
 @Dao
 interface AssistanceInteractionDao {
     @Upsert
-    suspend fun insertOrUpdate(assistanceInteraction: AssistanceInteractionEntity): Long
+    suspend fun insertOrUpdate(assistanceInteraction: AssistanceInteractionEntity)
 }

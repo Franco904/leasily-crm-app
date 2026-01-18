@@ -11,7 +11,6 @@ class AssistanceSentPropertyCrossRefDatabaseDataSourceImpl(
 ) : AssistanceSentPropertyCrossRefDatabaseDataSource {
     override suspend fun insertOrUpdate(
         crossRef: AssistanceSentPropertyCrossRefEntity,
-    ): AppResult<Unit, DataError> {
-        return onDatabase { dao.insertOrUpdate(crossRef) }
-    }
+    ) =
+        dao.insertOrUpdate(crossRef)
 }

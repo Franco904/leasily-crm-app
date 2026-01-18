@@ -11,6 +11,6 @@ class StayTransferDatabaseDataSourceImpl(
 ) : StayTransferDatabaseDataSource {
     override suspend fun insertOrUpdate(
         stayTransfer: StayTransferEntity,
-    ): AppResult<Unit, DataError> =
-        onDatabase { dao.insertOrUpdate(stayTransfer) }
+    ) =
+        dao.insertOrUpdate(stayTransfer)
 }

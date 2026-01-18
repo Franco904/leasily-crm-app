@@ -22,60 +22,60 @@ class CrmMetricsDatabaseDataSourceImpl(
     override fun watchGeneratedLeadsPerMonth(
         userId: Long,
     ): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchGeneratedLeadsPerMonth(userId) }
+        onDatabaseSafe { dao.watchGeneratedLeadsPerMonth(userId) }
 
     override fun watchGeneratedLeadsPerTenantSegmentPerMonth(
         userId: Long,
     ): AppResult<Flow<List<GeneratedLeadsPerTenantSegmentPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchGeneratedLeadsPerTenantSegmentPerMonth(userId) }
+        onDatabaseSafe { dao.watchGeneratedLeadsPerTenantSegmentPerMonth(userId) }
 
     override fun watchCountLeadsByContactChannelType(
         userId: Long,
     ): AppResult<Flow<List<LeadContactChannelCountCompound>>, DataError> =
-        onDatabase { dao.watchCountLeadsByContactChannelType(userId) }
+        onDatabaseSafe { dao.watchCountLeadsByContactChannelType(userId) }
 
     override fun watchNewStayBookingsPerMonth(
         userId: Long,
     ): AppResult<Flow<List<NewStayBookingsPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchNewStayBookingsPerMonth(userId) }
+        onDatabaseSafe { dao.watchNewStayBookingsPerMonth(userId) }
 
     override fun watchNewStayBookingsPerTenantSegmentPerMonth(
         userId: Long,
     ): AppResult<Flow<List<NewStayBookingsPerCustomerSegmentPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchNewStayBookingsPerTenantSegmentPerMonth(userId) }
+        onDatabaseSafe { dao.watchNewStayBookingsPerTenantSegmentPerMonth(userId) }
 
     override fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(
         userId: Long,
     ): AppResult<Flow<List<NewStayBookingsPerCustomerSegmentPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(userId) }
+        onDatabaseSafe { dao.watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(userId) }
 
     override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(
         userId: Long,
     ): AppResult<Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchNewStayBookingsPerTop3NeighborhoodsPerMonth(userId) }
+        onDatabaseSafe { dao.watchNewStayBookingsPerTop3NeighborhoodsPerMonth(userId) }
 
     override fun watchCommissionInvoicePerMonth(
         userId: Long,
     ): AppResult<Flow<List<CommissionInvoicePerMonthCompound>>, DataError> =
-        onDatabase { dao.watchCommissionInvoicePerMonth(userId) }
+        onDatabaseSafe { dao.watchCommissionInvoicePerMonth(userId) }
 
     override fun watchCommissionInvoicePerTenantSegmentPerMonth(
         userId: Long,
     ): AppResult<Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchCommissionInvoicePerTenantSegmentPerMonth(userId) }
+        onDatabaseSafe { dao.watchCommissionInvoicePerTenantSegmentPerMonth(userId) }
 
     override fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(
         userId: Long,
     ): AppResult<Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(userId) }
+        onDatabaseSafe { dao.watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(userId) }
 
     override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(
         userId: Long,
     ): AppResult<Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchCommissionInvoicePerTop3NeighborhoodsPerMonth(userId) }
+        onDatabaseSafe { dao.watchCommissionInvoicePerTop3NeighborhoodsPerMonth(userId) }
 
     override fun watchAverageTicketPerMonth(
         userId: Long,
     ): AppResult<Flow<List<AverageTicketPerMonthCompound>>, DataError> =
-        onDatabase { dao.watchAverageTicketPerMonth(userId) }
+        onDatabaseSafe { dao.watchAverageTicketPerMonth(userId) }
 }

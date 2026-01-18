@@ -10,8 +10,7 @@ class AssistanceInteractionDatabaseDataSourceImpl(
     private val dao: AssistanceInteractionDao,
 ) : AssistanceInteractionDatabaseDataSource {
     override suspend fun insertOrUpdate(
-        assistanceInteraction: AssistanceInteractionEntity,
-    ): AppResult<Unit, DataError> {
-        return onDatabase { dao.insertOrUpdate(assistanceInteraction) }
-    }
+        interaction: AssistanceInteractionEntity,
+    ) =
+        dao.insertOrUpdate(interaction)
 }

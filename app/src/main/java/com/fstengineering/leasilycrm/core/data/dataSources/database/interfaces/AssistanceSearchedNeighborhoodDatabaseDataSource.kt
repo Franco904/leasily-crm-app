@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.domain.utils.DataError
 interface AssistanceSearchedNeighborhoodDatabaseDataSource {
     suspend fun insertOrUpdate(
         neighborhood: AssistanceSearchedNeighborhoodEntity,
-    ): AppResult<Unit, DataError>
+    )
 }

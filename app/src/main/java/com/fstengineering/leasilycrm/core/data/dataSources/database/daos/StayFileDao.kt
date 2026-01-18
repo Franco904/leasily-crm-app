@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Sta
 @Dao
 interface StayFileDao {
     @Upsert
-    suspend fun insertOrUpdate(stayFile: StayFileEntity): Long
+    suspend fun insertOrUpdate(stayFile: StayFileEntity)
 }

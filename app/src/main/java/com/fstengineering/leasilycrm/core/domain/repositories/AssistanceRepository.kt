@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.collections.immutable.ImmutableList
 
 interface AssistanceRepository {
-    suspend fun insertOrUpdate(assistance: Assistance): AppResult<Long, DataError>
+    suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, DataError>
 
     suspend fun delete(id: Long): AppResult<Unit, DataError>
 

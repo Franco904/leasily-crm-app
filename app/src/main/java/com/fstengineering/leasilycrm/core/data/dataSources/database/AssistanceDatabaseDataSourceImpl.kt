@@ -10,19 +10,17 @@ import com.fstengineering.leasilycrm.core.domain.utils.DataError
 class AssistanceDatabaseDataSourceImpl(
     private val dao: AssistanceDao,
 ) : AssistanceDatabaseDataSource {
-    override suspend fun insertOrUpdate(assistance: AssistanceEntity): AppResult<Long, DataError> {
-        return onDatabase { dao.insertOrUpdate(assistance) }
-    }
+    override suspend fun insertOrUpdate(assistance: AssistanceEntity): Long =
+        dao.insertOrUpdate(assistance)
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        return onDatabase { dao.delete(id) }
-    }
+    override suspend fun delete(id: Long) =
+        dao.delete(id)
 
     override suspend fun getById(id: Long): AppResult<AssistanceCompound, DataError> {
-        return onDatabase { dao.getById(id) }
+        return onDatabaseSafe { dao.getById(id) }
     }
 
     override suspend fun getAllNeighborhoodNames(userId: Long): AppResult<List<String>, DataError> {
-        return onDatabase { dao.getAllNeighborhoodNames(userId) }
+        return onDatabaseSafe { dao.getAllNeighborhoodNames(userId) }
     }
 }

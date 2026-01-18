@@ -1,7 +1,16 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceCharacteristicAssistanceCrossRefEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceInteractionEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.AssistanceDatabaseDataSource
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.AssistanceInteractionDatabaseDataSource
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.AssistanceSearchedNeighborhoodDatabaseDataSource
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.AssistanceSentPropertyCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
@@ -9,36 +18,65 @@ import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceReposito
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.utils.onError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.firstOrNull
 
 class AssistanceRepositoryImpl(
-    private val databaseDataSource: AssistanceDatabaseDataSource,
+    private val databaseAdapter: DatabaseAdapter,
+    private val assistanceDatabaseDataSource: AssistanceDatabaseDataSource,
+    private val assistanceCharacteristicCrossRefDatabaseDataSource: AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource,
+    private val assistanceInteractionDatabaseDataSource: AssistanceInteractionDatabaseDataSource,
+    private val assistanceSearchedNeighborhoodDatabaseDataSource: AssistanceSearchedNeighborhoodDatabaseDataSource,
+    private val assistanceSentPropertyCrossRefDatabaseDataSource: AssistanceSentPropertyCrossRefDatabaseDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
 ) : AssistanceRepository {
-    override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Long, DataError> {
+    override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, DataError> {
+        return databaseAdapter.withTransaction {
+            saveDataInDatabase(assistance)
+        }
+    }
+
+    private suspend fun saveDataInDatabase(assistance: Assistance) {
         val assistanceEntity = AssistanceEntity.fromDomain(assistance)
 
-        val id = databaseDataSource.insertOrUpdate(assistanceEntity)
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { id -> id.let { assistance.id ?: it } }
-            )
+        val assistanceId = assistanceDatabaseDataSource.insertOrUpdate(assistanceEntity)
+            .let { id -> assistanceEntity.id ?: id }
 
-        return AppResult.Success(data = id)
+        assistance.characteristics.forEach {
+            val characteristic =
+                AssistanceCharacteristicAssistanceCrossRefEntity.fromDomain(domain = it)
+                    .copy(assistanceId = assistanceId)
+            assistanceCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
+        }
+
+        assistance.interactions.forEach {
+            val interaction = AssistanceInteractionEntity.fromDomain(domain = it)
+                .copy(assistanceId = assistanceId)
+            assistanceInteractionDatabaseDataSource.insertOrUpdate(interaction)
+        }
+
+        assistance.searchedNeighborhoods.forEach {
+            val searchedNeighborhood =
+                AssistanceSearchedNeighborhoodEntity.fromDomain(domain = it)
+                    .copy(assistanceId = assistanceId)
+            assistanceSearchedNeighborhoodDatabaseDataSource.insertOrUpdate(searchedNeighborhood)
+        }
+
+        assistance.sentProperties.forEach {
+            val sentProperty = AssistanceSentPropertyCrossRefEntity.fromDomain(domain = it)
+                .copy(assistanceId = assistanceId)
+            assistanceSentPropertyCrossRefDatabaseDataSource.insertOrUpdate(sentProperty)
+        }
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        databaseDataSource.delete(id)
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
-    }
+    override suspend fun delete(id: Long): AppResult<Unit, DataError> =
+        databaseAdapter.withTransaction {
+            assistanceDatabaseDataSource.delete(id)
+        }
 
     override suspend fun getById(assistanceId: Long): AppResult<Assistance, DataError> {
-        val property = databaseDataSource.getById(id = assistanceId)
+        val property = assistanceDatabaseDataSource.getById(id = assistanceId)
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { property -> property.toDomain() }
@@ -54,11 +92,12 @@ class AssistanceRepositoryImpl(
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
             )
 
-        val neighborhoodNames = databaseDataSource.getAllNeighborhoodNames(userId = userRemoteId)
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { neighborhoodNames -> neighborhoodNames.toPersistentList() }
-            )
+        val neighborhoodNames =
+            assistanceDatabaseDataSource.getAllNeighborhoodNames(userId = userRemoteId)
+                .fold(
+                    onError = { return AppResult.Error(error = it) },
+                    onSuccess = { neighborhoodNames -> neighborhoodNames.toPersistentList() }
+                )
 
         return AppResult.Success(data = neighborhoodNames)
     }

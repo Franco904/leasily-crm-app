@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlin.coroutines.cancellation.CancellationException
 
-inline fun <T> onDatabase(block: () -> T): AppResult<T, DataError> {
+inline fun <T> onDatabaseSafe(block: () -> T): AppResult<T, DataError> {
     try {
         return AppResult.Success(block())
     } catch (e: Exception) {

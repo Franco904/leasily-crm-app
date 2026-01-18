@@ -11,9 +11,9 @@ class PropertySeaProximityTypeDatabaseDataSourceImpl(
 ) : PropertySeaProximityTypeDatabaseDataSource {
     override suspend fun insertOrUpdate(
         propertySeaProximityType: PropertySeaProximityTypeEntity,
-    ): AppResult<Unit, DataError> =
-        onDatabase { dao.insertOrUpdate(propertySeaProximityType) }
+    ) =
+        dao.insertOrUpdate(propertySeaProximityType)
 
     override suspend fun getAll(): AppResult<List<PropertySeaProximityTypeEntity>, DataError> =
-        onDatabase { dao.getAll() }
+        onDatabaseSafe { dao.getAll() }
 }

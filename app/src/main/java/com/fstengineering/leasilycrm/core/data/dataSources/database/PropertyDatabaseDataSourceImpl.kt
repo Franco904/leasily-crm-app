@@ -11,39 +11,37 @@ import kotlinx.coroutines.flow.Flow
 class PropertyDatabaseDataSourceImpl(
     private val dao: PropertyDao,
 ) : PropertyDatabaseDataSource {
-    override suspend fun insertOrUpdate(property: PropertyEntity): AppResult<Long, DataError> {
-        return onDatabase { dao.insertOrUpdate(property) }
-    }
+    override suspend fun insertOrUpdate(property: PropertyEntity): Long =
+        dao.insertOrUpdate(property)
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        return onDatabase { dao.delete(id) }
-    }
+    override suspend fun delete(id: Long) =
+        dao.delete(id)
 
     override suspend fun getById(id: Long): AppResult<PropertyCompound, DataError> {
-        return onDatabase { dao.getById(id) }
+        return onDatabaseSafe { dao.getById(id) }
     }
 
     override suspend fun getAll(userId: Long): AppResult<List<PropertyCompound>, DataError> {
-        return onDatabase { dao.getAll(userId) }
+        return onDatabaseSafe { dao.getAll(userId) }
     }
 
     override suspend fun getAllMatching(
         userId: Long,
         matching: String?
     ): AppResult<List<PropertyCompound>, DataError> {
-        return onDatabase { dao.getAllMatching(userId, matching) }
+        return onDatabaseSafe { dao.getAllMatching(userId, matching) }
     }
 
     override suspend fun getAllNeighborHoodNames(userId: Long): AppResult<List<String>, DataError> {
-        return onDatabase { dao.getAllNeighborHoodNames(userId) }
+        return onDatabaseSafe { dao.getAllNeighborHoodNames(userId) }
     }
 
     override fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, DataError> {
-        return onDatabase { dao.watchById(id) }
+        return onDatabaseSafe { dao.watchById(id) }
     }
 
     override fun watchAll(userId: Long): AppResult<Flow<List<PropertyCompound>>, DataError> {
-        return onDatabase { dao.watchAll(userId) }
+        return onDatabaseSafe { dao.watchAll(userId) }
     }
 }
 

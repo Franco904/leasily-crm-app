@@ -11,11 +11,10 @@ class AssistanceCharacteristicDatabaseDataSourceImpl(
 ) : AssistanceCharacteristicDatabaseDataSource {
     override suspend fun insertOrUpdate(
         assistanceCharacteristic: AssistanceCharacteristicEntity,
-    ): AppResult<Unit, DataError> {
-        return onDatabase { dao.insertOrUpdate(assistanceCharacteristic) }
-    }
+    ) =
+        dao.insertOrUpdate(assistanceCharacteristic)
 
     override suspend fun getAll(): AppResult<List<AssistanceCharacteristicEntity>, DataError> {
-        return onDatabase { dao.getAll() }
+        return onDatabaseSafe { dao.getAll() }
     }
 }

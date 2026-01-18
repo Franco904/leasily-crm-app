@@ -1,7 +1,14 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyFileEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyPriceEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyCharacteristicPropertyCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyDatabaseDataSource
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyFileDatabaseDataSource
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyPriceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
@@ -24,11 +31,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 
 class PropertyRepositoryImpl(
-    private val databaseDataSource: PropertyDatabaseDataSource,
+    private val databaseAdapter: DatabaseAdapter,
+    private val propertyDatabaseDataSource: PropertyDatabaseDataSource,
+    private val propertyCharacteristicPropertyDatabaseDataSource: PropertyCharacteristicPropertyCrossRefDatabaseDataSource,
+    private val propertyFileDatabaseDataSource: PropertyFileDatabaseDataSource,
+    private val propertyPriceDatabaseDataSource: PropertyPriceDatabaseDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : PropertyRepository {
-    override suspend fun insertOrUpdate(property: Property): AppResult<Long, DataError> {
+    override suspend fun insertOrUpdate(property: Property): AppResult<Unit, DataError> {
         val userRemoteId = encryptedPreferencesDataSource.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
@@ -36,27 +47,45 @@ class PropertyRepositoryImpl(
             )
 
         val propertyWithUser = property.copy(userId = userRemoteId)
-        val propertyEntity = PropertyEntity.fromDomain(propertyWithUser)
 
-        val id = databaseDataSource.insertOrUpdate(propertyEntity)
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { it },
-            )
+        return databaseAdapter.withTransaction {
+            saveDataInDatabase(propertyWithUser)
+        }
+    }
+
+    private suspend fun saveDataInDatabase(property: Property) {
+        val propertyEntity = PropertyEntity.fromDomain(property)
+
+        val propertyId = propertyDatabaseDataSource.insertOrUpdate(propertyEntity)
             .let { property.id ?: it }
 
-        return AppResult.Success(data = id)
+        property.characteristics.forEach {
+            val characteristic =
+                PropertyCharacteristicPropertyCrossRefEntity.fromDomain(domain = it)
+                    .copy(propertyId = propertyId)
+            propertyCharacteristicPropertyDatabaseDataSource.insertOrUpdate(characteristic)
+        }
+
+        property.files.forEach {
+            val file = PropertyFileEntity.fromDomain(domain = it)
+                .copy(propertyId = propertyId)
+            propertyFileDatabaseDataSource.insertOrUpdate(file)
+        }
+
+        property.prices.forEach {
+            val price = PropertyPriceEntity.fromDomain(domain = it)
+                .copy(propertyId = propertyId)
+            propertyPriceDatabaseDataSource.insertOrUpdate(price)
+        }
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        databaseDataSource.delete(id)
-            .onError { return AppResult.Error(error = it) }
-
-        return AppResult.Success(data = Unit)
-    }
+    override suspend fun delete(id: Long): AppResult<Unit, DataError> =
+        databaseAdapter.withTransaction {
+            propertyDatabaseDataSource.delete(id)
+        }
 
     override suspend fun getById(propertyId: Long): AppResult<Property, DataError> {
-        val property = databaseDataSource.getById(id = propertyId)
+        val property = propertyDatabaseDataSource.getById(id = propertyId)
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { it },
@@ -73,7 +102,7 @@ class PropertyRepositoryImpl(
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
-        val properties = databaseDataSource.getAll(userId = userRemoteId)
+        val properties = propertyDatabaseDataSource.getAll(userId = userRemoteId)
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { it },
@@ -92,7 +121,7 @@ class PropertyRepositoryImpl(
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
-        val properties = databaseDataSource.getAllMatching(
+        val properties = propertyDatabaseDataSource.getAllMatching(
             userId = userRemoteId,
             matching = matching,
         )
@@ -112,18 +141,19 @@ class PropertyRepositoryImpl(
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
-        val neighborHoodNames = databaseDataSource.getAllNeighborHoodNames(userId = userRemoteId)
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { it },
-            )
-            .toPersistentList()
+        val neighborHoodNames =
+            propertyDatabaseDataSource.getAllNeighborHoodNames(userId = userRemoteId)
+                .fold(
+                    onError = { return AppResult.Error(error = it) },
+                    onSuccess = { it },
+                )
+                .toPersistentList()
 
         return AppResult.Success(data = neighborHoodNames)
     }
 
     override fun watchById(propertyId: Long): Flow<AppResult<Property?, DataError>> = flow {
-        val propertyFlow = databaseDataSource.watchById(id = propertyId)
+        val propertyFlow = propertyDatabaseDataSource.watchById(id = propertyId)
             .fold(
                 onError = { return@flow emit(AppResult.Error(error = it)) },
                 onSuccess = { it },
@@ -147,7 +177,7 @@ class PropertyRepositoryImpl(
                     onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
                 )
 
-            val propertiesFlow = databaseDataSource.watchAll(userId = userRemoteId)
+            val propertiesFlow = propertyDatabaseDataSource.watchAll(userId = userRemoteId)
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it },

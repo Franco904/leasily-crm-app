@@ -12,7 +12,6 @@ import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.StayTransferRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
@@ -48,7 +47,6 @@ class StayRegistrationViewModel(
     private val stayRepository: StayRepository,
     private val propertyRepository: PropertyRepository,
     private val tenantRepository: TenantRepository,
-    private val stayTransferRepository: StayTransferRepository,
     private val stayFileRepository: StayFileRepository,
     private val stayValidator: StayValidator,
     private val stayTransferValidator: StayTransferValidator,
@@ -403,28 +401,8 @@ class StayRegistrationViewModel(
                     return@launch
                 }
 
-            val stayId = stayRepository.insertOrUpdate(stayForm.value)
-                .fold(
-                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
-                    onSuccess = { stayId -> stayId },
-                )
-
-            stayForm.value.files.forEach { file ->
-                stayFileRepository.insertOrUpdate(
-                    file = file.copy(stayId = stayId),
-                )
-            }
-
-            stayForm.value.transfers.forEach { transfer ->
-                stayTransferRepository.insertOrUpdate(
-                    transfer = transfer.copy(stayId = stayId),
-                )
-            }
-
-            stayForm.value.tenant?.let { tenant ->
-                tenantRepository.insertOrUpdate(tenant)
-                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-            }
+            stayRepository.insertOrUpdate(stayForm.value)
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             val editMessageId =
                 if (stayForm.value.isUnavailablePeriod) R.string.edit_unavailable_period_success_message
