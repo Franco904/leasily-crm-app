@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.apis.interfaces.UserApi
-import com.fstengineering.leasilycrm.core.data.dataSources.remoteBackend.requestDtos.user.UpdateUserDto
+import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
+import com.fstengineering.leasilycrm.core.data.dataSources.remote.interfaces.UserRemoteDataSource
+import com.fstengineering.leasilycrm.core.data.dataSources.remote.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.data.models.SyncState
 import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
@@ -16,17 +16,17 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
-    private val api: UserApi,
-    private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
+    private val remoteDataSource: UserRemoteDataSource,
+    private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
     private val userSessionService: UserSessionService,
 ) : UserRepository {
     override suspend fun storeUser(user: User): AppResult<Unit, DataError> {
-        encryptedPreferencesStorage.savePreferences { prefs ->
+        encryptedPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(
                 remoteId = user.remoteId,
                 name = user.name,
@@ -41,7 +41,7 @@ class UserRepositoryImpl(
     }
 
     override fun watchUser(): Flow<AppResult<User, DataError>> = flow {
-        encryptedPreferencesStorage.readPreferences()
+        encryptedPreferencesDataSource.readPreferences()
             .onError { emit(AppResult.Error(error = it)) }
             .onSuccess { prefsFlow ->
                 emitAll(
@@ -55,16 +55,15 @@ class UserRepositoryImpl(
     override suspend fun updateUserCreciNumber(
         creciNumber: String?,
     ): AppResult<Unit, DataError> {
-        // Cache new user name
-        encryptedPreferencesStorage.savePreferences { prefs ->
+        encryptedPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(creciNumber = creciNumber)
         }
             .onError { return AppResult.Error(error = it) }
 
-        // Try to send new user name to remote backend API
-        api.updateUser(updateUserDto = UpdateUserDto(creciNumber = creciNumber))
+        val dto = UpdateUserDto(creciNumber = creciNumber)
+        remoteDataSource.updateUser(updateUserDto = dto)
             .onError { e ->
-                encryptedPreferencesStorage.savePreferences { prefs ->
+                encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.PendingSync.id)
                 }
 
@@ -73,7 +72,7 @@ class UserRepositoryImpl(
                 return AppResult.Error(error = e)
             }
             .onSuccess {
-                encryptedPreferencesStorage.savePreferences { prefs ->
+                encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Synced.id)
                 }
                     .onError { return AppResult.Error(error = it) }
@@ -83,20 +82,20 @@ class UserRepositoryImpl(
     }
 
     override suspend fun retryUserUpdate(): AppResult<Unit, DataError> {
-        val prefs = encryptedPreferencesStorage.readPreferences()
+        val prefs = encryptedPreferencesDataSource.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.first() },
+                onSuccess = { prefsFlow -> prefsFlow.firstOrNull() },
             )
 
-        if (prefs.userSyncStateId != SyncState.PendingSync.id) {
+        if (prefs?.userSyncStateId != SyncState.PendingSync.id) {
             return AppResult.Success(data = Unit) // no update needed
         }
 
         val cachedUser = prefs.toUser()
-        api.updateUser(updateUserDto = UpdateUserDto(cachedUser.creciNumber))
+        remoteDataSource.updateUser(updateUserDto = UpdateUserDto(cachedUser.creciNumber))
             .onError { remoteBackendError ->
-                encryptedPreferencesStorage.savePreferences { prefs ->
+                encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.PendingSync.id)
                 }
                     .onError { return AppResult.Error(error = it) }
@@ -104,7 +103,7 @@ class UserRepositoryImpl(
                 return AppResult.Error(error = remoteBackendError)
             }
             .onSuccess {
-                encryptedPreferencesStorage.savePreferences { prefs ->
+                encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Synced.id)
                 }
                     .onError { return AppResult.Error(error = it) }

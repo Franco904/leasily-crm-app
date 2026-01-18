@@ -1,14 +1,15 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.AssistanceSearchedNeighborhoodDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.AssistanceSearchedNeighborhoodDatabaseDataSource
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceSearchedNeighborhoodRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class AssistanceSearchedNeighborhoodRepositoryImpl(
-    private val dao: AssistanceSearchedNeighborhoodDao,
+    private val databaseDataSource: AssistanceSearchedNeighborhoodDatabaseDataSource,
 ) : AssistanceSearchedNeighborhoodRepository {
     override suspend fun insertOrUpdate(
         searchedNeighborhood: AssistanceSearchedNeighborhood,
@@ -16,7 +17,8 @@ class AssistanceSearchedNeighborhoodRepositoryImpl(
         val searchedNeighborhoodEntity =
             AssistanceSearchedNeighborhoodEntity.fromDomain(domain = searchedNeighborhood)
 
-        dao.insertOrUpdate(searchedNeighborhoodEntity)
+        databaseDataSource.insertOrUpdate(searchedNeighborhoodEntity)
+            .onError { return AppResult.Error(error = it) }
 
         return AppResult.Success(data = Unit)
     }

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.signin.composables
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

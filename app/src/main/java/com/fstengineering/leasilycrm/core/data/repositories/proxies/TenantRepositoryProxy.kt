@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.repositories.proxies
 
-import com.fstengineering.leasilycrm.core.data.dataSources.cache.interfaces.CacheLocalDataSource
+import com.fstengineering.leasilycrm.core.data.dataSources.inMemory.interfaces.TenantInMemoryDataSource
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
@@ -11,12 +11,12 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 class TenantRepositoryProxy(
-    private val cacheLocalDataSource: CacheLocalDataSource,
+    private val tenantInMemoryDataSource: TenantInMemoryDataSource,
     private val tenantRepository: TenantRepository,
 ) : TenantRepository {
     override suspend fun insertOrUpdate(tenant: Tenant): AppResult<Unit, DataError> {
         return tenantRepository.insertOrUpdate(tenant)
-            .onSuccess { cacheLocalDataSource.removeWhere<Tenant> { it?.id == tenant.id } }
+            .onSuccess { tenantInMemoryDataSource.removeTenant(tenant) }
     }
 
     override suspend fun delete(id: Long): AppResult<Unit, DataError> {
@@ -24,16 +24,11 @@ class TenantRepositoryProxy(
     }
 
     override suspend fun getById(tenantId: Long): AppResult<Tenant, DataError> {
-        val cachedTenant = cacheLocalDataSource.get<Tenant>(key = tenantId.toString())
+        val cachedTenant = tenantInMemoryDataSource.getTenantById(tenantId)
         if (cachedTenant != null) return AppResult.Success(data = cachedTenant)
 
         return tenantRepository.getById(tenantId)
-            .onSuccess { tenant ->
-                cacheLocalDataSource.put(
-                    key = tenantId.toString(),
-                    value = tenant
-                )
-            }
+            .onSuccess { tenant -> tenantInMemoryDataSource.putTenant(tenant) }
     }
 
     override suspend fun getAllLeadsMatching(

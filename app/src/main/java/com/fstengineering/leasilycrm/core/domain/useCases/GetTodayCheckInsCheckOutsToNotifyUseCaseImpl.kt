@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 
 class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
     private val authRepository: AuthRepository,
@@ -19,8 +20,8 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
     private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
     override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, DataError> {
-        val isTodayCheckInCheckOutNotificationEnabled = settingsRepository.watchSettings().first()
-            .fold(onError = { false }, onSuccess = { it.isTodayCheckInCheckOutNotificationEnabled })
+        val isTodayCheckInCheckOutNotificationEnabled = settingsRepository.watchSettings().firstOrNull()
+            ?.fold(onError = { false }, onSuccess = { it.isTodayCheckInCheckOutNotificationEnabled }) ?: false
 
         val isSessionAlive = authRepository.isSessionAlive()
             .fold(onError = { false }, onSuccess = { it })

@@ -191,18 +191,21 @@ class PropertyRegistrationViewModel(
                 propertyCharacteristicPropertyRepository.insertOrUpdate(
                     characteristicProperty = characteristic.copy(propertyId = propertyId),
                 )
+                    .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
             }
 
             propertyForm.value.prices.forEach { price ->
                 propertyPriceRepository.insertOrUpdate(
                     price = price.copy(propertyId = propertyId),
                 )
+                    .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
             }
 
             propertyForm.value.files.forEach { file ->
                 propertyFileRepository.insertOrUpdate(
                     file = file.copy(propertyId = propertyId),
                 )
+                    .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
             }
 
             val saveEvent =

@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyEntity
+import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
+import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
@@ -18,53 +18,66 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 
 class PropertyRepositoryImpl(
-    private val dao: PropertyDao,
-    private val encryptedPreferencesStorage: PreferencesStorage<EncryptedPreferences>,
-    private val plainPreferencesStorage: PreferencesStorage<PlainPreferences>,
+    private val databaseDataSource: PropertyDatabaseDataSource,
+    private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
+    private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : PropertyRepository {
     override suspend fun insertOrUpdate(property: Property): AppResult<Long, DataError> {
-        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
+                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
         val propertyWithUser = property.copy(userId = userRemoteId)
         val propertyEntity = PropertyEntity.fromDomain(propertyWithUser)
 
-        val id = dao.insertOrUpdate(propertyEntity)
+        val id = databaseDataSource.insertOrUpdate(propertyEntity)
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { it },
+            )
             .let { property.id ?: it }
 
         return AppResult.Success(data = id)
     }
 
     override suspend fun delete(id: Long): AppResult<Unit, DataError> {
-        dao.delete(id)
+        databaseDataSource.delete(id)
+            .onError { return AppResult.Error(error = it) }
 
         return AppResult.Success(data = Unit)
     }
 
     override suspend fun getById(propertyId: Long): AppResult<Property, DataError> {
-        val property = dao.getById(id = propertyId)
+        val property = databaseDataSource.getById(id = propertyId)
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { it },
+            )
             .toDomain()
 
         return AppResult.Success(data = property)
     }
 
     override suspend fun getAll(): AppResult<ImmutableList<Property>, DataError> {
-        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
+                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
-        val properties = dao.getAll(userId = userRemoteId)
+        val properties = databaseDataSource.getAll(userId = userRemoteId)
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { it },
+            )
             .map { property -> property.toDomain() }.toPersistentList()
 
         return AppResult.Success(data = properties)
@@ -73,36 +86,48 @@ class PropertyRepositoryImpl(
     override suspend fun getAllMatching(
         matching: String?,
     ): AppResult<ImmutableList<Property>, DataError> {
-        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
+                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
-        val properties = dao.getAllMatching(
+        val properties = databaseDataSource.getAllMatching(
             userId = userRemoteId,
             matching = matching,
         )
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { it },
+            )
             .map { property -> property.toDomain() }.toPersistentList()
 
         return AppResult.Success(data = properties)
     }
 
     override suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, DataError> {
-        val userRemoteId = encryptedPreferencesStorage.readPreferences()
+        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
+                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
-        val neighborHoodNames =
-            dao.getAllNeighborHoodNames(userId = userRemoteId).toPersistentList()
+        val neighborHoodNames = databaseDataSource.getAllNeighborHoodNames(userId = userRemoteId)
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { it },
+            )
+            .toPersistentList()
 
         return AppResult.Success(data = neighborHoodNames)
     }
 
     override fun watchById(propertyId: Long): Flow<AppResult<Property?, DataError>> = flow {
-        val propertyFlow = dao.watchById(id = propertyId)
+        val propertyFlow = databaseDataSource.watchById(id = propertyId)
+            .fold(
+                onError = { return@flow emit(AppResult.Error(error = it)) },
+                onSuccess = { it },
+            )
             .map { property ->
                 AppResult.Success<Property?, DataError>(data = property?.toDomain())
             }
@@ -113,16 +138,20 @@ class PropertyRepositoryImpl(
 
     override fun watchAll(): Flow<AppResult<ImmutableList<Property>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesStorage.readPreferences()
+            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
                 .fold(
                     onError = {
                         emit(AppResult.Error(error = it))
                         return@flow
                     },
-                    onSuccess = { prefsFlow -> prefsFlow.first().remoteId ?: -1 },
+                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
                 )
 
-            val propertiesFlow = dao.watchAll(userId = userRemoteId)
+            val propertiesFlow = databaseDataSource.watchAll(userId = userRemoteId)
+                .fold(
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onSuccess = { it },
+                )
                 .map {
                     val properties = it.map { property -> property.toDomain() }.toPersistentList()
                     AppResult.Success<ImmutableList<Property>, DataError>(data = properties)
@@ -134,7 +163,7 @@ class PropertyRepositoryImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun watchPropertyStaysSelectedPeriod(): Flow<AppResult<Pair<CalendarMonthYear?, CalendarMonthYear?>, DataError>> {
-        return plainPreferencesStorage.readPreferences()
+        return plainPreferencesDataSource.readPreferences()
             .fold(
                 onError = { error -> flow { emit(AppResult.Error(error = error)) } },
                 onSuccess = { prefsFlow ->
@@ -169,7 +198,7 @@ class PropertyRepositoryImpl(
         selectedEndMonth: Int?,
         selectedEndYear: Int?,
     ): AppResult<Unit, DataError> {
-        plainPreferencesStorage.savePreferences { prefs ->
+        plainPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(
                 propertyStaysSelectedPeriodStartMonth = selectedStartMonth,
                 propertyStaysSelectedPeriodStartYear = selectedStartYear,

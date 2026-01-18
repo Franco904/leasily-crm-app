@@ -1,18 +1,18 @@
 package com.fstengineering.leasilycrm.core.application.di
 
 import android.app.Application
-import com.fstengineering.leasilycrm.core.application.di.modules.cacheModule
 import com.fstengineering.leasilycrm.core.application.di.modules.connectivityModule
 import com.fstengineering.leasilycrm.core.application.di.modules.coroutineModule
-import com.fstengineering.leasilycrm.core.application.di.modules.databaseModule
+import com.fstengineering.leasilycrm.core.application.di.modules.daoModule
+import com.fstengineering.leasilycrm.core.application.di.modules.databaseDataSourceModule
 import com.fstengineering.leasilycrm.core.application.di.modules.domainServiceModule
-import com.fstengineering.leasilycrm.core.application.di.modules.externalPresentationModule
-import com.fstengineering.leasilycrm.core.application.di.modules.preferencesModule
-import com.fstengineering.leasilycrm.core.application.di.modules.remoteBackendModule
+import com.fstengineering.leasilycrm.core.application.di.modules.inMemoryDataSourceModule
+import com.fstengineering.leasilycrm.core.application.di.modules.preferencesDataSourceModule
+import com.fstengineering.leasilycrm.core.application.di.modules.presentationModule
+import com.fstengineering.leasilycrm.core.application.di.modules.remoteDataSourceModule
 import com.fstengineering.leasilycrm.core.application.di.modules.repositoryModule
-import com.fstengineering.leasilycrm.core.application.di.modules.sharedStorageModule
+import com.fstengineering.leasilycrm.core.application.di.modules.sharedStorageDataSourceModule
 import com.fstengineering.leasilycrm.core.application.di.modules.useCaseModule
-import com.fstengineering.leasilycrm.core.application.di.modules.utilsModule
 import com.fstengineering.leasilycrm.core.application.di.modules.validatorModule
 import com.fstengineering.leasilycrm.core.application.di.modules.viewModelModule
 import com.fstengineering.leasilycrm.core.application.di.modules.workerModule
@@ -28,20 +28,20 @@ fun Application.configureDependencyInjection() {
         workManagerFactory()
 
         modules(
-            coroutineModule,
-            connectivityModule,
-            cacheModule,
-            databaseModule,
-            preferencesModule,
-            remoteBackendModule,
-            sharedStorageModule,
-            repositoryModule,
-            domainServiceModule,
-            validatorModule,
-            useCaseModule,
+            presentationModule,
             viewModelModule,
-            externalPresentationModule,
-            utilsModule,
+            useCaseModule,
+            validatorModule,
+            domainServiceModule,
+            repositoryModule,
+            databaseDataSourceModule,
+            inMemoryDataSourceModule,
+            preferencesDataSourceModule,
+            remoteDataSourceModule,
+            sharedStorageDataSourceModule,
+            connectivityModule,
+            daoModule,
+            coroutineModule,
             workerModule,
         )
     }

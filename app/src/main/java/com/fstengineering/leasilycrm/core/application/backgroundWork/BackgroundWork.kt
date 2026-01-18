@@ -8,9 +8,25 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.fstengineering.leasilycrm.BuildConfig
+import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.BootstrappingWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.LazyWritesWorker
-import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.ReadsWorker
 import java.util.concurrent.TimeUnit
+
+fun WorkManager.enqueueBootstrappingWorker() {
+    val workerConstraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.UNMETERED) // only runs when connected to Wi-Fi
+        .build()
+
+    val workRequest = OneTimeWorkRequestBuilder<BootstrappingWorker>()
+        .setConstraints(workerConstraints)
+        .build()
+
+    enqueueUniqueWork(
+        uniqueWorkName = BootstrappingWorker.uniqueName,
+        existingWorkPolicy = ExistingWorkPolicy.REPLACE,
+        request = workRequest,
+    )
+}
 
 fun WorkManager.enqueueLazyWritesWorker() {
     val workerConstraints = Constraints.Builder()
@@ -26,19 +42,8 @@ fun WorkManager.enqueueLazyWritesWorker() {
         .build()
 
     enqueueUniquePeriodicWork(
-        LazyWritesWorker.UNIQUE_NAME,
-        ExistingPeriodicWorkPolicy.REPLACE,
-        workRequest,
-    )
-}
-
-fun WorkManager.enqueueReadsWorker() {
-    val workRequest = OneTimeWorkRequestBuilder<ReadsWorker>()
-        .build()
-
-    enqueueUniqueWork(
-        ReadsWorker.UNIQUE_NAME,
-        ExistingWorkPolicy.REPLACE,
-        workRequest,
+        uniqueWorkName = LazyWritesWorker.uniqueName,
+        existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.REPLACE,
+        request = workRequest,
     )
 }

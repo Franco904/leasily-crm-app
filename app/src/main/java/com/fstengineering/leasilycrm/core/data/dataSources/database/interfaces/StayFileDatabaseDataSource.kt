@@ -1,0 +1,9 @@
+package com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces
+
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayFileEntity
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
+
+interface StayFileDatabaseDataSource {
+    suspend fun insertOrUpdate(stayFile: StayFileEntity): AppResult<Unit, DataError>
+}

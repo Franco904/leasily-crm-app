@@ -63,193 +63,193 @@ import org.koin.dsl.module
 val repositoryModule = module {
     single<AssistanceCharacteristicAssistanceRepository> {
         AssistanceCharacteristicAssistanceRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<AssistanceCharacteristicRepository> {
         AssistanceCharacteristicRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<AssistanceRepository> {
         AssistanceRepositoryImpl(
-            dao = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+            databaseDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
     }
 
     single<AssistanceInteractionRepository> {
         AssistanceInteractionRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<AssistanceSearchedNeighborhoodRepository> {
         AssistanceSearchedNeighborhoodRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<AssistanceSentPropertyRepository> {
         AssistanceSentPropertyRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<AuthRepository> {
         AuthRepositoryImpl(
             connectivityAdapter = get(),
-            api = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+            remoteDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
     }
 
     single<CrmMetricsRepository> {
         CrmMetricsRepositoryImpl(
-            crmMetricsDao = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+            databaseDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
             now = AppDate.lazyNow(),
         )
     }
 
     single<CustomerSegmentRepository> {
         CustomerSegmentRepositoryImpl(
-            dao = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+            databaseDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
     }
 
     single<CustomerSegmentTypeRepository> {
         CustomerSegmentTypeRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<DomainTablesRepository> {
         DomainTablesRepositoryImpl(
             connectivityAdapter = get(),
-            api = get(),
-            assistanceCharacteristicDao = get(),
-            customerSegmentTypeDao = get(),
-            propertyCharacteristicDao = get(),
-            propertySeaProximityTypeDao = get(),
-            propertyTypeDao = get(),
-            tenantContactOriginTypeDao = get(),
+            remoteDataSource = get(),
+            assistanceCharacteristicDataSource = get(),
+            customerSegmentTypeDataSource = get(),
+            propertyCharacteristicDataSource = get(),
+            propertySeaProximityTypeDataSource = get(),
+            propertyTypeDataSource = get(),
+            tenantContactOriginTypeDataSource = get(),
         )
     }
 
     single<PropertyCharacteristicPropertyRepository> {
         PropertyCharacteristicPropertyRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<PropertyCharacteristicRepository> {
         PropertyCharacteristicRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<PropertyFileRepository> {
         PropertyFileRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<PropertyOwnerFileRepository> {
         PropertyOwnerFileRepositoryImpl(
-            dao = get(),
-            sharedStorage = get(),
+            databaseDataSource = get(),
+            sharedStorageDataSource = get(),
         )
     }
 
     single<PropertyOwnerRepository> {
         PropertyOwnerRepositoryImpl(
-            dao = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
-            sharedStorage = get(),
+            databaseDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
+            sharedStorageDataSource = get(),
         )
     }
 
     single<PropertyPriceRepository> {
         PropertyPriceRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<PropertyRepository> {
         PropertyRepositoryImpl(
-            dao = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
-            plainPreferencesStorage = get(plainPreferencesQualifier),
+            databaseDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
+            plainPreferencesDataSource = get(plainPreferencesQualifier),
         )
     }
 
     single<PropertySeaProximityTypeRepository> {
         PropertySeaProximityRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<PropertyTypeRepository> {
         PropertyTypeRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<SettingsRepository> {
         SettingsRepositoryImpl(
-            plainPreferencesStorage = get(plainPreferencesQualifier),
+            plainPreferencesDataSource = get(plainPreferencesQualifier),
         )
     }
 
     single<StayRepository> {
         StayRepositoryImpl(
-            dao = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
-            plainPreferencesStorage = get(plainPreferencesQualifier),
-            sharedStorage = get(),
+            databaseDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
+            plainPreferencesDataSource = get(plainPreferencesQualifier),
+            sharedStorageDataSource = get(),
         )
     }
 
     single<StayFileRepository> {
         StayFileRepositoryImpl(
-            dao = get(),
-            sharedStorage = get(),
+            databaseDataSource = get(),
+            sharedStorageDataSource = get(),
         )
     }
 
     single<StayTransferRepository> {
         StayTransferRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<TenantRepository> {
         val realRepository = TenantRepositoryImpl(
-            dao = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
-            plainPreferencesStorage = get(plainPreferencesQualifier),
+            databaseDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
+            plainPreferencesDataSource = get(plainPreferencesQualifier),
         )
 
         TenantRepositoryProxy(
-            cacheLocalDataSource = get(),
+            tenantInMemoryDataSource = get(),
             tenantRepository = realRepository,
         )
     }
 
     single<TenantContactOriginTypeRepository> {
         TenantContactOriginTypeRepositoryImpl(
-            dao = get(),
+            databaseDataSource = get(),
         )
     }
 
     single<UserRepository> {
         UserRepositoryImpl(
-            api = get(),
-            encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
+            remoteDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
             userSessionService = get(),
         )
     }

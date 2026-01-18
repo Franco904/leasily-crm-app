@@ -25,10 +25,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
+import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueBootstrappingWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueLazyWritesWorker
-import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueReadsWorker
+import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.BootstrappingWorker
 import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.LazyWritesWorker
-import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.ReadsWorker
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService.UserSessionEvent
@@ -155,14 +155,14 @@ class MainActivity : ComponentActivity() {
     private fun enqueueAppWorkers() {
         val workManager = WorkManager.getInstance(this@MainActivity)
 
+        workManager.enqueueBootstrappingWorker()
         workManager.enqueueLazyWritesWorker()
-        workManager.enqueueReadsWorker()
     }
 
     private fun cancelAppWorkers() {
         WorkManager.getInstance(this@MainActivity).run {
-            cancelUniqueWork(LazyWritesWorker.UNIQUE_NAME)
-            cancelUniqueWork(ReadsWorker.UNIQUE_NAME)
+            cancelUniqueWork(LazyWritesWorker.uniqueName)
+            cancelUniqueWork(BootstrappingWorker.uniqueName)
         }
     }
 
