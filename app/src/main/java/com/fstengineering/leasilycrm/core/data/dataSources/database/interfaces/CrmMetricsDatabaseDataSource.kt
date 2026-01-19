@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces
 
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.AverageTicketPerMonthCompound
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerCustomerSegmentPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerTenantTagPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerTop3NeighborhoodsPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerMonthCompound
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerTenantSegmentPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerTenantTagPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.LeadContactChannelCountCompound
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerCustomerSegmentPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerTenantTagPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerTop3NeighborhoodsPerMonthCompound
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -19,9 +19,9 @@ interface CrmMetricsDatabaseDataSource {
         userId: Long,
     ): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>, DataError>
 
-    fun watchGeneratedLeadsPerTenantSegmentPerMonth(
+    fun watchGeneratedLeadsPerTenantTagPerMonth(
         userId: Long,
-    ): AppResult<Flow<List<GeneratedLeadsPerTenantSegmentPerMonthCompound>>, DataError>
+    ): AppResult<Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>, DataError>
 
     fun watchCountLeadsByContactChannelType(
         userId: Long,
@@ -31,13 +31,9 @@ interface CrmMetricsDatabaseDataSource {
         userId: Long,
     ): AppResult<Flow<List<NewStayBookingsPerMonthCompound>>, DataError>
 
-    fun watchNewStayBookingsPerTenantSegmentPerMonth(
+    fun watchNewStayBookingsPerTenantTagPerMonth(
         userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerCustomerSegmentPerMonthCompound>>, DataError>
-
-    fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerCustomerSegmentPerMonthCompound>>, DataError>
+    ): AppResult<Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>, DataError>
 
     fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(
         userId: Long,
@@ -47,13 +43,9 @@ interface CrmMetricsDatabaseDataSource {
         userId: Long,
     ): AppResult<Flow<List<CommissionInvoicePerMonthCompound>>, DataError>
 
-    fun watchCommissionInvoicePerTenantSegmentPerMonth(
+    fun watchCommissionInvoicePerTenantTagPerMonth(
         userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>, DataError>
-
-    fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>, DataError>
+    ): AppResult<Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>, DataError>
 
     fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(
         userId: Long,

@@ -18,7 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.theme.customColorsV3
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
+import com.fstengineering.leasilycrm.core.application.theme.customColorsV2
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart
@@ -35,45 +36,45 @@ import kotlinx.collections.immutable.toPersistentSet
 import kotlin.math.roundToInt
 
 @Composable
-fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
-    newStayBookingsPerPropertyOwnerSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
+fun MonthlyCommissionInvoicePerTenantTagMetricCard(
+    commissionInvoicePerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val rowColors = customColorsV3
+    val rowColors = customColorsV2
 
-    val propertyOwnerSegments = remember(newStayBookingsPerPropertyOwnerSegmentPerMonth) {
-        newStayBookingsPerPropertyOwnerSegmentPerMonth.entries
-            .map { it.value.entries.map { propertyOwnerSegmentToCount -> propertyOwnerSegmentToCount.key } }
+    val tenantSegments = remember(commissionInvoicePerTenantSegmentPerMonth) {
+        commissionInvoicePerTenantSegmentPerMonth.entries
+            .map { it.value.entries.map { tenantSegmentToInvoice -> tenantSegmentToInvoice.key } }
             .flatten()
             .toPersistentSet()
     }
 
-    val propertyOwnerSegmentsToColors = propertyOwnerSegments
-        .associateWith { propertyOwnerSegment ->
-            val i = propertyOwnerSegments.indexOf(propertyOwnerSegment)
+    val tenantSegmentsToColors = tenantSegments
+        .associateWith { tenantSegment ->
+            val i = tenantSegments.indexOf(tenantSegment)
             rowColors[i % rowColors.size]
         }
         .toPersistentMap()
 
-    val rows = remember(newStayBookingsPerPropertyOwnerSegmentPerMonth) {
-        val rows = newStayBookingsPerPropertyOwnerSegmentPerMonth.entries
-            .map { (monthYear, propertyOwnerSegmentToBookingsCount) ->
+    val rows = remember(commissionInvoicePerTenantSegmentPerMonth) {
+        val rows = commissionInvoicePerTenantSegmentPerMonth.entries
+            .map { (monthYear, tenantSegmentToCommissionInvoice) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
                         .lowercase()
                         .capitalizeFirst(),
-                    values = propertyOwnerSegmentToBookingsCount.entries
-                        .mapIndexed { i, (propertyOwnerSegmentName, bookingsCount) ->
-                            val rowColor = propertyOwnerSegmentsToColors.entries
-                                .find { it.key == propertyOwnerSegmentName }
+                    values = tenantSegmentToCommissionInvoice.entries
+                        .mapIndexed { i, (tenantSegmentName, commissionInvoice) ->
+                            val rowColor = tenantSegmentsToColors.entries
+                                .find { it.key == tenantSegmentName }
                                 ?.value
                                 ?: rowColors[i % rowColors.size]
 
                             Bars.Data(
-                                label = propertyOwnerSegmentName,
-                                value = bookingsCount.toDouble(),
+                                label = tenantSegmentName,
+                                value = commissionInvoice.toDouble(),
                                 color = Brush.linearGradient(
                                     0.0f to rowColor,
                                     1.0f to rowColor,
@@ -88,21 +89,21 @@ fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
         rows
     }
 
-    val propertyOwnerSegmentsToColorsChunked = remember(propertyOwnerSegmentsToColors) {
+    val tenantSegmentsToColorsChunked = remember(tenantSegmentsToColors) {
         when {
-            propertyOwnerSegmentsToColors.entries.isEmpty() -> {
+            tenantSegmentsToColors.entries.isEmpty() -> {
                 persistentListOf(persistentListOf(), persistentListOf())
             }
 
-            propertyOwnerSegmentsToColors.entries.size == 1 -> {
-                val first = propertyOwnerSegmentsToColors.entries.first()
+            tenantSegmentsToColors.entries.size == 1 -> {
+                val first = tenantSegmentsToColors.entries.first()
                 persistentListOf(persistentListOf(first), persistentListOf())
             }
 
             else -> {
-                propertyOwnerSegmentsToColors
+                tenantSegmentsToColors
                     .entries
-                    .chunked((propertyOwnerSegmentsToColors.entries.size.toDouble() / 2).roundToInt())
+                    .chunked((tenantSegmentsToColors.entries.size.toDouble() / 2).roundToInt())
                     .map { it.toImmutableList() }
                     .toImmutableList()
             }
@@ -118,12 +119,12 @@ fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_new_bookings_per_property_owner_segment_metric_title),
+                text = stringResource(R.string.dashboard_monthly_commission_invoice_per_tenant_tag_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.dashboard_monthly_new_bookings_per_property_owner_segment_metric_description),
+                text = stringResource(R.string.dashboard_monthly_commission_invoice_per_tenant_tag_metric_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -138,17 +139,17 @@ fun MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
             } else {
                 AppRowChart(
                     rows = rows,
-                    rowThickness = (16.0 / (propertyOwnerSegmentsToColors.size.toDouble() / 2.5))
+                    rowThickness = (16.0 / (tenantSegmentsToColors.size.toDouble() / 2.5))
                         .coerceIn(16.0..28.0).dp,
-                    height = (520.0 + (12.0 * rows.size.toDouble() * propertyOwnerSegmentsToColors.size.toDouble()))
+                    height = (520.0 + (12.0 * rows.size.toDouble() * tenantSegmentsToColors.size.toDouble()))
                         .coerceAtLeast(520.0).dp,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                 )
             }
-            if (propertyOwnerSegmentsToColorsChunked.isNotEmpty()) {
+            if (tenantSegmentsToColorsChunked.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(32.dp))
-                AppRowChartChunkedColoredLabels(rowsChunked = propertyOwnerSegmentsToColorsChunked)
+                AppRowChartChunkedColoredLabels(rowsChunked = tenantSegmentsToColorsChunked)
             }
         }
     }

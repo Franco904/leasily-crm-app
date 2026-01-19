@@ -42,16 +42,6 @@ fun PropertyOwnerDetailsSection(
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item {
             IconLabelValueDetailsItem(
-                icon = Icons.Outlined.BookmarkBorder,
-                label = stringResource(R.string.property_owner_registration_customer_segment_label),
-                value = propertyOwner.customerSegment?.name
-                    ?: stringResource(R.string.not_registered_info_body_text),
-                isEmptyText = propertyOwner.customerSegment?.name == null,
-            )
-        }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
-        item {
-            IconLabelValueDetailsItem(
                 icon = Icons.Outlined.Person,
                 label = stringResource(R.string.property_owner_registration_name_label),
                 value = propertyOwner.name

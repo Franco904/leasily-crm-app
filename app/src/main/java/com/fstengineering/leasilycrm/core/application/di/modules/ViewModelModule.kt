@@ -166,7 +166,6 @@ val viewModelModule = module {
     viewModel {
         LeadTenantRegistrationViewModel(
             tenantRepository = get(),
-            customerSegmentRepository = get(),
             tenantContactOriginTypeRepository = get(),
             tenantValidator = get(),
         )

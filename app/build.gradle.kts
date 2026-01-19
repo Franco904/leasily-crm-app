@@ -33,8 +33,9 @@ android {
         buildConfigField(
             "String",
             "SESSION_COOKIE_NAME",
-            project.property("SESSION_COOKIE_NAME") as String
+            project.property("SESSION_COOKIE_NAME") as String,
         )
+        buildConfigField("Boolean", "SKIP_AUTH", project.property("SKIP_AUTH") as String)
     }
 
     signingConfigs {

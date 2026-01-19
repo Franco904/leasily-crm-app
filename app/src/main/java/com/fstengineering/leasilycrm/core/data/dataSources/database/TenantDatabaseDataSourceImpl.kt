@@ -55,6 +55,10 @@ class TenantDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getNameById(id) }
     }
 
+    override suspend fun getAllTagNames(userId: Long): AppResult<List<String>, DataError> {
+        return onDatabaseSafe { dao.getAllTagNames(userId) }
+    }
+
     override suspend fun getAllCityNames(userId: Long): AppResult<List<String>, DataError> {
         return onDatabaseSafe { dao.getAllCityNames(userId) }
     }

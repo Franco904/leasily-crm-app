@@ -78,10 +78,10 @@ data class AssistanceCompound(
     )
     val interactions: List<AssistanceInteractionEntity>,
 ) {
-    val activeSearchedNeighborhoods: List<AssistanceSearchedNeighborhoodEntity>
+    private val activeSearchedNeighborhoods: List<AssistanceSearchedNeighborhoodEntity>
         get() = searchedNeighborhoods.filter { !it.isDeleted }
 
-    val activeCharacteristics: List<AssistanceCharacteristicAssistance>
+    private val activeCharacteristics: List<AssistanceCharacteristicAssistance>
         get() {
             val activeCharacteristicIds = checkedCharacteristics
                 .filter { !it.isDeleted }
@@ -99,7 +99,7 @@ data class AssistanceCompound(
             }
         }
 
-    val activeSentProperties: List<AssistanceSentProperty>
+    private val activeSentProperties: List<AssistanceSentProperty>
         get() {
             val activeSentPropertyIds = checkedSentProperties
                 .filter { !it.isDeleted }
@@ -117,7 +117,7 @@ data class AssistanceCompound(
             }
         }
 
-    val activeInteractions: List<AssistanceInteractionEntity>
+    private val activeInteractions: List<AssistanceInteractionEntity>
         get() = interactions.filter { !it.isDeleted }
 
     fun toDomain() = Assistance(

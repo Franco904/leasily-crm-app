@@ -139,6 +139,20 @@ class TenantRepositoryImpl(
         return AppResult.Success(data = tenants)
     }
 
+    override suspend fun getAllTagNames(): AppResult<ImmutableList<String>, DataError> {
+        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
+            .fold(
+                onError = { return AppResult.Error(error = it) },
+                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
+            )
+
+        return databaseDataSource.getAllTagNames(userId = userRemoteId)
+            .fold(
+                onError = { AppResult.Error(error = it) },
+                onSuccess = { AppResult.Success(data = it.toPersistentList()) },
+            )
+    }
+
     override suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataError> {
         val userRemoteId = encryptedPreferencesDataSource.readPreferences()
             .fold(
@@ -146,14 +160,11 @@ class TenantRepositoryImpl(
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
-        val cityNames = databaseDataSource.getAllCityNames(userId = userRemoteId)
+        return databaseDataSource.getAllCityNames(userId = userRemoteId)
             .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { it },
+                onError = { AppResult.Error(error = it) },
+                onSuccess = { AppResult.Success(data = it.toPersistentList()) },
             )
-            .toPersistentList()
-
-        return AppResult.Success(data = cityNames)
     }
 
     override suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, DataError> {

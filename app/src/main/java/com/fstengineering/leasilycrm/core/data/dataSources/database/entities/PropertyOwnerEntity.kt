@@ -11,18 +11,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 
 @Entity(
     tableName = "property_owners",
-    foreignKeys = [
-        ForeignKey(
-            entity = CustomerSegmentEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["customer_segment_id"],
-            onDelete = ForeignKey.RESTRICT,
-        ),
-    ],
-    indices = [
-        Index("customer_segment_id"),
-        Index("user_id"),
-    ],
+    indices = [Index("user_id")],
 )
 data class PropertyOwnerEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
@@ -33,7 +22,6 @@ data class PropertyOwnerEntity(
     val email: String?,
     @ColumnInfo(name = "payment_key") val paymentKey: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Long?,
     @ColumnInfo(name = "user_id") val userId: Long,
 ) {
     companion object {
@@ -49,7 +37,6 @@ data class PropertyOwnerEntity(
                 phone = domain.phone,
                 email = domain.email,
                 paymentKey = domain.paymentKey,
-                customerSegmentId = domain.customerSegment?.id,
                 userId = domain.userId,
             )
         }

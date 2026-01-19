@@ -18,7 +18,7 @@ import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTen
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantNameDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantObservationsDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantPhoneDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantSegmentDetailsItem
+import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantTagDetailsItem
 
 @Composable
 fun LeadTenantDetailsIdentificationPage(
@@ -33,7 +33,7 @@ fun LeadTenantDetailsIdentificationPage(
             .fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.height(24.dp))
-        LeadTenantSegmentDetailsItem(segmentName = leadTenant.customerSegment?.name)
+        LeadTenantTagDetailsItem(tagName = leadTenant.tag)
         Spacer(modifier = Modifier.height(24.dp))
         LeadTenantNameDetailsItem(name = leadTenant.name)
         Spacer(modifier = Modifier.height(24.dp))

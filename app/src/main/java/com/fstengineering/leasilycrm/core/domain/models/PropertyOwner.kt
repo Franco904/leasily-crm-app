@@ -13,7 +13,6 @@ data class PropertyOwner(
     val email: String? = null,
     val paymentKey: String? = null,
     val isDeleted: Boolean = false,
-    val customerSegment: CustomerSegment? = null,
     val files: ImmutableList<PropertyOwnerFile> = persistentListOf(),
     val userId: Long? = null,
 )

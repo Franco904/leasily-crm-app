@@ -10,12 +10,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -29,12 +26,10 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
@@ -46,7 +41,6 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegi
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationFormSection
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationTopAppBar
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -63,21 +57,16 @@ fun PropertyOwnerRegistrationScreen(
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
-    val sheetState = rememberModalBottomSheetState()
-
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val propertyOwnerForm by viewModel.propertyOwnerForm.collectAsStateWithLifecycle()
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
-
-    val propertyOwnerSegments by viewModel.propertyOwnerSegments.collectAsStateWithLifecycle()
 
     val scrollToFieldFlow = Channel<PropertyOwnerField>()
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
-    var mustShowCustomerSegmentComboBottomsheet by remember { mutableStateOf(false) }
 
     val openDocumentFile = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
@@ -164,7 +153,6 @@ fun PropertyOwnerRegistrationScreen(
                 propertyOwnerForm = propertyOwnerForm,
                 onPropertyOwnerFormChange = viewModel::onPropertyOwnerFormChange,
                 formErrors = formErrors.errors,
-                onCustomerSegmentFieldTap = { mustShowCustomerSegmentComboBottomsheet = true },
                 onLastTextFieldDone = { focusManager.clearFocus() },
                 onAddPropertyOwnerFile = {
                     val acceptedMimeTypes = arrayOf("application/*", "text/*")
@@ -174,28 +162,6 @@ fun PropertyOwnerRegistrationScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(horizontal = 24.dp)
-            )
-        }
-        if (mustShowCustomerSegmentComboBottomsheet) {
-            AppComboBottomSheet(
-                sheetState = sheetState,
-                options = propertyOwnerSegments.map { it.name ?: "" }.toPersistentList(),
-                onOptionSelect = { customerSegmentName ->
-                    val selectedCustomerSegment =
-                        propertyOwnerSegments.find { it.name == customerSegmentName }
-
-                    viewModel.onPropertyOwnerFormChange(
-                        form = propertyOwnerForm.copy(customerSegment = selectedCustomerSegment)
-                    )
-
-                    focusManager.clearFocus()
-                },
-                onDismissRequest = {
-                    mustShowCustomerSegmentComboBottomsheet = false
-                    focusManager.clearFocus()
-                },
-                emptyOptionsIcon = Icons.Default.BookmarkBorder,
-                emptyOptionsText = stringResource(R.string.property_owner_registration_customer_segment_empty_text),
             )
         }
         if (mustShowConfirmLeaveRegistrationDialog) {

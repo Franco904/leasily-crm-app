@@ -33,6 +33,8 @@ interface TenantDatabaseDataSource {
 
     suspend fun getNameById(id: Long): AppResult<String, DataError>
 
+    suspend fun getAllTagNames(userId: Long): AppResult<List<String>, DataError>
+
     suspend fun getAllCityNames(userId: Long): AppResult<List<String>, DataError>
 
     fun watchById(id: Long): AppResult<Flow<TenantCompound?>, DataError>

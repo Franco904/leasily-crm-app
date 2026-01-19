@@ -15,7 +15,8 @@ class TenantInMemoryDataSourceImpl(
         inMemoryDataSource.put(key = tenant.id.toString(), value = tenant)
     }
 
-    override fun removeTenant(tenant: Tenant) {
-        inMemoryDataSource.removeWhere<Tenant> { t -> t?.id == tenant.id }
+    override fun removeTenant(id: Long?) {
+        if (id == null) return
+        inMemoryDataSource.removeWhere<Tenant> { t -> t?.id == id }
     }
 }

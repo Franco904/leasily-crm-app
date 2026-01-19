@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2805cbf99b28ebe029f3be59dfc0d6cc",
+    "identityHash": "bb5ddc29bc0a77bb339fd2d7d10eaa48",
     "entities": [
       {
         "tableName": "assistances",
@@ -548,53 +548,6 @@
         ]
       },
       {
-        "tableName": "customer_segments",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `user_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "createDateTime",
-            "columnName": "create_date_time",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "updateDateTime",
-            "columnName": "update_date_time",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "userId",
-            "columnName": "user_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isDeleted",
-            "columnName": "is_deleted",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        }
-      },
-      {
         "tableName": "properties",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `neighborhood` TEXT NOT NULL, `street_address` TEXT NOT NULL, `cep_postal_code` TEXT, `number` INTEGER, `address_line_2` TEXT, `parking_spot_number` TEXT, `parking_basement_level_number` TEXT, `hobby_box_number` TEXT, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `qt_air_conditioners` INTEGER NOT NULL, `qt_max_guests` INTEGER NOT NULL, `distance_to_sea` TEXT, `included_items` TEXT, `has_included_items` INTEGER NOT NULL, `cleaning_service_tax` TEXT, `has_cleaning_service_included` INTEGER NOT NULL, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_owner_id` INTEGER NOT NULL, `property_type_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_type_id`) REFERENCES `property_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
@@ -1042,7 +995,7 @@
       },
       {
         "tableName": "property_owners",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `phone` TEXT, `email` TEXT, `payment_key` TEXT, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `phone` TEXT, `email` TEXT, `payment_key` TEXT, `is_deleted` INTEGER NOT NULL, `user_id` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1089,11 +1042,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "customerSegmentId",
-            "columnName": "customer_segment_id",
-            "affinity": "INTEGER"
-          },
-          {
             "fieldPath": "userId",
             "columnName": "user_id",
             "affinity": "INTEGER",
@@ -1108,15 +1056,6 @@
         },
         "indices": [
           {
-            "name": "index_property_owners_customer_segment_id",
-            "unique": false,
-            "columnNames": [
-              "customer_segment_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_property_owners_customer_segment_id` ON `${TABLE_NAME}` (`customer_segment_id`)"
-          },
-          {
             "name": "index_property_owners_user_id",
             "unique": false,
             "columnNames": [
@@ -1124,19 +1063,6 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_property_owners_user_id` ON `${TABLE_NAME}` (`user_id`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "customer_segments",
-            "onDelete": "RESTRICT",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "customer_segment_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
           }
         ]
       },
@@ -1689,7 +1615,7 @@
       },
       {
         "tableName": "tenants",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `customer_segment_id` INTEGER, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`customer_segment_id`) REFERENCES `customer_segments`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `tag` TEXT, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1707,6 +1633,11 @@
             "columnName": "update_date_time",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "tag",
+            "columnName": "tag",
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "name",
@@ -1746,11 +1677,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "customerSegmentId",
-            "columnName": "customer_segment_id",
-            "affinity": "INTEGER"
-          },
-          {
             "fieldPath": "tenantContactOriginTypeId",
             "columnName": "tenant_contact_origin_type_id",
             "affinity": "INTEGER"
@@ -1769,15 +1695,6 @@
           ]
         },
         "indices": [
-          {
-            "name": "index_tenants_customer_segment_id",
-            "unique": false,
-            "columnNames": [
-              "customer_segment_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_tenants_customer_segment_id` ON `${TABLE_NAME}` (`customer_segment_id`)"
-          },
           {
             "name": "index_tenants_tenant_contact_origin_type_id",
             "unique": false,
@@ -1798,17 +1715,6 @@
           }
         ],
         "foreignKeys": [
-          {
-            "table": "customer_segments",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "customer_segment_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
           {
             "table": "tenant_contact_origin_types",
             "onDelete": "NO ACTION",
@@ -1860,7 +1766,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2805cbf99b28ebe029f3be59dfc0d6cc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bb5ddc29bc0a77bb339fd2d7d10eaa48')"
     ]
   }
 }

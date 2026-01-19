@@ -92,6 +92,17 @@ interface TenantDao {
 
     @Query(
         """
+        SELECT DISTINCT(tag) FROM tenants_read_view
+        WHERE user_id = :userId
+        AND tag IS NOT NULL
+        AND is_deleted = 0
+        ORDER BY tag
+    """
+    )
+    suspend fun getAllTagNames(userId: Long): List<String>
+
+    @Query(
+        """
         SELECT DISTINCT(city) FROM tenants_read_view
         WHERE user_id = :userId
         AND city IS NOT NULL

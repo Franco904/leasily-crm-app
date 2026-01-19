@@ -11,7 +11,7 @@ interface CrmMetricsRepository {
     fun watchGeneratedLeadsPerMonth():
             Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataError>>
 
-    fun watchGeneratedLeadsPerTenantSegmentPerMonth():
+    fun watchGeneratedLeadsPerTenantTagPerMonth():
             Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>>
 
     fun watchLeadContactChannelDistribution():
@@ -20,10 +20,7 @@ interface CrmMetricsRepository {
     fun watchNewStayBookingsPerMonth():
             Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataError>>
 
-    fun watchNewStayBookingsPerTenantSegmentPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>>
-
-    fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth():
+    fun watchNewStayBookingsPerTenantTagPerMonth():
             Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>>
 
     fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth():
@@ -32,10 +29,7 @@ interface CrmMetricsRepository {
     fun watchCommissionInvoicePerMonth():
             Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>>
 
-    fun watchCommissionInvoicePerTenantSegmentPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>>
-
-    fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth():
+    fun watchCommissionInvoicePerTenantTagPerMonth():
             Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>>
 
     fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth():

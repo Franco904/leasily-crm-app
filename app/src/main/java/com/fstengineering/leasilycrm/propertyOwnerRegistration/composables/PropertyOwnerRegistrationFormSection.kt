@@ -46,7 +46,6 @@ fun PropertyOwnerRegistrationFormSection(
     propertyOwnerForm: PropertyOwner,
     onPropertyOwnerFormChange: (PropertyOwner) -> Unit,
     formErrors: ImmutableMap<PropertyOwnerField, Int?>,
-    onCustomerSegmentFieldTap: () -> Unit,
     onLastTextFieldDone: () -> Unit,
     onAddPropertyOwnerFile: () -> Unit,
     scrollToFieldFlow: Flow<PropertyOwnerField>,
@@ -84,22 +83,6 @@ fun PropertyOwnerRegistrationFormSection(
         contentPadding = PaddingValues(bottom = 240.dp),
         modifier = modifier
     ) {
-        item {
-            FormTextField(
-                label = stringResource(R.string.property_owner_registration_customer_segment_label),
-                value = propertyOwnerForm.customerSegment?.name ?: "",
-                onTap = onCustomerSegmentFieldTap,
-                suffix = {
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                },
-                isReadOnly = true,
-            )
-        }
-        item { Spacer(modifier = Modifier.height(28.dp)) }
         item(key = PropertyOwnerField.Name) {
             Box(
                 modifier = Modifier

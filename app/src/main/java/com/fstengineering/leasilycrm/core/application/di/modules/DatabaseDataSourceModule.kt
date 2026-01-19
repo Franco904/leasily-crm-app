@@ -9,7 +9,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.AssistanceIn
 import com.fstengineering.leasilycrm.core.data.dataSources.database.AssistanceSearchedNeighborhoodDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.AssistanceSentPropertyCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.CrmMetricsDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.data.dataSources.database.CustomerSegmentDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.PropertyCharacteristicDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.PropertyCharacteristicPropertyCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.data.dataSources.database.PropertyDatabaseDataSourceImpl
@@ -31,7 +30,6 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.A
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.AssistanceSearchedNeighborhoodDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.AssistanceSentPropertyCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.CustomerSegmentDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyCharacteristicDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyCharacteristicPropertyCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyDatabaseDataSource
@@ -77,10 +75,6 @@ val databaseDataSourceModule = module {
 
     single<CrmMetricsDatabaseDataSource> {
         CrmMetricsDatabaseDataSourceImpl(dao = get())
-    }
-
-    single<CustomerSegmentDatabaseDataSource> {
-        CustomerSegmentDatabaseDataSourceImpl(dao = get())
     }
 
     single<PropertyCharacteristicDatabaseDataSource> {

@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.entities.co
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
@@ -17,7 +16,7 @@ data class PropertyOwnerCompound(
     )
     val files: List<PropertyOwnerFileEntity>,
 ) {
-    val activeFiles: List<PropertyOwnerFileEntity>
+    private val activeFiles: List<PropertyOwnerFileEntity>
         get() = files.filter { !it.isDeleted }
 
     fun toDomain() = PropertyOwner(

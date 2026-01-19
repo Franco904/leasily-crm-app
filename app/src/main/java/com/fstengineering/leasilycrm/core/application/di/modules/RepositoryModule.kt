@@ -7,7 +7,6 @@ import com.fstengineering.leasilycrm.core.data.repositories.AssistanceCharacteri
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.AuthRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.CrmMetricsRepositoryImpl
-import com.fstengineering.leasilycrm.core.data.repositories.CustomerSegmentRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.DomainTablesRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyCharacteristicRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyOwnerFileRepositoryImpl
@@ -26,7 +25,6 @@ import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacte
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.DomainTablesRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerFileRepository
@@ -74,14 +72,6 @@ val repositoryModule = module {
             databaseDataSource = get(),
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
             now = AppDate.lazyNow(),
-        )
-    }
-
-    single<CustomerSegmentRepository> {
-        CustomerSegmentRepositoryImpl(
-            databaseAdapter = get(),
-            databaseDataSource = get(),
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
     }
 

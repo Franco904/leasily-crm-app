@@ -35,7 +35,7 @@ import kotlinx.collections.immutable.toPersistentSet
 import kotlin.math.roundToInt
 
 @Composable
-fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
+fun MonthlyLeadGenerationPerTenantTagMetricCard(
     generatedLeadsPerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
     modifier: Modifier = Modifier,
 ) {
@@ -118,12 +118,12 @@ fun MonthlyLeadGenerationPerTenantSegmentMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_segment_metric_title),
+                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_tag_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_segment_metric_description),
+                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_tag_metric_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

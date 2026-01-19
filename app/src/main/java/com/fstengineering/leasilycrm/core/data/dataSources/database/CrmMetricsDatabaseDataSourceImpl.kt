@@ -2,13 +2,13 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database
 
 import com.fstengineering.leasilycrm.core.data.dataSources.database.daos.CrmMetricsDao
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.AverageTicketPerMonthCompound
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerCustomerSegmentPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerTenantTagPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerTop3NeighborhoodsPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerMonthCompound
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerTenantSegmentPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerTenantTagPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.LeadContactChannelCountCompound
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerCustomerSegmentPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerTenantTagPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerTop3NeighborhoodsPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
@@ -24,10 +24,10 @@ class CrmMetricsDatabaseDataSourceImpl(
     ): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>, DataError> =
         onDatabaseSafe { dao.watchGeneratedLeadsPerMonth(userId) }
 
-    override fun watchGeneratedLeadsPerTenantSegmentPerMonth(
+    override fun watchGeneratedLeadsPerTenantTagPerMonth(
         userId: Long,
-    ): AppResult<Flow<List<GeneratedLeadsPerTenantSegmentPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchGeneratedLeadsPerTenantSegmentPerMonth(userId) }
+    ): AppResult<Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchGeneratedLeadsPerTenantTagPerMonth(userId) }
 
     override fun watchCountLeadsByContactChannelType(
         userId: Long,
@@ -39,15 +39,10 @@ class CrmMetricsDatabaseDataSourceImpl(
     ): AppResult<Flow<List<NewStayBookingsPerMonthCompound>>, DataError> =
         onDatabaseSafe { dao.watchNewStayBookingsPerMonth(userId) }
 
-    override fun watchNewStayBookingsPerTenantSegmentPerMonth(
+    override fun watchNewStayBookingsPerTenantTagPerMonth(
         userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerCustomerSegmentPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchNewStayBookingsPerTenantSegmentPerMonth(userId) }
-
-    override fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerCustomerSegmentPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(userId) }
+    ): AppResult<Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchNewStayBookingsPerTenantTagPerMonth(userId) }
 
     override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(
         userId: Long,
@@ -59,15 +54,10 @@ class CrmMetricsDatabaseDataSourceImpl(
     ): AppResult<Flow<List<CommissionInvoicePerMonthCompound>>, DataError> =
         onDatabaseSafe { dao.watchCommissionInvoicePerMonth(userId) }
 
-    override fun watchCommissionInvoicePerTenantSegmentPerMonth(
+    override fun watchCommissionInvoicePerTenantTagPerMonth(
         userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchCommissionInvoicePerTenantSegmentPerMonth(userId) }
-
-    override fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(userId) }
+    ): AppResult<Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchCommissionInvoicePerTenantTagPerMonth(userId) }
 
     override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(
         userId: Long,

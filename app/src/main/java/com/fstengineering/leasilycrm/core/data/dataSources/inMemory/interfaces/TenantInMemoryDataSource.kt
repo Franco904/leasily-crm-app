@@ -7,5 +7,5 @@ interface TenantInMemoryDataSource {
 
     fun putTenant(tenant: Tenant)
 
-    fun removeTenant(tenant: Tenant)
+    fun removeTenant(id: Long?)
 }
