@@ -18,10 +18,6 @@ import com.fstengineering.leasilycrm.core.domain.repositories.DomainTablesReposi
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 
 class DomainTablesRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,

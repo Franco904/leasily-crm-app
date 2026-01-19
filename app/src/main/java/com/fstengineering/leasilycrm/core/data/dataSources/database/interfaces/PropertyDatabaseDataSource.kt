@@ -15,7 +15,10 @@ interface PropertyDatabaseDataSource {
 
     suspend fun getAll(userId: Long): AppResult<List<PropertyCompound>, DataError>
 
-    suspend fun getAllMatching(userId: Long, matching: String?): AppResult<List<PropertyCompound>, DataError>
+    suspend fun getAllMatching(
+        userId: Long,
+        matching: String?
+    ): AppResult<List<PropertyCompound>, DataError>
 
     suspend fun getAllNeighborHoodNames(userId: Long): AppResult<List<String>, DataError>
 

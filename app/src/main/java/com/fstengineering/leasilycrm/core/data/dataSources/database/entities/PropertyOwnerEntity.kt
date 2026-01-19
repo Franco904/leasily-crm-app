@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.application.models.AppDateTime

@@ -20,8 +20,12 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
     private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
     override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, DataError> {
-        val isTodayCheckInCheckOutNotificationEnabled = settingsRepository.watchSettings().firstOrNull()
-            ?.fold(onError = { false }, onSuccess = { it.isTodayCheckInCheckOutNotificationEnabled }) ?: false
+        val isTodayCheckInCheckOutNotificationEnabled =
+            settingsRepository.watchSettings().firstOrNull()
+                ?.fold(
+                    onError = { false },
+                    onSuccess = { it.isTodayCheckInCheckOutNotificationEnabled }
+                ) ?: false
 
         val isSessionAlive = authRepository.isSessionAlive()
             .fold(onError = { false }, onSuccess = { it })
