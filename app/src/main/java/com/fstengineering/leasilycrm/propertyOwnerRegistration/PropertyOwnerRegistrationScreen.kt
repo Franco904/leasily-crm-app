@@ -35,12 +35,14 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationFormSection
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationTopAppBar
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
+import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep2Field
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -62,7 +64,8 @@ fun PropertyOwnerRegistrationScreen(
     val propertyOwnerForm by viewModel.propertyOwnerForm.collectAsStateWithLifecycle()
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
-    val scrollToFieldFlow = Channel<PropertyOwnerField>()
+    val scrollToFieldChannel = remember { Channel<PropertyOwnerField>() }
+    val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -95,7 +98,7 @@ fun PropertyOwnerRegistrationScreen(
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.trySend(uiEvent.field)
+                    scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
                 is PropertyOwnerCreateSuccess -> {
@@ -109,6 +112,14 @@ fun PropertyOwnerRegistrationScreen(
 
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
+
+                is Exit -> {
+                    if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                    else {
+                        mustShowConfirmLeaveRegistrationDialog = false
+                        onBack()
+                    }
+                }
             }
         }
     }
@@ -120,14 +131,14 @@ fun PropertyOwnerRegistrationScreen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        viewModel.onExit()
     }
 
     Scaffold(
         topBar = {
             PropertyOwnerRegistrationTopAppBar(
                 isEditing = propertyOwnerId != null,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
+                onBack = viewModel::onExit,
                 onSavePropertyOwner = viewModel::savePropertyOwner,
             )
         },
@@ -158,7 +169,7 @@ fun PropertyOwnerRegistrationScreen(
                     val acceptedMimeTypes = arrayOf("application/*", "text/*")
                     openDocumentFile.launch(acceptedMimeTypes)
                 },
-                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                scrollToFieldFlow = scrollToFieldFlow,
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(horizontal = 24.dp)
@@ -169,7 +180,6 @@ fun PropertyOwnerRegistrationScreen(
                 isEditing = propertyOwnerId != null,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
-
                     onBack()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

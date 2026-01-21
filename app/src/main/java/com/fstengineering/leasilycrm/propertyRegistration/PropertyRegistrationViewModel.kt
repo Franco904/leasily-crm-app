@@ -65,8 +65,7 @@ class PropertyRegistrationViewModel(
     private val _propertyForm = MutableStateFlow(Property())
     val propertyForm = _propertyForm.asStateFlow()
 
-    var propertyToEdit: Property? = null
-        private set
+    private var propertyToEdit: Property? = null
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -74,13 +73,11 @@ class PropertyRegistrationViewModel(
     fun init(propertyId: Long?) {
         if (isInitialized) return
 
-        _isLoading.update { true }
-
         if (propertyId != null) {
+            _isLoading.update { true }
+
             getPropertyToEdit(propertyId)
-            this.propertyId = propertyId
-        } else {
-            _isLoading.update { false }
+            this@PropertyRegistrationViewModel.propertyId = propertyId
         }
 
         watchPropertyOwners()
@@ -185,9 +182,24 @@ class PropertyRegistrationViewModel(
         }
     }
 
+    fun onExit() {
+        val needConfirmation = when {
+            propertyToEdit != null -> propertyToEdit != propertyForm.value
+            else -> propertyForm.value.isAnyFormFieldInitialized
+        }
+
+        viewModelScope.launch {
+            _uiEvents.send(UiEvents.Exit(needConfirmation))
+        }
+    }
+
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
+
         data object PropertyCreateSuccess : UiEvents
+
         data class PropertyEditSuccess(val messageId: Int) : UiEvents
+
+        data class Exit(val needConfirmation: Boolean) : UiEvents
     }
 }

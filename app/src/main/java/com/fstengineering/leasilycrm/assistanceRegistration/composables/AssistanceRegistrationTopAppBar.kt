@@ -94,12 +94,7 @@ fun AssistanceRegistrationTopAppBar(
                             .padding(start = 8.dp)
                     ) {
                         Text(
-                            text = stringResource(
-                                when {
-                                    isEditing -> R.string.assistance_registration_top_app_bar_title_edit
-                                    else -> R.string.assistance_registration_top_app_bar_title_create
-                                },
-                            ),
+                            text = stringResource(R.string.assistance_registration_top_app_bar_title),
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -134,5 +129,6 @@ fun AssistanceRegistrationTopAppBar(
         ),
         windowInsets = WindowInsets(0),
         modifier = modifier
+            .padding(vertical = 8.dp)
     )
 }

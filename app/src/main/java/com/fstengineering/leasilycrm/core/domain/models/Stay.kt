@@ -31,4 +31,19 @@ data class Stay(
     val transfers: ImmutableList<StayTransfer> = persistentListOf(),
     val files: ImmutableList<StayFile> = persistentListOf(),
     val userId: Long? = null,
-)
+) {
+    val isAnyFormFieldInitialized = property != null
+            || tenant != null
+            || qtGuests != null
+            || vehicleMake != null
+            || vehicleColor != null
+            || vehicleLicensePlate != null
+            || checkInDateTime != null || checkInHourMinute != null
+            || checkOutDateTime != null || checkOutHourMinute != null
+            || isAutoCheckIn || isAutoCheckOut
+            || totalPrice != null || commission != null
+            || transfers.isNotEmpty()
+            || files.isNotEmpty()
+            || observations != null
+
+}

@@ -26,7 +26,7 @@
 
     <string name="settings_notifications_group_title">Notificações</string>
     <string name="settings_today_check_in_check_out_notification_title">Lembrete de check-ins e check-outs</string>
-    <string name="settings_today_check_in_check_out_notification_description">Alerta, no início da manhã, sobre a ocorrência de check-ins e check-outs no dia atual.</string>
+    <string name="settings_today_check_in_check_out_notification_description">Alerta, no início da manhã, sobre a ocorrência de check-ins e check-outs no dia.</string>
 
     <!-- Profile -->
     <string name="profile_top_app_bar_title">Conta</string>
@@ -353,9 +353,8 @@
     <string name="assistance_empty_text">Não há atendimento em andamento.</string>
 
     <!-- Assistance registration -->
-    <string name="assistance_registration_top_app_bar_title_create">Novo atendimento</string>
-    <string name="assistance_registration_top_app_bar_title_edit">Editar atendimento</string>
-    <string name="assistance_registration_top_app_bar_subtitle">para %1$s</string>
+    <string name="assistance_registration_top_app_bar_title">Atendimento</string>
+    <string name="assistance_registration_top_app_bar_subtitle">de %1$s</string>
     <string name="assistance_registration_top_app_bar_select_property_to_send_title">Selecionar imóvel(eis)</string>
 
     <string name="assistance_registration_step_1_title">Preferências</string>
@@ -574,8 +573,8 @@
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>
     <string name="confirm_leave_registration_dialog_headline_edit">Sair da edição?</string>
-    <string name="confirm_leave_registration_dialog_supporting_text_create">Se confirmado, os dados inseridos serão perdidos.</string>
-    <string name="confirm_leave_registration_dialog_supporting_text_edit">Se confirmado, alterações não serão aplicadas.</string>
+    <string name="confirm_leave_registration_dialog_supporting_text_create">Se confirmado, as informações inseridas não serão salvas.</string>
+    <string name="confirm_leave_registration_dialog_supporting_text_edit">Se confirmado, as alterações não serão aplicadas.</string>
 
     <string name="no_app_to_show_file_content_dialog_headline">Visualização falhou</string>
     <string name="no_app_to_show_file_content_dialog_supporting_text">Não há nenhum aplicativo para visualizar este arquivo. Tente baixar um apropriado na loja.</string>

@@ -42,12 +42,14 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyRegistrationFormSectionStep1
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyRegistrationTopAppBar
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep1Field
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep1ViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep1ViewModel.UiEvents.ValidateSuccess
+import com.fstengineering.leasilycrm.stayRegistration.models.StayField
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -79,7 +81,8 @@ fun PropertyRegistrationStep1Screen(
     val propertyTypes by parentViewModel.propertyTypes.collectAsStateWithLifecycle()
     val pastNeighborhoods by parentViewModel.pastNeighborhoods.collectAsStateWithLifecycle()
 
-    val scrollToFieldFlow = Channel<PropertyStep1Field>()
+    val scrollToFieldChannel = remember { Channel<PropertyStep1Field>() }
+    val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -99,6 +102,14 @@ fun PropertyRegistrationStep1Screen(
                         onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
+                    is Exit -> {
+                        if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                        else {
+                            mustShowConfirmLeaveRegistrationDialog = false
+                            onLeaveRegistration()
+                        }
+                    }
+
                     else -> {}
                 }
             }
@@ -108,7 +119,7 @@ fun PropertyRegistrationStep1Screen(
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
                     is ScrollToField -> {
-                        scrollToFieldFlow.trySend(uiEvent.field)
+                        scrollToFieldChannel.trySend(uiEvent.field)
                     }
 
                     is ValidateSuccess -> {
@@ -126,14 +137,14 @@ fun PropertyRegistrationStep1Screen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        parentViewModel.onExit()
     }
 
     Scaffold(
         topBar = {
             PropertyRegistrationTopAppBar(
                 isEditing = propertyId != null,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
+                onBack = parentViewModel::onExit,
             )
         },
         modifier = modifier
@@ -165,13 +176,10 @@ fun PropertyRegistrationStep1Screen(
                 formErrors = formErrors.errors,
                 onSelectPropertyOwner = { mustShowPropertyOwnersComboBottomsheet = true },
                 onLastTextFieldDone = { focusManager.clearFocus() },
-                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                scrollToFieldFlow = scrollToFieldFlow,
                 onNext = {
                     focusManager.clearFocus()
-
-                    stepViewModel.validatePropertyStep1(
-                        propertyForm = propertyForm,
-                    )
+                    stepViewModel.validatePropertyStep1(propertyForm)
                 },
                 modifier = Modifier
                     .padding(innerPadding)
@@ -219,7 +227,6 @@ fun PropertyRegistrationStep1Screen(
                 isEditing = propertyId != null,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
-
                     onLeaveRegistration()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

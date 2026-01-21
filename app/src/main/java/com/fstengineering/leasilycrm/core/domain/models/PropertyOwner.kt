@@ -15,4 +15,10 @@ data class PropertyOwner(
     val isDeleted: Boolean = false,
     val files: ImmutableList<PropertyOwnerFile> = persistentListOf(),
     val userId: Long? = null,
-)
+) {
+    val isAnyFormFieldInitialized = name != null
+            || phone != null
+            || email != null
+            || paymentKey != null
+            || files.isNotEmpty()
+}

@@ -174,10 +174,26 @@ class PropertyOwnerRegistrationViewModel(
         _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
     }
 
+    fun onExit() {
+        val needConfirmation = when {
+            propertyOwnerToEdit != null -> propertyOwnerToEdit != propertyOwnerForm.value
+            else -> propertyOwnerForm.value.isAnyFormFieldInitialized
+        }
+
+        viewModelScope.launch {
+            _uiEvents.send(UiEvents.Exit(needConfirmation))
+        }
+    }
+
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
+
         data class ScrollToField(val field: PropertyOwnerField) : UiEvents
+
         data object PropertyOwnerCreateSuccess : UiEvents
+
         data class PropertyOwnerEditSuccess(val messageId: Int) : UiEvents
+
+        data class Exit(val needConfirmation: Boolean) : UiEvents
     }
 }

@@ -27,6 +27,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceEditSuccess
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.ConvertOldTenantToLead
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceInteractionRegistrationBottomsheet
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationFormSectionStep3
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationTopAppBar
@@ -110,6 +111,14 @@ fun AssistanceRegistrationStep3Screen(
                     is ConvertOldTenantToLead -> {
                         onUiEvent(UiEvent.ShowSnackBar(R.string.convert_tenant_to_lead_success_message))
                     }
+
+                    is Exit -> {
+                        if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                        else {
+                            mustShowConfirmLeaveRegistrationDialog = false
+                            onLeaveRegistration()
+                        }
+                    }
                 }
             }
         }
@@ -159,7 +168,7 @@ fun AssistanceRegistrationStep3Screen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        parentViewModel.onExit()
     }
 
     Scaffold(
@@ -167,7 +176,7 @@ fun AssistanceRegistrationStep3Screen(
             AssistanceRegistrationTopAppBar(
                 leadTenantName = assistanceForm.tenant?.name ?: "",
                 isEditing = parentViewModel.assistanceId != null,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
+                onBack = parentViewModel::onExit,
             )
         },
         modifier = modifier
@@ -248,7 +257,6 @@ fun AssistanceRegistrationStep3Screen(
             isEditing = parentViewModel.assistanceId != null,
             onConfirmLeave = {
                 mustShowConfirmLeaveRegistrationDialog = false
-
                 onLeaveRegistration()
             },
             onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

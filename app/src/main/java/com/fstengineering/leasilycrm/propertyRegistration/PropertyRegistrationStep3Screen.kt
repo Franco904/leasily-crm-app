@@ -33,6 +33,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.propertyRegistration.composables.ConfirmDeletePropertyPriceDialog
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyPriceRegistrationDialog
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyRegistrationFormSectionStep3
@@ -84,6 +85,14 @@ fun PropertyRegistrationStep3Screen(
                         onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
+                    is Exit -> {
+                        if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                        else {
+                            mustShowConfirmLeaveRegistrationDialog = false
+                            onLeaveRegistration()
+                        }
+                    }
+
                     else -> {}
                 }
             }
@@ -125,14 +134,14 @@ fun PropertyRegistrationStep3Screen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        parentViewModel.onExit()
     }
 
     Scaffold(
         topBar = {
             PropertyRegistrationTopAppBar(
                 isEditing = parentViewModel.propertyId != null,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
+                onBack = parentViewModel::onExit,
             )
         },
         modifier = modifier
@@ -229,7 +238,6 @@ fun PropertyRegistrationStep3Screen(
                 isEditing = parentViewModel.propertyId != null,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
-
                     onLeaveRegistration()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

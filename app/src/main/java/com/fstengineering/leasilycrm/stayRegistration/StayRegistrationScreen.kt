@@ -41,6 +41,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.strategies.Default
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.home.tenants.composables.TenantsEmptySection
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.StayCreateSuccess
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.StayEditSuccess
@@ -92,7 +93,8 @@ fun StayRegistrationScreen(
 
     var isSearching by rememberSaveable { mutableStateOf(false) }
 
-    val scrollToFieldFlow = Channel<StayField>()
+    val scrollToFieldChannel = remember { Channel<StayField>() }
+    val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -139,7 +141,7 @@ fun StayRegistrationScreen(
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.trySend(uiEvent.field)
+                    scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
                 is StayCreateSuccess -> {
@@ -164,6 +166,14 @@ fun StayRegistrationScreen(
                 is TransferEditSuccess -> {
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
+
+                is Exit -> {
+                    if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                    else {
+                        mustShowConfirmLeaveRegistrationDialog = false
+                        onBack(false)
+                    }
+                }
             }
         }
     }
@@ -178,7 +188,7 @@ fun StayRegistrationScreen(
         when {
             isLoading -> Unit
             listStatus == StayRegistrationListState.ShowingMainForm -> {
-                mustShowConfirmLeaveRegistrationDialog = true
+                viewModel.onExit()
             }
 
             isSearching -> {
@@ -236,7 +246,7 @@ fun StayRegistrationScreen(
                     when {
                         isLoading -> Unit
                         listStatus == StayRegistrationListState.ShowingMainForm -> {
-                            mustShowConfirmLeaveRegistrationDialog = true
+                            viewModel.onExit()
                         }
 
                         isSearching -> {
@@ -285,7 +295,7 @@ fun StayRegistrationScreen(
                                 onPeriodDisabledByPropertyUnselected = {
                                     onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
                                 },
-                                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                                scrollToFieldFlow = scrollToFieldFlow,
                                 modifier = Modifier
                                     .padding(innerPadding)
                                     .padding(horizontal = 24.dp)
@@ -348,7 +358,7 @@ fun StayRegistrationScreen(
                                     val acceptedMimeTypes = arrayOf("application/*", "text/*")
                                     openDocumentFile.launch(acceptedMimeTypes)
                                 },
-                                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                                scrollToFieldFlow = scrollToFieldFlow,
                                 modifier = Modifier
                                     .padding(innerPadding)
                                     .padding(horizontal = 24.dp),
@@ -434,7 +444,6 @@ fun StayRegistrationScreen(
                     isEditing = stayId != null,
                     onConfirmLeave = {
                         mustShowConfirmLeaveRegistrationDialog = false
-
                         onBack(false)
                     },
                     onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

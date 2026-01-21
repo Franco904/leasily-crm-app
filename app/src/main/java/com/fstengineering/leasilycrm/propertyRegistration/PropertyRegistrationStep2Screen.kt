@@ -30,8 +30,10 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyRegistrationFormSectionStep2
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyRegistrationTopAppBar
+import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep1Field
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep2Field
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep2ViewModel.UiEvents.ScrollToField
@@ -62,7 +64,8 @@ fun PropertyRegistrationStep2Screen(
     val seaProximityTypes by parentViewModel.seaProximityTypes.collectAsStateWithLifecycle()
     val propertyCharacteristics by parentViewModel.propertyCharacteristics.collectAsStateWithLifecycle()
 
-    val scrollToFieldFlow = Channel<PropertyStep2Field>()
+    val scrollToFieldChannel = remember { Channel<PropertyStep2Field>() }
+    val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -79,6 +82,14 @@ fun PropertyRegistrationStep2Screen(
                         onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
+                    is Exit -> {
+                        if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                        else {
+                            mustShowConfirmLeaveRegistrationDialog = false
+                            onLeaveRegistration()
+                        }
+                    }
+
                     else -> {}
                 }
             }
@@ -88,7 +99,7 @@ fun PropertyRegistrationStep2Screen(
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
                     is ScrollToField -> {
-                        scrollToFieldFlow.trySend(uiEvent.field)
+                        scrollToFieldChannel.trySend(uiEvent.field)
                     }
 
                     is ValidateSuccess -> {
@@ -106,14 +117,14 @@ fun PropertyRegistrationStep2Screen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        parentViewModel.onExit()
     }
 
     Scaffold(
         topBar = {
             PropertyRegistrationTopAppBar(
                 isEditing = parentViewModel.propertyId != null,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
+                onBack = parentViewModel::onExit,
             )
         },
         modifier = modifier
@@ -143,7 +154,7 @@ fun PropertyRegistrationStep2Screen(
                 seaProximityTypes = seaProximityTypes,
                 propertyCharacteristics = propertyCharacteristics,
                 formErrors = formErrors.errors,
-                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                scrollToFieldFlow = scrollToFieldFlow,
                 onBack = onBack,
                 onNext = {
                     focusManager.clearFocus()
@@ -161,7 +172,6 @@ fun PropertyRegistrationStep2Screen(
                 isEditing = parentViewModel.propertyId != null,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
-
                     onLeaveRegistration()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

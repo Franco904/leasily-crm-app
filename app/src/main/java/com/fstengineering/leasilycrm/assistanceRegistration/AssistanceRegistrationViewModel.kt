@@ -13,6 +13,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
@@ -51,8 +52,7 @@ class AssistanceRegistrationViewModel(
     private val _assistanceForm = MutableStateFlow(Assistance())
     val assistanceForm = _assistanceForm.asStateFlow()
 
-    var assistanceToEdit: Assistance? = null
-        private set
+    private var assistanceToEdit: Assistance? = null
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -162,6 +162,17 @@ class AssistanceRegistrationViewModel(
         }
     }
 
+    fun onExit() {
+        val needConfirmation = when {
+            assistanceToEdit != null -> assistanceToEdit != assistanceForm.value
+            else -> assistanceForm.value.isAnyFormFieldInitialized
+        }
+
+        viewModelScope.launch {
+            _uiEvents.send(UiEvents.Exit(needConfirmation))
+        }
+    }
+
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
 
@@ -170,5 +181,7 @@ class AssistanceRegistrationViewModel(
         data class AssistanceEditSuccess(val messageId: Int) : UiEvents
 
         data object ConvertOldTenantToLead : UiEvents
+
+        data class Exit(val needConfirmation: Boolean) : UiEvents
     }
 }

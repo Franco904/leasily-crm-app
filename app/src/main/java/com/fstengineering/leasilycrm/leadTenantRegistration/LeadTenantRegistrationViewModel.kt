@@ -64,9 +64,11 @@ class LeadTenantRegistrationViewModel(
     fun init(leadTenantId: Long?) {
         if (isInitialized) return
 
-        _isLoading.update { true }
+        if (leadTenantId != null) {
+            _isLoading.update { true }
 
-        if (leadTenantId != null) getLeadTenantToEdit(leadTenantId)
+            getLeadTenantToEdit(leadTenantId)
+        }
 
         getPastTags()
         getPastCities()
@@ -83,6 +85,8 @@ class LeadTenantRegistrationViewModel(
                     _leadTenantForm.update { storedLeadTenant }
                     leadTenantToEdit = storedLeadTenant
                 }
+
+            _isLoading.update { false }
         }
     }
 
@@ -90,7 +94,7 @@ class LeadTenantRegistrationViewModel(
         viewModelScope.launch {
             tenantRepository.getAllTagNames()
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { _pastTags.update { it } }
+                .onSuccess { tags -> _pastTags.update { tags } }
         }
     }
 
@@ -98,7 +102,7 @@ class LeadTenantRegistrationViewModel(
         viewModelScope.launch {
             tenantRepository.getAllCityNames()
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { _pastCities.update { it } }
+                .onSuccess { cities -> _pastCities.update { cities } }
         }
     }
 
@@ -106,9 +110,7 @@ class LeadTenantRegistrationViewModel(
         viewModelScope.launch {
             tenantContactOriginTypeRepository.getAll()
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { _pastContactOriginTypes.update { it } }
-
-            _isLoading.update { false }
+                .onSuccess { contactOriginTypes -> _pastContactOriginTypes.update { contactOriginTypes } }
         }
     }
 
@@ -136,7 +138,7 @@ class LeadTenantRegistrationViewModel(
         viewModelScope.launch {
             val leadTenant = leadTenantForm.value
 
-            if (leadTenantToEdit != null && leadTenant == leadTenantToEdit) {
+            if (leadTenantToEdit != null && leadTenantToEdit != leadTenant) {
                 _uiEvents.send(UiEvents.LeadTenantEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
@@ -196,6 +198,17 @@ class LeadTenantRegistrationViewModel(
         _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
     }
 
+    fun onExit() {
+        val needConfirmation = when {
+            leadTenantToEdit != null -> leadTenantToEdit != leadTenantForm.value
+            else -> leadTenantForm.value.isAnyFormFieldInitialized
+        }
+
+        viewModelScope.launch {
+            _uiEvents.send(UiEvents.Exit(needConfirmation))
+        }
+    }
+
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
 
@@ -204,5 +217,7 @@ class LeadTenantRegistrationViewModel(
         data object LeadCreateSuccess : UiEvents
 
         data class LeadTenantEditSuccess(val messageId: Int) : UiEvents
+
+        data class Exit(val needConfirmation: Boolean) : UiEvents
     }
 }

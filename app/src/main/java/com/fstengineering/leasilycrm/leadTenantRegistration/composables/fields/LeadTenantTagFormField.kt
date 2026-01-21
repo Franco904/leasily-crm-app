@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material3.DropdownMenuItem
@@ -17,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
@@ -49,6 +51,8 @@ fun LeadTenantTagFormField(
                     imageVector = Icons.AutoMirrored.Outlined.Label,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
                 )
             },
             label = stringResource(R.string.lead_tenant_registration_tag_label),

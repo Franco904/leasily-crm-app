@@ -16,6 +16,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,12 +32,14 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.LeadCreateSuccess
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.LeadTenantEditSuccess
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationFormSection
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationTopAppBar
 import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantField
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -63,11 +66,12 @@ fun LeadTenantRegistrationScreen(
     // TODO: Excluir tabela e pegar nomes direto de Tenants
     val pastContactOriginTypes by viewModel.pastContactOriginTypes.collectAsStateWithLifecycle()
 
-    val scrollToFieldFlow = Channel<LeadTenantField>()
+    val scrollToFieldChannel = remember { Channel<LeadTenantField>() }
+    val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
+    var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.init(leadTenantId = leadTenantId)
@@ -82,7 +86,7 @@ fun LeadTenantRegistrationScreen(
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.trySend(uiEvent.field)
+                    scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
                 is LeadCreateSuccess -> {
@@ -96,6 +100,14 @@ fun LeadTenantRegistrationScreen(
 
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
+
+                is Exit -> {
+                    if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                    else {
+                        mustShowConfirmLeaveRegistrationDialog = false
+                        onBack()
+                    }
+                }
             }
         }
     }
@@ -107,7 +119,7 @@ fun LeadTenantRegistrationScreen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        viewModel.onExit()
     }
 
     Scaffold(
@@ -115,7 +127,7 @@ fun LeadTenantRegistrationScreen(
             LeadTenantRegistrationTopAppBar(
                 isEditing = leadTenantId != null,
                 isLead = leadTenantForm.isLead,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
+                onBack = viewModel::onExit,
                 onSaveLeadTenant = viewModel::saveLeadTenant,
             )
         },
@@ -144,7 +156,7 @@ fun LeadTenantRegistrationScreen(
                 pastCities = pastCities,
                 formErrors = formErrors.errors,
                 onLastTextFieldDone = { focusManager.clearFocus() },
-                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                scrollToFieldFlow = scrollToFieldFlow,
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(horizontal = 24.dp)
@@ -155,7 +167,6 @@ fun LeadTenantRegistrationScreen(
                 isEditing = leadTenantId != null,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
-
                     onBack()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

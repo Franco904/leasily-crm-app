@@ -36,4 +36,26 @@ data class Assistance(
     val tenant: Tenant? = null,
 ) {
     val qtGuests get() = qtAdultGuests + qtKidGuests + qtBabyGuests + qtAnimalGuests
+
+    val isAnyFormFieldInitialized = searchedStartDate != null
+            || searchedEndDate != null
+            || hasFlexibilityForPeriod
+            || maxAcceptedNightlyRate != null
+            || qtAdultGuests > 0
+            || qtKidGuests > 0
+            || qtBabyGuests > 0
+            || qtAnimalGuests > 0
+            || qtBedrooms > 0
+            || qtEnSuites > 0
+            || qtDoubleBeds > 0
+            || qtSingleBeds > 0
+            || qtBathrooms > 0
+            || qtParkingSpots > 0
+            || seaProximityType != null
+            || distanceToSea != null
+            || searchedNeighborhoods != null
+            || characteristics != null
+            || observations != null
+            || sentProperties != null
+            || interactions != null
 }

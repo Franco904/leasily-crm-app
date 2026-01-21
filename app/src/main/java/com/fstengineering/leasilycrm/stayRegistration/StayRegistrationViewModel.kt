@@ -22,6 +22,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayTransferValidator
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel
 import com.fstengineering.leasilycrm.stayRegistration.models.StayErrorUiState
 import com.fstengineering.leasilycrm.stayRegistration.models.StayField
 import com.fstengineering.leasilycrm.stayRegistration.models.StayTransferErrorUiState
@@ -62,10 +63,8 @@ class StayRegistrationViewModel(
     private val _transferForm = MutableStateFlow<StayTransfer?>(null)
     val transferForm = _transferForm.asStateFlow()
 
-    var stayToEdit: Stay? = null
-        private set
-
-    var transferFormBeforeEdit: StayTransfer? = null
+    private var stayToEdit: Stay? = null
+    private var transferFormBeforeEdit: StayTransfer? = null
 
     private val _stayFormErrors = MutableStateFlow(StayErrorUiState())
     val stayFormErrors = _stayFormErrors.asStateFlow()
@@ -445,12 +444,30 @@ class StayRegistrationViewModel(
         _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
     }
 
+    fun onExit() {
+        val needConfirmation = when {
+            stayToEdit != null -> stayToEdit != stayForm.value
+            else -> stayForm.value.isAnyFormFieldInitialized
+        }
+
+        viewModelScope.launch {
+            _uiEvents.send(UiEvents.Exit(needConfirmation))
+        }
+    }
+
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
+
         data class ScrollToField(val field: StayField) : UiEvents
+
         data class StayEditSuccess(val messageId: Int) : UiEvents
+
         data class TransferEditSuccess(val messageId: Int) : UiEvents
+
         data object StayCreateSuccess : UiEvents
+
         data object TransferCreateSuccess : UiEvents
+
+        data class Exit(val needConfirmation: Boolean) : UiEvents
     }
 }

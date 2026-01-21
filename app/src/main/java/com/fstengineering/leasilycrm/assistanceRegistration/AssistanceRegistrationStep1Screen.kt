@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -26,6 +27,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationFormSectionStep1
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationTopAppBar
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceSearchedNeighborhoodRegistrationDialog
@@ -41,6 +43,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantField
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
@@ -79,7 +82,8 @@ fun AssistanceRegistrationStep1Screen(
     val assistancePropertyCharacteristics by parentViewModel.assistancePropertyCharacteristics
         .collectAsStateWithLifecycle()
 
-    val scrollToFieldFlow = Channel<AssistanceStep1Field>()
+    val scrollToFieldChannel = remember { Channel<AssistanceStep1Field>() }
+    val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -102,6 +106,14 @@ fun AssistanceRegistrationStep1Screen(
                         onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
+                    is Exit -> {
+                        if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                        else {
+                            mustShowConfirmLeaveRegistrationDialog = false
+                            onLeaveRegistration()
+                        }
+                    }
+
                     else -> {}
                 }
             }
@@ -111,7 +123,7 @@ fun AssistanceRegistrationStep1Screen(
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
                     is ScrollToField -> {
-                        scrollToFieldFlow.trySend(uiEvent.field)
+                        scrollToFieldChannel.trySend(uiEvent.field)
                     }
 
                     is ValidateSuccess -> {
@@ -154,7 +166,7 @@ fun AssistanceRegistrationStep1Screen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        parentViewModel.onExit()
     }
 
     Scaffold(
@@ -162,7 +174,7 @@ fun AssistanceRegistrationStep1Screen(
             AssistanceRegistrationTopAppBar(
                 leadTenantName = assistanceForm.tenant?.name ?: "",
                 isEditing = parentViewModel.assistanceId != null,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
+                onBack = parentViewModel::onExit,
             )
         },
         modifier = modifier
@@ -222,7 +234,7 @@ fun AssistanceRegistrationStep1Screen(
                     seaProximityTypes = seaProximityTypes,
                     assistancePropertyCharacteristics = assistancePropertyCharacteristics,
                     formErrors = formErrors.errors,
-                    scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                    scrollToFieldFlow = scrollToFieldFlow,
                     onNext = {
                         focusManager.clearFocus()
 
@@ -254,7 +266,6 @@ fun AssistanceRegistrationStep1Screen(
                 isEditing = parentViewModel.assistanceId != null,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
-
                     onLeaveRegistration()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

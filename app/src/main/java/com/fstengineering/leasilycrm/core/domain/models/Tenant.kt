@@ -25,4 +25,13 @@ data class Tenant(
 ) {
     val isLead = status == TenantStatus.Lead
     val isOld = status == TenantStatus.Old
+
+    val isAnyFormFieldInitialized = tag != null
+            || name != null
+            || city != null
+            || identityDocument != null
+            || phone != null
+            || email != null
+            || tenantContactOriginType != null
+            || observations != null
 }
