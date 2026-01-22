@@ -123,7 +123,6 @@ fun AssistanceRegistrationStep2Screen(
         topBar = {
             AssistanceRegistrationTopAppBar(
                 leadTenantName = assistanceForm.tenant?.name ?: "",
-                isEditing = parentViewModel.assistanceId != null,
                 isAddingSentProperty = isAddingSentProperty,
                 mustShowSearchPropertyAction = isAddingSentProperty
                         && selectableProperties.isNotEmpty()

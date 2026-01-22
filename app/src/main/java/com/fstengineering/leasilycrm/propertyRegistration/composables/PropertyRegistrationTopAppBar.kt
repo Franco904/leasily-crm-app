@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyRegistration.composables
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,7 +28,7 @@ fun PropertyRegistrationTopAppBar(
         navigationIcon = {
             IconButton(onClick = onBack) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                    imageVector = Icons.Default.Close,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface,
                 )

@@ -175,7 +175,6 @@ fun AssistanceRegistrationStep3Screen(
         topBar = {
             AssistanceRegistrationTopAppBar(
                 leadTenantName = assistanceForm.tenant?.name ?: "",
-                isEditing = parentViewModel.assistanceId != null,
                 onBack = parentViewModel::onExit,
             )
         },

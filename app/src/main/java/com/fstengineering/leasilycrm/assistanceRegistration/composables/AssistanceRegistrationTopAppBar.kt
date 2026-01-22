@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,7 +33,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.textFields.Se
 @Composable
 fun AssistanceRegistrationTopAppBar(
     leadTenantName: String,
-    isEditing: Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     isAddingSentProperty: Boolean = false,
@@ -56,7 +56,7 @@ fun AssistanceRegistrationTopAppBar(
         navigationIcon = {
             IconButton(onClick = onBack) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                    imageVector = Icons.Default.Close,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
