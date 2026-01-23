@@ -13,11 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -200,8 +201,6 @@ fun LeadTenantDetailsScreen(
                     leadTenant.isLead -> stringResource(R.string.lead_tenant_details_top_app_bar_title_lead)
                     else -> stringResource(R.string.lead_tenant_details_top_app_bar_title_tenant)
                 },
-                hasUnfinishedAssistance = currentAssistance != null,
-                hasUnfinishedStay = currentStay != null,
                 hasMoreOptions = !(isViewingAllSentProperties || isViewingAllInterations || pastAssistanceToView != null),
                 onBack = when {
                     pastAssistanceToView != null -> {
@@ -221,28 +220,36 @@ fun LeadTenantDetailsScreen(
                 },
                 onEditLeadTenant = onEditLeadTenant,
                 onDeleteLeadTenant = { mustShowConfirmDeleteLeadTenantDialog = true },
-                onNewAssistance = { onRegisterAssistance(null) },
-                onEditAssistance = { onRegisterAssistance(currentAssistance?.id!!) },
-                onDeleteAssistance = { mustShowConfirmDeleteAssistanceDialog = true },
-                onNewStay = { onNewStay() },
-                onViewStay = { onViewStay(currentStay?.id!!) },
             )
         },
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = currentAssistance == null
-                        && LeadTenantDetailsTab.fromId(selectedTabId) == LeadTenantDetailsTab.CurrentAssistance,
-                enter = fadeIn(),
-                exit = fadeOut(),
+            ExtendedFloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                onClick = { if (currentStay != null) onViewStay(currentStay.id!!) else onNewStay() },
             ) {
-                FloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    onClick = { onRegisterAssistance(null) },
-                ) {
+                if (currentStay != null) {
                     Icon(
-                        painter = painterResource(R.drawable.assignment_add),
+                        painter = painterResource(R.drawable.calendar_view),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.view_property_stay_action_button_text),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.calendar_add_on),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.new_property_stay_action_button_text),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
             }
@@ -342,6 +349,9 @@ fun LeadTenantDetailsScreen(
                     assistancePropertyCharacteristics = assistancePropertyCharacteristics,
                     lastSentProperty = sortedSentProperties.firstOrNull(),
                     lastInteraction = sortedInteractions.firstOrNull(),
+                    onRegisterAssistance = { onRegisterAssistance(null) },
+                    onEditAssistance = { onRegisterAssistance(currentAssistance?.id!!) },
+                    onDeleteAssistance = { mustShowConfirmDeleteAssistanceDialog = true },
                     onViewAllSentProperties = { isViewingAllSentProperties = true },
                     onViewAllInteractions = { isViewingAllInterations = true },
                     onViewSentPropertyDetails = { propertyId ->
@@ -389,6 +399,11 @@ fun LeadTenantDetailsScreen(
                                     assistancePropertyCharacteristics = assistancePropertyCharacteristics,
                                     lastSentProperty = sortedSentProperties.firstOrNull(),
                                     lastInteraction = sortedInteractions.firstOrNull(),
+                                    onRegisterAssistance = { onRegisterAssistance(null) },
+                                    onEditAssistance = { onRegisterAssistance(currentAssistance?.id!!) },
+                                    onDeleteAssistance = {
+                                        mustShowConfirmDeleteAssistanceDialog = true
+                                    },
                                     onViewAllSentProperties = { isViewingAllSentProperties = true },
                                     onViewAllInteractions = { isViewingAllInterations = true },
                                     onViewSentPropertyDetails = { propertyId ->

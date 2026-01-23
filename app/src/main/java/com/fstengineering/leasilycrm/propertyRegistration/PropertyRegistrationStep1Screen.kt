@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -142,10 +144,13 @@ fun PropertyRegistrationStep1Screen(
 
     Scaffold(
         topBar = {
-            PropertyRegistrationTopAppBar(
-                isEditing = propertyId != null,
-                onBack = parentViewModel::onExit,
-            )
+            Column {
+                PropertyRegistrationTopAppBar(
+                    isEditing = propertyId != null,
+                    onBack = parentViewModel::onExit,
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
             .pointerInput(Unit) {

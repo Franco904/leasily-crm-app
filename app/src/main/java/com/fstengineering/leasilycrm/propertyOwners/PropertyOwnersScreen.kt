@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -87,7 +88,10 @@ fun PropertyOwnersScreen(
 
     Scaffold(
         topBar = {
-            PropertyOwnersTopAppBar(onBack = onBack)
+            Column {
+                PropertyOwnersTopAppBar(onBack = onBack)
+                HorizontalDivider()
+            }
         },
         floatingActionButton = {
             FloatingActionButton(

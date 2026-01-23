@@ -8,10 +8,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -206,59 +208,62 @@ fun StayRegistrationScreen(
             val isSelectingProperty = listStatus == StayRegistrationListState.SelectingProperty
             val isSelectingTenant = listStatus == StayRegistrationListState.SelectingTenant
 
-            StayRegistrationTopAppBar(
-                isEditing = stayId != null,
-                onSaveStay = {
-                    viewModel.onStayFormChange(
-                        stayForm.copy(
-                            totalPrice = totalPriceInput.replace(',', '.').toDecimalOrNull(),
-                            commission = commissionInput.replace(',', '.').toDecimalOrNull(),
+            Column {
+                StayRegistrationTopAppBar(
+                    isEditing = stayId != null,
+                    onSaveStay = {
+                        viewModel.onStayFormChange(
+                            stayForm.copy(
+                                totalPrice = totalPriceInput.replace(',', '.').toDecimalOrNull(),
+                                commission = commissionInput.replace(',', '.').toDecimalOrNull(),
+                            )
                         )
-                    )
 
-                    viewModel.saveStay()
-                },
-                isUnavailablePeriod = isUnavailablePeriod,
-                isSelectingProperty = isSelectingProperty,
-                isSelectingTenant = isSelectingTenant,
-                mustShowSearchAction = when {
-                    isSearching -> false
-                    isSelectingProperty -> properties.isNotEmpty()
-                    isSelectingTenant -> tenants.isNotEmpty()
-                    else -> false
-                },
-                isSearching = isSearching,
-                onSearch = { isSearching = true },
-                searchInput = when {
-                    !isSearching -> null
-                    isSelectingProperty -> propertySearchInput
-                    isSelectingTenant -> tenantSearchInput
-                    else -> null
-                },
-                onSearchInputChange = when {
-                    isSelectingProperty -> viewModel::onPropertySearchInputChange
-                    isSelectingTenant -> viewModel::onTenantSearchInputChange
-                    else -> {
-                        {}
-                    }
-                },
-                onBack = {
-                    when {
-                        isLoading -> Unit
-                        listStatus == StayRegistrationListState.ShowingMainForm -> {
-                            viewModel.onExit()
+                        viewModel.saveStay()
+                    },
+                    isUnavailablePeriod = isUnavailablePeriod,
+                    isSelectingProperty = isSelectingProperty,
+                    isSelectingTenant = isSelectingTenant,
+                    mustShowSearchAction = when {
+                        isSearching -> false
+                        isSelectingProperty -> properties.isNotEmpty()
+                        isSelectingTenant -> tenants.isNotEmpty()
+                        else -> false
+                    },
+                    isSearching = isSearching,
+                    onSearch = { isSearching = true },
+                    searchInput = when {
+                        !isSearching -> null
+                        isSelectingProperty -> propertySearchInput
+                        isSelectingTenant -> tenantSearchInput
+                        else -> null
+                    },
+                    onSearchInputChange = when {
+                        isSelectingProperty -> viewModel::onPropertySearchInputChange
+                        isSelectingTenant -> viewModel::onTenantSearchInputChange
+                        else -> {
+                            {}
                         }
+                    },
+                    onBack = {
+                        when {
+                            isLoading -> Unit
+                            listStatus == StayRegistrationListState.ShowingMainForm -> {
+                                viewModel.onExit()
+                            }
 
-                        isSearching -> {
-                            isSearching = false
-                            viewModel.onPropertySearchInputChange(searchInput = null)
-                            viewModel.onTenantSearchInputChange(searchInput = null)
+                            isSearching -> {
+                                isSearching = false
+                                viewModel.onPropertySearchInputChange(searchInput = null)
+                                viewModel.onTenantSearchInputChange(searchInput = null)
+                            }
+
+                            else -> listStatus = StayRegistrationListState.ShowingMainForm
                         }
-
-                        else -> listStatus = StayRegistrationListState.ShowingMainForm
-                    }
-                },
-            )
+                    },
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
             .pointerInput(Unit) {

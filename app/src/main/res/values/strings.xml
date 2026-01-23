@@ -162,7 +162,7 @@
     <string name="property_dashboard_current_month_stays_title">Estadias no mês atual</string>
 
     <!-- Property details -->
-    <string name="property_details_top_app_bar_title">Detalhes do imóvel</string>
+    <string name="property_details_top_app_bar_title">Imóvel</string>
 
     <string name="property_details_tab_identification_label_title">Identificação</string>
     <string name="property_details_top_financial_label_title">Financeiro</string>
@@ -246,7 +246,7 @@
     <string name="property_owner_registration_documents_body_text">Documentos relacionados ao proprietário podem ser, por exemplo, cópia(s) do(s) contrato(s) de administração imobiliária.</string>
 
     <!-- Property owner details -->
-    <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
+    <string name="property_owner_details_top_app_bar_title">Proprietário</string>
 
     <!-- Leads -->
     <string name="leads_empty_text">Nenhum lead registrado.</string>
@@ -294,8 +294,8 @@
     <string name="lead_tenant_registration_tenant_observations_label">Observações sobre o inquilino</string>
 
     <!-- Lead/tenant details -->
-    <string name="lead_tenant_details_top_app_bar_title_lead">Detalhes do lead</string>
-    <string name="lead_tenant_details_top_app_bar_title_tenant">Detalhes do inquilino</string>
+    <string name="lead_tenant_details_top_app_bar_title_lead">Lead</string>
+    <string name="lead_tenant_details_top_app_bar_title_tenant">Inquilino</string>
     <string name="lead_tenant_details_top_app_bar_title_all_sent_properties">Imóveis enviados</string>
     <string name="lead_tenant_details_top_app_bar_title_all_interations">Interações</string>
     <string name="lead_tenant_details_top_app_bar_title_past_assistance">Atendimento passado</string>
@@ -350,7 +350,7 @@
     <string name="assistance_delete_dialog_headline">Excluir atendimento em andamento?</string>
     <string name="assistance_delete_dialog_supporting_text">Se confirmada a exclusão, este atendimento não estará mais disponível.</string>
 
-    <string name="assistance_empty_text">Não há atendimento em andamento.</string>
+    <string name="assistance_empty_text">Nada em andamento no momento.</string>
 
     <!-- Assistance registration -->
     <string name="assistance_registration_top_app_bar_title">Atendimento</string>
@@ -505,8 +505,8 @@
     <string name="stay_registration_documents_body_text">Documentos relacionados ao aluguel podem ser, por exemplo, uma cópia do contrato ou recibo de locação elaborado entre as partes do processo.</string>
 
     <!-- Stay details -->
-    <string name="stay_details_top_app_bar_title">Detalhes da estadia</string>
-    <string name="stay_unavailable_period_details_top_app_bar_title">Detalhes do período indisponível</string>
+    <string name="stay_details_top_app_bar_title">Estadia</string>
+    <string name="stay_unavailable_period_details_top_app_bar_title">Período indisponível</string>
 
     <string name="stay_details_tenant_vehicle_data_body_text">Marca %1$s, Cor %2$s, Placa %3$s</string>
 
@@ -595,6 +595,7 @@
     <string name="advance_action_button_text">Avançar</string>
     <string name="apply_action_button_text">Aplicar</string>
     <string name="assist_action_button_text">Atender</string>
+    <string name="assist_now_action_button_text">Atender agora</string>
     <string name="back_action_button_text">Voltar</string>
     <string name="cancel_action_button_text">Cancelar</string>
     <string name="close_action_button_text">Fechar</string>

@@ -2,9 +2,11 @@ package com.fstengineering.leasilycrm.propertyOwnerDetails
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -82,11 +84,14 @@ fun PropertyOwnerDetailsScreen(
 
     Scaffold(
         topBar = {
-            PropertyOwnerDetailsTopAppBar(
-                onBack = onBack,
-                onEditPropertyOwner = { onEditPropertyOwner(propertyOwnerId) },
-                onDeletePropertyOwner = { mustShowConfirmDeleteDialog = true },
-            )
+            Column {
+                PropertyOwnerDetailsTopAppBar(
+                    onBack = onBack,
+                    onEditPropertyOwner = { onEditPropertyOwner(propertyOwnerId) },
+                    onDeletePropertyOwner = { mustShowConfirmDeleteDialog = true },
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
     ) { innerPadding ->

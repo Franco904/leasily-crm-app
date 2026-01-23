@@ -8,9 +8,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -136,24 +138,27 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            HomeTopAppBar(
-                currentBottomNavDestination = currentBottomNavDestination,
-                userProfilePictureUrl = userProfilePictureUrl,
-                hasSearchButton = currentBottomNavDestination in listOf(
-                    BottomNavBarDestination.Leads,
-                    BottomNavBarDestination.Tenants,
-                ),
-                onBack = {
-                    isSearching = false
-                    searchInput = null
-                },
-                isSearching = isSearching,
-                onSearchSelect = { isSearching = true },
-                searchInput = searchInput,
-                onSearchInputChange = { searchInput = it },
-                onProfileSelect = onProfileSelect,
-                onSettingsSelect = onSettingsSelect,
-            )
+            Column {
+                HomeTopAppBar(
+                    currentBottomNavDestination = currentBottomNavDestination,
+                    userProfilePictureUrl = userProfilePictureUrl,
+                    hasSearchButton = currentBottomNavDestination in listOf(
+                        BottomNavBarDestination.Leads,
+                        BottomNavBarDestination.Tenants,
+                    ),
+                    onBack = {
+                        isSearching = false
+                        searchInput = null
+                    },
+                    isSearching = isSearching,
+                    onSearchSelect = { isSearching = true },
+                    searchInput = searchInput,
+                    onSearchInputChange = { searchInput = it },
+                    onProfileSelect = onProfileSelect,
+                    onSettingsSelect = onSettingsSelect,
+                )
+                HorizontalDivider()
+            }
         },
         bottomBar = {
             val enterBottomNavBarAnim =

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -106,10 +107,13 @@ fun ProfileScreen(
 
     Scaffold(
         topBar = {
-            ProfileScreenTopBar(
-                isSigningOut = isSigningOut,
-                onBack = onBack,
-            )
+            Column {
+                ProfileScreenTopBar(
+                    isSigningOut = isSigningOut,
+                    onBack = onBack,
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
     ) { innerPadding ->
