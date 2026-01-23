@@ -22,7 +22,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayTransferValidator
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
-import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel
 import com.fstengineering.leasilycrm.stayRegistration.models.StayErrorUiState
 import com.fstengineering.leasilycrm.stayRegistration.models.StayField
 import com.fstengineering.leasilycrm.stayRegistration.models.StayTransferErrorUiState

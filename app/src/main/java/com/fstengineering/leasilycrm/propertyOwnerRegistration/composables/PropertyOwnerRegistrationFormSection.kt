@@ -82,6 +82,7 @@ fun PropertyOwnerRegistrationFormSection(
         contentPadding = PaddingValues(bottom = 240.dp),
         modifier = modifier
     ) {
+        item { Spacer(modifier = Modifier.height(28.dp)) }
         item(key = PropertyOwnerField.Name) {
             Box(
                 modifier = Modifier

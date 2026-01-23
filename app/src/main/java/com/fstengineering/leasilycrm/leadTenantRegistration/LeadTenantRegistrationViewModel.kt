@@ -138,7 +138,7 @@ class LeadTenantRegistrationViewModel(
         viewModelScope.launch {
             val leadTenant = leadTenantForm.value
 
-            if (leadTenantToEdit != null && leadTenantToEdit != leadTenant) {
+            if (leadTenantToEdit != null && leadTenantToEdit == leadTenant) {
                 _uiEvents.send(UiEvents.LeadTenantEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }

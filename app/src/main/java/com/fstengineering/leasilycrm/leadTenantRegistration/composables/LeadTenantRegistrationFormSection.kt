@@ -76,6 +76,7 @@ fun LeadTenantRegistrationFormSection(
             .verticalScroll(scrollState)
             .onGloballyPositioned { coords -> scrollContainerCoords = coords }
     ) {
+        Spacer(modifier = Modifier.height(28.dp))
         LeadTenantTagFormField(
             tag = leadTenantForm.tag,
             pastTags = pastTags,

@@ -120,9 +120,9 @@ fun NavGraphBuilder.destinations(
             onViewLeadTenantDetails = { leadTenantId ->
                 navController.navigate(Destinations.LeadTenantDetails(leadTenantId))
             },
-            onRegisterAssistance = { leadTenantId, assistanceId ->
+            onNewAssistance = { leadTenantId ->
                 val destination = Destinations.AssistanceRegistration(
-                    assistanceId = assistanceId,
+                    assistanceId = null,
                     leadTenantId = leadTenantId,
                 )
                 navController.navigate(destination)

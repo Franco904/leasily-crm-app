@@ -41,7 +41,6 @@ import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrati
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationFormSection
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationTopAppBar
 import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantField
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 

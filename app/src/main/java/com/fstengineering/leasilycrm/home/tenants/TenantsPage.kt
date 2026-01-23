@@ -27,7 +27,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByMenuOption
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByTextButton
@@ -51,8 +50,7 @@ fun TenantsPage(
     searchInput: String?,
     onRegisterTenant: (Long?) -> Unit,
     onViewTenantDetails: (Long) -> Unit,
-    onRegisterAssistance: (Long, Long?) -> Unit,
-    onDeleteAssistance: (Assistance) -> Unit,
+    onNewAssistance: (Long) -> Unit,
     onNewStay: (Long) -> Unit,
     onViewStay: (Long) -> Unit,
     onUiEvent: (UiEvent) -> Unit,
@@ -200,20 +198,6 @@ fun TenantsPage(
 
                             LeadTenantCard(
                                 leadTenant = tenant,
-                                onCardClick = { onViewTenantDetails(tenant.id!!) },
-                                onEditLeadTenant = { onRegisterTenant(tenant.id) },
-                                onDeleteLeadTenant = { viewModel.onDeleteTenant(tenant = tenant) },
-                                onNewAssistance = { onRegisterAssistance(tenant.id!!, null) },
-                                onEditAssistance = {
-                                    onRegisterAssistance(tenant.id!!, unfinishedAssistance?.id!!)
-                                },
-                                onDeleteAssistance = {
-                                    onDeleteAssistance(unfinishedAssistance!!.copy(tenant = tenant))
-                                },
-                                onViewStay = { onViewStay(unfinishedStay?.id!!) },
-                                onNewStay = { onNewStay(tenant.id!!) },
-                                hasUnfinishedAssistance = unfinishedAssistance != null,
-                                hasUnfinishedStay = unfinishedStay != null,
                                 qtGuestsLabelText = when {
                                     unfinishedStay?.qtGuests != null && unfinishedStay.qtGuests > 0 -> {
                                         pluralStringResource(
@@ -225,6 +209,16 @@ fun TenantsPage(
 
                                     else -> null
                                 },
+                                onCardClick = { onViewTenantDetails(tenant.id!!) },
+                                onEditLeadTenant = { onRegisterTenant(tenant.id) },
+                                onDeleteLeadTenant = { viewModel.onDeleteTenant(tenant = tenant) },
+                                onNewAssistance = { onNewAssistance(tenant.id!!) },
+                                onViewStay = { onViewStay(unfinishedStay?.id!!) },
+                                onNewStay = { onNewStay(tenant.id!!) },
+                                hasMoreOptionsMenu = true,
+                                hasUnfinishedAssistance = unfinishedAssistance != null,
+                                hasUnfinishedStay = unfinishedStay != null,
+                                hasPrimaryActions = true,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

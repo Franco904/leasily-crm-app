@@ -28,7 +28,6 @@ import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppTonalButton
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceLastInteractionDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceLastSentPropertyDetailsItem

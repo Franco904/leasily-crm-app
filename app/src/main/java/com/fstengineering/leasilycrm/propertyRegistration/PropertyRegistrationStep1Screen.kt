@@ -51,7 +51,6 @@ import com.fstengineering.leasilycrm.propertyRegistration.models.fields.Property
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep1ViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep1ViewModel.UiEvents.ValidateSuccess
-import com.fstengineering.leasilycrm.stayRegistration.models.StayField
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

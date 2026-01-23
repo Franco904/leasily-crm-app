@@ -44,7 +44,6 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegi
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationFormSection
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationTopAppBar
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
-import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep2Field
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
