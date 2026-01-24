@@ -226,10 +226,11 @@ fun LeadsPage(
                                 onNewAssistance = { onNewAssistance(lead.id!!) },
                                 onViewStay = { onViewStay(unfinishedStay?.id!!) },
                                 onNewStay = { onNewStay(lead.id!!) },
-                                hasMoreOptionsMenu = true,
                                 hasUnfinishedAssistance = unfinishedAssistance != null,
                                 hasUnfinishedStay = unfinishedStay != null,
-                                hasPrimaryActions = true,
+                                mustShowAssistanceText = true,
+                                mustShowMoreOptionsMenu = true,
+                                mustShowPrimaryActions = true,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

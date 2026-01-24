@@ -215,10 +215,11 @@ fun TenantsPage(
                                 onNewAssistance = { onNewAssistance(tenant.id!!) },
                                 onViewStay = { onViewStay(unfinishedStay?.id!!) },
                                 onNewStay = { onNewStay(tenant.id!!) },
-                                hasMoreOptionsMenu = true,
                                 hasUnfinishedAssistance = unfinishedAssistance != null,
                                 hasUnfinishedStay = unfinishedStay != null,
-                                hasPrimaryActions = true,
+                                mustShowAssistanceText = true,
+                                mustShowMoreOptionsMenu = true,
+                                mustShowPrimaryActions = true,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

@@ -257,6 +257,9 @@
         <item quantity="other">Procurando para %1$d hóspedes</item>
     </plurals>
 
+    <string name="lead_searching_qt_guests_empty_text">Quant. hóspedes não informada</string>
+    <string name="no_unfinished_assistance_text">Sem atendimento em andamento</string>
+
     <string name="leads_delete_dialog_headline">Excluir lead?</string>
     <string name="leads_delete_dialog_supporting_text">Se confirmada a exclusão, este lead, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>
 
