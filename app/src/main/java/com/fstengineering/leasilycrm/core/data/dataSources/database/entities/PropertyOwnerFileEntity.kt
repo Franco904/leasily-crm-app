@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "property_owner_files",
@@ -21,8 +21,8 @@ import java.time.LocalDateTime
 )
 data class PropertyOwnerFileEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "property_owner_file_uri") val propertyOwnerFileUri: String,
     @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Long,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
@@ -41,8 +41,8 @@ data class PropertyOwnerFileEntity(
 
             return PropertyOwnerFileEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 propertyOwnerFileUri = domain.uriString,
                 propertyOwnerId = domain.propertyOwnerId,
                 isDeleted = domain.isDeleted,

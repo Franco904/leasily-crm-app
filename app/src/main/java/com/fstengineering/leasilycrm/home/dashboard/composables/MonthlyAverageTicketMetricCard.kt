@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.application.theme.deepPurple
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
@@ -29,11 +30,10 @@ import ir.ehsannarmani.compose_charts.models.Bars
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import java.math.BigDecimal
 
 @Composable
 fun MonthlyAverageTicketMetricCard(
-    averageTicketPerMonth: ImmutableMap<CalendarMonthYear, BigDecimal>,
+    averageTicketPerMonth: ImmutableMap<CalendarMonthYear, AppDecimal>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current

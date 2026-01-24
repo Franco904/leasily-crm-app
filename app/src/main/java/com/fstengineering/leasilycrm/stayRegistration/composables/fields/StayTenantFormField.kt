@@ -59,10 +59,7 @@ fun StayTenantFormField(
         AnimatedVisibility(stayTenant != null) {
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
-                LeadTenantCard(
-                    leadTenant = stayTenant!!,
-                    hasMoreOptionsMenu = false,
-                )
+                LeadTenantCard(leadTenant = stayTenant!!)
             }
         }
         Spacer(modifier = Modifier.height(12.dp))

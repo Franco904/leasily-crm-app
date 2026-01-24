@@ -3,8 +3,10 @@ package com.fstengineering.leasilycrm.assistanceRegistration
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -121,29 +123,31 @@ fun AssistanceRegistrationStep2Screen(
 
     Scaffold(
         topBar = {
-            AssistanceRegistrationTopAppBar(
-                leadTenantName = assistanceForm.tenant?.name ?: "",
-                isEditing = parentViewModel.assistanceId != null,
-                isAddingSentProperty = isAddingSentProperty,
-                mustShowSearchPropertyAction = isAddingSentProperty
-                        && selectableProperties.isNotEmpty()
-                        && !isSearchingPropertyToSend,
-                isSearchingPropertyToSend = isSearchingPropertyToSend,
-                onSearchPropertyToSend = { isSearchingPropertyToSend = true },
-                searchInput = searchInput,
-                onSearchInputChange = stepViewModel::onSearchInputChange,
-                onBack = {
-                    when {
-                        isSearchingPropertyToSend -> {
-                            isSearchingPropertyToSend = false
-                            stepViewModel.onSearchInputChange(searchInput = null)
-                        }
+            Column {
+                AssistanceRegistrationTopAppBar(
+                    leadTenantName = assistanceForm.tenant?.name ?: "",
+                    isAddingSentProperty = isAddingSentProperty,
+                    mustShowSearchPropertyAction = isAddingSentProperty
+                            && selectableProperties.isNotEmpty()
+                            && !isSearchingPropertyToSend,
+                    isSearchingPropertyToSend = isSearchingPropertyToSend,
+                    onSearchPropertyToSend = { isSearchingPropertyToSend = true },
+                    searchInput = searchInput,
+                    onSearchInputChange = stepViewModel::onSearchInputChange,
+                    onBack = {
+                        when {
+                            isSearchingPropertyToSend -> {
+                                isSearchingPropertyToSend = false
+                                stepViewModel.onSearchInputChange(searchInput = null)
+                            }
 
-                        isAddingSentProperty -> isAddingSentProperty = false
-                        else -> mustShowConfirmLeaveRegistrationDialog = true
-                    }
-                },
-            )
+                            isAddingSentProperty -> isAddingSentProperty = false
+                            else -> mustShowConfirmLeaveRegistrationDialog = true
+                        }
+                    },
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
             .pointerInput(Unit) {

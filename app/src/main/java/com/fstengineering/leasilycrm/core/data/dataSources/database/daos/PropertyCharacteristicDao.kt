@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 @Dao
 interface PropertyCharacteristicDao {
     @Upsert
-    suspend fun insertOrUpdate(propertyCharacteristic: PropertyCharacteristicEntity): Long
+    suspend fun insertOrUpdate(propertyCharacteristic: PropertyCharacteristicEntity)
 
     @Query("SELECT * FROM property_characteristics")
     suspend fun getAll(): List<PropertyCharacteristicEntity>

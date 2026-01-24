@@ -14,17 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import java.time.LocalTime
+import com.fstengineering.leasilycrm.core.application.models.AppTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePickerDialog(
-    onTimeSelect: (LocalTime) -> Unit,
+    onTimeSelect: (AppTime) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
 ) {
-    val timeNow = remember { LocalTime.now() }
+    val timeNow = remember { AppTime.now() }
 
     val timePickerState = rememberTimePickerState(
         initialHour = timeNow.hour,
@@ -49,9 +49,8 @@ fun TimePickerDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    val selectedTime = LocalTime.now()
-                        .withHour(timePickerState.hour)
-                        .withMinute(timePickerState.minute)
+                    val selectedTime = AppTime.now()
+                        .withHourMinute(timePickerState.hour, timePickerState.minute)
 
                     onTimeSelect(selectedTime)
                     onDismiss()

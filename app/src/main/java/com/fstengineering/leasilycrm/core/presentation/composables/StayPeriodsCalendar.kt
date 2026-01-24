@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.application.theme.AppTheme
 import com.fstengineering.leasilycrm.core.application.theme.customColors
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
@@ -69,7 +70,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
-import java.time.LocalDate
 
 @Composable
 fun StayPeriodsCalendar(
@@ -84,7 +84,7 @@ fun StayPeriodsCalendar(
 ) {
     val context = LocalContext.current
 
-    val now = remember { LocalDate.now() }
+    val now = remember { AppDate.now() }
 
     val monthYearLabel = remember(month) {
         val monthLabel = context.getMonthLabelByNumber(monthNumber = month)
@@ -219,7 +219,7 @@ fun StayDatesSection(
     daysOfMonth: ImmutableList<String>,
     selectedDatesWithMonthYear: Pair<CalendarMonthYear, ImmutableList<StayCalendarDate>>?,
     singleStayPeriodColor: Color?,
-    now: LocalDate,
+    now: AppDate,
     month: Int,
     year: Int,
     onViewStay: ((Long) -> Unit)?,
@@ -258,7 +258,7 @@ fun StayDatesSection(
             val selectedDaysOfMonth = selectedDatesWithMonthYear?.second?.map { it.dayOfMonth }
 
             val isToday = day.toIntOrNull() == now.dayOfMonth
-                    && month == now.monthValue
+                    && month == now.month
                     && year == now.year
 
             if (selectedDatesWithMonthYear == null || day !in selectedDaysOfMonth!!) {

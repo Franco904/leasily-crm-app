@@ -7,9 +7,9 @@
     <string name="sign_in_sign_in_with_google">Entrar com Google</string>
 
     <!-- Home -->
+    <string name="home_crm_metrics_label">Desempenho</string>
     <string name="home_properties_label">Imóveis</string>
     <string name="home_property_owners_label">Proprietários</string>
-    <string name="home_customer_segments_label">Segmentos de cliente</string>
 
     <string name="home_dashboard_label">Painel</string>
     <string name="home_leads_label">Leads</string>
@@ -26,7 +26,7 @@
 
     <string name="settings_notifications_group_title">Notificações</string>
     <string name="settings_today_check_in_check_out_notification_title">Lembrete de check-ins e check-outs</string>
-    <string name="settings_today_check_in_check_out_notification_description">Alerta, no início da manhã, sobre a ocorrência de check-ins e check-outs no dia atual.</string>
+    <string name="settings_today_check_in_check_out_notification_description">Alerta, no início da manhã, sobre a ocorrência de check-ins e check-outs no dia.</string>
 
     <!-- Profile -->
     <string name="profile_top_app_bar_title">Conta</string>
@@ -47,8 +47,8 @@
 
     <string name="dashboard_monthly_lead_generation_metric_title">Geração total de leads</string>
     <string name="dashboard_monthly_lead_generation_metric_description">Mede o número de novos leads gerados em cada mês.</string>
-    <string name="dashboard_monthly_lead_generation_per_tenant_segment_metric_title">Geração de leads por segmento de inquilino</string>
-    <string name="dashboard_monthly_lead_generation_per_tenant_segment_metric_description">Mede o número de novos leads gerados por segmento de inquilino em cada mês.</string>
+    <string name="dashboard_monthly_lead_generation_per_tenant_tag_metric_title">Geração de leads por categoria de inquilino</string>
+    <string name="dashboard_monthly_lead_generation_per_tenant_tag_metric_description">Mede o número de novos leads gerados por categoria de inquilino em cada mês.</string>
     <string name="dashboard_lead_contact_channels_distribution_metric_title">Canais de contato dos leads</string>
     <string name="dashboard_lead_contact_channels_distribution_metric_description">Mede a distribuição atual dos leads por seus respectivos canais de contato.</string>
 
@@ -61,19 +61,15 @@
 
     <string name="dashboard_monthly_new_bookings_metric_title">Novas reservas</string>
     <string name="dashboard_monthly_new_bookings_metric_description">Mede o número de novas reservas de estadia agendadas em cada mês.</string>
-    <string name="dashboard_monthly_new_bookings_per_tenant_segment_metric_title">Novas reservas por segmento de inquilino</string>
-    <string name="dashboard_monthly_new_bookings_per_tenant_segment_metric_description">Mede o número de novas reservas de estadia agendadas por segmento de inquilino em cada mês.</string>
-    <string name="dashboard_monthly_new_bookings_per_property_owner_segment_metric_title">Novas reservas por segmento de proprietário</string>
-    <string name="dashboard_monthly_new_bookings_per_property_owner_segment_metric_description">Mede o número de novas reservas de estadia agendadas por segmento de proprietário do imóvel em cada mês.</string>
+    <string name="dashboard_monthly_new_bookings_per_tenant_tag_metric_title">Novas reservas por categoria de inquilino</string>
+    <string name="dashboard_monthly_new_bookings_per_tenant_tag_metric_description">Mede o número de novas reservas de estadia agendadas por categoria de inquilino em cada mês.</string>
     <string name="dashboard_monthly_new_bookings_per_top3_neighborhoods_metric_title">Bairros mais alugados</string>
     <string name="dashboard_monthly_new_bookings_per_top3_neighborhoods_metric_description">Mede o número de novas reservas de estadia agendadas nos 3 bairros mais alugados pelo corretor em cada mês.</string>
 
     <string name="dashboard_monthly_commission_invoice_metric_title">Faturamento total (R$)</string>
     <string name="dashboard_monthly_commission_invoice_metric_description">Mede o faturamento total do corretor (comissão recebida) em estadias de aluguel de temporada em cada mês.</string>
-    <string name="dashboard_monthly_commission_invoice_per_tenant_segment_metric_title">Faturamento por segmento de inquilino (R$)</string>
-    <string name="dashboard_monthly_commission_invoice_per_tenant_segment_metric_description">Mede o faturamento total do corretor (comissão recebida) em estadias de aluguel de temporada por segmento de inquilino em cada mês.</string>
-    <string name="dashboard_monthly_commission_invoice_per_property_owner_segment_metric_title">Faturamento por segmento de proprietário (R$)</string>
-    <string name="dashboard_monthly_commission_invoice_per_property_owner_segment_metric_description">Mede o faturamento total do corretor (comissão recebida) em estadias de aluguel de temporada por segmento de proprietário em cada mês.</string>
+    <string name="dashboard_monthly_commission_invoice_per_tenant_tag_metric_title">Faturamento por categoria de inquilino (R$)</string>
+    <string name="dashboard_monthly_commission_invoice_per_tenant_tag_metric_description">Mede o faturamento total do corretor (comissão recebida) em estadias de aluguel de temporada por categoria de inquilino em cada mês.</string>
     <string name="dashboard_monthly_commission_invoice_per_top3_neighborhoods_metric_title">Bairros mais rentáveis (R$)</string>
     <string name="dashboard_monthly_commission_invoice_per_top3_neighborhoods_metric_description">Mede o faturamento total do corretor (comissão recebida) em estadias de aluguel de temporada nos 3 bairros mais rentáveis de cada mês.</string>
     <string name="dashboard_average_monthly_ticket_metric_title">Ticket médio (R$)</string>
@@ -166,7 +162,7 @@
     <string name="property_dashboard_current_month_stays_title">Estadias no mês atual</string>
 
     <!-- Property details -->
-    <string name="property_details_top_app_bar_title">Detalhes do imóvel</string>
+    <string name="property_details_top_app_bar_title">Imóvel</string>
 
     <string name="property_details_tab_identification_label_title">Identificação</string>
     <string name="property_details_top_financial_label_title">Financeiro</string>
@@ -242,7 +238,6 @@
     <string name="property_owner_registration_top_app_bar_title_create">Novo proprietário</string>
     <string name="property_owner_registration_top_app_bar_title_edit">Editar proprietário</string>
 
-    <string name="property_owner_registration_customer_segment_label">Segmento de proprietário</string>
     <string name="property_owner_registration_name_label">Nome</string>
     <string name="property_owner_registration_phone_label">Telefone</string>
     <string name="property_owner_registration_email_label">Email</string>
@@ -250,10 +245,8 @@
     <string name="property_owner_registration_documents_title">Documentos</string>
     <string name="property_owner_registration_documents_body_text">Documentos relacionados ao proprietário podem ser, por exemplo, cópia(s) do(s) contrato(s) de administração imobiliária.</string>
 
-    <string name="property_owner_registration_customer_segment_empty_text">Nenhum segmento de proprietário registrado.</string>
-
     <!-- Property owner details -->
-    <string name="property_owner_details_top_app_bar_title">Detalhes do proprietário</string>
+    <string name="property_owner_details_top_app_bar_title">Proprietário</string>
 
     <!-- Leads -->
     <string name="leads_empty_text">Nenhum lead registrado.</string>
@@ -263,6 +256,9 @@
         <item quantity="one">Procurando para %1$d hóspede</item>
         <item quantity="other">Procurando para %1$d hóspedes</item>
     </plurals>
+
+    <string name="lead_searching_qt_guests_empty_text">Quant. hóspedes não informada</string>
+    <string name="no_unfinished_assistance_text">Sem atendimento em andamento</string>
 
     <string name="leads_delete_dialog_headline">Excluir lead?</string>
     <string name="leads_delete_dialog_supporting_text">Se confirmada a exclusão, este lead, seu(s) atendimento(s) e sua(s) estadia(s) não estarão mais disponíveis.</string>
@@ -290,7 +286,7 @@
     <string name="lead_registration_top_app_bar_title_edit">Editar lead</string>
     <string name="tenant_registration_top_app_bar_title_edit">Editar inquilino</string>
 
-    <string name="lead_tenant_registration_customer_segment_label">Segmento de inquilino</string>
+    <string name="lead_tenant_registration_tag_label">Categoria</string>
     <string name="lead_tenant_registration_name_label">Nome</string>
     <string name="lead_tenant_registration_city_label">Cidade</string>
     <string name="lead_tenant_registration_identity_document_label">Documento de identidade</string>
@@ -300,11 +296,9 @@
     <string name="lead_tenant_registration_lead_observations_label">Observações sobre o lead</string>
     <string name="lead_tenant_registration_tenant_observations_label">Observações sobre o inquilino</string>
 
-    <string name="lead_tenant_registration_customer_segment_empty_text">Nenhum segmento de inquilino registrado.</string>
-
     <!-- Lead/tenant details -->
-    <string name="lead_tenant_details_top_app_bar_title_lead">Detalhes do lead</string>
-    <string name="lead_tenant_details_top_app_bar_title_tenant">Detalhes do inquilino</string>
+    <string name="lead_tenant_details_top_app_bar_title_lead">Lead</string>
+    <string name="lead_tenant_details_top_app_bar_title_tenant">Inquilino</string>
     <string name="lead_tenant_details_top_app_bar_title_all_sent_properties">Imóveis enviados</string>
     <string name="lead_tenant_details_top_app_bar_title_all_interations">Interações</string>
     <string name="lead_tenant_details_top_app_bar_title_past_assistance">Atendimento passado</string>
@@ -359,12 +353,11 @@
     <string name="assistance_delete_dialog_headline">Excluir atendimento em andamento?</string>
     <string name="assistance_delete_dialog_supporting_text">Se confirmada a exclusão, este atendimento não estará mais disponível.</string>
 
-    <string name="assistance_empty_text">Não há atendimento em andamento.</string>
+    <string name="assistance_empty_text">Nada em andamento no momento.</string>
 
     <!-- Assistance registration -->
-    <string name="assistance_registration_top_app_bar_title_create">Novo atendimento</string>
-    <string name="assistance_registration_top_app_bar_title_edit">Editar atendimento</string>
-    <string name="assistance_registration_top_app_bar_subtitle">para %1$s</string>
+    <string name="assistance_registration_top_app_bar_title">Atendimento</string>
+    <string name="assistance_registration_top_app_bar_subtitle">de %1$s</string>
     <string name="assistance_registration_top_app_bar_select_property_to_send_title">Selecionar imóvel(eis)</string>
 
     <string name="assistance_registration_step_1_title">Preferências</string>
@@ -443,6 +436,8 @@
     <string name="stay_auto_check_out_suffix_text">(Auto check-out)</string>
     <string name="stay_check_in_check_out_date_time_text">%1$s/%2$s/%3$s • %4$sh%5$s %6$s</string>
 
+    <string name="stay_type_dialog_title">Escolha uma opção</string>
+
     <string name="stay_type_stay_title">Estadia de cliente</string>
     <string name="stay_type_stay_description">Registre uma estadia para um de seus leads</string>
 
@@ -515,8 +510,8 @@
     <string name="stay_registration_documents_body_text">Documentos relacionados ao aluguel podem ser, por exemplo, uma cópia do contrato ou recibo de locação elaborado entre as partes do processo.</string>
 
     <!-- Stay details -->
-    <string name="stay_details_top_app_bar_title">Detalhes da estadia</string>
-    <string name="stay_unavailable_period_details_top_app_bar_title">Detalhes do período indisponível</string>
+    <string name="stay_details_top_app_bar_title">Estadia</string>
+    <string name="stay_unavailable_period_details_top_app_bar_title">Período indisponível</string>
 
     <string name="stay_details_tenant_vehicle_data_body_text">Marca %1$s, Cor %2$s, Placa %3$s</string>
 
@@ -580,11 +575,15 @@
     <string name="no_label">no</string>
     <string name="until_label">até</string>
 
+    <!-- Chip texts -->
+    <string name="apartment_chip_text">Apartamento</string>
+    <string name="house_chip_text">Casa</string>
+
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>
     <string name="confirm_leave_registration_dialog_headline_edit">Sair da edição?</string>
-    <string name="confirm_leave_registration_dialog_supporting_text_create">Se confirmado, os dados inseridos serão perdidos.</string>
-    <string name="confirm_leave_registration_dialog_supporting_text_edit">Se confirmado, alterações não serão aplicadas.</string>
+    <string name="confirm_leave_registration_dialog_supporting_text_create">Se confirmado, as informações inseridas não serão salvas.</string>
+    <string name="confirm_leave_registration_dialog_supporting_text_edit">Se confirmado, as alterações não serão aplicadas.</string>
 
     <string name="no_app_to_show_file_content_dialog_headline">Visualização falhou</string>
     <string name="no_app_to_show_file_content_dialog_supporting_text">Não há nenhum aplicativo para visualizar este arquivo. Tente baixar um apropriado na loja.</string>
@@ -605,6 +604,7 @@
     <string name="advance_action_button_text">Avançar</string>
     <string name="apply_action_button_text">Aplicar</string>
     <string name="assist_action_button_text">Atender</string>
+    <string name="assist_now_action_button_text">Atender agora</string>
     <string name="back_action_button_text">Voltar</string>
     <string name="cancel_action_button_text">Cancelar</string>
     <string name="close_action_button_text">Fechar</string>
@@ -644,8 +644,6 @@
 
     <string name="inline_invalid_email">Email inválido</string>
 
-    <string name="inline_name_belongs_other_tenant_segment">Já existe um segmento de inquilino com este nome</string>
-    <string name="inline_name_belongs_other_property_owner_segment">Já existe um segmento de proprietário com este nome</string>
     <string name="inline_name_belongs_other_property_owner">Já existe um proprietário com este nome</string>
     <string name="inline_name_belongs_other_tenant">Já existe um lead ou inquilino com este nome</string>
 

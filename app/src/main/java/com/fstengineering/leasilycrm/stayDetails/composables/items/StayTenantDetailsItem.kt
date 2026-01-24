@@ -33,7 +33,6 @@ fun StayTenantDetailsItem(
             LeadTenantCard(
                 leadTenant = tenant,
                 onCardClick = if (cameFromTenant) null else onViewTenantDetails,
-                hasMoreOptionsMenu = false,
             )
         }
     }

@@ -6,7 +6,6 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.AssistanceCompound
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AssistanceDao {
@@ -31,19 +30,4 @@ interface AssistanceDao {
     """
     )
     suspend fun getAllNeighborhoodNames(userId: Long): List<String>
-
-    @Transaction
-    @Query("SELECT * FROM assistances WHERE id = :id AND is_deleted = 0")
-    fun watchById(id: Long): Flow<AssistanceCompound?>
-
-    @Transaction
-    @Query(
-        """
-        SELECT * FROM assistances
-        WHERE tenant_id = :tenantId
-        AND is_deleted = 0
-        ORDER BY id DESC
-    """
-    )
-    fun watchAllByTenant(tenantId: Long): Flow<List<AssistanceCompound>> // TODO: Order by register date DESC
 }

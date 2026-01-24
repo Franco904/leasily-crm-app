@@ -2,9 +2,11 @@ package com.fstengineering.leasilycrm.settings
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -14,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
@@ -33,7 +34,6 @@ fun SettingsScreen(
     onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
 
     val surfaceColor = MaterialTheme.colorScheme.surface
@@ -63,7 +63,12 @@ fun SettingsScreen(
     }
 
     Scaffold(
-        topBar = { SettingsScreenTopBar(onBack = onBack) },
+        topBar = {
+            Column {
+                SettingsScreenTopBar(onBack = onBack)
+                HorizontalDivider()
+            }
+        },
         modifier = modifier
     ) { innerPadding ->
         if (isLoading) {

@@ -17,9 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryButton
 
 @Composable
 fun AssistanceEmptySection(
+    onRegisterAssistance: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -44,5 +46,9 @@ fun AssistanceEmptySection(
                 .align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
+        AppPrimaryButton(
+            label = stringResource(R.string.assist_now_action_button_text),
+            onClick = onRegisterAssistance,
+        )
     }
 }

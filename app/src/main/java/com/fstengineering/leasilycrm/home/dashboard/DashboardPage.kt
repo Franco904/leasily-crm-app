@@ -28,13 +28,11 @@ import com.fstengineering.leasilycrm.home.composables.HomeNavCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.LeadContactChannelsDistributionPieChartCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyAverageTicketMetricCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyCommissionInvoiceMetricCard
-import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyCommissionInvoicePerPropertyOwnerSegmentMetricCard
-import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyCommissionInvoicePerTenantSegmentMetricCard
+import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyCommissionInvoicePerTenantTagMetricCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyCommissionInvoicePerTop3NeighborhoodsMetricCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyLeadGenerationMetricCard
-import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyLeadGenerationPerTenantSegmentMetricCard
+import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyLeadGenerationPerTenantTagMetricCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyNewStayBookingsMetricCard
-import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyNewStayBookingsPerTenantSegmentMetricCard
 import com.fstengineering.leasilycrm.home.dashboard.composables.MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard
 
@@ -49,19 +47,17 @@ fun DashboardPage(
 
     // Leads CRM metrics
     val generatedLeadsPerMonth by viewModel.generatedLeadsPerMonth.collectAsStateWithLifecycle()
-    val generatedLeadsPerTenantSegmentPerMonth by viewModel.generatedLeadsPerTenantSegmentPerMonth.collectAsStateWithLifecycle()
+    val generatedLeadsPerTenantTagPerMonth by viewModel.generatedLeadsPerTenantTagPerMonth.collectAsStateWithLifecycle()
     val leadContactChannelDistribution by viewModel.leadContactChannelDistribution.collectAsStateWithLifecycle()
 
     // Stay bookings CRM metrics
     val newStayBookingsPerMonth by viewModel.newStayBookingsPerMonth.collectAsStateWithLifecycle()
-    val newStayBookingsPerTenantSegmentPerMonth by viewModel.newStayBookingsPerTenantSegmentPerMonth.collectAsStateWithLifecycle()
-    val newStayBookingsPerPropertyOwnerSegmentPerMonth by viewModel.newStayBookingsPerPropertyOwnerSegmentPerMonth.collectAsStateWithLifecycle()
+    val newStayBookingsPerTenantTagPerMonth by viewModel.newStayBookingsPerTenantTagPerMonth.collectAsStateWithLifecycle()
     val newStayBookingsPerTop3NeighborhoodsPerMonth by viewModel.newStayBookingsPerTop3NeighborhoodsPerMonth.collectAsStateWithLifecycle()
 
     // Commission invoice CRM metrics
     val commissionInvoicePerMonth by viewModel.commissionInvoicePerMonth.collectAsStateWithLifecycle()
-    val commissionInvoicePerTenantSegmentPerMonth by viewModel.commissionInvoicePerTenantSegmentPerMonth.collectAsStateWithLifecycle()
-    val commissionInvoicePerPropertyOwnerSegmentPerMonth by viewModel.commissionInvoicePerPropertyOwnerSegmentPerMonth.collectAsStateWithLifecycle()
+    val commissionInvoicePerTenantTagPerMonth by viewModel.commissionInvoicePerTenantTagPerMonth.collectAsStateWithLifecycle()
     val commissionInvoicePerTop3NeighborhoodsPerMonth by viewModel.commissionInvoicePerTop3NeighborhoodsPerMonth.collectAsStateWithLifecycle()
     val averageTicketPerMonth by viewModel.averageTicketPerMonth.collectAsStateWithLifecycle()
 
@@ -130,8 +126,8 @@ fun DashboardPage(
         item { MonthlyLeadGenerationMetricCard(generatedLeadsPerMonth) }
         item { Spacer(modifier = Modifier.height(8.dp)) }
         item {
-            MonthlyLeadGenerationPerTenantSegmentMetricCard(
-                generatedLeadsPerTenantSegmentPerMonth
+            MonthlyLeadGenerationPerTenantTagMetricCard(
+                generatedLeadsPerTenantTagPerMonth
             )
         }
         item { Spacer(modifier = Modifier.height(8.dp)) }
@@ -155,13 +151,7 @@ fun DashboardPage(
         item { Spacer(modifier = Modifier.height(8.dp)) }
         item {
             MonthlyNewStayBookingsPerTenantSegmentMetricCard(
-                newStayBookingsPerTenantSegmentPerMonth
-            )
-        }
-        item { Spacer(modifier = Modifier.height(8.dp)) }
-        item {
-            MonthlyNewStayBookingsPerPropertyOwnerSegmentMetricCard(
-                newStayBookingsPerPropertyOwnerSegmentPerMonth
+                newStayBookingsPerTenantTagPerMonth
             )
         }
         item { Spacer(modifier = Modifier.height(8.dp)) }
@@ -188,14 +178,8 @@ fun DashboardPage(
         item { MonthlyCommissionInvoiceMetricCard(commissionInvoicePerMonth) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item {
-            MonthlyCommissionInvoicePerTenantSegmentMetricCard(
-                commissionInvoicePerTenantSegmentPerMonth
-            )
-        }
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-        item {
-            MonthlyCommissionInvoicePerPropertyOwnerSegmentMetricCard(
-                commissionInvoicePerPropertyOwnerSegmentPerMonth
+            MonthlyCommissionInvoicePerTenantTagMetricCard(
+                commissionInvoicePerTenantTagPerMonth
             )
         }
         item { Spacer(modifier = Modifier.height(16.dp)) }

@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristicAssistance
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "assistance_characteristics_assistances",
@@ -30,8 +30,8 @@ import java.time.LocalDateTime
 data class AssistanceCharacteristicAssistanceCrossRefEntity(
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
     @ColumnInfo(name = "assistance_characteristic_id") val assistanceCharacteristicId: Long,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 ) {
     companion object {
@@ -44,8 +44,8 @@ data class AssistanceCharacteristicAssistanceCrossRefEntity(
             return AssistanceCharacteristicAssistanceCrossRefEntity(
                 assistanceId = domain.assistanceId,
                 assistanceCharacteristicId = domain.assistanceCharacteristic.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 isDeleted = domain.isDeleted,
             )
         }

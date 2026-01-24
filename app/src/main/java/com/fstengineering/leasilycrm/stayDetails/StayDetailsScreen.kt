@@ -2,9 +2,11 @@ package com.fstengineering.leasilycrm.stayDetails
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -22,7 +24,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
@@ -67,12 +68,8 @@ fun StayDetailsScreen(
 
     val now by rememberNow()
 
-    val checkInDateTimeStartOfDay = stay.checkInDateTime?.let {
-        AppDateTime { it }.toStartOfDay()
-    }
-    val checkOutDateTimeStartOfDay = stay.checkOutDateTime?.let {
-        AppDateTime { it }.toStartOfDay()
-    }
+    val checkInDateTimeStartOfDay = stay.checkInDateTime?.toStartOfDay()
+    val checkOutDateTimeStartOfDay = stay.checkOutDateTime?.toStartOfDay()
 
     val canRegisterCheckIn = !stay.isCheckInDone
             && now.isAfter(checkInDateTimeStartOfDay)
@@ -143,13 +140,16 @@ fun StayDetailsScreen(
 
     Scaffold(
         topBar = {
-            StayDetailsTopAppBar(
-                isUnavailablePeriod = stay.isUnavailablePeriod,
-                isCheckOutDone = stay.isCheckOutDone,
-                onBack = onBack,
-                onEdit = { onEdit(stay) },
-                onDelete = { mustShowConfirmDeleteDialog = true },
-            )
+            Column {
+                StayDetailsTopAppBar(
+                    isUnavailablePeriod = stay.isUnavailablePeriod,
+                    isCheckOutDone = stay.isCheckOutDone,
+                    onBack = onBack,
+                    onEdit = { onEdit(stay) },
+                    onDelete = { mustShowConfirmDeleteDialog = true },
+                )
+                HorizontalDivider()
+            }
         },
         floatingActionButton = {
             if (canRegisterCheckIn || canRegisterCheckOut) {

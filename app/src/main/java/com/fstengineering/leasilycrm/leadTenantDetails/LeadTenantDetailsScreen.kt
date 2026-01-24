@@ -4,8 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,11 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -42,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
@@ -70,7 +70,6 @@ import com.fstengineering.leasilycrm.leadTenantDetails.composables.LeadTenantDet
 import com.fstengineering.leasilycrm.leadTenantDetails.models.LeadTenantDetailsTab
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,7 +93,7 @@ fun LeadTenantDetailsScreen(
     val lazyListState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
 
-    val currentMonth = remember { LocalDate.now().monthValue }
+    val currentMonth = remember { AppDate.now().month }
 
     var selectedTabId by rememberSaveable {
         mutableIntStateOf(LeadTenantDetailsTab.Details.id)
@@ -112,14 +111,14 @@ fun LeadTenantDetailsScreen(
 
     val sortedSentProperties = remember(currentAssistance?.sentProperties) {
         currentAssistance?.sentProperties
-            ?.sortedByDescending { it.updateDateTime }
+            ?.sortedByDescending { it.updateDateTime?.dateTime() }
             ?.map { it.property }
             ?: persistentListOf()
     }
 
     val sortedInteractions = remember(currentAssistance?.interactions) {
         currentAssistance?.interactions
-            ?.sortedByDescending { it.interactionDate }
+            ?.sortedByDescending { it.interactionDate?.date() }
             ?.toPersistentList()
             ?: persistentListOf()
     }
@@ -200,8 +199,6 @@ fun LeadTenantDetailsScreen(
                     leadTenant.isLead -> stringResource(R.string.lead_tenant_details_top_app_bar_title_lead)
                     else -> stringResource(R.string.lead_tenant_details_top_app_bar_title_tenant)
                 },
-                hasUnfinishedAssistance = currentAssistance != null,
-                hasUnfinishedStay = currentStay != null,
                 hasMoreOptions = !(isViewingAllSentProperties || isViewingAllInterations || pastAssistanceToView != null),
                 onBack = when {
                     pastAssistanceToView != null -> {
@@ -221,28 +218,36 @@ fun LeadTenantDetailsScreen(
                 },
                 onEditLeadTenant = onEditLeadTenant,
                 onDeleteLeadTenant = { mustShowConfirmDeleteLeadTenantDialog = true },
-                onNewAssistance = { onRegisterAssistance(null) },
-                onEditAssistance = { onRegisterAssistance(currentAssistance?.id!!) },
-                onDeleteAssistance = { mustShowConfirmDeleteAssistanceDialog = true },
-                onNewStay = { onNewStay() },
-                onViewStay = { onViewStay(currentStay?.id!!) },
             )
         },
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = currentAssistance == null
-                        && LeadTenantDetailsTab.fromId(selectedTabId) == LeadTenantDetailsTab.CurrentAssistance,
-                enter = fadeIn(),
-                exit = fadeOut(),
+            ExtendedFloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                onClick = { if (currentStay != null) onViewStay(currentStay.id!!) else onNewStay() },
             ) {
-                FloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    onClick = { onRegisterAssistance(null) },
-                ) {
+                if (currentStay != null) {
                     Icon(
-                        painter = painterResource(R.drawable.assignment_add),
+                        painter = painterResource(R.drawable.calendar_view),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.view_property_stay_action_button_text),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.calendar_add_on),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.new_property_stay_action_button_text),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
             }
@@ -296,7 +301,7 @@ fun LeadTenantDetailsScreen(
                             itemsIndexed(
                                 items = sortedInteractions.groupBy { interaction ->
                                     CalendarMonthYear(
-                                        month = interaction.interactionDate?.monthValue ?: 0,
+                                        month = interaction.interactionDate?.month ?: 0,
                                         year = interaction.interactionDate?.year ?: 0,
                                     )
                                 },
@@ -342,6 +347,9 @@ fun LeadTenantDetailsScreen(
                     assistancePropertyCharacteristics = assistancePropertyCharacteristics,
                     lastSentProperty = sortedSentProperties.firstOrNull(),
                     lastInteraction = sortedInteractions.firstOrNull(),
+                    onRegisterAssistance = { onRegisterAssistance(null) },
+                    onEditAssistance = { onRegisterAssistance(currentAssistance?.id!!) },
+                    onDeleteAssistance = { mustShowConfirmDeleteAssistanceDialog = true },
                     onViewAllSentProperties = { isViewingAllSentProperties = true },
                     onViewAllInteractions = { isViewingAllInterations = true },
                     onViewSentPropertyDetails = { propertyId ->
@@ -389,6 +397,11 @@ fun LeadTenantDetailsScreen(
                                     assistancePropertyCharacteristics = assistancePropertyCharacteristics,
                                     lastSentProperty = sortedSentProperties.firstOrNull(),
                                     lastInteraction = sortedInteractions.firstOrNull(),
+                                    onRegisterAssistance = { onRegisterAssistance(null) },
+                                    onEditAssistance = { onRegisterAssistance(currentAssistance?.id!!) },
+                                    onDeleteAssistance = {
+                                        mustShowConfirmDeleteAssistanceDialog = true
+                                    },
                                     onViewAllSentProperties = { isViewingAllSentProperties = true },
                                     onViewAllInteractions = { isViewingAllInterations = true },
                                     onViewSentPropertyDetails = { propertyId ->

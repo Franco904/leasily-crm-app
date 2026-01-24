@@ -25,7 +25,7 @@ import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.L
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantNameFormField
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantObservationsFormField
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantPhoneFormField
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantSegmentFormField
+import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantTagFormField
 import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantField
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -38,10 +38,9 @@ import kotlinx.coroutines.flow.Flow
 fun LeadTenantRegistrationFormSection(
     leadTenantForm: Tenant,
     onLeadTenantFormChange: (Tenant) -> Unit,
+    pastTags: ImmutableList<String>,
     pastCities: ImmutableList<String>,
     formErrors: ImmutableMap<LeadTenantField, Int?>,
-    onCustomerSegmentFieldTap: () -> Unit,
-    onTenantContactOriginFieldTap: () -> Unit,
     onLastTextFieldDone: () -> Unit,
     scrollToFieldFlow: Flow<LeadTenantField>,
     modifier: Modifier = Modifier,
@@ -77,9 +76,12 @@ fun LeadTenantRegistrationFormSection(
             .verticalScroll(scrollState)
             .onGloballyPositioned { coords -> scrollContainerCoords = coords }
     ) {
-        LeadTenantSegmentFormField(
-            tenantSegmentName = leadTenantForm.customerSegment?.name,
-            onCustomerSegmentFieldTap = onCustomerSegmentFieldTap,
+        Spacer(modifier = Modifier.height(28.dp))
+        LeadTenantTagFormField(
+            tag = leadTenantForm.tag,
+            pastTags = pastTags,
+            onTagChange = { onLeadTenantFormChange(leadTenantForm.copy(tag = it)) },
+            onDone = { nameFieldFocusRequester.requestFocus() },
         )
         Spacer(modifier = Modifier.height(28.dp))
         LeadTenantNameFormField(
@@ -137,7 +139,6 @@ fun LeadTenantRegistrationFormSection(
         Spacer(modifier = Modifier.height(28.dp))
         LeadTenantContactOriginTypeFormField(
             tenantContactOriginTypeName = leadTenantForm.tenantContactOriginType?.name,
-            onTenantContactOriginTypeFieldTap = onTenantContactOriginFieldTap,
         )
         Spacer(modifier = Modifier.height(28.dp))
         LeadTenantObservationsFormField(

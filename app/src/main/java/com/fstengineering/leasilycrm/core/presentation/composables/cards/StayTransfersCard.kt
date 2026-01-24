@@ -89,7 +89,7 @@ fun StayTransfersCard(
                                     stringResource(
                                         id = R.string.stay_registration_transfers_date_column_value,
                                         transfer.transferDate.dayOfMonth.formatToTwoDigitsDateTime(),
-                                        transfer.transferDate.monthValue.formatToTwoDigitsDateTime(),
+                                        transfer.transferDate.month.formatToTwoDigitsDateTime(),
                                         transfer.transferDate.year.formatToTwoDigitsDateTime(),
                                     )
                                 }

@@ -31,6 +31,8 @@ interface TenantRepository {
         currentTenantId: Long?,
     ): AppResult<ImmutableList<Tenant>, DataError>
 
+    suspend fun getAllTagNames(): AppResult<ImmutableList<String>, DataError>
+
     suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataError>
 
     suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, DataError>

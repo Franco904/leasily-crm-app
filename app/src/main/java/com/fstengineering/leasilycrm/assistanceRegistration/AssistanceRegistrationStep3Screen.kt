@@ -3,8 +3,10 @@ package com.fstengineering.leasilycrm.assistanceRegistration
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -27,6 +29,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceEditSuccess
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.ConvertOldTenantToLead
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceInteractionRegistrationBottomsheet
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationFormSectionStep3
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationTopAppBar
@@ -110,6 +113,14 @@ fun AssistanceRegistrationStep3Screen(
                     is ConvertOldTenantToLead -> {
                         onUiEvent(UiEvent.ShowSnackBar(R.string.convert_tenant_to_lead_success_message))
                     }
+
+                    is Exit -> {
+                        if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                        else {
+                            mustShowConfirmLeaveRegistrationDialog = false
+                            onLeaveRegistration()
+                        }
+                    }
                 }
             }
         }
@@ -159,16 +170,18 @@ fun AssistanceRegistrationStep3Screen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        parentViewModel.onExit()
     }
 
     Scaffold(
         topBar = {
-            AssistanceRegistrationTopAppBar(
-                leadTenantName = assistanceForm.tenant?.name ?: "",
-                isEditing = parentViewModel.assistanceId != null,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
-            )
+            Column {
+                AssistanceRegistrationTopAppBar(
+                    leadTenantName = assistanceForm.tenant?.name ?: "",
+                    onBack = parentViewModel::onExit,
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
             .pointerInput(Unit) {
@@ -248,7 +261,6 @@ fun AssistanceRegistrationStep3Screen(
             isEditing = parentViewModel.assistanceId != null,
             onConfirmLeave = {
                 mustShowConfirmLeaveRegistrationDialog = false
-
                 onLeaveRegistration()
             },
             onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

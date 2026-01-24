@@ -3,10 +3,8 @@ package com.fstengineering.leasilycrm.leadTenantRegistration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
-import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantContactOriginTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
@@ -33,7 +31,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class LeadTenantRegistrationViewModel(
     private val tenantRepository: TenantRepository,
-    private val customerSegmentRepository: CustomerSegmentRepository,
     private val tenantContactOriginTypeRepository: TenantContactOriginTypeRepository,
     private val tenantValidator: TenantValidator,
 ) : ViewModel() {
@@ -45,22 +42,21 @@ class LeadTenantRegistrationViewModel(
     private val _leadTenantForm = MutableStateFlow(Tenant())
     val leadTenantForm = _leadTenantForm.asStateFlow()
 
-    var leadTenantToEdit: Tenant? = null
-        private set
+    private var leadTenantToEdit: Tenant? = null
 
     private val _formErrors = MutableStateFlow(LeadTenantErrorUiState())
     val formErrors = _formErrors.asStateFlow()
 
-    private val _tenantSegments =
-        MutableStateFlow<ImmutableList<CustomerSegment>>(persistentListOf())
-    val tenantSegments = _tenantSegments.asStateFlow()
+    private val _pastTags =
+        MutableStateFlow<ImmutableList<String>>(persistentListOf())
+    val pastTags = _pastTags.asStateFlow()
 
     private val _pastCities = MutableStateFlow<ImmutableList<String>>(persistentListOf())
     val pastCities = _pastCities.asStateFlow()
 
-    private val _tenantContactOriginTypes =
+    private val _pastContactOriginTypes =
         MutableStateFlow<ImmutableList<TenantContactOriginType>>(persistentListOf())
-    val tenantContactOriginTypes = _tenantContactOriginTypes.asStateFlow()
+    val pastContactOriginTypes = _pastContactOriginTypes.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -68,13 +64,15 @@ class LeadTenantRegistrationViewModel(
     fun init(leadTenantId: Long?) {
         if (isInitialized) return
 
-        _isLoading.update { true }
+        if (leadTenantId != null) {
+            _isLoading.update { true }
 
-        if (leadTenantId != null) getLeadTenantToEdit(leadTenantId)
+            getLeadTenantToEdit(leadTenantId)
+        }
 
-        getTenantSegments()
+        getPastTags()
         getPastCities()
-        getTenantContactOriginTypes()
+        getPastContactOriginTypes()
 
         isInitialized = true
     }
@@ -87,16 +85,16 @@ class LeadTenantRegistrationViewModel(
                     _leadTenantForm.update { storedLeadTenant }
                     leadTenantToEdit = storedLeadTenant
                 }
+
+            _isLoading.update { false }
         }
     }
 
-    private fun getTenantSegments() {
+    private fun getPastTags() {
         viewModelScope.launch {
-            customerSegmentRepository.getAllTenantType()
+            tenantRepository.getAllTagNames()
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { storedCustomerSegments ->
-                    _tenantSegments.update { storedCustomerSegments }
-                }
+                .onSuccess { tags -> _pastTags.update { tags } }
         }
     }
 
@@ -104,21 +102,15 @@ class LeadTenantRegistrationViewModel(
         viewModelScope.launch {
             tenantRepository.getAllCityNames()
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { storedCities ->
-                    _pastCities.update { storedCities }
-                }
+                .onSuccess { cities -> _pastCities.update { cities } }
         }
     }
 
-    private fun getTenantContactOriginTypes() {
+    private fun getPastContactOriginTypes() {
         viewModelScope.launch {
             tenantContactOriginTypeRepository.getAll()
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { storedTenantContactOriginTypes ->
-                    _tenantContactOriginTypes.update { storedTenantContactOriginTypes }
-                }
-
-            _isLoading.update { false }
+                .onSuccess { contactOriginTypes -> _pastContactOriginTypes.update { contactOriginTypes } }
         }
     }
 
@@ -146,7 +138,7 @@ class LeadTenantRegistrationViewModel(
         viewModelScope.launch {
             val leadTenant = leadTenantForm.value
 
-            if (leadTenantToEdit != null && leadTenant == leadTenantToEdit) {
+            if (leadTenantToEdit != null && leadTenantToEdit == leadTenant) {
                 _uiEvents.send(UiEvents.LeadTenantEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
@@ -206,6 +198,17 @@ class LeadTenantRegistrationViewModel(
         _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
     }
 
+    fun onExit() {
+        val needConfirmation = when {
+            leadTenantToEdit != null -> leadTenantToEdit != leadTenantForm.value
+            else -> leadTenantForm.value.isAnyFormFieldInitialized
+        }
+
+        viewModelScope.launch {
+            _uiEvents.send(UiEvents.Exit(needConfirmation))
+        }
+    }
+
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
 
@@ -214,5 +217,7 @@ class LeadTenantRegistrationViewModel(
         data object LeadCreateSuccess : UiEvents
 
         data class LeadTenantEditSuccess(val messageId: Int) : UiEvents
+
+        data class Exit(val needConfirmation: Boolean) : UiEvents
     }
 }

@@ -62,9 +62,9 @@ fun PropertyPriceCard(
                         text = stringResource(
                             id = R.string.property_registration_date_range_value,
                             price.startDate?.dayOfMonth.toString(),
-                            price.startDate?.monthValue.toString(),
+                            price.startDate?.month.toString(),
                             price.endDate?.dayOfMonth.toString(),
-                            price.endDate?.monthValue.toString(),
+                            price.endDate?.month.toString(),
                         ),
                         modifier = Modifier
                             .padding(start = 8.dp)

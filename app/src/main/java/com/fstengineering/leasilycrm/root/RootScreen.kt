@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.utils.hasNotificationPermission
@@ -41,7 +42,7 @@ fun RootScreen(
                 when (uiEvent) {
                     is SignInState -> {
                         val firstDestination = when {
-                            uiEvent.isSessionAlive -> {
+                            uiEvent.isSessionAlive || BuildConfig.SKIP_AUTH -> {
                                 Destinations.Home(startedFromStayNotificationPopUp)
                             }
 

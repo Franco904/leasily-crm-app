@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.utils.hasError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 
 class LazyWritesWorker(
     applicationContext: Context,
@@ -12,12 +12,14 @@ class LazyWritesWorker(
     private val userRepository: UserRepository,
 ) : CoroutineWorker(applicationContext, workerParameters) {
     override suspend fun doWork(): Result {
-        val result = userRepository.retryUserUpdate()
-
-        return if (result.hasError()) Result.retry() else Result.success()
+        return userRepository.retryUserUpdate()
+            .fold(
+                onError = { Result.retry() },
+                onSuccess = { Result.success() },
+            )
     }
 
     companion object {
-        const val UNIQUE_NAME = "LazyWritesWorker"
+        val uniqueName: String = LazyWritesWorker::class.java.name
     }
 }

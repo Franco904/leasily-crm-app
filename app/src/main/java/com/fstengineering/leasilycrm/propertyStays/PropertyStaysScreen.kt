@@ -2,8 +2,10 @@ package com.fstengineering.leasilycrm.propertyStays
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -83,7 +85,12 @@ fun PropertyStaysScreen(
     }
 
     Scaffold(
-        topBar = { PropertyStaysTopAppBar(onBack = onBack) },
+        topBar = {
+            Column {
+                PropertyStaysTopAppBar(onBack = onBack)
+                HorizontalDivider()
+            }
+        },
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,

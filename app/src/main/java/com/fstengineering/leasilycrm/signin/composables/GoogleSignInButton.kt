@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.signin.composables
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -37,18 +37,20 @@ fun GoogleSignInButton(
         onClick = onSignIn,
         modifier = modifier
     ) {
-        AnimatedContent(
-            targetState = isSigningIn,
-            modifier = Modifier.padding(
-                horizontal = 24.dp,
-                vertical = 8.dp,
-            )
-        ) { isSigningIn ->
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(
+                    horizontal = 24.dp,
+                    vertical = 8.dp,
+                )
+                .size(width = 164.dp, height = 32.dp)
+        ) {
             if (isSigningIn) {
                 AppCircularProgressIndicator(
                     strokeWidth = 2.dp,
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(24.dp)
                 )
             } else {
                 Row(

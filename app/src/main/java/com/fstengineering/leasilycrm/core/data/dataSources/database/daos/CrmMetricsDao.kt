@@ -3,14 +3,14 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.daos
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.AverageTicketPerMonthCompound
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerCustomerSegmentPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerTenantTagPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.CommissionInvoicePerTop3NeighborhoodsPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerMonthCompound
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerTenantSegmentPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.GeneratedLeadsPerTenantTagPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.LeadContactChannelCountCompound
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerCustomerSegmentPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerMonthCompound
+import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerTenantTagPerMonthCompound
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.compounds.NewStayBookingsPerTop3NeighborhoodsPerMonthCompound
 import kotlinx.coroutines.flow.Flow
 
@@ -37,21 +37,17 @@ interface CrmMetricsDao {
         """
         SELECT
             strftime('%m-%Y', datetime(t.create_date_time / 1000, 'unixepoch')) AS month_year,
-            cs.name AS customer_segment_name,
+            t.tag AS tenant_tag_name,
             COUNT(*) AS total
         FROM tenants_read_view t
-        INNER JOIN customer_segments cs
-            ON t.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 1
-            AND cs.is_deleted = 0
         WHERE t.user_id = :userId
             AND t.is_deleted = 0
             AND datetime(t.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
-        GROUP BY month_year, cs.id
+        GROUP BY month_year, t.tag
     """
     )
-    fun watchGeneratedLeadsPerTenantSegmentPerMonth(userId: Long):
-            Flow<List<GeneratedLeadsPerTenantSegmentPerMonthCompound>>
+    fun watchGeneratedLeadsPerTenantTagPerMonth(userId: Long):
+            Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>
 
     @Query(
         """
@@ -92,51 +88,20 @@ interface CrmMetricsDao {
         """
         SELECT
             strftime('%m-%Y', datetime(s.create_date_time / 1000, 'unixepoch')) AS month_year,
-            cs.name AS customer_segment_name,
+            t.tag AS tenant_tag_name,
             COUNT(*) AS total
         FROM stays s
         INNER JOIN tenants t
             ON s.tenant_id = t.id
             AND t.is_deleted = 0
-        INNER JOIN customer_segments cs
-            ON t.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 1
-            AND cs.is_deleted = 0
         WHERE s.user_id = :userId
             AND s.is_deleted = 0
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
-        GROUP BY month_year, cs.id
+        GROUP BY month_year, t.tag
     """
     )
-    fun watchNewStayBookingsPerTenantSegmentPerMonth(userId: Long):
-            Flow<List<NewStayBookingsPerCustomerSegmentPerMonthCompound>>
-
-    @Query(
-        """
-        SELECT
-            strftime('%m-%Y', datetime(s.create_date_time / 1000, 'unixepoch')) AS month_year,
-            cs.name AS customer_segment_name,
-            COUNT(*) AS total
-        FROM stays s
-        INNER JOIN properties p
-            ON s.property_id = p.id
-            AND p.is_deleted = 0
-        INNER JOIN property_owners po
-            ON p.property_owner_id = po.id
-            AND po.is_deleted = 0
-        INNER JOIN customer_segments cs
-            ON po.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 2
-            AND cs.is_deleted = 0
-        WHERE s.user_id = :userId
-            AND s.is_deleted = 0
-            AND s.is_from_other_realtor = 0
-            AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
-        GROUP BY month_year, cs.id
-    """
-    )
-    fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth(userId: Long):
-            Flow<List<NewStayBookingsPerCustomerSegmentPerMonthCompound>>
+    fun watchNewStayBookingsPerTenantTagPerMonth(userId: Long):
+            Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>
 
     @Query(
         """
@@ -182,53 +147,21 @@ interface CrmMetricsDao {
         """
         SELECT
             strftime('%m-%Y', datetime(s.create_date_time / 1000, 'unixepoch')) AS month_year,
-            cs.name AS customer_segment_name,
+            t.tag AS tenant_tag_name,
             SUM(commission) AS commission_invoice
         FROM stays s
         INNER JOIN tenants t
             ON s.tenant_id = t.id
             AND t.is_deleted = 0
-        INNER JOIN customer_segments cs
-            ON t.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 1
-            AND cs.is_deleted = 0
         WHERE s.user_id = :userId
             AND s.is_deleted = 0
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
             AND commission IS NOT NULL
-        GROUP BY month_year, cs.id
+        GROUP BY month_year, t.tag
     """
     )
-    fun watchCommissionInvoicePerTenantSegmentPerMonth(userId: Long):
-            Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>
-
-    @Query(
-        """
-        SELECT
-            strftime('%m-%Y', datetime(s.create_date_time / 1000, 'unixepoch')) AS month_year,
-            cs.name AS customer_segment_name,
-            SUM(commission) AS commission_invoice
-        FROM stays s
-        INNER JOIN properties p
-            ON s.property_id = p.id
-            AND p.is_deleted = 0
-        INNER JOIN property_owners po
-            ON p.property_owner_id = po.id
-            AND po.is_deleted = 0
-        INNER JOIN customer_segments cs
-            ON po.customer_segment_id = cs.id
-            AND cs.customer_segment_type_id = 2
-            AND cs.is_deleted = 0
-        WHERE s.user_id = :userId
-            AND s.is_deleted = 0
-            AND s.is_from_other_realtor = 0
-            AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
-            AND commission IS NOT NULL
-        GROUP BY month_year, cs.id
-    """
-    )
-    fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth(userId: Long):
-            Flow<List<CommissionInvoicePerCustomerSegmentPerMonthCompound>>
+    fun watchCommissionInvoicePerTenantTagPerMonth(userId: Long):
+            Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>
 
     @Query(
         """

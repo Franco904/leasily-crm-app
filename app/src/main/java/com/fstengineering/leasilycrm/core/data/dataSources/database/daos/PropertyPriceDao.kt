@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 @Dao
 interface PropertyPriceDao {
     @Upsert
-    suspend fun insertOrUpdate(propertyPrice: PropertyPriceEntity): Long
+    suspend fun insertOrUpdate(propertyPrice: PropertyPriceEntity)
 }

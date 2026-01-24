@@ -6,12 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
-import java.math.BigDecimal
 
 @Composable
 fun StayTotalPriceDetailsItem(
-    totalPrice: BigDecimal?,
+    totalPrice: AppDecimal?,
     modifier: Modifier = Modifier,
 ) {
     IconLabelValueDetailsItem(

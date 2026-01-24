@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 @Dao
 interface PropertyCharacteristicPropertyCrossRefDao {
     @Upsert
-    suspend fun insertOrUpdate(crossRef: PropertyCharacteristicPropertyCrossRefEntity): Long
+    suspend fun insertOrUpdate(crossRef: PropertyCharacteristicPropertyCrossRefEntity)
 }

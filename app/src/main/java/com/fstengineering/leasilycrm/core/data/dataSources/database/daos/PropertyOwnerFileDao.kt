@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 @Dao
 interface PropertyOwnerFileDao {
     @Upsert
-    suspend fun insertOrUpdate(propertyOwnerFile: PropertyOwnerFileEntity): Long
+    suspend fun insertOrUpdate(propertyOwnerFile: PropertyOwnerFileEntity)
 }

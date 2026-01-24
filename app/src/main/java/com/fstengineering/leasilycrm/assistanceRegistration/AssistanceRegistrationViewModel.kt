@@ -6,16 +6,11 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicAssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceInteractionRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceSearchedNeighborhoodRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceSentPropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.collections.immutable.ImmutableList
@@ -30,12 +25,8 @@ import kotlinx.coroutines.launch
 class AssistanceRegistrationViewModel(
     private val assistanceRepository: AssistanceRepository,
     private val tenantRepository: TenantRepository,
-    private val assistanceSearchedNeighborhoodRepository: AssistanceSearchedNeighborhoodRepository,
     private val propertySeaProximityTypeRepository: PropertySeaProximityTypeRepository,
     private val assistanceCharacteristicRepository: AssistanceCharacteristicRepository,
-    private val assistanceCharacteristicAssistanceRepository: AssistanceCharacteristicAssistanceRepository,
-    private val assistanceSentPropertyRepository: AssistanceSentPropertyRepository,
-    private val assistanceInteractionRepository: AssistanceInteractionRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -60,8 +51,7 @@ class AssistanceRegistrationViewModel(
     private val _assistanceForm = MutableStateFlow(Assistance())
     val assistanceForm = _assistanceForm.asStateFlow()
 
-    var assistanceToEdit: Assistance? = null
-        private set
+    private var assistanceToEdit: Assistance? = null
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -156,35 +146,8 @@ class AssistanceRegistrationViewModel(
                 return@launch
             }
 
-            val assistanceId = assistanceRepository.insertOrUpdate(assistanceForm.value)
-                .fold(
-                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
-                    onSuccess = { assistanceId -> assistanceId },
-                )
-
-            assistanceForm.value.searchedNeighborhoods.forEach { searchedNeighborhood ->
-                assistanceSearchedNeighborhoodRepository.insertOrUpdate(
-                    searchedNeighborhood = searchedNeighborhood.copy(assistanceId = assistanceId),
-                )
-            }
-
-            assistanceForm.value.characteristics.forEach { characteristic ->
-                assistanceCharacteristicAssistanceRepository.insertOrUpdate(
-                    characteristicAssistance = characteristic.copy(assistanceId = assistanceId),
-                )
-            }
-
-            assistanceForm.value.sentProperties.forEach { sentProperty ->
-                assistanceSentPropertyRepository.insertOrUpdate(
-                    sentProperty = sentProperty.copy(assistanceId = assistanceId),
-                )
-            }
-
-            assistanceForm.value.interactions.forEach { interaction ->
-                assistanceInteractionRepository.insertOrUpdate(
-                    interaction = interaction.copy(assistanceId = assistanceId),
-                )
-            }
+            assistanceRepository.insertOrUpdate(assistanceForm.value)
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             val saveEvent =
                 if (assistanceToEdit != null) UiEvents.AssistanceEditSuccess(messageId = R.string.edit_assistance_success_message)
@@ -198,6 +161,17 @@ class AssistanceRegistrationViewModel(
         }
     }
 
+    fun onExit() {
+        val needConfirmation = when {
+            assistanceToEdit != null -> assistanceToEdit != assistanceForm.value
+            else -> assistanceForm.value.isAnyFormFieldInitialized
+        }
+
+        viewModelScope.launch {
+            _uiEvents.send(UiEvents.Exit(needConfirmation))
+        }
+    }
+
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
 
@@ -206,5 +180,7 @@ class AssistanceRegistrationViewModel(
         data class AssistanceEditSuccess(val messageId: Int) : UiEvents
 
         data object ConvertOldTenantToLead : UiEvents
+
+        data class Exit(val needConfirmation: Boolean) : UiEvents
     }
 }

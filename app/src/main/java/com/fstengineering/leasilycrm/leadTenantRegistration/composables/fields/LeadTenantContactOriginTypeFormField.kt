@@ -13,13 +13,11 @@ import com.fstengineering.leasilycrm.core.presentation.composables.textFields.Fo
 @Composable
 fun LeadTenantContactOriginTypeFormField(
     tenantContactOriginTypeName: String?,
-    onTenantContactOriginTypeFieldTap: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     FormTextField(
         label = stringResource(R.string.lead_tenant_registration_contact_origin_type_label),
         value = tenantContactOriginTypeName ?: "",
-        onTap = onTenantContactOriginTypeFieldTap,
         suffix = {
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,

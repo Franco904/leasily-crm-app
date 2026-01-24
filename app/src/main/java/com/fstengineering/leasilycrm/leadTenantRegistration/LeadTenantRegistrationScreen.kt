@@ -4,47 +4,43 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.LeadCreateSuccess
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.LeadTenantEditSuccess
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationFormSection
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationTopAppBar
-import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantComboType
 import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantField
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -60,23 +56,23 @@ fun LeadTenantRegistrationScreen(
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
-    val sheetState = rememberModalBottomSheetState()
-
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val leadTenantForm by viewModel.leadTenantForm.collectAsStateWithLifecycle()
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
-    val tenantSegments by viewModel.tenantSegments.collectAsStateWithLifecycle()
+    val pastTags by viewModel.pastTags.collectAsStateWithLifecycle()
     val pastCities by viewModel.pastCities.collectAsStateWithLifecycle()
-    val tenantContactOriginTypes by viewModel.tenantContactOriginTypes.collectAsStateWithLifecycle()
 
-    val scrollToFieldFlow = Channel<LeadTenantField>()
+    // TODO: Excluir tabela e pegar nomes direto de Tenants
+    val pastContactOriginTypes by viewModel.pastContactOriginTypes.collectAsStateWithLifecycle()
+
+    val scrollToFieldChannel = remember { Channel<LeadTenantField>() }
+    val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
-    var showingComboBottomsheetType by remember { mutableStateOf<LeadTenantComboType?>(null) }
+    var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.init(leadTenantId = leadTenantId)
@@ -91,7 +87,7 @@ fun LeadTenantRegistrationScreen(
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.trySend(uiEvent.field)
+                    scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
                 is LeadCreateSuccess -> {
@@ -105,6 +101,14 @@ fun LeadTenantRegistrationScreen(
 
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
+
+                is Exit -> {
+                    if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                    else {
+                        mustShowConfirmLeaveRegistrationDialog = false
+                        onBack()
+                    }
+                }
             }
         }
     }
@@ -116,17 +120,20 @@ fun LeadTenantRegistrationScreen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        viewModel.onExit()
     }
 
     Scaffold(
         topBar = {
-            LeadTenantRegistrationTopAppBar(
-                isEditing = leadTenantId != null,
-                isLead = leadTenantForm.isLead,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
-                onSaveLeadTenant = viewModel::saveLeadTenant,
-            )
+            Column {
+                LeadTenantRegistrationTopAppBar(
+                    isEditing = leadTenantId != null,
+                    isLead = leadTenantForm.isLead,
+                    onBack = viewModel::onExit,
+                    onSaveLeadTenant = viewModel::saveLeadTenant,
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
             .pointerInput(Unit) {
@@ -149,66 +156,14 @@ fun LeadTenantRegistrationScreen(
             LeadTenantRegistrationFormSection(
                 leadTenantForm = leadTenantForm,
                 onLeadTenantFormChange = viewModel::onLeadTenantFormChange,
+                pastTags = pastTags,
                 pastCities = pastCities,
                 formErrors = formErrors.errors,
-                onCustomerSegmentFieldTap = {
-                    showingComboBottomsheetType = LeadTenantComboType.TenantSegment
-                },
-                onTenantContactOriginFieldTap = {
-                    showingComboBottomsheetType = LeadTenantComboType.TenantContactOriginType
-                },
                 onLastTextFieldDone = { focusManager.clearFocus() },
-                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                scrollToFieldFlow = scrollToFieldFlow,
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(horizontal = 24.dp)
-            )
-        }
-        if (showingComboBottomsheetType != null) {
-            AppComboBottomSheet(
-                sheetState = sheetState,
-                options = when (showingComboBottomsheetType) {
-                    LeadTenantComboType.TenantSegment -> {
-                        tenantSegments.map { it.name ?: "" }.toPersistentList()
-                    }
-
-                    LeadTenantComboType.TenantContactOriginType -> {
-                        tenantContactOriginTypes.map { it.name ?: "" }.toPersistentList()
-                    }
-
-                    else -> persistentListOf()
-                },
-                onOptionSelect = { optionName ->
-                    when (showingComboBottomsheetType) {
-                        LeadTenantComboType.TenantSegment -> {
-                            val selectedCustomerSegment =
-                                tenantSegments.find { it.name == optionName }
-
-                            viewModel.onLeadTenantFormChange(
-                                form = leadTenantForm.copy(customerSegment = selectedCustomerSegment)
-                            )
-                        }
-
-                        LeadTenantComboType.TenantContactOriginType -> {
-                            val selectedTenantContactOriginType =
-                                tenantContactOriginTypes.find { it.name == optionName }
-
-                            viewModel.onLeadTenantFormChange(
-                                form = leadTenantForm.copy(tenantContactOriginType = selectedTenantContactOriginType)
-                            )
-                        }
-
-                        else -> {}
-                    }
-
-                    focusManager.clearFocus()
-                },
-                onDismissRequest = {
-                    showingComboBottomsheetType = null
-                    focusManager.clearFocus()
-                },
-                emptyOptionsIcon = Icons.Default.BookmarkBorder,
-                emptyOptionsText = stringResource(R.string.lead_tenant_registration_customer_segment_empty_text),
             )
         }
         if (mustShowConfirmLeaveRegistrationDialog) {
@@ -216,7 +171,6 @@ fun LeadTenantRegistrationScreen(
                 isEditing = leadTenantId != null,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
-
                     onBack()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

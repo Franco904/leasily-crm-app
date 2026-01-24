@@ -9,16 +9,12 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyFile
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.domain.models.PropertyType
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicPropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyPriceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyTypeRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.collections.immutable.ImmutableList
@@ -37,9 +33,6 @@ class PropertyRegistrationViewModel(
     private val propertyTypeRepository: PropertyTypeRepository,
     private val propertySeaProximityTypeRepository: PropertySeaProximityTypeRepository,
     private val propertyCharacteristicRepository: PropertyCharacteristicRepository,
-    private val propertyCharacteristicPropertyRepository: PropertyCharacteristicPropertyRepository,
-    private val propertyPriceRepository: PropertyPriceRepository,
-    private val propertyFileRepository: PropertyFileRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -72,8 +65,7 @@ class PropertyRegistrationViewModel(
     private val _propertyForm = MutableStateFlow(Property())
     val propertyForm = _propertyForm.asStateFlow()
 
-    var propertyToEdit: Property? = null
-        private set
+    private var propertyToEdit: Property? = null
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -81,13 +73,11 @@ class PropertyRegistrationViewModel(
     fun init(propertyId: Long?) {
         if (isInitialized) return
 
-        _isLoading.update { true }
-
         if (propertyId != null) {
+            _isLoading.update { true }
+
             getPropertyToEdit(propertyId)
-            this.propertyId = propertyId
-        } else {
-            _isLoading.update { false }
+            this@PropertyRegistrationViewModel.propertyId = propertyId
         }
 
         watchPropertyOwners()
@@ -181,29 +171,8 @@ class PropertyRegistrationViewModel(
                 return@launch
             }
 
-            val propertyId = propertyRepository.insertOrUpdate(propertyForm.value)
-                .fold(
-                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
-                    onSuccess = { propertyId -> propertyId },
-                )
-
-            propertyForm.value.characteristics.forEach { characteristic ->
-                propertyCharacteristicPropertyRepository.insertOrUpdate(
-                    characteristicProperty = characteristic.copy(propertyId = propertyId),
-                )
-            }
-
-            propertyForm.value.prices.forEach { price ->
-                propertyPriceRepository.insertOrUpdate(
-                    price = price.copy(propertyId = propertyId),
-                )
-            }
-
-            propertyForm.value.files.forEach { file ->
-                propertyFileRepository.insertOrUpdate(
-                    file = file.copy(propertyId = propertyId),
-                )
-            }
+            propertyRepository.insertOrUpdate(propertyForm.value)
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             val saveEvent =
                 if (propertyToEdit != null) UiEvents.PropertyEditSuccess(messageId = R.string.edit_property_success_message)
@@ -213,9 +182,24 @@ class PropertyRegistrationViewModel(
         }
     }
 
+    fun onExit() {
+        val needConfirmation = when {
+            propertyToEdit != null -> propertyToEdit != propertyForm.value
+            else -> propertyForm.value.isAnyFormFieldInitialized
+        }
+
+        viewModelScope.launch {
+            _uiEvents.send(UiEvents.Exit(needConfirmation))
+        }
+    }
+
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
+
         data object PropertyCreateSuccess : UiEvents
+
         data class PropertyEditSuccess(val messageId: Int) : UiEvents
+
+        data class Exit(val needConfirmation: Boolean) : UiEvents
     }
 }

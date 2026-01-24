@@ -5,20 +5,14 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.models.TenantContactOriginType
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "tenants",
     foreignKeys = [
-        ForeignKey(
-            entity = CustomerSegmentEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["customer_segment_id"],
-        ),
         ForeignKey(
             entity = TenantContactOriginTypeEntity::class,
             parentColumns = ["id"],
@@ -26,15 +20,15 @@ import java.time.LocalDateTime
         ),
     ],
     indices = [
-        Index("customer_segment_id"),
         Index("tenant_contact_origin_type_id"),
         Index("user_id"),
     ],
 )
 data class TenantEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
+    val tag: String?,
     val name: String,
     val city: String?,
     @ColumnInfo(name = "identity_document") val identityDocument: String?,
@@ -42,7 +36,6 @@ data class TenantEntity(
     val email: String?,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
-    @ColumnInfo(name = "customer_segment_id") val customerSegmentId: Long?,
     @ColumnInfo(name = "tenant_contact_origin_type_id") val tenantContactOriginTypeId: Long?,
     @ColumnInfo(name = "user_id") val userId: Long,
 ) {
@@ -50,6 +43,7 @@ data class TenantEntity(
         id = id,
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
+        tag = tag,
         name = name.normalizeEncoding(),
         city = city,
         identityDocument = identityDocument,
@@ -58,7 +52,6 @@ data class TenantEntity(
         observations = observations,
         isDeleted = isDeleted,
         userId = userId,
-        customerSegment = CustomerSegment(id = customerSegmentId),
         tenantContactOriginType = TenantContactOriginType(id = tenantContactOriginTypeId),
     )
 
@@ -69,8 +62,9 @@ data class TenantEntity(
 
             return TenantEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
+                tag = domain.tag,
                 name = domain.name,
                 city = domain.city,
                 identityDocument = domain.identityDocument,
@@ -78,7 +72,6 @@ data class TenantEntity(
                 email = domain.email,
                 observations = domain.observations,
                 isDeleted = domain.isDeleted,
-                customerSegmentId = domain.customerSegment?.id,
                 tenantContactOriginTypeId = domain.tenantContactOriginType?.id,
                 userId = domain.userId,
             )

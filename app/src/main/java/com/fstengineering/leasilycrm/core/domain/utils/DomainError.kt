@@ -13,17 +13,6 @@ sealed interface DomainError : Error {
         IsNullOrBlank,
     }
 
-    enum class CustomerSegmentName : DomainError {
-        IsBlank,
-        BelongsToOtherTenantSegment,
-        BelongsToOtherPropertyOwnerSegment,
-        LengthIsGreaterThan75Chars,
-    }
-
-    enum class CustomerSegmentType : DomainError {
-        IsNull,
-    }
-
     enum class PropertyPropertyOwner : DomainError {
         IsNull,
     }

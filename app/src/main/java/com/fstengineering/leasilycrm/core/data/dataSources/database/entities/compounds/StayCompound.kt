@@ -37,10 +37,10 @@ data class StayCompound(
     )
     val files: List<StayFileEntity>,
 ) {
-    val activeTransfers: List<StayTransferEntity>
+    private val activeTransfers: List<StayTransferEntity>
         get() = transfers.filter { !it.isDeleted }
 
-    val activeFiles: List<StayFileEntity>
+    private val activeFiles: List<StayFileEntity>
         get() = files.filter { !it.isDeleted }
 
     fun toDomain(): Stay = Stay(

@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "property_characteristics_properties",
@@ -30,8 +30,8 @@ import java.time.LocalDateTime
 data class PropertyCharacteristicPropertyCrossRefEntity(
     @ColumnInfo(name = "property_id") val propertyId: Long,
     @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Long,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
 ) {
     companion object {
@@ -42,8 +42,8 @@ data class PropertyCharacteristicPropertyCrossRefEntity(
             return PropertyCharacteristicPropertyCrossRefEntity(
                 propertyId = domain.propertyId,
                 propertyCharacteristicId = domain.propertyCharacteristic.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 isDeleted = domain.isDeleted,
             )
         }

@@ -7,8 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.EditNote
-import androidx.compose.material.icons.outlined.PlaylistRemove
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,17 +27,10 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 fun LeadTenantDetailsTopAppBar(
     titleText: String,
-    hasUnfinishedAssistance: Boolean,
-    hasUnfinishedStay: Boolean,
     hasMoreOptions: Boolean,
     onBack: () -> Unit,
     onEditLeadTenant: () -> Unit,
     onDeleteLeadTenant: () -> Unit,
-    onNewAssistance: () -> Unit,
-    onEditAssistance: () -> Unit,
-    onDeleteAssistance: () -> Unit,
-    onNewStay: () -> Unit,
-    onViewStay: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
@@ -79,52 +70,6 @@ fun LeadTenantDetailsTopAppBar(
                                 onClick = onDeleteLeadTenant,
                             ),
                         )
-                        if (hasUnfinishedAssistance) {
-                            val options = listOf(
-                                MoreOptionsMenuOption(isHorizontalDivider = true),
-                                MoreOptionsMenuOption(
-                                    icon = Icons.Outlined.EditNote,
-                                    text = stringResource(R.string.edit_assistance_action_button_text),
-                                    onClick = onEditAssistance,
-                                ),
-                                MoreOptionsMenuOption(
-                                    icon = Icons.Outlined.PlaylistRemove,
-                                    text = stringResource(R.string.delete_assistance_action_button_text),
-                                    onClick = onDeleteAssistance,
-                                ),
-                            )
-
-                            addAll(options)
-                        } else {
-                            val options = listOf(
-                                MoreOptionsMenuOption(isHorizontalDivider = true),
-                                MoreOptionsMenuOption(
-                                    iconDrawable = R.drawable.assignment_add,
-                                    text = stringResource(R.string.assist_action_button_text),
-                                    onClick = onNewAssistance,
-                                ),
-                            )
-
-                            addAll(options)
-                        }
-                        add(MoreOptionsMenuOption(isHorizontalDivider = true))
-                        if (hasUnfinishedStay) {
-                            add(
-                                MoreOptionsMenuOption(
-                                    iconDrawable = R.drawable.calendar_view,
-                                    text = stringResource(R.string.view_property_stay_action_button_text),
-                                    onClick = onViewStay,
-                                ),
-                            )
-                        } else {
-                            add(
-                                MoreOptionsMenuOption(
-                                    iconDrawable = R.drawable.calendar_add_on,
-                                    text = stringResource(R.string.new_property_stay_action_button_text),
-                                    onClick = onNewStay,
-                                ),
-                            )
-                        }
                     }.toPersistentList(),
                     modifier = Modifier
                         .padding(end = 16.dp)

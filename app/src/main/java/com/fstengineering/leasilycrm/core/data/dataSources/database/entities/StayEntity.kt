@@ -5,12 +5,12 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import kotlinx.collections.immutable.persistentListOf
-import java.math.BigDecimal
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "stays",
@@ -34,18 +34,18 @@ import java.time.LocalDateTime
 )
 data class StayEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "is_from_other_realtor") val isFromOtherRealtor: Boolean,
     @ColumnInfo(name = "qt_guests") val qtGuests: Int? = null,
-    @ColumnInfo(name = "check_in_date_time") val checkInDateTime: LocalDateTime,
-    @ColumnInfo(name = "check_out_date_time") val checkOutDateTime: LocalDateTime,
+    @ColumnInfo(name = "check_in_date_time") val checkInDateTime: AppDateTime,
+    @ColumnInfo(name = "check_out_date_time") val checkOutDateTime: AppDateTime,
     @ColumnInfo(name = "is_auto_check_in") val isAutoCheckIn: Boolean = false,
     @ColumnInfo(name = "is_auto_check_out") val isAutoCheckOut: Boolean = false,
     @ColumnInfo(name = "is_check_in_done") val isCheckInDone: Boolean = false,
     @ColumnInfo(name = "is_check_out_done") val isCheckOutDone: Boolean = false,
-    @ColumnInfo(name = "total_price") val totalPrice: BigDecimal? = null,
-    val commission: BigDecimal? = null,
+    @ColumnInfo(name = "total_price") val totalPrice: AppDecimal? = null,
+    val commission: AppDecimal? = null,
     @ColumnInfo(name = "vehicle_make") val vehicleMake: String? = null,
     @ColumnInfo(name = "vehicle_color") val vehicleColor: String? = null,
     @ColumnInfo(name = "vehicle_license_plate") val vehicleLicensePlate: String? = null,
@@ -94,18 +94,16 @@ data class StayEntity(
             val (checkOutHour, checkOutMinute) = domain.checkOutHourMinute
 
             val adjustedCheckInDateTime = domain.checkInDateTime
-                .withHour(checkInHour ?: 0)
-                .withMinute(checkInMinute ?: 0)
+                .withHourMinute(checkInHour ?: 0, checkInMinute ?: 0)
 
             val adjustedCheckOutDateTime = domain.checkOutDateTime
-                .withHour(checkOutHour ?: 23)
-                .withMinute(checkOutMinute ?: 59)
+                .withHourMinute(checkOutHour ?: 23, checkOutMinute ?: 59)
 
             if (domain.isUnavailablePeriod) {
                 return StayEntity(
                     id = domain.id,
-                    createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                    updateDateTime = LocalDateTime.now(),
+                    createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                    updateDateTime = AppDateTime.now(),
                     isFromOtherRealtor = true,
                     checkInDateTime = adjustedCheckInDateTime,
                     checkOutDateTime = adjustedCheckOutDateTime,
@@ -124,8 +122,8 @@ data class StayEntity(
 
             return StayEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 isFromOtherRealtor = false,
                 vehicleMake = domain.vehicleMake,
                 vehicleColor = domain.vehicleColor,

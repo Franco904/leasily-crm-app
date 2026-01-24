@@ -72,7 +72,7 @@ data class PropertyCompound(
     )
     val stays: List<StayEntity>,
 ) {
-    val activeCharacteristics: List<PropertyCharacteristicProperty>
+    private val activeCharacteristics: List<PropertyCharacteristicProperty>
         get() {
             val activeCharacteristicIds = checkedCharacteristics
                 .filter { !it.isDeleted }
@@ -90,13 +90,13 @@ data class PropertyCompound(
             }
         }
 
-    val activePrices: List<PropertyPriceEntity>
+    private val activePrices: List<PropertyPriceEntity>
         get() = prices.filter { !it.isDeleted }
 
-    val activeFiles: List<PropertyFileEntity>
+    private val activeFiles: List<PropertyFileEntity>
         get() = files.filter { !it.isDeleted }
 
-    val activeStays: List<StayEntity>
+    private val activeStays: List<StayEntity>
         get() = stays.filter { !it.isDeleted }
 
     fun toDomain() = Property(

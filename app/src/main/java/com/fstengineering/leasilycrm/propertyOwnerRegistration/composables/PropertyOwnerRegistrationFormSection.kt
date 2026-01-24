@@ -13,7 +13,6 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,7 +45,6 @@ fun PropertyOwnerRegistrationFormSection(
     propertyOwnerForm: PropertyOwner,
     onPropertyOwnerFormChange: (PropertyOwner) -> Unit,
     formErrors: ImmutableMap<PropertyOwnerField, Int?>,
-    onCustomerSegmentFieldTap: () -> Unit,
     onLastTextFieldDone: () -> Unit,
     onAddPropertyOwnerFile: () -> Unit,
     scrollToFieldFlow: Flow<PropertyOwnerField>,
@@ -84,21 +82,6 @@ fun PropertyOwnerRegistrationFormSection(
         contentPadding = PaddingValues(bottom = 240.dp),
         modifier = modifier
     ) {
-        item {
-            FormTextField(
-                label = stringResource(R.string.property_owner_registration_customer_segment_label),
-                value = propertyOwnerForm.customerSegment?.name ?: "",
-                onTap = onCustomerSegmentFieldTap,
-                suffix = {
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                },
-                isReadOnly = true,
-            )
-        }
         item { Spacer(modifier = Modifier.height(28.dp)) }
         item(key = PropertyOwnerField.Name) {
             Box(

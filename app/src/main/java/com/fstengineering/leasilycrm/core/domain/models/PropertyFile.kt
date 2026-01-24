@@ -1,11 +1,11 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
-import java.time.LocalDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 
 data class PropertyFile(
     val id: Long? = null,
-    val createDateTime: LocalDateTime? = null,
-    val updateDateTime: LocalDateTime? = null,
+    val createDateTime: AppDateTime? = null,
+    val updateDateTime: AppDateTime? = null,
     val uriString: String? = null,
     val propertyId: Long? = null,
     val isMainPicture: Boolean = false,

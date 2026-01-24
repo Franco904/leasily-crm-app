@@ -7,5 +7,5 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ass
 @Dao
 interface AssistanceSentPropertyCrossRefDao {
     @Upsert
-    suspend fun insertOrUpdate(crossRef: AssistanceSentPropertyCrossRefEntity): Long
+    suspend fun insertOrUpdate(crossRef: AssistanceSentPropertyCrossRefEntity)
 }

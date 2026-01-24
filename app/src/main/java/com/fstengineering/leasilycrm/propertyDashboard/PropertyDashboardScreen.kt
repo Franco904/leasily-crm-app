@@ -2,9 +2,11 @@ package com.fstengineering.leasilycrm.propertyDashboard
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -89,11 +91,14 @@ fun PropertyDashboardScreen(
 
     Scaffold(
         topBar = {
-            PropertyDashboardTopAppBar(
-                onBack = onBack,
-                onEditProperty = onEditProperty,
-                onDeleteProperty = { mustShowConfirmDeleteDialog = true },
-            )
+            Column {
+                PropertyDashboardTopAppBar(
+                    onBack = onBack,
+                    onEditProperty = onEditProperty,
+                    onDeleteProperty = { mustShowConfirmDeleteDialog = true },
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
     ) { innerPadding ->

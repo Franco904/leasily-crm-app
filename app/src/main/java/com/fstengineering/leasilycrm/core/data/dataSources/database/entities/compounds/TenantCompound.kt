@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.core.data.dataSources.database.entities.co
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.AssistanceEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.CustomerSegmentEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantContactOriginTypeEntity
 import com.fstengineering.leasilycrm.core.data.dataSources.database.views.TenantReadView
@@ -13,12 +12,6 @@ import kotlinx.collections.immutable.toImmutableList
 
 data class TenantCompound(
     @Embedded val tenant: TenantReadView,
-    @Relation(
-        parentColumn = "customer_segment_id",
-        entityColumn = "id",
-        entity = CustomerSegmentEntity::class,
-    )
-    val customerSegment: CustomerSegmentCompound?,
     @Relation(
         parentColumn = "tenant_contact_origin_type_id",
         entityColumn = "id",
@@ -37,16 +30,17 @@ data class TenantCompound(
     )
     val stays: List<StayEntity>,
 ) {
-    val activeAssistances: List<AssistanceCompound>
+    private val activeAssistances: List<AssistanceCompound>
         get() = assistances.filter { !it.assistance.isDeleted }
 
-    val activeStays: List<StayEntity>
+    private val activeStays: List<StayEntity>
         get() = stays.filter { !it.isDeleted }
 
     fun toDomain() = Tenant(
         id = tenant.id,
         createDateTime = tenant.createDateTime,
         updateDateTime = tenant.updateDateTime,
+        tag = tenant.tag,
         name = tenant.name,
         city = tenant.city,
         identityDocument = tenant.identityDocument,
@@ -55,7 +49,6 @@ data class TenantCompound(
         observations = tenant.observations,
         status = TenantStatus.fromId(id = tenant.status),
         isDeleted = tenant.isDeleted,
-        customerSegment = customerSegment?.toDomain(),
         tenantContactOriginType = tenantContactOriginType?.toDomain(),
         assistances = activeAssistances.map { it.toDomain() }.toImmutableList(),
         stays = activeStays.map { it.toDomain() }.toImmutableList(),

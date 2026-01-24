@@ -3,10 +3,8 @@ package com.fstengineering.leasilycrm.propertyOwnerRegistration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.CustomerSegment
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
-import com.fstengineering.leasilycrm.core.domain.repositories.CustomerSegmentRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
@@ -19,9 +17,7 @@ import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyO
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerErrorUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -35,7 +31,6 @@ import kotlin.time.Duration.Companion.milliseconds
 class PropertyOwnerRegistrationViewModel(
     private val propertyOwnerRepository: PropertyOwnerRepository,
     private val propertyOwnerFileRepository: PropertyOwnerFileRepository,
-    private val customerSegmentRepository: CustomerSegmentRepository,
     private val propertyOwnerValidator: PropertyOwnerValidator,
 ) : ViewModel() {
     private var isInitialized = false
@@ -46,15 +41,10 @@ class PropertyOwnerRegistrationViewModel(
     private val _propertyOwnerForm = MutableStateFlow(PropertyOwner())
     val propertyOwnerForm = _propertyOwnerForm.asStateFlow()
 
-    var propertyOwnerToEdit: PropertyOwner? = null
-        private set
+    private var propertyOwnerToEdit: PropertyOwner? = null
 
     private val _formErrors = MutableStateFlow(PropertyOwnerErrorUiState())
     val formErrors = _formErrors.asStateFlow()
-
-    private val _propertyOwnerSegments =
-        MutableStateFlow<ImmutableList<CustomerSegment>>(persistentListOf())
-    val propertyOwnerSegments = _propertyOwnerSegments.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -62,11 +52,10 @@ class PropertyOwnerRegistrationViewModel(
     fun init(propertyOwnerId: Long?) {
         if (isInitialized) return
 
-        _isLoading.update { true }
-
-        if (propertyOwnerId != null) getPropertyOwnerToEdit(propertyOwnerId)
-
-        getPropertyOwnerSegments()
+        if (propertyOwnerId != null) {
+            _isLoading.update { true }
+            getPropertyOwnerToEdit(propertyOwnerId)
+        }
 
         isInitialized = true
     }
@@ -79,14 +68,6 @@ class PropertyOwnerRegistrationViewModel(
                     _propertyOwnerForm.update { storedPropertyOwner }
                     propertyOwnerToEdit = storedPropertyOwner
                 }
-        }
-    }
-
-    private fun getPropertyOwnerSegments() {
-        viewModelScope.launch {
-            customerSegmentRepository.getAllPropertyOwnerType()
-                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { segments -> _propertyOwnerSegments.update { segments } }
 
             _isLoading.update { false }
         }
@@ -157,17 +138,8 @@ class PropertyOwnerRegistrationViewModel(
                     return@launch
                 }
 
-            val propertyOwnerId = propertyOwnerRepository.insertOrUpdate(propertyOwner)
-                .fold(
-                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
-                    onSuccess = { propertyOwnerId -> propertyOwnerId },
-                )
-
-            propertyOwner.files.forEach { file ->
-                propertyOwnerFileRepository.insertOrUpdate(
-                    file = file.copy(propertyOwnerId = propertyOwnerId),
-                )
-            }
+            propertyOwnerRepository.insertOrUpdate(propertyOwner)
+                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             val saveEvent =
                 if (propertyOwnerToEdit != null) UiEvents.PropertyOwnerEditSuccess(messageId = R.string.edit_property_owner_success_message)
@@ -202,10 +174,26 @@ class PropertyOwnerRegistrationViewModel(
         _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
     }
 
+    fun onExit() {
+        val needConfirmation = when {
+            propertyOwnerToEdit != null -> propertyOwnerToEdit != propertyOwnerForm.value
+            else -> propertyOwnerForm.value.isAnyFormFieldInitialized
+        }
+
+        viewModelScope.launch {
+            _uiEvents.send(UiEvents.Exit(needConfirmation))
+        }
+    }
+
     sealed interface UiEvents {
         data class Error(val error: DataError) : UiEvents
+
         data class ScrollToField(val field: PropertyOwnerField) : UiEvents
+
         data object PropertyOwnerCreateSuccess : UiEvents
+
         data class PropertyOwnerEditSuccess(val messageId: Int) : UiEvents
+
+        data class Exit(val needConfirmation: Boolean) : UiEvents
     }
 }

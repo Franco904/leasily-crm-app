@@ -8,7 +8,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyRepository {
-    suspend fun insertOrUpdate(property: Property): AppResult<Long, DataError>
+    suspend fun insertOrUpdate(property: Property): AppResult<Unit, DataError>
 
     suspend fun delete(id: Long): AppResult<Unit, DataError>
 

@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -122,21 +124,24 @@ fun PropertiesScreen(
 
     Scaffold(
         topBar = {
-            PropertiesTopAppBar(
-                onBack = {
-                    if (isSearchingProperty) {
-                        isSearchingProperty = false
-                        viewModel.onSearchInputChange(searchInput = null)
-                    } else {
-                        onBack()
-                    }
-                },
-                mustShowSearchPropertyAction = properties.isNotEmpty() && !isSearchingProperty,
-                isSearchingProperty = isSearchingProperty,
-                onSearchProperty = { isSearchingProperty = true },
-                searchInput = searchInput,
-                onSearchInputChange = viewModel::onSearchInputChange,
-            )
+            Column {
+                PropertiesTopAppBar(
+                    onBack = {
+                        if (isSearchingProperty) {
+                            isSearchingProperty = false
+                            viewModel.onSearchInputChange(searchInput = null)
+                        } else {
+                            onBack()
+                        }
+                    },
+                    mustShowSearchPropertyAction = properties.isNotEmpty() && !isSearchingProperty,
+                    isSearchingProperty = isSearchingProperty,
+                    onSearchProperty = { isSearchingProperty = true },
+                    searchInput = searchInput,
+                    onSearchInputChange = viewModel::onSearchInputChange,
+                )
+                HorizontalDivider()
+            }
         },
         floatingActionButton = {
             AnimatedVisibility(

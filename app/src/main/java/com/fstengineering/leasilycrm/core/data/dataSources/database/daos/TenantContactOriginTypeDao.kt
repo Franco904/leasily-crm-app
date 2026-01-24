@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Ten
 @Dao
 interface TenantContactOriginTypeDao {
     @Upsert
-    suspend fun insertOrUpdate(tenantContactOriginType: TenantContactOriginTypeEntity): Long
+    suspend fun insertOrUpdate(tenantContactOriginType: TenantContactOriginTypeEntity)
 
     @Query("SELECT * FROM tenant_contact_origin_types")
     suspend fun getAll(): List<TenantContactOriginTypeEntity>

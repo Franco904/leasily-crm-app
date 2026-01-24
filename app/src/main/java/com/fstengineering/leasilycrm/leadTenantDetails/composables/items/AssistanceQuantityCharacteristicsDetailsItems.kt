@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BathroomsDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BedroomsEnSuitesDetailsItem
@@ -32,9 +34,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.details.IconV
 import com.fstengineering.leasilycrm.core.presentation.composables.details.ParkingSpotsDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.persistentListOf
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 @Composable
 fun AssistanceQuantityCharacteristicsDetailsItems(
@@ -83,8 +82,8 @@ fun AssistanceQuantityCharacteristicsDetailsItems(
 
 @Composable
 fun SearchedDateRangeDetailsItem(
-    searchedStartDate: LocalDate?,
-    searchedEndDate: LocalDate?,
+    searchedStartDate: AppDate?,
+    searchedEndDate: AppDate?,
     hasFlexibilityForPeriod: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -92,9 +91,8 @@ fun SearchedDateRangeDetailsItem(
 
     val hasSearchedDateRange = searchedStartDate != null && searchedEndDate != null
     val dateRangeDaysCount = if (!hasSearchedDateRange) 0 else {
-        ChronoUnit.DAYS
-            .between(searchedStartDate, searchedEndDate).toInt()
-            .takeUnless { it == 0 } ?: 1
+        searchedStartDate.daysBetween(searchedEndDate)
+            .coerceAtLeast(1)
     }
 
     Row(
@@ -112,10 +110,10 @@ fun SearchedDateRangeDetailsItem(
                         /* id = */ R.plurals.lead_tenant_assistance_details_searched_date_range,
                         /* quantity = */ dateRangeDaysCount,
                         searchedStartDate.dayOfMonth.formatToTwoDigitsDateTime(),
-                        searchedStartDate.monthValue.formatToTwoDigitsDateTime(),
+                        searchedStartDate.month.formatToTwoDigitsDateTime(),
                         searchedStartDate.year,
                         searchedEndDate.dayOfMonth.formatToTwoDigitsDateTime(),
-                        searchedEndDate.monthValue.formatToTwoDigitsDateTime(),
+                        searchedEndDate.month.formatToTwoDigitsDateTime(),
                         searchedEndDate.year,
                         dateRangeDaysCount,
                     )
@@ -149,7 +147,7 @@ fun SearchedDateRangeDetailsItem(
 
 @Composable
 fun MaxAcceptedNightlyRateDetailsItem(
-    maxAcceptedNightlyRate: BigDecimal?,
+    maxAcceptedNightlyRate: AppDecimal?,
     modifier: Modifier = Modifier,
 ) {
     IconValueDetailsItem(

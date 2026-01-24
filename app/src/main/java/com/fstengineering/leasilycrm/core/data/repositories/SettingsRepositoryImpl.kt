@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesStorage
+import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.domain.models.Settings
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class SettingsRepositoryImpl(
-    private val plainPreferencesStorage: PreferencesStorage<PlainPreferences>,
+    private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : SettingsRepository {
     override fun watchSettings(): Flow<AppResult<Settings, DataError>> = flow {
-        plainPreferencesStorage.readPreferences()
+        plainPreferencesDataSource.readPreferences()
             .fold(
                 onError = { error ->
                     emit(AppResult.Error(error = error))
@@ -40,7 +40,7 @@ class SettingsRepositoryImpl(
     override suspend fun setIsTodayCheckInCheckOutNotificationEnabled(
         isEnabled: Boolean,
     ): AppResult<Unit, DataError> {
-        plainPreferencesStorage.savePreferences { prefs ->
+        plainPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(isTodayCheckInCheckOutNotificationEnabled = isEnabled)
         }
             .onError { return AppResult.Error(error = it) }

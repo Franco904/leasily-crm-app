@@ -7,15 +7,14 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -29,24 +28,22 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationFormSection
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationTopAppBar
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -63,21 +60,17 @@ fun PropertyOwnerRegistrationScreen(
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
-    val sheetState = rememberModalBottomSheetState()
-
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val propertyOwnerForm by viewModel.propertyOwnerForm.collectAsStateWithLifecycle()
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
-    val propertyOwnerSegments by viewModel.propertyOwnerSegments.collectAsStateWithLifecycle()
-
-    val scrollToFieldFlow = Channel<PropertyOwnerField>()
+    val scrollToFieldChannel = remember { Channel<PropertyOwnerField>() }
+    val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
-    var mustShowCustomerSegmentComboBottomsheet by remember { mutableStateOf(false) }
 
     val openDocumentFile = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
@@ -106,7 +99,7 @@ fun PropertyOwnerRegistrationScreen(
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.trySend(uiEvent.field)
+                    scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
                 is PropertyOwnerCreateSuccess -> {
@@ -120,6 +113,14 @@ fun PropertyOwnerRegistrationScreen(
 
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
+
+                is Exit -> {
+                    if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                    else {
+                        mustShowConfirmLeaveRegistrationDialog = false
+                        onBack()
+                    }
+                }
             }
         }
     }
@@ -131,16 +132,19 @@ fun PropertyOwnerRegistrationScreen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        viewModel.onExit()
     }
 
     Scaffold(
         topBar = {
-            PropertyOwnerRegistrationTopAppBar(
-                isEditing = propertyOwnerId != null,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
-                onSavePropertyOwner = viewModel::savePropertyOwner,
-            )
+            Column {
+                PropertyOwnerRegistrationTopAppBar(
+                    isEditing = propertyOwnerId != null,
+                    onBack = viewModel::onExit,
+                    onSavePropertyOwner = viewModel::savePropertyOwner,
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
             .pointerInput(Unit) {
@@ -164,38 +168,15 @@ fun PropertyOwnerRegistrationScreen(
                 propertyOwnerForm = propertyOwnerForm,
                 onPropertyOwnerFormChange = viewModel::onPropertyOwnerFormChange,
                 formErrors = formErrors.errors,
-                onCustomerSegmentFieldTap = { mustShowCustomerSegmentComboBottomsheet = true },
                 onLastTextFieldDone = { focusManager.clearFocus() },
                 onAddPropertyOwnerFile = {
                     val acceptedMimeTypes = arrayOf("application/*", "text/*")
                     openDocumentFile.launch(acceptedMimeTypes)
                 },
-                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                scrollToFieldFlow = scrollToFieldFlow,
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(horizontal = 24.dp)
-            )
-        }
-        if (mustShowCustomerSegmentComboBottomsheet) {
-            AppComboBottomSheet(
-                sheetState = sheetState,
-                options = propertyOwnerSegments.map { it.name ?: "" }.toPersistentList(),
-                onOptionSelect = { customerSegmentName ->
-                    val selectedCustomerSegment =
-                        propertyOwnerSegments.find { it.name == customerSegmentName }
-
-                    viewModel.onPropertyOwnerFormChange(
-                        form = propertyOwnerForm.copy(customerSegment = selectedCustomerSegment)
-                    )
-
-                    focusManager.clearFocus()
-                },
-                onDismissRequest = {
-                    mustShowCustomerSegmentComboBottomsheet = false
-                    focusManager.clearFocus()
-                },
-                emptyOptionsIcon = Icons.Default.BookmarkBorder,
-                emptyOptionsText = stringResource(R.string.property_owner_registration_customer_segment_empty_text),
             )
         }
         if (mustShowConfirmLeaveRegistrationDialog) {
@@ -203,7 +184,6 @@ fun PropertyOwnerRegistrationScreen(
                 isEditing = propertyOwnerId != null,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
-
                     onBack()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

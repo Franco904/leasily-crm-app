@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.Pro
 @Dao
 interface PropertySeaProximityTypeDao {
     @Upsert
-    suspend fun insertOrUpdate(propertySeaProximityType: PropertySeaProximityTypeEntity): Long
+    suspend fun insertOrUpdate(propertySeaProximityType: PropertySeaProximityTypeEntity)
 
     @Query("SELECT * FROM property_sea_proximity_types")
     suspend fun getAll(): List<PropertySeaProximityTypeEntity>

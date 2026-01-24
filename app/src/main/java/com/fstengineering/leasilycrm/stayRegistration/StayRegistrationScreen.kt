@@ -8,10 +8,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -31,6 +33,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
@@ -40,6 +43,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.strategies.Default
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.home.tenants.composables.TenantsEmptySection
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.StayCreateSuccess
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.StayEditSuccess
@@ -91,7 +95,8 @@ fun StayRegistrationScreen(
 
     var isSearching by rememberSaveable { mutableStateOf(false) }
 
-    val scrollToFieldFlow = Channel<StayField>()
+    val scrollToFieldChannel = remember { Channel<StayField>() }
+    val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -138,7 +143,7 @@ fun StayRegistrationScreen(
                 }
 
                 is ScrollToField -> {
-                    scrollToFieldFlow.trySend(uiEvent.field)
+                    scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
                 is StayCreateSuccess -> {
@@ -163,6 +168,14 @@ fun StayRegistrationScreen(
                 is TransferEditSuccess -> {
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
+
+                is Exit -> {
+                    if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                    else {
+                        mustShowConfirmLeaveRegistrationDialog = false
+                        onBack(false)
+                    }
+                }
             }
         }
     }
@@ -177,7 +190,7 @@ fun StayRegistrationScreen(
         when {
             isLoading -> Unit
             listStatus == StayRegistrationListState.ShowingMainForm -> {
-                mustShowConfirmLeaveRegistrationDialog = true
+                viewModel.onExit()
             }
 
             isSearching -> {
@@ -195,59 +208,62 @@ fun StayRegistrationScreen(
             val isSelectingProperty = listStatus == StayRegistrationListState.SelectingProperty
             val isSelectingTenant = listStatus == StayRegistrationListState.SelectingTenant
 
-            StayRegistrationTopAppBar(
-                isEditing = stayId != null,
-                onSaveStay = {
-                    viewModel.onStayFormChange(
-                        stayForm.copy(
-                            totalPrice = totalPriceInput.replace(',', '.').toBigDecimalOrNull(),
-                            commission = commissionInput.replace(',', '.').toBigDecimalOrNull(),
+            Column {
+                StayRegistrationTopAppBar(
+                    isEditing = stayId != null,
+                    onSaveStay = {
+                        viewModel.onStayFormChange(
+                            stayForm.copy(
+                                totalPrice = totalPriceInput.replace(',', '.').toDecimalOrNull(),
+                                commission = commissionInput.replace(',', '.').toDecimalOrNull(),
+                            )
                         )
-                    )
 
-                    viewModel.saveStay()
-                },
-                isUnavailablePeriod = isUnavailablePeriod,
-                isSelectingProperty = isSelectingProperty,
-                isSelectingTenant = isSelectingTenant,
-                mustShowSearchAction = when {
-                    isSearching -> false
-                    isSelectingProperty -> properties.isNotEmpty()
-                    isSelectingTenant -> tenants.isNotEmpty()
-                    else -> false
-                },
-                isSearching = isSearching,
-                onSearch = { isSearching = true },
-                searchInput = when {
-                    !isSearching -> null
-                    isSelectingProperty -> propertySearchInput
-                    isSelectingTenant -> tenantSearchInput
-                    else -> null
-                },
-                onSearchInputChange = when {
-                    isSelectingProperty -> viewModel::onPropertySearchInputChange
-                    isSelectingTenant -> viewModel::onTenantSearchInputChange
-                    else -> {
-                        {}
-                    }
-                },
-                onBack = {
-                    when {
-                        isLoading -> Unit
-                        listStatus == StayRegistrationListState.ShowingMainForm -> {
-                            mustShowConfirmLeaveRegistrationDialog = true
+                        viewModel.saveStay()
+                    },
+                    isUnavailablePeriod = isUnavailablePeriod,
+                    isSelectingProperty = isSelectingProperty,
+                    isSelectingTenant = isSelectingTenant,
+                    mustShowSearchAction = when {
+                        isSearching -> false
+                        isSelectingProperty -> properties.isNotEmpty()
+                        isSelectingTenant -> tenants.isNotEmpty()
+                        else -> false
+                    },
+                    isSearching = isSearching,
+                    onSearch = { isSearching = true },
+                    searchInput = when {
+                        !isSearching -> null
+                        isSelectingProperty -> propertySearchInput
+                        isSelectingTenant -> tenantSearchInput
+                        else -> null
+                    },
+                    onSearchInputChange = when {
+                        isSelectingProperty -> viewModel::onPropertySearchInputChange
+                        isSelectingTenant -> viewModel::onTenantSearchInputChange
+                        else -> {
+                            {}
                         }
+                    },
+                    onBack = {
+                        when {
+                            isLoading -> Unit
+                            listStatus == StayRegistrationListState.ShowingMainForm -> {
+                                viewModel.onExit()
+                            }
 
-                        isSearching -> {
-                            isSearching = false
-                            viewModel.onPropertySearchInputChange(searchInput = null)
-                            viewModel.onTenantSearchInputChange(searchInput = null)
+                            isSearching -> {
+                                isSearching = false
+                                viewModel.onPropertySearchInputChange(searchInput = null)
+                                viewModel.onTenantSearchInputChange(searchInput = null)
+                            }
+
+                            else -> listStatus = StayRegistrationListState.ShowingMainForm
                         }
-
-                        else -> listStatus = StayRegistrationListState.ShowingMainForm
-                    }
-                },
-            )
+                    },
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
             .pointerInput(Unit) {
@@ -284,7 +300,7 @@ fun StayRegistrationScreen(
                                 onPeriodDisabledByPropertyUnselected = {
                                     onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
                                 },
-                                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                                scrollToFieldFlow = scrollToFieldFlow,
                                 modifier = Modifier
                                     .padding(innerPadding)
                                     .padding(horizontal = 24.dp)
@@ -347,7 +363,7 @@ fun StayRegistrationScreen(
                                     val acceptedMimeTypes = arrayOf("application/*", "text/*")
                                     openDocumentFile.launch(acceptedMimeTypes)
                                 },
-                                scrollToFieldFlow = scrollToFieldFlow.receiveAsFlow(),
+                                scrollToFieldFlow = scrollToFieldFlow,
                                 modifier = Modifier
                                     .padding(innerPadding)
                                     .padding(horizontal = 24.dp),
@@ -433,7 +449,6 @@ fun StayRegistrationScreen(
                     isEditing = stayId != null,
                     onConfirmLeave = {
                         mustShowConfirmLeaveRegistrationDialog = false
-
                         onBack(false)
                     },
                     onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

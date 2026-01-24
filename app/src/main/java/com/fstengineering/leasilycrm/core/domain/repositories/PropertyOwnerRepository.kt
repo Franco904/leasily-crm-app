@@ -7,9 +7,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyOwnerRepository {
-    suspend fun insertOrUpdate(
-        propertyOwner: PropertyOwner,
-    ): AppResult<Long, DataError>
+    suspend fun insertOrUpdate(propertyOwner: PropertyOwner): AppResult<Unit, DataError>
 
     suspend fun delete(id: Long): AppResult<Unit, DataError>
 

@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
@@ -143,10 +144,10 @@ fun PropertyRegistrationFormSectionStep3(
             } else {
                 itemsIndexed(
                     items = propertyForm.prices
-                        .sortedBy { it.startDate }
+                        .sortedBy { it.startDate?.date() }
                         .groupBy { price ->
                             CalendarMonthYear(
-                                month = price.startDate?.monthValue ?: 0,
+                                month = price.startDate?.month ?: 0,
                                 year = price.startDate?.year ?: 0,
                             )
                         }
@@ -193,7 +194,7 @@ fun PropertyRegistrationFormSectionStep3(
                 Spacer(modifier = Modifier.weight(1f))
                 BackStepButton(onBack = {
                     val cleaningServiceTax = cleaningServiceTaxInput
-                        .replace(',', '.').toBigDecimalOrNull()
+                        .replace(',', '.').toDecimalOrNull()
 
                     val updatedPropertyForm = propertyForm.copy(
                         cleaningServiceTax = cleaningServiceTax,
@@ -206,7 +207,7 @@ fun PropertyRegistrationFormSectionStep3(
                 Spacer(modifier = Modifier.width(8.dp))
                 NextStepButton(onNext = {
                     val cleaningServiceTax = cleaningServiceTaxInput
-                        .replace(',', '.').toBigDecimalOrNull()
+                        .replace(',', '.').toDecimalOrNull()
 
                     val updatedPropertyForm = propertyForm.copy(
                         cleaningServiceTax = cleaningServiceTax,

@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.presentation.composables.cards
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,21 +11,23 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.EditNote
 import androidx.compose.material.icons.outlined.Group
-import androidx.compose.material.icons.outlined.PlaylistRemove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
+import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryIconButton
+import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppTonalIconButton
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import kotlinx.collections.immutable.toPersistentList
 
@@ -36,13 +39,13 @@ fun LeadTenantCard(
     onEditLeadTenant: () -> Unit = {},
     onDeleteLeadTenant: () -> Unit = {},
     onNewAssistance: () -> Unit = {},
-    onEditAssistance: () -> Unit = {},
-    onDeleteAssistance: () -> Unit = {},
     onNewStay: () -> Unit = {},
     onViewStay: () -> Unit = {},
-    hasMoreOptionsMenu: Boolean = true,
     hasUnfinishedAssistance: Boolean = false,
     hasUnfinishedStay: Boolean = false,
+    mustShowAssistanceText: Boolean = false,
+    mustShowMoreOptionsMenu: Boolean = false,
+    mustShowPrimaryActions: Boolean = false,
     qtGuestsLabelText: String? = null,
 ) {
     AppCard(
@@ -50,115 +53,102 @@ fun LeadTenantCard(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .padding(16.dp)
+                .fillMaxWidth()
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
                 Text(
                     text = leadTenant.name ?: "",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .weight(1f)
                 )
-                if (hasMoreOptionsMenu) {
-                    AppMoreOptionsIconDropdownMenu(
-                        options = buildList {
-                            add(
-                                MoreOptionsMenuOption(
-                                    icon = Icons.Outlined.Edit,
-                                    text = stringResource(R.string.edit_action_button_text),
-                                    onClick = onEditLeadTenant,
-                                ),
-                            )
-                            add(
-                                MoreOptionsMenuOption(
-                                    icon = Icons.Outlined.Delete,
-                                    text = stringResource(R.string.delete_action_button_text),
-                                    onClick = onDeleteLeadTenant,
-                                ),
-                            )
-                            if (hasUnfinishedAssistance) {
-                                val options = listOf(
-                                    MoreOptionsMenuOption(isHorizontalDivider = true),
-                                    MoreOptionsMenuOption(
-                                        icon = Icons.Outlined.EditNote,
-                                        text = stringResource(R.string.edit_assistance_action_button_text),
-                                        onClick = onEditAssistance,
-                                    ),
-                                    MoreOptionsMenuOption(
-                                        icon = Icons.Outlined.PlaylistRemove,
-                                        text = stringResource(R.string.delete_assistance_action_button_text),
-                                        onClick = onDeleteAssistance,
-                                    ),
-
-                                    )
-
-                                addAll(options)
-                            } else {
-                                val options = listOf(
-                                    MoreOptionsMenuOption(isHorizontalDivider = true),
-                                    MoreOptionsMenuOption(
-                                        iconDrawable = R.drawable.assignment_add,
-                                        text = stringResource(R.string.assist_action_button_text),
-                                        onClick = onNewAssistance,
-                                    ),
-                                )
-
-                                addAll(options)
-                            }
-                            add(MoreOptionsMenuOption(isHorizontalDivider = true))
-                            if (hasUnfinishedStay) {
-                                add(
-                                    MoreOptionsMenuOption(
-                                        iconDrawable = R.drawable.calendar_view,
-                                        text = stringResource(R.string.view_property_stay_action_button_text),
-                                        onClick = onViewStay,
-                                    ),
-                                )
-                            } else {
-                                add(
-                                    MoreOptionsMenuOption(
-                                        iconDrawable = R.drawable.calendar_add_on,
-                                        text = stringResource(R.string.new_property_stay_action_button_text),
-                                        onClick = onNewStay,
-                                    ),
-                                )
-                            }
-                        }.toPersistentList()
-                    )
-                }
-            }
-            if (!leadTenant.city.isNullOrBlank()) {
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = leadTenant.city,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-            }
-            if (qtGuestsLabelText != null) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Group,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                if (!leadTenant.city.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = qtGuestsLabelText,
+                        text = leadTenant.city,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                if (mustShowAssistanceText) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    if (hasUnfinishedAssistance) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Group,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = qtGuestsLabelText
+                                    ?: stringResource(R.string.lead_searching_qt_guests_empty_text),
+                                style = MaterialTheme.typography.bodyMedium
+                                    .copy(fontStyle = if (qtGuestsLabelText != null) null else FontStyle.Italic),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    } else {
+                        Text(
+                            text = stringResource(R.string.no_unfinished_assistance_text),
+                            style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
+                            color = MaterialTheme.colorScheme.outline,
+                        )
+                    }
+                }
+            }
+
+            if (mustShowMoreOptionsMenu) {
+                AppMoreOptionsIconDropdownMenu(
+                    options = buildList {
+                        add(
+                            MoreOptionsMenuOption(
+                                icon = Icons.Outlined.Edit,
+                                text = stringResource(R.string.edit_action_button_text),
+                                onClick = onEditLeadTenant,
+                            ),
+                        )
+                        add(
+                            MoreOptionsMenuOption(
+                                icon = Icons.Outlined.Delete,
+                                text = stringResource(R.string.delete_action_button_text),
+                                onClick = onDeleteLeadTenant,
+                            ),
+                        )
+                    }.toPersistentList(),
+                    modifier = Modifier
+                        .padding(top = 16.dp, end = 16.dp)
+                        .align(Alignment.TopEnd)
+                )
+            }
+
+            if (mustShowPrimaryActions) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp, end = 8.dp)
+                        .align(Alignment.BottomEnd)
+                ) {
+                    if (!hasUnfinishedAssistance) {
+                        AppTonalIconButton(
+                            icon = painterResource(R.drawable.assignment_add),
+                            onClick = onNewAssistance
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(4.dp))
+                    AppPrimaryIconButton(
+                        icon = if (hasUnfinishedStay) {
+                            painterResource(R.drawable.calendar_view)
+                        } else painterResource(R.drawable.calendar_add_on),
+                        onClick = if (hasUnfinishedStay) onViewStay else onNewStay,
+                        modifier = Modifier
+                            .width(52.dp)
                     )
                 }
             }

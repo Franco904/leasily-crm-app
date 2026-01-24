@@ -4,10 +4,12 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.fstengineering.leasilycrm.core.application.models.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
@@ -32,6 +35,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.propertyRegistration.composables.ConfirmDeletePropertyPriceDialog
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyPriceRegistrationDialog
 import com.fstengineering.leasilycrm.propertyRegistration.composables.PropertyRegistrationFormSectionStep3
@@ -41,7 +45,6 @@ import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyReg
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +70,7 @@ fun PropertyRegistrationStep3Screen(
     var isRegisteringNewPropertyPrice by remember { mutableStateOf(false) }
 
     val propertyPriceForm by stepViewModel.propertyPriceForm.collectAsStateWithLifecycle()
-    var propertyPriceFormStartDate: LocalDate? by rememberSaveable { mutableStateOf(null) }
+    var propertyPriceFormStartDate: AppDate? by rememberSaveable { mutableStateOf(null) }
 
     val propertyPriceToDelete by stepViewModel.propertyPriceToDelete.collectAsStateWithLifecycle()
 
@@ -82,6 +85,14 @@ fun PropertyRegistrationStep3Screen(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
                         onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
+                    }
+
+                    is Exit -> {
+                        if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
+                        else {
+                            mustShowConfirmLeaveRegistrationDialog = false
+                            onLeaveRegistration()
+                        }
                     }
 
                     else -> {}
@@ -125,15 +136,18 @@ fun PropertyRegistrationStep3Screen(
     }
 
     BackHandler {
-        mustShowConfirmLeaveRegistrationDialog = true
+        parentViewModel.onExit()
     }
 
     Scaffold(
         topBar = {
-            PropertyRegistrationTopAppBar(
-                isEditing = parentViewModel.propertyId != null,
-                onBack = { mustShowConfirmLeaveRegistrationDialog = true },
-            )
+            Column {
+                PropertyRegistrationTopAppBar(
+                    isEditing = parentViewModel.propertyId != null,
+                    onBack = parentViewModel::onExit,
+                )
+                HorizontalDivider()
+            }
         },
         modifier = modifier
             .pointerInput(Unit) {
@@ -229,7 +243,6 @@ fun PropertyRegistrationStep3Screen(
                 isEditing = parentViewModel.propertyId != null,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
-
                     onLeaveRegistration()
                 },
                 onCancel = { mustShowConfirmLeaveRegistrationDialog = false }

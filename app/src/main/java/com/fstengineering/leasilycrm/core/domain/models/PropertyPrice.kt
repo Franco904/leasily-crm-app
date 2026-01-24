@@ -1,16 +1,16 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.LocalDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 
 data class PropertyPrice(
     val id: Long? = null,
-    val createDateTime: LocalDateTime? = null,
-    val updateDateTime: LocalDateTime? = null,
-    val startDate: LocalDate? = null,
-    val endDate: LocalDate? = null,
-    val price: BigDecimal? = null,
+    val createDateTime: AppDateTime? = null,
+    val updateDateTime: AppDateTime? = null,
+    val startDate: AppDate? = null,
+    val endDate: AppDate? = null,
+    val price: AppDecimal? = null,
     val propertyId: Long? = null,
     val isDeleted: Boolean = false,
 )

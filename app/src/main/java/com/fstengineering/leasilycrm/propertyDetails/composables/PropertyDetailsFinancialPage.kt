@@ -102,10 +102,10 @@ fun LazyListScope.pricesDetailsItems(
     } else {
         itemsIndexed(
             items = prices
-                .sortedBy { it.startDate }
+                .sortedBy { it.startDate?.date() }
                 .groupBy { price ->
                     CalendarMonthYear(
-                        month = price.startDate?.monthValue ?: 0,
+                        month = price.startDate?.month ?: 0,
                         year = price.startDate?.year ?: 0,
                     )
                 }

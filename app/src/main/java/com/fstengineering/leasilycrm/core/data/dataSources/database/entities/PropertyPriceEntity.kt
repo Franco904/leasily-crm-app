@@ -5,10 +5,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.application.models.AppDate
+import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Entity(
     tableName = "property_prices",
@@ -23,11 +23,11 @@ import java.time.LocalDateTime
 )
 data class PropertyPriceEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "create_date_time") val createDateTime: LocalDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: LocalDateTime,
-    @ColumnInfo(name = "start_date") val startDate: LocalDate,
-    @ColumnInfo(name = "end_date") val endDate: LocalDate,
-    val price: BigDecimal,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
+    @ColumnInfo(name = "start_date") val startDate: AppDate,
+    @ColumnInfo(name = "end_date") val endDate: AppDate,
+    val price: AppDecimal,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
     @ColumnInfo(name = "property_id") val propertyId: Long,
 ) {
@@ -49,8 +49,8 @@ data class PropertyPriceEntity(
 
             return PropertyPriceEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: LocalDateTime.now(),
-                updateDateTime = LocalDateTime.now(),
+                createDateTime = domain.createDateTime ?: AppDateTime.now(),
+                updateDateTime = AppDateTime.now(),
                 startDate = domain.startDate,
                 endDate = domain.endDate,
                 price = domain.price,

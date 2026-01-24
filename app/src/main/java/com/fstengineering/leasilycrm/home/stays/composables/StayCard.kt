@@ -36,7 +36,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
@@ -60,12 +59,8 @@ fun StayCard(
 
     val now by rememberNow()
 
-    val checkInDateTimeStartOfDay = stay.checkInDateTime?.let {
-        AppDateTime { it }.toStartOfDay()
-    }
-    val checkOutDateTimeStartOfDay = stay.checkOutDateTime?.let {
-        AppDateTime { it }.toStartOfDay()
-    }
+    val checkInDateTimeStartOfDay = stay.checkInDateTime?.toStartOfDay()
+    val checkOutDateTimeStartOfDay = stay.checkOutDateTime?.toStartOfDay()
 
     val canRegisterCheckIn = !stay.isCheckInDone
             && now.isAfter(checkInDateTimeStartOfDay)
@@ -191,7 +186,7 @@ fun StayCard(
                     text = stringResource(
                         R.string.stay_check_in_check_out_date_time_text,
                         stay.checkInDateTime!!.dayOfMonth.formatToTwoDigitsDateTime(),
-                        stay.checkInDateTime.monthValue.formatToTwoDigitsDateTime(),
+                        stay.checkInDateTime.month.formatToTwoDigitsDateTime(),
                         stay.checkInDateTime.year.toString(),
                         stay.checkInHourMinute.first!!.formatToTwoDigitsDateTime(),
                         stay.checkInHourMinute.second!!.formatToTwoDigitsDateTime(),
@@ -228,7 +223,7 @@ fun StayCard(
                     text = stringResource(
                         R.string.stay_check_in_check_out_date_time_text,
                         stay.checkOutDateTime!!.dayOfMonth.formatToTwoDigitsDateTime(),
-                        stay.checkOutDateTime.monthValue.formatToTwoDigitsDateTime(),
+                        stay.checkOutDateTime.month.formatToTwoDigitsDateTime(),
                         stay.checkOutDateTime.year.toString(),
                         stay.checkOutHourMinute.first!!.formatToTwoDigitsDateTime(),
                         stay.checkOutHourMinute.second!!.formatToTwoDigitsDateTime(),

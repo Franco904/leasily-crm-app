@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.home.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.models.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 
 class DashboardViewModel(
     private val crmMetricsRepository: CrmMetricsRepository,
@@ -23,10 +23,10 @@ class DashboardViewModel(
         MutableStateFlow<ImmutableMap<CalendarMonthYear, Int>>(persistentMapOf())
     val generatedLeadsPerMonth = _generatedLeadsPerMonth.asStateFlow()
 
-    private val _generatedLeadsPerTenantSegmentPerMonth =
+    private val _generatedLeadsPerTenantTagPerMonth =
         MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(persistentMapOf())
-    val generatedLeadsPerTenantSegmentPerMonth =
-        _generatedLeadsPerTenantSegmentPerMonth.asStateFlow()
+    val generatedLeadsPerTenantTagPerMonth =
+        _generatedLeadsPerTenantTagPerMonth.asStateFlow()
 
     private val _leadContactChannelDistribution =
         MutableStateFlow<ImmutableMap<String?, Double>>(persistentMapOf())
@@ -37,15 +37,10 @@ class DashboardViewModel(
         MutableStateFlow<ImmutableMap<CalendarMonthYear, Int>>(persistentMapOf())
     val newStayBookingsPerMonth = _newStayBookingsPerMonth.asStateFlow()
 
-    private val _newStayBookingsPerTenantSegmentPerMonth =
+    private val _newStayBookingsPerTenantTagPerMonth =
         MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(persistentMapOf())
-    val newStayBookingsPerTenantSegmentPerMonth =
-        _newStayBookingsPerTenantSegmentPerMonth.asStateFlow()
-
-    private val _newStayBookingsPerPropertyOwnerSegmentPerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(persistentMapOf())
-    val newStayBookingsPerPropertyOwnerSegmentPerMonth =
-        _newStayBookingsPerPropertyOwnerSegmentPerMonth.asStateFlow()
+    val newStayBookingsPerTenantTagPerMonth =
+        _newStayBookingsPerTenantTagPerMonth.asStateFlow()
 
     private val _newStayBookingsPerTop3NeighborhoodsPerMonth =
         MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(persistentMapOf())
@@ -54,32 +49,25 @@ class DashboardViewModel(
 
     // Commission invoice CRM metrics
     private val _commissionInvoicePerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, BigDecimal>>(persistentMapOf())
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, AppDecimal>>(persistentMapOf())
     val commissionInvoicePerMonth = _commissionInvoicePerMonth.asStateFlow()
 
-    private val _commissionInvoicePerTenantSegmentPerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>>(
+    private val _commissionInvoicePerTenantTagPerMonth =
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>(
             persistentMapOf()
         )
-    val commissionInvoicePerTenantSegmentPerMonth =
-        _commissionInvoicePerTenantSegmentPerMonth.asStateFlow()
-
-    private val _commissionInvoicePerPropertyOwnerSegmentPerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>>(
-            persistentMapOf()
-        )
-    val commissionInvoicePerPropertyOwnerSegmentPerMonth =
-        _commissionInvoicePerPropertyOwnerSegmentPerMonth.asStateFlow()
+    val commissionInvoicePerTenantTagPerMonth =
+        _commissionInvoicePerTenantTagPerMonth.asStateFlow()
 
     private val _commissionInvoicePerTop3NeighborhoodsPerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, BigDecimal>>>(
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>(
             persistentMapOf()
         )
     val commissionInvoicePerTop3NeighborhoodsPerMonth =
         _commissionInvoicePerTop3NeighborhoodsPerMonth.asStateFlow()
 
     private val _averageTicketPerMonth =
-        MutableStateFlow<ImmutableMap<CalendarMonthYear, BigDecimal>>(persistentMapOf())
+        MutableStateFlow<ImmutableMap<CalendarMonthYear, AppDecimal>>(persistentMapOf())
     val averageTicketPerMonth = _averageTicketPerMonth.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
@@ -90,19 +78,17 @@ class DashboardViewModel(
 
         // Leads CRM metrics
         watchGeneratedLeadsPerMonth()
-        watchGeneratedLeadsPerTenantSegmentPerMonth()
+        watchGeneratedLeadsPerTenantTagPerMonth()
         watchLeadContactChannelDistribution()
 
         // Stay bookings CRM metrics
         watchNewStayBookingsPerMonth()
-        watchNewStayBookingsPerTenantSegmentPerMonth()
-        watchNewStayBookingsPerPropertyOwnerSegmentPerMonth()
+        watchNewStayBookingsPerTenantTagPerMonth()
         watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
 
         // Commission invoice CRM metrics
         watchCommissionInvoicePerMonth()
-        watchCommissionInvoicePerTenantSegmentPerMonth()
-        watchCommissionInvoicePerPropertyOwnerSegmentPerMonth()
+        watchCommissionInvoicePerTenantTagPerMonth()
         watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
         watchAverageTicketPerMonth()
 
@@ -124,12 +110,12 @@ class DashboardViewModel(
         }
     }
 
-    private fun watchGeneratedLeadsPerTenantSegmentPerMonth() {
+    private fun watchGeneratedLeadsPerTenantTagPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchGeneratedLeadsPerTenantSegmentPerMonth().collect { result ->
+            crmMetricsRepository.watchGeneratedLeadsPerTenantTagPerMonth().collect { result ->
                 result
                     .onSuccess { generatedLeadsPerTenantSegmentPerMonth ->
-                        _generatedLeadsPerTenantSegmentPerMonth.update {
+                        _generatedLeadsPerTenantTagPerMonth.update {
                             generatedLeadsPerTenantSegmentPerMonth
                         }
                     }
@@ -159,30 +145,16 @@ class DashboardViewModel(
         }
     }
 
-    private fun watchNewStayBookingsPerTenantSegmentPerMonth() {
+    private fun watchNewStayBookingsPerTenantTagPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchNewStayBookingsPerTenantSegmentPerMonth().collect { result ->
+            crmMetricsRepository.watchNewStayBookingsPerTenantTagPerMonth().collect { result ->
                 result
                     .onSuccess { newStayBookingsPerTenantSegmentPerMonth ->
-                        _newStayBookingsPerTenantSegmentPerMonth.update {
+                        _newStayBookingsPerTenantTagPerMonth.update {
                             newStayBookingsPerTenantSegmentPerMonth
                         }
                     }
             }
-        }
-    }
-
-    private fun watchNewStayBookingsPerPropertyOwnerSegmentPerMonth() {
-        viewModelScope.launch {
-            crmMetricsRepository.watchNewStayBookingsPerPropertyOwnerSegmentPerMonth()
-                .collect { result ->
-                    result
-                        .onSuccess { newStayBookingsPerPropertyOwnerSegmentPerMonth ->
-                            _newStayBookingsPerPropertyOwnerSegmentPerMonth.update {
-                                newStayBookingsPerPropertyOwnerSegmentPerMonth
-                            }
-                        }
-                }
         }
     }
 
@@ -211,28 +183,14 @@ class DashboardViewModel(
         }
     }
 
-    private fun watchCommissionInvoicePerTenantSegmentPerMonth() {
+    private fun watchCommissionInvoicePerTenantTagPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchCommissionInvoicePerTenantSegmentPerMonth()
+            crmMetricsRepository.watchCommissionInvoicePerTenantTagPerMonth()
                 .collect { result ->
                     result
                         .onSuccess { commissionInvoicePerTenantSegmentPerMonth ->
-                            _commissionInvoicePerTenantSegmentPerMonth.update {
+                            _commissionInvoicePerTenantTagPerMonth.update {
                                 commissionInvoicePerTenantSegmentPerMonth
-                            }
-                        }
-                }
-        }
-    }
-
-    private fun watchCommissionInvoicePerPropertyOwnerSegmentPerMonth() {
-        viewModelScope.launch {
-            crmMetricsRepository.watchCommissionInvoicePerPropertyOwnerSegmentPerMonth()
-                .collect { result ->
-                    result
-                        .onSuccess { commissionInvoicePerPropertyOwnerSegmentPerMonth ->
-                            _commissionInvoicePerPropertyOwnerSegmentPerMonth.update {
-                                commissionInvoicePerPropertyOwnerSegmentPerMonth
                             }
                         }
                 }
