@@ -60,21 +60,19 @@ class PropertyRepositoryImpl(
             .let { property.id ?: it }
 
         property.characteristics.forEach {
-            val characteristic =
-                PropertyCharacteristicPropertyCrossRefEntity.fromDomain(domain = it)
-                    .copy(propertyId = propertyId)
+            val characteristic = PropertyCharacteristicPropertyCrossRefEntity.fromDomain(
+                domain = it.copy(propertyId = propertyId)
+            )
             propertyCharacteristicPropertyDatabaseDataSource.insertOrUpdate(characteristic)
         }
 
         property.files.forEach {
-            val file = PropertyFileEntity.fromDomain(domain = it)
-                .copy(propertyId = propertyId)
+            val file = PropertyFileEntity.fromDomain(domain = it.copy(propertyId = propertyId))
             propertyFileDatabaseDataSource.insertOrUpdate(file)
         }
 
         property.prices.forEach {
-            val price = PropertyPriceEntity.fromDomain(domain = it)
-                .copy(propertyId = propertyId)
+            val price = PropertyPriceEntity.fromDomain(domain = it.copy(propertyId = propertyId))
             propertyPriceDatabaseDataSource.insertOrUpdate(price)
         }
     }

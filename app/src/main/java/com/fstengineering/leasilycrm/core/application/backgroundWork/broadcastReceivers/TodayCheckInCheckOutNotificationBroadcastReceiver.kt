@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationManagerCompat
+import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.presentation.notifications.TodayCheckInCheckOutNotification
@@ -38,7 +39,7 @@ class TodayCheckInCheckOutNotificationBroadcastReceiver : BroadcastReceiver(),
                         notify(TODAY_CHECK_IN_CHECK_OUT_NOTIFICATION_ID, notification)
                     }
                 } catch (e: SecurityException) {
-                    e.printStackTrace()
+                    if (BuildConfig.DEBUG) e.printStackTrace()
                 }
             }
         }

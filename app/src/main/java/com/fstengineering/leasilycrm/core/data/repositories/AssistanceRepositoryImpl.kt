@@ -44,28 +44,34 @@ class AssistanceRepositoryImpl(
             .let { id -> assistanceEntity.id ?: id }
 
         assistance.characteristics.forEach {
-            val characteristic =
-                AssistanceCharacteristicAssistanceCrossRefEntity.fromDomain(domain = it)
-                    .copy(assistanceId = assistanceId)
+            val characteristic = AssistanceCharacteristicAssistanceCrossRefEntity.fromDomain(
+                domain = it.copy(assistanceId = assistanceId),
+            )
+
             assistanceCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
         }
 
         assistance.interactions.forEach {
-            val interaction = AssistanceInteractionEntity.fromDomain(domain = it)
-                .copy(assistanceId = assistanceId)
+            val interaction = AssistanceInteractionEntity.fromDomain(
+                domain = it.copy(assistanceId = assistanceId),
+            )
+
             assistanceInteractionDatabaseDataSource.insertOrUpdate(interaction)
         }
 
         assistance.searchedNeighborhoods.forEach {
-            val searchedNeighborhood =
-                AssistanceSearchedNeighborhoodEntity.fromDomain(domain = it)
-                    .copy(assistanceId = assistanceId)
+            val searchedNeighborhood = AssistanceSearchedNeighborhoodEntity.fromDomain(
+                domain = it.copy(assistanceId = assistanceId),
+            )
+
             assistanceSearchedNeighborhoodDatabaseDataSource.insertOrUpdate(searchedNeighborhood)
         }
 
         assistance.sentProperties.forEach {
-            val sentProperty = AssistanceSentPropertyCrossRefEntity.fromDomain(domain = it)
-                .copy(assistanceId = assistanceId)
+            val sentProperty = AssistanceSentPropertyCrossRefEntity.fromDomain(
+                domain = it.copy(assistanceId = assistanceId),
+            )
+
             assistanceSentPropertyCrossRefDatabaseDataSource.insertOrUpdate(sentProperty)
         }
     }

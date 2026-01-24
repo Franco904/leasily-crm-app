@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.data.adapters
 
 import androidx.room.withTransaction
+import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.data.dataSources.database.AppDatabase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -17,6 +18,7 @@ class DatabaseAdapterImpl(private val db: AppDatabase) : DatabaseAdapter {
             return AppResult.Success(data = Unit)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
+            if (BuildConfig.DEBUG) e.printStackTrace()
 
             return AppResult.Error(DataError.UnknownError)
         }

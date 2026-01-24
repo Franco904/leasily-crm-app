@@ -58,14 +58,14 @@ class StayRepositoryImpl(
             .let { stay.id ?: it }
 
         stay.files.forEach {
-            val file = StayFileEntity.fromDomain(domain = it)
-                .copy(stayId = stayId)
+            val file = StayFileEntity.fromDomain(domain = it.copy(stayId = stayId))
+
             stayFileDatabaseDataSource.insertOrUpdate(file)
         }
 
         stay.transfers.forEach {
-            val transfer = StayTransferEntity.fromDomain(domain = it)
-                .copy(stayId = stayId)
+            val transfer = StayTransferEntity.fromDomain(domain = it.copy(stayId = stayId))
+
             stayTransferDatabaseDataSource.insertOrUpdate(transfer)
         }
     }
