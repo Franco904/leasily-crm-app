@@ -570,6 +570,10 @@
     <string name="no_label">no</string>
     <string name="until_label">até</string>
 
+    <!-- Chip texts -->
+    <string name="apartment_chip_text">Apartamento</string>
+    <string name="house_chip_text">Casa</string>
+
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>
     <string name="confirm_leave_registration_dialog_headline_edit">Sair da edição?</string>
