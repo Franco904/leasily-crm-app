@@ -103,6 +103,7 @@ fun UnavailablePeriodRegistrationFormSection(
         contentPadding = PaddingValues(bottom = 240.dp),
         modifier = modifier
     ) {
+        item { Spacer(modifier = Modifier.height(24.dp)) }
         item(key = StayField.Property) {
             Box(
                 modifier = Modifier
