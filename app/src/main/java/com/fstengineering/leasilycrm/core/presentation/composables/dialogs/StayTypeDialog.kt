@@ -32,7 +32,13 @@ fun StayTypeDialog(
     modifier: Modifier = Modifier,
 ) {
     AlertDialog(
-        title = {},
+        title = {
+            Text(
+                text = stringResource(R.string.stay_type_dialog_title),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        },
         text = {
             Column {
                 Surface(

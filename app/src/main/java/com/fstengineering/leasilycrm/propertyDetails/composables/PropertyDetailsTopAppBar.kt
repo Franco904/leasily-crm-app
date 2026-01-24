@@ -28,7 +28,6 @@ fun PropertyDetailsTopAppBar(
     onBack: () -> Unit,
     onEditProperty: () -> Unit,
     onDeleteProperty: () -> Unit,
-    onNewStay: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
@@ -62,12 +61,6 @@ fun PropertyDetailsTopAppBar(
                         icon = Icons.Outlined.Delete,
                         text = stringResource(R.string.delete_action_button_text),
                         onClick = onDeleteProperty,
-                    ),
-                    MoreOptionsMenuOption(isHorizontalDivider = true),
-                    MoreOptionsMenuOption(
-                        iconDrawable = R.drawable.calendar_add_on,
-                        text = stringResource(R.string.new_property_stay_action_button_text),
-                        onClick = onNewStay,
                     ),
                 ),
                 modifier = Modifier

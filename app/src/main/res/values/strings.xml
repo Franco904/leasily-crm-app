@@ -436,6 +436,8 @@
     <string name="stay_auto_check_out_suffix_text">(Auto check-out)</string>
     <string name="stay_check_in_check_out_date_time_text">%1$s/%2$s/%3$s • %4$sh%5$s %6$s</string>
 
+    <string name="stay_type_dialog_title">Escolha uma opção</string>
+
     <string name="stay_type_stay_title">Estadia de cliente</string>
     <string name="stay_type_stay_description">Registre uma estadia para um de seus leads</string>
 
