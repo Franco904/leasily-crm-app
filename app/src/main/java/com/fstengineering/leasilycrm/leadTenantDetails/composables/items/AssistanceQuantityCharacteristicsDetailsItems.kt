@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppDate
-import com.fstengineering.leasilycrm.core.application.models.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BathroomsDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BedroomsEnSuitesDetailsItem

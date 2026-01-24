@@ -55,9 +55,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppDate
-import com.fstengineering.leasilycrm.core.application.theme.AppTheme
-import com.fstengineering.leasilycrm.core.application.theme.customColors
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
+import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
+import com.fstengineering.leasilycrm.core.presentation.theme.customColors
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate

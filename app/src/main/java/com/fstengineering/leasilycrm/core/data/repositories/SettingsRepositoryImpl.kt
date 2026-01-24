@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.domain.models.Settings
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

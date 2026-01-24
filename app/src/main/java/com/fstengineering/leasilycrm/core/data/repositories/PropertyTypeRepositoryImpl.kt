@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyTypeDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyTypeDatabaseDataSource
 import com.fstengineering.leasilycrm.core.domain.models.PropertyType
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyTypeRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

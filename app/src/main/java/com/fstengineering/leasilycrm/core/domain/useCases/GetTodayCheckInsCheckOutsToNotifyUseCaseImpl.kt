@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.useCases
 
-import com.fstengineering.leasilycrm.core.application.models.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.StayCheckNotificationStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository

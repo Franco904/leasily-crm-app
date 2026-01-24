@@ -44,8 +44,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.P
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.PreferredSeaProximityTypeFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.SearchedStayDateRangeFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
-import com.fstengineering.leasilycrm.core.application.models.toDate
-import com.fstengineering.leasilycrm.core.application.models.toDecimalOrNull
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDate
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood

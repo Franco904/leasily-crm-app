@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.validators
 
-import com.fstengineering.leasilycrm.core.application.models.AppDate
-import com.fstengineering.leasilycrm.core.application.models.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound

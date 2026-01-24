@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertySeaProximityTypeDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertySeaProximityTypeDatabaseDataSource
 import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

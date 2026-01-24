@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.PropertyOwnerFileEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyOwnerDatabaseDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.PropertyOwnerFileDatabaseDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.sharedStorage.interfaces.SharedStorageDataSource
+import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerFileDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.interfaces.SharedStorageDataSource
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

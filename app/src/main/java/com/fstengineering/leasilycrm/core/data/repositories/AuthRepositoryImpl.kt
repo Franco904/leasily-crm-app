@@ -1,10 +1,10 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.adapters.interfaces.ConnectivityAdapter
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.remote.interfaces.UserRemoteDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.remote.requestDtos.user.SignInRequestDto
+import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ConnectivityAdapter
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.domain.models.User
 import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -55,7 +55,7 @@ class AuthRepositoryImpl(
 
         remoteDataSource.signOutUser()
             .onError { e ->
-                if (e !is DataError.UnauthorizedError) return AppResult.Error(error = e)
+                if (e != DataError.UnauthorizedError) return AppResult.Error(error = e)
             }
 
         encryptedPreferencesDataSource.savePreferences { prefs ->

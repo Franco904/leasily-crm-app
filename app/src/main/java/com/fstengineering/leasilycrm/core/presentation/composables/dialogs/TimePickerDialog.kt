@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppTime
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,16 +1,16 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayFileEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.StayTransferEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.StayDatabaseDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.StayFileDatabaseDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.StayTransferDatabaseDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
-import com.fstengineering.leasilycrm.core.data.dataSources.sharedStorage.interfaces.SharedStorageDataSource
+import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayFileDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayTransferDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
+import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.interfaces.SharedStorageDataSource
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.models.StayCheckStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository

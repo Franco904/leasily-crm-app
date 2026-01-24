@@ -27,8 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppDate
-import com.fstengineering.leasilycrm.core.application.models.toDateTime
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDateTime
 import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog

@@ -1,11 +1,11 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.application.models.AppDate
-import com.fstengineering.leasilycrm.core.application.models.AppDecimal
-import com.fstengineering.leasilycrm.core.application.models.toDecimal
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDecimal
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

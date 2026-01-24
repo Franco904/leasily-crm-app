@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.validators
 
-import com.fstengineering.leasilycrm.core.application.models.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXIMITY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner

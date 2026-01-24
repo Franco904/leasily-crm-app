@@ -1,11 +1,11 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.data.adapters.interfaces.DatabaseAdapter
-import com.fstengineering.leasilycrm.core.data.dataSources.database.entities.TenantEntity
-import com.fstengineering.leasilycrm.core.data.dataSources.database.interfaces.TenantDatabaseDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.encrypted.EncryptedPreferences
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.data.dataSources.preferences.plain.PlainPreferences
+import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
