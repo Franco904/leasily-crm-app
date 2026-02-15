@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.di.modules
+package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import android.content.Context
 import android.net.ConnectivityManager

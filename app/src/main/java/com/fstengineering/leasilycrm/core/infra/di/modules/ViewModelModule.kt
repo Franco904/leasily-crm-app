@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.di.modules
+package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.di.modules
+package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.core.domain.validators.AssistanceInteractionValidatorImpl
 import com.fstengineering.leasilycrm.core.domain.validators.AssistanceSearchedNeighborhoodValidatorImpl

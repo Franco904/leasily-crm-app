@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.di.modules
+package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.BootstrappingWorker
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.LazyWritesWorker

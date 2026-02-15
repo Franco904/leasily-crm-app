@@ -1,7 +1,7 @@
-package com.fstengineering.leasilycrm.core.di.modules
+package com.fstengineering.leasilycrm.core.infra.di.modules
 
-import com.fstengineering.leasilycrm.core.di.qualifiers.encryptedPreferencesQualifier
-import com.fstengineering.leasilycrm.core.di.qualifiers.plainPreferencesQualifier
+import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
+import com.fstengineering.leasilycrm.core.infra.di.qualifiers.plainPreferencesQualifier
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceCharacteristicRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceRepositoryImpl

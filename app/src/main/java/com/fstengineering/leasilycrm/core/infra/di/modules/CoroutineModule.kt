@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.di.modules
+package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.di.modules
+package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.core.domain.services.UserSessionServiceImpl
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService

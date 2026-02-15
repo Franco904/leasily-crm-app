@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.di.qualifiers
+package com.fstengineering.leasilycrm.core.infra.di.qualifiers
 
 import org.koin.core.qualifier.named
 
