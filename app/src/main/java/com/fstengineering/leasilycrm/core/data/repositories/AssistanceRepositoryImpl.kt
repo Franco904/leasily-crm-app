@@ -1,5 +1,10 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
+import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceCharacteristicAssistanceCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
@@ -13,11 +18,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSentPropertyCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.firstOrNull
@@ -82,13 +82,13 @@ class AssistanceRepositoryImpl(
         }
 
     override suspend fun getById(assistanceId: Long): AppResult<Assistance, DataError> {
-        val property = assistanceDatabaseDataSource.getById(id = assistanceId)
+        val assistance = assistanceDatabaseDataSource.getById(id = assistanceId)
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { property -> property.toDomain() }
+                onSuccess = { assistance -> assistance.toDomain() }
             )
 
-        return AppResult.Success(data = property)
+        return AppResult.Success(data = assistance)
     }
 
     override suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>, DataError> {

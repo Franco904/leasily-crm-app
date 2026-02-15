@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
 import com.fstengineering.leasilycrm.core.presentation.theme.deepPurple
-import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart

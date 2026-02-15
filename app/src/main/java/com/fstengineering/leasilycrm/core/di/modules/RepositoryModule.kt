@@ -148,7 +148,6 @@ val repositoryModule = module {
             stayTransferDatabaseDataSource = get(),
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
             plainPreferencesDataSource = get(plainPreferencesQualifier),
-            sharedStorageDataSource = get(),
         )
     }
 

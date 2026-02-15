@@ -2,9 +2,9 @@ package com.fstengineering.leasilycrm.core.domain.useCases
 
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
-import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
+import com.fstengineering.leasilycrm.core.domain.models.helpers.StayCalendarDate
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
 import kotlinx.collections.immutable.PersistentList
@@ -25,22 +25,22 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
         var previousIndex: Int? = null
         var stayIndex = 0
 
-        val sortedStays = stays.sortedBy { it.checkInDateTime?.dateTime() }
+        val sortedStays = stays.sortedBy { it.checkInDateTime.dateTime() }
 
         sortedStays
             .forEachIndexed { i, stay ->
                 val currentIndex =
-                    if (stay.isUnavailablePeriod) UNAVAILABLE_PERIOD_INDEX else stayIndex
+                    if (stay is Stay.UnavailablePeriod) UNAVAILABLE_PERIOD_INDEX else stayIndex
 
                 val isLastStay = sortedStays.last() == stay
                 val nextStay = if (isLastStay) null else sortedStays[sortedStays.indexOf(stay) + 1]
                 val isNextStayAdjacent =
-                    nextStay?.checkInDateTime?.dayOfMonth == stay.checkOutDateTime?.dayOfMonth
+                    nextStay?.checkInDateTime?.dayOfMonth == stay.checkOutDateTime.dayOfMonth
 
                 val nextIndex = when {
                     isLastStay || !isNextStayAdjacent -> null
-                    nextStay?.isUnavailablePeriod == true -> UNAVAILABLE_PERIOD_INDEX
-                    stay.isUnavailablePeriod -> stayIndex
+                    nextStay is Stay.UnavailablePeriod -> UNAVAILABLE_PERIOD_INDEX
+                    stay is Stay.UnavailablePeriod -> stayIndex
                     else -> stayIndex + 1
                 }
 
@@ -48,8 +48,8 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
                     previousIndex = previousIndex,
                     currentIndex = currentIndex,
                     nextIndex = nextIndex,
-                    checkInDate = stay.checkInDateTime?.toDate()!!,
-                    checkOutDate = stay.checkOutDateTime?.toDate()!!,
+                    checkInDate = stay.checkInDateTime.toDate(),
+                    checkOutDate = stay.checkOutDateTime.toDate(),
                     stayId = stay.id!!,
                 )
 
@@ -67,7 +67,7 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
                 }
 
                 previousIndex = if (isNextStayAdjacent) currentIndex else null
-                if (!stay.isUnavailablePeriod) stayIndex++
+                if (stay !is Stay.UnavailablePeriod) stayIndex++
             }
 
         return staysStructuredDatesMap
@@ -83,7 +83,6 @@ class GetStaysStructuredDatesUseCaseImpl : GetStaysStructuredDatesUseCase {
      *
      * @param checkInDate The stay check-in date.
      * @param checkOutDate The stay check-out date.
-     * @param isUnavailablePeriod Whether the stay dates belong to an unavailable period.
      */
     private fun getStayDatesGroupedByMonthAndYear(
         previousIndex: Int?,

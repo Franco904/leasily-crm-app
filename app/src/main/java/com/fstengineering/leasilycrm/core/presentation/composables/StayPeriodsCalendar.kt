@@ -59,8 +59,8 @@ import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
 import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.theme.customColors
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
-import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
-import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
+import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.helpers.StayCalendarDate
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.daysOfWeek
 import com.fstengineering.leasilycrm.core.presentation.utils.getFirstDayOfWeekOfMonth

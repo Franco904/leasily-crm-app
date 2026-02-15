@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 
 @Entity(
     tableName = "property_characteristics_properties",
@@ -32,20 +32,16 @@ data class PropertyCharacteristicPropertyCrossRefEntity(
     @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Long,
     @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
     @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
-    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
 ) {
     companion object {
-        fun fromDomain(domain: PropertyCharacteristicProperty): PropertyCharacteristicPropertyCrossRefEntity {
-            requireNotNull(domain.propertyId) { "PropertyCharacteristicProperty.propertyId is required" }
-            requireNotNull(domain.propertyCharacteristic?.id) { "PropertyCharacteristicProperty.propertyCharacteristic.id is required" }
-
-            return PropertyCharacteristicPropertyCrossRefEntity(
+        fun fromDomain(domain: PropertyCharacteristicProperty) =
+            PropertyCharacteristicPropertyCrossRefEntity(
                 propertyId = domain.propertyId,
                 propertyCharacteristicId = domain.propertyCharacteristic.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
                 isDeleted = domain.isDeleted,
             )
-        }
     }
 }

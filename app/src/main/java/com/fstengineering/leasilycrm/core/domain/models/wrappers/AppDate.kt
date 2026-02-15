@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.models.wrappers
 
-import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
-import com.fstengineering.leasilycrm.core.domain.models.StayCalendarDate
+import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.helpers.StayCalendarDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentList

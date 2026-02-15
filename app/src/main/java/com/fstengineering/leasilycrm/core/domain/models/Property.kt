@@ -3,43 +3,42 @@ package com.fstengineering.leasilycrm.core.domain.models
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 
 data class Property(
-    val id: Long? = null,
-    val createDateTime: AppDateTime? = null,
-    val updateDateTime: AppDateTime? = null,
-    val neighborhood: String? = null,
-    val streetAddress: String? = null,
-    val cepPostalCode: String? = null,
-    val number: Int? = null,
-    val addressLine2: String? = null,
-    val parkingSpotNumber: String? = null,
-    val parkingBasementLevelNumber: String? = null,
-    val hobbyBoxNumber: String? = null,
-    val qtBedrooms: Int = 1,
-    val qtEnSuites: Int = 0,
-    val qtDoubleBeds: Int = 0,
-    val qtSingleBeds: Int = 0,
-    val qtBathrooms: Int = 0,
-    val qtParkingSpots: Int = 0,
-    val qtAirConditioners: Int = 0,
-    val qtMaxGuests: Int = 0,
-    val distanceToSea: AppDecimal? = null,
-    val includedItems: String? = null,
-    val hasIncludedItems: Boolean? = null,
-    val cleaningServiceTax: AppDecimal? = null,
-    val hasCleaningServiceIncluded: Boolean? = null,
-    val observations: String? = null,
-    val isDeleted: Boolean = false,
-    val owner: PropertyOwner? = null,
-    val type: PropertyType? = null,
-    val seaProximityType: PropertySeaProximityType? = null,
-    val characteristics: ImmutableList<PropertyCharacteristicProperty> = persistentListOf(),
-    val prices: ImmutableList<PropertyPrice> = persistentListOf(),
-    val files: ImmutableList<PropertyFile> = persistentListOf(),
-    val stays: ImmutableList<Stay> = persistentListOf(),
-    val userId: Long? = null,
+    val id: Long?,
+    val createDateTime: AppDateTime?,
+    val updateDateTime: AppDateTime?,
+    val owner: PropertyOwner,
+    val type: PropertyType,
+    val neighborhood: String,
+    val streetAddress: String,
+    val cepPostalCode: String?,
+    val number: Int?,
+    val addressLine2: String?,
+    val parkingSpotNumber: String?,
+    val parkingBasementLevelNumber: String?,
+    val hobbyBoxNumber: String?,
+    val qtBedrooms: Int,
+    val qtEnSuites: Int,
+    val qtDoubleBeds: Int,
+    val qtSingleBeds: Int,
+    val qtBathrooms: Int,
+    val qtParkingSpots: Int,
+    val qtAirConditioners: Int,
+    val qtMaxGuests: Int,
+    val seaProximityType: PropertySeaProximityType?,
+    val distanceToSea: AppDecimal?,
+    val includedItems: String?,
+    val hasIncludedItems: Boolean,
+    val characteristics: ImmutableList<PropertyCharacteristicProperty>,
+    val cleaningServiceTax: AppDecimal?,
+    val hasCleaningServiceIncluded: Boolean,
+    val prices: ImmutableList<PropertyPrice>,
+    val files: ImmutableList<PropertyFile>,
+    val observations: String?,
+    val isDeleted: Boolean,
+    val stays: ImmutableList<Stay>,
+    val userId: Long,
 ) {
     val isAnyFormFieldInitialized = owner != null
             || type != null
@@ -68,5 +67,4 @@ data class Property(
             || prices.isNotEmpty()
             || files.isNotEmpty()
             || observations != null
-
 }

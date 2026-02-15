@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.domain.useCases
 
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.StayOwnedTenant
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
@@ -11,6 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -37,9 +39,10 @@ class WatchPropertyWithStaysTenantsUseCaseImpl(
                             return@onSuccess
                         }
 
-                        val updatedStays = resolveTenantsForStays(
-                            currentStays = storedProperty.stays,
-                        )
+                        val ownedStays = storedProperty.stays
+                            .filterIsInstance<Stay.Owned>()
+                            .toImmutableList()
+                        val updatedStays = resolveTenantsForStays(currentStays = ownedStays)
 
                         val newProperty = storedProperty.copy(stays = updatedStays)
                         emit(AppResult.Success(data = newProperty))
@@ -48,19 +51,19 @@ class WatchPropertyWithStaysTenantsUseCaseImpl(
     }
 
     private suspend fun resolveTenantsForStays(
-        currentStays: ImmutableList<Stay>,
-    ): ImmutableList<Stay> = coroutineScope {
+        currentStays: ImmutableList<Stay.Owned>,
+    ): ImmutableList<Stay.Owned> = coroutineScope {
         currentStays
             .map { stay ->
                 async {
-                    val tenantId = stay.tenant?.id ?: return@async stay
+                    val tenantId = stay.tenant.tenantId
                     val tenant = tenantRepository.getById(tenantId)
                         .fold(
                             onError = { stay.tenant },
-                            onSuccess = { tenant -> tenant },
+                            onSuccess = { tenant -> StayOwnedTenant.WithData(tenant) },
                         )
 
-                    stay.copy(tenant = tenant)
+                    stay.copy(tenant = (tenant))
                 }
             }
             .awaitAll()

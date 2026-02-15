@@ -5,10 +5,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
 
 @Entity(
     tableName = "assistances",
@@ -30,7 +30,7 @@ import com.fstengineering.leasilycrm.core.domain.models.Assistance
     ],
 )
 data class AssistanceEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long?,
     @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
     @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "searched_start_date") val searchedStartDate: AppDate?,
@@ -49,26 +49,14 @@ data class AssistanceEntity(
     @ColumnInfo(name = "qt_parking_spots") val qtParkingSpots: Int,
     @ColumnInfo(name = "distance_to_sea") val distanceToSea: AppDecimal?,
     val observations: String?,
-    @ColumnInfo(name = "is_finished") val isFinished: Boolean = false,
-    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
+    @ColumnInfo(name = "is_finished") val isFinished: Boolean,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Long?,
     @ColumnInfo(name = "tenant_id") val tenantId: Long,
 ) {
     companion object {
-        fun fromDomain(domain: Assistance): AssistanceEntity {
-            requireNotNull(domain.qtAdultGuests) { "Assistance.qtAdultGuests is required" }
-            requireNotNull(domain.qtKidGuests) { "Assistance.qtKidGuests is required" }
-            requireNotNull(domain.qtBabyGuests) { "Assistance.qtBabyGuests is required" }
-            requireNotNull(domain.qtAnimalGuests) { "Assistance.qtAnimalGuests is required" }
-            requireNotNull(domain.qtBedrooms) { "Assistance.qtBedrooms is required" }
-            requireNotNull(domain.qtEnSuites) { "Assistance.qtEnSuites is required" }
-            requireNotNull(domain.qtDoubleBeds) { "Assistance.qtDoubleBeds is required" }
-            requireNotNull(domain.qtSingleBeds) { "Assistance.qtSingleBeds is required" }
-            requireNotNull(domain.qtBathrooms) { "Assistance.qtBathrooms is required" }
-            requireNotNull(domain.qtParkingSpots) { "Assistance.qtParkingSpots is required" }
-            requireNotNull(domain.tenant?.id) { "Assistance.tenant.id is required" }
-
-            return AssistanceEntity(
+        fun fromDomain(domain: Assistance) =
+            AssistanceEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
@@ -91,8 +79,7 @@ data class AssistanceEntity(
                 isFinished = domain.isFinished,
                 isDeleted = domain.isDeleted,
                 propertySeaProximityTypeId = domain.seaProximityType?.id,
-                tenantId = domain.tenant.id,
+                tenantId = domain.tenantId,
             )
-        }
     }
 }

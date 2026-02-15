@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 
 @Entity(
@@ -20,15 +20,12 @@ data class PropertyOwnerEntity(
     val phone: String?,
     val email: String?,
     @ColumnInfo(name = "payment_key") val paymentKey: String?,
-    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "user_id") val userId: Long,
 ) {
     companion object {
-        fun fromDomain(domain: PropertyOwner): PropertyOwnerEntity {
-            requireNotNull(domain.name) { "PropertyOwner.name is required" }
-            requireNotNull(domain.userId) { "PropertyOwner.userId is required" }
-
-            return PropertyOwnerEntity(
+        fun fromDomain(domain: PropertyOwner) =
+            PropertyOwnerEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
@@ -36,8 +33,8 @@ data class PropertyOwnerEntity(
                 phone = domain.phone,
                 email = domain.email,
                 paymentKey = domain.paymentKey,
+                isDeleted = domain.isDeleted,
                 userId = domain.userId,
             )
-        }
     }
 }

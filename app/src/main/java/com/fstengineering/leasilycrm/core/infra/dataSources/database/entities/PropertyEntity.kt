@@ -5,13 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
-import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
-import com.fstengineering.leasilycrm.core.domain.models.PropertyType
-import kotlinx.collections.immutable.persistentListOf
 
 @Entity(
     tableName = "properties",
@@ -40,7 +36,7 @@ import kotlinx.collections.immutable.persistentListOf
     ],
 )
 data class PropertyEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long?,
     @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
     @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     val neighborhood: String,
@@ -65,68 +61,15 @@ data class PropertyEntity(
     @ColumnInfo(name = "cleaning_service_tax") val cleaningServiceTax: AppDecimal?,
     @ColumnInfo(name = "has_cleaning_service_included") val hasCleaningServiceIncluded: Boolean,
     val observations: String?,
-    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Long,
     @ColumnInfo(name = "property_type_id") val propertyTypeId: Long,
     @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityType: Long?,
     @ColumnInfo(name = "user_id") val userId: Long,
 ) {
-    fun toDomain() = Property(
-        id = id,
-        createDateTime = createDateTime,
-        updateDateTime = updateDateTime,
-        neighborhood = neighborhood,
-        streetAddress = streetAddress,
-        cepPostalCode = cepPostalCode,
-        number = number,
-        addressLine2 = addressLine2,
-        parkingSpotNumber = parkingSpotNumber,
-        parkingBasementLevelNumber = parkingBasementLevelNumber,
-        hobbyBoxNumber = hobbyBoxNumber,
-        qtBedrooms = qtBedrooms,
-        qtEnSuites = qtEnSuites,
-        qtDoubleBeds = qtDoubleBeds,
-        qtSingleBeds = qtSingleBeds,
-        qtBathrooms = qtBathrooms,
-        qtParkingSpots = qtParkingSpots,
-        qtAirConditioners = qtAirConditioners,
-        qtMaxGuests = qtMaxGuests,
-        distanceToSea = distanceToSea,
-        includedItems = includedItems,
-        hasIncludedItems = hasIncludedItems,
-        cleaningServiceTax = cleaningServiceTax,
-        hasCleaningServiceIncluded = hasCleaningServiceIncluded,
-        observations = observations,
-        isDeleted = isDeleted,
-        owner = PropertyOwner(id = propertyOwnerId),
-        type = PropertyType(id = propertyTypeId),
-        seaProximityType = PropertySeaProximityType(id = propertySeaProximityType),
-        userId = userId,
-        characteristics = persistentListOf(),
-        prices = persistentListOf(),
-        files = persistentListOf(),
-        stays = persistentListOf(),
-    )
-
     companion object {
-        fun fromDomain(domain: Property): PropertyEntity {
-            requireNotNull(domain.neighborhood) { "Property.neighborhood is required" }
-            requireNotNull(domain.streetAddress) { "Property.streetAddress is required" }
-            requireNotNull(domain.qtBedrooms) { "Property.qtBedrooms is required" }
-            requireNotNull(domain.qtEnSuites) { "Property.qtEnSuites is required" }
-            requireNotNull(domain.qtDoubleBeds) { "Property.qtDoubleBeds is required" }
-            requireNotNull(domain.qtSingleBeds) { "Property.qtSingleBeds is required" }
-            requireNotNull(domain.qtBathrooms) { "Property.qtBathrooms is required" }
-            requireNotNull(domain.qtParkingSpots) { "Property.qtParkingSpots is required" }
-            requireNotNull(domain.qtAirConditioners) { "Property.qtAirConditioners is required" }
-            requireNotNull(domain.qtMaxGuests) { "Property.qtMaxGuests is required" }
-            requireNotNull(domain.hasIncludedItems) { "Property.hasIncludedItems is required" }
-            requireNotNull(domain.hasCleaningServiceIncluded) { "Property.hasCleaningServiceIncluded is required" }
-            requireNotNull(domain.owner?.id) { "Property.owner.id is required" }
-            requireNotNull(domain.type?.id) { "Property.type.id is required" }
-            requireNotNull(domain.userId) { "Property.userId is required" }
-
-            return PropertyEntity(
+        fun fromDomain(domain: Property) =
+            PropertyEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
@@ -153,11 +96,10 @@ data class PropertyEntity(
                 hasCleaningServiceIncluded = domain.hasCleaningServiceIncluded,
                 observations = domain.observations,
                 isDeleted = domain.isDeleted,
-                propertyOwnerId = domain.owner.id,
+                propertyOwnerId = requireNotNull(domain.owner.id),
                 propertyTypeId = domain.type.id,
                 propertySeaProximityType = domain.seaProximityType?.id,
                 userId = domain.userId,
             )
-        }
     }
 }

@@ -4,12 +4,12 @@ import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 
 data class AssistanceInteraction(
-    val id: Long? = null,
-    val createDateTime: AppDateTime? = null,
-    val updateDateTime: AppDateTime? = null,
-    val interactionDate: AppDate? = null,
-    val title: String? = null,
-    val description: String? = null,
-    val assistanceId: Long? = null,
-    val isDeleted: Boolean = false,
+    val id: Long?,
+    val createDateTime: AppDateTime?,
+    val updateDateTime: AppDateTime?,
+    val interactionDate: AppDate,
+    val title: String,
+    val description: String?,
+    val assistanceId: Long,
+    val isDeleted: Boolean,
 )

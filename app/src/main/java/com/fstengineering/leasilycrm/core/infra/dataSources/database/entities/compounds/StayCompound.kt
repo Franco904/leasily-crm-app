@@ -2,12 +2,16 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.StayFile
+import com.fstengineering.leasilycrm.core.domain.models.StayOwnedTenant
+import com.fstengineering.leasilycrm.core.domain.models.StayProperty
+import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.TenantReadView
-import com.fstengineering.leasilycrm.core.domain.models.Stay
 import kotlinx.collections.immutable.toImmutableList
 
 data class StayCompound(
@@ -37,37 +41,56 @@ data class StayCompound(
     )
     val files: List<StayFileEntity>,
 ) {
-    private val activeTransfers: List<StayTransferEntity>
-        get() = transfers.filter { !it.isDeleted }
+    private val activeTransfers: List<StayTransfer>
+        get() = transfers
+            .filter { !it.isDeleted }
+            .map { it.toDomain() }
 
-    private val activeFiles: List<StayFileEntity>
-        get() = files.filter { !it.isDeleted }
+    private val activeFiles: List<StayFile>
+        get() = files
+            .filter { !it.isDeleted }
+            .map { it.toDomain() }
 
-    fun toDomain(): Stay = Stay(
-        id = stay.id,
-        createDateTime = stay.createDateTime,
-        updateDateTime = stay.updateDateTime,
-        isUnavailablePeriod = stay.isFromOtherRealtor,
-        qtGuests = stay.qtGuests,
-        totalPrice = stay.totalPrice,
-        checkInDateTime = stay.checkInDateTime,
-        checkInHourMinute = stay.checkInDateTime.hour to stay.checkInDateTime.minute,
-        checkOutDateTime = stay.checkOutDateTime,
-        checkOutHourMinute = stay.checkOutDateTime.hour to stay.checkOutDateTime.minute,
-        isAutoCheckIn = stay.isAutoCheckIn,
-        isAutoCheckOut = stay.isAutoCheckOut,
-        isCheckInDone = stay.isCheckInDone,
-        isCheckOutDone = stay.isCheckOutDone,
-        commission = stay.commission,
-        vehicleMake = stay.vehicleMake,
-        vehicleColor = stay.vehicleColor,
-        vehicleLicensePlate = stay.vehicleLicensePlate,
-        observations = stay.observations,
-        isDeleted = stay.isDeleted,
-        property = property.toDomain(),
-        tenant = tenant?.toDomain(),
-        transfers = activeTransfers.map { it.toDomain() }.toImmutableList(),
-        files = activeFiles.map { it.toDomain() }.toImmutableList(),
-        userId = stay.userId,
-    )
+    fun toDomain(): Stay {
+        return if (tenant != null) {
+            Stay.Owned(
+                id = requireNotNull(stay.id),
+                createDateTime = stay.createDateTime,
+                updateDateTime = stay.updateDateTime,
+                property = StayProperty.WithData(property.toDomain()),
+                tenant = StayOwnedTenant.WithData(tenant.toDomain()),
+                vehicleMake = stay.vehicleMake,
+                vehicleColor = stay.vehicleColor,
+                vehicleLicensePlate = stay.vehicleLicensePlate,
+                qtGuests = requireNotNull(stay.qtGuests),
+                checkInDateTime = stay.checkInDateTime,
+                checkInHourMinute = stay.checkInDateTime.hour to stay.checkInDateTime.minute,
+                checkOutDateTime = stay.checkOutDateTime,
+                checkOutHourMinute = stay.checkOutDateTime.hour to stay.checkOutDateTime.minute,
+                isAutoCheckIn = requireNotNull(stay.isAutoCheckIn),
+                isAutoCheckOut = requireNotNull(stay.isAutoCheckOut),
+                isCheckInDone = requireNotNull(stay.isCheckInDone),
+                isCheckOutDone = requireNotNull(stay.isCheckOutDone),
+                totalPrice = stay.totalPrice,
+                commission = requireNotNull(stay.commission),
+                observations = stay.observations,
+                transfers = activeTransfers.toImmutableList(),
+                files = activeFiles.toImmutableList(),
+                isDeleted = stay.isDeleted,
+                userId = stay.userId,
+            )
+        } else {
+            Stay.UnavailablePeriod(
+                id = requireNotNull(stay.id),
+                createDateTime = stay.createDateTime,
+                updateDateTime = stay.updateDateTime,
+                property = StayProperty.WithData(property.toDomain()),
+                checkInDateTime = stay.checkInDateTime,
+                checkOutDateTime = stay.checkOutDateTime,
+                observations = stay.observations,
+                isDeleted = stay.isDeleted,
+                userId = stay.userId,
+            )
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.domain.models
+package com.fstengineering.leasilycrm.core.domain.models.helpers
 
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 

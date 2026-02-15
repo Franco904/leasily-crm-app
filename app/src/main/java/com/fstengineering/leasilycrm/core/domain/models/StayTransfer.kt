@@ -5,12 +5,12 @@ import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
 
 data class StayTransfer(
-    val id: Long? = null,
-    val createDateTime: AppDateTime? = null,
-    val updateDateTime: AppDateTime? = null,
-    val transferDate: AppDate? = null,
-    val transferAmount: AppDecimal? = null,
-    val transferDescription: String? = null,
-    val stayId: Long? = null,
-    val isDeleted: Boolean = false,
+    val id: Long?,
+    val createDateTime: AppDateTime?,
+    val updateDateTime: AppDateTime?,
+    val transferDate: AppDate,
+    val amount: AppDecimal,
+    val description: String?,
+    val stayId: Long,
+    val isDeleted: Boolean,
 )

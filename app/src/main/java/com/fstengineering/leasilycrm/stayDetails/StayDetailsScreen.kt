@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
@@ -51,7 +50,7 @@ fun StayDetailsScreen(
     cameFromProperty: Boolean,
     cameFromTenant: Boolean,
     viewModel: StayDetailsViewModel,
-    onEdit: (Stay) -> Unit,
+    onEdit: (Long, Long?, Long?, Boolean) -> Unit,
     onViewPropertyDashboard: (Long) -> Unit,
     onViewTenantDetails: (Long) -> Unit,
     onBack: () -> Unit,
@@ -68,8 +67,8 @@ fun StayDetailsScreen(
 
     val now by rememberNow()
 
-    val checkInDateTimeStartOfDay = stay.checkInDateTime?.toStartOfDay()
-    val checkOutDateTimeStartOfDay = stay.checkOutDateTime?.toStartOfDay()
+    val checkInDateTimeStartOfDay = stay.checkInDateTime.toStartOfDay()
+    val checkOutDateTimeStartOfDay = stay.checkOutDateTime.toStartOfDay()
 
     val canRegisterCheckIn = !stay.isCheckInDone
             && now.isAfter(checkInDateTimeStartOfDay)
@@ -145,7 +144,14 @@ fun StayDetailsScreen(
                     isUnavailablePeriod = stay.isUnavailablePeriod,
                     isCheckOutDone = stay.isCheckOutDone,
                     onBack = onBack,
-                    onEdit = { onEdit(stay) },
+                    onEdit = {
+                        onEdit(
+                            stay.id,
+                            stay.property.id,
+                            stay.tenant?.id,
+                            stay.isUnavailablePeriod,
+                        )
+                    },
                     onDelete = { mustShowConfirmDeleteDialog = true },
                 )
                 HorizontalDivider()
@@ -187,7 +193,7 @@ fun StayDetailsScreen(
                     stay = stay,
                     stayStructuredDates = stayStructuredDates,
                     cameFromProperty = cameFromProperty,
-                    onViewPropertyDashboard = { onViewPropertyDashboard(stay.property?.id!!) },
+                    onViewPropertyDashboard = { onViewPropertyDashboard(stay.property.id) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
@@ -207,7 +213,7 @@ fun StayDetailsScreen(
                     },
                     cameFromProperty = cameFromProperty,
                     cameFromTenant = cameFromTenant,
-                    onViewPropertyDashboard = { onViewPropertyDashboard(stay.property?.id!!) },
+                    onViewPropertyDashboard = { onViewPropertyDashboard(stay.property.id) },
                     onViewTenantDetails = { onViewTenantDetails(stay.tenant?.id!!) },
                     modifier = Modifier
                         .fillMaxSize()

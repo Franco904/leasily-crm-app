@@ -2,9 +2,10 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
 import kotlinx.collections.immutable.toImmutableList
 
 data class PropertyOwnerCompound(
@@ -16,11 +17,13 @@ data class PropertyOwnerCompound(
     )
     val files: List<PropertyOwnerFileEntity>,
 ) {
-    private val activeFiles: List<PropertyOwnerFileEntity>
-        get() = files.filter { !it.isDeleted }
+    private val activeFiles: List<PropertyOwnerFile>
+        get() = files
+            .filter { !it.isDeleted }
+            .map { it.toDomain() }
 
     fun toDomain() = PropertyOwner(
-        id = propertyOwner.id,
+        id = requireNotNull(propertyOwner.id),
         createDateTime = propertyOwner.createDateTime,
         updateDateTime = propertyOwner.updateDateTime,
         name = propertyOwner.name,
@@ -28,7 +31,7 @@ data class PropertyOwnerCompound(
         email = propertyOwner.email,
         paymentKey = propertyOwner.paymentKey,
         isDeleted = propertyOwner.isDeleted,
-        files = activeFiles.map { it.toDomain() }.toImmutableList(),
+        files = activeFiles.toImmutableList(),
         userId = propertyOwner.userId,
     )
 }

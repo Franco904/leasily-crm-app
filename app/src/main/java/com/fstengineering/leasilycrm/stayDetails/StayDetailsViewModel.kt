@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.stayDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
@@ -11,6 +10,7 @@ import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegiste
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.stayDetails.model.StayDetailsUiState
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.channels.Channel
@@ -31,7 +31,7 @@ class StayDetailsViewModel(
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _stay = MutableStateFlow(Stay())
+    private val _stay = MutableStateFlow<StayDetailsUiState>(StayDetailsUiState.Empty)
     val stay = _stay.asStateFlow()
 
     private val _stayStructuredDates = MutableStateFlow<StaysStructuredDatesMap>(persistentMapOf())
@@ -78,7 +78,7 @@ class StayDetailsViewModel(
 
     fun deleteStay() {
         viewModelScope.launch {
-            stayRepository.delete(id = stay.value.id!!)
+            stayRepository.delete(id = stay.value?.id!!)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { _uiEvents.send(UiEvents.StayDeleteSuccess) }
         }
@@ -86,7 +86,7 @@ class StayDetailsViewModel(
 
     fun registerStayCheckIn() {
         viewModelScope.launch {
-            val updatedStay = stay.value.copy(isCheckInDone = true)
+            val updatedStay = stay.value?.copy(isCheckInDone = true)
 
             stayRepository.insertOrUpdate(stay = updatedStay)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }

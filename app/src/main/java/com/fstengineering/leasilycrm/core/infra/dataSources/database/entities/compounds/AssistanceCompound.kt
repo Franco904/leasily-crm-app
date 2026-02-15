@@ -3,6 +3,11 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import com.fstengineering.leasilycrm.core.domain.models.Assistance
+import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristicAssistance
+import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
+import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
+import com.fstengineering.leasilycrm.core.domain.models.AssistanceSentProperty
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceCharacteristicAssistanceCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceCharacteristicEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
@@ -12,9 +17,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.As
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertySeaProximityTypeEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristicAssistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceSentProperty
 import kotlinx.collections.immutable.toImmutableList
 
 data class AssistanceCompound(
@@ -78,8 +80,10 @@ data class AssistanceCompound(
     )
     val interactions: List<AssistanceInteractionEntity>,
 ) {
-    private val activeSearchedNeighborhoods: List<AssistanceSearchedNeighborhoodEntity>
-        get() = searchedNeighborhoods.filter { !it.isDeleted }
+    private val activeSearchedNeighborhoods: List<AssistanceSearchedNeighborhood>
+        get() = searchedNeighborhoods
+            .filter { !it.isDeleted }
+            .map { it.toDomain() }
 
     private val activeCharacteristics: List<AssistanceCharacteristicAssistance>
         get() {
@@ -92,8 +96,10 @@ data class AssistanceCompound(
                 val characteristic = allCharacteristics.find { it.id == activeCharacteristicId }
 
                 AssistanceCharacteristicAssistance(
-                    assistanceId = assistance.id,
-                    assistanceCharacteristic = characteristic?.toDomain(),
+                    assistanceId = requireNotNull(assistance.id),
+                    assistanceCharacteristic = requireNotNull(characteristic).toDomain(),
+                    createDateTime = assistance.createDateTime,
+                    updateDateTime = assistance.updateDateTime,
                     isDeleted = false,
                 )
             }
@@ -110,18 +116,22 @@ data class AssistanceCompound(
                 val sentProperty = allSentProperties.find { it.property.id == activeSentPropertyId }
 
                 AssistanceSentProperty(
-                    assistanceId = assistance.id,
-                    property = sentProperty?.toDomain(),
+                    assistanceId = requireNotNull(assistance.id),
+                    property = requireNotNull(sentProperty).toDomain(),
+                    createDateTime = assistance.createDateTime,
+                    updateDateTime = assistance.updateDateTime,
                     isDeleted = false,
                 )
             }
         }
 
-    private val activeInteractions: List<AssistanceInteractionEntity>
-        get() = interactions.filter { !it.isDeleted }
+    private val activeInteractions: List<AssistanceInteraction>
+        get() = interactions
+            .filter { !it.isDeleted }
+            .map { it.toDomain() }
 
     fun toDomain() = Assistance(
-        id = assistance.id,
+        id = requireNotNull(assistance.id),
         createDateTime = assistance.createDateTime,
         updateDateTime = assistance.updateDateTime,
         searchedStartDate = assistance.searchedStartDate,
@@ -142,11 +152,11 @@ data class AssistanceCompound(
         observations = assistance.observations,
         isFinished = assistance.isFinished,
         isDeleted = assistance.isDeleted,
-        tenant = tenant.toDomain(),
-        searchedNeighborhoods = activeSearchedNeighborhoods.map { it.toDomain() }.toImmutableList(),
+        tenantId = requireNotNull(tenant.id),
+        searchedNeighborhoods = activeSearchedNeighborhoods.toImmutableList(),
         seaProximityType = seaProximityType?.toDomain(),
         characteristics = activeCharacteristics.toImmutableList(),
         sentProperties = activeSentProperties.toImmutableList(),
-        interactions = activeInteractions.map { it.toDomain() }.toImmutableList(),
+        interactions = activeInteractions.toImmutableList(),
     )
 }

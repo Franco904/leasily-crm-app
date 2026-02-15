@@ -44,7 +44,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
 import com.fstengineering.leasilycrm.core.domain.models.Assistance
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
-import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomsheet
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.AssistanceInteractionCard

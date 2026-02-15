@@ -18,7 +18,7 @@ class StayTransferValidatorImpl : StayTransferValidator {
         validateTransferDate(transferDate = stayTransfer.transferDate)
             .onError { e -> errors.add(e) }
 
-        validateTransferAmount(amount = stayTransfer.transferAmount)
+        validateTransferAmount(amount = stayTransfer.amount)
             .onError { e -> errors.add(e) }
 
         return if (errors.isEmpty()) {

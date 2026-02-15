@@ -3,6 +3,11 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
+import com.fstengineering.leasilycrm.core.domain.models.PropertyFile
+import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
+import com.fstengineering.leasilycrm.core.domain.models.Stay
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
@@ -12,8 +17,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Pr
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertySeaProximityTypeEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyTypeEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
 import kotlinx.collections.immutable.toImmutableList
 
 data class PropertyCompound(
@@ -83,24 +86,32 @@ data class PropertyCompound(
                 val characteristic = allCharacteristics.find { it.id == activeCharacteristicId }
 
                 PropertyCharacteristicProperty(
-                    propertyId = property.id,
-                    propertyCharacteristic = characteristic?.toDomain(),
+                    createDateTime = property.createDateTime,
+                    updateDateTime = property.updateDateTime,
+                    propertyId = requireNotNull(property.id),
+                    propertyCharacteristic = requireNotNull(characteristic).toDomain(),
                     isDeleted = false,
                 )
             }
         }
 
-    private val activePrices: List<PropertyPriceEntity>
-        get() = prices.filter { !it.isDeleted }
+    private val activePrices: List<PropertyPrice>
+        get() = prices
+            .filter { !it.isDeleted }
+            .map { it.toDomain() }
 
-    private val activeFiles: List<PropertyFileEntity>
-        get() = files.filter { !it.isDeleted }
+    private val activeFiles: List<PropertyFile>
+        get() = files
+            .filter { !it.isDeleted }
+            .map { it.toDomain() }
 
-    private val activeStays: List<StayEntity>
-        get() = stays.filter { !it.isDeleted }
+    private val activeStays: List<Stay>
+        get() = stays
+            .filter { !it.isDeleted }
+            .map { it.toDomain() }
 
     fun toDomain() = Property(
-        id = property.id,
+        id = requireNotNull(property.id),
         createDateTime = property.createDateTime,
         updateDateTime = property.updateDateTime,
         neighborhood = property.neighborhood,
@@ -130,9 +141,9 @@ data class PropertyCompound(
         type = type.toDomain(),
         seaProximityType = seaProximityType?.toDomain(),
         characteristics = activeCharacteristics.toImmutableList(),
-        prices = activePrices.map { it.toDomain() }.toImmutableList(),
-        files = activeFiles.map { it.toDomain() }.toImmutableList(),
-        stays = activeStays.map { it.toDomain() }.toImmutableList(),
+        prices = activePrices.toImmutableList(),
+        files = activeFiles.toImmutableList(),
+        stays = activeStays.toImmutableList(),
         userId = property.userId,
     )
 }

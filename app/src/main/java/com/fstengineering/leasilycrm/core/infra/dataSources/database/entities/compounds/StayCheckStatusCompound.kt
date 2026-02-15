@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 
 import androidx.room.ColumnInfo
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.models.StayCheckStatus
+import com.fstengineering.leasilycrm.core.domain.models.helpers.StayCheckStatus
 
 data class StayCheckStatusCompound(
     @ColumnInfo(name = "tenant_name") val tenantName: String?,

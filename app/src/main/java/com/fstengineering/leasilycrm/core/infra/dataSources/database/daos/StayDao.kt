@@ -44,7 +44,7 @@ interface StayDao {
         LEFT JOIN property_owners po ON p.property_owner_id = po.id AND po.is_deleted = 0
         LEFT JOIN property_types pt ON p.property_type_id = pt.id AND pt.is_active = 1
         WHERE s.is_check_out_done = 0
-        AND s.is_from_other_realtor = 0
+        AND s.tenant_id IS NOT NULL
         AND s.is_deleted = 0
         AND s.user_id = :userId
     """

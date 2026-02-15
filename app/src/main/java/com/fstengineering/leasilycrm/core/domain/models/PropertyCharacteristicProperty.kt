@@ -3,9 +3,9 @@ package com.fstengineering.leasilycrm.core.domain.models
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 
 data class PropertyCharacteristicProperty(
-    val propertyId: Long? = null,
-    val propertyCharacteristic: PropertyCharacteristic? = null,
-    val createDateTime: AppDateTime? = null,
-    val updateDateTime: AppDateTime? = null,
-    val isDeleted: Boolean = false,
+    val propertyId: Long,
+    val propertyCharacteristic: PropertyCharacteristic,
+    val createDateTime: AppDateTime?,
+    val updateDateTime: AppDateTime?,
+    val isDeleted: Boolean,
 )

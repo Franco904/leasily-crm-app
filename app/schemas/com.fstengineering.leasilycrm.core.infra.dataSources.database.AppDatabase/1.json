@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "bb5ddc29bc0a77bb339fd2d7d10eaa48",
+    "identityHash": "0a038c7944d6ebf47fc574acffb3862c",
     "entities": [
       {
         "tableName": "assistances",
@@ -193,12 +193,13 @@
       },
       {
         "tableName": "assistance_characteristics",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "name",
@@ -802,12 +803,13 @@
       },
       {
         "tableName": "property_characteristics",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "name",
@@ -1068,7 +1070,7 @@
       },
       {
         "tableName": "property_owner_files",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `property_owner_file_uri` TEXT NOT NULL, `property_owner_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `property_owner_file_uri` TEXT NOT NULL, `property_owner_file_name` TEXT NOT NULL, `property_owner_id` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1090,6 +1092,12 @@
           {
             "fieldPath": "propertyOwnerFileUri",
             "columnName": "property_owner_file_uri",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyOwnerFileName",
+            "columnName": "property_owner_file_name",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -1222,12 +1230,13 @@
       },
       {
         "tableName": "property_sea_proximity_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "name",
@@ -1251,12 +1260,13 @@
       },
       {
         "tableName": "property_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "name",
@@ -1280,7 +1290,7 @@
       },
       {
         "tableName": "stays",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `is_from_other_realtor` INTEGER NOT NULL, `qt_guests` INTEGER, `check_in_date_time` INTEGER NOT NULL, `check_out_date_time` INTEGER NOT NULL, `is_auto_check_in` INTEGER NOT NULL, `is_auto_check_out` INTEGER NOT NULL, `is_check_in_done` INTEGER NOT NULL, `is_check_out_done` INTEGER NOT NULL, `total_price` TEXT, `commission` TEXT, `vehicle_make` TEXT, `vehicle_color` TEXT, `vehicle_license_plate` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `vehicle_make` TEXT, `vehicle_color` TEXT, `vehicle_license_plate` TEXT, `qt_guests` INTEGER, `check_in_date_time` INTEGER NOT NULL, `check_out_date_time` INTEGER NOT NULL, `is_auto_check_in` INTEGER, `is_auto_check_out` INTEGER, `is_check_in_done` INTEGER, `is_check_out_done` INTEGER, `total_price` TEXT, `commission` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1300,10 +1310,19 @@
             "notNull": true
           },
           {
-            "fieldPath": "isFromOtherRealtor",
-            "columnName": "is_from_other_realtor",
-            "affinity": "INTEGER",
-            "notNull": true
+            "fieldPath": "vehicleMake",
+            "columnName": "vehicle_make",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "vehicleColor",
+            "columnName": "vehicle_color",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "vehicleLicensePlate",
+            "columnName": "vehicle_license_plate",
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "qtGuests",
@@ -1325,26 +1344,22 @@
           {
             "fieldPath": "isAutoCheckIn",
             "columnName": "is_auto_check_in",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "isAutoCheckOut",
             "columnName": "is_auto_check_out",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "isCheckInDone",
             "columnName": "is_check_in_done",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "isCheckOutDone",
             "columnName": "is_check_out_done",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "totalPrice",
@@ -1354,21 +1369,6 @@
           {
             "fieldPath": "commission",
             "columnName": "commission",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "vehicleMake",
-            "columnName": "vehicle_make",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "vehicleColor",
-            "columnName": "vehicle_color",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "vehicleLicensePlate",
-            "columnName": "vehicle_license_plate",
             "affinity": "TEXT"
           },
           {
@@ -1462,7 +1462,7 @@
       },
       {
         "tableName": "stay_files",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `stay_file_uri` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `stay_file_uri` TEXT NOT NULL, `stay_file_name` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1484,6 +1484,12 @@
           {
             "fieldPath": "stayFileUri",
             "columnName": "stay_file_uri",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stayFileName",
+            "columnName": "stay_file_name",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -1533,7 +1539,7 @@
       },
       {
         "tableName": "stay_transfers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `transfer_date` INTEGER NOT NULL, `transfer_amount` TEXT NOT NULL, `transfer_description` TEXT, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `transfer_date` INTEGER NOT NULL, `amount` TEXT NOT NULL, `description` TEXT, `is_deleted` INTEGER NOT NULL, `stay_id` INTEGER NOT NULL, FOREIGN KEY(`stay_id`) REFERENCES `stays`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1559,14 +1565,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "transferAmount",
-            "columnName": "transfer_amount",
+            "fieldPath": "amount",
+            "columnName": "amount",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "transferDescription",
-            "columnName": "transfer_description",
+            "fieldPath": "description",
+            "columnName": "description",
             "affinity": "TEXT"
           },
           {
@@ -1730,12 +1736,13 @@
       },
       {
         "tableName": "tenant_contact_origin_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "name",
@@ -1766,7 +1773,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bb5ddc29bc0a77bb339fd2d7d10eaa48')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a038c7944d6ebf47fc574acffb3862c')"
     ]
   }
 }

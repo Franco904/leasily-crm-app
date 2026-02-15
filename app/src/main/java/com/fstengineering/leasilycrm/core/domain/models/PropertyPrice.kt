@@ -5,12 +5,12 @@ import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
 
 data class PropertyPrice(
-    val id: Long? = null,
-    val createDateTime: AppDateTime? = null,
-    val updateDateTime: AppDateTime? = null,
-    val startDate: AppDate? = null,
-    val endDate: AppDate? = null,
-    val price: AppDecimal? = null,
-    val propertyId: Long? = null,
-    val isDeleted: Boolean = false,
+    val id: Long?,
+    val createDateTime: AppDateTime?,
+    val updateDateTime: AppDateTime?,
+    val startDate: AppDate,
+    val endDate: AppDate,
+    val price: AppDecimal,
+    val propertyId: Long,
+    val isDeleted: Boolean,
 )

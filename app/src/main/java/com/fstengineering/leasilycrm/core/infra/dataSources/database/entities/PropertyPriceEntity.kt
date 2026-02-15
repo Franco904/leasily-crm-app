@@ -22,17 +22,19 @@ import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
     indices = [Index("property_id")],
 )
 data class PropertyPriceEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long?,
     @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
     @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "start_date") val startDate: AppDate,
     @ColumnInfo(name = "end_date") val endDate: AppDate,
     val price: AppDecimal,
-    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "property_id") val propertyId: Long,
 ) {
     fun toDomain() = PropertyPrice(
         id = id,
+        createDateTime = createDateTime,
+        updateDateTime = updateDateTime,
         startDate = startDate,
         endDate = endDate,
         price = price,
@@ -41,13 +43,8 @@ data class PropertyPriceEntity(
     )
 
     companion object {
-        fun fromDomain(domain: PropertyPrice): PropertyPriceEntity {
-            requireNotNull(domain.startDate) { "PropertyPrice.startDate is required" }
-            requireNotNull(domain.endDate) { "PropertyPrice.endDate is required" }
-            requireNotNull(domain.price) { "PropertyPrice.price is required" }
-            requireNotNull(domain.propertyId) { "PropertyPrice.propertyId is required" }
-
-            return PropertyPriceEntity(
+        fun fromDomain(domain: PropertyPrice) =
+            PropertyPriceEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
@@ -57,6 +54,5 @@ data class PropertyPriceEntity(
                 propertyId = domain.propertyId,
                 isDeleted = domain.isDeleted,
             )
-        }
     }
 }

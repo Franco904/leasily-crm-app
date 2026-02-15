@@ -1,10 +1,12 @@
 package com.fstengineering.leasilycrm.core.domain.validators
 
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.StayOwnedTenant
+import com.fstengineering.leasilycrm.core.domain.models.StayProperty
 import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
@@ -18,22 +20,28 @@ class StayValidatorImpl : StayValidator {
     ): AppResultCompound<Unit, DomainError> {
         val errors = mutableListOf<DomainError>()
 
-        validateProperty(property = stay.property)
-            .onError { e -> errors.add(e) }
+        val property = stay.property as? StayProperty.WithData
+        if (property != null) {
+            validateProperty(property = property.data)
+                .onError { e -> errors.add(e) }
+        }
 
         validatePeriod(
-            checkInDateTime = stay.checkInDateTime?.withHourMinute(0, 0),
-            checkOutDateTime = stay.checkOutDateTime?.withHourMinute(0, 0),
+            checkInDateTime = stay.checkInDateTime.withHourMinute(0, 0),
+            checkOutDateTime = stay.checkOutDateTime.withHourMinute(0, 0),
             checkInDateTimeBeforeEdit = stayBeforeEdit?.checkInDateTime?.withHourMinute(0, 0),
-            propertyStayCheckInDateTimes = stay.property?.stays
-                ?.mapNotNull { it.checkInDateTime?.withHourMinute(0, 0) }
+            propertyStayCheckInDateTimes = property?.data?.stays
+                ?.map { it.checkInDateTime.withHourMinute(0, 0) }
                 ?: emptyList(),
         )
             .onError { e -> errors.add(e) }
 
-        if (!stay.isUnavailablePeriod) {
-            validateTenant(tenant = stay.tenant)
-                .onError { e -> errors.add(e) }
+        if (stay is Stay.Owned) {
+            val tenant = stay.tenant
+            if (tenant is StayOwnedTenant.WithData) {
+                validateTenant(tenant = tenant.data)
+                    .onError { e -> errors.add(e) }
+            }
 
             validateCheckInTime(checkInHourMinute = stay.checkInHourMinute)
                 .onError { e -> errors.add(e) }

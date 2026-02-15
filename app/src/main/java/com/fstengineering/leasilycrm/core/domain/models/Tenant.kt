@@ -1,37 +1,37 @@
 package com.fstengineering.leasilycrm.core.domain.models
 
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 
 data class Tenant(
-    val id: Long? = null,
-    val createDateTime: AppDateTime? = null,
-    val updateDateTime: AppDateTime? = null,
-    val tag: String? = null,
-    val name: String? = null,
-    val city: String? = null,
-    val identityDocument: String? = null,
-    val phone: String? = null,
-    val email: String? = null,
-    val observations: String? = null,
-    val status: TenantStatus = TenantStatus.Lead,
-    val isDeleted: Boolean = false,
-    val tenantContactOriginType: TenantContactOriginType? = null,
-    val assistances: ImmutableList<Assistance> = persistentListOf(),
-    val stays: ImmutableList<Stay> = persistentListOf(),
-    val userId: Long? = null,
+    val id: Long?,
+    val createDateTime: AppDateTime?,
+    val updateDateTime: AppDateTime?,
+    val tag: String?,
+    val name: String,
+    val city: String?,
+    val identityDocument: String?,
+    val phone: String?,
+    val email: String?,
+    val tenantContactOriginType: TenantContactOriginType?,
+    val observations: String?,
+    val status: TenantStatus,
+    val isDeleted: Boolean,
+    val assistances: ImmutableList<Assistance>,
+    val stays: ImmutableList<Stay>,
+    val userId: Long,
 ) {
-    val isLead = status == TenantStatus.Lead
-    val isOld = status == TenantStatus.Old
+    val isLead get() = status == TenantStatus.Lead
+    val isOld get() = status == TenantStatus.Old
 
-    val isAnyFormFieldInitialized = tag != null
-            || name != null
-            || city != null
-            || identityDocument != null
-            || phone != null
-            || email != null
-            || tenantContactOriginType != null
-            || observations != null
+    val isAnyFormFieldInitialized
+        get() = tag != null
+                || name != null
+                || city != null
+                || identityDocument != null
+                || phone != null
+                || email != null
+                || tenantContactOriginType != null
+                || observations != null
 }

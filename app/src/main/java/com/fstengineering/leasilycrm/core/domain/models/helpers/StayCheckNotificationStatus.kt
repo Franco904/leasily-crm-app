@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.domain.models
+package com.fstengineering.leasilycrm.core.domain.models.helpers
 
 data class StayCheckNotificationStatus(
     val tenantName: String,

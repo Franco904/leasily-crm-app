@@ -1,5 +1,12 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.helpers.StayCheckStatus
+import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
@@ -10,16 +17,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
-import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.interfaces.SharedStorageDataSource
-import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.StayCheckStatus
-import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.utils.onError
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -35,7 +33,6 @@ class StayRepositoryImpl(
     private val stayTransferDatabaseDataSource: StayTransferDatabaseDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
-    private val sharedStorageDataSource: SharedStorageDataSource,
 ) : StayRepository {
     override suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, DataError> {
         val userRemoteId = encryptedPreferencesDataSource.readPreferences()
@@ -44,7 +41,7 @@ class StayRepositoryImpl(
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
             )
 
-        val stayWithUser = stay.copy(userId = userRemoteId)
+        val stayWithUser = stay.copyWithUserId(userId = userRemoteId)
 
         return databaseAdapter.withTransaction {
             saveDataInDatabase(stayWithUser)
@@ -57,16 +54,18 @@ class StayRepositoryImpl(
         val stayId = stayDatabaseDataSource.insertOrUpdate(stayEntity)
             .let { stay.id ?: it }
 
-        stay.files.forEach {
-            val file = StayFileEntity.fromDomain(domain = it.copy(stayId = stayId))
+        if (stay is Stay.Owned) {
+            stay.files.forEach {
+                val file = StayFileEntity.fromDomain(domain = it.copy(stayId = stayId))
 
-            stayFileDatabaseDataSource.insertOrUpdate(file)
-        }
+                stayFileDatabaseDataSource.insertOrUpdate(file)
+            }
 
-        stay.transfers.forEach {
-            val transfer = StayTransferEntity.fromDomain(domain = it.copy(stayId = stayId))
+            stay.transfers.forEach {
+                val transfer = StayTransferEntity.fromDomain(domain = it.copy(stayId = stayId))
 
-            stayTransferDatabaseDataSource.insertOrUpdate(transfer)
+                stayTransferDatabaseDataSource.insertOrUpdate(transfer)
+            }
         }
     }
 
@@ -79,42 +78,28 @@ class StayRepositoryImpl(
         val stay = stayDatabaseDataSource.getById(id = stayId)
             .fold(
                 onError = { return AppResult.Error(error = it) },
-                onSuccess = { it },
+                onSuccess = { it.toDomain() },
             )
-            .toDomain()
 
-        val filesWithNames = stay.files.map { file ->
-            val fileName = sharedStorageDataSource
-                .getFileName(contentUriString = file.uriString ?: "")
-
-            file.copy(name = fileName)
-        }.toImmutableList()
-
-        return AppResult.Success(data = stay.copy(files = filesWithNames))
+        return AppResult.Success(data = stay)
     }
 
-    override fun watchById(stayId: Long): Flow<AppResult<Stay?, DataError>> = flow {
-        val stayFlow = stayDatabaseDataSource.watchById(id = stayId)
-            .fold(
-                onError = { return@flow emit(AppResult.Error(error = it)) },
-                onSuccess = { it },
-            )
-            .map { stay ->
-                val domain = stay?.toDomain() ?: return@map AppResult.Success(data = null)
+    override fun watchById(stayId: Long): Flow<AppResult<Stay?, DataError>> =
+        flow {
+            val stayFlow = stayDatabaseDataSource.watchById(id = stayId)
+                .fold(
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onSuccess = { it },
+                )
+                .map { stayEntity ->
+                    val stay = stayEntity?.toDomain() ?: return@map AppResult.Success(data = null)
 
-                val filesWithNames = domain.files.map { file ->
-                    val fileName =
-                        sharedStorageDataSource.getFileName(contentUriString = file.uriString ?: "")
+                    AppResult.Success<Stay, DataError>(data = stay)
+                }
+                .distinctUntilChanged()
 
-                    file.copy(name = fileName)
-                }.toImmutableList()
-
-                AppResult.Success<Stay?, DataError>(data = domain.copy(files = filesWithNames))
-            }
-            .distinctUntilChanged()
-
-        emitAll(stayFlow)
-    }
+            emitAll(stayFlow)
+        }
 
     override fun watchAll(): Flow<AppResult<ImmutableList<Stay>, DataError>> =
         flow {

@@ -3,11 +3,11 @@ package com.fstengineering.leasilycrm.core.domain.models
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 
 data class PropertyFile(
-    val id: Long? = null,
-    val createDateTime: AppDateTime? = null,
-    val updateDateTime: AppDateTime? = null,
-    val uriString: String? = null,
-    val propertyId: Long? = null,
-    val isMainPicture: Boolean = false,
-    val isDeleted: Boolean = false,
+    val id: Long?,
+    val createDateTime: AppDateTime?,
+    val updateDateTime: AppDateTime?,
+    val uriString: String,
+    val propertyId: Long,
+    val isMainPicture: Boolean,
+    val isDeleted: Boolean,
 )

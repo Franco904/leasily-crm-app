@@ -15,11 +15,11 @@ data class EncryptedPreferences(
 ) {
     fun toUser(): User {
         return User(
-            remoteId = remoteId,
-            name = name,
+            remoteId = requireNotNull(remoteId),
+            name = requireNotNull(name),
             creciNumber = creciNumber,
-            profilePictureUrl = profilePictureUrl,
-            userSyncStateId = userSyncStateId,
+            profilePictureUrl = requireNotNull(profilePictureUrl),
+            userSyncStateId = requireNotNull(userSyncStateId),
         )
     }
 }

@@ -2,19 +2,18 @@ package com.fstengineering.leasilycrm.core.domain.models
 
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 
 data class PropertyOwner(
-    val id: Long? = null,
-    val createDateTime: AppDateTime? = null,
-    val updateDateTime: AppDateTime? = null,
-    val name: String? = null,
-    val phone: String? = null,
-    val email: String? = null,
-    val paymentKey: String? = null,
-    val isDeleted: Boolean = false,
-    val files: ImmutableList<PropertyOwnerFile> = persistentListOf(),
-    val userId: Long? = null,
+    val id: Long?,
+    val createDateTime: AppDateTime?,
+    val updateDateTime: AppDateTime?,
+    val name: String,
+    val phone: String?,
+    val email: String?,
+    val paymentKey: String?,
+    val isDeleted: Boolean,
+    val files: ImmutableList<PropertyOwnerFile>,
+    val userId: Long,
 ) {
     val isAnyFormFieldInitialized = name != null
             || phone != null

@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
+import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
 
 @Entity(
     tableName = "assistance_searched_neighborhoods",
@@ -20,26 +20,25 @@ import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighb
     indices = [Index("assistance_id")],
 )
 data class AssistanceSearchedNeighborhoodEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long?,
     @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
     @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     val neighborhood: String,
-    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean = false,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
 ) {
     fun toDomain() = AssistanceSearchedNeighborhood(
         id = id,
+        createDateTime = createDateTime,
+        updateDateTime = updateDateTime,
         neighborhood = neighborhood,
         assistanceId = assistanceId,
         isDeleted = isDeleted,
     )
 
     companion object {
-        fun fromDomain(domain: AssistanceSearchedNeighborhood): AssistanceSearchedNeighborhoodEntity {
-            requireNotNull(domain.neighborhood) { "AssistanceSearchedNeighborhood.neighborhood is required" }
-            requireNotNull(domain.assistanceId) { "AssistanceSearchedNeighborhood.assistanceId is required" }
-
-            return AssistanceSearchedNeighborhoodEntity(
+        fun fromDomain(domain: AssistanceSearchedNeighborhood) =
+            AssistanceSearchedNeighborhoodEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
@@ -47,6 +46,5 @@ data class AssistanceSearchedNeighborhoodEntity(
                 assistanceId = domain.assistanceId,
                 isDeleted = domain.isDeleted,
             )
-        }
     }
 }

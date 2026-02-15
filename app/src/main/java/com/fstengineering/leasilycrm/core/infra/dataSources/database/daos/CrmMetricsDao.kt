@@ -77,7 +77,7 @@ interface CrmMetricsDao {
         FROM stays
         WHERE user_id = :userId
             AND is_deleted = 0
-            AND is_from_other_realtor = 0
+            AND tenant_id IS NOT NULL
             AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
         GROUP BY month_year
     """
@@ -115,7 +115,7 @@ interface CrmMetricsDao {
             AND p.is_deleted = 0
         WHERE s.user_id = :userId
             AND s.is_deleted = 0
-            AND s.is_from_other_realtor = 0
+            AND s.tenant_id IS NOT NULL
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
         GROUP BY month_year, p.neighborhood
         ORDER BY total DESC
@@ -135,7 +135,7 @@ interface CrmMetricsDao {
         FROM stays
         WHERE user_id = :userId
             AND is_deleted = 0
-            AND is_from_other_realtor = 0
+            AND tenant_id IS NOT NULL
             AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
             AND commission IS NOT NULL
         GROUP BY month_year
@@ -175,7 +175,7 @@ interface CrmMetricsDao {
             AND p.is_deleted = 0
         WHERE s.user_id = :userId
             AND s.is_deleted = 0
-            AND s.is_from_other_realtor = 0
+            AND s.tenant_id IS NOT NULL
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
             AND commission IS NOT NULL
         GROUP BY month_year, p.neighborhood
@@ -193,7 +193,7 @@ interface CrmMetricsDao {
         FROM stays
         WHERE user_id = :userId
             AND is_deleted = 0
-            AND is_from_other_realtor = 0
+            AND tenant_id IS NOT NULL
             AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
             AND commission IS NOT NULL
         GROUP BY month_year

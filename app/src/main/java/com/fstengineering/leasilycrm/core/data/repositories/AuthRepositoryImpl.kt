@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.core.data.models.SyncState
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ConnectivityAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
@@ -43,6 +44,7 @@ class AuthRepositoryImpl(
             name = signInResponseDto.name,
             creciNumber = signInResponseDto.creciNumber,
             profilePictureUrl = signInResponseDto.profilePictureUrl,
+            userSyncStateId = SyncState.Synced.id,
         )
 
         return AppResult.Success(data = user)

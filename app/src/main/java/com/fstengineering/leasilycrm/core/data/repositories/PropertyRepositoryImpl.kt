@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
-import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.models.Property
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

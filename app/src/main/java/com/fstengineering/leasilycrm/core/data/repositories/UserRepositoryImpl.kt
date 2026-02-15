@@ -32,7 +32,7 @@ class UserRepositoryImpl(
                 name = user.name,
                 creciNumber = user.creciNumber,
                 profilePictureUrl = user.profilePictureUrl,
-                userSyncStateId = SyncState.Synced.id,
+                userSyncStateId = user.userSyncStateId,
             )
         }
             .onError { return AppResult.Error(error = it) }

@@ -582,12 +582,12 @@ fun NavGraphBuilder.destinations(
             cameFromProperty = args.cameFromProperty,
             cameFromTenant = args.cameFromTenant,
             viewModel = koinViewModel(),
-            onEdit = { stay ->
+            onEdit = { stayId, propertyId, tenantId, isUnavailablePeriod ->
                 val destination = Destinations.StayRegistration(
-                    stayId = stay.id,
-                    propertyId = stay.property?.id,
-                    leadTenantId = stay.tenant?.id,
-                    isUnavailablePeriod = stay.isUnavailablePeriod,
+                    stayId = stayId,
+                    propertyId = propertyId,
+                    leadTenantId = tenantId,
+                    isUnavailablePeriod = isUnavailablePeriod,
                 )
 
                 navController.navigate(destination)

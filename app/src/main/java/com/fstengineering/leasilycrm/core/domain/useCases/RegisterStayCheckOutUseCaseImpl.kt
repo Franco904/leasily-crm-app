@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.useCases
 
 import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.models.StayOwnedTenant
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
@@ -12,9 +13,7 @@ class RegisterStayCheckOutUseCaseImpl(
     private val stayRepository: StayRepository,
     private val assistanceRepository: AssistanceRepository,
 ) : RegisterStayCheckOutUseCase {
-    override suspend operator fun invoke(
-        stay: Stay,
-    ): AppResult<Unit, DataError> {
+    override suspend operator fun invoke(stay: Stay.Owned): AppResult<Unit, DataError> {
         val updatedStay = stay.copy(
             isCheckInDone = true,
             isCheckOutDone = true,
@@ -23,8 +22,10 @@ class RegisterStayCheckOutUseCaseImpl(
         stayRepository.insertOrUpdate(stay = updatedStay)
             .onError { return AppResult.Error(error = it) }
 
-        val unfinishedAssistance = stay.tenant?.assistances
-            ?.firstOrNull { !it.isFinished }
+        if (stay.tenant !is StayOwnedTenant.WithData) return AppResult.Success(data = Unit)
+
+        val unfinishedAssistance = stay.tenant.data.assistances
+            .firstOrNull { !it.isFinished }
             ?.copy(isFinished = true)
 
         if (unfinishedAssistance != null) {

@@ -41,7 +41,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.domain.models.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.StaysEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
