@@ -13,6 +13,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckNotificationStatus
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
+import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 
 object TodayCheckInCheckOutNotification {
     private const val CHANNEL_ID = "stays_reminder_channel"
@@ -46,7 +47,7 @@ object TodayCheckInCheckOutNotification {
             else R.string.upcoming_check_out_reminder_notification_description
 
         val propertyTypeName = when {
-            status.propertyTypeId == PropertyType.Apartment.id -> context.getString(R.string.no_label)
+            status.propertyType == PropertyType.Apartment -> context.getString(R.string.no_label)
             else -> context.getString(R.string.na_label)
         }
 
@@ -54,7 +55,7 @@ object TodayCheckInCheckOutNotification {
             textId,
             status.tenantName,
             propertyTypeName,
-            status.propertyTypeId.lowercase(),
+            context.getString(status.propertyType.presentationLabel()).lowercase(),
             status.propertyOwnerName,
             status.hourMinute.first.formatToTwoDigitsDateTime(),
             status.hourMinute.second.formatToTwoDigitsDateTime(),

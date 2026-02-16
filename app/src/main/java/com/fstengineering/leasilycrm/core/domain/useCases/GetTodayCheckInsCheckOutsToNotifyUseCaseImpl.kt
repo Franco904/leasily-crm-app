@@ -9,6 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetTodayChe
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -51,7 +52,7 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
 
                             StayCheckNotificationStatus(
                                 tenantName = requireNotNull(it.tenantName),
-                                propertyTypeId = requireNotNull(it.propertyTypeId),
+                                propertyType = PropertyType.parse(requireNotNull(it.propertyTypeId)),
                                 propertyOwnerName = requireNotNull(it.propertyOwnerName),
                                 hourMinute = if (mustNotifyCheckIn) {
                                     it.checkInDateTime.toHourMinute()
