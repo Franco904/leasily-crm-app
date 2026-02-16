@@ -22,29 +22,25 @@ class TenantDatabaseDataSourceImpl(
     }
 
     override suspend fun getAllLeadsMatching(
-        userId: Long,
         matching: String?,
         order: Int,
     ): AppResult<List<TenantCompound>, DataError> {
-        return onDatabaseSafe { dao.getAllLeadsMatching(userId, matching, order) }
+        return onDatabaseSafe { dao.getAllLeadsMatching(matching, order) }
     }
 
     override suspend fun getAllTenantsMatching(
-        userId: Long,
         matching: String?,
         order: Int,
     ): AppResult<List<TenantCompound>, DataError> {
-        return onDatabaseSafe { dao.getAllTenantsMatching(userId, matching, order) }
+        return onDatabaseSafe { dao.getAllTenantsMatching(matching, order) }
     }
 
     override suspend fun getAllWithoutUpcomingStaysMatching(
-        userId: Long,
         matching: String?,
         currentTenantId: Long?,
     ): AppResult<List<TenantCompound>, DataError> {
         return onDatabaseSafe {
             dao.getAllWithoutUpcomingStaysMatching(
-                userId = userId,
                 matching = matching,
                 currentTenantId = currentTenantId,
             )
@@ -55,12 +51,12 @@ class TenantDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getNameById(id) }
     }
 
-    override suspend fun getAllTagNames(userId: Long): AppResult<List<String>, DataError> {
-        return onDatabaseSafe { dao.getAllTagNames(userId) }
+    override suspend fun getAllTagNames(): AppResult<List<String>, DataError> {
+        return onDatabaseSafe { dao.getAllTagNames() }
     }
 
-    override suspend fun getAllCityNames(userId: Long): AppResult<List<String>, DataError> {
-        return onDatabaseSafe { dao.getAllCityNames(userId) }
+    override suspend fun getAllCityNames(): AppResult<List<String>, DataError> {
+        return onDatabaseSafe { dao.getAllCityNames() }
     }
 
     override fun watchById(id: Long): AppResult<Flow<TenantCompound?>, DataError> {
@@ -68,14 +64,12 @@ class TenantDatabaseDataSourceImpl(
     }
 
     override fun watchAll(
-        userId: Long,
         tenantStatusIdFilter: Int?,
         matching: String?,
         orderTypeId: Int?,
     ): AppResult<Flow<List<TenantCompound>>, DataError> {
         return onDatabaseSafe {
             dao.watchAll(
-                userId = userId,
                 tenantStatusIdFilter = tenantStatusIdFilter,
                 matching = matching,
                 orderTypeId = orderTypeId,
@@ -84,13 +78,11 @@ class TenantDatabaseDataSourceImpl(
     }
 
     override suspend fun countTenantsWithName(
-        userId: Long,
         tenantName: String,
         currentStoredTenantName: String?,
     ): AppResult<Int, DataError> {
         return onDatabaseSafe {
             dao.countTenantsWithName(
-                userId = userId,
                 tenantName = tenantName,
                 currentStoredTenantName = currentStoredTenantName,
             )

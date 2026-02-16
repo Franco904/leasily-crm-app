@@ -22,7 +22,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.theme.indigo
-import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart

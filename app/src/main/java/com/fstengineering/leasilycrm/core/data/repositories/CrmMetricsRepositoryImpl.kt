@@ -1,12 +1,12 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDecimal
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.helpers.toDecimal
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
@@ -28,14 +28,8 @@ class CrmMetricsRepositoryImpl(
 ) : CrmMetricsRepository {
     override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val generatedLeadsPerMonthFlow = databaseDataSource
-                .watchGeneratedLeadsPerMonth(userId = userRemoteId)
+                .watchGeneratedLeadsPerMonth()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
@@ -75,14 +69,8 @@ class CrmMetricsRepositoryImpl(
 
     override fun watchGeneratedLeadsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val generatedLeadsPerTenantSegmentPerMonthFlow = databaseDataSource
-                .watchGeneratedLeadsPerTenantTagPerMonth(userId = userRemoteId)
+                .watchGeneratedLeadsPerTenantTagPerMonth()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
@@ -129,14 +117,8 @@ class CrmMetricsRepositoryImpl(
 
     override fun watchLeadContactChannelDistribution(): Flow<AppResult<ImmutableMap<String?, Double>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val leadContactChannelDistributionFlow = databaseDataSource
-                .watchCountLeadsByContactChannelType(userId = userRemoteId)
+                .watchCountLeadsByContactChannelType()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
@@ -165,14 +147,8 @@ class CrmMetricsRepositoryImpl(
 
     override fun watchNewStayBookingsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val newStayBookingsPerMonthFlow = databaseDataSource
-                .watchNewStayBookingsPerMonth(userId = userRemoteId)
+                .watchNewStayBookingsPerMonth()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
@@ -212,14 +188,8 @@ class CrmMetricsRepositoryImpl(
 
     override fun watchNewStayBookingsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val newStayBookingsPerTenantSegmentPerMonthFlow = databaseDataSource
-                .watchNewStayBookingsPerTenantTagPerMonth(userId = userRemoteId)
+                .watchNewStayBookingsPerTenantTagPerMonth()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
@@ -266,14 +236,8 @@ class CrmMetricsRepositoryImpl(
 
     override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val newStayBookingsPerTop3NeighborhoodsPerMonthFlow = databaseDataSource
-                .watchNewStayBookingsPerTop3NeighborhoodsPerMonth(userId = userRemoteId)
+                .watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
@@ -321,14 +285,8 @@ class CrmMetricsRepositoryImpl(
 
     override fun watchCommissionInvoicePerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val commissionInvoicePerMonthFlow = databaseDataSource
-                .watchCommissionInvoicePerMonth(userId = userRemoteId)
+                .watchCommissionInvoicePerMonth()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
@@ -371,14 +329,8 @@ class CrmMetricsRepositoryImpl(
 
     override fun watchCommissionInvoicePerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val commissionInvoicePerTenantSegmentPerMonthFlow = databaseDataSource
-                .watchCommissionInvoicePerTenantTagPerMonth(userId = userRemoteId)
+                .watchCommissionInvoicePerTenantTagPerMonth()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
@@ -425,14 +377,8 @@ class CrmMetricsRepositoryImpl(
 
     override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val commissionInvoicePerTop3NeighborhoodsPerMonthFlow = databaseDataSource
-                .watchCommissionInvoicePerTop3NeighborhoodsPerMonth(userId = userRemoteId)
+                .watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
@@ -483,14 +429,8 @@ class CrmMetricsRepositoryImpl(
 
     override fun watchAverageTicketPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-                )
-
             val averageTicketPerMonthFlow = databaseDataSource
-                .watchAverageTicketPerMonth(userId = userRemoteId)
+                .watchAverageTicketPerMonth()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }

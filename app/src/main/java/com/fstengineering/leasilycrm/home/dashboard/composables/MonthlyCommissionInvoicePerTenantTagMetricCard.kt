@@ -18,9 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.presentation.theme.customColorsV2
-import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.labels.AppRowChartChunkedColoredLabels
@@ -74,7 +74,7 @@ fun MonthlyCommissionInvoicePerTenantTagMetricCard(
 
                             Bars.Data(
                                 label = tenantSegmentName,
-                                value = commissionInvoice.toDouble(),
+                                value = commissionInvoice.doubleValue,
                                 color = Brush.linearGradient(
                                     0.0f to rowColor,
                                     1.0f to rowColor,

@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.models.Settings
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Settings
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError

@@ -10,7 +10,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.graphics.toColorInt
 import com.fstengineering.leasilycrm.MainActivity
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.helpers.StayCheckNotificationStatus
+import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckNotificationStatus
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 
 object TodayCheckInCheckOutNotification {
@@ -44,16 +45,16 @@ object TodayCheckInCheckOutNotification {
             if (status.mustNotifyCheckIn) R.string.upcoming_check_in_reminder_notification_description
             else R.string.upcoming_check_out_reminder_notification_description
 
-        val propertyTypeName =
-            if (status.propertyTypeName == context.getString(R.string.apartment_chip_text)) {
-                context.getString(R.string.no_label)
-            } else context.getString(R.string.na_label)
+        val propertyTypeName = when {
+            status.propertyTypeId == PropertyType.Apartment.id -> context.getString(R.string.no_label)
+            else -> context.getString(R.string.na_label)
+        }
 
         val text = context.getString(
             textId,
             status.tenantName,
             propertyTypeName,
-            status.propertyTypeName.lowercase(),
+            status.propertyTypeId.lowercase(),
             status.propertyOwnerName,
             status.hourMinute.first.formatToTwoDigitsDateTime(),
             status.hourMinute.second.formatToTwoDigitsDateTime(),

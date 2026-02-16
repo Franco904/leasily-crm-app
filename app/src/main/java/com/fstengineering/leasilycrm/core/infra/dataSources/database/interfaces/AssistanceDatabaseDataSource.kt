@@ -12,5 +12,5 @@ interface AssistanceDatabaseDataSource {
 
     suspend fun getById(id: Long): AppResult<AssistanceCompound, DataError>
 
-    suspend fun getAllNeighborhoodNames(userId: Long): AppResult<List<String>, DataError>
+    suspend fun getAllNeighborhoodNames(): AppResult<List<String>, DataError>
 }

@@ -24,10 +24,9 @@ interface AssistanceDao {
         SELECT DISTINCT(neighborhood) FROM assistance_searched_neighborhoods asn
         INNER JOIN assistances a ON a.id = asn.assistance_id
         INNER JOIN tenants_read_view t ON t.id = a.tenant_id
-        WHERE t.user_id = :userId
-        AND asn.is_deleted = 0
+        WHERE asn.is_deleted = 0
         ORDER BY neighborhood
     """
     )
-    suspend fun getAllNeighborhoodNames(userId: Long): List<String>
+    suspend fun getAllNeighborhoodNames(): List<String>
 }

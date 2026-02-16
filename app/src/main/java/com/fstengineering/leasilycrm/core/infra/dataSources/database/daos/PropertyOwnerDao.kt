@@ -28,25 +28,22 @@ interface PropertyOwnerDao {
     @Query(
         """
         SELECT * FROM property_owners
-        WHERE user_id = :userId
-        AND is_deleted = 0
+        WHERE is_deleted = 0
         ORDER BY name
     """
     )
-    fun watchAll(userId: Long): Flow<List<PropertyOwnerCompound>>
+    fun watchAll(): Flow<List<PropertyOwnerCompound>>
 
     @Query(
         """
         SELECT COUNT(name) FROM property_owners
-        WHERE user_id = :userId
-        AND (
+        WHERE (
             name = :propertyOwnerName AND (:currentStoredPropertyOwnerName IS NULL OR name <> :currentStoredPropertyOwnerName)
         )
         AND is_deleted = 0
     """
     )
     suspend fun countPropertyOwnersWithName(
-        userId: Long,
         propertyOwnerName: String,
         currentStoredPropertyOwnerName: String?,
     ): Int

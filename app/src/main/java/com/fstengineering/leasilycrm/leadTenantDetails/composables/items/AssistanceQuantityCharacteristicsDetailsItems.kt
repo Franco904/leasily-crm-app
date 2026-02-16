@@ -24,9 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BathroomsDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BedroomsEnSuitesDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.DoubleSingleBedsDetailsItem
@@ -50,8 +50,8 @@ fun AssistanceQuantityCharacteristicsDetailsItems(
         )
         Spacer(modifier = Modifier.height(16.dp))
         SearchedDateRangeDetailsItem(
-            searchedStartDate = assistance.searchedStartDate,
-            searchedEndDate = assistance.searchedEndDate,
+            searchedStartDate = assistance.searchingStartDate,
+            searchedEndDate = assistance.searchingEndDate,
             hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,
         )
         Spacer(modifier = Modifier.height(16.dp))

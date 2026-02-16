@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 
 @Entity(
     tableName = "assistance_interactions",
@@ -30,19 +30,18 @@ data class AssistanceInteractionEntity(
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
 ) {
-    fun toDomain() = AssistanceInteraction(
+    fun toDomain() = AssistanceInteraction.parse(
         id = id,
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
         interactionDate = interactionDate,
         title = title,
         description = description,
-        assistanceId = assistanceId,
         isDeleted = isDeleted,
     )
 
     companion object {
-        fun fromDomain(domain: AssistanceInteraction) =
+        fun fromDomain(domain: AssistanceInteraction, assistanceId: Long) =
             AssistanceInteractionEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
@@ -50,7 +49,7 @@ data class AssistanceInteractionEntity(
                 interactionDate = domain.interactionDate,
                 title = domain.title,
                 description = domain.description,
-                assistanceId = domain.assistanceId,
+                assistanceId = assistanceId,
                 isDeleted = domain.isDeleted,
             )
     }

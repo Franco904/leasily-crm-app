@@ -12,8 +12,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.presentation.composables.HasCharacteristicRow
 import kotlinx.collections.immutable.ImmutableList
 
@@ -30,7 +30,7 @@ fun AssistancePreferredOtherCharacteristicsDetailsItems(
     val notCheckedCharacteristics = remember(checkedCharacteristics) {
         assistancePropertyCharacteristics.filter {
             it.id !in checkedCharacteristics
-                .map { characteristic -> characteristic.assistanceCharacteristic?.id }
+                .map { characteristic -> characteristic.propertyCharacteristic?.id }
         }
     }
 
@@ -46,7 +46,7 @@ fun AssistancePreferredOtherCharacteristicsDetailsItems(
             Spacer(modifier = Modifier.height(16.dp))
             HasCharacteristicRow(
                 hasCharacteristic = true,
-                characteristicLabel = checkedCharacteristic.assistanceCharacteristic?.name ?: "",
+                characteristicLabel = checkedCharacteristic.propertyCharacteristic?.name ?: "",
             )
         }
         notCheckedCharacteristics.forEach { notCheckedCharacteristic ->

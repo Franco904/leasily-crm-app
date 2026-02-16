@@ -2,15 +2,14 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.BuildConfig
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 
 @Entity(
     tableName = "property_owners",
-    indices = [Index("user_id")],
 )
 data class PropertyOwnerEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
@@ -21,7 +20,8 @@ data class PropertyOwnerEntity(
     val email: String?,
     @ColumnInfo(name = "payment_key") val paymentKey: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
-    @ColumnInfo(name = "user_id") val userId: Long,
+    val inconsistencies: String?,
+    @ColumnInfo(name = "contract_version") val contractVersion: Int,
 ) {
     companion object {
         fun fromDomain(domain: PropertyOwner) =
@@ -34,7 +34,8 @@ data class PropertyOwnerEntity(
                 email = domain.email,
                 paymentKey = domain.paymentKey,
                 isDeleted = domain.isDeleted,
-                userId = domain.userId,
+                inconsistencies = domain.inconsistencies,
+                contractVersion = BuildConfig.CONTRACT_VERSION,
             )
     }
 }

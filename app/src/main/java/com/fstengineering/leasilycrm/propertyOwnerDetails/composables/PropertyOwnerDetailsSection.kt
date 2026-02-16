@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.DocumentFileCard
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
 

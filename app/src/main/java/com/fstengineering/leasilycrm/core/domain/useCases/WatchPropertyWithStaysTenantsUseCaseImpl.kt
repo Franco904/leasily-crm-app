@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.domain.useCases
 
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.StayOwnedTenant
+import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
@@ -63,7 +63,7 @@ class WatchPropertyWithStaysTenantsUseCaseImpl(
                             onSuccess = { tenant -> StayOwnedTenant.WithData(tenant) },
                         )
 
-                    stay.copy(tenant = (tenant))
+                    stay.putTenant(tenant = tenant)
                 }
             }
             .awaitAll()

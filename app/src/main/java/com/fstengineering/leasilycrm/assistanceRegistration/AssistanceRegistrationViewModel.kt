@@ -3,12 +3,10 @@ package com.fstengineering.leasilycrm.assistanceRegistration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
-import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError

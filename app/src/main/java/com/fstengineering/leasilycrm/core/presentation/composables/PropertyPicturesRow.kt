@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.PropertyFile
+import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList

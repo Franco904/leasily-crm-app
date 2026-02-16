@@ -21,28 +21,23 @@ class PropertyDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getById(id) }
     }
 
-    override suspend fun getAll(userId: Long): AppResult<List<PropertyCompound>, DataError> {
-        return onDatabaseSafe { dao.getAll(userId) }
+    override suspend fun getAll(): AppResult<List<PropertyCompound>, DataError> {
+        return onDatabaseSafe { dao.getAll() }
     }
 
-    override suspend fun getAllMatching(
-        userId: Long,
-        matching: String?
-    ): AppResult<List<PropertyCompound>, DataError> {
-        return onDatabaseSafe { dao.getAllMatching(userId, matching) }
+    override suspend fun getAllMatching(matching: String?): AppResult<List<PropertyCompound>, DataError> {
+        return onDatabaseSafe { dao.getAllMatching(matching) }
     }
 
-    override suspend fun getAllNeighborHoodNames(userId: Long): AppResult<List<String>, DataError> {
-        return onDatabaseSafe { dao.getAllNeighborHoodNames(userId) }
+    override suspend fun getAllNeighborHoodNames(): AppResult<List<String>, DataError> {
+        return onDatabaseSafe { dao.getAllNeighborHoodNames() }
     }
 
     override fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, DataError> {
         return onDatabaseSafe { dao.watchById(id) }
     }
 
-    override fun watchAll(userId: Long): AppResult<Flow<List<PropertyCompound>>, DataError> {
-        return onDatabaseSafe { dao.watchAll(userId) }
+    override fun watchAll(): AppResult<Flow<List<PropertyCompound>>, DataError> {
+        return onDatabaseSafe { dao.watchAll() }
     }
 }
-
-

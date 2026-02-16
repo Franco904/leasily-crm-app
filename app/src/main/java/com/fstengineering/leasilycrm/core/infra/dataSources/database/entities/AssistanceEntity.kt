@@ -5,10 +5,12 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
+import com.fstengineering.leasilycrm.BuildConfig
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 
 @Entity(
     tableName = "assistances",
@@ -18,15 +20,9 @@ import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
             parentColumns = ["id"],
             childColumns = ["tenant_id"],
         ),
-        ForeignKey(
-            entity = PropertySeaProximityTypeEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["property_sea_proximity_type_id"],
-        ),
     ],
     indices = [
         Index("tenant_id"),
-        Index("property_sea_proximity_type_id"),
     ],
 )
 data class AssistanceEntity(
@@ -37,49 +33,58 @@ data class AssistanceEntity(
     @ColumnInfo(name = "searched_end_date") val searchedEndDate: AppDate?,
     @ColumnInfo(name = "has_flexibility_for_period") val hasFlexibilityForPeriod: Boolean,
     @ColumnInfo(name = "max_accepted_nightly_rate") val maxAcceptedNightlyRate: AppDecimal?,
-    @ColumnInfo(name = "qt_adult_guests") val qtAdultGuests: Int,
-    @ColumnInfo(name = "qt_kid_guests") val qtKidGuests: Int,
-    @ColumnInfo(name = "qt_baby_guests") val qtBabyGuests: Int,
-    @ColumnInfo(name = "qt_animal_guests") val qtAnimalGuests: Int,
-    @ColumnInfo(name = "qt_bedrooms") val qtBedrooms: Int,
-    @ColumnInfo(name = "qt_en_suites") val qtEnSuites: Int,
-    @ColumnInfo(name = "qt_double_beds") val qtDoubleBeds: Int,
-    @ColumnInfo(name = "qt_single_beds") val qtSingleBeds: Int,
-    @ColumnInfo(name = "qt_bathrooms") val qtBathrooms: Int,
-    @ColumnInfo(name = "qt_parking_spots") val qtParkingSpots: Int,
+    @ColumnInfo(name = "adults") val adults: Int,
+    @ColumnInfo(name = "kids") val kids: Int,
+    @ColumnInfo(name = "babies") val babies: Int,
+    @ColumnInfo(name = "animals") val animals: Int,
+    @ColumnInfo(name = "bedrooms") val bedrooms: Int,
+    @ColumnInfo(name = "en_suites") val enSuites: Int,
+    @ColumnInfo(name = "double_beds") val doubleBeds: Int,
+    @ColumnInfo(name = "single_beds") val singleBeds: Int,
+    @ColumnInfo(name = "bathrooms") val bathrooms: Int,
+    @ColumnInfo(name = "parking_spots") val parkingSpots: Int,
     @ColumnInfo(name = "distance_to_sea") val distanceToSea: AppDecimal?,
     val observations: String?,
     @ColumnInfo(name = "is_finished") val isFinished: Boolean,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Long?,
     @ColumnInfo(name = "tenant_id") val tenantId: Long,
+    val inconsistencies: String?,
+    @ColumnInfo(name = "contract_version") val contractVersion: Int,
 ) {
     companion object {
-        fun fromDomain(domain: Assistance) =
-            AssistanceEntity(
+        fun fromDomain(domain: Assistance): AssistanceEntity {
+            val seaProximityType = domain.seaProximityType
+
+            return AssistanceEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
-                searchedStartDate = domain.searchedStartDate,
-                searchedEndDate = domain.searchedEndDate,
+                searchedStartDate = domain.searchedPeriod?.startDate,
+                searchedEndDate = domain.searchedPeriod?.endDate,
                 hasFlexibilityForPeriod = domain.hasFlexibilityForPeriod,
                 maxAcceptedNightlyRate = domain.maxAcceptedNightlyRate,
-                qtAdultGuests = domain.qtAdultGuests,
-                qtKidGuests = domain.qtKidGuests,
-                qtBabyGuests = domain.qtBabyGuests,
-                qtAnimalGuests = domain.qtAnimalGuests,
-                qtBedrooms = domain.qtBedrooms,
-                qtEnSuites = domain.qtEnSuites,
-                qtDoubleBeds = domain.qtDoubleBeds,
-                qtSingleBeds = domain.qtSingleBeds,
-                qtBathrooms = domain.qtBathrooms,
-                qtParkingSpots = domain.qtParkingSpots,
-                distanceToSea = domain.distanceToSea,
+                adults = domain.guestsCount.adults,
+                kids = domain.guestsCount.kids,
+                babies = domain.guestsCount.babies,
+                animals = domain.guestsCount.animals,
+                bedrooms = domain.preferredFeaturesCount.bedrooms,
+                enSuites = domain.preferredFeaturesCount.enSuites,
+                doubleBeds = domain.preferredFeaturesCount.doubleBeds,
+                singleBeds = domain.preferredFeaturesCount.singleBeds,
+                bathrooms = domain.preferredFeaturesCount.bathrooms,
+                parkingSpots = domain.preferredFeaturesCount.parkingSpots,
+                propertySeaProximityTypeId = seaProximityType?.id,
+                distanceToSea = if (seaProximityType is PropertySeaProximityType.DistanceToSea) {
+                    seaProximityType.distance
+                } else null,
                 observations = domain.observations,
                 isFinished = domain.isFinished,
                 isDeleted = domain.isDeleted,
-                propertySeaProximityTypeId = domain.seaProximityType?.id,
                 tenantId = domain.tenantId,
+                inconsistencies = domain.inconsistencies,
+                contractVersion = BuildConfig.CONTRACT_VERSION,
             )
+        }
     }
 }

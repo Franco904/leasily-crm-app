@@ -5,7 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes

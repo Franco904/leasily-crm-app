@@ -25,13 +25,12 @@ interface CrmMetricsDao {
             strftime('%m-%Y', datetime(create_date_time / 1000, 'unixepoch')) AS month_year,
             COUNT(*) AS total
         FROM tenants
-        WHERE user_id = :userId
-            AND is_deleted = 0
+        WHERE is_deleted = 0
             AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
         GROUP BY month_year
     """
     )
-    fun watchGeneratedLeadsPerMonth(userId: Long): Flow<List<GeneratedLeadsPerMonthCompound>>
+    fun watchGeneratedLeadsPerMonth(): Flow<List<GeneratedLeadsPerMonthCompound>>
 
     @Query(
         """
@@ -40,31 +39,26 @@ interface CrmMetricsDao {
             t.tag AS tenant_tag_name,
             COUNT(*) AS total
         FROM tenants_read_view t
-        WHERE t.user_id = :userId
-            AND t.is_deleted = 0
+        WHERE t.is_deleted = 0
             AND datetime(t.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
         GROUP BY month_year, t.tag
     """
     )
-    fun watchGeneratedLeadsPerTenantTagPerMonth(userId: Long):
+    fun watchGeneratedLeadsPerTenantTagPerMonth():
             Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>
 
     @Query(
         """
         SELECT
-            tcot.name AS lead_contact_channel_name,
+            t.contact_origin AS lead_contact_channel_name,
             COUNT(*) AS lead_count
         FROM tenants_read_view t
-        LEFT JOIN tenant_contact_origin_types tcot
-            ON t.tenant_contact_origin_type_id = tcot.id
-            AND tcot.is_active = 1
-        WHERE user_id = :userId
-            AND status = 0
+        WHERE status = 0
             AND is_deleted = 0
-        GROUP BY tcot.name
+        GROUP BY t.contact_origin
     """
     )
-    fun watchCountLeadsByContactChannelType(userId: Long): Flow<List<LeadContactChannelCountCompound>>
+    fun watchCountLeadsByContactChannelType(): Flow<List<LeadContactChannelCountCompound>>
 
     /*
      * Bookings
@@ -75,14 +69,13 @@ interface CrmMetricsDao {
             strftime('%m-%Y', datetime(create_date_time / 1000, 'unixepoch')) AS month_year,
             COUNT(*) AS total
         FROM stays
-        WHERE user_id = :userId
-            AND is_deleted = 0
+        WHERE is_deleted = 0
             AND tenant_id IS NOT NULL
             AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
         GROUP BY month_year
     """
     )
-    fun watchNewStayBookingsPerMonth(userId: Long): Flow<List<NewStayBookingsPerMonthCompound>>
+    fun watchNewStayBookingsPerMonth(): Flow<List<NewStayBookingsPerMonthCompound>>
 
     @Query(
         """
@@ -94,13 +87,12 @@ interface CrmMetricsDao {
         INNER JOIN tenants t
             ON s.tenant_id = t.id
             AND t.is_deleted = 0
-        WHERE s.user_id = :userId
-            AND s.is_deleted = 0
+        WHERE s.is_deleted = 0
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
         GROUP BY month_year, t.tag
     """
     )
-    fun watchNewStayBookingsPerTenantTagPerMonth(userId: Long):
+    fun watchNewStayBookingsPerTenantTagPerMonth():
             Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>
 
     @Query(
@@ -113,15 +105,14 @@ interface CrmMetricsDao {
         INNER JOIN properties p
             ON s.property_id = p.id
             AND p.is_deleted = 0
-        WHERE s.user_id = :userId
-            AND s.is_deleted = 0
+        WHERE s.is_deleted = 0
             AND s.tenant_id IS NOT NULL
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
         GROUP BY month_year, p.neighborhood
         ORDER BY total DESC
     """
     )
-    fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(userId: Long):
+    fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth():
             Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>
 
     /*
@@ -133,15 +124,14 @@ interface CrmMetricsDao {
             strftime('%m-%Y', datetime(create_date_time / 1000, 'unixepoch')) AS month_year,
             SUM(commission) AS commission_invoice
         FROM stays
-        WHERE user_id = :userId
-            AND is_deleted = 0
+        WHERE is_deleted = 0
             AND tenant_id IS NOT NULL
             AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
             AND commission IS NOT NULL
         GROUP BY month_year
     """
     )
-    fun watchCommissionInvoicePerMonth(userId: Long): Flow<List<CommissionInvoicePerMonthCompound>>
+    fun watchCommissionInvoicePerMonth(): Flow<List<CommissionInvoicePerMonthCompound>>
 
     @Query(
         """
@@ -153,14 +143,13 @@ interface CrmMetricsDao {
         INNER JOIN tenants t
             ON s.tenant_id = t.id
             AND t.is_deleted = 0
-        WHERE s.user_id = :userId
-            AND s.is_deleted = 0
+        WHERE s.is_deleted = 0
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
             AND commission IS NOT NULL
         GROUP BY month_year, t.tag
     """
     )
-    fun watchCommissionInvoicePerTenantTagPerMonth(userId: Long):
+    fun watchCommissionInvoicePerTenantTagPerMonth():
             Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>
 
     @Query(
@@ -173,8 +162,7 @@ interface CrmMetricsDao {
         INNER JOIN properties p
             ON s.property_id = p.id
             AND p.is_deleted = 0
-        WHERE s.user_id = :userId
-            AND s.is_deleted = 0
+        WHERE s.is_deleted = 0
             AND s.tenant_id IS NOT NULL
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
             AND commission IS NOT NULL
@@ -182,7 +170,7 @@ interface CrmMetricsDao {
         ORDER BY commission_invoice DESC
     """
     )
-    fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(userId: Long):
+    fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth():
             Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>
 
     @Query(
@@ -191,13 +179,12 @@ interface CrmMetricsDao {
             strftime('%m-%Y', datetime(create_date_time / 1000, 'unixepoch')) AS month_year,
             ROUND(SUM(commission) * 1.0 / COUNT(*), 2) AS average_ticket
         FROM stays
-        WHERE user_id = :userId
-            AND is_deleted = 0
+        WHERE is_deleted = 0
             AND tenant_id IS NOT NULL
             AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
             AND commission IS NOT NULL
         GROUP BY month_year
     """
     )
-    fun watchAverageTicketPerMonth(userId: Long): Flow<List<AverageTicketPerMonthCompound>>
+    fun watchAverageTicketPerMonth(): Flow<List<AverageTicketPerMonthCompound>>
 }

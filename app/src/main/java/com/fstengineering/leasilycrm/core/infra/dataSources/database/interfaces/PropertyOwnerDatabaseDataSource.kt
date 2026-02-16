@@ -15,10 +15,9 @@ interface PropertyOwnerDatabaseDataSource {
 
     fun watchById(id: Long): AppResult<Flow<PropertyOwnerCompound>, DataError>
 
-    fun watchAll(userId: Long): AppResult<Flow<List<PropertyOwnerCompound>>, DataError>
+    fun watchAll(): AppResult<Flow<List<PropertyOwnerCompound>>, DataError>
 
     suspend fun countPropertyOwnersWithName(
-        userId: Long,
         propertyOwnerName: String,
         currentStoredPropertyOwnerName: String?,
     ): AppResult<Int, DataError>

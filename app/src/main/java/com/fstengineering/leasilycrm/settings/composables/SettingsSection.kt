@@ -26,7 +26,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Settings
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Settings
 import com.fstengineering.leasilycrm.core.presentation.utils.hasNotificationPermission
 
 @Composable

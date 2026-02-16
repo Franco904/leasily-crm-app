@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.repositories
 
-import com.fstengineering.leasilycrm.core.domain.models.User
+import com.fstengineering.leasilycrm.core.domain.entities.User
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 

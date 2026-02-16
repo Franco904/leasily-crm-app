@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar

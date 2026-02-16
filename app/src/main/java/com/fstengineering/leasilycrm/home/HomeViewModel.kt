@@ -2,8 +2,8 @@ package com.fstengineering.leasilycrm.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository

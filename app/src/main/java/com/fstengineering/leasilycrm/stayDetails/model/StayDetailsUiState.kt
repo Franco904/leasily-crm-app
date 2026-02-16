@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.stayDetails.model
 
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.Saved
-import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.StayFileWithName
-import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
-import com.fstengineering.leasilycrm.core.domain.models.TenantSaved
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.entities.Saved
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.entities.StayFileWithName
+import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
+import com.fstengineering.leasilycrm.core.domain.entities.TenantSaved
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface StayDetailsUiState {

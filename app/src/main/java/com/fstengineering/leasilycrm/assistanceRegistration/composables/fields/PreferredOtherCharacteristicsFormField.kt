@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristicAssistance
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacteristic
+import com.fstengineering.leasilycrm.core.domain.entities.AssistancePropertyCharacteristic
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicSelectableChip
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
@@ -25,7 +25,7 @@ fun PreferredOtherCharacteristicsFormField(
     val notDeletedAssistanceCharacteristics = remember(assistanceForm.characteristics) {
         assistanceForm.characteristics
             .filter { !it.isDeleted }
-            .map { it.assistanceCharacteristic }
+            .map { it.propertyCharacteristic }
     }
 
     FlowRow(
@@ -58,11 +58,11 @@ private fun onAssistancePropertyCharacteristicSelect(
 
     val newAssistanceForm = assistanceForm.copy(
         characteristics = selectedCharacteristics.mutate { list ->
-            val characteristics = list.map { it.assistanceCharacteristic }
+            val characteristics = list.map { it.propertyCharacteristic }
 
             if (characteristic in characteristics) {
                 val associatedCharacteristic =
-                    list.find { it.assistanceCharacteristic == characteristic } ?: return
+                    list.find { it.propertyCharacteristic == characteristic } ?: return
 
                 if (associatedCharacteristic.assistanceId == null) {
                     list.remove(associatedCharacteristic)
@@ -75,7 +75,7 @@ private fun onAssistancePropertyCharacteristicSelect(
                 )
             } else {
                 val newCharacteristic =
-                    AssistanceCharacteristicAssistance(assistanceCharacteristic = characteristic)
+                    AssistancePropertyCharacteristic(propertyCharacteristic = characteristic)
                 list.add(newCharacteristic)
             }
         }

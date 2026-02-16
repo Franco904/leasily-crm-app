@@ -2,11 +2,11 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.StayFile
-import com.fstengineering.leasilycrm.core.domain.models.StayOwnedTenant
-import com.fstengineering.leasilycrm.core.domain.models.StayProperty
-import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.entities.StayFile
+import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
+import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
+import com.fstengineering.leasilycrm.core.domain.helpers.StayProperty
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
@@ -53,8 +53,8 @@ data class StayCompound(
 
     fun toDomain(): Stay {
         return if (tenant != null) {
-            Stay.Owned(
-                id = requireNotNull(stay.id),
+            Stay.Owned.parse(
+                id = stay.id,
                 createDateTime = stay.createDateTime,
                 updateDateTime = stay.updateDateTime,
                 property = StayProperty.WithData(property.toDomain()),
@@ -62,26 +62,26 @@ data class StayCompound(
                 vehicleMake = stay.vehicleMake,
                 vehicleColor = stay.vehicleColor,
                 vehicleLicensePlate = stay.vehicleLicensePlate,
-                qtGuests = requireNotNull(stay.qtGuests),
+                guests = stay.guests,
                 checkInDateTime = stay.checkInDateTime,
-                checkInHourMinute = stay.checkInDateTime.hour to stay.checkInDateTime.minute,
+                checkInTime = stay.checkInDateTime.hour to stay.checkInDateTime.minute,
                 checkOutDateTime = stay.checkOutDateTime,
-                checkOutHourMinute = stay.checkOutDateTime.hour to stay.checkOutDateTime.minute,
-                isAutoCheckIn = requireNotNull(stay.isAutoCheckIn),
-                isAutoCheckOut = requireNotNull(stay.isAutoCheckOut),
-                isCheckInDone = requireNotNull(stay.isCheckInDone),
-                isCheckOutDone = requireNotNull(stay.isCheckOutDone),
+                checkOutTime = stay.checkOutDateTime.hour to stay.checkOutDateTime.minute,
+                isAutoCheckIn = stay.isAutoCheckIn,
+                isAutoCheckOut = stay.isAutoCheckOut,
+                statusId = stay.status,
                 totalPrice = stay.totalPrice,
-                commission = requireNotNull(stay.commission),
+                commission = stay.commission,
                 observations = stay.observations,
                 transfers = activeTransfers.toImmutableList(),
                 files = activeFiles.toImmutableList(),
                 isDeleted = stay.isDeleted,
-                userId = stay.userId,
+                inconsistencies = stay.inconsistencies,
+                contractVersion = stay.contractVersion,
             )
         } else {
-            Stay.UnavailablePeriod(
-                id = requireNotNull(stay.id),
+            Stay.UnavailablePeriod.parse(
+                id = stay.id,
                 createDateTime = stay.createDateTime,
                 updateDateTime = stay.updateDateTime,
                 property = StayProperty.WithData(property.toDomain()),
@@ -89,7 +89,8 @@ data class StayCompound(
                 checkOutDateTime = stay.checkOutDateTime,
                 observations = stay.observations,
                 isDeleted = stay.isDeleted,
-                userId = stay.userId,
+                inconsistencies = stay.inconsistencies,
+                contractVersion = stay.contractVersion,
             )
         }
     }

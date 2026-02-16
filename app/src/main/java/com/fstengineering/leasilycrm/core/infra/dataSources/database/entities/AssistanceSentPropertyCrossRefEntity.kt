@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceSentProperty
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSentProperty
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 
 @Entity(
     tableName = "assistance_sent_properties",
@@ -35,9 +35,9 @@ data class AssistanceSentPropertyCrossRefEntity(
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
 ) {
     companion object {
-        fun fromDomain(domain: AssistanceSentProperty) =
+        fun fromDomain(domain: AssistanceSentProperty, assistanceId: Long) =
             AssistanceSentPropertyCrossRefEntity(
-                assistanceId = domain.assistanceId,
+                assistanceId = assistanceId,
                 propertyId = requireNotNull(domain.property.id),
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),

@@ -24,19 +24,17 @@ interface PropertyDao {
     @Query(
         """
         SELECT * FROM properties
-        WHERE user_id = :userId
-        AND is_deleted = 0
+        WHERE is_deleted = 0
         ORDER BY neighborhood
     """
     )
-    suspend fun getAll(userId: Long): List<PropertyCompound>
+    suspend fun getAll(): List<PropertyCompound>
 
     @Transaction
     @Query(
         """
         SELECT * FROM properties
-        WHERE user_id = :userId
-        AND is_deleted = 0
+        WHERE is_deleted = 0
         AND (
             :matching IS NULL OR
             neighborhood   LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE OR
@@ -45,17 +43,16 @@ interface PropertyDao {
         ORDER BY neighborhood
     """
     )
-    suspend fun getAllMatching(userId: Long, matching: String?): List<PropertyCompound>
+    suspend fun getAllMatching(matching: String?): List<PropertyCompound>
 
     @Query(
         """
         SELECT DISTINCT(neighborhood) FROM properties
-        WHERE user_id = :userId
-        AND is_deleted = 0
+        WHERE is_deleted = 0
         ORDER BY neighborhood
     """
     )
-    suspend fun getAllNeighborHoodNames(userId: Long): List<String>
+    suspend fun getAllNeighborHoodNames(): List<String>
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
@@ -65,10 +62,9 @@ interface PropertyDao {
     @Query(
         """
         SELECT * FROM properties
-        WHERE user_id = :userId
-        AND is_deleted = 0
+        WHERE is_deleted = 0
         ORDER BY neighborhood
     """
     )
-    fun watchAll(userId: Long): Flow<List<PropertyCompound>>
+    fun watchAll(): Flow<List<PropertyCompound>>
 }

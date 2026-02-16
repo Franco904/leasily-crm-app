@@ -1,0 +1,169 @@
+package com.fstengineering.leasilycrm.core.domain.entities
+
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.validations.validatePropertyNeighborhood
+import com.fstengineering.leasilycrm.core.domain.validations.validatePropertyOwner
+import com.fstengineering.leasilycrm.core.domain.validations.validatePropertyStreetAddress
+import com.fstengineering.leasilycrm.core.domain.validations.validatePropertyType
+import kotlinx.collections.immutable.ImmutableList
+
+data class Property(
+    val id: Long?,
+    val createDateTime: AppDateTime?,
+    val updateDateTime: AppDateTime?,
+    val owner: PropertyOwner,
+    val type: PropertyType,
+    val neighborhood: String,
+    val streetAddress: String,
+    val cepPostalCode: String?,
+    val number: Int?,
+    val addressLine2: String?,
+    val parkingSpotNumber: String?,
+    val parkingBasementLevelNumber: String?,
+    val hobbyBoxNumber: String?,
+    val bedrooms: Int,
+    val enSuites: Int,
+    val doubleBeds: Int,
+    val singleBeds: Int,
+    val bathrooms: Int,
+    val parkingSpots: Int,
+    val airConditioners: Int,
+    val maxGuests: Int,
+    val seaProximityType: PropertySeaProximityType?,
+    val includedItems: String?,
+    val hasIncludedItems: Boolean,
+    val characteristics: ImmutableList<PropertyCharacteristicCrossRef>,
+    val cleaningServiceTax: AppDecimal?,
+    val hasCleaningServiceIncluded: Boolean,
+    val prices: ImmutableList<PropertyPrice>,
+    val files: ImmutableList<PropertyFile>,
+    val observations: String?,
+    val isDeleted: Boolean,
+    val stays: ImmutableList<Stay>,
+    val inconsistencies: String?,
+    val contractVersion: Int,
+) {
+    companion object {
+        fun parse(
+            id: Long?,
+            createDateTime: AppDateTime?,
+            updateDateTime: AppDateTime?,
+            owner: PropertyOwner?,
+            typeId: Long?,
+            neighborhood: String?,
+            streetAddress: String?,
+            cepPostalCode: String?,
+            number: Int?,
+            addressLine2: String?,
+            parkingSpotNumber: String?,
+            parkingBasementLevelNumber: String?,
+            hobbyBoxNumber: String?,
+            bedrooms: Int,
+            enSuites: Int,
+            doubleBeds: Int,
+            singleBeds: Int,
+            bathrooms: Int,
+            parkingSpots: Int,
+            airConditioners: Int,
+            maxGuests: Int,
+            seaProximityTypeId: Long?,
+            distanceToSea: AppDecimal?,
+            includedItems: String?,
+            hasIncludedItems: Boolean,
+            characteristics: ImmutableList<PropertyCharacteristicCrossRef>,
+            cleaningServiceTax: AppDecimal?,
+            hasCleaningServiceIncluded: Boolean,
+            prices: ImmutableList<PropertyPrice>,
+            files: ImmutableList<PropertyFile>,
+            observations: String?,
+            isDeleted: Boolean,
+            stays: ImmutableList<Stay>,
+            inconsistencies: String?,
+            contractVersion: Int,
+        ): Property {
+            validatePropertyOwner(owner?.id).onError { throw it.asException() }
+            validatePropertyType(typeId).onError { throw it.asException() }
+            validatePropertyNeighborhood(neighborhood).onError { throw it.asException() }
+            validatePropertyStreetAddress(streetAddress).onError { throw it.asException() }
+
+            val type = PropertyType.parse(requireNotNull(typeId))
+
+            if (neighborhood.isNullOrBlank()) throw ParsingError.Property.NeighborhoodRequired.asException()
+            if (streetAddress.isNullOrBlank()) throw ParsingError.Property.StreetAddressRequired.asException()
+
+            val seaProximityType = seaProximityTypeId?.let {
+                PropertySeaProximityType.parse(it, distanceToSea = distanceToSea)
+            }
+
+            return Property(
+                id = id,
+                createDateTime = createDateTime,
+                updateDateTime = updateDateTime,
+                owner = requireNotNull(owner),
+                type = type,
+                neighborhood = neighborhood,
+                streetAddress = streetAddress,
+                cepPostalCode = cepPostalCode,
+                number = number,
+                addressLine2 = addressLine2,
+                parkingSpotNumber = parkingSpotNumber,
+                parkingBasementLevelNumber = parkingBasementLevelNumber,
+                hobbyBoxNumber = hobbyBoxNumber,
+                bedrooms = bedrooms,
+                enSuites = enSuites,
+                doubleBeds = doubleBeds,
+                singleBeds = singleBeds,
+                bathrooms = bathrooms,
+                parkingSpots = parkingSpots,
+                airConditioners = airConditioners,
+                maxGuests = maxGuests,
+                seaProximityType = seaProximityType,
+                includedItems = includedItems,
+                hasIncludedItems = hasIncludedItems,
+                characteristics = characteristics,
+                cleaningServiceTax = cleaningServiceTax,
+                hasCleaningServiceIncluded = hasCleaningServiceIncluded,
+                prices = prices,
+                files = files,
+                observations = observations,
+                isDeleted = isDeleted,
+                stays = stays,
+                inconsistencies = inconsistencies,
+                contractVersion = contractVersion,
+            )
+        }
+    }
+}
+
+// val isAnyFormFieldInitialized = owner != null
+//            || type != null
+//            || neighborhood != null
+//            || streetAddress != null
+//            || cepPostalCode != null
+//            || number != null
+//            || addressLine2 != null
+//            || parkingSpotNumber != null
+//            || parkingBasementLevelNumber != null
+//            || hobbyBoxNumber != null
+//            || qtBedrooms > 0
+//            || qtEnSuites > 0
+//            || qtDoubleBeds > 0
+//            || qtSingleBeds > 0
+//            || qtBathrooms > 0
+//            || qtParkingSpots > 0
+//            || qtAirConditioners > 0
+//            || qtMaxGuests > 0
+//            || seaProximityType != null
+//            || includedItems != null
+//            || hasIncludedItems != null
+//            || characteristics.isNotEmpty()
+//            || cleaningServiceTax != null
+//            || hasCleaningServiceIncluded != null
+//            || prices.isNotEmpty()
+//            || files.isNotEmpty()
+//            || observations != null

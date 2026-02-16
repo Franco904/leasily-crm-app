@@ -19,53 +19,33 @@ import kotlinx.coroutines.flow.Flow
 class CrmMetricsDatabaseDataSourceImpl(
     private val dao: CrmMetricsDao,
 ) : CrmMetricsDatabaseDataSource {
-    override fun watchGeneratedLeadsPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchGeneratedLeadsPerMonth(userId) }
+    override fun watchGeneratedLeadsPerMonth(): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchGeneratedLeadsPerMonth() }
 
-    override fun watchGeneratedLeadsPerTenantTagPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchGeneratedLeadsPerTenantTagPerMonth(userId) }
+    override fun watchGeneratedLeadsPerTenantTagPerMonth(): AppResult<Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchGeneratedLeadsPerTenantTagPerMonth() }
 
-    override fun watchCountLeadsByContactChannelType(
-        userId: Long,
-    ): AppResult<Flow<List<LeadContactChannelCountCompound>>, DataError> =
-        onDatabaseSafe { dao.watchCountLeadsByContactChannelType(userId) }
+    override fun watchCountLeadsByContactChannelType(): AppResult<Flow<List<LeadContactChannelCountCompound>>, DataError> =
+        onDatabaseSafe { dao.watchCountLeadsByContactChannelType() }
 
-    override fun watchNewStayBookingsPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchNewStayBookingsPerMonth(userId) }
+    override fun watchNewStayBookingsPerMonth(): AppResult<Flow<List<NewStayBookingsPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchNewStayBookingsPerMonth() }
 
-    override fun watchNewStayBookingsPerTenantTagPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchNewStayBookingsPerTenantTagPerMonth(userId) }
+    override fun watchNewStayBookingsPerTenantTagPerMonth(): AppResult<Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchNewStayBookingsPerTenantTagPerMonth() }
 
-    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchNewStayBookingsPerTop3NeighborhoodsPerMonth(userId) }
+    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): AppResult<Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchNewStayBookingsPerTop3NeighborhoodsPerMonth() }
 
-    override fun watchCommissionInvoicePerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchCommissionInvoicePerMonth(userId) }
+    override fun watchCommissionInvoicePerMonth(): AppResult<Flow<List<CommissionInvoicePerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchCommissionInvoicePerMonth() }
 
-    override fun watchCommissionInvoicePerTenantTagPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchCommissionInvoicePerTenantTagPerMonth(userId) }
+    override fun watchCommissionInvoicePerTenantTagPerMonth(): AppResult<Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchCommissionInvoicePerTenantTagPerMonth() }
 
-    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchCommissionInvoicePerTop3NeighborhoodsPerMonth(userId) }
+    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): AppResult<Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchCommissionInvoicePerTop3NeighborhoodsPerMonth() }
 
-    override fun watchAverageTicketPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<AverageTicketPerMonthCompound>>, DataError> =
-        onDatabaseSafe { dao.watchAverageTicketPerMonth(userId) }
+    override fun watchAverageTicketPerMonth(): AppResult<Flow<List<AverageTicketPerMonthCompound>>, DataError> =
+        onDatabaseSafe { dao.watchAverageTicketPerMonth() }
 }

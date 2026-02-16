@@ -15,43 +15,23 @@ import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.coroutines.flow.Flow
 
 interface CrmMetricsDatabaseDataSource {
-    fun watchGeneratedLeadsPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>, DataError>
+    fun watchGeneratedLeadsPerMonth(): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>, DataError>
 
-    fun watchGeneratedLeadsPerTenantTagPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>, DataError>
+    fun watchGeneratedLeadsPerTenantTagPerMonth(): AppResult<Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>, DataError>
 
-    fun watchCountLeadsByContactChannelType(
-        userId: Long,
-    ): AppResult<Flow<List<LeadContactChannelCountCompound>>, DataError>
+    fun watchCountLeadsByContactChannelType(): AppResult<Flow<List<LeadContactChannelCountCompound>>, DataError>
 
-    fun watchNewStayBookingsPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerMonthCompound>>, DataError>
+    fun watchNewStayBookingsPerMonth(): AppResult<Flow<List<NewStayBookingsPerMonthCompound>>, DataError>
 
-    fun watchNewStayBookingsPerTenantTagPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>, DataError>
+    fun watchNewStayBookingsPerTenantTagPerMonth(): AppResult<Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>, DataError>
 
-    fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>, DataError>
+    fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): AppResult<Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>, DataError>
 
-    fun watchCommissionInvoicePerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerMonthCompound>>, DataError>
+    fun watchCommissionInvoicePerMonth(): AppResult<Flow<List<CommissionInvoicePerMonthCompound>>, DataError>
 
-    fun watchCommissionInvoicePerTenantTagPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>, DataError>
+    fun watchCommissionInvoicePerTenantTagPerMonth(): AppResult<Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>, DataError>
 
-    fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>, DataError>
+    fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): AppResult<Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>, DataError>
 
-    fun watchAverageTicketPerMonth(
-        userId: Long,
-    ): AppResult<Flow<List<AverageTicketPerMonthCompound>>, DataError>
+    fun watchAverageTicketPerMonth(): AppResult<Flow<List<AverageTicketPerMonthCompound>>, DataError>
 }

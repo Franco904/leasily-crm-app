@@ -25,18 +25,16 @@ class PropertyOwnerDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.watchById(id) }
     }
 
-    override fun watchAll(userId: Long): AppResult<Flow<List<PropertyOwnerCompound>>, DataError> {
-        return onDatabaseSafe { dao.watchAll(userId) }
+    override fun watchAll(): AppResult<Flow<List<PropertyOwnerCompound>>, DataError> {
+        return onDatabaseSafe { dao.watchAll() }
     }
 
     override suspend fun countPropertyOwnersWithName(
-        userId: Long,
         propertyOwnerName: String,
         currentStoredPropertyOwnerName: String?
     ): AppResult<Int, DataError> {
         return onDatabaseSafe {
             dao.countPropertyOwnersWithName(
-                userId = userId,
                 propertyOwnerName = propertyOwnerName,
                 currentStoredPropertyOwnerName = currentStoredPropertyOwnerName,
             )

@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.useCases
 
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.models.helpers.StayCheckNotificationStatus
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckNotificationStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
@@ -41,7 +41,7 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
                     val todayCheckInsAndCheckOutsToNotify = upcomingCheckInsAndCheckOuts
                         .filter {
                             it.tenantName != null
-                                    && it.propertyTypeName != null
+                                    && it.propertyTypeId != null
                                     && it.propertyOwnerName != null
                         }
                         .map {
@@ -50,9 +50,9 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
                             val mustNotifyCheckOut = it.checkOutDateTime.isToday()
 
                             StayCheckNotificationStatus(
-                                tenantName = it.tenantName ?: "",
-                                propertyTypeName = it.propertyTypeName ?: "",
-                                propertyOwnerName = it.propertyOwnerName ?: "",
+                                tenantName = requireNotNull(it.tenantName),
+                                propertyTypeId = requireNotNull(it.propertyTypeId),
+                                propertyOwnerName = requireNotNull(it.propertyOwnerName),
                                 hourMinute = if (mustNotifyCheckIn) {
                                     it.checkInDateTime.toHourMinute()
                                 } else it.checkOutDateTime.toHourMinute(),

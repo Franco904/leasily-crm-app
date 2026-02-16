@@ -13,7 +13,6 @@ import com.fstengineering.leasilycrm.core.infra.di.modules.remoteDataSourceModul
 import com.fstengineering.leasilycrm.core.infra.di.modules.repositoryModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.sharedStorageDataSourceModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.useCaseModule
-import com.fstengineering.leasilycrm.core.infra.di.modules.validatorModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.viewModelModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.workerModule
 import org.koin.android.ext.koin.androidContext
@@ -31,7 +30,6 @@ fun Application.configureDependencyInjection() {
             presentationModule,
             viewModelModule,
             useCaseModule,
-            validatorModule,
             domainServiceModule,
             repositoryModule,
             databaseDataSourceModule,

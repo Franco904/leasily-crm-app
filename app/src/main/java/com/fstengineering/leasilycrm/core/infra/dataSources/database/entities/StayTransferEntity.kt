@@ -5,10 +5,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 
 @Entity(
     tableName = "stay_transfers",
@@ -31,7 +31,7 @@ data class StayTransferEntity(
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "stay_id") val stayId: Long,
 ) {
-    fun toDomain() = StayTransfer(
+    fun toDomain() = StayTransfer.parse(
         id = id,
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
@@ -43,7 +43,7 @@ data class StayTransferEntity(
     )
 
     companion object {
-        fun fromDomain(domain: StayTransfer) =
+        fun fromDomain(domain: StayTransfer, stayId: Long) =
             StayTransferEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
@@ -52,7 +52,7 @@ data class StayTransferEntity(
                 amount = domain.amount,
                 description = domain.description,
                 isDeleted = domain.isDeleted,
-                stayId = domain.stayId,
+                stayId = stayId,
             )
     }
 }

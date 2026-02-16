@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 
 @Composable

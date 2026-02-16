@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.di.modules
 
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.useCases.GetStaysStructuredDatesUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.GetTodayCheckInsCheckOutsToNotifyUseCaseImpl
 import com.fstengineering.leasilycrm.core.domain.useCases.RegisterStayCheckOutUseCaseImpl

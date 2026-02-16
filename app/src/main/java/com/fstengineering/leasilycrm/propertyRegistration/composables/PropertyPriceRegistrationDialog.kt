@@ -20,10 +20,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDate
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDecimalOrNull
-import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.toDate
+import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
@@ -60,8 +60,8 @@ fun PropertyPriceRegistrationDialog(
         )
     }
 
-    var priceAmountInput by rememberSaveable(propertyPriceForm.price) {
-        mutableStateOf(propertyPriceForm.price?.toString() ?: "")
+    var priceAmountInput by rememberSaveable(propertyPriceForm.amount) {
+        mutableStateOf(propertyPriceForm.amount?.toString() ?: "")
     }
 
     var mustShowDateRangePickerDialog by rememberSaveable { mutableStateOf(false) }
@@ -160,7 +160,7 @@ fun PropertyPriceRegistrationDialog(
 
                 mustShowDateRangePickerDialog = false
 
-                if (propertyPriceForm.price == null) {
+                if (propertyPriceForm.amount == null) {
                     priceAmountFieldFocusRequester.requestFocus()
                 }
             },

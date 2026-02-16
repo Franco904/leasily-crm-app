@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import kotlinx.collections.immutable.ImmutableList
 

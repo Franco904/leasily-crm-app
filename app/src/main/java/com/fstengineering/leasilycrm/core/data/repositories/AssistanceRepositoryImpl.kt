@@ -1,14 +1,14 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceCharacteristicAssistanceCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource
@@ -44,34 +44,24 @@ class AssistanceRepositoryImpl(
             .let { id -> assistanceEntity.id ?: id }
 
         assistance.characteristics.forEach {
-            val characteristic = AssistanceCharacteristicAssistanceCrossRefEntity.fromDomain(
-                domain = it.copy(assistanceId = assistanceId),
-            )
-
+            val characteristic =
+                AssistancePropertyCharacteristicCrossRefEntity.fromDomain(it, assistanceId)
             assistanceCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
         }
 
         assistance.interactions.forEach {
-            val interaction = AssistanceInteractionEntity.fromDomain(
-                domain = it.copy(assistanceId = assistanceId),
-            )
-
+            val interaction = AssistanceInteractionEntity.fromDomain(it, assistanceId)
             assistanceInteractionDatabaseDataSource.insertOrUpdate(interaction)
         }
 
         assistance.searchedNeighborhoods.forEach {
-            val searchedNeighborhood = AssistanceSearchedNeighborhoodEntity.fromDomain(
-                domain = it.copy(assistanceId = assistanceId),
-            )
-
+            val searchedNeighborhood =
+                AssistanceSearchedNeighborhoodEntity.fromDomain(it, assistanceId)
             assistanceSearchedNeighborhoodDatabaseDataSource.insertOrUpdate(searchedNeighborhood)
         }
 
         assistance.sentProperties.forEach {
-            val sentProperty = AssistanceSentPropertyCrossRefEntity.fromDomain(
-                domain = it.copy(assistanceId = assistanceId),
-            )
-
+            val sentProperty = AssistanceSentPropertyCrossRefEntity.fromDomain(it, assistanceId)
             assistanceSentPropertyCrossRefDatabaseDataSource.insertOrUpdate(sentProperty)
         }
     }
@@ -92,14 +82,8 @@ class AssistanceRepositoryImpl(
     }
 
     override suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-            )
-
         val neighborhoodNames =
-            assistanceDatabaseDataSource.getAllNeighborhoodNames(userId = userRemoteId)
+            assistanceDatabaseDataSource.getAllNeighborhoodNames()
                 .fold(
                     onError = { return AppResult.Error(error = it) },
                     onSuccess = { neighborhoodNames -> neighborhoodNames.toPersistentList() }

@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.repositories
 
-import com.fstengineering.leasilycrm.core.domain.models.Tenant
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
+import com.fstengineering.leasilycrm.core.domain.entities.Tenant
+import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.collections.immutable.ImmutableList

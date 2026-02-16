@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.home.tenants.models
 
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
+import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 
 enum class TenantFilterType(
     val status: TenantStatus,

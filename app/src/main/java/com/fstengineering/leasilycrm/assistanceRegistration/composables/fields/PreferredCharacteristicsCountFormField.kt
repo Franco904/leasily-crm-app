@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.presentation.composables.CountAnswer
 import com.fstengineering.leasilycrm.core.presentation.composables.CountAnswersFormField
 import kotlinx.collections.immutable.persistentListOf

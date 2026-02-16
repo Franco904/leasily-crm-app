@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BathroomsDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BedroomsEnSuitesDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.DoubleSingleBedsDetailsItem
@@ -36,22 +36,22 @@ fun PropertyQuantityCharacteristicsDetailsItems(
         )
         Spacer(modifier = Modifier.height(16.dp))
         BedroomsEnSuitesDetailsItem(
-            qtBedrooms = property.qtBedrooms,
-            qtEnSuites = property.qtEnSuites,
+            qtBedrooms = property.bedrooms,
+            qtEnSuites = property.enSuites,
         )
         Spacer(modifier = Modifier.height(16.dp))
         DoubleSingleBedsDetailsItem(
-            qtDoubleBeds = property.qtDoubleBeds,
-            qtSingleBeds = property.qtSingleBeds,
+            qtDoubleBeds = property.doubleBeds,
+            qtSingleBeds = property.singleBeds,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        BathroomsDetailsItem(qtBathrooms = property.qtBathrooms)
+        BathroomsDetailsItem(qtBathrooms = property.bathrooms)
         Spacer(modifier = Modifier.height(16.dp))
-        ParkingSpotsDetailsItem(qtParkingSpots = property.qtParkingSpots)
+        ParkingSpotsDetailsItem(qtParkingSpots = property.parkingSpots)
         Spacer(modifier = Modifier.height(16.dp))
-        AirConditionersDetailsItem(qtAirConditioners = property.qtAirConditioners)
+        AirConditionersDetailsItem(qtAirConditioners = property.airConditioners)
         Spacer(modifier = Modifier.height(16.dp))
-        MaxGuestsDetailsItem(qtMaxGuests = property.qtMaxGuests)
+        MaxGuestsDetailsItem(qtMaxGuests = property.maxGuests)
     }
 }
 

@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
@@ -49,7 +49,7 @@ fun PropertyPriceCard(
             )
             Spacer(modifier = Modifier.height(16.dp))
             monthPrices.forEach { price ->
-                val priceAmountFormatted = price.price
+                val priceAmountFormatted = price.amount
                     .toString()
                     .replace(".", ",")
 

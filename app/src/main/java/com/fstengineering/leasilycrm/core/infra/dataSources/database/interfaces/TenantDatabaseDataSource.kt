@@ -14,40 +14,35 @@ interface TenantDatabaseDataSource {
     suspend fun getById(id: Long): AppResult<TenantCompound?, DataError>
 
     suspend fun getAllLeadsMatching(
-        userId: Long,
         matching: String?,
         order: Int,
     ): AppResult<List<TenantCompound>, DataError>
 
     suspend fun getAllTenantsMatching(
-        userId: Long,
         matching: String?,
         order: Int,
     ): AppResult<List<TenantCompound>, DataError>
 
     suspend fun getAllWithoutUpcomingStaysMatching(
-        userId: Long,
         matching: String?,
         currentTenantId: Long?,
     ): AppResult<List<TenantCompound>, DataError>
 
     suspend fun getNameById(id: Long): AppResult<String, DataError>
 
-    suspend fun getAllTagNames(userId: Long): AppResult<List<String>, DataError>
+    suspend fun getAllTagNames(): AppResult<List<String>, DataError>
 
-    suspend fun getAllCityNames(userId: Long): AppResult<List<String>, DataError>
+    suspend fun getAllCityNames(): AppResult<List<String>, DataError>
 
     fun watchById(id: Long): AppResult<Flow<TenantCompound?>, DataError>
 
     fun watchAll(
-        userId: Long,
         tenantStatusIdFilter: Int?,
         matching: String?,
         orderTypeId: Int?,
     ): AppResult<Flow<List<TenantCompound>>, DataError>
 
     suspend fun countTenantsWithName(
-        userId: Long,
         tenantName: String,
         currentStoredTenantName: String?,
     ): AppResult<Int, DataError>

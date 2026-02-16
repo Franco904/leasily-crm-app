@@ -10,7 +10,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantCityDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantContactOriginTypeDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.LeadTenantEmailDetailsItem
@@ -46,7 +46,7 @@ fun LeadTenantDetailsIdentificationPage(
         LeadTenantEmailDetailsItem(email = leadTenant.email)
         Spacer(modifier = Modifier.height(24.dp))
         LeadTenantContactOriginTypeDetailsItem(
-            contactOriginTypeName = leadTenant.tenantContactOriginType?.name,
+            contactOriginTypeName = leadTenant.contactOrigin?.name,
         )
         Spacer(modifier = Modifier.height(24.dp))
         HorizontalDivider()

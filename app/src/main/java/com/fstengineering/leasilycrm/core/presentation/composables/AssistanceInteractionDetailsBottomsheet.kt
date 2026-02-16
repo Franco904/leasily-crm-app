@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)

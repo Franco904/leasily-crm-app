@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 
 @Entity(
     tableName = "assistance_searched_neighborhoods",
@@ -27,23 +27,22 @@ data class AssistanceSearchedNeighborhoodEntity(
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
 ) {
-    fun toDomain() = AssistanceSearchedNeighborhood(
+    fun toDomain() = AssistanceSearchedNeighborhood.parse(
         id = id,
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
         neighborhood = neighborhood,
-        assistanceId = assistanceId,
         isDeleted = isDeleted,
     )
 
     companion object {
-        fun fromDomain(domain: AssistanceSearchedNeighborhood) =
+        fun fromDomain(domain: AssistanceSearchedNeighborhood, assistanceId: Long) =
             AssistanceSearchedNeighborhoodEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
                 neighborhood = domain.neighborhood,
-                assistanceId = domain.assistanceId,
+                assistanceId = assistanceId,
                 isDeleted = domain.isDeleted,
             )
     }

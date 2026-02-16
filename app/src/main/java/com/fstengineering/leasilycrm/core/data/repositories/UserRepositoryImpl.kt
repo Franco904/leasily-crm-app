@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfac
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.data.models.SyncState
-import com.fstengineering.leasilycrm.core.domain.models.User
+import com.fstengineering.leasilycrm.core.domain.entities.User
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

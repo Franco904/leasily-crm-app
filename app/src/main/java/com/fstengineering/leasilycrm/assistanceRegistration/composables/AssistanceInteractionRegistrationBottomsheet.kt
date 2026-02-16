@@ -33,7 +33,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.A
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.AssistanceInteractionDescriptionFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.AssistanceInteractionTitleFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceInteractionField
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DatePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates

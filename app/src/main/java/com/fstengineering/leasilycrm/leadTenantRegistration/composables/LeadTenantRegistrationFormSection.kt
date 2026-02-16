@@ -16,7 +16,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberVerticalCenterScroller
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantCityFormField
 import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantContactOriginTypeFormField
@@ -138,7 +138,7 @@ fun LeadTenantRegistrationFormSection(
         )
         Spacer(modifier = Modifier.height(28.dp))
         LeadTenantContactOriginTypeFormField(
-            tenantContactOriginTypeName = leadTenantForm.tenantContactOriginType?.name,
+            tenantContactOriginTypeName = leadTenantForm.contactOrigin?.name,
         )
         Spacer(modifier = Modifier.height(28.dp))
         LeadTenantObservationsFormField(

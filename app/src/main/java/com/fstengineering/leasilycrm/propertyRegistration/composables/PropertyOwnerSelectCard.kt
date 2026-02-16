@@ -7,7 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 
 @Composable

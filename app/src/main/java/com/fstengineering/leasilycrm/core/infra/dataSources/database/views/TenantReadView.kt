@@ -3,7 +3,8 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.views
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 
 @DatabaseView(
     viewName = "tenants_read_view",
@@ -30,7 +31,7 @@ import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
             EXISTS (
                 SELECT 1 FROM stays s
                 WHERE (s.tenant_id = t.id AND s.is_deleted = 0)
-                AND s.is_check_out_done = 0
+                AND (s.status = 0 OR s.status = 1)
             ) AS has_upcoming_check_out
             FROM tenants t
         ) AS base
@@ -46,9 +47,10 @@ data class TenantReadView(
     @ColumnInfo(name = "identity_document") val identityDocument: String?,
     val phone: String?,
     val email: String?,
+    @ColumnInfo(name = "contact_origin") val contactOrigin: String?,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
-    @ColumnInfo(name = "tenant_contact_origin_type_id") val tenantContactOriginTypeId: Long?,
-    @ColumnInfo(name = "user_id") val userId: Long,
+    val inconsistencies: String?,
+    @ColumnInfo(name = "contract_version") val contractVersion: Int,
     val status: Int,
 )

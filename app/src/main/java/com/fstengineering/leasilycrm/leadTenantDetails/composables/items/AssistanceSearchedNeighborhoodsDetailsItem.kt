@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
 
 @Composable

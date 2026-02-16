@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption

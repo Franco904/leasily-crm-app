@@ -24,8 +24,7 @@ interface TenantDao {
     @Query(
         """
         SELECT * FROM tenants_read_view
-        WHERE user_id = :userId
-        AND status = 0
+        WHERE status = 0
         AND is_deleted = 0
         AND (
             :matching IS NULL OR
@@ -37,18 +36,13 @@ interface TenantDao {
             CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
-    suspend fun getAllLeadsMatching(
-        userId: Long,
-        matching: String?,
-        order: Int,
-    ): List<TenantCompound>
+    suspend fun getAllLeadsMatching(matching: String?, order: Int): List<TenantCompound>
 
     @Transaction
     @Query(
         """
         SELECT * FROM tenants_read_view
-        WHERE user_id = :userId
-        AND status <> 0
+        WHERE status <> 0
         AND is_deleted = 0
         AND (
             :matching IS NULL OR
@@ -60,18 +54,13 @@ interface TenantDao {
             CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
-    suspend fun getAllTenantsMatching(
-        userId: Long,
-        matching: String?,
-        order: Int,
-    ): List<TenantCompound>
+    suspend fun getAllTenantsMatching(matching: String?, order: Int): List<TenantCompound>
 
     @Transaction
     @Query(
         """
         SELECT * FROM tenants_read_view
-        WHERE user_id = :userId
-        AND (status <> 1 OR (:currentTenantId IS NOT NULL AND id = :currentTenantId))
+        WHERE (status <> 1 OR (:currentTenantId IS NOT NULL AND id = :currentTenantId))
         AND is_deleted = 0
         AND (
             :matching IS NULL OR
@@ -82,7 +71,6 @@ interface TenantDao {
     """
     )
     suspend fun getAllWithoutUpcomingStaysMatching(
-        userId: Long,
         matching: String?,
         currentTenantId: Long?,
     ): List<TenantCompound>
@@ -93,24 +81,22 @@ interface TenantDao {
     @Query(
         """
         SELECT DISTINCT(tag) FROM tenants_read_view
-        WHERE user_id = :userId
-        AND tag IS NOT NULL
+        WHERE tag IS NOT NULL
         AND is_deleted = 0
         ORDER BY tag
     """
     )
-    suspend fun getAllTagNames(userId: Long): List<String>
+    suspend fun getAllTagNames(): List<String>
 
     @Query(
         """
         SELECT DISTINCT(city) FROM tenants_read_view
-        WHERE user_id = :userId
-        AND city IS NOT NULL
+        WHERE city IS NOT NULL
         AND is_deleted = 0
         ORDER BY city
     """
     )
-    suspend fun getAllCityNames(userId: Long): List<String>
+    suspend fun getAllCityNames(): List<String>
 
     @Transaction
     @Query("SELECT * FROM tenants_read_view WHERE id = :id AND is_deleted = 0")
@@ -121,8 +107,7 @@ interface TenantDao {
         """
         SELECT *
         FROM tenants_read_view t
-        WHERE user_id = :userId
-        AND is_deleted = 0
+        WHERE is_deleted = 0
         AND (
             :tenantStatusIdFilter IS NULL OR
             status = :tenantStatusIdFilter
@@ -138,7 +123,6 @@ interface TenantDao {
     """
     )
     fun watchAll(
-        userId: Long,
         tenantStatusIdFilter: Int?,
         matching: String?,
         orderTypeId: Int?,
@@ -147,15 +131,13 @@ interface TenantDao {
     @Query(
         """
         SELECT COUNT(name) FROM tenants_read_view
-        WHERE user_id = :userId
-        AND (
+        WHERE (
             name = :tenantName AND (:currentStoredTenantName IS NULL OR name <> :currentStoredTenantName)
         )
         AND is_deleted = 0
     """
     )
     suspend fun countTenantsWithName(
-        userId: Long,
         tenantName: String,
         currentStoredTenantName: String?,
     ): Int

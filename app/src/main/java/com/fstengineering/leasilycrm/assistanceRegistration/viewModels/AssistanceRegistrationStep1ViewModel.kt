@@ -6,12 +6,11 @@ import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceSea
 import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceStep1ErrorUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceNeighborhoodField
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
+import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceSearchedNeighborhoodValidator
-import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
@@ -82,7 +81,7 @@ class AssistanceRegistrationStep1ViewModel(
             assistanceSearchedNeighborhoodValidator.validate(newSearchedNeighborhood)
                 .onErrors { errors ->
                     val nameError =
-                        errors.firstOrNull { it is DomainError.AssistanceSearchedNeighborhoodName }
+                        errors.firstOrNull { it is ParsingError.AssistanceSearchedNeighborhoodName }
 
                     _searchedNeighborhoodErrors.update {
                         val newErrors = it.errors.mutate { map ->
@@ -105,12 +104,12 @@ class AssistanceRegistrationStep1ViewModel(
         _searchedNeighborhoodErrors.update { AssistanceSearchedNeighborhoodErrorUiState() }
     }
 
-    private suspend fun setFieldErrors(errors: List<DomainError>) {
+    private suspend fun setFieldErrors(errors: List<ParsingError>) {
         _formErrors.update { AssistanceStep1ErrorUiState() }
         delay(150.milliseconds)
 
         val propertyDistanceToSeaError =
-            errors.firstOrNull { it is DomainError.PropertyDistanceToSea }
+            errors.firstOrNull { it is ParsingError.PropertyDistanceToSea }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->

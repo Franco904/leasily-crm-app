@@ -2,51 +2,33 @@ package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.plainPreferencesQualifier
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.data.repositories.AssistanceCharacteristicRepositoryImpl
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.data.repositories.AssistanceRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.AuthRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.CrmMetricsRepositoryImpl
-import com.fstengineering.leasilycrm.core.data.repositories.DomainTablesRepositoryImpl
-import com.fstengineering.leasilycrm.core.data.repositories.PropertyCharacteristicRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyOwnerFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyOwnerRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.PropertyRepositoryImpl
-import com.fstengineering.leasilycrm.core.data.repositories.PropertySeaProximityRepositoryImpl
-import com.fstengineering.leasilycrm.core.data.repositories.PropertyTypeRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.SettingsRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.StayFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.StayRepositoryImpl
-import com.fstengineering.leasilycrm.core.data.repositories.TenantContactOriginTypeRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.TenantRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.UserRepositoryImpl
 import com.fstengineering.leasilycrm.core.data.repositories.proxies.TenantRepositoryProxy
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.DomainTablesRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyCharacteristicRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertySeaProximityTypeRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.TenantContactOriginTypeRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<AssistanceCharacteristicRepository> {
-        AssistanceCharacteristicRepositoryImpl(
-            databaseDataSource = get(),
-        )
-    }
-
     single<AssistanceRepository> {
         AssistanceRepositoryImpl(
             databaseAdapter = get(),
@@ -75,25 +57,6 @@ val repositoryModule = module {
         )
     }
 
-    single<DomainTablesRepository> {
-        DomainTablesRepositoryImpl(
-            databaseAdapter = get(),
-            assistanceCharacteristicDataSource = get(),
-            propertyCharacteristicDataSource = get(),
-            propertySeaProximityTypeDataSource = get(),
-            propertyTypeDataSource = get(),
-            tenantContactOriginTypeDataSource = get(),
-            connectivityAdapter = get(),
-            remoteDataSource = get(),
-        )
-    }
-
-    single<PropertyCharacteristicRepository> {
-        PropertyCharacteristicRepositoryImpl(
-            databaseDataSource = get(),
-        )
-    }
-
     single<PropertyOwnerFileRepository> {
         PropertyOwnerFileRepositoryImpl(
             sharedStorageDataSource = get(),
@@ -119,18 +82,6 @@ val repositoryModule = module {
             propertyPriceDatabaseDataSource = get(),
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
             plainPreferencesDataSource = get(plainPreferencesQualifier),
-        )
-    }
-
-    single<PropertySeaProximityTypeRepository> {
-        PropertySeaProximityRepositoryImpl(
-            databaseDataSource = get(),
-        )
-    }
-
-    single<PropertyTypeRepository> {
-        PropertyTypeRepositoryImpl(
-            databaseDataSource = get(),
         )
     }
 
@@ -168,12 +119,6 @@ val repositoryModule = module {
         TenantRepositoryProxy(
             tenantInMemoryDataSource = get(),
             tenantRepository = realRepository,
-        )
-    }
-
-    single<TenantContactOriginTypeRepository> {
-        TenantContactOriginTypeRepositoryImpl(
-            databaseDataSource = get(),
         )
     }
 

@@ -2,8 +2,8 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
 import kotlinx.collections.immutable.toImmutableList
@@ -22,8 +22,8 @@ data class PropertyOwnerCompound(
             .filter { !it.isDeleted }
             .map { it.toDomain() }
 
-    fun toDomain() = PropertyOwner(
-        id = requireNotNull(propertyOwner.id),
+    fun toDomain() = PropertyOwner.parse(
+        id = propertyOwner.id,
         createDateTime = propertyOwner.createDateTime,
         updateDateTime = propertyOwner.updateDateTime,
         name = propertyOwner.name,
@@ -32,6 +32,7 @@ data class PropertyOwnerCompound(
         paymentKey = propertyOwner.paymentKey,
         isDeleted = propertyOwner.isDeleted,
         files = activeFiles.toImmutableList(),
-        userId = propertyOwner.userId,
+        inconsistencies = propertyOwner.inconsistencies,
+        contractVersion = propertyOwner.contractVersion,
     )
 }

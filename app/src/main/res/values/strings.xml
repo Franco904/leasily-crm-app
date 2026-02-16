@@ -635,6 +635,7 @@
 
     <!-- Validation messages -->
     <string name="inline_required">Obrigatório</string>
+    <string name="inline_invalid_data">Dado inválido</string>
 
     <string name="inline_too_big_8_chars">Deve ter no máximo 8 caracteres</string>
     <string name="inline_too_big_20_chars">Deve ter no máximo 20 caracteres</string>
@@ -648,6 +649,7 @@
     <string name="inline_name_belongs_other_tenant">Já existe um lead ou inquilino com este nome</string>
 
     <string name="inline_period_start_end_date_are_same_period">Data de fim não deve ser a mesma da de início</string>
+    <string name="inline_period_start_date_is_after_end_date_period">Data de fim não deve ser anterior à de início</string>
     <string name="inline_period_is_overlapping_other_property_stay_period">Imóvel está ocupado por outra estadia neste período</string>
     <string name="inline_period_is_overlapping_other_property_price_period">Imóvel já possui um preço fixado neste período</string>
 

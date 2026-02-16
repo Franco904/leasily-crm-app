@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.DocumentFileCard
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField

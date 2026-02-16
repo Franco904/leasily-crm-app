@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database.converters
 
 import androidx.room.TypeConverter
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDecimalOrNull
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
 
 class AppDecimalConverter {
     @TypeConverter

@@ -20,7 +20,7 @@ class AssistanceDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getById(id) }
     }
 
-    override suspend fun getAllNeighborhoodNames(userId: Long): AppResult<List<String>, DataError> {
-        return onDatabaseSafe { dao.getAllNeighborhoodNames(userId) }
+    override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, DataError> {
+        return onDatabaseSafe { dao.getAllNeighborhoodNames() }
     }
 }

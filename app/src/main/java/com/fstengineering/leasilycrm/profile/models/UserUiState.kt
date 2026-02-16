@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.profile.models
 
-import com.fstengineering.leasilycrm.core.domain.models.User
+import com.fstengineering.leasilycrm.core.domain.entities.User
 
 data class UserUiState(
     val profilePictureUrl: String? = null,

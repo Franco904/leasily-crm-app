@@ -26,30 +26,26 @@ interface StayDao {
     fun watchById(id: Long): Flow<StayCompound?>
 
     @Transaction
-    @Query("SELECT * FROM stays WHERE user_id = :userId AND is_deleted = 0")
-    fun watchAll(userId: Long): Flow<List<StayCompound>>
+    @Query("SELECT * FROM stays WHERE is_deleted = 0")
+    fun watchAll(): Flow<List<StayCompound>>
 
     @Query(
         """
         SELECT 
             t.name AS tenant_name, 
-            pt.name AS property_type_name, 
+            p.property_type_id AS property_type_id, 
             po.name AS property_owner_name, 
             s.check_in_date_time, 
             s.check_out_date_time, 
-            s.is_check_in_done
+            s.status
         FROM stays s
         LEFT JOIN tenants_read_view t ON s.tenant_id = t.id AND t.is_deleted = 0
         LEFT JOIN properties p ON s.property_id = p.id AND p.is_deleted = 0
         LEFT JOIN property_owners po ON p.property_owner_id = po.id AND po.is_deleted = 0
-        LEFT JOIN property_types pt ON p.property_type_id = pt.id AND pt.is_active = 1
-        WHERE s.is_check_out_done = 0
+        WHERE (s.status = 0 OR s.status = 1)
         AND s.tenant_id IS NOT NULL
         AND s.is_deleted = 0
-        AND s.user_id = :userId
     """
     )
-    fun watchAllUpcomingCheckInsAndCheckOuts(
-        userId: Long,
-    ): Flow<List<StayCheckStatusCompound>>
+    fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<List<StayCheckStatusCompound>>
 }

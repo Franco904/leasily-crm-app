@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.repositories
 
-import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.helpers.StayCheckStatus
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckStatus
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.collections.immutable.ImmutableList

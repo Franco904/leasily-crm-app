@@ -30,9 +30,9 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton

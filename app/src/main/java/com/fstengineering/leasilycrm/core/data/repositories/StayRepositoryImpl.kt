@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
-import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.helpers.StayCheckStatus
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
@@ -35,16 +35,8 @@ class StayRepositoryImpl(
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : StayRepository {
     override suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
-        val stayWithUser = stay.copyWithUserId(userId = userRemoteId)
-
         return databaseAdapter.withTransaction {
-            saveDataInDatabase(stayWithUser)
+            saveDataInDatabase(stay)
         }
     }
 
@@ -62,7 +54,7 @@ class StayRepositoryImpl(
             }
 
             stay.transfers.forEach {
-                val transfer = StayTransferEntity.fromDomain(domain = it.copy(stayId = stayId))
+                val transfer = StayTransferEntity.fromDomain(it, stayId)
 
                 stayTransferDatabaseDataSource.insertOrUpdate(transfer)
             }
@@ -103,16 +95,7 @@ class StayRepositoryImpl(
 
     override fun watchAll(): Flow<AppResult<ImmutableList<Stay>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = {
-                        emit(AppResult.Error(error = it))
-                        return@flow
-                    },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-                )
-
-            val staysFlow = stayDatabaseDataSource.watchAll(userId = userRemoteId)
+            val staysFlow = stayDatabaseDataSource.watchAll()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it },
@@ -128,17 +111,8 @@ class StayRepositoryImpl(
 
     override fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<AppResult<ImmutableList<StayCheckStatus>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = {
-                        emit(AppResult.Error(error = it))
-                        return@flow
-                    },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-                )
-
             val staysStatusFlow = stayDatabaseDataSource
-                .watchAllUpcomingCheckInsAndCheckOuts(userId = userRemoteId)
+                .watchAllUpcomingCheckInsAndCheckOuts()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it },

@@ -2,10 +2,9 @@ package com.fstengineering.leasilycrm.leadTenantDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
-import com.fstengineering.leasilycrm.core.domain.models.Tenant
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceCharacteristicRepository
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacteristic
+import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError

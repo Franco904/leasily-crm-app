@@ -6,8 +6,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
-import com.fstengineering.leasilycrm.core.domain.models.Tenant
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
+import com.fstengineering.leasilycrm.core.domain.entities.Tenant
+import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
@@ -32,14 +32,7 @@ class TenantRepositoryImpl(
     override suspend fun insertOrUpdate(
         tenant: Tenant,
     ): AppResult<Unit, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
-        val tenantWithUser = tenant.copy(userId = userRemoteId)
-        val tenantEntity = TenantEntity.fromDomain(tenantWithUser)
+        val tenantEntity = TenantEntity.fromDomain(tenant)
 
         return databaseAdapter.withTransaction {
             databaseDataSource.insertOrUpdate(tenantEntity)
@@ -68,14 +61,7 @@ class TenantRepositoryImpl(
         matching: String?,
         orderTypeId: Int,
     ): AppResult<ImmutableList<Tenant>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
         val leads = databaseDataSource.getAllLeadsMatching(
-            userId = userRemoteId,
             matching = matching,
             order = orderTypeId,
         )
@@ -93,14 +79,7 @@ class TenantRepositoryImpl(
         matching: String?,
         orderTypeId: Int,
     ): AppResult<ImmutableList<Tenant>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
         val tenants = databaseDataSource.getAllTenantsMatching(
-            userId = userRemoteId,
             matching = matching,
             order = orderTypeId,
         )
@@ -118,14 +97,7 @@ class TenantRepositoryImpl(
         matching: String?,
         currentTenantId: Long?,
     ): AppResult<ImmutableList<Tenant>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
         val tenants = databaseDataSource.getAllWithoutUpcomingStaysMatching(
-            userId = userRemoteId,
             matching = matching,
             currentTenantId = currentTenantId,
         )
@@ -140,13 +112,7 @@ class TenantRepositoryImpl(
     }
 
     override suspend fun getAllTagNames(): AppResult<ImmutableList<String>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
-        return databaseDataSource.getAllTagNames(userId = userRemoteId)
+        return databaseDataSource.getAllTagNames()
             .fold(
                 onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toPersistentList()) },
@@ -154,13 +120,7 @@ class TenantRepositoryImpl(
     }
 
     override suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
-        return databaseDataSource.getAllCityNames(userId = userRemoteId)
+        return databaseDataSource.getAllCityNames()
             .fold(
                 onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toPersistentList()) },
@@ -233,17 +193,7 @@ class TenantRepositoryImpl(
         orderTypeId: Int?,
     ): Flow<AppResult<ImmutableList<Tenant>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = {
-                        emit(AppResult.Error(error = it))
-                        return@flow
-                    },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-                )
-
             val tenantsFlow = databaseDataSource.watchAll(
-                userId = userRemoteId,
                 tenantStatusIdFilter = tenantStatusFilter?.id,
                 matching = matching,
                 orderTypeId = orderTypeId,
@@ -267,14 +217,7 @@ class TenantRepositoryImpl(
         tenantName: String,
         currentStoredTenantName: String?,
     ): AppResult<Boolean, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
         val count = databaseDataSource.countTenantsWithName(
-            userId = userRemoteId,
             tenantName = tenantName.normalizeEncoding(),
             currentStoredTenantName = currentStoredTenantName,
         )

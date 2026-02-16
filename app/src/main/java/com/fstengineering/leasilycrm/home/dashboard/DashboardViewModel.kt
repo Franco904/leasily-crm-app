@@ -2,8 +2,8 @@ package com.fstengineering.leasilycrm.home.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.repositories.CrmMetricsRepository
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.collections.immutable.ImmutableMap

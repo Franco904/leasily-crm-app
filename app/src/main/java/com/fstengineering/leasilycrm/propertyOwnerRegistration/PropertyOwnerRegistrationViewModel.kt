@@ -3,12 +3,12 @@ package com.fstengineering.leasilycrm.propertyOwnerRegistration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwnerFile
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
@@ -149,15 +149,15 @@ class PropertyOwnerRegistrationViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<DomainError>) {
+    private suspend fun setFieldErrors(errors: List<ParsingError>) {
         _formErrors.update { PropertyOwnerErrorUiState() }
         delay(150.milliseconds)
 
-        val nameError = errors.firstOrNull { it is DomainError.PropertyOwnerName }
-        val phoneError = errors.firstOrNull { it is DomainError.PropertyOwnerPhone }
-        val emailError = errors.firstOrNull { it is DomainError.PropertyOwnerEmail }
+        val nameError = errors.firstOrNull { it is ParsingError.PropertyOwnerName }
+        val phoneError = errors.firstOrNull { it is ParsingError.PropertyOwnerPhone }
+        val emailError = errors.firstOrNull { it is ParsingError.PropertyOwnerEmail }
         val paymentKeyError =
-            errors.firstOrNull { it is DomainError.PropertyOwnerPaymentKey }
+            errors.firstOrNull { it is ParsingError.PropertyOwnerPaymentKey }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->

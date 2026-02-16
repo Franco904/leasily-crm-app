@@ -10,7 +10,6 @@ val workerModule = module {
         BootstrappingWorker(
             applicationContext = get(),
             workerParameters = get(),
-            domainTablesRepository = get(),
         )
     }
 

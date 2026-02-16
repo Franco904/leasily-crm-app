@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.useCases
 
-import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.StayOwnedTenant
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
 import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegisterStayCheckOutUseCase
@@ -14,19 +14,19 @@ class UndoRegisterStayCheckOutUseCaseImpl(
     private val assistanceRepository: AssistanceRepository,
 ) : UndoRegisterStayCheckOutUseCase {
     override suspend operator fun invoke(stay: Stay.Owned): AppResult<Unit, DataError> {
-        val updatedStay = stay.copy(isCheckOutDone = false)
+        val updatedStay = stay.undoRegisterCheckOut()
 
         stayRepository.insertOrUpdate(stay = updatedStay)
             .onError { return AppResult.Error(error = it) }
 
         if (stay.tenant !is StayOwnedTenant.WithData) return AppResult.Success(data = Unit)
 
-        val unfinishedAssistance = stay.tenant.data.assistances
-            .firstOrNull { !it.isFinished }
-            ?.copy(isFinished = false)
+        val updatedAssistance = stay.tenant.data?.assistances
+            ?.firstOrNull { !it.isFinished }
+            ?.unfinish()
 
-        if (unfinishedAssistance != null) {
-            assistanceRepository.insertOrUpdate(unfinishedAssistance)
+        if (updatedAssistance != null) {
+            assistanceRepository.insertOrUpdate(updatedAssistance)
                 .onError { return AppResult.Error(error = it) }
         }
 

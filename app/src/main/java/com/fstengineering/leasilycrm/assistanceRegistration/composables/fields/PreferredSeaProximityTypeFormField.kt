@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDecimalOrNull
+import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXIMITY_TYPE_ID
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioGroup
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioOption
 import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.DistanceToSeaFormField

@@ -3,24 +3,23 @@ package com.fstengineering.leasilycrm.stayRegistration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.domain.models.StayFile
-import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
-import com.fstengineering.leasilycrm.core.domain.models.Tenant
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.entities.StayFile
+import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
+import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayTransferValidator
-import com.fstengineering.leasilycrm.core.domain.validators.interfaces.StayValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.stayRegistration.models.StayErrorUiState
 import com.fstengineering.leasilycrm.stayRegistration.models.StayField
@@ -346,12 +345,12 @@ class StayRegistrationViewModel(
         }
     }
 
-    private suspend fun setTransferFieldErrors(errors: List<DomainError>) {
+    private suspend fun setTransferFieldErrors(errors: List<ParsingError>) {
         _transferFormErrors.update { StayTransferErrorUiState() }
         delay(150.milliseconds)
 
-        val transferDateError = errors.firstOrNull { it is DomainError.StayTransferDate }
-        val transferAmountError = errors.firstOrNull { it is DomainError.StayTransferAmount }
+        val transferDateError = errors.firstOrNull { it is ParsingError.StayTransferDate }
+        val transferAmountError = errors.firstOrNull { it is ParsingError.StayTransferAmount }
 
         _transferFormErrors.update {
             val newErrors = it.errors.mutate { map ->
@@ -414,16 +413,16 @@ class StayRegistrationViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<DomainError>) {
+    private suspend fun setFieldErrors(errors: List<ParsingError>) {
         _stayFormErrors.update { StayErrorUiState() }
         delay(150.milliseconds)
 
-        val stayPropertyError = errors.firstOrNull { it is DomainError.StayProperty }
-        val stayTenantError = errors.firstOrNull { it is DomainError.StayTenant }
-        val periodError = errors.firstOrNull { it is DomainError.StayPeriod }
-        val checkInTimeError = errors.firstOrNull { it is DomainError.StayCheckInTime }
-        val checkOutTimeError = errors.firstOrNull { it is DomainError.StayCheckOutTime }
-        val commissionError = errors.firstOrNull { it is DomainError.StayCommission }
+        val stayPropertyError = errors.firstOrNull { it is ParsingError.StayProperty }
+        val stayTenantError = errors.firstOrNull { it is ParsingError.StayTenant }
+        val periodError = errors.firstOrNull { it is ParsingError.StayPeriod }
+        val checkInTimeError = errors.firstOrNull { it is ParsingError.StayCheckInTime }
+        val checkOutTimeError = errors.firstOrNull { it is ParsingError.StayCheckOutTime }
+        val commissionError = errors.firstOrNull { it is ParsingError.StayCommission }
 
         _stayFormErrors.update {
             val newErrors = it.errors.mutate { map ->

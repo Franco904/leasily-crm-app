@@ -1,12 +1,13 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
+import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.data.models.SyncState
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ConnectivityAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.SignInRequestDto
-import com.fstengineering.leasilycrm.core.domain.models.User
+import com.fstengineering.leasilycrm.core.domain.entities.User
 import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
@@ -39,13 +40,7 @@ class AuthRepositoryImpl(
                 onSuccess = { responseDto -> responseDto }
             )
 
-        val user = User(
-            remoteId = signInResponseDto.id,
-            name = signInResponseDto.name,
-            creciNumber = signInResponseDto.creciNumber,
-            profilePictureUrl = signInResponseDto.profilePictureUrl,
-            userSyncStateId = SyncState.Synced.id,
-        )
+        val user = signInResponseDto.toDomain()
 
         return AppResult.Success(data = user)
     }
@@ -63,7 +58,6 @@ class AuthRepositoryImpl(
         encryptedPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(
                 sessionCookie = null,
-                remoteId = null,
                 name = null,
                 creciNumber = null,
                 profilePictureUrl = null,

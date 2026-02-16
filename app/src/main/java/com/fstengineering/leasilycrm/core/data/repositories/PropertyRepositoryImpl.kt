@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.data.repositories
 
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
@@ -12,8 +12,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
-import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
-import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
@@ -40,16 +40,8 @@ class PropertyRepositoryImpl(
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : PropertyRepository {
     override suspend fun insertOrUpdate(property: Property): AppResult<Unit, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
-        val propertyWithUser = property.copy(userId = userRemoteId)
-
         return databaseAdapter.withTransaction {
-            saveDataInDatabase(propertyWithUser)
+            saveDataInDatabase(property)
         }
     }
 
@@ -60,7 +52,7 @@ class PropertyRepositoryImpl(
             .let { property.id ?: it }
 
         property.characteristics.forEach {
-            val characteristic = PropertyCharacteristicPropertyCrossRefEntity.fromDomain(
+            val characteristic = PropertyCharacteristicCrossRefEntity.fromDomain(
                 domain = it.copy(propertyId = propertyId)
             )
             propertyCharacteristicPropertyDatabaseDataSource.insertOrUpdate(characteristic)
@@ -72,7 +64,7 @@ class PropertyRepositoryImpl(
         }
 
         property.prices.forEach {
-            val price = PropertyPriceEntity.fromDomain(domain = it.copy(propertyId = propertyId))
+            val price = PropertyPriceEntity.fromDomain(it, propertyId)
             propertyPriceDatabaseDataSource.insertOrUpdate(price)
         }
     }
@@ -94,13 +86,7 @@ class PropertyRepositoryImpl(
     }
 
     override suspend fun getAll(): AppResult<ImmutableList<Property>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
-        val properties = propertyDatabaseDataSource.getAll(userId = userRemoteId)
+        val properties = propertyDatabaseDataSource.getAll()
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { it },
@@ -113,16 +99,7 @@ class PropertyRepositoryImpl(
     override suspend fun getAllMatching(
         matching: String?,
     ): AppResult<ImmutableList<Property>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
-        val properties = propertyDatabaseDataSource.getAllMatching(
-            userId = userRemoteId,
-            matching = matching,
-        )
+        val properties = propertyDatabaseDataSource.getAllMatching(matching)
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { it },
@@ -133,14 +110,8 @@ class PropertyRepositoryImpl(
     }
 
     override suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
         val neighborHoodNames =
-            propertyDatabaseDataSource.getAllNeighborHoodNames(userId = userRemoteId)
+            propertyDatabaseDataSource.getAllNeighborHoodNames()
                 .fold(
                     onError = { return AppResult.Error(error = it) },
                     onSuccess = { it },
@@ -166,16 +137,7 @@ class PropertyRepositoryImpl(
 
     override fun watchAll(): Flow<AppResult<ImmutableList<Property>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = {
-                        emit(AppResult.Error(error = it))
-                        return@flow
-                    },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-                )
-
-            val propertiesFlow = propertyDatabaseDataSource.watchAll(userId = userRemoteId)
+            val propertiesFlow = propertyDatabaseDataSource.watchAll()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it },

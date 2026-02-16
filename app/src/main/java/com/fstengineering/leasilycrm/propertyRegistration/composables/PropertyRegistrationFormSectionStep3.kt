@@ -31,10 +31,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDecimalOrNull
-import com.fstengineering.leasilycrm.core.domain.models.helpers.CalendarMonthYear
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
+import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
+import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPricesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton

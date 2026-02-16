@@ -16,9 +16,7 @@ interface StayDatabaseDataSource {
 
     fun watchById(id: Long): AppResult<Flow<StayCompound?>, DataError>
 
-    fun watchAll(userId: Long): AppResult<Flow<List<StayCompound>>, DataError>
+    fun watchAll(): AppResult<Flow<List<StayCompound>>, DataError>
 
-    fun watchAllUpcomingCheckInsAndCheckOuts(
-        userId: Long,
-    ): AppResult<Flow<List<StayCheckStatusCompound>>, DataError>
+    fun watchAllUpcomingCheckInsAndCheckOuts(): AppResult<Flow<List<StayCheckStatusCompound>>, DataError>
 }

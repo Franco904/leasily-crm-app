@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.interfaces.SharedStorageDataSource
-import com.fstengineering.leasilycrm.core.domain.models.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
@@ -34,16 +34,8 @@ class PropertyOwnerRepositoryImpl(
     override suspend fun insertOrUpdate(
         propertyOwner: PropertyOwner,
     ): AppResult<Unit, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 }
-            )
-
-        val propertyOwnerWithUser = propertyOwner.copy(userId = userRemoteId)
-
         return databaseAdapter.withTransaction {
-            saveDataInDatabase(propertyOwnerWithUser)
+            saveDataInDatabase(propertyOwner)
         }
     }
 
@@ -75,14 +67,7 @@ class PropertyOwnerRepositoryImpl(
             )
             .toDomain()
 
-        val filesWithNames = propertyOwner.files.map { file ->
-            val fileName =
-                sharedStorageDataSource.getFileName(contentUriString = file.uriString ?: "")
-
-            file.copy(name = fileName)
-        }.toImmutableList()
-
-        return AppResult.Success(data = propertyOwner.copy(files = filesWithNames))
+        return AppResult.Success(data = propertyOwner)
     }
 
     override fun watchById(
@@ -96,16 +81,7 @@ class PropertyOwnerRepositoryImpl(
             .map { propertyOwner ->
                 val domain = propertyOwner.toDomain()
 
-                val filesWithNames = domain.files.map { file ->
-                    val fileName =
-                        sharedStorageDataSource.getFileName(contentUriString = file.uriString ?: "")
-
-                    file.copy(name = fileName)
-                }.toImmutableList()
-
-                AppResult.Success<PropertyOwner, DataError>(
-                    data = domain.copy(files = filesWithNames),
-                )
+                AppResult.Success<PropertyOwner, DataError>(data = domain)
             }
             .distinctUntilChanged()
 
@@ -114,17 +90,8 @@ class PropertyOwnerRepositoryImpl(
 
     override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataError>> =
         flow {
-            val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-                .fold(
-                    onError = {
-                        emit(AppResult.Error(error = it))
-                        return@flow
-                    },
-                    onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-                )
-
             emitAll(
-                propertyOwnerDatabaseDataSource.watchAll(userId = userRemoteId)
+                propertyOwnerDatabaseDataSource.watchAll()
                     .fold(
                         onError = { return@flow emit(AppResult.Error(error = it)) },
                         onSuccess = { it }
@@ -141,14 +108,7 @@ class PropertyOwnerRepositoryImpl(
         propertyOwnerName: String,
         currentStoredPropertyOwnerName: String?,
     ): AppResult<Boolean, DataError> {
-        val userRemoteId = encryptedPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { return AppResult.Error(error = it) },
-                onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.remoteId ?: -1 },
-            )
-
         val count = propertyOwnerDatabaseDataSource.countPropertyOwnersWithName(
-            userId = userRemoteId,
             propertyOwnerName = propertyOwnerName.normalizeEncoding(),
             currentStoredPropertyOwnerName = currentStoredPropertyOwnerName,
         )

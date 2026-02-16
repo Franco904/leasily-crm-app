@@ -3,19 +3,18 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristicAssistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceSentProperty
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceCharacteristicAssistanceCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceCharacteristicEntity
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.entities.AssistancePropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSentProperty
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertySeaProximityTypeEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
 import kotlinx.collections.immutable.toImmutableList
 
@@ -34,28 +33,11 @@ data class AssistanceCompound(
     )
     val searchedNeighborhoods: List<AssistanceSearchedNeighborhoodEntity>,
     @Relation(
-        parentColumn = "property_sea_proximity_type_id",
-        entityColumn = "id",
-        entity = PropertySeaProximityTypeEntity::class,
-    )
-    val seaProximityType: PropertySeaProximityTypeEntity?,
-    @Relation(
-        parentColumn = "id",
-        entity = AssistanceCharacteristicEntity::class,
-        entityColumn = "id",
-        associateBy = Junction(
-            value = AssistanceCharacteristicAssistanceCrossRefEntity::class,
-            parentColumn = "assistance_id",
-            entityColumn = "assistance_characteristic_id"
-        )
-    )
-    val allCharacteristics: List<AssistanceCharacteristicEntity>,
-    @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",
-        entity = AssistanceCharacteristicAssistanceCrossRefEntity::class
+        entity = AssistancePropertyCharacteristicCrossRefEntity::class
     )
-    val checkedCharacteristics: List<AssistanceCharacteristicAssistanceCrossRefEntity>,
+    val checkedCharacteristics: List<AssistancePropertyCharacteristicCrossRefEntity>,
     @Relation(
         parentColumn = "id",
         entity = PropertyEntity::class,
@@ -85,19 +67,18 @@ data class AssistanceCompound(
             .filter { !it.isDeleted }
             .map { it.toDomain() }
 
-    private val activeCharacteristics: List<AssistanceCharacteristicAssistance>
+    private val activeCharacteristics: List<AssistancePropertyCharacteristic>
         get() {
             val activeCharacteristicIds = checkedCharacteristics
                 .filter { !it.isDeleted }
-                .map { it.assistanceCharacteristicId }
+                .map { it.propertyCharacteristicId }
                 .toSet()
 
             return activeCharacteristicIds.map { activeCharacteristicId ->
-                val characteristic = allCharacteristics.find { it.id == activeCharacteristicId }
+                val characteristic = PropertyCharacteristic.parse(activeCharacteristicId)
 
-                AssistanceCharacteristicAssistance(
-                    assistanceId = requireNotNull(assistance.id),
-                    assistanceCharacteristic = requireNotNull(characteristic).toDomain(),
+                AssistancePropertyCharacteristic(
+                    propertyCharacteristic = characteristic,
                     createDateTime = assistance.createDateTime,
                     updateDateTime = assistance.updateDateTime,
                     isDeleted = false,
@@ -116,7 +97,6 @@ data class AssistanceCompound(
                 val sentProperty = allSentProperties.find { it.property.id == activeSentPropertyId }
 
                 AssistanceSentProperty(
-                    assistanceId = requireNotNull(assistance.id),
                     property = requireNotNull(sentProperty).toDomain(),
                     createDateTime = assistance.createDateTime,
                     updateDateTime = assistance.updateDateTime,
@@ -130,33 +110,35 @@ data class AssistanceCompound(
             .filter { !it.isDeleted }
             .map { it.toDomain() }
 
-    fun toDomain() = Assistance(
-        id = requireNotNull(assistance.id),
+    fun toDomain() = Assistance.parse(
+        id = assistance.id,
         createDateTime = assistance.createDateTime,
         updateDateTime = assistance.updateDateTime,
         searchedStartDate = assistance.searchedStartDate,
         searchedEndDate = assistance.searchedEndDate,
         hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,
         maxAcceptedNightlyRate = assistance.maxAcceptedNightlyRate,
-        qtAdultGuests = assistance.qtAdultGuests,
-        qtKidGuests = assistance.qtKidGuests,
-        qtBabyGuests = assistance.qtBabyGuests,
-        qtAnimalGuests = assistance.qtAnimalGuests,
-        qtBedrooms = assistance.qtBedrooms,
-        qtEnSuites = assistance.qtEnSuites,
-        qtDoubleBeds = assistance.qtDoubleBeds,
-        qtSingleBeds = assistance.qtSingleBeds,
-        qtBathrooms = assistance.qtBathrooms,
-        qtParkingSpots = assistance.qtParkingSpots,
+        adults = assistance.adults,
+        kids = assistance.kids,
+        babies = assistance.babies,
+        animals = assistance.animals,
+        bedrooms = assistance.bedrooms,
+        enSuites = assistance.enSuites,
+        doubleBeds = assistance.doubleBeds,
+        singleBeds = assistance.singleBeds,
+        bathrooms = assistance.bathrooms,
+        parkingSpots = assistance.parkingSpots,
+        seaProximityTypeId = assistance.propertySeaProximityTypeId,
         distanceToSea = assistance.distanceToSea,
         observations = assistance.observations,
         isFinished = assistance.isFinished,
         isDeleted = assistance.isDeleted,
         tenantId = requireNotNull(tenant.id),
         searchedNeighborhoods = activeSearchedNeighborhoods.toImmutableList(),
-        seaProximityType = seaProximityType?.toDomain(),
         characteristics = activeCharacteristics.toImmutableList(),
         sentProperties = activeSentProperties.toImmutableList(),
         interactions = activeInteractions.toImmutableList(),
+        inconsistencies = assistance.inconsistencies,
+        contractVersion = assistance.contractVersion,
     )
 }

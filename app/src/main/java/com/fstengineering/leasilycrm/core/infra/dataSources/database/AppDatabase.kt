@@ -10,76 +10,55 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDateTypeConverter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDecimalConverter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceCharacteristicDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSearchedNeighborhoodDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.CrmMetricsDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyCharacteristicDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyCharacteristicPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyOwnerDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyOwnerFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyPriceDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertySeaProximityTypeDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyTypeDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.TenantContactOriginTypeDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.TenantDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceCharacteristicAssistanceCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceCharacteristicEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertySeaProximityTypeEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyTypeEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantContactOriginTypeEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.TenantReadView
 
 @Database(
-    /*
-     * Domain tables:
-     *
-     * assistance_characteristics, property_characteristics,
-     * property_sea_proximity_types, property_types and tenant_contact_origin_types.
-     */
     entities = [
         AssistanceEntity::class,
-        AssistanceCharacteristicEntity::class,
-        AssistanceCharacteristicAssistanceCrossRefEntity::class,
+        AssistancePropertyCharacteristicCrossRefEntity::class,
         AssistanceInteractionEntity::class,
         AssistanceSearchedNeighborhoodEntity::class,
         AssistanceSentPropertyCrossRefEntity::class,
         PropertyEntity::class,
-        PropertyCharacteristicEntity::class,
-        PropertyCharacteristicPropertyCrossRefEntity::class,
+        PropertyCharacteristicCrossRefEntity::class,
         PropertyFileEntity::class,
         PropertyOwnerEntity::class,
         PropertyOwnerFileEntity::class,
         PropertyPriceEntity::class,
-        PropertySeaProximityTypeEntity::class,
-        PropertyTypeEntity::class,
         StayEntity::class,
         StayFileEntity::class,
         StayTransferEntity::class,
         TenantEntity::class,
-        TenantContactOriginTypeEntity::class,
     ],
     views = [
         TenantReadView::class,
@@ -99,8 +78,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun assistanceCharacteristicAssistanceCrossRefDao(): AssistanceCharacteristicAssistanceCrossRefDao
 
-    abstract fun assistanceCharacteristicDao(): AssistanceCharacteristicDao
-
     abstract fun assistanceInteractionDao(): AssistanceInteractionDao
 
     abstract fun assistanceSearchedNeighborhoodDao(): AssistanceSearchedNeighborhoodDao
@@ -113,8 +90,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun propertyCharacteristicPropertyCrossRefDao(): PropertyCharacteristicPropertyCrossRefDao
 
-    abstract fun propertyCharacteristicDao(): PropertyCharacteristicDao
-
     abstract fun propertyFileDao(): PropertyFileDao
 
     abstract fun propertyOwnerDao(): PropertyOwnerDao
@@ -123,10 +98,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun propertyPriceDao(): PropertyPriceDao
 
-    abstract fun propertySeaProximityTypeDao(): PropertySeaProximityTypeDao
-
-    abstract fun propertyTypeDao(): PropertyTypeDao
-
     abstract fun stayDao(): StayDao
 
     abstract fun stayFileDao(): StayFileDao
@@ -134,8 +105,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun stayTransferDao(): StayTransferDao
 
     abstract fun tenantDao(): TenantDao
-
-    abstract fun tenantContactOriginTypeDao(): TenantContactOriginTypeDao
 
     companion object {
         const val DB_VERSION = 1
@@ -149,14 +118,5 @@ abstract class AppDatabase : RoomDatabase() {
             )
                 .build()
         }
-
-//        fun buildInMemoryDatabase(appContext: Context): AppDatabase {
-//            return Room.inMemoryDatabaseBuilder(
-//                context = appContext,
-//                klass = AppDatabase::class.java,
-//            )
-//                .allowMainThreadQueries()
-//                .build()
-//        }
     }
 }

@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
+import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyCharacteristicCrossRef
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicSelectableChip
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
@@ -75,7 +75,7 @@ private fun onPropertyCharacteristicSelect(
                 )
             } else {
                 val newCharacteristic =
-                    PropertyCharacteristicProperty(propertyCharacteristic = characteristic)
+                    PropertyCharacteristicCrossRef(propertyCharacteristic = characteristic)
                 list.add(newCharacteristic)
             }
         }

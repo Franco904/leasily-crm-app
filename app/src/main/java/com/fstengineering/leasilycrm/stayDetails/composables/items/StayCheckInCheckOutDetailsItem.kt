@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.CheckInCheckOutChipLabel
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow

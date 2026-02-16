@@ -26,11 +26,11 @@ class StayDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.watchById(id) }
     }
 
-    override fun watchAll(userId: Long): AppResult<Flow<List<StayCompound>>, DataError> {
-        return onDatabaseSafe { dao.watchAll(userId) }
+    override fun watchAll(): AppResult<Flow<List<StayCompound>>, DataError> {
+        return onDatabaseSafe { dao.watchAll() }
     }
 
-    override fun watchAllUpcomingCheckInsAndCheckOuts(userId: Long): AppResult<Flow<List<StayCheckStatusCompound>>, DataError> {
-        return onDatabaseSafe { dao.watchAllUpcomingCheckInsAndCheckOuts(userId) }
+    override fun watchAllUpcomingCheckInsAndCheckOuts(): AppResult<Flow<List<StayCheckStatusCompound>>, DataError> {
+        return onDatabaseSafe { dao.watchAllUpcomingCheckInsAndCheckOuts() }
     }
 }

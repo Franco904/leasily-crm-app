@@ -2,10 +2,8 @@ package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
-import com.fstengineering.leasilycrm.core.infra.dataSources.remote.DomainTablesRemoteDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.UserRemoteDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.cookies.UserSessionCookieStorage
-import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.DomainTablesRemoteDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -61,6 +59,5 @@ val remoteDataSourceModule = module {
         }
     }
 
-    single<DomainTablesRemoteDataSource> { DomainTablesRemoteDataSourceImpl(client = get()) }
     single<UserRemoteDataSource> { UserRemoteDataSourceImpl(client = get()) }
 }

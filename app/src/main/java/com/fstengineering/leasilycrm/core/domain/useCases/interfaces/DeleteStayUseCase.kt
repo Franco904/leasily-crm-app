@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.useCases.interfaces
 
-import com.fstengineering.leasilycrm.core.domain.models.Stay
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 

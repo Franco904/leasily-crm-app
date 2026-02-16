@@ -13,16 +13,13 @@ interface PropertyDatabaseDataSource {
 
     suspend fun getById(id: Long): AppResult<PropertyCompound, DataError>
 
-    suspend fun getAll(userId: Long): AppResult<List<PropertyCompound>, DataError>
+    suspend fun getAll(): AppResult<List<PropertyCompound>, DataError>
 
-    suspend fun getAllMatching(
-        userId: Long,
-        matching: String?
-    ): AppResult<List<PropertyCompound>, DataError>
+    suspend fun getAllMatching(matching: String?): AppResult<List<PropertyCompound>, DataError>
 
-    suspend fun getAllNeighborHoodNames(userId: Long): AppResult<List<String>, DataError>
+    suspend fun getAllNeighborHoodNames(): AppResult<List<String>, DataError>
 
     fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, DataError>
 
-    fun watchAll(userId: Long): AppResult<Flow<List<PropertyCompound>>, DataError>
+    fun watchAll(): AppResult<Flow<List<PropertyCompound>>, DataError>
 }

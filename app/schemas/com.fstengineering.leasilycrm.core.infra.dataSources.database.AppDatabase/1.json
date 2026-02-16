@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0a038c7944d6ebf47fc574acffb3862c",
+    "identityHash": "140a855a75d12e260ad852b9f41b5839",
     "entities": [
       {
         "tableName": "assistances",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `searched_start_date` INTEGER, `searched_end_date` INTEGER, `has_flexibility_for_period` INTEGER NOT NULL, `max_accepted_nightly_rate` TEXT, `qt_adult_guests` INTEGER NOT NULL, `qt_kid_guests` INTEGER NOT NULL, `qt_baby_guests` INTEGER NOT NULL, `qt_animal_guests` INTEGER NOT NULL, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `distance_to_sea` TEXT, `observations` TEXT, `is_finished` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER, `tenant_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `searched_start_date` INTEGER, `searched_end_date` INTEGER, `has_flexibility_for_period` INTEGER NOT NULL, `max_accepted_nightly_rate` TEXT, `adults` INTEGER NOT NULL, `kids` INTEGER NOT NULL, `babies` INTEGER NOT NULL, `animals` INTEGER NOT NULL, `bedrooms` INTEGER NOT NULL, `en_suites` INTEGER NOT NULL, `double_beds` INTEGER NOT NULL, `single_beds` INTEGER NOT NULL, `bathrooms` INTEGER NOT NULL, `parking_spots` INTEGER NOT NULL, `distance_to_sea` TEXT, `observations` TEXT, `is_finished` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER, `tenant_id` INTEGER NOT NULL, `inconsistencies` TEXT, `contract_version` INTEGER NOT NULL, FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -47,62 +47,62 @@
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "qtAdultGuests",
-            "columnName": "qt_adult_guests",
+            "fieldPath": "adults",
+            "columnName": "adults",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtKidGuests",
-            "columnName": "qt_kid_guests",
+            "fieldPath": "kids",
+            "columnName": "kids",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtBabyGuests",
-            "columnName": "qt_baby_guests",
+            "fieldPath": "babies",
+            "columnName": "babies",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtAnimalGuests",
-            "columnName": "qt_animal_guests",
+            "fieldPath": "animals",
+            "columnName": "animals",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtBedrooms",
-            "columnName": "qt_bedrooms",
+            "fieldPath": "bedrooms",
+            "columnName": "bedrooms",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtEnSuites",
-            "columnName": "qt_en_suites",
+            "fieldPath": "enSuites",
+            "columnName": "en_suites",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtDoubleBeds",
-            "columnName": "qt_double_beds",
+            "fieldPath": "doubleBeds",
+            "columnName": "double_beds",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtSingleBeds",
-            "columnName": "qt_single_beds",
+            "fieldPath": "singleBeds",
+            "columnName": "single_beds",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtBathrooms",
-            "columnName": "qt_bathrooms",
+            "fieldPath": "bathrooms",
+            "columnName": "bathrooms",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtParkingSpots",
-            "columnName": "qt_parking_spots",
+            "fieldPath": "parkingSpots",
+            "columnName": "parking_spots",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -138,6 +138,17 @@
             "columnName": "tenant_id",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "inconsistencies",
+            "columnName": "inconsistencies",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "contractVersion",
+            "columnName": "contract_version",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -155,15 +166,6 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_assistances_tenant_id` ON `${TABLE_NAME}` (`tenant_id`)"
-          },
-          {
-            "name": "index_assistances_property_sea_proximity_type_id",
-            "unique": false,
-            "columnNames": [
-              "property_sea_proximity_type_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistances_property_sea_proximity_type_id` ON `${TABLE_NAME}` (`property_sea_proximity_type_id`)"
           }
         ],
         "foreignKeys": [
@@ -177,53 +179,12 @@
             "referencedColumns": [
               "id"
             ]
-          },
-          {
-            "table": "property_sea_proximity_types",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "property_sea_proximity_type_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
           }
         ]
       },
       {
-        "tableName": "assistance_characteristics",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isActive",
-            "columnName": "is_active",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        }
-      },
-      {
-        "tableName": "assistance_characteristics_assistances",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assistance_id` INTEGER NOT NULL, `assistance_characteristic_id` INTEGER NOT NULL, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, PRIMARY KEY(`assistance_id`, `assistance_characteristic_id`), FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`assistance_characteristic_id`) REFERENCES `assistance_characteristics`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "tableName": "assistance_property_characteristics",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`assistance_id` INTEGER NOT NULL, `property_characteristic_id` INTEGER NOT NULL, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, PRIMARY KEY(`assistance_id`, `property_characteristic_id`), FOREIGN KEY(`assistance_id`) REFERENCES `assistances`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "assistanceId",
@@ -232,8 +193,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "assistanceCharacteristicId",
-            "columnName": "assistance_characteristic_id",
+            "fieldPath": "propertyCharacteristicId",
+            "columnName": "property_characteristic_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -260,27 +221,27 @@
           "autoGenerate": false,
           "columnNames": [
             "assistance_id",
-            "assistance_characteristic_id"
+            "property_characteristic_id"
           ]
         },
         "indices": [
           {
-            "name": "index_assistance_characteristics_assistances_assistance_id",
+            "name": "index_assistance_property_characteristics_assistance_id",
             "unique": false,
             "columnNames": [
               "assistance_id"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_characteristics_assistances_assistance_id` ON `${TABLE_NAME}` (`assistance_id`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_property_characteristics_assistance_id` ON `${TABLE_NAME}` (`assistance_id`)"
           },
           {
-            "name": "index_assistance_characteristics_assistances_assistance_characteristic_id",
+            "name": "index_assistance_property_characteristics_property_characteristic_id",
             "unique": false,
             "columnNames": [
-              "assistance_characteristic_id"
+              "property_characteristic_id"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_characteristics_assistances_assistance_characteristic_id` ON `${TABLE_NAME}` (`assistance_characteristic_id`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_assistance_property_characteristics_property_characteristic_id` ON `${TABLE_NAME}` (`property_characteristic_id`)"
           }
         ],
         "foreignKeys": [
@@ -290,17 +251,6 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "assistance_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "assistance_characteristics",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "assistance_characteristic_id"
             ],
             "referencedColumns": [
               "id"
@@ -550,7 +500,7 @@
       },
       {
         "tableName": "properties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `neighborhood` TEXT NOT NULL, `street_address` TEXT NOT NULL, `cep_postal_code` TEXT, `number` INTEGER, `address_line_2` TEXT, `parking_spot_number` TEXT, `parking_basement_level_number` TEXT, `hobby_box_number` TEXT, `qt_bedrooms` INTEGER NOT NULL, `qt_en_suites` INTEGER NOT NULL, `qt_double_beds` INTEGER NOT NULL, `qt_single_beds` INTEGER NOT NULL, `qt_bathrooms` INTEGER NOT NULL, `qt_parking_spots` INTEGER NOT NULL, `qt_air_conditioners` INTEGER NOT NULL, `qt_max_guests` INTEGER NOT NULL, `distance_to_sea` TEXT, `included_items` TEXT, `has_included_items` INTEGER NOT NULL, `cleaning_service_tax` TEXT, `has_cleaning_service_included` INTEGER NOT NULL, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_owner_id` INTEGER NOT NULL, `property_type_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_type_id`) REFERENCES `property_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_sea_proximity_type_id`) REFERENCES `property_sea_proximity_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `neighborhood` TEXT NOT NULL, `street_address` TEXT NOT NULL, `cep_postal_code` TEXT, `number` INTEGER, `address_line_2` TEXT, `parking_spot_number` TEXT, `parking_basement_level_number` TEXT, `hobby_box_number` TEXT, `bedrooms` INTEGER NOT NULL, `en_suites` INTEGER NOT NULL, `double_beds` INTEGER NOT NULL, `single_beds` INTEGER NOT NULL, `bathrooms` INTEGER NOT NULL, `parking_spots` INTEGER NOT NULL, `air_conditioners` INTEGER NOT NULL, `max_guests` INTEGER NOT NULL, `distance_to_sea` TEXT, `included_items` TEXT, `has_included_items` INTEGER NOT NULL, `cleaning_service_tax` TEXT, `has_cleaning_service_included` INTEGER NOT NULL, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_owner_id` INTEGER NOT NULL, `property_type_id` INTEGER NOT NULL, `property_sea_proximity_type_id` INTEGER, `inconsistencies` TEXT, `contract_version` INTEGER NOT NULL, FOREIGN KEY(`property_owner_id`) REFERENCES `property_owners`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -612,50 +562,50 @@
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "qtBedrooms",
-            "columnName": "qt_bedrooms",
+            "fieldPath": "bedrooms",
+            "columnName": "bedrooms",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtEnSuites",
-            "columnName": "qt_en_suites",
+            "fieldPath": "enSuites",
+            "columnName": "en_suites",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtDoubleBeds",
-            "columnName": "qt_double_beds",
+            "fieldPath": "doubleBeds",
+            "columnName": "double_beds",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtSingleBeds",
-            "columnName": "qt_single_beds",
+            "fieldPath": "singleBeds",
+            "columnName": "single_beds",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtBathrooms",
-            "columnName": "qt_bathrooms",
+            "fieldPath": "bathrooms",
+            "columnName": "bathrooms",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtParkingSpots",
-            "columnName": "qt_parking_spots",
+            "fieldPath": "parkingSpots",
+            "columnName": "parking_spots",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtAirConditioners",
-            "columnName": "qt_air_conditioners",
+            "fieldPath": "airConditioners",
+            "columnName": "air_conditioners",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "qtMaxGuests",
-            "columnName": "qt_max_guests",
+            "fieldPath": "maxGuests",
+            "columnName": "max_guests",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -698,25 +648,30 @@
             "notNull": true
           },
           {
-            "fieldPath": "propertyOwnerId",
+            "fieldPath": "ownerId",
             "columnName": "property_owner_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "propertyTypeId",
+            "fieldPath": "typeId",
             "columnName": "property_type_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "propertySeaProximityType",
+            "fieldPath": "seaProximityTypeId",
             "columnName": "property_sea_proximity_type_id",
             "affinity": "INTEGER"
           },
           {
-            "fieldPath": "userId",
-            "columnName": "user_id",
+            "fieldPath": "inconsistencies",
+            "columnName": "inconsistencies",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "contractVersion",
+            "columnName": "contract_version",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -736,33 +691,6 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_properties_property_owner_id` ON `${TABLE_NAME}` (`property_owner_id`)"
-          },
-          {
-            "name": "index_properties_property_type_id",
-            "unique": false,
-            "columnNames": [
-              "property_type_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_properties_property_type_id` ON `${TABLE_NAME}` (`property_type_id`)"
-          },
-          {
-            "name": "index_properties_property_sea_proximity_type_id",
-            "unique": false,
-            "columnNames": [
-              "property_sea_proximity_type_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_properties_property_sea_proximity_type_id` ON `${TABLE_NAME}` (`property_sea_proximity_type_id`)"
-          },
-          {
-            "name": "index_properties_user_id",
-            "unique": false,
-            "columnNames": [
-              "user_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_properties_user_id` ON `${TABLE_NAME}` (`user_id`)"
           }
         ],
         "foreignKeys": [
@@ -776,64 +704,12 @@
             "referencedColumns": [
               "id"
             ]
-          },
-          {
-            "table": "property_types",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "property_type_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "property_sea_proximity_types",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "property_sea_proximity_type_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
           }
         ]
       },
       {
-        "tableName": "property_characteristics",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isActive",
-            "columnName": "is_active",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        }
-      },
-      {
         "tableName": "property_characteristics_properties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`property_id` INTEGER NOT NULL, `property_characteristic_id` INTEGER NOT NULL, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, PRIMARY KEY(`property_id`, `property_characteristic_id`), FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`property_characteristic_id`) REFERENCES `property_characteristics`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`property_id` INTEGER NOT NULL, `property_characteristic_id` INTEGER NOT NULL, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `is_deleted` INTEGER NOT NULL, PRIMARY KEY(`property_id`, `property_characteristic_id`), FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "propertyId",
@@ -900,17 +776,6 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "property_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "property_characteristics",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "property_characteristic_id"
             ],
             "referencedColumns": [
               "id"
@@ -997,7 +862,7 @@
       },
       {
         "tableName": "property_owners",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `phone` TEXT, `email` TEXT, `payment_key` TEXT, `is_deleted` INTEGER NOT NULL, `user_id` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `name` TEXT NOT NULL, `phone` TEXT, `email` TEXT, `payment_key` TEXT, `is_deleted` INTEGER NOT NULL, `inconsistencies` TEXT, `contract_version` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1044,8 +909,13 @@
             "notNull": true
           },
           {
-            "fieldPath": "userId",
-            "columnName": "user_id",
+            "fieldPath": "inconsistencies",
+            "columnName": "inconsistencies",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "contractVersion",
+            "columnName": "contract_version",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1055,18 +925,7 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [
-          {
-            "name": "index_property_owners_user_id",
-            "unique": false,
-            "columnNames": [
-              "user_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_property_owners_user_id` ON `${TABLE_NAME}` (`user_id`)"
-          }
-        ]
+        }
       },
       {
         "tableName": "property_owner_files",
@@ -1147,7 +1006,7 @@
       },
       {
         "tableName": "property_prices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `start_date` INTEGER NOT NULL, `end_date` INTEGER NOT NULL, `price` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `start_date` INTEGER NOT NULL, `end_date` INTEGER NOT NULL, `amount` TEXT NOT NULL, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1179,8 +1038,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "price",
-            "columnName": "price",
+            "fieldPath": "amount",
+            "columnName": "amount",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -1229,68 +1088,8 @@
         ]
       },
       {
-        "tableName": "property_sea_proximity_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isActive",
-            "columnName": "is_active",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        }
-      },
-      {
-        "tableName": "property_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isActive",
-            "columnName": "is_active",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        }
-      },
-      {
         "tableName": "stays",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `vehicle_make` TEXT, `vehicle_color` TEXT, `vehicle_license_plate` TEXT, `qt_guests` INTEGER, `check_in_date_time` INTEGER NOT NULL, `check_out_date_time` INTEGER NOT NULL, `is_auto_check_in` INTEGER, `is_auto_check_out` INTEGER, `is_check_in_done` INTEGER, `is_check_out_done` INTEGER, `total_price` TEXT, `commission` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `vehicle_make` TEXT, `vehicle_color` TEXT, `vehicle_license_plate` TEXT, `guests` INTEGER, `check_in_date_time` INTEGER NOT NULL, `check_out_date_time` INTEGER NOT NULL, `is_auto_check_in` INTEGER, `is_auto_check_out` INTEGER, `total_price` TEXT, `commission` TEXT, `observations` TEXT, `status` INTEGER, `is_deleted` INTEGER NOT NULL, `property_id` INTEGER NOT NULL, `tenant_id` INTEGER, `inconsistencies` TEXT, `contract_version` INTEGER NOT NULL, FOREIGN KEY(`property_id`) REFERENCES `properties`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`tenant_id`) REFERENCES `tenants`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1325,8 +1124,8 @@
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "qtGuests",
-            "columnName": "qt_guests",
+            "fieldPath": "guests",
+            "columnName": "guests",
             "affinity": "INTEGER"
           },
           {
@@ -1352,16 +1151,6 @@
             "affinity": "INTEGER"
           },
           {
-            "fieldPath": "isCheckInDone",
-            "columnName": "is_check_in_done",
-            "affinity": "INTEGER"
-          },
-          {
-            "fieldPath": "isCheckOutDone",
-            "columnName": "is_check_out_done",
-            "affinity": "INTEGER"
-          },
-          {
             "fieldPath": "totalPrice",
             "columnName": "total_price",
             "affinity": "TEXT"
@@ -1375,6 +1164,11 @@
             "fieldPath": "observations",
             "columnName": "observations",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "isDeleted",
@@ -1394,8 +1188,13 @@
             "affinity": "INTEGER"
           },
           {
-            "fieldPath": "userId",
-            "columnName": "user_id",
+            "fieldPath": "inconsistencies",
+            "columnName": "inconsistencies",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "contractVersion",
+            "columnName": "contract_version",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1424,15 +1223,6 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_stays_tenant_id` ON `${TABLE_NAME}` (`tenant_id`)"
-          },
-          {
-            "name": "index_stays_user_id",
-            "unique": false,
-            "columnNames": [
-              "user_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_stays_user_id` ON `${TABLE_NAME}` (`user_id`)"
           }
         ],
         "foreignKeys": [
@@ -1621,7 +1411,7 @@
       },
       {
         "tableName": "tenants",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `tag` TEXT, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `tenant_contact_origin_type_id` INTEGER, `user_id` INTEGER NOT NULL, FOREIGN KEY(`tenant_contact_origin_type_id`) REFERENCES `tenant_contact_origin_types`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `create_date_time` INTEGER NOT NULL, `update_date_time` INTEGER NOT NULL, `tag` TEXT, `name` TEXT NOT NULL, `city` TEXT, `identity_document` TEXT, `phone` TEXT, `email` TEXT, `contact_origin` TEXT, `observations` TEXT, `is_deleted` INTEGER NOT NULL, `inconsistencies` TEXT, `contract_version` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1672,6 +1462,11 @@
             "affinity": "TEXT"
           },
           {
+            "fieldPath": "contactOrigin",
+            "columnName": "contact_origin",
+            "affinity": "TEXT"
+          },
+          {
             "fieldPath": "observations",
             "columnName": "observations",
             "affinity": "TEXT"
@@ -1683,76 +1478,13 @@
             "notNull": true
           },
           {
-            "fieldPath": "tenantContactOriginTypeId",
-            "columnName": "tenant_contact_origin_type_id",
-            "affinity": "INTEGER"
+            "fieldPath": "inconsistencies",
+            "columnName": "inconsistencies",
+            "affinity": "TEXT"
           },
           {
-            "fieldPath": "userId",
-            "columnName": "user_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [
-          {
-            "name": "index_tenants_tenant_contact_origin_type_id",
-            "unique": false,
-            "columnNames": [
-              "tenant_contact_origin_type_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_tenants_tenant_contact_origin_type_id` ON `${TABLE_NAME}` (`tenant_contact_origin_type_id`)"
-          },
-          {
-            "name": "index_tenants_user_id",
-            "unique": false,
-            "columnNames": [
-              "user_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_tenants_user_id` ON `${TABLE_NAME}` (`user_id`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "tenant_contact_origin_types",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "tenant_contact_origin_type_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
-      },
-      {
-        "tableName": "tenant_contact_origin_types",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `is_active` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isActive",
-            "columnName": "is_active",
+            "fieldPath": "contractVersion",
+            "columnName": "contract_version",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1768,12 +1500,12 @@
     "views": [
       {
         "viewName": "tenants_read_view",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n            base.*,\n            CASE\n                WHEN base.has_no_stays OR (NOT base.has_upcoming_check_out AND base.has_unfinished_assistance) THEN 0\n                WHEN base.has_upcoming_check_out THEN 1\n                ELSE 2\n            END AS status\n        FROM (\n            SELECT\n            t.*,\n            NOT EXISTS (\n                SELECT 1 FROM stays s\n                WHERE (s.tenant_id = t.id AND s.is_deleted = 0)\n            ) AS has_no_stays,\n            EXISTS (\n                SELECT 1 FROM assistances a\n                WHERE (a.tenant_id = t.id AND a.is_deleted = 0)\n                AND a.is_finished = 0\n            ) AS has_unfinished_assistance,\n            EXISTS (\n                SELECT 1 FROM stays s\n                WHERE (s.tenant_id = t.id AND s.is_deleted = 0)\n                AND s.is_check_out_done = 0\n            ) AS has_upcoming_check_out\n            FROM tenants t\n        ) AS base"
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n            base.*,\n            CASE\n                WHEN base.has_no_stays OR (NOT base.has_upcoming_check_out AND base.has_unfinished_assistance) THEN 0\n                WHEN base.has_upcoming_check_out THEN 1\n                ELSE 2\n            END AS status\n        FROM (\n            SELECT\n            t.*,\n            NOT EXISTS (\n                SELECT 1 FROM stays s\n                WHERE (s.tenant_id = t.id AND s.is_deleted = 0)\n            ) AS has_no_stays,\n            EXISTS (\n                SELECT 1 FROM assistances a\n                WHERE (a.tenant_id = t.id AND a.is_deleted = 0)\n                AND a.is_finished = 0\n            ) AS has_unfinished_assistance,\n            EXISTS (\n                SELECT 1 FROM stays s\n                WHERE (s.tenant_id = t.id AND s.is_deleted = 0)\n                AND (s.status = 0 OR s.status = 1)\n            ) AS has_upcoming_check_out\n            FROM tenants t\n        ) AS base"
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a038c7944d6ebf47fc574acffb3862c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '140a855a75d12e260ad852b9f41b5839')"
     ]
   }
 }

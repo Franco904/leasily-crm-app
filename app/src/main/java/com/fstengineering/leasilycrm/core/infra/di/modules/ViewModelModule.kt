@@ -4,8 +4,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDate
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.dashboard.DashboardViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel

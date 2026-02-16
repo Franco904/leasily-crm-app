@@ -34,7 +34,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.constants.APARTMENT_PROPERTY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXIMITY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.constants.NOT_APPLICABLE_PROXIMITY_TYPE_ID
-import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicReadOnlyChip
@@ -203,13 +203,13 @@ fun CharacteristicsChipsRow(
                 }
             )
         }
-        if (property.qtBedrooms > 0) {
+        if (property.bedrooms > 0) {
             Spacer(modifier = Modifier.width(4.dp))
             CharacteristicReadOnlyChip(
                 characteristicText = pluralStringResource(
                     R.plurals.properties_qt_bedrooms,
-                    property.qtBedrooms,
-                    property.qtBedrooms,
+                    property.bedrooms,
+                    property.bedrooms,
                 ),
             )
         }

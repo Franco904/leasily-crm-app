@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.StayFile
+import com.fstengineering.leasilycrm.core.domain.entities.StayFile
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.DocumentFileCard
 
 fun LazyListScope.stayDocumentsDetailsItem(

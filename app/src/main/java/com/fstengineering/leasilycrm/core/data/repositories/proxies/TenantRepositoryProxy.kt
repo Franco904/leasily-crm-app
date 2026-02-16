@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.data.repositories.proxies
 
 import com.fstengineering.leasilycrm.core.infra.dataSources.inMemory.interfaces.TenantInMemoryDataSource
-import com.fstengineering.leasilycrm.core.domain.models.Tenant
-import com.fstengineering.leasilycrm.core.domain.models.enums.TenantStatus
+import com.fstengineering.leasilycrm.core.domain.entities.Tenant
+import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError

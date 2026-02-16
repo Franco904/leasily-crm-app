@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database.converters
 
 import androidx.room.TypeConverter
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.toDateTime
 
 class AppDateTimeTypeConverter {
     @TypeConverter

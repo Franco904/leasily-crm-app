@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.useCases.interfaces
 
-import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import kotlinx.coroutines.flow.Flow

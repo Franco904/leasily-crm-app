@@ -2,11 +2,10 @@ package com.fstengineering.leasilycrm.propertyRegistration.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyRegistration.models.PropertyStep2ErrorUiState
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyStep2Field
@@ -54,12 +53,12 @@ class PropertyRegistrationStep2ViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<DomainError>) {
+    private suspend fun setFieldErrors(errors: List<ParsingError>) {
         _formErrors.update { PropertyStep2ErrorUiState() }
         delay(150.milliseconds)
 
         val propertyDistanceToSeaError =
-            errors.firstOrNull { it is DomainError.PropertyDistanceToSea }
+            errors.firstOrNull { it is ParsingError.PropertyDistanceToSea }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->

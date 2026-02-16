@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.broadcastReceivers.TodayCheckInCheckOutNotificationBroadcastReceiver
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 
 object TodayCheckInCheckOutNotificationAlarm {
     private const val ALARM_INTENT_REQUEST_CODE = 0

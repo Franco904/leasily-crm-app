@@ -44,12 +44,12 @@ import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.P
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.PreferredSeaProximityTypeFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.composables.fields.SearchedStayDateRangeFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDate
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.toDecimalOrNull
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceCharacteristic
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceSearchedNeighborhood
-import com.fstengineering.leasilycrm.core.domain.models.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.helpers.toDate
+import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacteristic
+import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
@@ -140,8 +140,8 @@ fun AssistanceRegistrationFormSectionStep1(
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
                 SearchedStayDateRangeFormField(
-                    searchedStartDate = assistanceForm.searchedStartDate,
-                    searchedEndDate = assistanceForm.searchedEndDate,
+                    searchedStartDate = assistanceForm.searchingStartDate,
+                    searchedEndDate = assistanceForm.searchingEndDate,
                     onTap = { mustShowDateRangePickerDialog = true },
                 )
             }

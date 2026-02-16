@@ -1,0 +1,284 @@
+package com.fstengineering.leasilycrm.core.domain.entities
+
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
+import com.fstengineering.leasilycrm.core.domain.helpers.StayProperty
+import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.validations.validateStayCommission
+import com.fstengineering.leasilycrm.core.domain.validations.validateStayPrice
+import com.fstengineering.leasilycrm.core.domain.validations.validateStayProperty
+import com.fstengineering.leasilycrm.core.domain.validations.validateStayTenant
+import com.fstengineering.leasilycrm.core.domain.valueObjects.StayGuestsCount
+import com.fstengineering.leasilycrm.core.domain.valueObjects.StayPeriod
+import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
+import kotlinx.collections.immutable.ImmutableList
+
+sealed class Stay(
+    open val id: Long?,
+    open val createDateTime: AppDateTime?,
+    open val updateDateTime: AppDateTime?,
+    open val property: StayProperty,
+    open val period: StayPeriod,
+    open val observations: String?,
+    open val isDeleted: Boolean,
+    open val inconsistencies: String?,
+    open val contractVersion: Int,
+) {
+    class Owned private constructor(
+        override val id: Long?,
+        override val createDateTime: AppDateTime?,
+        override val updateDateTime: AppDateTime?,
+        override val property: StayProperty,
+        override val period: StayPeriod,
+        override val observations: String?,
+        override val isDeleted: Boolean,
+        override val inconsistencies: String?,
+        override val contractVersion: Int,
+        val tenant: StayOwnedTenant,
+        val vehicleMake: String?,
+        val vehicleColor: String?,
+        val vehicleLicensePlate: String?,
+        val guestsCount: StayGuestsCount,
+        val isAutoCheckIn: Boolean,
+        val isAutoCheckOut: Boolean,
+        val totalPrice: AppDecimal?,
+        val commission: AppDecimal,
+        val status: StayStatus,
+        val transfers: ImmutableList<StayTransfer>,
+        val files: ImmutableList<StayFile>,
+    ) : Stay(
+        id = id,
+        createDateTime = createDateTime,
+        updateDateTime = updateDateTime,
+        property = property,
+        period = period,
+        observations = observations,
+        isDeleted = isDeleted,
+        inconsistencies = inconsistencies,
+        contractVersion = contractVersion,
+    ) {
+        fun registerCheckIn() = copyWith(status = StayStatus.CheckedIn)
+
+        fun registerCheckOut() = copyWith(status = StayStatus.CheckedOut)
+
+        fun undoRegisterCheckOut() = copyWith(status = StayStatus.CheckedIn)
+
+        fun putTenant(tenant: StayOwnedTenant): Owned {
+            if (tenant is StayOwnedTenant.WithData) {
+                validateStayTenant(tenant.data?.id)
+                    .onError { throw it.asException() }
+            }
+
+            return copyWith(tenant = tenant)
+        }
+
+        private fun copyWith(
+            id: Long? = this.id,
+            createDateTime: AppDateTime? = this.createDateTime,
+            updateDateTime: AppDateTime? = this.updateDateTime,
+            property: StayProperty = this.property,
+            tenant: StayOwnedTenant = this.tenant,
+            vehicleMake: String? = this.vehicleMake,
+            vehicleColor: String? = this.vehicleColor,
+            vehicleLicensePlate: String? = this.vehicleLicensePlate,
+            guestsCount: StayGuestsCount = this.guestsCount,
+            period: StayPeriod = this.period,
+            isAutoCheckIn: Boolean = this.isAutoCheckIn,
+            isAutoCheckOut: Boolean = this.isAutoCheckOut,
+            status: StayStatus = this.status,
+            totalPrice: AppDecimal? = this.totalPrice,
+            commission: AppDecimal = this.commission,
+            transfers: ImmutableList<StayTransfer> = this.transfers,
+            files: ImmutableList<StayFile> = this.files,
+            observations: String? = this.observations,
+            isDeleted: Boolean = this.isDeleted,
+            inconsistencies: String? = this.inconsistencies,
+            contractVersion: Int = this.contractVersion,
+        ) = Owned(
+            id = id,
+            createDateTime = createDateTime,
+            updateDateTime = updateDateTime,
+            property = property,
+            tenant = tenant,
+            vehicleMake = vehicleMake,
+            vehicleColor = vehicleColor,
+            vehicleLicensePlate = vehicleLicensePlate,
+            guestsCount = guestsCount,
+            period = period,
+            isAutoCheckIn = isAutoCheckIn,
+            isAutoCheckOut = isAutoCheckOut,
+            status = status,
+            totalPrice = totalPrice,
+            commission = commission,
+            transfers = transfers,
+            files = files,
+            observations = observations,
+            isDeleted = isDeleted,
+            inconsistencies = inconsistencies,
+            contractVersion = contractVersion,
+        )
+
+        companion object {
+            fun parse(
+                id: Long?,
+                createDateTime: AppDateTime?,
+                updateDateTime: AppDateTime?,
+                property: StayProperty,
+                tenant: StayOwnedTenant,
+                vehicleMake: String?,
+                vehicleColor: String?,
+                vehicleLicensePlate: String?,
+                guests: Int?,
+                checkInDateTime: AppDateTime,
+                checkInTime: Pair<Int?, Int?>,
+                checkOutDateTime: AppDateTime,
+                checkOutTime: Pair<Int?, Int?>,
+                isAutoCheckIn: Boolean?,
+                isAutoCheckOut: Boolean?,
+                totalPrice: AppDecimal?,
+                commission: AppDecimal?,
+                transfers: ImmutableList<StayTransfer>,
+                files: ImmutableList<StayFile>,
+                observations: String?,
+                statusId: Int?,
+                isDeleted: Boolean,
+                inconsistencies: String?,
+                contractVersion: Int,
+            ): Owned {
+                if (property is StayProperty.WithData) {
+                    validateStayProperty(property.data?.id)
+                        .onError { throw it.asException() }
+                }
+
+                if (tenant is StayOwnedTenant.WithData) {
+                    validateStayTenant(tenant.data?.id)
+                        .onError { throw it.asException() }
+                }
+
+                val guestsCount = StayGuestsCount.parse(guests)
+
+                val period = StayPeriod.parse(
+                    checkInDateTime = checkInDateTime,
+                    checkInTime = checkInTime,
+                    checkOutDateTime = checkOutDateTime,
+                    checkOutTime = checkOutTime,
+                )
+
+                isAutoCheckIn ?: throw ParsingError.Stay.IsAutoCheckInRequired.asException()
+                isAutoCheckOut ?: throw ParsingError.Stay.IsAutoCheckOutRequired.asException()
+                statusId ?: throw ParsingError.Stay.StatusRequired.asException()
+
+                if (totalPrice != null) {
+                    validateStayPrice(totalPrice)
+                        .onError { throw it.asException() }
+                }
+
+                validateStayCommission(commission)
+                    .onError { throw it.asException() }
+
+                val status = StayStatus.parse(statusId)
+
+                return Owned(
+                    id = id,
+                    createDateTime = createDateTime,
+                    updateDateTime = updateDateTime,
+                    property = property,
+                    tenant = tenant,
+                    vehicleMake = vehicleMake,
+                    vehicleColor = vehicleColor,
+                    vehicleLicensePlate = vehicleLicensePlate,
+                    guestsCount = guestsCount,
+                    period = period,
+                    isAutoCheckIn = isAutoCheckIn,
+                    isAutoCheckOut = isAutoCheckOut,
+                    status = status,
+                    totalPrice = totalPrice,
+                    commission = requireNotNull(commission),
+                    transfers = transfers,
+                    files = files,
+                    observations = observations,
+                    isDeleted = isDeleted,
+                    inconsistencies = inconsistencies,
+                    contractVersion = contractVersion,
+                )
+            }
+        }
+    }
+
+    class UnavailablePeriod private constructor(
+        override val id: Long?,
+        override val createDateTime: AppDateTime?,
+        override val updateDateTime: AppDateTime?,
+        override val property: StayProperty,
+        override val period: StayPeriod,
+        override val observations: String?,
+        override val isDeleted: Boolean,
+        override val inconsistencies: String?,
+        override val contractVersion: Int,
+    ) : Stay(
+        id = id,
+        createDateTime = createDateTime,
+        updateDateTime = updateDateTime,
+        property = property,
+        period = period,
+        observations = observations,
+        isDeleted = isDeleted,
+        inconsistencies = inconsistencies,
+        contractVersion = contractVersion,
+    ) {
+        companion object {
+            fun parse(
+                id: Long?,
+                createDateTime: AppDateTime?,
+                updateDateTime: AppDateTime?,
+                property: StayProperty,
+                checkInDateTime: AppDateTime,
+                checkOutDateTime: AppDateTime,
+                observations: String?,
+                isDeleted: Boolean,
+                inconsistencies: String?,
+                contractVersion: Int,
+            ): UnavailablePeriod {
+                if (property is StayProperty.WithData) {
+                    validateStayProperty(property.data?.id)
+                        .onError { throw it.asException() }
+                }
+
+                val period = StayPeriod.parse(
+                    checkInDateTime = checkInDateTime,
+                    checkInTime = 12 to 0,
+                    checkOutDateTime = checkOutDateTime,
+                    checkOutTime = 12 to 0,
+                )
+
+                return UnavailablePeriod(
+                    id = id,
+                    createDateTime = createDateTime,
+                    updateDateTime = updateDateTime,
+                    property = property,
+                    period = period,
+                    observations = observations,
+                    isDeleted = isDeleted,
+                    inconsistencies = inconsistencies,
+                    contractVersion = contractVersion,
+                )
+            }
+        }
+    }
+}
+
+//val isAnyFormFieldInitialized = property != null
+//        || tenant != null
+//        || vehicleMake != null
+//        || vehicleColor != null
+//        || vehicleLicensePlate != null
+//        || guests != null
+//        || checkInDateTime != null || checkInHourMinute != null
+//        || checkOutDateTime != null || checkOutHourMinute != null
+//        || isAutoCheckIn || isAutoCheckOut
+//        || totalPrice != null || commission != null
+//        || transfers.isNotEmpty()
+//        || files.isNotEmpty()
+//        || observations != null

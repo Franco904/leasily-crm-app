@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.presentation.composables.CountAnswer
 import com.fstengineering.leasilycrm.core.presentation.composables.CountAnswersFormField
 import kotlinx.collections.immutable.persistentListOf
@@ -19,43 +19,43 @@ fun PropertyCharacteristicsCountFormField(
         countAnswers = persistentListOf(
             CountAnswer(
                 label = stringResource(R.string.property_registration_bedrooms_body_text),
-                count = propertyForm.qtBedrooms,
-                onCountChange = { onPropertyFormChange(propertyForm.copy(qtBedrooms = it)) },
+                count = propertyForm.bedrooms,
+                onCountChange = { onPropertyFormChange(propertyForm.copy(bedrooms = it)) },
             ),
             CountAnswer(
                 label = stringResource(R.string.property_registration_en_suites_body_text),
-                count = propertyForm.qtEnSuites,
-                onCountChange = { onPropertyFormChange(propertyForm.copy(qtEnSuites = it)) },
+                count = propertyForm.enSuites,
+                onCountChange = { onPropertyFormChange(propertyForm.copy(enSuites = it)) },
             ),
             CountAnswer(
                 label = stringResource(R.string.property_registration_double_beds_body_text),
-                count = propertyForm.qtDoubleBeds,
-                onCountChange = { onPropertyFormChange(propertyForm.copy(qtDoubleBeds = it)) },
+                count = propertyForm.doubleBeds,
+                onCountChange = { onPropertyFormChange(propertyForm.copy(doubleBeds = it)) },
             ),
             CountAnswer(
                 label = stringResource(R.string.property_registration_single_beds_body_text),
-                count = propertyForm.qtSingleBeds,
-                onCountChange = { onPropertyFormChange(propertyForm.copy(qtSingleBeds = it)) },
+                count = propertyForm.singleBeds,
+                onCountChange = { onPropertyFormChange(propertyForm.copy(singleBeds = it)) },
             ),
             CountAnswer(
                 label = stringResource(R.string.property_registration_bathrooms_body_text),
-                count = propertyForm.qtBathrooms,
-                onCountChange = { onPropertyFormChange(propertyForm.copy(qtBathrooms = it)) },
+                count = propertyForm.bathrooms,
+                onCountChange = { onPropertyFormChange(propertyForm.copy(bathrooms = it)) },
             ),
             CountAnswer(
                 label = stringResource(R.string.property_registration_parking_spots_body_text),
-                count = propertyForm.qtParkingSpots,
-                onCountChange = { onPropertyFormChange(propertyForm.copy(qtParkingSpots = it)) },
+                count = propertyForm.parkingSpots,
+                onCountChange = { onPropertyFormChange(propertyForm.copy(parkingSpots = it)) },
             ),
             CountAnswer(
                 label = stringResource(R.string.property_registration_air_conditioners_body_text),
-                count = propertyForm.qtAirConditioners,
-                onCountChange = { onPropertyFormChange(propertyForm.copy(qtAirConditioners = it)) },
+                count = propertyForm.airConditioners,
+                onCountChange = { onPropertyFormChange(propertyForm.copy(airConditioners = it)) },
             ),
             CountAnswer(
                 label = stringResource(R.string.property_registration_max_guests_body_text),
-                count = propertyForm.qtMaxGuests,
-                onCountChange = { onPropertyFormChange(propertyForm.copy(qtMaxGuests = it)) },
+                count = propertyForm.maxGuests,
+                onCountChange = { onPropertyFormChange(propertyForm.copy(maxGuests = it)) },
             ),
         ),
         modifier = modifier

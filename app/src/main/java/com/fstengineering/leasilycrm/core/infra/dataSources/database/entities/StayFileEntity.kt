@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.models.StayFile
-import com.fstengineering.leasilycrm.core.domain.models.wrappers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.entities.StayFile
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 
 @Entity(
     tableName = "stay_files",

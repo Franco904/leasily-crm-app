@@ -6,7 +6,7 @@ import androidx.compose.material.icons.outlined.House
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.fstengineering.leasilycrm.core.domain.constants.APARTMENT_PROPERTY_TYPE_ID
-import com.fstengineering.leasilycrm.core.domain.models.PropertyType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconValueDetailsItem
 
 @Composable

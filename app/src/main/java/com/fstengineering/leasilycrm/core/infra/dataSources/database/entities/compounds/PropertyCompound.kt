@@ -1,21 +1,18 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds
 
 import androidx.room.Embedded
-import androidx.room.Junction
 import androidx.room.Relation
-import com.fstengineering.leasilycrm.core.domain.models.Property
-import com.fstengineering.leasilycrm.core.domain.models.PropertyCharacteristicProperty
-import com.fstengineering.leasilycrm.core.domain.models.PropertyFile
-import com.fstengineering.leasilycrm.core.domain.models.PropertyPrice
-import com.fstengineering.leasilycrm.core.domain.models.Stay
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicPropertyCrossRefEntity
+import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyCharacteristicCrossRef
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertySeaProximityTypeEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyTypeEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import kotlinx.collections.immutable.toImmutableList
 
@@ -28,34 +25,11 @@ data class PropertyCompound(
     )
     val owner: PropertyOwnerCompound,
     @Relation(
-        parentColumn = "property_type_id",
-        entityColumn = "id",
-        entity = PropertyTypeEntity::class,
-    )
-    val type: PropertyTypeEntity,
-    @Relation(
-        parentColumn = "property_sea_proximity_type_id",
-        entityColumn = "id",
-        entity = PropertySeaProximityTypeEntity::class,
-    )
-    val seaProximityType: PropertySeaProximityTypeEntity?,
-    @Relation(
-        parentColumn = "id",
-        entity = PropertyCharacteristicEntity::class,
-        entityColumn = "id",
-        associateBy = Junction(
-            value = PropertyCharacteristicPropertyCrossRefEntity::class,
-            parentColumn = "property_id",
-            entityColumn = "property_characteristic_id"
-        )
-    )
-    val allCharacteristics: List<PropertyCharacteristicEntity>,
-    @Relation(
         parentColumn = "id",
         entityColumn = "property_id",
-        entity = PropertyCharacteristicPropertyCrossRefEntity::class
+        entity = PropertyCharacteristicCrossRefEntity::class
     )
-    val checkedCharacteristics: List<PropertyCharacteristicPropertyCrossRefEntity>,
+    val checkedCharacteristics: List<PropertyCharacteristicCrossRefEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "property_id",
@@ -75,7 +49,7 @@ data class PropertyCompound(
     )
     val stays: List<StayEntity>,
 ) {
-    private val activeCharacteristics: List<PropertyCharacteristicProperty>
+    private val activeCharacteristics: List<PropertyCharacteristicCrossRef>
         get() {
             val activeCharacteristicIds = checkedCharacteristics
                 .filter { !it.isDeleted }
@@ -83,13 +57,13 @@ data class PropertyCompound(
                 .toSet()
 
             return activeCharacteristicIds.map { activeCharacteristicId ->
-                val characteristic = allCharacteristics.find { it.id == activeCharacteristicId }
+                val characteristic = PropertyCharacteristic.parse(activeCharacteristicId)
 
-                PropertyCharacteristicProperty(
+                PropertyCharacteristicCrossRef(
                     createDateTime = property.createDateTime,
                     updateDateTime = property.updateDateTime,
                     propertyId = requireNotNull(property.id),
-                    propertyCharacteristic = requireNotNull(characteristic).toDomain(),
+                    propertyCharacteristic = characteristic,
                     isDeleted = false,
                 )
             }
@@ -110,8 +84,8 @@ data class PropertyCompound(
             .filter { !it.isDeleted }
             .map { it.toDomain() }
 
-    fun toDomain() = Property(
-        id = requireNotNull(property.id),
+    fun toDomain() = Property.parse(
+        id = property.id,
         createDateTime = property.createDateTime,
         updateDateTime = property.updateDateTime,
         neighborhood = property.neighborhood,
@@ -122,14 +96,14 @@ data class PropertyCompound(
         parkingSpotNumber = property.parkingSpotNumber,
         parkingBasementLevelNumber = property.parkingBasementLevelNumber,
         hobbyBoxNumber = property.hobbyBoxNumber,
-        qtBedrooms = property.qtBedrooms,
-        qtEnSuites = property.qtEnSuites,
-        qtDoubleBeds = property.qtDoubleBeds,
-        qtSingleBeds = property.qtSingleBeds,
-        qtBathrooms = property.qtBathrooms,
-        qtParkingSpots = property.qtParkingSpots,
-        qtAirConditioners = property.qtAirConditioners,
-        qtMaxGuests = property.qtMaxGuests,
+        bedrooms = property.bedrooms,
+        enSuites = property.enSuites,
+        doubleBeds = property.doubleBeds,
+        singleBeds = property.singleBeds,
+        bathrooms = property.bathrooms,
+        parkingSpots = property.parkingSpots,
+        airConditioners = property.airConditioners,
+        maxGuests = property.maxGuests,
         distanceToSea = property.distanceToSea,
         includedItems = property.includedItems,
         hasIncludedItems = property.hasIncludedItems,
@@ -138,12 +112,13 @@ data class PropertyCompound(
         observations = property.observations,
         isDeleted = property.isDeleted,
         owner = owner.toDomain(),
-        type = type.toDomain(),
-        seaProximityType = seaProximityType?.toDomain(),
+        typeId = property.typeId,
+        seaProximityTypeId = property.seaProximityTypeId,
         characteristics = activeCharacteristics.toImmutableList(),
         prices = activePrices.toImmutableList(),
         files = activeFiles.toImmutableList(),
         stays = activeStays.toImmutableList(),
-        userId = property.userId,
+        inconsistencies = property.inconsistencies,
+        contractVersion = property.contractVersion,
     )
 }
