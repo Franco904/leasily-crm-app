@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.map
 class TenantRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val databaseDataSource: TenantDatabaseDataSource,
-    private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : TenantRepository {
     override suspend fun insertOrUpdate(

@@ -29,7 +29,6 @@ class AssistanceRepositoryImpl(
     private val assistanceInteractionDatabaseDataSource: AssistanceInteractionDatabaseDataSource,
     private val assistanceSearchedNeighborhoodDatabaseDataSource: AssistanceSearchedNeighborhoodDatabaseDataSource,
     private val assistanceSentPropertyCrossRefDatabaseDataSource: AssistanceSentPropertyCrossRefDatabaseDataSource,
-    private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
 ) : AssistanceRepository {
     override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, DataError> {
         return databaseAdapter.withTransaction {

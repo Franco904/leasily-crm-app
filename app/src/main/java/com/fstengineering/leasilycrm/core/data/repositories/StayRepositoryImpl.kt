@@ -31,7 +31,6 @@ class StayRepositoryImpl(
     private val stayDatabaseDataSource: StayDatabaseDataSource,
     private val stayFileDatabaseDataSource: StayFileDatabaseDataSource,
     private val stayTransferDatabaseDataSource: StayTransferDatabaseDataSource,
-    private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : StayRepository {
     override suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, DataError> {

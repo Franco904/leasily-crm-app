@@ -28,8 +28,6 @@ class PropertyOwnerRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val propertyOwnerDatabaseDataSource: PropertyOwnerDatabaseDataSource,
     private val propertyOwnerFileDatabaseDataSource: PropertyOwnerFileDatabaseDataSource,
-    private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
-    private val sharedStorageDataSource: SharedStorageDataSource,
 ) : PropertyOwnerRepository {
     override suspend fun insertOrUpdate(
         propertyOwner: PropertyOwner,

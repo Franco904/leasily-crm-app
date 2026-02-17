@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Pr
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyCharacteristicPropertyCrossRefDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyCharacteristicCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyFileDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyPriceDatabaseDataSource
@@ -25,7 +25,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -33,10 +32,9 @@ import kotlinx.coroutines.flow.mapLatest
 class PropertyRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val propertyDatabaseDataSource: PropertyDatabaseDataSource,
-    private val propertyCharacteristicPropertyDatabaseDataSource: PropertyCharacteristicPropertyCrossRefDatabaseDataSource,
+    private val propertyCharacteristicCrossRefDatabaseDataSource: PropertyCharacteristicCrossRefDatabaseDataSource,
     private val propertyFileDatabaseDataSource: PropertyFileDatabaseDataSource,
     private val propertyPriceDatabaseDataSource: PropertyPriceDatabaseDataSource,
-    private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : PropertyRepository {
     override suspend fun insertOrUpdate(property: Property): AppResult<Unit, DataError> {
@@ -55,7 +53,7 @@ class PropertyRepositoryImpl(
             val characteristic = PropertyCharacteristicCrossRefEntity.fromDomain(
                 domain = it.copy(propertyId = propertyId)
             )
-            propertyCharacteristicPropertyDatabaseDataSource.insertOrUpdate(characteristic)
+            propertyCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
         }
 
         property.files.forEach {

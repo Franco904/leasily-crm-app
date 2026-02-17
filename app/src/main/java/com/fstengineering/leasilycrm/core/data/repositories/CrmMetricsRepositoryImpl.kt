@@ -23,7 +23,6 @@ import kotlin.math.roundToInt
 
 class CrmMetricsRepositoryImpl(
     private val databaseDataSource: CrmMetricsDatabaseDataSource,
-    private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
     private val now: AppDate,
 ) : CrmMetricsRepository {
     override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataError>> =

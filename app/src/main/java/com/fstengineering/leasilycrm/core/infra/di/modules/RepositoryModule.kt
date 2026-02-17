@@ -37,7 +37,6 @@ val repositoryModule = module {
             assistanceInteractionDatabaseDataSource = get(),
             assistanceSearchedNeighborhoodDatabaseDataSource = get(),
             assistanceSentPropertyCrossRefDatabaseDataSource = get(),
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
     }
 
@@ -52,7 +51,6 @@ val repositoryModule = module {
     single<CrmMetricsRepository> {
         CrmMetricsRepositoryImpl(
             databaseDataSource = get(),
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
             now = AppDate.lazyNow(),
         )
     }
@@ -68,8 +66,6 @@ val repositoryModule = module {
             databaseAdapter = get(),
             propertyOwnerDatabaseDataSource = get(),
             propertyOwnerFileDatabaseDataSource = get(),
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
-            sharedStorageDataSource = get(),
         )
     }
 
@@ -77,10 +73,9 @@ val repositoryModule = module {
         PropertyRepositoryImpl(
             databaseAdapter = get(),
             propertyDatabaseDataSource = get(),
-            propertyCharacteristicPropertyDatabaseDataSource = get(),
+            propertyCharacteristicCrossRefDatabaseDataSource = get(),
             propertyFileDatabaseDataSource = get(),
             propertyPriceDatabaseDataSource = get(),
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
             plainPreferencesDataSource = get(plainPreferencesQualifier),
         )
     }
@@ -97,7 +92,6 @@ val repositoryModule = module {
             stayDatabaseDataSource = get(),
             stayFileDatabaseDataSource = get(),
             stayTransferDatabaseDataSource = get(),
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
             plainPreferencesDataSource = get(plainPreferencesQualifier),
         )
     }
@@ -112,7 +106,6 @@ val repositoryModule = module {
         val realRepository = TenantRepositoryImpl(
             databaseAdapter = get(),
             databaseDataSource = get(),
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
             plainPreferencesDataSource = get(plainPreferencesQualifier),
         )
 
