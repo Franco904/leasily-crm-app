@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 
 enum class PropertyCharacteristic(val id: Long) {
     Accessibility(id = 1L),
@@ -22,6 +22,6 @@ enum class PropertyCharacteristic(val id: Long) {
 
     companion object {
         fun parse(id: Long): PropertyCharacteristic = entries.find { it.id == id }
-            ?: throw ParsingError.Property.CharacteristicInvalid.asException()
+            ?: throw DomainError.Property.CharacteristicInvalid.asException()
     }
 }

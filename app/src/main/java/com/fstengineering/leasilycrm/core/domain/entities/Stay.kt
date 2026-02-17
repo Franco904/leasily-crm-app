@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
 import com.fstengineering.leasilycrm.core.domain.helpers.StayProperty
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayGuestsCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayPeriod
@@ -163,9 +163,9 @@ sealed class Stay(
                     checkOutTime = checkOutTime,
                 )
 
-                isAutoCheckIn ?: throw ParsingError.Stay.IsAutoCheckInRequired.asException()
-                isAutoCheckOut ?: throw ParsingError.Stay.IsAutoCheckOutRequired.asException()
-                statusId ?: throw ParsingError.Stay.StatusRequired.asException()
+                isAutoCheckIn ?: throw DomainError.Stay.IsAutoCheckInRequired.asException()
+                isAutoCheckOut ?: throw DomainError.Stay.IsAutoCheckOutRequired.asException()
+                statusId ?: throw DomainError.Stay.StatusRequired.asException()
 
                 if (totalPrice != null) {
                     validateTotalPrice(totalPrice)
@@ -202,24 +202,24 @@ sealed class Stay(
                 )
             }
 
-            fun validateTenant(tenantId: Long?): AppResult<Unit, ParsingError.Stay> {
+            fun validateTenant(tenantId: Long?): AppResult<Unit, DomainError.Stay> {
                 return when {
-                    tenantId == null -> AppResult.Error(ParsingError.Stay.PropertyRequired)
+                    tenantId == null -> AppResult.Error(DomainError.Stay.PropertyRequired)
                     else -> AppResult.Success(Unit)
                 }
             }
 
-            fun validateTotalPrice(totalPrice: AppDecimal): AppResult<Unit, ParsingError.Stay> {
+            fun validateTotalPrice(totalPrice: AppDecimal): AppResult<Unit, DomainError.Stay> {
                 return when {
-                    totalPrice.isNegative -> AppResult.Error(ParsingError.Stay.TotalPriceIsNegative)
+                    totalPrice.isNegative -> AppResult.Error(DomainError.Stay.TotalPriceIsNegative)
                     else -> AppResult.Success(Unit)
                 }
             }
 
-            fun validateCommission(commission: AppDecimal?): AppResult<Unit, ParsingError.Stay> {
+            fun validateCommission(commission: AppDecimal?): AppResult<Unit, DomainError.Stay> {
                 return when {
-                    commission == null -> AppResult.Error(ParsingError.Stay.CommissionRequired)
-                    commission.isNegative -> AppResult.Error(ParsingError.Stay.CommissionIsNegative)
+                    commission == null -> AppResult.Error(DomainError.Stay.CommissionRequired)
+                    commission.isNegative -> AppResult.Error(DomainError.Stay.CommissionIsNegative)
                     else -> AppResult.Success(Unit)
                 }
             }
@@ -288,9 +288,9 @@ sealed class Stay(
     }
 
     companion object {
-        fun validateProperty(propertyId: Long?): AppResult<Unit, ParsingError.Stay> {
+        fun validateProperty(propertyId: Long?): AppResult<Unit, DomainError.Stay> {
             return when {
-                propertyId == null -> AppResult.Error(ParsingError.Stay.PropertyRequired)
+                propertyId == null -> AppResult.Error(DomainError.Stay.PropertyRequired)
                 else -> AppResult.Success(Unit)
             }
         }

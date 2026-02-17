@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class AssistanceGuestsCount private constructor(
@@ -25,12 +25,12 @@ class AssistanceGuestsCount private constructor(
             kids: Int,
             babies: Int,
             animals: Int,
-        ): AppResult<Unit, ParsingError.Assistance> {
+        ): AppResult<Unit, DomainError.Assistance> {
             return when {
-                adults < 0 -> AppResult.Error(ParsingError.Assistance.AdultGuestsCountIsNegative)
-                kids < 0 -> AppResult.Error(ParsingError.Assistance.KidsGuestsCountIsNegative)
-                babies < 0 -> AppResult.Error(ParsingError.Assistance.BabiesGuestsCountIsNegative)
-                animals < 0 -> AppResult.Error(ParsingError.Assistance.AnimalsGuestsCountIsNegative)
+                adults < 0 -> AppResult.Error(DomainError.Assistance.AdultGuestsCountIsNegative)
+                kids < 0 -> AppResult.Error(DomainError.Assistance.KidsGuestsCountIsNegative)
+                babies < 0 -> AppResult.Error(DomainError.Assistance.BabiesGuestsCountIsNegative)
+                animals < 0 -> AppResult.Error(DomainError.Assistance.AnimalsGuestsCountIsNegative)
                 else -> AppResult.Success(Unit)
             }
         }

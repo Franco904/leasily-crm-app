@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 
 enum class TenantStatus(val id: Int) {
     Lead(id = 0),
@@ -9,6 +9,6 @@ enum class TenantStatus(val id: Int) {
 
     companion object {
         fun parse(id: Int) =
-            entries.find { it.id == id } ?: throw ParsingError.Tenant.StatusInvalid.asException()
+            entries.find { it.id == id } ?: throw DomainError.Tenant.StatusInvalid.asException()
     }
 }

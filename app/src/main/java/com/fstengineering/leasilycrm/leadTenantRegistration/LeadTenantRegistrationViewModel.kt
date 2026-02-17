@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
@@ -173,13 +173,13 @@ class LeadTenantRegistrationViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ParsingError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _formErrors.update { LeadTenantErrorUiState() }
         delay(150.milliseconds)
 
-        val nameError = errors.firstOrNull { it is ParsingError.TenantName }
-        val phoneError = errors.firstOrNull { it is ParsingError.TenantPhone }
-        val emailError = errors.firstOrNull { it is ParsingError.TenantEmail }
+        val nameError = errors.firstOrNull { it is DomainError.TenantName }
+        val phoneError = errors.firstOrNull { it is DomainError.TenantPhone }
+        val emailError = errors.firstOrNull { it is DomainError.TenantEmail }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->

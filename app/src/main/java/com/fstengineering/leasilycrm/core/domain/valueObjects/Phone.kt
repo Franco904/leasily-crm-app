@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class Phone private constructor(val value: String) {
@@ -13,9 +13,9 @@ class Phone private constructor(val value: String) {
             return Phone(requireNotNull(phone))
         }
 
-        fun validate(phone: String): AppResult<Unit, ParsingError> {
+        fun validate(phone: String): AppResult<Unit, DomainError> {
             return when {
-                phone.length > 20 -> AppResult.Error(ParsingError.PropertyOwner.PhoneLengthIsGreaterThan20Chars)
+                phone.length > 20 -> AppResult.Error(DomainError.PropertyOwner.PhoneLengthIsGreaterThan20Chars)
                 else -> AppResult.Success(Unit)
             }
         }

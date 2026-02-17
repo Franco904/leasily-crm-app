@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyRegistration.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -60,16 +60,16 @@ class PropertyRegistrationStep1ViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ParsingError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _formErrors.update { PropertyStep1ErrorUiState() }
         delay(150.milliseconds)
 
-        val propertyOwnerError = errors.firstOrNull { it is ParsingError.PropertyPropertyOwner }
-        val propertyTypeError = errors.firstOrNull { it is ParsingError.PropertyType }
+        val propertyOwnerError = errors.firstOrNull { it is DomainError.PropertyPropertyOwner }
+        val propertyTypeError = errors.firstOrNull { it is DomainError.PropertyType }
         val propertyNeighborhoodError =
-            errors.firstOrNull { it is ParsingError.PropertyNeighborhood }
+            errors.firstOrNull { it is DomainError.PropertyNeighborhood }
         val propertyStreetAddressError =
-            errors.firstOrNull { it is ParsingError.PropertyStreetAddress }
+            errors.firstOrNull { it is DomainError.PropertyStreetAddress }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->

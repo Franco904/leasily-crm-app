@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceInt
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceInteractionField
 import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceInteractionValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -84,9 +84,9 @@ class AssistanceRegistrationStep3ViewModel(
             assistanceInteractionValidator.validate(interactionFromForm)
                 .onErrors { errors ->
                     val interactionDateError =
-                        errors.firstOrNull { it is ParsingError.AssistanceInteractionDate }
+                        errors.firstOrNull { it is DomainError.AssistanceInteractionDate }
                     val titleError =
-                        errors.firstOrNull { it is ParsingError.AssistanceInteractionTitle }
+                        errors.firstOrNull { it is DomainError.AssistanceInteractionTitle }
 
                     _formErrors.update {
                         val newErrors = it.errors.mutate { map ->

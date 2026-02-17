@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.core.domain.entities
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class AssistanceSearchedNeighborhood private constructor(
@@ -32,9 +32,9 @@ class AssistanceSearchedNeighborhood private constructor(
             )
         }
 
-        fun validate(neighborhood: String?): AppResult<Unit, ParsingError.Assistance> {
+        fun validate(neighborhood: String?): AppResult<Unit, DomainError.Assistance> {
             return when {
-                neighborhood.isNullOrBlank() -> AppResult.Error(ParsingError.Assistance.SearchedNeighborhoodNameRequired)
+                neighborhood.isNullOrBlank() -> AppResult.Error(DomainError.Assistance.SearchedNeighborhoodNameRequired)
                 else -> AppResult.Success(Unit)
             }
         }

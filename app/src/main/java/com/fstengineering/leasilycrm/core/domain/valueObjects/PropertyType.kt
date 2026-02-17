@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 
 enum class PropertyType(val id: Long) {
     Apartment(id = 1L),
@@ -8,6 +8,6 @@ enum class PropertyType(val id: Long) {
 
     companion object {
         fun parse(id: Long): PropertyType = entries.find { it.id == id }
-            ?: throw ParsingError.Property.TypeInvalid.asException()
+            ?: throw DomainError.Property.TypeInvalid.asException()
     }
 }

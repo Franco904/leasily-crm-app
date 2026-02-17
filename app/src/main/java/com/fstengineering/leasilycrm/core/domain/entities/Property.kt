@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import kotlinx.collections.immutable.ImmutableList
 
@@ -90,8 +90,8 @@ data class Property(
 
             val type = PropertyType.parse(requireNotNull(typeId))
 
-            if (neighborhood.isNullOrBlank()) throw ParsingError.Property.NeighborhoodRequired.asException()
-            if (streetAddress.isNullOrBlank()) throw ParsingError.Property.StreetAddressRequired.asException()
+            if (neighborhood.isNullOrBlank()) throw DomainError.Property.NeighborhoodRequired.asException()
+            if (streetAddress.isNullOrBlank()) throw DomainError.Property.StreetAddressRequired.asException()
 
             val seaProximityType = seaProximityTypeId?.let {
                 PropertySeaProximityType.parse(it, distanceToSea = distanceToSea)
@@ -135,30 +135,30 @@ data class Property(
             )
         }
 
-        fun validateOwner(ownerId: Long?): AppResult<Unit, ParsingError.Property> {
+        fun validateOwner(ownerId: Long?): AppResult<Unit, DomainError.Property> {
             return when {
-                ownerId == null -> AppResult.Error(ParsingError.Property.OwnerRequired)
+                ownerId == null -> AppResult.Error(DomainError.Property.OwnerRequired)
                 else -> AppResult.Success(Unit)
             }
         }
 
-        fun validateType(typeId: Long?): AppResult<Unit, ParsingError.Property> {
+        fun validateType(typeId: Long?): AppResult<Unit, DomainError.Property> {
             return when {
-                typeId == null -> AppResult.Error(ParsingError.Property.TypeRequired)
+                typeId == null -> AppResult.Error(DomainError.Property.TypeRequired)
                 else -> AppResult.Success(Unit)
             }
         }
 
-        fun validateNeighborhood(neighborhood: String?): AppResult<Unit, ParsingError.Property> {
+        fun validateNeighborhood(neighborhood: String?): AppResult<Unit, DomainError.Property> {
             return when {
-                neighborhood.isNullOrBlank() -> AppResult.Error(ParsingError.Property.NeighborhoodRequired)
+                neighborhood.isNullOrBlank() -> AppResult.Error(DomainError.Property.NeighborhoodRequired)
                 else -> AppResult.Success(Unit)
             }
         }
 
-        fun validateStreetAddress(streetAddress: String?): AppResult<Unit, ParsingError.Property> {
+        fun validateStreetAddress(streetAddress: String?): AppResult<Unit, DomainError.Property> {
             return when {
-                streetAddress.isNullOrBlank() -> AppResult.Error(ParsingError.Property.StreetAddressRequired)
+                streetAddress.isNullOrBlank() -> AppResult.Error(DomainError.Property.StreetAddressRequired)
                 else -> AppResult.Success(Unit)
             }
         }

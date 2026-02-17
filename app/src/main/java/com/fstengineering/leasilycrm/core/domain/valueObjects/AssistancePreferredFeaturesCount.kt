@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 data class AssistancePreferredFeaturesCount(
@@ -48,14 +48,14 @@ data class AssistancePreferredFeaturesCount(
             singleBeds: Int,
             bathrooms: Int,
             parkingSpots: Int,
-        ): AppResult<Unit, ParsingError.Assistance> {
+        ): AppResult<Unit, DomainError.Assistance> {
             return when {
-                bedrooms < 0 -> AppResult.Error(ParsingError.Assistance.BedroomsCountIsNegative)
-                enSuites < 0 -> AppResult.Error(ParsingError.Assistance.EnSuitesCountIsNegative)
-                doubleBeds < 0 -> AppResult.Error(ParsingError.Assistance.DoubleBedsCountIsNegative)
-                singleBeds < 0 -> AppResult.Error(ParsingError.Assistance.SingleBedsCountIsNegative)
-                bathrooms < 0 -> AppResult.Error(ParsingError.Assistance.BathroomsCountIsNegative)
-                parkingSpots < 0 -> AppResult.Error(ParsingError.Assistance.ParkingSpotsCountIsNegative)
+                bedrooms < 0 -> AppResult.Error(DomainError.Assistance.BedroomsCountIsNegative)
+                enSuites < 0 -> AppResult.Error(DomainError.Assistance.EnSuitesCountIsNegative)
+                doubleBeds < 0 -> AppResult.Error(DomainError.Assistance.DoubleBedsCountIsNegative)
+                singleBeds < 0 -> AppResult.Error(DomainError.Assistance.SingleBedsCountIsNegative)
+                bathrooms < 0 -> AppResult.Error(DomainError.Assistance.BathroomsCountIsNegative)
+                parkingSpots < 0 -> AppResult.Error(DomainError.Assistance.ParkingSpotsCountIsNegative)
                 else -> AppResult.Success(Unit)
             }
         }

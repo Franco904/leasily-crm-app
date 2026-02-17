@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class Name private constructor(val value: String) {
@@ -13,10 +13,10 @@ class Name private constructor(val value: String) {
             return Name(requireNotNull(name))
         }
 
-        fun validate(name: String?): AppResult<Unit, ParsingError> {
+        fun validate(name: String?): AppResult<Unit, DomainError> {
             return when {
-                name.isNullOrBlank() -> AppResult.Error(ParsingError.PropertyOwner.NameRequired)
-                name.length > 100 -> AppResult.Error(ParsingError.PropertyOwner.NameLengthIsGreaterThan100Chars)
+                name.isNullOrBlank() -> AppResult.Error(DomainError.PropertyOwner.NameRequired)
+                name.length > 100 -> AppResult.Error(DomainError.PropertyOwner.NameLengthIsGreaterThan100Chars)
                 else -> AppResult.Success(Unit)
             }
         }

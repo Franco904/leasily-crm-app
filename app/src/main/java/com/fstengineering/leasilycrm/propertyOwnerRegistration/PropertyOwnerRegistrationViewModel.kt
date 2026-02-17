@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
@@ -149,15 +149,15 @@ class PropertyOwnerRegistrationViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ParsingError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _formErrors.update { PropertyOwnerErrorUiState() }
         delay(150.milliseconds)
 
-        val nameError = errors.firstOrNull { it is ParsingError.PropertyOwnerName }
-        val phoneError = errors.firstOrNull { it is ParsingError.PropertyOwnerPhone }
-        val emailError = errors.firstOrNull { it is ParsingError.PropertyOwnerEmail }
+        val nameError = errors.firstOrNull { it is DomainError.PropertyOwnerName }
+        val phoneError = errors.firstOrNull { it is DomainError.PropertyOwnerPhone }
+        val emailError = errors.firstOrNull { it is DomainError.PropertyOwnerEmail }
         val paymentKeyError =
-            errors.firstOrNull { it is ParsingError.PropertyOwnerPaymentKey }
+            errors.firstOrNull { it is DomainError.PropertyOwnerPaymentKey }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->

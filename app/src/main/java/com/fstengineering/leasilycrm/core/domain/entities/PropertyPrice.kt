@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyPricePeriod
 
@@ -49,10 +49,10 @@ class PropertyPrice private constructor(
 
         fun validateAmount(
             amount: AppDecimal?,
-        ): AppResult<Unit, ParsingError.Property> {
+        ): AppResult<Unit, DomainError.Property> {
             return when {
-                amount == null -> AppResult.Error(ParsingError.Property.PriceAmountRequired)
-                amount.isNegative -> AppResult.Error(ParsingError.Property.PriceAmountIsNegative)
+                amount == null -> AppResult.Error(DomainError.Property.PriceAmountRequired)
+                amount.isNegative -> AppResult.Error(DomainError.Property.PriceAmountIsNegative)
                 else -> AppResult.Success(Unit)
             }
         }

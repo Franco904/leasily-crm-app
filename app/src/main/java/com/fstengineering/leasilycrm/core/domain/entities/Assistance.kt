@@ -3,8 +3,6 @@ package com.fstengineering.leasilycrm.core.domain.entities
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistanceGuestsCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistancePreferredFeaturesCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistanceSearchedPeriod

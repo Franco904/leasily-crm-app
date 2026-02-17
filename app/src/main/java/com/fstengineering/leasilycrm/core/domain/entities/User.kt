@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 
 class User private constructor(
     val remoteId: Long,
@@ -35,7 +35,7 @@ class User private constructor(
         }
 
         private fun validateCreciNumber(creciNumber: String) {
-            if (creciNumber.length > 8) throw ParsingError.User.CreciNumberLengthIsGreaterThan8Chars.asException()
+            if (creciNumber.length > 8) throw DomainError.User.CreciNumberLengthIsGreaterThan8Chars.asException()
         }
     }
 }

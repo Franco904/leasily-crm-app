@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.core.domain.entities
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class AssistanceInteraction private constructor(
@@ -39,16 +39,16 @@ class AssistanceInteraction private constructor(
             )
         }
 
-        fun validateDate(date: AppDate?): AppResult<Unit, ParsingError.Assistance> {
+        fun validateDate(date: AppDate?): AppResult<Unit, DomainError.Assistance> {
             return when {
-                date == null -> AppResult.Error(ParsingError.Assistance.InteractionDateRequired)
+                date == null -> AppResult.Error(DomainError.Assistance.InteractionDateRequired)
                 else -> AppResult.Success(Unit)
             }
         }
 
-        fun validateTitle(title: String?): AppResult<Unit, ParsingError.Assistance> {
+        fun validateTitle(title: String?): AppResult<Unit, DomainError.Assistance> {
             return when {
-                title.isNullOrBlank() -> AppResult.Error(ParsingError.Assistance.InteractionTitleRequired)
+                title.isNullOrBlank() -> AppResult.Error(DomainError.Assistance.InteractionTitleRequired)
                 else -> AppResult.Success(Unit)
             }
         }

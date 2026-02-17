@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 sealed class PropertySeaProximityType(val id: Long) {
@@ -20,10 +20,10 @@ sealed class PropertySeaProximityType(val id: Long) {
                 return DistanceToSea(requireNotNull(distance))
             }
 
-            fun validate(distance: AppDecimal?): AppResult<Unit, ParsingError> {
+            fun validate(distance: AppDecimal?): AppResult<Unit, DomainError> {
                 return when {
-                    distance == null -> AppResult.Error(ParsingError.PropertySeaProximity.DistanceToSeaRequired)
-                    distance.isNegative -> AppResult.Error(ParsingError.PropertySeaProximity.DistanceToSeaIsNegative)
+                    distance == null -> AppResult.Error(DomainError.PropertySeaProximity.DistanceToSeaRequired)
+                    distance.isNegative -> AppResult.Error(DomainError.PropertySeaProximity.DistanceToSeaIsNegative)
                     else -> AppResult.Success(Unit)
                 }
             }
@@ -41,10 +41,10 @@ sealed class PropertySeaProximityType(val id: Long) {
             SEA_VIEW_ID -> SeaView
             FAR_FROM_SEA_ID -> FarFromSea
             DISTANCE_TO_SEA_ID -> DistanceToSea.parse(distanceToSea)
-            else -> throw ParsingError.PropertySeaProximity.PropertySeaProximityInvalid.asException()
+            else -> throw DomainError.PropertySeaProximity.PropertySeaProximityInvalid.asException()
         }
 
-        fun validate(id: Long, distanceToSea: AppDecimal?): AppResult<Unit, ParsingError> {
+        fun validate(id: Long, distanceToSea: AppDecimal?): AppResult<Unit, DomainError> {
             val noValidationTypes = listOf(
                 SEA_ACCESS_ID,
                 SEA_VIEW_ID,
@@ -54,7 +54,7 @@ sealed class PropertySeaProximityType(val id: Long) {
             return when (id) {
                 in noValidationTypes -> AppResult.Success(Unit)
                 DISTANCE_TO_SEA_ID -> DistanceToSea.validate(distanceToSea)
-                else -> AppResult.Error(ParsingError.PropertySeaProximity.PropertySeaProximityInvalid)
+                else -> AppResult.Error(DomainError.PropertySeaProximity.PropertySeaProximityInvalid)
             }
         }
     }

@@ -14,7 +14,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
@@ -345,12 +345,12 @@ class StayRegistrationViewModel(
         }
     }
 
-    private suspend fun setTransferFieldErrors(errors: List<ParsingError>) {
+    private suspend fun setTransferFieldErrors(errors: List<DomainError>) {
         _transferFormErrors.update { StayTransferErrorUiState() }
         delay(150.milliseconds)
 
-        val transferDateError = errors.firstOrNull { it is ParsingError.StayTransferDate }
-        val transferAmountError = errors.firstOrNull { it is ParsingError.StayTransferAmount }
+        val transferDateError = errors.firstOrNull { it is DomainError.StayTransferDate }
+        val transferAmountError = errors.firstOrNull { it is DomainError.StayTransferAmount }
 
         _transferFormErrors.update {
             val newErrors = it.errors.mutate { map ->
@@ -413,16 +413,16 @@ class StayRegistrationViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ParsingError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _stayFormErrors.update { StayErrorUiState() }
         delay(150.milliseconds)
 
-        val stayPropertyError = errors.firstOrNull { it is ParsingError.StayProperty }
-        val stayTenantError = errors.firstOrNull { it is ParsingError.StayTenant }
-        val periodError = errors.firstOrNull { it is ParsingError.StayPeriod }
-        val checkInTimeError = errors.firstOrNull { it is ParsingError.StayCheckInTime }
-        val checkOutTimeError = errors.firstOrNull { it is ParsingError.StayCheckOutTime }
-        val commissionError = errors.firstOrNull { it is ParsingError.StayCommission }
+        val stayPropertyError = errors.firstOrNull { it is DomainError.StayProperty }
+        val stayTenantError = errors.firstOrNull { it is DomainError.StayTenant }
+        val periodError = errors.firstOrNull { it is DomainError.StayPeriod }
+        val checkInTimeError = errors.firstOrNull { it is DomainError.StayCheckInTime }
+        val checkOutTimeError = errors.firstOrNull { it is DomainError.StayCheckOutTime }
+        val commissionError = errors.firstOrNull { it is DomainError.StayCommission }
 
         _stayFormErrors.update {
             val newErrors = it.errors.mutate { map ->

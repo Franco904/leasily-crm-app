@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
-sealed interface ParsingError : AppError {
-    fun asException() = ParsingException(this)
+sealed interface DomainError : AppError {
+    fun asException() = DomainException(this)
 
-    enum class Assistance : ParsingError {
+    enum class Assistance : DomainError {
         SearchingPeriodRequired,
         SearchingPeriodStartAndEndDatesAreTheSame,
         SearchingPeriodStartDateIsAfterEndDate,
@@ -22,7 +22,7 @@ sealed interface ParsingError : AppError {
         InteractionTitleRequired,
     }
 
-    enum class Property : ParsingError {
+    enum class Property : DomainError {
         OwnerRequired,
         TypeRequired,
         TypeInvalid,
@@ -37,13 +37,13 @@ sealed interface ParsingError : AppError {
         PriceAmountIsNegative,
     }
 
-    enum class PropertySeaProximity : ParsingError {
+    enum class PropertySeaProximity : DomainError {
         PropertySeaProximityInvalid,
         DistanceToSeaRequired,
         DistanceToSeaIsNegative,
     }
 
-    enum class PropertyOwner : ParsingError {
+    enum class PropertyOwner : DomainError {
         NameRequired,
         NameBelongsToOtherOwner,
         NameLengthIsGreaterThan100Chars,
@@ -53,7 +53,7 @@ sealed interface ParsingError : AppError {
         PaymentKeyLengthIsGreaterThan120Chars,
     }
 
-    enum class Tenant : ParsingError {
+    enum class Tenant : DomainError {
         NameRequired,
         NameBelongsToOtherTenant,
         NameLengthIsGreaterThan100Chars,
@@ -63,7 +63,7 @@ sealed interface ParsingError : AppError {
         StatusInvalid,
     }
 
-    enum class Stay : ParsingError {
+    enum class Stay : DomainError {
         PropertyRequired,
         TenantRequired,
         GuestsCountRequired,
@@ -87,7 +87,7 @@ sealed interface ParsingError : AppError {
         StatusInvalid,
     }
 
-    enum class User : ParsingError {
+    enum class User : DomainError {
         CreciNumberLengthIsGreaterThan8Chars,
     }
 }

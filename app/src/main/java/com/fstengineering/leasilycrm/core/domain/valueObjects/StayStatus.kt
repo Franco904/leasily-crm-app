@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 
 enum class StayStatus(val id: Int) {
     Upcoming(id = 0),
@@ -12,6 +12,6 @@ enum class StayStatus(val id: Int) {
 
     companion object {
         fun parse(id: Int) =
-            entries.find { it.id == id } ?: throw ParsingError.Stay.StatusInvalid.asException()
+            entries.find { it.id == id } ?: throw DomainError.Stay.StatusInvalid.asException()
     }
 }

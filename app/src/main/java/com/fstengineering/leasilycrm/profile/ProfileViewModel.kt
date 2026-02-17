@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
@@ -78,7 +78,7 @@ class ProfileViewModel(
 
             userValidator.validate(editedUser)
                 .onErrors { errors ->
-                    val creciNumberError = errors.firstOrNull { it is ParsingError.CreciNumber }
+                    val creciNumberError = errors.firstOrNull { it is DomainError.CreciNumber }
                     _creciFieldError.update { creciNumberError?.toInlineMessage() }
 
                     return@launch

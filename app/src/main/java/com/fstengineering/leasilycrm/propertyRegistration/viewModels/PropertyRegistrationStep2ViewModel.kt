@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyRegistration.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -53,12 +53,12 @@ class PropertyRegistrationStep2ViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ParsingError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _formErrors.update { PropertyStep2ErrorUiState() }
         delay(150.milliseconds)
 
         val propertyDistanceToSeaError =
-            errors.firstOrNull { it is ParsingError.PropertyDistanceToSea }
+            errors.firstOrNull { it is DomainError.PropertyDistanceToSea }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->

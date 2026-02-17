@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.Assist
 import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
 import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceSearchedNeighborhoodValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -81,7 +81,7 @@ class AssistanceRegistrationStep1ViewModel(
             assistanceSearchedNeighborhoodValidator.validate(newSearchedNeighborhood)
                 .onErrors { errors ->
                     val nameError =
-                        errors.firstOrNull { it is ParsingError.AssistanceSearchedNeighborhoodName }
+                        errors.firstOrNull { it is DomainError.AssistanceSearchedNeighborhoodName }
 
                     _searchedNeighborhoodErrors.update {
                         val newErrors = it.errors.mutate { map ->
@@ -104,12 +104,12 @@ class AssistanceRegistrationStep1ViewModel(
         _searchedNeighborhoodErrors.update { AssistanceSearchedNeighborhoodErrorUiState() }
     }
 
-    private suspend fun setFieldErrors(errors: List<ParsingError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _formErrors.update { AssistanceStep1ErrorUiState() }
         delay(150.milliseconds)
 
         val propertyDistanceToSeaError =
-            errors.firstOrNull { it is ParsingError.PropertyDistanceToSea }
+            errors.firstOrNull { it is DomainError.PropertyDistanceToSea }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->

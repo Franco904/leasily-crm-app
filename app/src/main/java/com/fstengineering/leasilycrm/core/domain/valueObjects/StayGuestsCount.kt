@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class StayGuestsCount private constructor(val count: Int) {
@@ -13,10 +13,10 @@ class StayGuestsCount private constructor(val count: Int) {
             return StayGuestsCount(requireNotNull(count))
         }
 
-        fun validate(guestsCount: Int?): AppResult<Unit, ParsingError.Stay> {
+        fun validate(guestsCount: Int?): AppResult<Unit, DomainError.Stay> {
             return when {
-                guestsCount == null -> AppResult.Error(ParsingError.Stay.GuestsCountRequired)
-                guestsCount < 0 -> AppResult.Error(ParsingError.Stay.GuestsCountIsNegative)
+                guestsCount == null -> AppResult.Error(DomainError.Stay.GuestsCountRequired)
+                guestsCount < 0 -> AppResult.Error(DomainError.Stay.GuestsCountIsNegative)
                 else -> AppResult.Success(Unit)
             }
         }

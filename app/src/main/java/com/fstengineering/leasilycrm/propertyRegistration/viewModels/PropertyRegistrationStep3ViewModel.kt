@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyRegistration.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
-import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyPriceValidator
@@ -78,14 +78,14 @@ class PropertyRegistrationStep3ViewModel(
         }
     }
 
-    private suspend fun setFieldErrors(errors: List<ParsingError>) {
+    private suspend fun setFieldErrors(errors: List<DomainError>) {
         _priceFormErrors.update { PropertyPriceErrorUiState() }
         delay(150.milliseconds)
 
         val priceDateRangeError =
-            errors.firstOrNull { it is ParsingError.PropertyPricePeriod }
+            errors.firstOrNull { it is DomainError.PropertyPricePeriod }
         val priceAmountError =
-            errors.firstOrNull { it is ParsingError.PropertyPriceAmount }
+            errors.firstOrNull { it is DomainError.PropertyPriceAmount }
 
         _priceFormErrors.update {
             val newErrors = it.errors.mutate { map ->
