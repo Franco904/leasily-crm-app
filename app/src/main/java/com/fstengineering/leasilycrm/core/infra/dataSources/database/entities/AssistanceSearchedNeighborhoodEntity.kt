@@ -32,7 +32,6 @@ data class AssistanceSearchedNeighborhoodEntity(
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
         neighborhood = neighborhood,
-        isDeleted = isDeleted,
     )
 
     companion object {
@@ -43,7 +42,7 @@ data class AssistanceSearchedNeighborhoodEntity(
                 updateDateTime = AppDateTime.now(),
                 neighborhood = domain.neighborhood,
                 assistanceId = assistanceId,
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
             )
     }
 }

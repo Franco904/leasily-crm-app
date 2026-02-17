@@ -38,7 +38,6 @@ data class PropertyPriceEntity(
         startDate = startDate,
         endDate = endDate,
         amount = amount,
-        propertyId = propertyId,
         isDeleted = isDeleted,
     )
 

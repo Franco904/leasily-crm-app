@@ -8,6 +8,4 @@ data class PropertyOwnerFile(
     val updateDateTime: AppDateTime?,
     val uriString: String,
     val name: String,
-    val propertyOwnerId: Long,
-    val isDeleted: Boolean,
 )

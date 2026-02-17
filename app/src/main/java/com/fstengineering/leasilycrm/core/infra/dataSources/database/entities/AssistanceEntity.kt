@@ -80,7 +80,7 @@ data class AssistanceEntity(
                 } else null,
                 observations = domain.observations,
                 isFinished = domain.isFinished,
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
                 tenantId = domain.tenantId,
                 inconsistencies = domain.inconsistencies,
                 contractVersion = BuildConfig.CONTRACT_VERSION,

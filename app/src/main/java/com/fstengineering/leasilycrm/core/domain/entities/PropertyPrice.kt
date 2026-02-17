@@ -14,7 +14,6 @@ class PropertyPrice private constructor(
     val updateDateTime: AppDateTime?,
     val period: PropertyPricePeriod,
     val amount: AppDecimal,
-    val propertyId: Long,
     val isDeleted: Boolean,
 ) {
     companion object {
@@ -25,7 +24,6 @@ class PropertyPrice private constructor(
             startDate: AppDate?,
             endDate: AppDate?,
             amount: AppDecimal?,
-            propertyId: Long,
             isDeleted: Boolean,
         ): PropertyPrice {
             validateAmount(amount)
@@ -42,7 +40,6 @@ class PropertyPrice private constructor(
                 updateDateTime = updateDateTime,
                 period = period,
                 amount = requireNotNull(amount),
-                propertyId = propertyId,
                 isDeleted = isDeleted,
             )
         }

@@ -33,21 +33,19 @@ data class PropertyFileEntity(
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
         uriString = propertyFileUri,
-        propertyId = propertyId,
         isMainPicture = isMainPicture,
-        isDeleted = isDeleted,
     )
 
     companion object {
-        fun fromDomain(domain: PropertyFile) =
+        fun fromDomain(domain: PropertyFile, propertyId: Long) =
             PropertyFileEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
                 propertyFileUri = domain.uriString,
-                propertyId = domain.propertyId,
+                propertyId = propertyId,
                 isMainPicture = domain.isMainPicture,
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
             )
     }
 }

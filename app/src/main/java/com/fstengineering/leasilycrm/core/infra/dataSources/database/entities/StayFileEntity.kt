@@ -34,20 +34,18 @@ data class StayFileEntity(
         updateDateTime = updateDateTime,
         uriString = stayFileUri,
         name = stayFileName,
-        isDeleted = isDeleted,
-        stayId = stayId,
     )
 
     companion object {
-        fun fromDomain(domain: StayFile) =
+        fun fromDomain(domain: StayFile, stayId: Long) =
             StayFileEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
                 stayFileUri = domain.uriString,
                 stayFileName = domain.name,
-                isDeleted = domain.isDeleted,
-                stayId = domain.stayId,
+                isDeleted = false,
+                stayId = stayId,
             )
     }
 }

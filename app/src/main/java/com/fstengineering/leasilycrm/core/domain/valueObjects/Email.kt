@@ -1,12 +1,13 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.constants.EMAIL_REGEX
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class Email private constructor(val value: String) {
     companion object {
+        private const val EMAIL_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$"
+
         fun parse(email: String): Email {
             validate(email)
                 .onError { throw it.asException() }

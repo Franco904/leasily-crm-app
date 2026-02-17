@@ -8,6 +8,4 @@ data class StayFile(
     val updateDateTime: AppDateTime?,
     val uriString: String,
     val name: String,
-    val isDeleted: Boolean,
-    val stayId: Long,
 )

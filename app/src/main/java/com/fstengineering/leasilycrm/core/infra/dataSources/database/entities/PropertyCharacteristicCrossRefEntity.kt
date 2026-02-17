@@ -30,13 +30,13 @@ data class PropertyCharacteristicCrossRefEntity(
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
 ) {
     companion object {
-        fun fromDomain(domain: PropertyCharacteristicCrossRef) =
+        fun fromDomain(domain: PropertyCharacteristicCrossRef, propertyId: Long) =
             PropertyCharacteristicCrossRefEntity(
-                propertyId = domain.propertyId,
+                propertyId = propertyId,
                 propertyCharacteristicId = domain.propertyCharacteristic.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
             )
     }
 }

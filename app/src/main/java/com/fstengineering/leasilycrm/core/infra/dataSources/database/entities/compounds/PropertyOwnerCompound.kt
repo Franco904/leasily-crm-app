@@ -30,7 +30,6 @@ data class PropertyOwnerCompound(
         phone = propertyOwner.phone,
         email = propertyOwner.email,
         paymentKey = propertyOwner.paymentKey,
-        isDeleted = propertyOwner.isDeleted,
         files = activeFiles.toImmutableList(),
         inconsistencies = propertyOwner.inconsistencies,
         contractVersion = propertyOwner.contractVersion,

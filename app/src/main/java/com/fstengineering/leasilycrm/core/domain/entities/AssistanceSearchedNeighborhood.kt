@@ -10,7 +10,6 @@ class AssistanceSearchedNeighborhood private constructor(
     val createDateTime: AppDateTime?,
     val updateDateTime: AppDateTime?,
     val neighborhood: String,
-    val isDeleted: Boolean,
 ) {
     companion object {
         fun parse(
@@ -18,7 +17,6 @@ class AssistanceSearchedNeighborhood private constructor(
             createDateTime: AppDateTime?,
             updateDateTime: AppDateTime?,
             neighborhood: String?,
-            isDeleted: Boolean,
         ): AssistanceSearchedNeighborhood {
             validate(neighborhood)
                 .onError { throw it.asException() }
@@ -28,7 +26,6 @@ class AssistanceSearchedNeighborhood private constructor(
                 createDateTime = createDateTime,
                 updateDateTime = updateDateTime,
                 neighborhood = requireNotNull(neighborhood),
-                isDeleted = isDeleted,
             )
         }
 

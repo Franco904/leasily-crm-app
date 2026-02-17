@@ -6,5 +6,4 @@ data class AssistanceSentProperty(
     val property: Property,
     val createDateTime: AppDateTime?,
     val updateDateTime: AppDateTime?,
-    val isDeleted: Boolean,
 )

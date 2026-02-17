@@ -37,7 +37,6 @@ data class AssistanceInteractionEntity(
         date = interactionDate,
         title = title,
         description = description,
-        isDeleted = isDeleted,
     )
 
     companion object {
@@ -50,7 +49,7 @@ data class AssistanceInteractionEntity(
                 title = domain.title,
                 description = domain.description,
                 assistanceId = assistanceId,
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
             )
     }
 }

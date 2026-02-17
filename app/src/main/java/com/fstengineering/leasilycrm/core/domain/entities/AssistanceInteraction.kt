@@ -13,7 +13,6 @@ class AssistanceInteraction private constructor(
     val date: AppDate,
     val title: String,
     val description: String?,
-    val isDeleted: Boolean,
 ) {
     companion object {
         fun parse(
@@ -23,7 +22,6 @@ class AssistanceInteraction private constructor(
             date: AppDate?,
             title: String?,
             description: String?,
-            isDeleted: Boolean,
         ): AssistanceInteraction {
             validateDate(date).onError { throw it.asException() }
             validateTitle(title).onError { throw it.asException() }
@@ -35,7 +33,6 @@ class AssistanceInteraction private constructor(
                 date = requireNotNull(date),
                 title = requireNotNull(title),
                 description = description,
-                isDeleted = isDeleted,
             )
         }
 

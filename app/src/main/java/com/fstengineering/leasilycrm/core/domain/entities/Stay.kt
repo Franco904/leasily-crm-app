@@ -19,7 +19,6 @@ sealed class Stay(
     open val property: StayProperty,
     open val period: StayPeriod,
     open val observations: String?,
-    open val isDeleted: Boolean,
     open val inconsistencies: String?,
     open val contractVersion: Int,
 ) {
@@ -30,7 +29,6 @@ sealed class Stay(
         override val property: StayProperty,
         override val period: StayPeriod,
         override val observations: String?,
-        override val isDeleted: Boolean,
         override val inconsistencies: String?,
         override val contractVersion: Int,
         val tenant: StayOwnedTenant,
@@ -52,7 +50,6 @@ sealed class Stay(
         property = property,
         period = period,
         observations = observations,
-        isDeleted = isDeleted,
         inconsistencies = inconsistencies,
         contractVersion = contractVersion,
     ) {
@@ -90,7 +87,6 @@ sealed class Stay(
             transfers: ImmutableList<StayTransfer> = this.transfers,
             files: ImmutableList<StayFile> = this.files,
             observations: String? = this.observations,
-            isDeleted: Boolean = this.isDeleted,
             inconsistencies: String? = this.inconsistencies,
             contractVersion: Int = this.contractVersion,
         ) = Owned(
@@ -112,7 +108,6 @@ sealed class Stay(
             transfers = transfers,
             files = files,
             observations = observations,
-            isDeleted = isDeleted,
             inconsistencies = inconsistencies,
             contractVersion = contractVersion,
         )
@@ -140,7 +135,6 @@ sealed class Stay(
                 files: ImmutableList<StayFile>,
                 observations: String?,
                 statusId: Int?,
-                isDeleted: Boolean,
                 inconsistencies: String?,
                 contractVersion: Int,
             ): Owned {
@@ -196,7 +190,6 @@ sealed class Stay(
                     transfers = transfers,
                     files = files,
                     observations = observations,
-                    isDeleted = isDeleted,
                     inconsistencies = inconsistencies,
                     contractVersion = contractVersion,
                 )
@@ -233,7 +226,6 @@ sealed class Stay(
         override val property: StayProperty,
         override val period: StayPeriod,
         override val observations: String?,
-        override val isDeleted: Boolean,
         override val inconsistencies: String?,
         override val contractVersion: Int,
     ) : Stay(
@@ -243,7 +235,6 @@ sealed class Stay(
         property = property,
         period = period,
         observations = observations,
-        isDeleted = isDeleted,
         inconsistencies = inconsistencies,
         contractVersion = contractVersion,
     ) {
@@ -256,7 +247,6 @@ sealed class Stay(
                 checkInDateTime: AppDateTime,
                 checkOutDateTime: AppDateTime,
                 observations: String?,
-                isDeleted: Boolean,
                 inconsistencies: String?,
                 contractVersion: Int,
             ): UnavailablePeriod {
@@ -279,7 +269,6 @@ sealed class Stay(
                     property = property,
                     period = period,
                     observations = observations,
-                    isDeleted = isDeleted,
                     inconsistencies = inconsistencies,
                     contractVersion = contractVersion,
                 )

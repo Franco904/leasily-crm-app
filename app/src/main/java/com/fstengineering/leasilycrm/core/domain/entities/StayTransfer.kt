@@ -14,8 +14,6 @@ class StayTransfer private constructor(
     val date: AppDate,
     val amount: AppDecimal,
     val description: String?,
-    val stayId: Long,
-    val isDeleted: Boolean,
 ) {
     companion object {
         fun parse(
@@ -25,8 +23,6 @@ class StayTransfer private constructor(
             date: AppDate?,
             amount: AppDecimal?,
             description: String?,
-            stayId: Long,
-            isDeleted: Boolean,
         ): StayTransfer {
             validateDate(date).onError { throw it.asException() }
             validateAmount(amount).onError { throw it.asException() }
@@ -38,8 +34,6 @@ class StayTransfer private constructor(
                 date = requireNotNull(date),
                 amount = requireNotNull(amount),
                 description = description,
-                stayId = stayId,
-                isDeleted = isDeleted,
             )
         }
 

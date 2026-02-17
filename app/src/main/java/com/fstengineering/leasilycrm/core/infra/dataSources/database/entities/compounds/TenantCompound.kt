@@ -48,7 +48,6 @@ data class TenantCompound(
         email = tenant.email,
         observations = tenant.observations,
         statusId = tenant.status,
-        isDeleted = tenant.isDeleted,
         contactOrigin = tenant.contactOrigin,
         assistances = activeAssistances.toImmutableList(),
         stays = activeStays.toImmutableList(),

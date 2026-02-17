@@ -15,7 +15,6 @@ class PropertyOwner private constructor(
     val email: Email?,
     val paymentKey: String?,
     val files: ImmutableList<PropertyOwnerFile>,
-    val isDeleted: Boolean,
     val inconsistencies: String?,
     val contractVersion: Int,
 ) {
@@ -29,7 +28,6 @@ class PropertyOwner private constructor(
             email: String?,
             paymentKey: String?,
             files: ImmutableList<PropertyOwnerFile>,
-            isDeleted: Boolean,
             inconsistencies: String?,
             contractVersion: Int,
         ): PropertyOwner {
@@ -45,7 +43,6 @@ class PropertyOwner private constructor(
                 phone = parsedPhone,
                 email = parsedEmail,
                 paymentKey = paymentKey,
-                isDeleted = isDeleted,
                 files = files,
                 inconsistencies = inconsistencies,
                 contractVersion = contractVersion,

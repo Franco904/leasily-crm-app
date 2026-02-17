@@ -78,7 +78,6 @@ data class StayEntity(
                 observations = observations,
                 transfers = persistentListOf(),
                 files = persistentListOf(),
-                isDeleted = isDeleted,
                 inconsistencies = inconsistencies,
                 contractVersion = contractVersion,
             )
@@ -91,7 +90,6 @@ data class StayEntity(
                 checkInDateTime = checkInDateTime,
                 checkOutDateTime = checkOutDateTime,
                 observations = observations,
-                isDeleted = isDeleted,
                 inconsistencies = inconsistencies,
                 contractVersion = contractVersion,
             )
@@ -118,7 +116,7 @@ data class StayEntity(
                 commission = ownedStay?.commission,
                 observations = domain.observations,
                 status = ownedStay?.status?.id,
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
                 propertyId = domain.property.propertyId,
                 tenantId = ownedStay?.tenant?.tenantId,
                 inconsistencies = domain.inconsistencies,

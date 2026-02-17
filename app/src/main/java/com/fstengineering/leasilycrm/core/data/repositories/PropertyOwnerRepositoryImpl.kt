@@ -44,8 +44,7 @@ class PropertyOwnerRepositoryImpl(
             .let { id -> propertyOwner.id ?: id }
 
         propertyOwner.files.forEach {
-            val file = PropertyOwnerFileEntity.fromDomain(domain = it)
-                .copy(propertyOwnerId = propertyOwnerId)
+            val file = PropertyOwnerFileEntity.fromDomain(it, propertyOwnerId)
             propertyOwnerFileDatabaseDataSource.insertOrUpdate(file)
         }
     }

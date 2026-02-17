@@ -7,7 +7,5 @@ data class PropertyFile(
     val createDateTime: AppDateTime?,
     val updateDateTime: AppDateTime?,
     val uriString: String,
-    val propertyId: Long,
     val isMainPicture: Boolean,
-    val isDeleted: Boolean,
 )

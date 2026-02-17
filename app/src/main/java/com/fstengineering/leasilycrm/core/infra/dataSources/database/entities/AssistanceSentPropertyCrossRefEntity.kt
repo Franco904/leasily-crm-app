@@ -41,7 +41,7 @@ data class AssistanceSentPropertyCrossRefEntity(
                 propertyId = requireNotNull(domain.property.id),
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
             )
     }
 }

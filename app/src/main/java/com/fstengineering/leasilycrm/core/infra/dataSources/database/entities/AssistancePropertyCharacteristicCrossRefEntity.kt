@@ -36,7 +36,7 @@ data class AssistancePropertyCharacteristicCrossRefEntity(
                 propertyCharacteristicId = domain.propertyCharacteristic.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
             )
     }
 }

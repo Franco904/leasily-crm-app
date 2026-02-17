@@ -64,7 +64,6 @@ data class PropertyCompound(
                     updateDateTime = property.updateDateTime,
                     propertyId = requireNotNull(property.id),
                     propertyCharacteristic = characteristic,
-                    isDeleted = false,
                 )
             }
         }
@@ -110,7 +109,6 @@ data class PropertyCompound(
         cleaningServiceTax = property.cleaningServiceTax,
         hasCleaningServiceIncluded = property.hasCleaningServiceIncluded,
         observations = property.observations,
-        isDeleted = property.isDeleted,
         owner = owner.toDomain(),
         typeId = property.typeId,
         seaProximityTypeId = property.seaProximityTypeId,

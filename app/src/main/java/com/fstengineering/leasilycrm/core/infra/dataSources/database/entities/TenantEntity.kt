@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 
 @Entity(
     tableName = "tenants",
@@ -33,14 +34,14 @@ data class TenantEntity(
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
                 tag = domain.tag,
-                name = domain.name,
+                name = domain.name.value.normalizeEncoding(),
                 city = domain.city,
                 identityDocument = domain.identityDocument,
-                phone = domain.phone,
-                email = domain.email,
+                phone = domain.phone?.value,
+                email = domain.email?.value,
                 contactOrigin = domain.contactOrigin,
                 observations = domain.observations,
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
                 inconsistencies = domain.inconsistencies,
                 contractVersion = BuildConfig.CONTRACT_VERSION,
             )

@@ -47,14 +47,12 @@ class StayRepositoryImpl(
 
         if (stay is Stay.Owned) {
             stay.files.forEach {
-                val file = StayFileEntity.fromDomain(domain = it.copy(stayId = stayId))
-
+                val file = StayFileEntity.fromDomain(it, stayId)
                 stayFileDatabaseDataSource.insertOrUpdate(file)
             }
 
             stay.transfers.forEach {
                 val transfer = StayTransferEntity.fromDomain(it, stayId)
-
                 stayTransferDatabaseDataSource.insertOrUpdate(transfer)
             }
         }

@@ -89,7 +89,7 @@ data class PropertyEntity(
                 cleaningServiceTax = domain.cleaningServiceTax,
                 hasCleaningServiceIncluded = domain.hasCleaningServiceIncluded,
                 observations = domain.observations,
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
                 ownerId = requireNotNull(domain.owner.id),
                 typeId = domain.type.id,
                 inconsistencies = domain.inconsistencies,

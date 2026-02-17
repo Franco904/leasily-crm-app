@@ -50,14 +50,12 @@ class PropertyRepositoryImpl(
             .let { property.id ?: it }
 
         property.characteristics.forEach {
-            val characteristic = PropertyCharacteristicCrossRefEntity.fromDomain(
-                domain = it.copy(propertyId = propertyId)
-            )
+            val characteristic = PropertyCharacteristicCrossRefEntity.fromDomain(it, propertyId)
             propertyCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
         }
 
         property.files.forEach {
-            val file = PropertyFileEntity.fromDomain(domain = it.copy(propertyId = propertyId))
+            val file = PropertyFileEntity.fromDomain(it, propertyId)
             propertyFileDatabaseDataSource.insertOrUpdate(file)
         }
 

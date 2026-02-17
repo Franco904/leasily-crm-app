@@ -38,8 +38,6 @@ data class StayTransferEntity(
         date = transferDate,
         amount = amount,
         description = description,
-        isDeleted = isDeleted,
-        stayId = stayId,
     )
 
     companion object {
@@ -51,7 +49,7 @@ data class StayTransferEntity(
                 transferDate = domain.date,
                 amount = domain.amount,
                 description = domain.description,
-                isDeleted = domain.isDeleted,
+                isDeleted = false,
                 stayId = stayId,
             )
     }

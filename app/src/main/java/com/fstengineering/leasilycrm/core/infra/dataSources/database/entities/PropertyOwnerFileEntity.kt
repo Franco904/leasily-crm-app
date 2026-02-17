@@ -34,20 +34,18 @@ data class PropertyOwnerFileEntity(
         updateDateTime = updateDateTime,
         uriString = propertyOwnerFileUri,
         name = propertyOwnerFileName,
-        propertyOwnerId = propertyOwnerId,
-        isDeleted = isDeleted,
     )
 
     companion object {
-        fun fromDomain(domain: PropertyOwnerFile) =
+        fun fromDomain(domain: PropertyOwnerFile, propertyOwnerId: Long) =
             PropertyOwnerFileEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
                 propertyOwnerFileUri = domain.uriString,
                 propertyOwnerFileName = domain.name,
-                propertyOwnerId = domain.propertyOwnerId,
-                isDeleted = domain.isDeleted,
+                propertyOwnerId = propertyOwnerId,
+                isDeleted = false,
             )
     }
 }

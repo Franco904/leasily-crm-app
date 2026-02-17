@@ -7,5 +7,4 @@ data class AssistancePropertyCharacteristic(
     val propertyCharacteristic: PropertyCharacteristic,
     val createDateTime: AppDateTime?,
     val updateDateTime: AppDateTime?,
-    val isDeleted: Boolean,
 )

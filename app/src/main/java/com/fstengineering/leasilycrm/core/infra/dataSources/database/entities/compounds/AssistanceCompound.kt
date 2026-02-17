@@ -81,7 +81,6 @@ data class AssistanceCompound(
                     propertyCharacteristic = characteristic,
                     createDateTime = assistance.createDateTime,
                     updateDateTime = assistance.updateDateTime,
-                    isDeleted = false,
                 )
             }
         }
@@ -100,7 +99,6 @@ data class AssistanceCompound(
                     property = requireNotNull(sentProperty).toDomain(),
                     createDateTime = assistance.createDateTime,
                     updateDateTime = assistance.updateDateTime,
-                    isDeleted = false,
                 )
             }
         }

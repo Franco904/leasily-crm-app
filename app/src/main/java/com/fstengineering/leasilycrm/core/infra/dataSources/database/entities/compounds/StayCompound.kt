@@ -75,7 +75,6 @@ data class StayCompound(
                 observations = stay.observations,
                 transfers = activeTransfers.toImmutableList(),
                 files = activeFiles.toImmutableList(),
-                isDeleted = stay.isDeleted,
                 inconsistencies = stay.inconsistencies,
                 contractVersion = stay.contractVersion,
             )
@@ -88,7 +87,6 @@ data class StayCompound(
                 checkInDateTime = stay.checkInDateTime,
                 checkOutDateTime = stay.checkOutDateTime,
                 observations = stay.observations,
-                isDeleted = stay.isDeleted,
                 inconsistencies = stay.inconsistencies,
                 contractVersion = stay.contractVersion,
             )
