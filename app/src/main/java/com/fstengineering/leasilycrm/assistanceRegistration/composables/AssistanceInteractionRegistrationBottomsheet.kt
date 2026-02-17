@@ -111,7 +111,7 @@ fun AssistanceInteractionRegistrationBottomsheet(
             }
             Spacer(modifier = Modifier.height(16.dp))
             AssistanceInteractionDateFormField(
-                interactionDate = interactionForm.interactionDate,
+                interactionDate = interactionForm.date,
                 error = formErrors[AssistanceInteractionField.InteractionDate],
                 onTap = { mustShowDatePickerDialog = true },
             )

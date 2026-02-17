@@ -273,7 +273,7 @@ class StayRegistrationViewModel(
     fun onStayTransferFormChange(form: StayTransfer?) {
         _transferFormErrors.update {
             val newErrors = it.errors.mutate { map ->
-                if (transferForm.value?.transferDate != form?.transferDate) {
+                if (transferForm.value?.date != form?.date) {
                     map[StayTransferField.TransferDate] = null
                 }
                 if (transferForm.value?.transferAmount != form?.transferAmount) {

@@ -1,10 +1,9 @@
 package com.fstengineering.leasilycrm.core.domain.entities
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.validations.validateEmail
-import com.fstengineering.leasilycrm.core.domain.validations.validateName
-import com.fstengineering.leasilycrm.core.domain.validations.validatePhone
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Email
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Name
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Phone
 import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import kotlinx.collections.immutable.ImmutableList
 
@@ -13,11 +12,11 @@ class Tenant private constructor(
     val createDateTime: AppDateTime?,
     val updateDateTime: AppDateTime?,
     val tag: String?,
-    val name: String,
+    val name: Name,
     val city: String?,
     val identityDocument: String?,
-    val phone: String?,
-    val email: String?,
+    val phone: Phone?,
+    val email: Email?,
     val contactOrigin: String?,
     val observations: String?,
     val status: TenantStatus,
@@ -50,9 +49,9 @@ class Tenant private constructor(
             inconsistencies: String?,
             contractVersion: Int,
         ): Tenant {
-            validateName(name).onError { throw it.asException() }
-            phone?.let { validatePhone(phone).onError { throw it.asException() } }
-            email?.let { validateEmail(email).onError { throw it.asException() } }
+            val parsedName = Name.parse(name)
+            val parsedPhone = phone?.let { Phone.parse(it) }
+            val parsedEmail = email?.let { Email.parse(it) }
 
             val status = TenantStatus.parse(statusId)
 
@@ -61,11 +60,11 @@ class Tenant private constructor(
                 createDateTime = createDateTime,
                 updateDateTime = updateDateTime,
                 tag = tag,
-                name = requireNotNull(name),
+                name = parsedName,
                 city = city,
                 identityDocument = identityDocument,
-                phone = phone,
-                email = email,
+                phone = parsedPhone,
+                email = parsedEmail,
                 contactOrigin = contactOrigin,
                 observations = observations,
                 status = status,

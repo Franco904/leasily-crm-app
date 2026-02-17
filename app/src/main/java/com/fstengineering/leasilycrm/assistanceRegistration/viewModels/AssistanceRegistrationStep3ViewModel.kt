@@ -38,7 +38,7 @@ class AssistanceRegistrationStep3ViewModel(
     ) {
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                if (interactionForm.value?.interactionDate != form?.interactionDate) {
+                if (interactionForm.value?.date != form?.date) {
                     map[AssistanceInteractionField.InteractionDate] = null
                 }
                 if (interactionForm.value?.title != form?.title) {

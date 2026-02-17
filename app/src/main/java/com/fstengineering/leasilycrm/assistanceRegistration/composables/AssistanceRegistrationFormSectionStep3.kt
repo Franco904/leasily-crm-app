@@ -60,7 +60,7 @@ fun AssistanceRegistrationFormSectionStep3(
     val assistanceInteractions = remember(assistanceForm.interactions) {
         assistanceForm.interactions
             .filter { !it.isDeleted }
-            .sortedByDescending { it.interactionDate?.date() }
+            .sortedByDescending { it.date.date() }
             .toPersistentList()
     }
 

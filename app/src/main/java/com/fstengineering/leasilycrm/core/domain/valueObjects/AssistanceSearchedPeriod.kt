@@ -1,8 +1,9 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.validations.validateAssistanceSearchedPeriod
 
 class AssistanceSearchedPeriod private constructor(
     val startDate: AppDate,
@@ -13,13 +14,25 @@ class AssistanceSearchedPeriod private constructor(
             startDate: AppDate?,
             endDate: AppDate?,
         ): AssistanceSearchedPeriod {
-            validateAssistanceSearchedPeriod(startDate, endDate)
+            validate(startDate, endDate)
                 .onError { throw it.asException() }
 
             return AssistanceSearchedPeriod(
                 startDate = requireNotNull(startDate),
                 endDate = requireNotNull(endDate),
             )
+        }
+
+        fun validate(
+            startDate: AppDate?,
+            endDate: AppDate?,
+        ): AppResult<Unit, ParsingError.Assistance> {
+            return when {
+                startDate == null || endDate == null -> AppResult.Error(ParsingError.Assistance.SearchingPeriodRequired)
+                startDate == endDate -> AppResult.Error(ParsingError.Assistance.SearchingPeriodStartAndEndDatesAreTheSame)
+                startDate > endDate -> AppResult.Error(ParsingError.Assistance.SearchingPeriodStartDateIsAfterEndDate)
+                else -> AppResult.Success(Unit)
+            }
         }
     }
 }

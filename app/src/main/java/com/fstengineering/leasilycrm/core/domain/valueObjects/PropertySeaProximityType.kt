@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.validations.validateDistanceToSea
 
 sealed class PropertySeaProximityType(val id: Long) {
     data object SeaAccess : PropertySeaProximityType(SEA_ACCESS_ID)
@@ -14,10 +14,18 @@ sealed class PropertySeaProximityType(val id: Long) {
     ) {
         companion object {
             fun parse(distance: AppDecimal?): DistanceToSea {
-                validateDistanceToSea(distance)
+                validate(distance)
                     .onError { throw it.asException() }
 
                 return DistanceToSea(requireNotNull(distance))
+            }
+
+            fun validate(distance: AppDecimal?): AppResult<Unit, ParsingError> {
+                return when {
+                    distance == null -> AppResult.Error(ParsingError.PropertySeaProximity.DistanceToSeaRequired)
+                    distance.isNegative -> AppResult.Error(ParsingError.PropertySeaProximity.DistanceToSeaIsNegative)
+                    else -> AppResult.Success(Unit)
+                }
             }
         }
     }
@@ -34,6 +42,20 @@ sealed class PropertySeaProximityType(val id: Long) {
             FAR_FROM_SEA_ID -> FarFromSea
             DISTANCE_TO_SEA_ID -> DistanceToSea.parse(distanceToSea)
             else -> throw ParsingError.PropertySeaProximity.PropertySeaProximityInvalid.asException()
+        }
+
+        fun validate(id: Long, distanceToSea: AppDecimal?): AppResult<Unit, ParsingError> {
+            val noValidationTypes = listOf(
+                SEA_ACCESS_ID,
+                SEA_VIEW_ID,
+                FAR_FROM_SEA_ID,
+            )
+
+            return when (id) {
+                in noValidationTypes -> AppResult.Success(Unit)
+                DISTANCE_TO_SEA_ID -> DistanceToSea.validate(distanceToSea)
+                else -> AppResult.Error(ParsingError.PropertySeaProximity.PropertySeaProximityInvalid)
+            }
         }
     }
 }

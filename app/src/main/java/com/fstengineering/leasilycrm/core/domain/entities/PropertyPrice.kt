@@ -3,8 +3,9 @@ package com.fstengineering.leasilycrm.core.domain.entities
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.validations.validatePropertyPriceAmount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyPricePeriod
 
 class PropertyPrice private constructor(
@@ -27,7 +28,7 @@ class PropertyPrice private constructor(
             propertyId: Long,
             isDeleted: Boolean,
         ): PropertyPrice {
-            validatePropertyPriceAmount(amount)
+            validateAmount(amount)
                 .onError { throw it.asException() }
 
             val period = PropertyPricePeriod.parse(
@@ -44,6 +45,16 @@ class PropertyPrice private constructor(
                 propertyId = propertyId,
                 isDeleted = isDeleted,
             )
+        }
+
+        fun validateAmount(
+            amount: AppDecimal?,
+        ): AppResult<Unit, ParsingError.Property> {
+            return when {
+                amount == null -> AppResult.Error(ParsingError.Property.PriceAmountRequired)
+                amount.isNegative -> AppResult.Error(ParsingError.Property.PriceAmountIsNegative)
+                else -> AppResult.Success(Unit)
+            }
         }
     }
 }

@@ -4,12 +4,9 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
 import com.fstengineering.leasilycrm.core.domain.helpers.StayProperty
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.validations.validateStayCommission
-import com.fstengineering.leasilycrm.core.domain.validations.validateStayPrice
-import com.fstengineering.leasilycrm.core.domain.validations.validateStayProperty
-import com.fstengineering.leasilycrm.core.domain.validations.validateStayTenant
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayGuestsCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayPeriod
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
@@ -67,7 +64,7 @@ sealed class Stay(
 
         fun putTenant(tenant: StayOwnedTenant): Owned {
             if (tenant is StayOwnedTenant.WithData) {
-                validateStayTenant(tenant.data?.id)
+                validateTenant(tenant.data?.id)
                     .onError { throw it.asException() }
             }
 
@@ -148,12 +145,12 @@ sealed class Stay(
                 contractVersion: Int,
             ): Owned {
                 if (property is StayProperty.WithData) {
-                    validateStayProperty(property.data?.id)
+                    validateProperty(property.data?.id)
                         .onError { throw it.asException() }
                 }
 
                 if (tenant is StayOwnedTenant.WithData) {
-                    validateStayTenant(tenant.data?.id)
+                    validateTenant(tenant.data?.id)
                         .onError { throw it.asException() }
                 }
 
@@ -171,11 +168,11 @@ sealed class Stay(
                 statusId ?: throw ParsingError.Stay.StatusRequired.asException()
 
                 if (totalPrice != null) {
-                    validateStayPrice(totalPrice)
+                    validateTotalPrice(totalPrice)
                         .onError { throw it.asException() }
                 }
 
-                validateStayCommission(commission)
+                validateCommission(commission)
                     .onError { throw it.asException() }
 
                 val status = StayStatus.parse(statusId)
@@ -203,6 +200,28 @@ sealed class Stay(
                     inconsistencies = inconsistencies,
                     contractVersion = contractVersion,
                 )
+            }
+
+            fun validateTenant(tenantId: Long?): AppResult<Unit, ParsingError.Stay> {
+                return when {
+                    tenantId == null -> AppResult.Error(ParsingError.Stay.PropertyRequired)
+                    else -> AppResult.Success(Unit)
+                }
+            }
+
+            fun validateTotalPrice(totalPrice: AppDecimal): AppResult<Unit, ParsingError.Stay> {
+                return when {
+                    totalPrice.isNegative -> AppResult.Error(ParsingError.Stay.TotalPriceIsNegative)
+                    else -> AppResult.Success(Unit)
+                }
+            }
+
+            fun validateCommission(commission: AppDecimal?): AppResult<Unit, ParsingError.Stay> {
+                return when {
+                    commission == null -> AppResult.Error(ParsingError.Stay.CommissionRequired)
+                    commission.isNegative -> AppResult.Error(ParsingError.Stay.CommissionIsNegative)
+                    else -> AppResult.Success(Unit)
+                }
             }
         }
     }
@@ -242,7 +261,7 @@ sealed class Stay(
                 contractVersion: Int,
             ): UnavailablePeriod {
                 if (property is StayProperty.WithData) {
-                    validateStayProperty(property.data?.id)
+                    validateProperty(property.data?.id)
                         .onError { throw it.asException() }
                 }
 
@@ -264,6 +283,15 @@ sealed class Stay(
                     inconsistencies = inconsistencies,
                     contractVersion = contractVersion,
                 )
+            }
+        }
+    }
+
+    companion object {
+        fun validateProperty(propertyId: Long?): AppResult<Unit, ParsingError.Stay> {
+            return when {
+                propertyId == null -> AppResult.Error(ParsingError.Stay.PropertyRequired)
+                else -> AppResult.Success(Unit)
             }
         }
     }

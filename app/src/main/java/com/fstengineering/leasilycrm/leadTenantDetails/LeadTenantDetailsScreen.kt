@@ -118,7 +118,7 @@ fun LeadTenantDetailsScreen(
 
     val sortedInteractions = remember(currentAssistance?.interactions) {
         currentAssistance?.interactions
-            ?.sortedByDescending { it.interactionDate?.date() }
+            ?.sortedByDescending { it.date?.date() }
             ?.toPersistentList()
             ?: persistentListOf()
     }
@@ -301,8 +301,8 @@ fun LeadTenantDetailsScreen(
                             itemsIndexed(
                                 items = sortedInteractions.groupBy { interaction ->
                                     CalendarMonthYear(
-                                        month = interaction.interactionDate?.month ?: 0,
-                                        year = interaction.interactionDate?.year ?: 0,
+                                        month = interaction.date?.month ?: 0,
+                                        year = interaction.date?.year ?: 0,
                                     )
                                 },
                                 key = { i, (monthYear, _) -> monthYear.id },

@@ -85,12 +85,12 @@ fun StayTransfersCard(
                     ) {
                         Text(
                             text = when {
-                                transfer.transferDate != null -> {
+                                transfer.date != null -> {
                                     stringResource(
                                         id = R.string.stay_registration_transfers_date_column_value,
-                                        transfer.transferDate.dayOfMonth.formatToTwoDigitsDateTime(),
-                                        transfer.transferDate.month.formatToTwoDigitsDateTime(),
-                                        transfer.transferDate.year.formatToTwoDigitsDateTime(),
+                                        transfer.date.dayOfMonth.formatToTwoDigitsDateTime(),
+                                        transfer.date.month.formatToTwoDigitsDateTime(),
+                                        transfer.date.year.formatToTwoDigitsDateTime(),
                                     )
                                 }
 

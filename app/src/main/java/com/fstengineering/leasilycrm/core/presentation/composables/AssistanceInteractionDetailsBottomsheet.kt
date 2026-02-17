@@ -64,9 +64,9 @@ fun AssistanceInteractionDetailsBottomsheet(
                 Text(
                     text = stringResource(
                         R.string.assistance_registration_interaction_registration_interaction_date_value,
-                        interaction.interactionDate!!.dayOfMonth.formatToTwoDigitsDateTime(),
-                        interaction.interactionDate.month.formatToTwoDigitsDateTime(),
-                        interaction.interactionDate.year,
+                        interaction.date!!.dayOfMonth.formatToTwoDigitsDateTime(),
+                        interaction.date.month.formatToTwoDigitsDateTime(),
+                        interaction.date.year,
                     ),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,

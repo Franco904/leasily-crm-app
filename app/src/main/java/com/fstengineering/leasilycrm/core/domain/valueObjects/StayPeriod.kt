@@ -1,8 +1,9 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ParsingError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.validations.validateStayPeriod
 
 class StayPeriod private constructor(
     val checkInDateTime: AppDateTime,
@@ -15,7 +16,7 @@ class StayPeriod private constructor(
             checkOutDateTime: AppDateTime?,
             checkOutTime: Pair<Int?, Int?>?,
         ): StayPeriod {
-            validateStayPeriod(
+            validate(
                 checkInDateTime = checkInDateTime,
                 checkInTime = checkInTime,
                 checkOutDateTime = checkOutDateTime,
@@ -36,6 +37,36 @@ class StayPeriod private constructor(
                     minute = checkOutTime.second!!,
                 ),
             )
+        }
+
+        fun validate(
+            checkInDateTime: AppDateTime?,
+            checkInTime: Pair<Int?, Int?>?,
+            checkOutDateTime: AppDateTime?,
+            checkOutTime: Pair<Int?, Int?>?,
+        ): AppResult<Unit, ParsingError.Stay> {
+            // propertyStayCheckInDateTimes.isNotEmpty() -> {
+            //                val isThereAnyPropertyOverbooking = propertyStayCheckInDateTimes
+            //                    .filter { it != checkInDateTimeBeforeEdit }
+            //                    .any { existingStayCheckInDateTime ->
+            //                        checkInDateTime <= existingStayCheckInDateTime
+            //                                && checkOutDateTime >= existingStayCheckInDateTime
+            //                    }
+            //
+            //                if (!isThereAnyPropertyOverbooking) return AppResult.Success(Unit)
+            //
+            //                return AppResult.Error(ParsingError.StayPeriod.IsOverlappingOtherPropertyStayPeriod)
+            //            }
+
+            return when {
+                checkInDateTime == null -> AppResult.Error(ParsingError.Stay.CheckInDateRequired)
+                checkInTime?.first == null || checkInTime.second == null -> AppResult.Error(ParsingError.Stay.CheckInTimeRequired)
+                checkOutDateTime == null -> AppResult.Error(ParsingError.Stay.CheckOutDateRequired)
+                checkOutTime?.first == null || checkOutTime.second == null -> AppResult.Error(ParsingError.Stay.CheckOutTimeRequired)
+                checkInDateTime.isSameDayAs(checkOutDateTime) -> AppResult.Error(ParsingError.Stay.PeriodStartAndEndDatesAreTheSame)
+                checkInDateTime.isAfterDayOf(checkOutDateTime) -> AppResult.Error(ParsingError.Stay.PeriodStartDateIsAfterEndDate)
+                else -> AppResult.Success(Unit)
+            }
         }
     }
 }

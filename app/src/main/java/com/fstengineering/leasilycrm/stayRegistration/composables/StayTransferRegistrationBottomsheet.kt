@@ -121,7 +121,7 @@ fun StayTransferRegistrationBottomsheet(
             }
             Spacer(modifier = Modifier.height(16.dp))
             StayTransferDateFormField(
-                transferDate = transferForm.transferDate,
+                transferDate = transferForm.date,
                 error = formErrors[StayTransferField.TransferDate],
                 onTap = { mustShowDatePickerDialog = true },
             )
