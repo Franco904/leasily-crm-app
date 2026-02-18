@@ -3,10 +3,10 @@ package com.fstengineering.leasilycrm.core.domain.entities
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import kotlinx.collections.immutable.ImmutableList
 
 data class Property(
@@ -93,6 +93,10 @@ data class Property(
 
             val seaProximityType = seaProximityTypeId?.let {
                 PropertySeaProximityType.parse(it, distanceToSea = distanceToSea)
+            }
+
+            if (files.count { it.isMainPicture } > 1) {
+                throw DomainError.Property.MoreThanOneMainPictureFile.asException()
             }
 
             return Property(

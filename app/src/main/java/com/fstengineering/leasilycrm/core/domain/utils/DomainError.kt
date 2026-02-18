@@ -35,6 +35,7 @@ sealed interface DomainError : AppError {
         PricePeriodIsOverlappingOtherPricePeriod,
         PriceAmountRequired,
         PriceAmountIsNegative,
+        MoreThanOneMainPictureFile,
     }
 
     enum class PropertySeaProximity : DomainError {
