@@ -4,18 +4,19 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.fstengineering.leasilycrm.core.domain.entities.Assistance
-import com.fstengineering.leasilycrm.core.domain.entities.AssistancePropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
+import com.fstengineering.leasilycrm.core.domain.entities.AssistancePropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSentProperty
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 data class AssistanceCompound(
@@ -130,13 +131,12 @@ data class AssistanceCompound(
         distanceToSea = assistance.distanceToSea,
         observations = assistance.observations,
         isFinished = assistance.isFinished,
-        isDeleted = assistance.isDeleted,
         tenantId = requireNotNull(tenant.id),
         searchedNeighborhoods = activeSearchedNeighborhoods.toImmutableList(),
         characteristics = activeCharacteristics.toImmutableList(),
         sentProperties = activeSentProperties.toImmutableList(),
         interactions = activeInteractions.toImmutableList(),
-        inconsistencies = assistance.inconsistencies,
+        inconsistencies = persistentListOf(), // assistance.inconsistencies,
         contractVersion = assistance.contractVersion,
     )
 }

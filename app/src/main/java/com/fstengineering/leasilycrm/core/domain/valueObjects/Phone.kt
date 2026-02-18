@@ -10,7 +10,7 @@ class Phone private constructor(val value: String) {
             validate(phone)
                 .onError { throw it.asException() }
 
-            return Phone(requireNotNull(phone))
+            return Phone(phone)
         }
 
         fun validate(phone: String): AppResult<Unit, DomainError> {

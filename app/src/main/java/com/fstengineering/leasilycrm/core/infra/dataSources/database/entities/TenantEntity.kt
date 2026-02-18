@@ -42,7 +42,7 @@ data class TenantEntity(
                 contactOrigin = domain.contactOrigin,
                 observations = domain.observations,
                 isDeleted = false,
-                inconsistencies = domain.inconsistencies,
+                inconsistencies = domain.inconsistencies.joinToString(", "),
                 contractVersion = BuildConfig.CONTRACT_VERSION,
             )
     }

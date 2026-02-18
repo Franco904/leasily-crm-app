@@ -2,13 +2,11 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
-import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.TenantReadView
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 data class TenantCompound(
@@ -18,7 +16,7 @@ data class TenantCompound(
         entityColumn = "tenant_id",
         entity = AssistanceEntity::class,
     )
-    val assistances: List<AssistanceCompound>,
+    val assistances: List<AssistanceEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "tenant_id",
@@ -26,15 +24,15 @@ data class TenantCompound(
     )
     val stays: List<StayEntity>,
 ) {
-    private val activeAssistances: List<Assistance>
+    private val activeAssistances: List<Long>
         get() = assistances
-            .filter { !it.assistance.isDeleted }
-            .map { it.toDomain() }
+            .filter { !it.isDeleted }
+            .mapNotNull { it.id }
 
-    private val activeStays: List<Stay>
+    private val activeStays: List<Long>
         get() = stays
             .filter { !it.isDeleted }
-            .map { it.toDomain() }
+            .mapNotNull { it.id }
 
     fun toDomain() = Tenant.parse(
         id = tenant.id,
@@ -49,9 +47,9 @@ data class TenantCompound(
         observations = tenant.observations,
         statusId = tenant.status,
         contactOrigin = tenant.contactOrigin,
-        assistances = activeAssistances.toImmutableList(),
-        stays = activeStays.toImmutableList(),
-        inconsistencies = tenant.inconsistencies,
+        assistancesIds = activeAssistances.toImmutableList(),
+        staysIds = activeStays.toImmutableList(),
+        inconsistencies = persistentListOf(), // tenant.inconsistencies,
         contractVersion = tenant.contractVersion,
     )
 }

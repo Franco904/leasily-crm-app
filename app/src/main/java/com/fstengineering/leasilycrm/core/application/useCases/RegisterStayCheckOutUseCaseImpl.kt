@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
-import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
 import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
@@ -18,8 +17,6 @@ class RegisterStayCheckOutUseCaseImpl(
 
         stayRepository.insertOrUpdate(stay = updatedStay)
             .onError { return AppResult.Error(error = it) }
-
-        if (stay.tenant !is StayOwnedTenant.WithData) return AppResult.Success(data = Unit)
 
         // TODO: Create AssistanceReadView to determine isFinished flag
         val updatedAssistance = stay.tenant.data?.assistances

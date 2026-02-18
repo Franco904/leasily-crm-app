@@ -7,8 +7,6 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
-import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
-import com.fstengineering.leasilycrm.core.domain.helpers.StayProperty
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import kotlinx.collections.immutable.persistentListOf
@@ -54,48 +52,6 @@ data class StayEntity(
     val inconsistencies: String?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
 ) {
-    fun toDomain(): Stay {
-        return if (tenantId != null) {
-            Stay.Owned.parse(
-                id = id,
-                createDateTime = createDateTime,
-                updateDateTime = updateDateTime,
-                property = StayProperty.WithId(propertyId),
-                tenant = StayOwnedTenant.WithId(tenantId),
-                vehicleMake = vehicleMake,
-                vehicleColor = vehicleColor,
-                vehicleLicensePlate = vehicleLicensePlate,
-                guests = guests,
-                checkInDateTime = checkInDateTime,
-                checkInTime = checkInDateTime.hour to checkInDateTime.minute,
-                checkOutDateTime = checkOutDateTime,
-                checkOutTime = checkOutDateTime.hour to checkOutDateTime.minute,
-                isAutoCheckIn = isAutoCheckIn,
-                isAutoCheckOut = isAutoCheckOut,
-                statusId = status,
-                totalPrice = totalPrice,
-                commission = commission,
-                observations = observations,
-                transfers = persistentListOf(),
-                files = persistentListOf(),
-                inconsistencies = inconsistencies,
-                contractVersion = contractVersion,
-            )
-        } else {
-            Stay.UnavailablePeriod.parse(
-                id = id,
-                createDateTime = createDateTime,
-                updateDateTime = updateDateTime,
-                property = StayProperty.WithId(propertyId),
-                checkInDateTime = checkInDateTime,
-                checkOutDateTime = checkOutDateTime,
-                observations = observations,
-                inconsistencies = inconsistencies,
-                contractVersion = contractVersion,
-            )
-        }
-    }
-
     companion object {
         fun fromDomain(domain: Stay): StayEntity {
             val ownedStay = domain as? Stay.Owned
@@ -117,9 +73,9 @@ data class StayEntity(
                 observations = domain.observations,
                 status = ownedStay?.status?.id,
                 isDeleted = false,
-                propertyId = domain.property.propertyId,
-                tenantId = ownedStay?.tenant?.tenantId,
-                inconsistencies = domain.inconsistencies,
+                propertyId = domain.propertyId,
+                tenantId = ownedStay?.tenantId,
+                inconsistencies = domain.inconsistencies.joinToString(", "),
                 contractVersion = BuildConfig.CONTRACT_VERSION,
             )
         }

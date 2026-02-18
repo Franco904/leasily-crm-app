@@ -12,7 +12,7 @@ class Email private constructor(val value: String) {
             validate(email)
                 .onError { throw it.asException() }
 
-            return Email(requireNotNull(email))
+            return Email(email)
         }
 
         fun validate(email: String): AppResult<Unit, DomainError> {

@@ -25,7 +25,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 data class AssistancePropertyCharacteristicCrossRefEntity(
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
     @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Long,
-    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime, // TODO: Faz sentido createDateTime e updateDateTime aqui?
     @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
 ) {

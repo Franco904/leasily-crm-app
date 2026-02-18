@@ -2,8 +2,6 @@ package com.fstengineering.leasilycrm.core.domain.entities
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
-import com.fstengineering.leasilycrm.core.domain.helpers.StayProperty
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -16,22 +14,22 @@ sealed class Stay(
     open val id: Long?,
     open val createDateTime: AppDateTime?,
     open val updateDateTime: AppDateTime?,
-    open val property: StayProperty,
+    open val propertyId: Long,
     open val period: StayPeriod,
     open val observations: String?,
-    open val inconsistencies: String?,
+    open val inconsistencies: ImmutableList<DomainError>,
     open val contractVersion: Int,
 ) {
     class Owned private constructor(
         override val id: Long?,
         override val createDateTime: AppDateTime?,
         override val updateDateTime: AppDateTime?,
-        override val property: StayProperty,
+        override val propertyId: Long,
         override val period: StayPeriod,
         override val observations: String?,
-        override val inconsistencies: String?,
+        override val inconsistencies: ImmutableList<DomainError>,
         override val contractVersion: Int,
-        val tenant: StayOwnedTenant,
+        val tenantId: Long,
         val vehicleMake: String?,
         val vehicleColor: String?,
         val vehicleLicensePlate: String?,
@@ -47,7 +45,7 @@ sealed class Stay(
         id = id,
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
-        property = property,
+        propertyId = propertyId,
         period = period,
         observations = observations,
         inconsistencies = inconsistencies,
@@ -59,21 +57,17 @@ sealed class Stay(
 
         fun undoRegisterCheckOut() = copyWith(status = StayStatus.CheckedIn)
 
-        fun putTenant(tenant: StayOwnedTenant): Owned {
-            if (tenant is StayOwnedTenant.WithData) {
-                validateTenant(tenant.data?.id)
-                    .onError { throw it.asException() }
-            }
-
-            return copyWith(tenant = tenant)
+        fun putTenant(tenantId: Long): Owned {
+            validateTenant(tenantId).onError { throw it.asException() }
+            return copyWith(tenantId = tenantId)
         }
 
         private fun copyWith(
             id: Long? = this.id,
             createDateTime: AppDateTime? = this.createDateTime,
             updateDateTime: AppDateTime? = this.updateDateTime,
-            property: StayProperty = this.property,
-            tenant: StayOwnedTenant = this.tenant,
+            propertyId: Long = this.propertyId,
+            tenantId: Long = this.tenantId,
             vehicleMake: String? = this.vehicleMake,
             vehicleColor: String? = this.vehicleColor,
             vehicleLicensePlate: String? = this.vehicleLicensePlate,
@@ -87,14 +81,14 @@ sealed class Stay(
             transfers: ImmutableList<StayTransfer> = this.transfers,
             files: ImmutableList<StayFile> = this.files,
             observations: String? = this.observations,
-            inconsistencies: String? = this.inconsistencies,
+            inconsistencies: ImmutableList<DomainError> = this.inconsistencies,
             contractVersion: Int = this.contractVersion,
         ) = Owned(
             id = id,
             createDateTime = createDateTime,
             updateDateTime = updateDateTime,
-            property = property,
-            tenant = tenant,
+            propertyId = propertyId,
+            tenantId = tenantId,
             vehicleMake = vehicleMake,
             vehicleColor = vehicleColor,
             vehicleLicensePlate = vehicleLicensePlate,
@@ -117,8 +111,8 @@ sealed class Stay(
                 id: Long?,
                 createDateTime: AppDateTime?,
                 updateDateTime: AppDateTime?,
-                property: StayProperty,
-                tenant: StayOwnedTenant,
+                propertyId: Long,
+                tenantId: Long,
                 vehicleMake: String?,
                 vehicleColor: String?,
                 vehicleLicensePlate: String?,
@@ -135,18 +129,11 @@ sealed class Stay(
                 files: ImmutableList<StayFile>,
                 observations: String?,
                 statusId: Int?,
-                inconsistencies: String?,
+                inconsistencies: ImmutableList<DomainError>,
                 contractVersion: Int,
             ): Owned {
-                if (property is StayProperty.WithData) {
-                    validateProperty(property.data?.id)
-                        .onError { throw it.asException() }
-                }
-
-                if (tenant is StayOwnedTenant.WithData) {
-                    validateTenant(tenant.data?.id)
-                        .onError { throw it.asException() }
-                }
+                validateProperty(propertyId) .onError { throw it.asException() }
+                validateTenant(tenantId).onError { throw it.asException() }
 
                 val guestsCount = StayGuestsCount.parse(guests)
 
@@ -175,8 +162,8 @@ sealed class Stay(
                     id = id,
                     createDateTime = createDateTime,
                     updateDateTime = updateDateTime,
-                    property = property,
-                    tenant = tenant,
+                    propertyId = propertyId,
+                    tenantId = tenantId,
                     vehicleMake = vehicleMake,
                     vehicleColor = vehicleColor,
                     vehicleLicensePlate = vehicleLicensePlate,
@@ -223,16 +210,16 @@ sealed class Stay(
         override val id: Long?,
         override val createDateTime: AppDateTime?,
         override val updateDateTime: AppDateTime?,
-        override val property: StayProperty,
+        override val propertyId: Long,
         override val period: StayPeriod,
         override val observations: String?,
-        override val inconsistencies: String?,
+        override val inconsistencies: ImmutableList<DomainError>,
         override val contractVersion: Int,
     ) : Stay(
         id = id,
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
-        property = property,
+        propertyId = propertyId,
         period = period,
         observations = observations,
         inconsistencies = inconsistencies,
@@ -243,17 +230,14 @@ sealed class Stay(
                 id: Long?,
                 createDateTime: AppDateTime?,
                 updateDateTime: AppDateTime?,
-                property: StayProperty,
+                propertyId: Long,
                 checkInDateTime: AppDateTime,
                 checkOutDateTime: AppDateTime,
                 observations: String?,
-                inconsistencies: String?,
+                inconsistencies: ImmutableList<DomainError>,
                 contractVersion: Int,
             ): UnavailablePeriod {
-                if (property is StayProperty.WithData) {
-                    validateProperty(property.data?.id)
-                        .onError { throw it.asException() }
-                }
+                validateProperty(propertyId).onError { throw it.asException() }
 
                 val period = StayPeriod.parse(
                     checkInDateTime = checkInDateTime,
@@ -266,7 +250,7 @@ sealed class Stay(
                     id = id,
                     createDateTime = createDateTime,
                     updateDateTime = updateDateTime,
-                    property = property,
+                    propertyId = propertyId,
                     period = period,
                     observations = observations,
                     inconsistencies = inconsistencies,

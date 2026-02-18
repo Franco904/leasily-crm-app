@@ -82,7 +82,7 @@ data class AssistanceEntity(
                 isFinished = domain.isFinished,
                 isDeleted = false,
                 tenantId = domain.tenantId,
-                inconsistencies = domain.inconsistencies,
+                inconsistencies = domain.inconsistencies.joinToString(", "),
                 contractVersion = BuildConfig.CONTRACT_VERSION,
             )
         }

@@ -55,7 +55,7 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.Stay.GuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
     DomainError.Stay.PeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
     DomainError.Stay.PeriodStartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
-    DomainError.Stay.PeriodIsOverlappingOtherPeriod -> R.string.inline_period_is_overlapping_other_property_stay_period
+    DomainError.Stay.Overbooking -> R.string.inline_period_is_overlapping_other_property_stay_period
     DomainError.Stay.CheckInDateRequired -> INLINE_REQUIRED
     DomainError.Stay.CheckInTimeRequired -> INLINE_REQUIRED
     DomainError.Stay.CheckOutDateRequired -> INLINE_REQUIRED

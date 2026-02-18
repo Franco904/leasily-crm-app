@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.entities
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Email
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Name
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Phone
@@ -20,9 +21,9 @@ class Tenant private constructor(
     val contactOrigin: String?,
     val observations: String?,
     val status: TenantStatus,
-    val assistances: ImmutableList<Assistance>,
-    val stays: ImmutableList<Stay>,
-    val inconsistencies: String?,
+    val assistancesIds: ImmutableList<Long>,
+    val staysIds: ImmutableList<Long>,
+    val inconsistencies: ImmutableList<DomainError>,
     val contractVersion: Int,
 ) {
     val isLead get() = status == TenantStatus.Lead
@@ -42,9 +43,9 @@ class Tenant private constructor(
             contactOrigin: String?,
             observations: String?,
             statusId: Int,
-            assistances: ImmutableList<Assistance>,
-            stays: ImmutableList<Stay>,
-            inconsistencies: String?,
+            assistancesIds: ImmutableList<Long>,
+            staysIds: ImmutableList<Long>,
+            inconsistencies: ImmutableList<DomainError>,
             contractVersion: Int,
         ): Tenant {
             val parsedName = Name.parse(name)
@@ -66,8 +67,8 @@ class Tenant private constructor(
                 contactOrigin = contactOrigin,
                 observations = observations,
                 status = status,
-                assistances = assistances,
-                stays = stays,
+                assistancesIds = assistancesIds,
+                staysIds = staysIds,
                 inconsistencies = inconsistencies,
                 contractVersion = contractVersion,
             )

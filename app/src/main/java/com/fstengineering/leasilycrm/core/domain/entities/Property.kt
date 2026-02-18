@@ -13,7 +13,7 @@ data class Property(
     val id: Long?,
     val createDateTime: AppDateTime?,
     val updateDateTime: AppDateTime?,
-    val owner: PropertyOwner,
+    val ownerId: Long,
     val type: PropertyType,
     val neighborhood: String,
     val streetAddress: String,
@@ -40,8 +40,8 @@ data class Property(
     val prices: ImmutableList<PropertyPrice>,
     val files: ImmutableList<PropertyFile>,
     val observations: String?,
-    val stays: ImmutableList<Stay>,
-    val inconsistencies: String?,
+    val staysIds: ImmutableList<Long>,
+    val inconsistencies: ImmutableList<DomainError>,
     val contractVersion: Int,
 ) {
     companion object {
@@ -49,7 +49,7 @@ data class Property(
             id: Long?,
             createDateTime: AppDateTime?,
             updateDateTime: AppDateTime?,
-            owner: PropertyOwner?,
+            ownerId: Long?,
             typeId: Long?,
             neighborhood: String?,
             streetAddress: String?,
@@ -77,11 +77,11 @@ data class Property(
             prices: ImmutableList<PropertyPrice>,
             files: ImmutableList<PropertyFile>,
             observations: String?,
-            stays: ImmutableList<Stay>,
-            inconsistencies: String?,
+            staysIds: ImmutableList<Long>,
+            inconsistencies: ImmutableList<DomainError>,
             contractVersion: Int,
         ): Property {
-            validateOwner(owner?.id).onError { throw it.asException() }
+            validateOwner(ownerId).onError { throw it.asException() }
             validateType(typeId).onError { throw it.asException() }
             validateNeighborhood(neighborhood).onError { throw it.asException() }
             validateStreetAddress(streetAddress).onError { throw it.asException() }
@@ -103,7 +103,7 @@ data class Property(
                 id = id,
                 createDateTime = createDateTime,
                 updateDateTime = updateDateTime,
-                owner = requireNotNull(owner),
+                ownerId = requireNotNull(ownerId),
                 type = type,
                 neighborhood = neighborhood,
                 streetAddress = streetAddress,
@@ -130,7 +130,7 @@ data class Property(
                 prices = prices,
                 files = files,
                 observations = observations,
-                stays = stays,
+                staysIds = staysIds,
                 inconsistencies = inconsistencies,
                 contractVersion = contractVersion,
             )

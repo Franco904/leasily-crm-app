@@ -71,7 +71,7 @@ sealed interface DomainError : AppError {
         GuestsCountIsNegative,
         PeriodStartAndEndDatesAreTheSame,
         PeriodStartDateIsAfterEndDate,
-        PeriodIsOverlappingOtherPeriod,
+        Overbooking,
         CheckInDateRequired,
         CheckInTimeRequired,
         CheckOutDateRequired,

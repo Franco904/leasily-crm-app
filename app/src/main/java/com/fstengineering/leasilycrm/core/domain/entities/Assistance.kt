@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.core.domain.entities
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistanceGuestsCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistancePreferredFeaturesCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistanceSearchedPeriod
@@ -26,7 +27,7 @@ class Assistance private constructor(
     val sentProperties: ImmutableList<AssistanceSentProperty>,
     val interactions: ImmutableList<AssistanceInteraction>,
     val tenantId: Long,
-    val inconsistencies: String?,
+    val inconsistencies: ImmutableList<DomainError>,
     val contractVersion: Int,
 ) {
     fun finish() = copyWith(isFinished = true)
@@ -50,7 +51,7 @@ class Assistance private constructor(
         sentProperties: ImmutableList<AssistanceSentProperty> = this.sentProperties,
         interactions: ImmutableList<AssistanceInteraction> = this.interactions,
         tenantId: Long = this.tenantId,
-        inconsistencies: String? = this.inconsistencies,
+        inconsistencies: ImmutableList<DomainError> = this.inconsistencies,
         contractVersion: Int = this.contractVersion,
     ) = Assistance(
         id = id,
@@ -95,14 +96,13 @@ class Assistance private constructor(
             seaProximityTypeId: Long?,
             distanceToSea: AppDecimal?,
             isFinished: Boolean,
-            isDeleted: Boolean,
             searchedNeighborhoods: ImmutableList<AssistanceSearchedNeighborhood>,
             characteristics: ImmutableList<AssistancePropertyCharacteristic>,
             observations: String?,
             sentProperties: ImmutableList<AssistanceSentProperty>,
             interactions: ImmutableList<AssistanceInteraction>,
             tenantId: Long,
-            inconsistencies: String?,
+            inconsistencies: ImmutableList<DomainError>,
             contractVersion: Int,
         ): Assistance {
             val searchedPeriod =

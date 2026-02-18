@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.entities
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Email
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Name
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Phone
@@ -15,7 +16,7 @@ class PropertyOwner private constructor(
     val email: Email?,
     val paymentKey: String?,
     val files: ImmutableList<PropertyOwnerFile>,
-    val inconsistencies: String?,
+    val inconsistencies: ImmutableList<DomainError>,
     val contractVersion: Int,
 ) {
     companion object {
@@ -28,7 +29,7 @@ class PropertyOwner private constructor(
             email: String?,
             paymentKey: String?,
             files: ImmutableList<PropertyOwnerFile>,
-            inconsistencies: String?,
+            inconsistencies: ImmutableList<DomainError>,
             contractVersion: Int,
         ): PropertyOwner {
             val parsedName = Name.parse(name)

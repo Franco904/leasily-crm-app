@@ -3,27 +3,20 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyCharacteristicCrossRef
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 data class PropertyCompound(
     @Embedded val property: PropertyEntity,
-    @Relation(
-        parentColumn = "property_owner_id",
-        entityColumn = "id",
-        entity = PropertyOwnerEntity::class,
-    )
-    val owner: PropertyOwnerCompound,
     @Relation(
         parentColumn = "id",
         entityColumn = "property_id",
@@ -78,10 +71,10 @@ data class PropertyCompound(
             .filter { !it.isDeleted }
             .map { it.toDomain() }
 
-    private val activeStays: List<Stay>
+    private val activeStays: List<Long>
         get() = stays
             .filter { !it.isDeleted }
-            .map { it.toDomain() }
+            .mapNotNull { it.id }
 
     fun toDomain() = Property.parse(
         id = property.id,
@@ -109,14 +102,14 @@ data class PropertyCompound(
         cleaningServiceTax = property.cleaningServiceTax,
         hasCleaningServiceIncluded = property.hasCleaningServiceIncluded,
         observations = property.observations,
-        owner = owner.toDomain(),
+        ownerId = property.ownerId,
         typeId = property.typeId,
         seaProximityTypeId = property.seaProximityTypeId,
         characteristics = activeCharacteristics.toImmutableList(),
         prices = activePrices.toImmutableList(),
         files = activeFiles.toImmutableList(),
-        stays = activeStays.toImmutableList(),
-        inconsistencies = property.inconsistencies,
+        staysIds = activeStays.toImmutableList(),
+        inconsistencies = persistentListOf(), // property.inconsistencies,
         contractVersion = property.contractVersion,
     )
 }

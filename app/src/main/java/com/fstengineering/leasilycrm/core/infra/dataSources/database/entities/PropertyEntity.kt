@@ -90,9 +90,9 @@ data class PropertyEntity(
                 hasCleaningServiceIncluded = domain.hasCleaningServiceIncluded,
                 observations = domain.observations,
                 isDeleted = false,
-                ownerId = requireNotNull(domain.owner.id),
+                ownerId = domain.ownerId,
                 typeId = domain.type.id,
-                inconsistencies = domain.inconsistencies,
+                inconsistencies = domain.inconsistencies.joinToString(", "),
                 contractVersion = BuildConfig.CONTRACT_VERSION,
             )
         }

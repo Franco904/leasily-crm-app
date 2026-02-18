@@ -34,7 +34,7 @@ data class PropertyOwnerEntity(
                 email = domain.email?.value,
                 paymentKey = domain.paymentKey,
                 isDeleted = false,
-                inconsistencies = domain.inconsistencies,
+                inconsistencies = domain.inconsistencies.joinToString(", "),
                 contractVersion = BuildConfig.CONTRACT_VERSION,
             )
     }

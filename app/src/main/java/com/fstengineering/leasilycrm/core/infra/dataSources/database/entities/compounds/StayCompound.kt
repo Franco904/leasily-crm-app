@@ -5,29 +5,14 @@ import androidx.room.Relation
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.entities.StayFile
 import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
-import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
-import com.fstengineering.leasilycrm.core.domain.helpers.StayProperty
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.TenantReadView
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 data class StayCompound(
     @Embedded val stay: StayEntity,
-    @Relation(
-        parentColumn = "property_id",
-        entityColumn = "id",
-        entity = PropertyEntity::class,
-    )
-    val property: PropertyCompound,
-    @Relation(
-        parentColumn = "tenant_id",
-        entityColumn = "id",
-        entity = TenantReadView::class,
-    )
-    val tenant: TenantCompound?,
     @Relation(
         parentColumn = "id",
         entityColumn = "stay_id",
@@ -52,13 +37,13 @@ data class StayCompound(
             .map { it.toDomain() }
 
     fun toDomain(): Stay {
-        return if (tenant != null) {
+        return if (stay.tenantId != null) {
             Stay.Owned.parse(
                 id = stay.id,
                 createDateTime = stay.createDateTime,
                 updateDateTime = stay.updateDateTime,
-                property = StayProperty.WithData(property.toDomain()),
-                tenant = StayOwnedTenant.WithData(tenant.toDomain()),
+                propertyId = stay.propertyId,
+                tenantId = stay.tenantId,
                 vehicleMake = stay.vehicleMake,
                 vehicleColor = stay.vehicleColor,
                 vehicleLicensePlate = stay.vehicleLicensePlate,
@@ -75,7 +60,7 @@ data class StayCompound(
                 observations = stay.observations,
                 transfers = activeTransfers.toImmutableList(),
                 files = activeFiles.toImmutableList(),
-                inconsistencies = stay.inconsistencies,
+                inconsistencies = persistentListOf(), // stay.inconsistencies,
                 contractVersion = stay.contractVersion,
             )
         } else {
@@ -83,11 +68,11 @@ data class StayCompound(
                 id = stay.id,
                 createDateTime = stay.createDateTime,
                 updateDateTime = stay.updateDateTime,
-                property = StayProperty.WithData(property.toDomain()),
+                propertyId = stay.propertyId,
                 checkInDateTime = stay.checkInDateTime,
                 checkOutDateTime = stay.checkOutDateTime,
                 observations = stay.observations,
-                inconsistencies = stay.inconsistencies,
+                inconsistencies = persistentListOf(), // stay.inconsistencies,
                 contractVersion = stay.contractVersion,
             )
         }

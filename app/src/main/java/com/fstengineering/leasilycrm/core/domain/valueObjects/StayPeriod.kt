@@ -9,6 +9,26 @@ class StayPeriod private constructor(
     val checkInDateTime: AppDateTime,
     val checkOutDateTime: AppDateTime,
 ) {
+    /*
+        val newPeriod = StayPeriod.parse(...)
+
+        val existingPeriods = stayRepository
+            .findByPropertyId(propertyId)
+            .map { it.period }
+
+        val hasOverbooking =
+            existingPeriods
+                .filter { it != periodBeforeEdit }
+                .any { it.overlaps(newPeriod) }
+
+        if (hasOverbooking) {
+            return AppResult.Error(DomainError.Stay.Overbooking)
+        }
+     */
+    fun overlaps(other: StayPeriod): Boolean {
+        return checkInDateTime < other.checkOutDateTime && checkOutDateTime > other.checkInDateTime
+    }
+
     companion object {
         fun parse(
             checkInDateTime: AppDateTime?,
@@ -45,24 +65,17 @@ class StayPeriod private constructor(
             checkOutDateTime: AppDateTime?,
             checkOutTime: Pair<Int?, Int?>?,
         ): AppResult<Unit, DomainError.Stay> {
-            // propertyStayCheckInDateTimes.isNotEmpty() -> {
-            //                val isThereAnyPropertyOverbooking = propertyStayCheckInDateTimes
-            //                    .filter { it != checkInDateTimeBeforeEdit }
-            //                    .any { existingStayCheckInDateTime ->
-            //                        checkInDateTime <= existingStayCheckInDateTime
-            //                                && checkOutDateTime >= existingStayCheckInDateTime
-            //                    }
-            //
-            //                if (!isThereAnyPropertyOverbooking) return AppResult.Success(Unit)
-            //
-            //                return AppResult.Error(ParsingError.StayPeriod.IsOverlappingOtherPropertyStayPeriod)
-            //            }
-
             return when {
                 checkInDateTime == null -> AppResult.Error(DomainError.Stay.CheckInDateRequired)
-                checkInTime?.first == null || checkInTime.second == null -> AppResult.Error(DomainError.Stay.CheckInTimeRequired)
+                checkInTime?.first == null || checkInTime.second == null -> {
+                    AppResult.Error(DomainError.Stay.CheckInTimeRequired)
+                }
+
                 checkOutDateTime == null -> AppResult.Error(DomainError.Stay.CheckOutDateRequired)
-                checkOutTime?.first == null || checkOutTime.second == null -> AppResult.Error(DomainError.Stay.CheckOutTimeRequired)
+                checkOutTime?.first == null || checkOutTime.second == null -> {
+                    AppResult.Error(DomainError.Stay.CheckOutTimeRequired)
+                }
+
                 checkInDateTime.isSameDayAs(checkOutDateTime) -> AppResult.Error(DomainError.Stay.PeriodStartAndEndDatesAreTheSame)
                 checkInDateTime.isAfterDayOf(checkOutDateTime) -> AppResult.Error(DomainError.Stay.PeriodStartDateIsAfterEndDate)
                 else -> AppResult.Success(Unit)

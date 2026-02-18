@@ -9,6 +9,26 @@ class PropertyPricePeriod private constructor(
     val startDate: AppDate,
     val endDate: AppDate,
 ) {
+    /*
+        val newPeriod = PropertyPricePeriod.parse(...)
+
+        val existingPeriods = stayRepository
+            .findByPropertyId(propertyId)
+            .map { it.period }
+
+        val hasOverbooking =
+            existingPeriods
+                .filter { it != periodBeforeEdit }
+                .any { it.overlaps(newPeriod) }
+
+        if (hasOverbooking) {
+            return AppResult.Error(DomainError.Stay.Overbooking)
+        }
+    */
+    fun overlaps(other: PropertyPricePeriod): Boolean {
+        return startDate < other.endDate && endDate > other.startDate
+    }
+
     companion object {
         fun parse(
             startDate: AppDate?,
@@ -27,18 +47,6 @@ class PropertyPricePeriod private constructor(
             startDate: AppDate?,
             endDate: AppDate?,
         ): AppResult<Unit, DomainError.Property> {
-            // otherPropertyPricesStartDates.isNotEmpty() -> {
-            //                val isThereAnyPropertyPriceOverlapping = otherPropertyPricesStartDates
-            //                    .filter { it != startDateBeforeEdit }
-            //                    .any { existingPriceStartDate ->
-            //                        startDate < existingPriceStartDate && endDate > existingPriceStartDate
-            //                    }
-            //
-            //                if (!isThereAnyPropertyPriceOverlapping) return AppResult.Success(Unit)
-            //
-            //                return AppResult.Error(ParsingError.PropertyPricePeriod.IsOverlappingOtherPropertyPricePeriod)
-            //            }
-
             return when {
                 startDate == null || endDate == null -> AppResult.Error(DomainError.Property.PricePeriodRequired)
                 startDate == endDate -> AppResult.Error(DomainError.Property.PricePeriodStartAndEndDatesAreTheSame)

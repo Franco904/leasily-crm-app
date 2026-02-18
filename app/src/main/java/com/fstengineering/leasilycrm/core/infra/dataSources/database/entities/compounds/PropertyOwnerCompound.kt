@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 data class PropertyOwnerCompound(
@@ -31,7 +32,7 @@ data class PropertyOwnerCompound(
         email = propertyOwner.email,
         paymentKey = propertyOwner.paymentKey,
         files = activeFiles.toImmutableList(),
-        inconsistencies = propertyOwner.inconsistencies,
+        inconsistencies = persistentListOf(), // propertyOwner.inconsistencies,
         contractVersion = propertyOwner.contractVersion,
     )
 }

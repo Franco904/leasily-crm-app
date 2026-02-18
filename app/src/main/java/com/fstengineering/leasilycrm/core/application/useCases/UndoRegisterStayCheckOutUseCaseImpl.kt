@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
-import com.fstengineering.leasilycrm.core.domain.helpers.StayOwnedTenant
 import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
