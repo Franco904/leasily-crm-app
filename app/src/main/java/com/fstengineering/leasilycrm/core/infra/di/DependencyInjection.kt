@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.infra.di.modules.connectivityModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.coroutineModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.daoModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.databaseDataSourceModule
-import com.fstengineering.leasilycrm.core.infra.di.modules.domainServiceModule
+import com.fstengineering.leasilycrm.core.infra.di.modules.applicationServiceModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.inMemoryDataSourceModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.preferencesDataSourceModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.presentationModule
@@ -30,7 +30,7 @@ fun Application.configureDependencyInjection() {
             presentationModule,
             viewModelModule,
             useCaseModule,
-            domainServiceModule,
+            applicationServiceModule,
             repositoryModule,
             databaseDataSourceModule,
             inMemoryDataSourceModule,

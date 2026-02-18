@@ -1,16 +1,16 @@
 package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.useCases.GetStaysStructuredDatesUseCaseImpl
-import com.fstengineering.leasilycrm.core.domain.useCases.GetTodayCheckInsCheckOutsToNotifyUseCaseImpl
-import com.fstengineering.leasilycrm.core.domain.useCases.RegisterStayCheckOutUseCaseImpl
-import com.fstengineering.leasilycrm.core.domain.useCases.UndoRegisterStayCheckOutUseCaseImpl
-import com.fstengineering.leasilycrm.core.domain.useCases.WatchPropertyWithStaysTenantsUseCaseImpl
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.GetStaysStructuredDatesUseCaseImpl
+import com.fstengineering.leasilycrm.core.application.useCases.GetTodayCheckInsCheckOutsToNotifyUseCaseImpl
+import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCaseImpl
+import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCaseImpl
+import com.fstengineering.leasilycrm.core.application.useCases.WatchPropertyWithStaysTenantsUseCaseImpl
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {

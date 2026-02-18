@@ -9,8 +9,8 @@ import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess

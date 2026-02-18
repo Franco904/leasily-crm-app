@@ -30,8 +30,8 @@ import com.fstengineering.leasilycrm.core.infra.backgroundWork.enqueueLazyWrites
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.BootstrappingWorker
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.LazyWritesWorker
 import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
-import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
-import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService.UserSessionEvent
+import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
+import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService.UserSessionEvent
 import com.fstengineering.leasilycrm.core.presentation.composables.AppErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.AppSnackbarHost
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData

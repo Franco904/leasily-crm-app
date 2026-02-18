@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.home.tenants
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
-import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError

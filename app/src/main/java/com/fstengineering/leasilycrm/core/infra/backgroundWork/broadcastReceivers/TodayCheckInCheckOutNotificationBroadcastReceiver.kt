@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationManagerCompat
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.notifications.TodayCheckInCheckOutNotification
 import kotlinx.coroutines.CoroutineScope

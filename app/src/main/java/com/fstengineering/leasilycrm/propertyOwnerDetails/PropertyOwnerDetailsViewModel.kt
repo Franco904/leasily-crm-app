@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyOwnerDetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess

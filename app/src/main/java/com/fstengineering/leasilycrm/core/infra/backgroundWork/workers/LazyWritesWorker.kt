@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.core.infra.backgroundWork.workers
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.application.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 
 class LazyWritesWorker(

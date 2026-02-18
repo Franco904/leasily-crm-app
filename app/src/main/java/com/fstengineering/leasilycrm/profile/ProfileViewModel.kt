@@ -3,9 +3,9 @@ package com.fstengineering.leasilycrm.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.repositories.AuthRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
+import com.fstengineering.leasilycrm.core.application.repositories.AuthRepository
+import com.fstengineering.leasilycrm.core.application.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold

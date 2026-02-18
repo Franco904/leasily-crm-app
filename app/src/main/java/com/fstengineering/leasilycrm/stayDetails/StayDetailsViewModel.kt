@@ -2,11 +2,11 @@ package com.fstengineering.leasilycrm.stayDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess

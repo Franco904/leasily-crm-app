@@ -9,10 +9,10 @@ import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.entities.StayFile
 import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.StayFileRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
+import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold

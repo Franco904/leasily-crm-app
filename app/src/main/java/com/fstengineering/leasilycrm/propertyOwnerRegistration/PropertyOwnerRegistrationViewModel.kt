@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwnerFile
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerFileRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyOwnerRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerFileRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold

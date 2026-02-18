@@ -6,8 +6,8 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
+import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess

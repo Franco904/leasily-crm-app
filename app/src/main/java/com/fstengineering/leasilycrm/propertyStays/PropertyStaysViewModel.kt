@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.GetStaysStructuredDatesUseCase
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.StaysStructuredDatesMap
-import com.fstengineering.leasilycrm.core.domain.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.ImmutableList

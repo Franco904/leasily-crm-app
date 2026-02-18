@@ -1,0 +1,16 @@
+package com.fstengineering.leasilycrm.core.application.repositories
+
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import kotlinx.collections.immutable.ImmutableList
+
+interface AssistanceRepository {
+    suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, DataError>
+
+    suspend fun delete(id: Long): AppResult<Unit, DataError>
+
+    suspend fun getById(assistanceId: Long): AppResult<Assistance, DataError>
+
+    suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>, DataError>
+}
