@@ -18,8 +18,6 @@ class UndoRegisterStayCheckOutUseCaseImpl(
         stayRepository.insertOrUpdate(stay = updatedStay)
             .onError { return AppResult.Error(error = it) }
 
-        if (stay.tenant !is StayOwnedTenant.WithData) return AppResult.Success(data = Unit)
-
         val updatedAssistance = stay.tenant.data?.assistances
             ?.firstOrNull { !it.isFinished }
             ?.unfinish()
