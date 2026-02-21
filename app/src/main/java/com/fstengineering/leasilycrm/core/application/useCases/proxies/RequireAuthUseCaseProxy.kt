@@ -7,12 +7,12 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.SystemError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
-class RequireAuthUseCaseProxy<P : UseCase.UseCaseParam, R>(
-    private val delegate: UseCase<P, R>,
+class RequireAuthUseCaseProxy<W : UseCase.WriteModel, R>(
+    private val delegate: UseCase<W, R>,
     private val userSessionService: UserSessionService,
-) : UseCase<P, R> {
-    override suspend fun invoke(params: P): AppResult<R, SystemError> {
-        return delegate(params)
+) : UseCase<W, R> {
+    override suspend fun invoke(writeModel: W): AppResult<R, SystemError> {
+        return delegate(writeModel)
             .onError {
                 if (it == ApplicationError.Unauthorized) {
                     userSessionService.onSessionExpired()

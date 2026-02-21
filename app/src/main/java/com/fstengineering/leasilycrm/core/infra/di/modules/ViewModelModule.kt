@@ -4,6 +4,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrati
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
+import com.fstengineering.leasilycrm.core.application.useCases.proxies.RequireAuthUseCaseProxy
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.home.HomeViewModel
@@ -13,6 +14,7 @@ import com.fstengineering.leasilycrm.home.stays.StaysViewModel
 import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel
+import com.fstengineering.leasilycrm.profile.application.useCases.UpdateUserCreciNumberUseCaseImpl
 import com.fstengineering.leasilycrm.profile.presentation.ProfileViewModel
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel

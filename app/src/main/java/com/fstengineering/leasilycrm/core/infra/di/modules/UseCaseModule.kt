@@ -10,10 +10,29 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetSta
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.proxies.RequireAuthUseCaseProxy
+import com.fstengineering.leasilycrm.core.infra.di.qualifiers.userCreciNumberUseCaseQualifier
+import com.fstengineering.leasilycrm.profile.application.models.UserWriteModel
+import com.fstengineering.leasilycrm.profile.application.useCases.UpdateUserCreciNumberUseCaseImpl
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val useCaseModule = module {
+    factory<UseCase<UserWriteModel, Unit>>(userCreciNumberUseCaseQualifier) {
+        UpdateUserCreciNumberUseCaseImpl(
+            userRepository = get(),
+        )
+    }
+
+    factory<UseCase<UserWriteModel, Unit>> {
+        RequireAuthUseCaseProxy(
+            delegate = get(userCreciNumberUseCaseQualifier),
+            userSessionService = get()
+        )
+    }
+
     single<RegisterStayCheckOutUseCase> {
         RegisterStayCheckOutUseCaseImpl(
             stayRepository = get(),

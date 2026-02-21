@@ -11,12 +11,14 @@ import com.fstengineering.leasilycrm.profile.application.models.UserWriteModel
 class UpdateUserCreciNumberUseCaseImpl(
     private val userRepository: UserRepository,
 ) : UseCase<UserWriteModel, Unit> {
-    override suspend fun invoke(params: UserWriteModel): AppResult<Unit, SystemError> {
-        if (params.creciNumber != null) {
-            User.validateCreciNumber(creciNumber = params.creciNumber)
+    override suspend fun invoke(writeModel: UserWriteModel): AppResult<Unit, SystemError> {
+        val creciNumber = writeModel.creciNumber
+
+        if (creciNumber != null) {
+            User.validateCreciNumber(creciNumber = creciNumber)
                 .onError { e -> return AppResult.Error(error = e) }
         }
 
-        return userRepository.updateUserCreciNumber(params.creciNumber)
+        return userRepository.updateUserCreciNumber(creciNumber)
     }
 }
