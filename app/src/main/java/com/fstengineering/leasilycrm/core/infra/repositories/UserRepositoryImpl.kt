@@ -28,7 +28,7 @@ class UserRepositoryImpl(
             prefs.copy(
                 remoteId = user.remoteId,
                 name = user.name,
-                creciNumber = user.creciNumber,
+                creciNumber = user.creci?.value,
                 profilePictureUrl = user.profilePictureUrl,
                 userSyncStateId = user.userSyncStateId,
             )
@@ -89,7 +89,7 @@ class UserRepositoryImpl(
         }
 
         val cachedUser = prefs.toUser()
-        remoteDataSource.updateUser(updateUserDto = UpdateUserDto(cachedUser.creciNumber))
+        remoteDataSource.updateUser(updateUserDto = UpdateUserDto(cachedUser.creci?.value))
             .onError { remoteBackendError ->
                 encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.PendingSync.id)

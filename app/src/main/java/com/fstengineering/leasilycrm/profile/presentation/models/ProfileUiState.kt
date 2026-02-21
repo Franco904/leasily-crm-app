@@ -14,7 +14,7 @@ sealed interface ProfileUiState {
             fun fromDomain(user: User): Loaded {
                 return Loaded(
                     name = user.name,
-                    creciNumber = user.creciNumber,
+                    creciNumber = user.creci?.value,
                     profilePictureUrl = user.profilePictureUrl,
                 )
             }

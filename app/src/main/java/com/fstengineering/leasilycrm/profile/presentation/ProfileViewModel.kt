@@ -8,11 +8,11 @@ import com.fstengineering.leasilycrm.core.application.repositories.UserRepositor
 import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.entities.User
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Creci
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.UserWriteModel
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
@@ -89,11 +89,10 @@ class ProfileViewModel(
         _creciFieldError.update { null }
     }
 
-    fun onCreciNumberFieldFocusLoss() {
-        val state = uiState.value
-        if (state !is ProfileUiState.Loaded || state.creciNumber == null) return
+    fun onCreciFocusLoss(input: String?) {
+        if (input == null) return
 
-        User.validateCreciNumber(creciNumber = state.creciNumber)
+        Creci.validate(creciNumber = input)
             .onError { e -> _creciFieldError.update { e.toInlineMessage() } }
     }
 

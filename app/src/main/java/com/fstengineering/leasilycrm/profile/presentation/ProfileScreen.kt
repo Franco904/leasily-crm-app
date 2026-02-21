@@ -148,7 +148,7 @@ fun ProfileScreen(
                     initialCreciNumber = (uiState as ProfileUiState.Loaded).creciNumber,
                     onCreciNumberChange = viewModel::onCreciNumberChange,
                     creciNumberError = creciFieldError,
-                    onCreciNumberFieldFocusLoss = viewModel::onCreciNumberFieldFocusLoss,
+                    onCreciFocusLoss = viewModel::onCreciFocusLoss,
                     onEdit = { creciNumber ->
                         isEditingUser = false
 

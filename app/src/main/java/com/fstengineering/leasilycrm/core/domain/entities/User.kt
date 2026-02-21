@@ -1,15 +1,13 @@
 package com.fstengineering.leasilycrm.core.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Creci
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 
 class User private constructor(
     val remoteId: Long,
     val name: String,
-    val creciNumber: String?,
+    val creci: Creci?,
     val profilePictureUrl: String,
     val userSyncStateId: Int,
     val inconsistencies: ImmutableList<DomainError>,
@@ -25,27 +23,17 @@ class User private constructor(
             inconsistencies: ImmutableList<DomainError>,
             contractVersion: Int,
         ): User {
-            creciNumber?.let {
-                validateCreciNumber(creciNumber)
-                    .onError { throw it.asException() }
-            }
+            val creci = creciNumber?.let { Creci.parse(creciNumber) }
 
             return User(
                 remoteId = remoteId,
                 name = name,
-                creciNumber = creciNumber,
+                creci = creci,
                 profilePictureUrl = profilePictureUrl,
                 userSyncStateId = userSyncStateId,
                 inconsistencies = inconsistencies,
                 contractVersion = contractVersion,
             )
-        }
-
-        fun validateCreciNumber(creciNumber: String): AppResult<Unit, DomainError.User> {
-            return when {
-                creciNumber.length > 8 -> AppResult.Error(DomainError.User.CreciNumberLengthIsGreaterThan8Chars)
-                else -> AppResult.Success(Unit)
-            }
         }
     }
 }
