@@ -10,9 +10,9 @@ sealed interface UserUiState {
     data object Empty : UserUiState
 
     data class Loaded(
-        val name: String? = null,
-        val creciNumber: String? = null,
-        val profilePictureUrl: String? = null,
+        val name: String,
+        val creciNumber: String?,
+        val profilePictureUrl: String,
     ) : UserUiState {
         companion object {
             fun fromDomain(user: User): Loaded {

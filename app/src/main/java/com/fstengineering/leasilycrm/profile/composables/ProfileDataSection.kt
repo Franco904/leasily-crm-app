@@ -49,7 +49,7 @@ fun ProfileDataSection(
     )
     Spacer(modifier = Modifier.height(16.dp))
     Text(
-        text = userUiState.name ?: "-",
+        text = userUiState.name,
         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
     )
     Spacer(modifier = Modifier.height(12.dp))
