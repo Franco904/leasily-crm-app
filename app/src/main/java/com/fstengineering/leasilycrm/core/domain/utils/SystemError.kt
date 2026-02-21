@@ -1,3 +1,3 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
-interface AppError
+interface SystemError : BaseError

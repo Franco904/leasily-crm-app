@@ -11,7 +11,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximi
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.collections.immutable.ImmutableList
@@ -191,7 +191,7 @@ class PropertyRegistrationViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
+        data class Error(val error: InfraError) : UiEvents
 
         data object PropertyCreateSuccess : UiEvents
 

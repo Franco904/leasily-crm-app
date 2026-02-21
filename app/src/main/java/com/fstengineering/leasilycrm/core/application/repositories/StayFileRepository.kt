@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.core.application.repositories
 
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.entities.StayFile
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
 
 interface StayFileRepository {
-    suspend fun getFileName(file: StayFile): AppResult<String, DataError>
+    suspend fun getFileName(file: StayFile): AppResult<String, ApplicationError>
 }

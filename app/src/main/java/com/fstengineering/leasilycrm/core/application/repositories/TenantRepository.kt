@@ -1,58 +1,58 @@
 package com.fstengineering.leasilycrm.core.application.repositories
 
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
-import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface TenantRepository {
     suspend fun insertOrUpdate(
         tenant: Tenant,
-    ): AppResult<Unit, DataError>
+    ): AppResult<Unit, ApplicationError>
 
-    suspend fun delete(id: Long): AppResult<Unit, DataError>
+    suspend fun delete(id: Long): AppResult<Unit, ApplicationError>
 
-    suspend fun getById(tenantId: Long): AppResult<Tenant, DataError>
+    suspend fun getById(tenantId: Long): AppResult<Tenant, ApplicationError>
 
     suspend fun getAllLeadsMatching(
         matching: String?,
         orderTypeId: Int,
-    ): AppResult<ImmutableList<Tenant>, DataError>
+    ): AppResult<ImmutableList<Tenant>, ApplicationError>
 
     suspend fun getAllTenantsMatching(
         matching: String?,
         orderTypeId: Int,
-    ): AppResult<ImmutableList<Tenant>, DataError>
+    ): AppResult<ImmutableList<Tenant>, ApplicationError>
 
     suspend fun getAllWithoutUpcomingStaysMatching(
         matching: String?,
         currentTenantId: Long?,
-    ): AppResult<ImmutableList<Tenant>, DataError>
+    ): AppResult<ImmutableList<Tenant>, ApplicationError>
 
-    suspend fun getAllTagNames(): AppResult<ImmutableList<String>, DataError>
+    suspend fun getAllTagNames(): AppResult<ImmutableList<String>, ApplicationError>
 
-    suspend fun getAllCityNames(): AppResult<ImmutableList<String>, DataError>
+    suspend fun getAllCityNames(): AppResult<ImmutableList<String>, ApplicationError>
 
-    suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, DataError>
+    suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, ApplicationError>
 
-    suspend fun getPreferredTenantsOrderTypeId(): AppResult<Int, DataError>
+    suspend fun getPreferredTenantsOrderTypeId(): AppResult<Int, ApplicationError>
 
-    suspend fun updatePreferredLeadsOrderTypeId(orderTypeId: Int): AppResult<Unit, DataError>
+    suspend fun updatePreferredLeadsOrderTypeId(orderTypeId: Int): AppResult<Unit, ApplicationError>
 
-    suspend fun updatePreferredTenantsOrderTypeId(orderTypeId: Int): AppResult<Unit, DataError>
+    suspend fun updatePreferredTenantsOrderTypeId(orderTypeId: Int): AppResult<Unit, ApplicationError>
 
-    fun watchById(tenantId: Long): Flow<AppResult<Tenant?, DataError>>
+    fun watchById(tenantId: Long): Flow<AppResult<Tenant?, ApplicationError>>
 
     fun watchAll(
         tenantStatusFilter: TenantStatus? = null,
         matching: String? = null,
         orderTypeId: Int? = null,
-    ): Flow<AppResult<ImmutableList<Tenant>, DataError>>
+    ): Flow<AppResult<ImmutableList<Tenant>, ApplicationError>>
 
     suspend fun isThereTenantWithName(
         tenantName: String,
         currentStoredTenantName: String?,
-    ): AppResult<Boolean, DataError>
+    ): AppResult<Boolean, ApplicationError>
 }

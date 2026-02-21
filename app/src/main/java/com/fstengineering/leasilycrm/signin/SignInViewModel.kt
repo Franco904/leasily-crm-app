@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.application.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -46,7 +46,7 @@ class SignInViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
+        data class Error(val error: InfraError) : UiEvents
         data object ContinueSignIn : UiEvents
         data object SignInSuccess : UiEvents
     }

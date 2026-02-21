@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
@@ -233,7 +233,7 @@ class StaysViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
+        data class Error(val error: InfraError) : UiEvents
         data object StayDeleteSuccess : UiEvents
         data object RegisterCheckInSuccess : UiEvents
         data object RegisterCheckOutSuccess : UiEvents

@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
-sealed interface DomainError : AppError {
+sealed interface DomainError : SystemError {
     fun asException() = DomainException(this)
 
     enum class Assistance : DomainError {

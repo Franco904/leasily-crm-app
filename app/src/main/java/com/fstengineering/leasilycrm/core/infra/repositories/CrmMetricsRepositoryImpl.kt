@@ -1,14 +1,14 @@
 package com.fstengineering.leasilycrm.core.infra.repositories
 
+import com.fstengineering.leasilycrm.core.application.repositories.CrmMetricsRepository
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.helpers.toDecimal
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
 import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
-import com.fstengineering.leasilycrm.core.application.repositories.CrmMetricsRepository
+import com.fstengineering.leasilycrm.core.domain.helpers.toDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentMap
@@ -22,12 +22,12 @@ class CrmMetricsRepositoryImpl(
     private val databaseDataSource: CrmMetricsDatabaseDataSource,
     private val now: AppDate,
 ) : CrmMetricsRepository {
-    override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataError>> =
+    override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>> =
         flow {
             val generatedLeadsPerMonthFlow = databaseDataSource
                 .watchGeneratedLeadsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -52,10 +52,10 @@ class CrmMetricsRepositoryImpl(
 
                     generatedLeadsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val leadsCount = generatedLeadsPerMonthMap[monthYear]
-                        generatedLeadsWithMissingMonthsMap.put(monthYear, leadsCount ?: 0)
+                        generatedLeadsWithMissingMonthsMap[monthYear] = leadsCount ?: 0
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>(
                         data = generatedLeadsWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -63,12 +63,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(generatedLeadsPerMonthFlowMapped)
         }
 
-    override fun watchGeneratedLeadsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
+    override fun watchGeneratedLeadsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>> =
         flow {
             val generatedLeadsPerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchGeneratedLeadsPerTenantTagPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -98,11 +98,11 @@ class CrmMetricsRepositoryImpl(
                     generatedLeadsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val leadsCountPerTenantSegment =
                             generatedLeadsPerTenantSegmentPerMonthMap[monthYear]
-                        generatedLeadsWithMissingMonthsMap
-                            .put(monthYear, leadsCountPerTenantSegment ?: persistentMapOf())
+                        generatedLeadsWithMissingMonthsMap[monthYear] =
+                            leadsCountPerTenantSegment ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>(
                         data = generatedLeadsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -111,12 +111,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(generatedLeadsPerTenantSegmentPerMonthFlowMapped)
         }
 
-    override fun watchLeadContactChannelDistribution(): Flow<AppResult<ImmutableMap<String?, Double>, DataError>> =
+    override fun watchLeadContactChannelDistribution(): Flow<AppResult<ImmutableMap<String?, Double>, ApplicationError>> =
         flow {
             val leadContactChannelDistributionFlow = databaseDataSource
                 .watchCountLeadsByContactChannelType()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -133,7 +133,7 @@ class CrmMetricsRepositoryImpl(
                         .filterValues { it > 0.0 }
                         .toPersistentMap()
 
-                    AppResult.Success<ImmutableMap<String?, Double>, DataError>(
+                    AppResult.Success<ImmutableMap<String?, Double>, ApplicationError>(
                         data = leadContactChannelDistribution,
                     )
                 }
@@ -141,12 +141,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(leadContactChannelDistributionFlowMapped)
         }
 
-    override fun watchNewStayBookingsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, DataError>> =
+    override fun watchNewStayBookingsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>> =
         flow {
             val newStayBookingsPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -171,10 +171,10 @@ class CrmMetricsRepositoryImpl(
 
                     newStayBookingsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val bookingsCount = newStayBookingsPerMonthMap[monthYear]
-                        newStayBookingsWithMissingMonthsMap.put(monthYear, bookingsCount ?: 0)
+                        newStayBookingsWithMissingMonthsMap[monthYear] = bookingsCount ?: 0
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>(
                         data = newStayBookingsWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -182,12 +182,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(newStayBookingsPerMonthFlowMapped)
         }
 
-    override fun watchNewStayBookingsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
+    override fun watchNewStayBookingsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>> =
         flow {
             val newStayBookingsPerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerTenantTagPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -217,11 +217,11 @@ class CrmMetricsRepositoryImpl(
                     newStayBookingsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val bookingsCountPerTenantSegment =
                             newStayBookingsPerTenantSegmentPerMonthMap[monthYear]
-                        newStayBookingsWithMissingMonthsMap
-                            .put(monthYear, bookingsCountPerTenantSegment ?: persistentMapOf())
+                        newStayBookingsWithMissingMonthsMap[monthYear] =
+                            bookingsCountPerTenantSegment ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>(
                         data = newStayBookingsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -230,12 +230,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(newStayBookingsPerTenantSegmentPerMonthFlowMapped)
         }
 
-    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>> =
+    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>> =
         flow {
             val newStayBookingsPerTop3NeighborhoodsPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -266,11 +266,11 @@ class CrmMetricsRepositoryImpl(
                     newStayBookingsWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val bookingsCountPerTop3Neighborhoods =
                             newStayBookingsPerTop3NeighborhoodsPerMonthMap[monthYear]
-                        newStayBookingsWithMissingMonthsMap
-                            .put(monthYear, bookingsCountPerTop3Neighborhoods ?: persistentMapOf())
+                        newStayBookingsWithMissingMonthsMap[monthYear] =
+                            bookingsCountPerTop3Neighborhoods ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>(
                         data = newStayBookingsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -279,12 +279,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(newStayBookingsPerTop3NeighborhoodsPerMonthFlowMapped)
         }
 
-    override fun watchCommissionInvoicePerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>> =
+    override fun watchCommissionInvoicePerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, ApplicationError>> =
         flow {
             val commissionInvoicePerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -309,13 +309,11 @@ class CrmMetricsRepositoryImpl(
 
                     commissionInvoiceWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val commissionInvoice = commissionInvoicePerMonthMap[monthYear]
-                        commissionInvoiceWithMissingMonthsMap.put(
-                            monthYear,
+                        commissionInvoiceWithMissingMonthsMap[monthYear] =
                             commissionInvoice ?: 0.toDecimal()
-                        )
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>, ApplicationError>(
                         data = commissionInvoiceWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -323,12 +321,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerMonthFlowMapped)
         }
 
-    override fun watchCommissionInvoicePerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>> =
+    override fun watchCommissionInvoicePerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, ApplicationError>> =
         flow {
             val commissionInvoicePerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerTenantTagPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -358,11 +356,11 @@ class CrmMetricsRepositoryImpl(
                     commissionInvoiceWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val commissionInvoicePerTenantSegment =
                             commissionInvoicePerTenantSegmentPerMonthMap[monthYear]
-                        commissionInvoiceWithMissingMonthsMap
-                            .put(monthYear, commissionInvoicePerTenantSegment ?: persistentMapOf())
+                        commissionInvoiceWithMissingMonthsMap[monthYear] =
+                            commissionInvoicePerTenantSegment ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, ApplicationError>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -371,12 +369,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerTenantSegmentPerMonthFlowMapped)
         }
 
-    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>> =
+    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, ApplicationError>> =
         flow {
             val commissionInvoicePerTop3NeighborhoodsPerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -407,14 +405,11 @@ class CrmMetricsRepositoryImpl(
                     commissionInvoiceWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val commissionInvoicePerTop3Neighborhoods =
                             commissionInvoicePerTop3NeighborhoodsPerMonthMap[monthYear]
-                        commissionInvoiceWithMissingMonthsMap
-                            .put(
-                                monthYear,
-                                commissionInvoicePerTop3Neighborhoods ?: persistentMapOf()
-                            )
+                        commissionInvoiceWithMissingMonthsMap[monthYear] =
+                            commissionInvoicePerTop3Neighborhoods ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, ApplicationError>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -423,12 +418,12 @@ class CrmMetricsRepositoryImpl(
             emitAll(commissionInvoicePerTop3NeighborhoodsPerMonthFlowMapped)
         }
 
-    override fun watchAverageTicketPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>> =
+    override fun watchAverageTicketPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, ApplicationError>> =
         flow {
             val averageTicketPerMonthFlow = databaseDataSource
                 .watchAverageTicketPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it }
                 )
 
@@ -453,13 +448,11 @@ class CrmMetricsRepositoryImpl(
 
                     averageTicketWithMissingMonthsMap.entries.forEach { (monthYear, _) ->
                         val averageTicket = averageTicketPerMonthMap[monthYear]
-                        averageTicketWithMissingMonthsMap.put(
-                            monthYear,
+                        averageTicketWithMissingMonthsMap[monthYear] =
                             averageTicket ?: 0.toDecimal()
-                        )
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>, DataError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>, ApplicationError>(
                         data = averageTicketWithMissingMonthsMap.toPersistentMap(),
                     )
                 }

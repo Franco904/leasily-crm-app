@@ -26,7 +26,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.domain.utils.CredentialsError
+import com.fstengineering.leasilycrm.core.infra.utils.CredentialsError
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.signin.SignInViewModel.UiEvents.ContinueSignIn
 import com.fstengineering.leasilycrm.signin.SignInViewModel.UiEvents.Error

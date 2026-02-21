@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepos
 import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -27,7 +27,7 @@ class WatchPropertyWithStaysTenantsUseCaseImpl(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(
         propertyId: Long,
-    ): Flow<AppResult<Property?, DataError>> {
+    ): Flow<AppResult<Property?, InfraError>> {
         return propertyRepository.watchById(propertyId)
             .transformLatest { result ->
                 result

@@ -1,28 +1,28 @@
 package com.fstengineering.leasilycrm.core.infra.repositories.proxies
 
-import com.fstengineering.leasilycrm.core.infra.dataSources.inMemory.interfaces.TenantInMemoryDataSource
-import com.fstengineering.leasilycrm.core.domain.entities.Tenant
-import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
+import com.fstengineering.leasilycrm.core.infra.dataSources.inMemory.interfaces.TenantInMemoryDataSource
 
 class TenantRepositoryProxy(
     private val tenantInMemoryDataSource: TenantInMemoryDataSource,
     private val tenantRepository: TenantRepository,
 ) : TenantRepository {
-    override suspend fun insertOrUpdate(tenant: Tenant): AppResult<Unit, DataError> {
+    override suspend fun insertOrUpdate(tenant: Tenant): AppResult<Unit, ApplicationError> {
         return tenantRepository.insertOrUpdate(tenant)
             .onSuccess { tenantInMemoryDataSource.removeTenant(tenant.id) }
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> {
+    override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
         return tenantRepository.delete(id)
             .onSuccess { tenantInMemoryDataSource.removeTenant(id = id) }
     }
 
-    override suspend fun getById(tenantId: Long): AppResult<Tenant, DataError> {
+    override suspend fun getById(tenantId: Long): AppResult<Tenant, ApplicationError> {
         val inMemoryTenant = tenantInMemoryDataSource.getTenantById(tenantId)
         if (inMemoryTenant != null) return AppResult.Success(data = inMemoryTenant)
 

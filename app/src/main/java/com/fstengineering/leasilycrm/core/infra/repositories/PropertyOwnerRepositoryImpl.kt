@@ -1,15 +1,15 @@
 package com.fstengineering.leasilycrm.core.infra.repositories
 
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerRepository
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerFileDatabaseDataSource
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerRepository
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -26,10 +26,14 @@ class PropertyOwnerRepositoryImpl(
 ) : PropertyOwnerRepository {
     override suspend fun insertOrUpdate(
         propertyOwner: PropertyOwner,
-    ): AppResult<Unit, DataError> {
+    ): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
             saveDataInDatabase(propertyOwner)
         }
+            .fold(
+                onError = { AppResult.Error(error = it.toApplication()) },
+                onSuccess = { AppResult.Success(data = Unit) }
+            )
     }
 
     private suspend fun saveDataInDatabase(propertyOwner: PropertyOwner) {
@@ -44,17 +48,22 @@ class PropertyOwnerRepositoryImpl(
         }
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> =
-        databaseAdapter.withTransaction {
+    override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
+        return databaseAdapter.withTransaction {
             propertyOwnerDatabaseDataSource.delete(id)
         }
+            .fold(
+                onError = { AppResult.Error(error = it.toApplication()) },
+                onSuccess = { AppResult.Success(data = Unit) }
+            )
+    }
 
     override suspend fun getById(
         propertyOwnerId: Long,
-    ): AppResult<PropertyOwner, DataError> {
+    ): AppResult<PropertyOwner, ApplicationError> {
         val propertyOwner = propertyOwnerDatabaseDataSource.getById(id = propertyOwnerId)
             .fold(
-                onError = { return AppResult.Error(error = it) },
+                onError = { return AppResult.Error(error = it.toApplication()) },
                 onSuccess = { it }
             )
             .toDomain()
@@ -64,33 +73,33 @@ class PropertyOwnerRepositoryImpl(
 
     override fun watchById(
         propertyOwnerId: Long,
-    ): Flow<AppResult<PropertyOwner, DataError>> = flow {
+    ): Flow<AppResult<PropertyOwner, ApplicationError>> = flow {
         val propertyOwnerFlow = propertyOwnerDatabaseDataSource.watchById(id = propertyOwnerId)
             .fold(
-                onError = { return@flow emit(AppResult.Error(error = it)) },
+                onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                 onSuccess = { it }
             )
             .map { propertyOwner ->
                 val domain = propertyOwner.toDomain()
 
-                AppResult.Success<PropertyOwner, DataError>(data = domain)
+                AppResult.Success<PropertyOwner, ApplicationError>(data = domain)
             }
             .distinctUntilChanged()
 
         emitAll(propertyOwnerFlow)
     }
 
-    override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, DataError>> =
+    override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, ApplicationError>> =
         flow {
             emitAll(
                 propertyOwnerDatabaseDataSource.watchAll()
                     .fold(
-                        onError = { return@flow emit(AppResult.Error(error = it)) },
+                        onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                         onSuccess = { it }
                     )
                     .map {
                         val propertyOwners = it.map { owner -> owner.toDomain() }.toPersistentList()
-                        AppResult.Success<ImmutableList<PropertyOwner>, DataError>(data = propertyOwners)
+                        AppResult.Success<ImmutableList<PropertyOwner>, ApplicationError>(data = propertyOwners)
                     }
                     .distinctUntilChanged()
             )
@@ -99,13 +108,13 @@ class PropertyOwnerRepositoryImpl(
     override suspend fun isTherePropertyOwnerWithName(
         propertyOwnerName: String,
         currentStoredPropertyOwnerName: String?,
-    ): AppResult<Boolean, DataError> {
+    ): AppResult<Boolean, ApplicationError> {
         val count = propertyOwnerDatabaseDataSource.countPropertyOwnersWithName(
             propertyOwnerName = propertyOwnerName.normalizeEncoding(),
             currentStoredPropertyOwnerName = currentStoredPropertyOwnerName,
         )
             .fold(
-                onError = { return AppResult.Error(error = it) },
+                onError = { return AppResult.Error(error = it.toApplication()) },
                 onSuccess = { count -> count }
             )
 

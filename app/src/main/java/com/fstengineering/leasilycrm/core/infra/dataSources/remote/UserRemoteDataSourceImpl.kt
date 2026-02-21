@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.u
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.responseDtos.user.SignInUserResponseDto
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -19,7 +19,7 @@ class UserRemoteDataSourceImpl(
 ) : UserRemoteDataSource {
     override suspend fun signInUser(
         signInRequestDto: SignInRequestDto,
-    ): AppResult<SignInUserResponseDto, DataError> {
+    ): AppResult<SignInUserResponseDto, InfraError> {
         return client.requestBackend(
             url = SIGN_IN_ROUTE,
             method = HttpMethod.Post,
@@ -31,7 +31,7 @@ class UserRemoteDataSourceImpl(
             )
     }
 
-    override suspend fun signOutUser(): AppResult<Unit, DataError> {
+    override suspend fun signOutUser(): AppResult<Unit, InfraError> {
         return client.requestBackend(
             url = SIGN_OUT_ROUTE,
             method = HttpMethod.Get,
@@ -44,7 +44,7 @@ class UserRemoteDataSourceImpl(
 
     override suspend fun updateUser(
         updateUserDto: UpdateUserDto,
-    ): AppResult<Unit, DataError> {
+    ): AppResult<Unit, InfraError> {
         return client.requestBackend(
             url = UPDATE_USER_ROUTE,
             method = HttpMethod.Put,

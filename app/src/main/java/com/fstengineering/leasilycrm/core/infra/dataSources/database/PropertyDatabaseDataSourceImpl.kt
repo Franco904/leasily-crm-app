@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Pr
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.coroutines.flow.Flow
 
 class PropertyDatabaseDataSourceImpl(
@@ -17,27 +17,27 @@ class PropertyDatabaseDataSourceImpl(
     override suspend fun delete(id: Long) =
         dao.delete(id)
 
-    override suspend fun getById(id: Long): AppResult<PropertyCompound, DataError> {
+    override suspend fun getById(id: Long): AppResult<PropertyCompound, InfraError> {
         return onDatabaseSafe { dao.getById(id) }
     }
 
-    override suspend fun getAll(): AppResult<List<PropertyCompound>, DataError> {
+    override suspend fun getAll(): AppResult<List<PropertyCompound>, InfraError> {
         return onDatabaseSafe { dao.getAll() }
     }
 
-    override suspend fun getAllMatching(matching: String?): AppResult<List<PropertyCompound>, DataError> {
+    override suspend fun getAllMatching(matching: String?): AppResult<List<PropertyCompound>, InfraError> {
         return onDatabaseSafe { dao.getAllMatching(matching) }
     }
 
-    override suspend fun getAllNeighborHoodNames(): AppResult<List<String>, DataError> {
+    override suspend fun getAllNeighborHoodNames(): AppResult<List<String>, InfraError> {
         return onDatabaseSafe { dao.getAllNeighborHoodNames() }
     }
 
-    override fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, DataError> {
+    override fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, InfraError> {
         return onDatabaseSafe { dao.watchById(id) }
     }
 
-    override fun watchAll(): AppResult<Flow<List<PropertyCompound>>, DataError> {
+    override fun watchAll(): AppResult<Flow<List<PropertyCompound>>, InfraError> {
         return onDatabaseSafe { dao.watchAll() }
     }
 }

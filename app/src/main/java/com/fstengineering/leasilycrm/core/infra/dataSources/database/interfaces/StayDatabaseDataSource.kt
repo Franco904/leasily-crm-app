@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.St
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckStatusCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.coroutines.flow.Flow
 
 interface StayDatabaseDataSource {
@@ -12,11 +12,11 @@ interface StayDatabaseDataSource {
 
     suspend fun delete(id: Long)
 
-    suspend fun getById(id: Long): AppResult<StayCompound, DataError>
+    suspend fun getById(id: Long): AppResult<StayCompound, InfraError>
 
-    fun watchById(id: Long): AppResult<Flow<StayCompound?>, DataError>
+    fun watchById(id: Long): AppResult<Flow<StayCompound?>, InfraError>
 
-    fun watchAll(): AppResult<Flow<List<StayCompound>>, DataError>
+    fun watchAll(): AppResult<Flow<List<StayCompound>>, InfraError>
 
-    fun watchAllUpcomingCheckInsAndCheckOuts(): AppResult<Flow<List<StayCheckStatusCompound>>, DataError>
+    fun watchAllUpcomingCheckInsAndCheckOuts(): AppResult<Flow<List<StayCheckStatusCompound>>, InfraError>
 }

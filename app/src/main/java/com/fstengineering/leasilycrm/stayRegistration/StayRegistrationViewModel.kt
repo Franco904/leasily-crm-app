@@ -13,7 +13,7 @@ import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepos
 import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -454,7 +454,7 @@ class StayRegistrationViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
+        data class Error(val error: InfraError) : UiEvents
 
         data class ScrollToField(val field: StayField) : UiEvents
 

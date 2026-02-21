@@ -2,9 +2,10 @@ package com.fstengineering.leasilycrm.core.infra.repositories
 
 import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
@@ -27,10 +28,14 @@ class AssistanceRepositoryImpl(
     private val assistanceSearchedNeighborhoodDatabaseDataSource: AssistanceSearchedNeighborhoodDatabaseDataSource,
     private val assistanceSentPropertyCrossRefDatabaseDataSource: AssistanceSentPropertyCrossRefDatabaseDataSource,
 ) : AssistanceRepository {
-    override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, DataError> {
+    override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
             saveDataInDatabase(assistance)
         }
+            .fold(
+                onError = { AppResult.Error(error = it.toApplication()) },
+                onSuccess = { AppResult.Success(data = Unit) }
+            )
     }
 
     private suspend fun saveDataInDatabase(assistance: Assistance) {
@@ -62,26 +67,31 @@ class AssistanceRepositoryImpl(
         }
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> =
-        databaseAdapter.withTransaction {
+    override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
+        return databaseAdapter.withTransaction {
             assistanceDatabaseDataSource.delete(id)
         }
+            .fold(
+                onError = { AppResult.Error(error = it.toApplication()) },
+                onSuccess = { AppResult.Success(data = Unit) }
+            )
+    }
 
-    override suspend fun getById(assistanceId: Long): AppResult<Assistance, DataError> {
+    override suspend fun getById(assistanceId: Long): AppResult<Assistance, ApplicationError> {
         val assistance = assistanceDatabaseDataSource.getById(id = assistanceId)
             .fold(
-                onError = { return AppResult.Error(error = it) },
+                onError = { return AppResult.Error(error = it.toApplication()) },
                 onSuccess = { assistance -> assistance.toDomain() }
             )
 
         return AppResult.Success(data = assistance)
     }
 
-    override suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>, DataError> {
+    override suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>, ApplicationError> {
         val neighborhoodNames =
             assistanceDatabaseDataSource.getAllNeighborhoodNames()
                 .fold(
-                    onError = { return AppResult.Error(error = it) },
+                    onError = { return AppResult.Error(error = it.toApplication()) },
                     onSuccess = { neighborhoodNames -> neighborhoodNames.toPersistentList() }
                 )
 

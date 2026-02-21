@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.application.repositories.SettingsRepos
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import kotlinx.collections.immutable.persistentListOf
@@ -20,7 +20,7 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
     private val settingsRepository: SettingsRepository,
     private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
-    override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, DataError> {
+    override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, InfraError> {
         val isTodayCheckInCheckOutNotificationEnabled =
             settingsRepository.watchSettings().firstOrNull()
                 ?.fold(

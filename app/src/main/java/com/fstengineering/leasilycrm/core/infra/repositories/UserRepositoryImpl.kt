@@ -7,9 +7,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.u
 import com.fstengineering.leasilycrm.core.infra.models.SyncState
 import com.fstengineering.leasilycrm.core.domain.entities.User
 import com.fstengineering.leasilycrm.core.application.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -21,11 +20,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class UserRepositoryImpl(
-    private val userSessionService: UserSessionService,
     private val remoteDataSource: UserRemoteDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
 ) : UserRepository {
-    override suspend fun storeUser(user: User): AppResult<Unit, DataError> {
+    override suspend fun storeUser(user: User): AppResult<Unit, ApplicationError> {
         encryptedPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(
                 remoteId = user.remoteId,
@@ -35,18 +33,18 @@ class UserRepositoryImpl(
                 userSyncStateId = user.userSyncStateId,
             )
         }
-            .onError { return AppResult.Error(error = it) }
+            .onError { return AppResult.Error(error = it.toApplication()) }
 
         return AppResult.Success(data = Unit)
     }
 
-    override fun watchUser(): Flow<AppResult<User, DataError>> = flow {
+    override fun watchUser(): Flow<AppResult<User, ApplicationError>> = flow {
         encryptedPreferencesDataSource.readPreferences()
-            .onError { emit(AppResult.Error(error = it)) }
+            .onError { emit(AppResult.Error(error = it.toApplication())) }
             .onSuccess { prefsFlow ->
                 emitAll(
                     prefsFlow
-                        .map { AppResult.Success<User, DataError>(data = it.toUser()) }
+                        .map { AppResult.Success<User, ApplicationError>(data = it.toUser()) }
                         .distinctUntilChanged()
                 )
             }
@@ -54,11 +52,11 @@ class UserRepositoryImpl(
 
     override suspend fun updateUserCreciNumber(
         creciNumber: String?,
-    ): AppResult<Unit, DataError> {
+    ): AppResult<Unit, ApplicationError> {
         encryptedPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(creciNumber = creciNumber)
         }
-            .onError { return AppResult.Error(error = it) }
+            .onError { return AppResult.Error(error = it.toApplication()) }
 
         val dto = UpdateUserDto(creciNumber = creciNumber)
         remoteDataSource.updateUser(updateUserDto = dto)
@@ -67,26 +65,22 @@ class UserRepositoryImpl(
                     prefs.copy(userSyncStateId = SyncState.PendingSync.id)
                 }
 
-                if (e == DataError.UnauthorizedError) {
-                    userSessionService.onSessionExpired()
-                }
-
-                return AppResult.Error(error = e)
+                return AppResult.Error(error = e.toApplication())
             }
             .onSuccess {
                 encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Synced.id)
                 }
-                    .onError { return AppResult.Error(error = it) }
+                    .onError { return AppResult.Error(error = it.toApplication()) }
             }
 
         return AppResult.Success(data = Unit)
     }
 
-    override suspend fun retryUserUpdate(): AppResult<Unit, DataError> {
+    override suspend fun retryUserUpdate(): AppResult<Unit, ApplicationError> {
         val prefs = encryptedPreferencesDataSource.readPreferences()
             .fold(
-                onError = { return AppResult.Error(error = it) },
+                onError = { return AppResult.Error(error = it.toApplication()) },
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull() },
             )
 
@@ -100,15 +94,15 @@ class UserRepositoryImpl(
                 encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.PendingSync.id)
                 }
-                    .onError { return AppResult.Error(error = it) }
+                    .onError { return AppResult.Error(error = it.toApplication()) }
 
-                return AppResult.Error(error = remoteBackendError)
+                return AppResult.Error(error = remoteBackendError.toApplication())
             }
             .onSuccess {
                 encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Synced.id)
                 }
-                    .onError { return AppResult.Error(error = it) }
+                    .onError { return AppResult.Error(error = it.toApplication()) }
             }
 
         return AppResult.Success(data = Unit)

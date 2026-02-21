@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepos
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -164,7 +164,7 @@ class PropertyStaysViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
+        data class Error(val error: InfraError) : UiEvents
         data object NavigateUp : UiEvents
     }
 }

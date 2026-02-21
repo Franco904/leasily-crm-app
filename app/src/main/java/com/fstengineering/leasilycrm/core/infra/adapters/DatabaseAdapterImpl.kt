@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.core.infra.adapters
 import androidx.room.withTransaction
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
 import kotlin.coroutines.cancellation.CancellationException
@@ -11,7 +11,7 @@ import kotlin.coroutines.cancellation.CancellationException
 class DatabaseAdapterImpl(private val db: AppDatabase) : DatabaseAdapter {
     override suspend fun withTransaction(
         transactionBlock: suspend () -> Unit,
-    ): AppResult<Unit, DataError> {
+    ): AppResult<Unit, InfraError> {
         try {
             db.withTransaction { transactionBlock() }
 
@@ -20,7 +20,7 @@ class DatabaseAdapterImpl(private val db: AppDatabase) : DatabaseAdapter {
             if (e is CancellationException) throw e
             if (BuildConfig.DEBUG) e.printStackTrace()
 
-            return AppResult.Error(DataError.UnknownError)
+            return AppResult.Error(InfraError.Unknown)
         }
     }
 }

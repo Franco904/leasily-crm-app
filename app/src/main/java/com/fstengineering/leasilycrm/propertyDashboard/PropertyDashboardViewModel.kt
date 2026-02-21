@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.StayCalendarDate
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.collections.immutable.ImmutableList
@@ -108,7 +108,7 @@ class PropertyDashboardViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
+        data class Error(val error: InfraError) : UiEvents
         data object NavigateUp : UiEvents
         data object PropertyDeleteSuccess : UiEvents
     }

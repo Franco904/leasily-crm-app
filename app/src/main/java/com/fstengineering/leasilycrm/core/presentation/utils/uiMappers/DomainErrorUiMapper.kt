@@ -36,6 +36,7 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.Property.PricePeriodIsOverlappingOtherPricePeriod -> R.string.inline_period_is_overlapping_other_property_price_period
     DomainError.Property.PriceAmountRequired -> INLINE_REQUIRED
     DomainError.Property.PriceAmountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.Property.MoreThanOneMainPictureFile -> INLINE_GENERIC_INVALID_DATA
 
     DomainError.PropertyOwner.NameRequired -> INLINE_REQUIRED
     DomainError.PropertyOwner.NameBelongsToOtherOwner -> R.string.inline_name_belongs_other_property_owner

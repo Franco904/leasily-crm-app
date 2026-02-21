@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
+import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
@@ -40,6 +40,7 @@ import com.fstengineering.leasilycrm.profile.composables.ConfirmSignOutUserDialo
 import com.fstengineering.leasilycrm.profile.composables.EditCreciNumberDialog
 import com.fstengineering.leasilycrm.profile.composables.ProfileDataSection
 import com.fstengineering.leasilycrm.profile.composables.ProfileScreenTopBar
+import com.fstengineering.leasilycrm.profile.models.UserUiState
 import com.fstengineering.leasilycrm.profile.models.strategies.SignOutErrorBottomSheetDataPropertiesStrategy
 import kotlinx.coroutines.launch
 
@@ -57,7 +58,6 @@ fun ProfileScreen(
 
     val userUiState by viewModel.user.collectAsStateWithLifecycle()
     val creciFieldError by viewModel.creciFieldError.collectAsStateWithLifecycle()
-    val isLoadingUser by viewModel.isLoadingUser.collectAsStateWithLifecycle()
 
     var isSigningOut by remember { mutableStateOf(false) }
     var isConfirmingSigningOut by remember { mutableStateOf(false) }
@@ -129,9 +129,27 @@ fun ProfileScreen(
                     bottom = innerPadding.calculateBottomPadding(),
                 )
         ) {
-            if (isEditingUser) {
+            when (userUiState) {
+                is UserUiState.Empty -> {
+                    AppCircularProgressIndicator(
+                        modifier = Modifier
+                            .size(64.dp)
+                    )
+                }
+
+                is UserUiState.Loaded -> {
+                    ProfileDataSection(
+                        userUiState = userUiState as UserUiState.Loaded,
+                        isSigningOut = isSigningOut,
+                        onSignOut = { isConfirmingSigningOut = true },
+                        onEditUser = { if (!isEditingUser) isEditingUser = true }
+                    )
+                }
+            }
+
+            if (isEditingUser && userUiState is UserUiState.Loaded) {
                 EditCreciNumberDialog(
-                    userUiState = userUiState,
+                    userUiState = userUiState as UserUiState.Loaded,
                     onUserUiStateChange = viewModel::onCreciNumberChange,
                     creciNumberError = creciFieldError,
                     onEdit = { editedUser ->
@@ -156,20 +174,6 @@ fun ProfileScreen(
                         viewModel.onSignOut()
                     },
                     onCancel = { isConfirmingSigningOut = false },
-                )
-            }
-
-            if (isLoadingUser) {
-                AppCircularProgressIndicator(
-                    modifier = Modifier
-                        .size(64.dp)
-                )
-            } else {
-                ProfileDataSection(
-                    userUiState = userUiState,
-                    isSigningOut = isSigningOut,
-                    onSignOut = { isConfirmingSigningOut = true },
-                    onEditUser = { if (!isEditingUser) isEditingUser = true }
                 )
             }
         }

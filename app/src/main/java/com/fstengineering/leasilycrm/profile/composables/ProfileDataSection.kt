@@ -34,7 +34,7 @@ import com.fstengineering.leasilycrm.profile.models.UserUiState
 
 @Composable
 fun ProfileDataSection(
-    userUiState: UserUiState,
+    userUiState: UserUiState.Loaded,
     isSigningOut: Boolean,
     onSignOut: () -> Unit,
     onEditUser: () -> Unit,

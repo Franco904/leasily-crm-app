@@ -24,10 +24,10 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun EditCreciNumberDialog(
-    userUiState: UserUiState,
-    onUserUiStateChange: (UserUiState) -> Unit,
+    userUiState: UserUiState.Loaded,
+    onUserUiStateChange: (UserUiState.Loaded) -> Unit,
     creciNumberError: Int?,
-    onEdit: (UserUiState) -> Unit,
+    onEdit: (UserUiState.Loaded) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

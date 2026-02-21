@@ -1,10 +1,10 @@
 package com.fstengineering.leasilycrm.core.infra.repositories
 
+import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckStatus
-import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
@@ -31,10 +31,14 @@ class StayRepositoryImpl(
     private val stayTransferDatabaseDataSource: StayTransferDatabaseDataSource,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : StayRepository {
-    override suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, DataError> {
+    override suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
             saveDataInDatabase(stay)
         }
+            .fold(
+                onError = { AppResult.Error(error = it.toApplication()) },
+                onSuccess = { AppResult.Success(data = Unit) }
+            )
     }
 
     private suspend fun saveDataInDatabase(stay: Stay) {
@@ -56,77 +60,82 @@ class StayRepositoryImpl(
         }
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, DataError> =
-        databaseAdapter.withTransaction {
+    override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
+        return databaseAdapter.withTransaction {
             stayDatabaseDataSource.delete(id)
         }
+            .fold(
+                onError = { AppResult.Error(error = it.toApplication()) },
+                onSuccess = { AppResult.Success(data = Unit) }
+            )
+    }
 
-    override suspend fun getById(stayId: Long): AppResult<Stay, DataError> {
+    override suspend fun getById(stayId: Long): AppResult<Stay, ApplicationError> {
         val stay = stayDatabaseDataSource.getById(id = stayId)
             .fold(
-                onError = { return AppResult.Error(error = it) },
+                onError = { return AppResult.Error(error = it.toApplication()) },
                 onSuccess = { it.toDomain() },
             )
 
         return AppResult.Success(data = stay)
     }
 
-    override fun watchById(stayId: Long): Flow<AppResult<Stay?, DataError>> =
+    override fun watchById(stayId: Long): Flow<AppResult<Stay?, ApplicationError>> =
         flow {
             val stayFlow = stayDatabaseDataSource.watchById(id = stayId)
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it },
                 )
                 .map { stayEntity ->
                     val stay = stayEntity?.toDomain() ?: return@map AppResult.Success(data = null)
 
-                    AppResult.Success<Stay, DataError>(data = stay)
+                    AppResult.Success<Stay, ApplicationError>(data = stay)
                 }
                 .distinctUntilChanged()
 
             emitAll(stayFlow)
         }
 
-    override fun watchAll(): Flow<AppResult<ImmutableList<Stay>, DataError>> =
+    override fun watchAll(): Flow<AppResult<ImmutableList<Stay>, ApplicationError>> =
         flow {
             val staysFlow = stayDatabaseDataSource.watchAll()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it },
                 )
                 .map {
                     val stays = it.map { stay -> stay.toDomain() }.toPersistentList()
-                    AppResult.Success<ImmutableList<Stay>, DataError>(data = stays)
+                    AppResult.Success<ImmutableList<Stay>, ApplicationError>(data = stays)
                 }
                 .distinctUntilChanged()
 
             emitAll(staysFlow)
         }
 
-    override fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<AppResult<ImmutableList<StayCheckStatus>, DataError>> =
+    override fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<AppResult<ImmutableList<StayCheckStatus>, ApplicationError>> =
         flow {
             val staysStatusFlow = stayDatabaseDataSource
                 .watchAllUpcomingCheckInsAndCheckOuts()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { it },
                 )
                 .map {
                     val staysStatus =
                         it.map { stayStatus -> stayStatus.toDomain() }.toPersistentList()
-                    AppResult.Success<ImmutableList<StayCheckStatus>, DataError>(data = staysStatus)
+                    AppResult.Success<ImmutableList<StayCheckStatus>, ApplicationError>(data = staysStatus)
                 }
                 .distinctUntilChanged()
 
             emitAll(staysStatusFlow)
         }
 
-    override fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, DataError>> =
+    override fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, ApplicationError>> =
         flow {
             plainPreferencesDataSource.readPreferences()
                 .fold(
-                    onError = { error -> return@flow emit(AppResult.Error(error = error)) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
                     onSuccess = { prefsFlow ->
                         emitAll(
                             prefsFlow.map {
@@ -141,11 +150,11 @@ class StayRepositoryImpl(
 
     override suspend fun setMustNotShowCheckOutDialogAnymore(
         mustNotShowCheckOutDialogAnymore: Boolean,
-    ): AppResult<Unit, DataError> {
+    ): AppResult<Unit, ApplicationError> {
         plainPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore)
         }
-            .onError { return AppResult.Error(error = it) }
+            .onError { return AppResult.Error(error = it.toApplication()) }
 
         return AppResult.Success(data = Unit)
     }

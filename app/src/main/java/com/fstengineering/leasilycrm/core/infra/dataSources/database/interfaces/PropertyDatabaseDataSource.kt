@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyDatabaseDataSource {
@@ -11,15 +11,15 @@ interface PropertyDatabaseDataSource {
 
     suspend fun delete(id: Long)
 
-    suspend fun getById(id: Long): AppResult<PropertyCompound, DataError>
+    suspend fun getById(id: Long): AppResult<PropertyCompound, InfraError>
 
-    suspend fun getAll(): AppResult<List<PropertyCompound>, DataError>
+    suspend fun getAll(): AppResult<List<PropertyCompound>, InfraError>
 
-    suspend fun getAllMatching(matching: String?): AppResult<List<PropertyCompound>, DataError>
+    suspend fun getAllMatching(matching: String?): AppResult<List<PropertyCompound>, InfraError>
 
-    suspend fun getAllNeighborHoodNames(): AppResult<List<String>, DataError>
+    suspend fun getAllNeighborHoodNames(): AppResult<List<String>, InfraError>
 
-    fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, DataError>
+    fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, InfraError>
 
-    fun watchAll(): AppResult<Flow<List<PropertyCompound>>, DataError>
+    fun watchAll(): AppResult<Flow<List<PropertyCompound>>, InfraError>
 }

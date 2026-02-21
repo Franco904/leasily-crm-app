@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerFileRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerRepository
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -186,7 +186,7 @@ class PropertyOwnerRegistrationViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
+        data class Error(val error: InfraError) : UiEvents
 
         data class ScrollToField(val field: PropertyOwnerField) : UiEvents
 

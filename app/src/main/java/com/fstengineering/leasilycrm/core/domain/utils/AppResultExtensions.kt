@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
-fun <D, E : AppError> AppResult<D, E>.hasError(): Boolean = this is AppResult.Error
+fun <D, E : BaseError> AppResult<D, E>.hasError(): Boolean = this is AppResult.Error
 
-inline fun <D, E : AppError> AppResult<D, E>.onSuccess(
+inline fun <D, E : BaseError> AppResult<D, E>.onSuccess(
     block: (D) -> Unit,
 ) = apply {
     if (this is AppResult.Success<D, E>) {
@@ -10,7 +10,7 @@ inline fun <D, E : AppError> AppResult<D, E>.onSuccess(
     }
 }
 
-inline fun <D, E : AppError> AppResult<D, E>.onError(
+inline fun <D, E : BaseError> AppResult<D, E>.onError(
     block: (E) -> Unit,
 ) = apply {
     if (this is AppResult.Error<D, E>) {
@@ -18,7 +18,7 @@ inline fun <D, E : AppError> AppResult<D, E>.onError(
     }
 }
 
-inline fun <D, E : AppError, R> AppResult<D, E>.fold(
+inline fun <D, E : BaseError, R> AppResult<D, E>.fold(
     onError: (error: E) -> R,
     onSuccess: (data: D) -> R,
 ): R {

@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Pr
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyOwnerCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerDatabaseDataSource
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.coroutines.flow.Flow
 
 class PropertyOwnerDatabaseDataSourceImpl(
@@ -17,22 +17,22 @@ class PropertyOwnerDatabaseDataSourceImpl(
     override suspend fun delete(id: Long) =
         dao.delete(id)
 
-    override suspend fun getById(id: Long): AppResult<PropertyOwnerCompound, DataError> {
+    override suspend fun getById(id: Long): AppResult<PropertyOwnerCompound, InfraError> {
         return onDatabaseSafe { dao.getById(id) }
     }
 
-    override fun watchById(id: Long): AppResult<Flow<PropertyOwnerCompound>, DataError> {
+    override fun watchById(id: Long): AppResult<Flow<PropertyOwnerCompound>, InfraError> {
         return onDatabaseSafe { dao.watchById(id) }
     }
 
-    override fun watchAll(): AppResult<Flow<List<PropertyOwnerCompound>>, DataError> {
+    override fun watchAll(): AppResult<Flow<List<PropertyOwnerCompound>>, InfraError> {
         return onDatabaseSafe { dao.watchAll() }
     }
 
     override suspend fun countPropertyOwnersWithName(
         propertyOwnerName: String,
         currentStoredPropertyOwnerName: String?
-    ): AppResult<Int, DataError> {
+    ): AppResult<Int, InfraError> {
         return onDatabaseSafe {
             dao.countPropertyOwnersWithName(
                 propertyOwnerName = propertyOwnerName,

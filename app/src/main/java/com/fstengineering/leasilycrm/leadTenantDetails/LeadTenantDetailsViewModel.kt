@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacterist
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.collections.immutable.ImmutableList
@@ -106,7 +106,7 @@ class LeadTenantDetailsViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
+        data class Error(val error: InfraError) : UiEvents
 
         data object NavigateUp : UiEvents
 

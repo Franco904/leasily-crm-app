@@ -5,14 +5,14 @@ import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRep
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class RegisterStayCheckOutUseCaseImpl(
     private val stayRepository: StayRepository,
     private val assistanceRepository: AssistanceRepository,
 ) : RegisterStayCheckOutUseCase {
-    override suspend operator fun invoke(stay: Stay.Owned): AppResult<Unit, DataError> {
+    override suspend operator fun invoke(stay: Stay.Owned): AppResult<Unit, InfraError> {
         val updatedStay = stay.registerCheckOut()
 
         stayRepository.insertOrUpdate(stay = updatedStay)

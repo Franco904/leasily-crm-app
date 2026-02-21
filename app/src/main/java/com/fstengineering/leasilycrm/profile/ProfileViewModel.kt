@@ -6,13 +6,14 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.repositories.AuthRepository
 import com.fstengineering.leasilycrm.core.application.repositories.UserRepository
 import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UseCase
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
+import com.fstengineering.leasilycrm.profile.application.models.UserWriteModel
 import com.fstengineering.leasilycrm.profile.models.UserUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,8 +24,8 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val authRepository: AuthRepository,
-    private val userValidator: UserValidator,
     private val userRepository: UserRepository,
+    private val updateUserCreciNumber: UseCase<UserWriteModel, Unit>,
     private val userSessionService: UserSessionService,
 ) : ViewModel() {
     private var isInitialized = false
@@ -32,14 +33,11 @@ class ProfileViewModel(
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _user = MutableStateFlow(UserUiState())
+    private val _user = MutableStateFlow<UserUiState>(UserUiState.Empty)
     val user = _user.asStateFlow()
 
     private val _creciFieldError = MutableStateFlow<Int?>(null)
     val creciFieldError = _creciFieldError.asStateFlow()
-
-    private val _isLoadingUser = MutableStateFlow(true)
-    val isLoadingUser = _isLoadingUser.asStateFlow()
 
     fun init() {
         if (isInitialized) return
@@ -51,21 +49,15 @@ class ProfileViewModel(
 
     private fun watchUser() {
         viewModelScope.launch {
-            _isLoadingUser.update { true }
-
             userRepository.watchUser().collect { result ->
                 result
                     .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                    .onSuccess { user ->
-                        if (!user.isNull()) _user.update { UserUiState.fromDomain(user) }
-                    }
-
-                _isLoadingUser.update { false }
+                    .onSuccess { user -> _user.update { UserUiState.Loaded.fromDomain(user) } }
             }
         }
     }
 
-    fun editUser(editedUserState: UserUiState) {
+    fun editUser(editedUserState: UserUiState.Loaded) {
         viewModelScope.launch {
             if (editedUserState == user.value) {
                 _uiEvents.send(
@@ -74,18 +66,16 @@ class ProfileViewModel(
                 return@launch
             }
 
-            val editedUser = editedUserState.toDomain()
+            val useCaseParams =
+                UserWriteModel(creciNumber = editedUserState.creciNumber)
 
-            userValidator.validate(editedUser)
-                .onErrors { errors ->
-                    val creciNumberError = errors.firstOrNull { it is DomainError.CreciNumber }
-                    _creciFieldError.update { creciNumberError?.toInlineMessage() }
-
-                    return@launch
+            updateUserCreciNumber(useCaseParams)
+                .onError { e ->
+                    when (e) {
+                        is ApplicationError -> _uiEvents.send(UiEvents.Error(e))
+                        is DomainError -> _creciFieldError.update { e.toInlineMessage() }
+                    }
                 }
-
-            userRepository.updateUserCreciNumber(creciNumber = editedUserState.creciNumber)
-                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess {
                     val event =
                         UiEvents.EditUserSuccess(messageId = R.string.edit_user_creci_success_message)
@@ -94,8 +84,11 @@ class ProfileViewModel(
         }
     }
 
-    fun onCreciNumberChange(newUserData: UserUiState) {
-        if (newUserData.creciNumber != user.value.creciNumber) {
+    fun onCreciNumberChange(newUserData: UserUiState.Loaded) {
+        val currentUser = user.value
+        if (currentUser !is UserUiState.Loaded) return
+
+        if (newUserData.creciNumber != currentUser.creciNumber) {
             _creciFieldError.update { null }
         }
     }
@@ -125,7 +118,7 @@ class ProfileViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
+        data class Error(val error: ApplicationError) : UiEvents
         data class EditUserSuccess(val messageId: Int) : UiEvents
         data object ContinueSignOut : UiEvents
         data object SignOutSuccess : UiEvents

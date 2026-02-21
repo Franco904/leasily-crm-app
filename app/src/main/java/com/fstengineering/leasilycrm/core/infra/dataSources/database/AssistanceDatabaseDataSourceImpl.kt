@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.As
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.AssistanceCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 
 class AssistanceDatabaseDataSourceImpl(
     private val dao: AssistanceDao,
@@ -16,11 +16,11 @@ class AssistanceDatabaseDataSourceImpl(
     override suspend fun delete(id: Long) =
         dao.delete(id)
 
-    override suspend fun getById(id: Long): AppResult<AssistanceCompound, DataError> {
+    override suspend fun getById(id: Long): AppResult<AssistanceCompound, InfraError> {
         return onDatabaseSafe { dao.getById(id) }
     }
 
-    override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, DataError> {
+    override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, InfraError> {
         return onDatabaseSafe { dao.getAllNeighborhoodNames() }
     }
 }

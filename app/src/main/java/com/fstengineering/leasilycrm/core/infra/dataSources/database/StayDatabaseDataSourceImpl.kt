@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.coroutines.flow.Flow
 
 class StayDatabaseDataSourceImpl(
@@ -18,19 +18,19 @@ class StayDatabaseDataSourceImpl(
     override suspend fun delete(id: Long) =
         dao.delete(id)
 
-    override suspend fun getById(id: Long): AppResult<StayCompound, DataError> {
+    override suspend fun getById(id: Long): AppResult<StayCompound, InfraError> {
         return onDatabaseSafe { dao.getById(id) }
     }
 
-    override fun watchById(id: Long): AppResult<Flow<StayCompound?>, DataError> {
+    override fun watchById(id: Long): AppResult<Flow<StayCompound?>, InfraError> {
         return onDatabaseSafe { dao.watchById(id) }
     }
 
-    override fun watchAll(): AppResult<Flow<List<StayCompound>>, DataError> {
+    override fun watchAll(): AppResult<Flow<List<StayCompound>>, InfraError> {
         return onDatabaseSafe { dao.watchAll() }
     }
 
-    override fun watchAllUpcomingCheckInsAndCheckOuts(): AppResult<Flow<List<StayCheckStatusCompound>>, DataError> {
+    override fun watchAllUpcomingCheckInsAndCheckOuts(): AppResult<Flow<List<StayCheckStatusCompound>>, InfraError> {
         return onDatabaseSafe { dao.watchAllUpcomingCheckInsAndCheckOuts() }
     }
 }
