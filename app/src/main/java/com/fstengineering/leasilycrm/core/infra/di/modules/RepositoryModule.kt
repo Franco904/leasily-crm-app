@@ -119,7 +119,6 @@ val repositoryModule = module {
         UserRepositoryImpl(
             remoteDataSource = get(),
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
-            userSessionService = get(),
         )
     }
 }
