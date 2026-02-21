@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.profile.models.strategies
+package com.fstengineering.leasilycrm.profile.presentation.models.strategies
 
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.ErrorBottomSheetDataPropertiesStrategy

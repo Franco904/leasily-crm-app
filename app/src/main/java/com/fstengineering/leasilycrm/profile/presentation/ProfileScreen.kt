@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.profile
+package com.fstengineering.leasilycrm.profile.presentation
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
@@ -32,16 +32,12 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.ProfileUiEvents.ContinueSignOut
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.ProfileUiEvents.EditUserSuccess
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.ProfileUiEvents.Error
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.ProfileUiEvents.SignOutSuccess
-import com.fstengineering.leasilycrm.profile.composables.ConfirmSignOutUserDialog
-import com.fstengineering.leasilycrm.profile.composables.EditCreciNumberDialog
-import com.fstengineering.leasilycrm.profile.composables.ProfileDataSection
-import com.fstengineering.leasilycrm.profile.composables.ProfileScreenTopBar
-import com.fstengineering.leasilycrm.profile.models.ProfileUiState
-import com.fstengineering.leasilycrm.profile.models.strategies.SignOutErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.profile.presentation.composables.ConfirmSignOutUserDialog
+import com.fstengineering.leasilycrm.profile.presentation.composables.EditCreciNumberDialog
+import com.fstengineering.leasilycrm.profile.presentation.composables.ProfileDataSection
+import com.fstengineering.leasilycrm.profile.presentation.composables.ProfileScreenTopBar
+import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
+import com.fstengineering.leasilycrm.profile.presentation.models.strategies.SignOutErrorBottomSheetDataPropertiesStrategy
 import kotlinx.coroutines.launch
 
 @Composable
@@ -68,7 +64,7 @@ fun ProfileScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is Error -> {
+                is ProfileViewModel.ProfileUiEvent.Error -> {
                     isSigningOut = false
 
                     val errorData = uiEvent.error.toBottomSheetData(
@@ -77,11 +73,11 @@ fun ProfileScreen(
                     onUiEvent(ShowErrorBottomSheet(errorData))
                 }
 
-                is EditUserSuccess -> {
+                is ProfileViewModel.ProfileUiEvent.EditUserSuccess -> {
                     onUiEvent(ShowSnackBar(uiEvent.messageId))
                 }
 
-                is ContinueSignOut -> {
+                is ProfileViewModel.ProfileUiEvent.ContinueSignOut -> {
                     launch {
                         credentialManager.clearGoogleCredentialState(activityContext = activity)
                             .onError { e ->
@@ -92,7 +88,7 @@ fun ProfileScreen(
                     }
                 }
 
-                is SignOutSuccess -> {
+                is ProfileViewModel.ProfileUiEvent.SignOutSuccess -> {
                     isSigningOut = false
                 }
             }

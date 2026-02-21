@@ -13,7 +13,7 @@ import com.fstengineering.leasilycrm.home.stays.StaysViewModel
 import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel
-import com.fstengineering.leasilycrm.profile.ProfileViewModel
+import com.fstengineering.leasilycrm.profile.presentation.ProfileViewModel
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel
 import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel
@@ -57,8 +57,8 @@ val viewModelModule = module {
     viewModel {
         ProfileViewModel(
             authRepository = get(),
-            userValidator = get(),
             userRepository = get(),
+            updateUserCreciNumber = get(),
             userSessionService = get(),
         )
     }

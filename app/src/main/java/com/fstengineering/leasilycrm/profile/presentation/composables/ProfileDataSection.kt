@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.profile.composables
+package com.fstengineering.leasilycrm.profile.presentation.composables
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.profile.models.ProfileUiState
+import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
 
 @Composable
 fun ProfileDataSection(

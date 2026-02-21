@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.profile.models
+package com.fstengineering.leasilycrm.profile.presentation.models
 
 import com.fstengineering.leasilycrm.core.domain.entities.User
 

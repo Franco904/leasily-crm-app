@@ -17,7 +17,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsScreen
 import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationScreen
-import com.fstengineering.leasilycrm.profile.ProfileScreen
+import com.fstengineering.leasilycrm.profile.presentation.ProfileScreen
 import com.fstengineering.leasilycrm.properties.PropertiesScreen
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardScreen
 import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsScreen

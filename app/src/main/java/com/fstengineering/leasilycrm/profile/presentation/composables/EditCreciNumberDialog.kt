@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.profile.composables
+package com.fstengineering.leasilycrm.profile.presentation.composables
 
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog

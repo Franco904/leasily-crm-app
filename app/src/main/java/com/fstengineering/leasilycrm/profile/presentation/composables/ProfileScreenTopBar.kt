@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.profile.composables
+package com.fstengineering.leasilycrm.profile.presentation.composables
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
