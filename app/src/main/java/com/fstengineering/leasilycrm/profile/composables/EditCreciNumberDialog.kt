@@ -18,22 +18,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
-import com.fstengineering.leasilycrm.profile.models.UserUiState
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun EditCreciNumberDialog(
-    userUiState: UserUiState.Loaded,
-    onUserUiStateChange: (UserUiState.Loaded) -> Unit,
+    initialCreciNumber: String?,
+    onCreciNumberChange: () -> Unit,
     creciNumberError: Int?,
-    onEdit: (UserUiState.Loaded) -> Unit,
+    onEdit: (String?) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val creciNumberFieldFocusRequester = remember { FocusRequester() }
 
-    var currentUserUiState by remember(userUiState) { mutableStateOf(userUiState) }
+    var creciNumberInput by remember(initialCreciNumber) {
+        mutableStateOf(initialCreciNumber ?: "")
+    }
 
     LaunchedEffect(Unit) {
         delay(250.milliseconds)
@@ -51,24 +52,19 @@ fun EditCreciNumberDialog(
         text = {
             FormTextField(
                 label = stringResource(R.string.profile_edit_user_dialog_creci_field_placeholder),
-                value = currentUserUiState.creciNumber ?: "",
-                onValueChange = { creciNumberInput ->
-                    currentUserUiState = currentUserUiState.copy(
-                        creciNumber = creciNumberInput.takeIf { !it.isBlank() },
-                    )
-                    onUserUiStateChange(userUiState.copy(creciNumber = creciNumberInput))
-                },
+                value = creciNumberInput,
+                onValueChange = { creciNumberInput = it; onCreciNumberChange() },
                 isInvalid = creciNumberError != null,
                 supportingText = creciNumberError?.let { stringResource(creciNumberError) },
                 maxLength = 8,
                 keyboardType = KeyboardType.Number,
-                onDone = { onEdit(userUiState) },
+                onDone = { onEdit(creciNumberInput.takeIf { !it.isBlank() }) },
                 fieldFocusRequester = creciNumberFieldFocusRequester,
             )
         },
         confirmButton = {
             TextButton(
-                onClick = { onEdit(currentUserUiState) },
+                onClick = { onEdit(creciNumberInput.takeIf { !it.isBlank() }) },
             ) {
                 Text(
                     text = stringResource(R.string.edit_action_button_text),

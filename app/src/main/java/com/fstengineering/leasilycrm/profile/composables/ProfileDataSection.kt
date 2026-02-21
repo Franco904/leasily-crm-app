@@ -30,18 +30,18 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.profile.models.UserUiState
+import com.fstengineering.leasilycrm.profile.models.ProfileUiState
 
 @Composable
 fun ProfileDataSection(
-    userUiState: UserUiState.Loaded,
+    profileUiState: ProfileUiState.Loaded,
     isSigningOut: Boolean,
     onSignOut: () -> Unit,
     onEditUser: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AsyncImage(
-        model = userUiState.profilePictureUrl,
+        model = profileUiState.profilePictureUrl,
         contentDescription = null,
         modifier = modifier
             .size(112.dp)
@@ -49,7 +49,7 @@ fun ProfileDataSection(
     )
     Spacer(modifier = Modifier.height(16.dp))
     Text(
-        text = userUiState.name,
+        text = profileUiState.name,
         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
     )
     Spacer(modifier = Modifier.height(12.dp))
@@ -62,13 +62,13 @@ fun ProfileDataSection(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = if (userUiState.creciNumber != null) "CRECI  ·  ${userUiState.creciNumber}" else stringResource(
+                text = if (profileUiState.creciNumber != null) "CRECI  ·  ${profileUiState.creciNumber}" else stringResource(
                     R.string.profile_creci_blank_body_text
                 ),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.outline,
                     fontWeight = FontWeight.Medium,
-                    fontStyle = if (userUiState.creciNumber != null) FontStyle.Normal else FontStyle.Italic,
+                    fontStyle = if (profileUiState.creciNumber != null) FontStyle.Normal else FontStyle.Italic,
                 ),
             )
             Spacer(modifier = Modifier.width(8.dp))

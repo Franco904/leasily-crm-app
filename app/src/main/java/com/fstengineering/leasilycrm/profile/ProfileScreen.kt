@@ -32,15 +32,15 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.ContinueSignOut
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.EditUserSuccess
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.profile.ProfileViewModel.UiEvents.SignOutSuccess
+import com.fstengineering.leasilycrm.profile.ProfileViewModel.ProfileUiEvents.ContinueSignOut
+import com.fstengineering.leasilycrm.profile.ProfileViewModel.ProfileUiEvents.EditUserSuccess
+import com.fstengineering.leasilycrm.profile.ProfileViewModel.ProfileUiEvents.Error
+import com.fstengineering.leasilycrm.profile.ProfileViewModel.ProfileUiEvents.SignOutSuccess
 import com.fstengineering.leasilycrm.profile.composables.ConfirmSignOutUserDialog
 import com.fstengineering.leasilycrm.profile.composables.EditCreciNumberDialog
 import com.fstengineering.leasilycrm.profile.composables.ProfileDataSection
 import com.fstengineering.leasilycrm.profile.composables.ProfileScreenTopBar
-import com.fstengineering.leasilycrm.profile.models.UserUiState
+import com.fstengineering.leasilycrm.profile.models.ProfileUiState
 import com.fstengineering.leasilycrm.profile.models.strategies.SignOutErrorBottomSheetDataPropertiesStrategy
 import kotlinx.coroutines.launch
 
@@ -56,7 +56,7 @@ fun ProfileScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val userUiState by viewModel.user.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val creciFieldError by viewModel.creciFieldError.collectAsStateWithLifecycle()
 
     var isSigningOut by remember { mutableStateOf(false) }
@@ -129,17 +129,17 @@ fun ProfileScreen(
                     bottom = innerPadding.calculateBottomPadding(),
                 )
         ) {
-            when (userUiState) {
-                is UserUiState.Empty -> {
+            when (uiState) {
+                is ProfileUiState.Empty -> {
                     AppCircularProgressIndicator(
                         modifier = Modifier
                             .size(64.dp)
                     )
                 }
 
-                is UserUiState.Loaded -> {
+                is ProfileUiState.Loaded -> {
                     ProfileDataSection(
-                        userUiState = userUiState as UserUiState.Loaded,
+                        profileUiState = uiState as ProfileUiState.Loaded,
                         isSigningOut = isSigningOut,
                         onSignOut = { isConfirmingSigningOut = true },
                         onEditUser = { if (!isEditingUser) isEditingUser = true }
@@ -147,14 +147,16 @@ fun ProfileScreen(
                 }
             }
 
-            if (isEditingUser && userUiState is UserUiState.Loaded) {
+            if (isEditingUser && uiState is ProfileUiState.Loaded) {
                 EditCreciNumberDialog(
-                    userUiState = userUiState as UserUiState.Loaded,
-                    onUserUiStateChange = viewModel::onCreciNumberChange,
+                    initialCreciNumber = (uiState as ProfileUiState.Loaded).creciNumber,
+                    onCreciNumberChange = viewModel::onCreciNumberChange,
                     creciNumberError = creciFieldError,
-                    onEdit = { editedUser ->
+                    onEdit = { creciNumber ->
                         isEditingUser = false
 
+                        val editedUser =
+                            (uiState as ProfileUiState.Loaded).copy(creciNumber = creciNumber)
                         viewModel.editUser(editedUser)
                     },
                     onCancel = {
