@@ -88,28 +88,19 @@ val viewModelModule = module {
         PropertyRegistrationViewModel(
             propertyRepository = get(),
             propertyOwnerRepository = get(),
-            propertyTypeRepository = get(),
-            propertySeaProximityTypeRepository = get(),
-            propertyCharacteristicRepository = get(),
         )
     }
 
     viewModel {
-        PropertyRegistrationStep1ViewModel(
-            propertyValidator = get(),
-        )
+        PropertyRegistrationStep1ViewModel()
     }
 
     viewModel {
-        PropertyRegistrationStep2ViewModel(
-            propertyValidator = get(),
-        )
+        PropertyRegistrationStep2ViewModel()
     }
 
     viewModel {
-        PropertyRegistrationStep3ViewModel(
-            propertyPriceValidator = get(),
-        )
+        PropertyRegistrationStep3ViewModel()
     }
 
     viewModel {
@@ -124,7 +115,6 @@ val viewModelModule = module {
     viewModel {
         PropertyDetailsViewModel(
             propertyRepository = get(),
-            propertyCharacteristicRepository = get(),
         )
     }
 
@@ -147,7 +137,6 @@ val viewModelModule = module {
         PropertyOwnerRegistrationViewModel(
             propertyOwnerRepository = get(),
             propertyOwnerFileRepository = get(),
-            propertyOwnerValidator = get(),
         )
     }
 
@@ -166,8 +155,6 @@ val viewModelModule = module {
     viewModel {
         LeadTenantRegistrationViewModel(
             tenantRepository = get(),
-            tenantContactOriginTypeRepository = get(),
-            tenantValidator = get(),
         )
     }
 
@@ -175,7 +162,6 @@ val viewModelModule = module {
         LeadTenantDetailsViewModel(
             tenantRepository = get(),
             assistanceRepository = get(),
-            assistanceCharacteristicRepository = get(),
         )
     }
 
@@ -189,16 +175,11 @@ val viewModelModule = module {
         AssistanceRegistrationViewModel(
             assistanceRepository = get(),
             tenantRepository = get(),
-            propertySeaProximityTypeRepository = get(),
-            assistanceCharacteristicRepository = get(),
         )
     }
 
     viewModel {
-        AssistanceRegistrationStep1ViewModel(
-            assistanceValidator = get(),
-            assistanceSearchedNeighborhoodValidator = get(),
-        )
+        AssistanceRegistrationStep1ViewModel()
     }
 
     viewModel {
@@ -208,9 +189,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        AssistanceRegistrationStep3ViewModel(
-            assistanceInteractionValidator = get(),
-        )
+        AssistanceRegistrationStep3ViewModel()
     }
 
     viewModel {
@@ -228,8 +207,6 @@ val viewModelModule = module {
             propertyRepository = get(),
             tenantRepository = get(),
             stayFileRepository = get(),
-            stayValidator = get(),
-            stayTransferValidator = get(),
         )
     }
 

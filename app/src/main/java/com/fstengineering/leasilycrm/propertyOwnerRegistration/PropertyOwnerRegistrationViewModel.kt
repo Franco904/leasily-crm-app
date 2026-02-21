@@ -31,7 +31,6 @@ import kotlin.time.Duration.Companion.milliseconds
 class PropertyOwnerRegistrationViewModel(
     private val propertyOwnerRepository: PropertyOwnerRepository,
     private val propertyOwnerFileRepository: PropertyOwnerFileRepository,
-    private val propertyOwnerValidator: PropertyOwnerValidator,
 ) : ViewModel() {
     private var isInitialized = false
 

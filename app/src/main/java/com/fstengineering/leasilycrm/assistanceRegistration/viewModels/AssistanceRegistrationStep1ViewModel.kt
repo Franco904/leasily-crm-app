@@ -22,10 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
-class AssistanceRegistrationStep1ViewModel(
-    private val assistanceValidator: AssistanceValidator,
-    private val assistanceSearchedNeighborhoodValidator: AssistanceSearchedNeighborhoodValidator,
-) : ViewModel() {
+class AssistanceRegistrationStep1ViewModel : ViewModel() {
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 

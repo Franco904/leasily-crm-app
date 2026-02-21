@@ -20,9 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
-class PropertyRegistrationStep3ViewModel(
-    private val propertyPriceValidator: PropertyPriceValidator,
-) : ViewModel() {
+class PropertyRegistrationStep3ViewModel : ViewModel() {
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 

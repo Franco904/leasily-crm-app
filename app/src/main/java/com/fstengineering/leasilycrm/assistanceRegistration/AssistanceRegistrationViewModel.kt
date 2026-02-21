@@ -23,8 +23,6 @@ import kotlinx.coroutines.launch
 class AssistanceRegistrationViewModel(
     private val assistanceRepository: AssistanceRepository,
     private val tenantRepository: TenantRepository,
-    private val propertySeaProximityTypeRepository: PropertySeaProximityTypeRepository,
-    private val assistanceCharacteristicRepository: AssistanceCharacteristicRepository,
 ) : ViewModel() {
     private var isInitialized = false
 

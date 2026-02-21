@@ -19,9 +19,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AssistanceRegistrationStep3ViewModel(
-    private val assistanceInteractionValidator: AssistanceInteractionValidator,
-) : ViewModel() {
+class AssistanceRegistrationStep3ViewModel : ViewModel() {
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 

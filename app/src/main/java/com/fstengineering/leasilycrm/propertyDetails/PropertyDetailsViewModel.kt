@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 
 class PropertyDetailsViewModel(
     private val propertyRepository: PropertyRepository,
-    private val propertyCharacteristicRepository: PropertyCharacteristicRepository,
 ) : ViewModel() {
     private var isInitialized = false
 

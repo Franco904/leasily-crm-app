@@ -27,9 +27,6 @@ import kotlinx.coroutines.launch
 class PropertyRegistrationViewModel(
     private val propertyRepository: PropertyRepository,
     private val propertyOwnerRepository: PropertyOwnerRepository,
-    private val propertyTypeRepository: PropertyTypeRepository,
-    private val propertySeaProximityTypeRepository: PropertySeaProximityTypeRepository,
-    private val propertyCharacteristicRepository: PropertyCharacteristicRepository,
 ) : ViewModel() {
     private var isInitialized = false
 

@@ -47,8 +47,6 @@ class StayRegistrationViewModel(
     private val propertyRepository: PropertyRepository,
     private val tenantRepository: TenantRepository,
     private val stayFileRepository: StayFileRepository,
-    private val stayValidator: StayValidator,
-    private val stayTransferValidator: StayTransferValidator,
 ) : ViewModel() {
     private var isInitialized = false
 

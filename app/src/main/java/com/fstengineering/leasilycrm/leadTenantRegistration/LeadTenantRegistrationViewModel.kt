@@ -28,8 +28,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class LeadTenantRegistrationViewModel(
     private val tenantRepository: TenantRepository,
-    private val tenantContactOriginTypeRepository: TenantContactOriginTypeRepository,
-    private val tenantValidator: TenantValidator,
 ) : ViewModel() {
     private var isInitialized = false
 

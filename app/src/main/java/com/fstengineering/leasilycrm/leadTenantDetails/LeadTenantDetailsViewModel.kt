@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 class LeadTenantDetailsViewModel(
     private val tenantRepository: TenantRepository,
     private val assistanceRepository: AssistanceRepository,
-    private val assistanceCharacteristicRepository: AssistanceCharacteristicRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
