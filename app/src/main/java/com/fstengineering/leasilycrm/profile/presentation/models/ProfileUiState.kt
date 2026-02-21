@@ -13,7 +13,7 @@ sealed interface ProfileUiState {
         companion object {
             fun fromDomain(user: User): Loaded {
                 return Loaded(
-                    name = user.name,
+                    name = user.name.value,
                     creciNumber = user.creci?.value,
                     profilePictureUrl = user.profilePictureUrl,
                 )

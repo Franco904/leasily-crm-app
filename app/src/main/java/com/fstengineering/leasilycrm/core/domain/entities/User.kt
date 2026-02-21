@@ -2,11 +2,12 @@ package com.fstengineering.leasilycrm.core.domain.entities
 
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Creci
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Name
 import kotlinx.collections.immutable.ImmutableList
 
 class User private constructor(
     val remoteId: Long,
-    val name: String,
+    val name: Name,
     val creci: Creci?,
     val profilePictureUrl: String,
     val userSyncStateId: Int,
@@ -23,6 +24,7 @@ class User private constructor(
             inconsistencies: ImmutableList<DomainError>,
             contractVersion: Int,
         ): User {
+            val name = Name.parse(name)
             val creci = creciNumber?.let { Creci.parse(creciNumber) }
 
             return User(

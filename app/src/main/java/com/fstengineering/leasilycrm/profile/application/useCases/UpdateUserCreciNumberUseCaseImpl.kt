@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.entities.User
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.SystemError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Creci
 import com.fstengineering.leasilycrm.profile.application.models.UserWriteModel
 
 class UpdateUserCreciNumberUseCaseImpl(
@@ -15,7 +16,7 @@ class UpdateUserCreciNumberUseCaseImpl(
         val creciNumber = writeModel.creciNumber
 
         if (creciNumber != null) {
-            User.validateCreciNumber(creciNumber = creciNumber)
+            Creci.validate(creciNumber = creciNumber)
                 .onError { e -> return AppResult.Error(error = e) }
         }
 

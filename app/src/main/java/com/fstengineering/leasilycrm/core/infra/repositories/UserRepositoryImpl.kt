@@ -27,7 +27,7 @@ class UserRepositoryImpl(
         encryptedPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(
                 remoteId = user.remoteId,
-                name = user.name,
+                name = user.name.value,
                 creciNumber = user.creci?.value,
                 profilePictureUrl = user.profilePictureUrl,
                 userSyncStateId = user.userSyncStateId,
