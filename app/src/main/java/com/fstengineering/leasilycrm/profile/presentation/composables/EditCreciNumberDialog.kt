@@ -26,6 +26,7 @@ fun EditCreciNumberDialog(
     initialCreciNumber: String?,
     onCreciNumberChange: () -> Unit,
     creciNumberError: Int?,
+    onCreciNumberFieldFocusLoss: () -> Unit,
     onEdit: (String?) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
@@ -60,6 +61,7 @@ fun EditCreciNumberDialog(
                 keyboardType = KeyboardType.Number,
                 onDone = { onEdit(creciNumberInput.takeIf { !it.isBlank() }) },
                 fieldFocusRequester = creciNumberFieldFocusRequester,
+                onFocusLost = onCreciNumberFieldFocusLoss,
             )
         },
         confirmButton = {

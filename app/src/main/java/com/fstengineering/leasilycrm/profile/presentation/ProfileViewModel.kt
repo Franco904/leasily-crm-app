@@ -8,6 +8,7 @@ import com.fstengineering.leasilycrm.core.application.repositories.UserRepositor
 import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.entities.User
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -86,6 +87,14 @@ class ProfileViewModel(
 
     fun onCreciNumberChange() {
         _creciFieldError.update { null }
+    }
+
+    fun onCreciNumberFieldFocusLoss() {
+        val state = uiState.value
+        if (state !is ProfileUiState.Loaded || state.creciNumber == null) return
+
+        User.validateCreciNumber(creciNumber = state.creciNumber)
+            .onError { e -> _creciFieldError.update { e.toInlineMessage() } }
     }
 
     fun clearErrors() {
