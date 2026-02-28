@@ -36,6 +36,8 @@
 
     <string name="profile_edit_user_creci_dialog_headline">Editar CRECI</string>
     <string name="profile_edit_user_dialog_creci_field_placeholder">Número CRECI</string>
+
+    <string name="profile_name_blank_body_text">Nome não informado</string>
     <string name="profile_creci_blank_body_text">CRECI não informado</string>
 
     <!-- Dashboard -->
@@ -561,8 +563,10 @@
     <string name="not_registered_info_body_text">Informação não registrada</string>
     <string name="not_registered_info_var_1_body_text">Não informado</string>
     <string name="not_registered_info_var_2_body_text">Não informada</string>
+
     <string name="no_file_registered_body_text">Nenhum arquivo registrado</string>
     <string name="unnamed_file_text">Arquivo sem nome</string>
+
     <string name="unknown_text">Desconhecido</string>
 
     <string name="order_by_name_text">Nome</string>

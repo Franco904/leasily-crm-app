@@ -13,6 +13,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Creci
+import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.NotApplicable
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.UserWriteModel
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
@@ -67,8 +68,12 @@ class ProfileViewModel(
                 return@launch
             }
 
-            val useCaseParams =
-                UserWriteModel(creciNumber = editedUiState.creciNumber)
+            val creciNumber = when (val field = editedUiState.creciNumber) {
+                is NotApplicable -> return@launch
+                else -> field.valueOrNull
+            }
+
+            val useCaseParams = UserWriteModel(creciNumber = creciNumber)
 
             updateUserCreciNumber(useCaseParams)
                 .onError { e ->

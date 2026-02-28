@@ -31,6 +31,9 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularPr
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
+import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.NotApplicable
+import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.NotProvided
+import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.Provided
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.profile.presentation.composables.ConfirmSignOutUserDialog
 import com.fstengineering.leasilycrm.profile.presentation.composables.EditCreciNumberDialog
@@ -144,16 +147,24 @@ fun ProfileScreen(
             }
 
             if (isEditingUser && uiState is ProfileUiState.Loaded) {
+                val loadedState = (uiState as ProfileUiState.Loaded)
+                val creciNumber = when (val field = loadedState.creciNumber) {
+                    is NotApplicable -> return@Column
+                    else -> field.valueOrNull
+                }
+
                 EditCreciNumberDialog(
-                    initialCreciNumber = (uiState as ProfileUiState.Loaded).creciNumber,
+                    initialCreciNumber = creciNumber,
                     onCreciNumberChange = viewModel::onCreciNumberChange,
                     creciNumberError = creciFieldError,
                     onCreciFocusLoss = viewModel::onCreciFocusLoss,
                     onEdit = { creciNumber ->
                         isEditingUser = false
 
-                        val editedUser =
-                            (uiState as ProfileUiState.Loaded).copy(creciNumber = creciNumber)
+                        val newCreciNumber =
+                            if (creciNumber == null) NotProvided else Provided(creciNumber)
+                        val editedUser = loadedState.copy(creciNumber = newCreciNumber)
+
                         viewModel.editUser(editedUser)
                     },
                     onCancel = {

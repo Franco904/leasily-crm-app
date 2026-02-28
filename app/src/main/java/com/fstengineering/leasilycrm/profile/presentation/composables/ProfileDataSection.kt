@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState
+import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.NotApplicable
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
 
 @Composable
@@ -48,10 +50,7 @@ fun ProfileDataSection(
             .clip(CircleShape)
     )
     Spacer(modifier = Modifier.height(16.dp))
-    Text(
-        text = profileUiState.name,
-        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
-    )
+    NameDetailsItem(name = profileUiState.name)
     Spacer(modifier = Modifier.height(12.dp))
     Box(
         contentAlignment = Alignment.Center,
@@ -61,16 +60,7 @@ fun ProfileDataSection(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = if (profileUiState.creciNumber != null) "CRECI  ·  ${profileUiState.creciNumber}" else stringResource(
-                    R.string.profile_creci_blank_body_text
-                ),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.outline,
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = if (profileUiState.creciNumber != null) FontStyle.Normal else FontStyle.Italic,
-                ),
-            )
+            CreciNumberDetailsItem(creciNumber = profileUiState.creciNumber)
             Spacer(modifier = Modifier.width(8.dp))
             FilledTonalIconButton(
                 enabled = !isSigningOut,
@@ -116,6 +106,51 @@ fun ProfileDataSection(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun NameDetailsItem(
+    name: FieldValueState<String>,
+    modifier: Modifier = Modifier,
+) {
+    when (name) {
+        NotApplicable -> {}
+        else -> {
+            val value = name.valueOrNull
+            Text(
+                text = value ?: stringResource(R.string.profile_name_blank_body_text),
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium,
+                    fontStyle = if (value != null) FontStyle.Normal else FontStyle.Italic,
+                ),
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Composable
+fun CreciNumberDetailsItem(
+    creciNumber: FieldValueState<String>,
+    modifier: Modifier = Modifier,
+) {
+    when (creciNumber) {
+        NotApplicable -> {}
+        else -> {
+            val value = creciNumber.valueOrNull
+            Text(
+                text = if (value != null) "CRECI  ·  $value" else stringResource(
+                    R.string.profile_creci_blank_body_text
+                ),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.outline,
+                    fontWeight = FontWeight.Medium,
+                    fontStyle = if (value != null) FontStyle.Normal else FontStyle.Italic,
+                ),
+                modifier = modifier
+            )
         }
     }
 }
