@@ -70,8 +70,8 @@ data class AssistanceCompound(
             return checkedSentProperties
                 .map { it.propertyId }
                 .toSet()
-                .mapNotNull { activeSentPropertyId ->
-                    allSentProperties.find { it.property.id == activeSentPropertyId }?.property?.id
+                .mapNotNull { sentPropertyId ->
+                    allSentProperties.find { it.property.id == sentPropertyId }?.property?.id
                 }
                 .toImmutableList()
         }
