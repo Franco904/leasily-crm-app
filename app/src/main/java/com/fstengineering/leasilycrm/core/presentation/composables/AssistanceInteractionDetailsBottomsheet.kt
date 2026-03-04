@@ -24,14 +24,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
+import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionBottomSheetDetailsUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AssistanceInteractionDetailsBottomsheet(
+fun AssistanceInteractionDetailsBottomSheet(
     sheetState: SheetState,
-    interaction: AssistanceInteraction,
+    interaction: AssistanceInteractionBottomSheetDetailsUiState,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -64,7 +64,7 @@ fun AssistanceInteractionDetailsBottomsheet(
                 Text(
                     text = stringResource(
                         R.string.assistance_registration_interaction_registration_interaction_date_value,
-                        interaction.date!!.dayOfMonth.formatToTwoDigitsDateTime(),
+                        interaction.date.dayOfMonth.formatToTwoDigitsDateTime(),
                         interaction.date.month.formatToTwoDigitsDateTime(),
                         interaction.date.year,
                     ),
@@ -76,7 +76,7 @@ fun AssistanceInteractionDetailsBottomsheet(
             HorizontalDivider()
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = interaction.title!!,
+                text = interaction.title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )

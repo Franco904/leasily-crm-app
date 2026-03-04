@@ -16,6 +16,8 @@ interface TenantRepository {
 
     suspend fun getById(tenantId: Long): AppResult<Tenant, ApplicationError>
 
+    suspend fun getNameById(tenantId: Long): AppResult<String, ApplicationError>
+
     suspend fun getAllLeadsMatching(
         matching: String?,
         orderTypeId: Int,

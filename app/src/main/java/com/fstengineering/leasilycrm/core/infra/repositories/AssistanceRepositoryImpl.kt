@@ -5,12 +5,11 @@ import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRep
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
@@ -44,7 +43,7 @@ class AssistanceRepositoryImpl(
         val assistanceId = assistanceDatabaseDataSource.insertOrUpdate(assistanceEntity)
             .let { id -> assistanceEntity.id ?: id }
 
-        assistance.characteristics.forEach {
+        assistance.preferredPropertyCharacteristics.forEach {
             val characteristic =
                 AssistancePropertyCharacteristicCrossRefEntity.fromDomain(it, assistanceId)
             assistanceCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
@@ -55,13 +54,13 @@ class AssistanceRepositoryImpl(
             assistanceInteractionDatabaseDataSource.insertOrUpdate(interaction)
         }
 
-        assistance.searchedNeighborhoods.forEach {
+        assistance.preferredNeighborhoods.forEach {
             val searchedNeighborhood =
-                AssistanceSearchedNeighborhoodEntity.fromDomain(it, assistanceId)
+                AssistancePreferredNeighborhoodEntity.fromDomain(it, assistanceId)
             assistanceSearchedNeighborhoodDatabaseDataSource.insertOrUpdate(searchedNeighborhood)
         }
 
-        assistance.sentProperties.forEach {
+        assistance.sentPropertiesIds.forEach {
             val sentProperty = AssistanceSentPropertyCrossRefEntity.fromDomain(it, assistanceId)
             assistanceSentPropertyCrossRefDatabaseDataSource.insertOrUpdate(sentProperty)
         }

@@ -2,30 +2,33 @@ package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
+import kotlinx.collections.immutable.persistentListOf
 
 sealed class PropertySeaProximityType(val id: Long) {
     data object SeaAccess : PropertySeaProximityType(SEA_ACCESS_ID)
+
     data object SeaView : PropertySeaProximityType(SEA_VIEW_ID)
+
     data object FarFromSea : PropertySeaProximityType(FAR_FROM_SEA_ID)
+
     class DistanceToSea private constructor(val distance: AppDecimal) : PropertySeaProximityType(
         DISTANCE_TO_SEA_ID,
     ) {
         companion object {
-            fun parse(distance: AppDecimal?): DistanceToSea {
-                validate(distance)
-                    .onError { throw it.asException() }
+            fun parse(
+                distance: AppDecimal?,
+            ): AppResultCompound<DistanceToSea, DomainError.PropertySeaProximity> {
+                val errors = persistentListOf<DomainError.PropertySeaProximity>()
 
-                return DistanceToSea(requireNotNull(distance))
-            }
+                if (distance == null) errors.add(DomainError.PropertySeaProximity.DistanceToSeaRequired)
+                if (distance?.isNegative == true) errors.add(DomainError.PropertySeaProximity.DistanceToSeaIsNegative)
 
-            fun validate(distance: AppDecimal?): AppResult<Unit, DomainError> {
-                return when {
-                    distance == null -> AppResult.Error(DomainError.PropertySeaProximity.DistanceToSeaRequired)
-                    distance.isNegative -> AppResult.Error(DomainError.PropertySeaProximity.DistanceToSeaIsNegative)
-                    else -> AppResult.Success(Unit)
-                }
+                if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+
+                return AppResultCompound.Success(data = DistanceToSea(requireNotNull(distance)))
             }
         }
     }
@@ -36,26 +39,31 @@ sealed class PropertySeaProximityType(val id: Long) {
         const val FAR_FROM_SEA_ID = 3L
         const val DISTANCE_TO_SEA_ID = 4L
 
-        fun parse(id: Long, distanceToSea: AppDecimal?): PropertySeaProximityType = when (id) {
-            SEA_ACCESS_ID -> SeaAccess
-            SEA_VIEW_ID -> SeaView
-            FAR_FROM_SEA_ID -> FarFromSea
-            DISTANCE_TO_SEA_ID -> DistanceToSea.parse(distanceToSea)
-            else -> throw DomainError.PropertySeaProximity.PropertySeaProximityInvalid.asException()
-        }
+        fun parse(
+            id: Long,
+            distanceToSea: AppDecimal?,
+        ): AppResultCompound<PropertySeaProximityType, DomainError.PropertySeaProximity> {
+            val errors = persistentListOf<DomainError.PropertySeaProximity>()
 
-        fun validate(id: Long, distanceToSea: AppDecimal?): AppResult<Unit, DomainError> {
-            val noValidationTypes = listOf(
-                SEA_ACCESS_ID,
-                SEA_VIEW_ID,
-                FAR_FROM_SEA_ID,
-            )
+            val parsed = when (id) {
+                SEA_ACCESS_ID -> SeaAccess
+                SEA_VIEW_ID -> SeaView
+                FAR_FROM_SEA_ID -> FarFromSea
 
-            return when (id) {
-                in noValidationTypes -> AppResult.Success(Unit)
-                DISTANCE_TO_SEA_ID -> DistanceToSea.validate(distanceToSea)
-                else -> AppResult.Error(DomainError.PropertySeaProximity.PropertySeaProximityInvalid)
+                DISTANCE_TO_SEA_ID -> {
+                    DistanceToSea.parse(distanceToSea)
+                        .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                }
+
+                else -> {
+                    errors.add(DomainError.PropertySeaProximity.PropertySeaProximityInvalid)
+                    null
+                }
             }
+
+            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+
+            return AppResultCompound.Success(data = requireNotNull(parsed))
         }
     }
 }

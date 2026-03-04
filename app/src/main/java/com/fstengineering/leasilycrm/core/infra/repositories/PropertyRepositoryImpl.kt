@@ -52,10 +52,10 @@ class PropertyRepositoryImpl(
         val propertyId = propertyDatabaseDataSource.insertOrUpdate(propertyEntity)
             .let { property.id ?: it }
 
-        property.characteristics.forEach {
-            val characteristic = PropertyCharacteristicCrossRefEntity.fromDomain(it, propertyId)
-            propertyCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
-        }
+//        property.characteristics.forEach {
+//            val characteristic = PropertyCharacteristicCrossRefEntity.fromDomain(it, propertyId)
+//            propertyCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
+//        }
 
         property.files.forEach {
             val file = PropertyFileEntity.fromDomain(it, propertyId)
@@ -123,6 +123,19 @@ class PropertyRepositoryImpl(
                 .toPersistentList()
 
         return AppResult.Success(data = neighborHoodNames)
+    }
+
+    override suspend fun getAllSentInAssistance(
+        assistanceId: Long,
+    ): AppResult<ImmutableList<Property>, ApplicationError> {
+        val sentProperties = propertyDatabaseDataSource.getAllSentInAssistance(assistanceId)
+            .fold(
+                onError = { return AppResult.Error(error = it.toApplication()) },
+                onSuccess = { it.map { property -> property.toDomain() } },
+            )
+            .toPersistentList()
+
+        return AppResult.Success(data = sentProperties)
     }
 
     override fun watchById(propertyId: Long): Flow<AppResult<Property?, ApplicationError>> = flow {

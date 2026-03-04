@@ -60,7 +60,7 @@ fun StayPropertyFormField(
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
                 PropertyCard(
-                    property = stayProperty!!,
+                    propertyDetails = stayProperty!!,
                     hasMoreOptionsMenu = false,
                     hasCharacteristicsChipsRow = false,
                 )

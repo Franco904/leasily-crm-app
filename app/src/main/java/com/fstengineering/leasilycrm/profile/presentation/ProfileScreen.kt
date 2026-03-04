@@ -32,8 +32,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
 import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.NotApplicable
-import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.NotProvided
-import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.Provided
+import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.Applicable
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.profile.presentation.composables.ConfirmSignOutUserDialog
 import com.fstengineering.leasilycrm.profile.presentation.composables.EditCreciNumberDialog
@@ -129,7 +128,7 @@ fun ProfileScreen(
                 )
         ) {
             when (uiState) {
-                is ProfileUiState.Empty -> {
+                is ProfileUiState.Loading -> {
                     AppCircularProgressIndicator(
                         modifier = Modifier
                             .size(64.dp)
@@ -161,8 +160,7 @@ fun ProfileScreen(
                     onEdit = { creciNumber ->
                         isEditingUser = false
 
-                        val newCreciNumber =
-                            if (creciNumber == null) NotProvided else Provided(creciNumber)
+                        val newCreciNumber = Applicable(creciNumber)
                         val editedUser = loadedState.copy(creciNumber = newCreciNumber)
 
                         viewModel.editUser(editedUser)

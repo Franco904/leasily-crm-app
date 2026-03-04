@@ -49,31 +49,30 @@ data class AssistanceEntity(
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Long?,
     @ColumnInfo(name = "tenant_id") val tenantId: Long,
-    val inconsistencies: String?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
 ) {
     companion object {
         fun fromDomain(domain: Assistance): AssistanceEntity {
-            val seaProximityType = domain.seaProximityType
+            val seaProximityType = domain.preferredSeaProximityType
 
             return AssistanceEntity(
                 id = domain.id,
                 createDateTime = domain.createDateTime ?: AppDateTime.now(),
                 updateDateTime = AppDateTime.now(),
-                searchedStartDate = domain.searchedPeriod?.startDate,
-                searchedEndDate = domain.searchedPeriod?.endDate,
+                searchedStartDate = domain.preferredPeriod?.startDate,
+                searchedEndDate = domain.preferredPeriod?.endDate,
                 hasFlexibilityForPeriod = domain.hasFlexibilityForPeriod,
                 maxAcceptedNightlyRate = domain.maxAcceptedNightlyRate,
-                adults = domain.guestsCount.adults,
-                kids = domain.guestsCount.kids,
-                babies = domain.guestsCount.babies,
-                animals = domain.guestsCount.animals,
-                bedrooms = domain.preferredFeaturesCount.bedrooms,
-                enSuites = domain.preferredFeaturesCount.enSuites,
-                doubleBeds = domain.preferredFeaturesCount.doubleBeds,
-                singleBeds = domain.preferredFeaturesCount.singleBeds,
-                bathrooms = domain.preferredFeaturesCount.bathrooms,
-                parkingSpots = domain.preferredFeaturesCount.parkingSpots,
+                adults = domain.guestsCount.adultsCount,
+                kids = domain.guestsCount.kidsCount,
+                babies = domain.guestsCount.babiesCount,
+                animals = domain.guestsCount.animalsCount,
+                bedrooms = domain.preferredFeaturesCount.bedroomsCount,
+                enSuites = domain.preferredFeaturesCount.enSuitesCount,
+                doubleBeds = domain.preferredFeaturesCount.doubleBedsCount,
+                singleBeds = domain.preferredFeaturesCount.singleBedsCount,
+                bathrooms = domain.preferredFeaturesCount.bathroomsCount,
+                parkingSpots = domain.preferredFeaturesCount.parkingSpotsCount,
                 propertySeaProximityTypeId = seaProximityType?.id,
                 distanceToSea = if (seaProximityType is PropertySeaProximityType.DistanceToSea) {
                     seaProximityType.distance
@@ -82,7 +81,6 @@ data class AssistanceEntity(
                 isFinished = domain.isFinished,
                 isDeleted = false,
                 tenantId = domain.tenantId,
-                inconsistencies = domain.inconsistencies.joinToString(", "),
                 contractVersion = BuildConfig.CONTRACT_VERSION,
             )
         }

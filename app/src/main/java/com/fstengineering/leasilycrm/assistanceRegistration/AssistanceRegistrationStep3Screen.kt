@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.assistanceRegistration
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -28,17 +29,19 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceCreateSuccess
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceEditSuccess
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.ConvertOldTenantToLead
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.BottomSheetError
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Exit
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceInteractionRegistrationBottomsheet
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationFormSectionStep3
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationTopAppBar
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.ConfirmDeleteAssistanceInteractionDialog
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceInteractionRegistrationBottomSheet
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationFormSectionStep3
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationTopAppBar
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.ConfirmDeleteAssistanceInteractionDialog
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel.UiEvents.InteractionCreateSuccess
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel.UiEvents.InteractionEditSuccess
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
-import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomsheet
+import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomSheet
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
@@ -58,42 +61,35 @@ fun AssistanceRegistrationStep3Screen(
     onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
     val activity = LocalActivity.current!!
     val focusManager = LocalFocusManager.current
 
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val assistanceForm by parentViewModel.assistanceForm.collectAsStateWithLifecycle()
-
-    val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
+    val draftForm by parentViewModel.draftForm.collectAsStateWithLifecycle()
+    val loadedDraftForm = draftForm as? AssistanceDraftFormUiState.Loaded
 
     val interactionForm by stepViewModel.interactionForm.collectAsStateWithLifecycle()
+    val loadedInteractionForm = interactionForm as? AssistanceInteractionDraftFormUiState.Loaded
 
     val formErrors by stepViewModel.formErrors.collectAsStateWithLifecycle()
 
-    var interactionToView by rememberSaveable { mutableStateOf<AssistanceInteraction?>(null) }
-    var interactionToDelete by rememberSaveable { mutableStateOf<AssistanceInteraction?>(null) }
+    var interactionToView by rememberSaveable {
+        mutableStateOf<AssistanceInteractionDraftFormUiState.Loaded?>(null)
+    }
+    var interactionToDelete by rememberSaveable {
+        mutableStateOf<AssistanceInteractionDraftFormUiState.Loaded?>(null)
+    }
 
     var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
-
-    val listStatus = remember(isLoading, assistanceForm.interactions) {
-        when {
-            isLoading -> ListState.Loading
-            assistanceForm.interactions.isEmpty() -> ListState.Empty
-            else -> ListState.Idle
-        }
-    }
 
     LaunchedEffect(Unit) {
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is Error -> {
+                    is BottomSheetError -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
@@ -129,32 +125,32 @@ fun AssistanceRegistrationStep3Screen(
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
                     is InteractionCreateSuccess -> {
-                        val newInterations = assistanceForm.interactions
-                            .toPersistentList()
-                            .add(interactionForm!!)
+                        if (loadedInteractionForm == null) return@collect
+                        if (loadedDraftForm?.interactions == null) return@collect
 
-                        parentViewModel.onAssistanceFormChange(
-                            form = assistanceForm.copy(interactions = newInterations),
-                        )
-                        stepViewModel.onInteractionFormChange(form = null)
-                        stepViewModel.onDismissInteraction()
+                        val newInterations = loadedDraftForm.interactions
+                            .toPersistentList()
+                            .add(loadedInteractionForm)
+
+                        parentViewModel.onAssistanceFormChange(loadedDraftForm.copy(interactions = newInterations))
+                        stepViewModel.clearInteractionForm()
 
                         onUiEvent(UiEvent.ShowSnackBar(R.string.create_assistance_interaction_success_message))
                     }
 
                     is InteractionEditSuccess -> {
-                        val newInterations = assistanceForm.interactions
+                        if (loadedInteractionForm == null) return@collect
+                        if (loadedDraftForm?.interactions == null) return@collect
+
+                        val newInterations = loadedDraftForm.interactions
                             .toPersistentList()
                             .mutate { list ->
                                 val i = list.indexOf(stepViewModel.interactionFormBeforeEdit)
-                                list[i] = interactionForm!!
+                                list[i] = loadedInteractionForm
                             }
 
-                        parentViewModel.onAssistanceFormChange(
-                            form = assistanceForm.copy(interactions = newInterations),
-                        )
-                        stepViewModel.onInteractionFormChange(form = null)
-                        stepViewModel.onDismissInteraction()
+                        parentViewModel.onAssistanceFormChange(loadedDraftForm.copy(interactions = newInterations))
+                        stepViewModel.clearInteractionForm()
 
                         onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                     }
@@ -176,8 +172,10 @@ fun AssistanceRegistrationStep3Screen(
     Scaffold(
         topBar = {
             Column {
+                if (loadedDraftForm == null) return@Scaffold
+
                 AssistanceRegistrationTopAppBar(
-                    leadTenantName = assistanceForm.tenant?.name ?: "",
+                    leadTenantName = loadedDraftForm.leadTenantName,
                     onBack = parentViewModel::onExit,
                 )
                 HorizontalDivider()
@@ -188,82 +186,76 @@ fun AssistanceRegistrationStep3Screen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) { innerPadding ->
-        AssistanceRegistrationFormSectionStep3(
-            listStatus = listStatus,
-            assistanceForm = assistanceForm,
-            onAddInteraction = {
-                stepViewModel.onInteractionFormChange(form = AssistanceInteraction())
-            },
-            onViewInteractionDetails = { interactionToView = it },
-            onEditInteraction = {
-                stepViewModel.onInteractionFormChange(form = it)
-                stepViewModel.onEditInteraction(interaction = it)
-            },
-            onDeleteInteraction = { interactionToDelete = it },
-            onBack = onBack,
-            onSave = {
-                focusManager.clearFocus()
-                parentViewModel.saveAssistance()
-            },
-            modifier = Modifier
-                .padding(innerPadding),
-        )
-    }
-    if (interactionForm != null) {
-        AssistanceInteractionRegistrationBottomsheet(
-            sheetState = sheetState,
-            interactionForm = interactionForm!!,
-            onInterationFormChange = stepViewModel::onInteractionFormChange,
-            formErrors = formErrors.errors,
-            onDismissRequest = {
-                stepViewModel.onInteractionFormChange(form = null)
-                stepViewModel.onDismissInteraction()
-            },
-            onSave = {
-                stepViewModel.clearErrors()
+        AnimatedContent(targetState = draftForm) { form ->
+            when (form) {
+                is AssistanceDraftFormUiState.Loading -> {
+                    FullScreenLoadingIndicator(innerPadding)
+                }
 
-                stepViewModel.validateInteractionForm(assistanceForm = assistanceForm)
+                is AssistanceDraftFormUiState.Loaded -> {
+                    AssistanceRegistrationFormSectionStep3(
+                        assistanceForm = form,
+                        onAddInteraction = stepViewModel::onOpenInteractionForm,
+                        onViewInteractionDetails = { interactionToView = it },
+                        onEditInteraction = {
+                            stepViewModel.onInteractionFormChange(newForm = it)
+                            stepViewModel.onEditInteraction(interaction = it)
+                        },
+                        onDeleteInteraction = { interactionToDelete = it },
+                        onBack = onBack,
+                        onSave = {
+                            focusManager.clearFocus()
+                            parentViewModel.saveAssistance()
+                        },
+                        modifier = Modifier
+                            .padding(innerPadding),
+                    )
+                }
             }
-        )
-    }
-    if (interactionToView != null) {
-        AssistanceInteractionDetailsBottomsheet(
-            sheetState = sheetState,
-            interaction = interactionToView!!,
-            onDismissRequest = { interactionToView = null },
-        )
-    }
-    if (interactionToDelete != null) {
-        ConfirmDeleteAssistanceInteractionDialog(
-            onConfirmDelete = {
-                val newInteractions = assistanceForm.interactions
-                    .toPersistentList()
-                    .mutate { list ->
-                        if (interactionToDelete?.id == null) {
-                            list.remove(interactionToDelete)
-                        } else {
-                            val i = list.indexOf(interactionToDelete)
-                            list[i] = list[i].copy(isDeleted = true)
-                        }
-                    }
+        }
 
-                parentViewModel.onAssistanceFormChange(
-                    form = assistanceForm.copy(interactions = newInteractions),
-                )
+        if (loadedInteractionForm != null && loadedDraftForm != null) {
+            AssistanceInteractionRegistrationBottomSheet(
+                sheetState = sheetState,
+                interactionForm = loadedInteractionForm,
+                onInteractionFormChange = stepViewModel::onInteractionFormChange,
+                formErrors = formErrors.errors,
+                onDismissRequest = stepViewModel::clearInteractionForm,
+                onSave = { stepViewModel.validateInteractionForm(loadedDraftForm) }
+            )
+        }
 
-                interactionToDelete = null
-            },
-            onCancel = { interactionToDelete = null },
-        )
-    }
-    if (mustShowConfirmLeaveRegistrationDialog) {
-        ConfirmLeaveRegistrationDialog(
-            isEditing = parentViewModel.assistanceId != null,
-            onConfirmLeave = {
-                mustShowConfirmLeaveRegistrationDialog = false
-                onLeaveRegistration()
-            },
-            onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
-        )
+        if (interactionToView != null) {
+            AssistanceInteractionDetailsBottomSheet(
+                sheetState = sheetState,
+                interaction = interactionToView!!.toBottomSheetDetails(),
+                onDismissRequest = { interactionToView = null },
+            )
+        }
+
+        if (interactionToDelete != null && loadedDraftForm != null) {
+            ConfirmDeleteAssistanceInteractionDialog(
+                onConfirmDelete = {
+                    val newInteractions = loadedDraftForm.interactions
+                        .toPersistentList()
+                        .mutate { interactions -> interactions.remove(interactionToDelete) }
+
+                    parentViewModel.onAssistanceFormChange(loadedDraftForm.copy(interactions = newInteractions))
+                    interactionToDelete = null
+                },
+                onCancel = { interactionToDelete = null },
+            )
+        }
+
+        if (mustShowConfirmLeaveRegistrationDialog) {
+            ConfirmLeaveRegistrationDialog(
+                isEditing = parentViewModel.assistanceId != null,
+                onConfirmLeave = {
+                    mustShowConfirmLeaveRegistrationDialog = false
+                    onLeaveRegistration()
+                },
+                onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
+            )
+        }
     }
 }

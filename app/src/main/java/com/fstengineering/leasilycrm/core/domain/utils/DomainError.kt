@@ -4,9 +4,10 @@ sealed interface DomainError : SystemError {
     fun asException() = DomainException(this)
 
     enum class Assistance : DomainError {
-        SearchingPeriodRequired,
-        SearchingPeriodStartAndEndDatesAreTheSame,
-        SearchingPeriodStartDateIsAfterEndDate,
+        TenantRequired,
+        PreferredPeriodRequired,
+        PreferredPeriodStartAndEndDatesAreTheSame,
+        PreferredPeriodStartDateIsAfterEndDate,
         AdultGuestsCountIsNegative,
         KidsGuestsCountIsNegative,
         BabiesGuestsCountIsNegative,
@@ -17,16 +18,18 @@ sealed interface DomainError : SystemError {
         SingleBedsCountIsNegative,
         BathroomsCountIsNegative,
         ParkingSpotsCountIsNegative,
-        SearchedNeighborhoodNameRequired,
         InteractionDateRequired,
         InteractionTitleRequired,
+    }
+
+    enum class Neighborhood : DomainError {
+        NeighborhoodRequired,
     }
 
     enum class Property : DomainError {
         OwnerRequired,
         TypeRequired,
         TypeInvalid,
-        NeighborhoodRequired,
         StreetAddressRequired,
         CharacteristicInvalid,
         PricePeriodRequired,

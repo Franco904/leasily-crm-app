@@ -579,9 +579,31 @@
     <string name="no_label">no</string>
     <string name="until_label">até</string>
 
-    <!-- Chip texts -->
-    <string name="apartment_chip_text">Apartamento</string>
-    <string name="house_chip_text">Casa</string>
+    <!-- Fixed options texts -->
+    <string name="apartment_property_type_text">Apartamento</string>
+    <string name="house_property_type_text">Casa</string>
+
+    <string name="sea_access_property_sea_proximity_type_text">Saída para o mar</string>
+    <string name="sea_view_property_sea_proximity_type_text">Vista para o mar</string>
+    <string name="far_from_sea_property_sea_proximity_type_text">Longe do mar</string>
+    <string name="distance_to_sea_property_sea_proximity_type_text">Distância até o mar</string>
+
+    <string name="accessibility_property_characteristic_text">Acessibilidade</string>
+    <string name="balcony_property_characteristic_text">Varanda</string>
+    <string name="barbecue_area_property_characteristic_text">Churrasqueira</string>
+    <string name="bath_linen_property_characteristic_text">Roupa de banho</string>
+    <string name="beach_chair_property_characteristic_text">Cadeira de praia</string>
+    <string name="beach_umbrella_property_characteristic_text">Guarda-sol</string>
+    <string name="bed_linen_property_characteristic_text">Roupa de cama</string>
+    <string name="commercial_area_property_characteristic_text">Área comercial</string>
+    <string name="common_area_condominium_property_characteristic_text">Área comum (condomínio)</string>
+    <string name="elevator_property_characteristic_text">Elevador</string>
+    <string name="home_office_property_characteristic_text">Escritório em casa</string>
+    <string name="modern_property_characteristic_text">Moderno</string>
+    <string name="pet_friendly_property_characteristic_text">Aceita animais domésticos</string>
+    <string name="playground_property_characteristic_text">Parquinho infantil</string>
+    <string name="swimming_pool_property_characteristic_text">Piscina</string>
+    <string name="washing_machine_property_characteristic_text">Máquina de lavar</string>
 
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>

@@ -46,7 +46,7 @@ import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomsheet
+import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.AssistanceInteractionCard
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
@@ -289,7 +289,7 @@ fun LeadTenantDetailsScreen(
 
                                 if (i > 0) Spacer(modifier = Modifier.height(8.dp))
                                 PropertyCard(
-                                    property = selectedProperty,
+                                    propertyDetails = selectedProperty,
                                     onCardClick = { onViewSentPropertyDetails(selectedProperty.id!!) },
                                     hasMoreOptionsMenu = false,
                                     hasCharacteristicsChipsRow = false,
@@ -439,7 +439,7 @@ fun LeadTenantDetailsScreen(
             }
         }
         if (interactionToView != null) {
-            AssistanceInteractionDetailsBottomsheet(
+            AssistanceInteractionDetailsBottomSheet(
                 sheetState = sheetState,
                 interaction = interactionToView!!,
                 onDismissRequest = { interactionToView = null },

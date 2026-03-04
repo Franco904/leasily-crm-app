@@ -64,6 +64,18 @@ class TenantRepositoryImpl(
             ?: AppResult.Error(ApplicationError.Unknown)
     }
 
+    override suspend fun getNameById(
+        tenantId: Long,
+    ): AppResult<String, ApplicationError> {
+        val tenantName = databaseDataSource.getNameById(id = tenantId)
+            .fold(
+                onError = { return AppResult.Error(error = it.toApplication()) },
+                onSuccess = { it ?: return AppResult.Error(error = ApplicationError.Unknown) }
+            )
+
+        return AppResult.Success(data = tenantName)
+    }
+
     override suspend fun getAllLeadsMatching(
         matching: String?,
         orderTypeId: Int,

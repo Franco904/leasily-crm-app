@@ -22,18 +22,13 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 )
 data class AssistanceInteractionEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
-    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "interaction_date") val interactionDate: AppDate,
     val title: String,
     val description: String?,
-    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
 ) {
     fun toDomain() = AssistanceInteraction.parse(
         id = id,
-        createDateTime = createDateTime,
-        updateDateTime = updateDateTime,
         date = interactionDate,
         title = title,
         description = description,
@@ -43,13 +38,10 @@ data class AssistanceInteractionEntity(
         fun fromDomain(domain: AssistanceInteraction, assistanceId: Long) =
             AssistanceInteractionEntity(
                 id = domain.id,
-                createDateTime = domain.createDateTime ?: AppDateTime.now(),
-                updateDateTime = AppDateTime.now(),
                 interactionDate = domain.date,
                 title = domain.title,
                 description = domain.description,
                 assistanceId = assistanceId,
-                isDeleted = false,
             )
     }
 }

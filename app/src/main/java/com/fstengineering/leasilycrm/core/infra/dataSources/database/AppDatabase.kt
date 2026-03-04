@@ -28,7 +28,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.Tenant
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
@@ -47,7 +47,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.Tenan
         AssistanceEntity::class,
         AssistancePropertyCharacteristicCrossRefEntity::class,
         AssistanceInteractionEntity::class,
-        AssistanceSearchedNeighborhoodEntity::class,
+        AssistancePreferredNeighborhoodEntity::class,
         AssistanceSentPropertyCrossRefEntity::class,
         PropertyEntity::class,
         PropertyCharacteristicCrossRefEntity::class,

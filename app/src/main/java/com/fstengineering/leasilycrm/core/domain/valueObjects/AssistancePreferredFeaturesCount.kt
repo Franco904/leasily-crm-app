@@ -1,63 +1,48 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onError
+import kotlinx.collections.immutable.persistentListOf
 
 data class AssistancePreferredFeaturesCount(
-    val bedrooms: Int,
-    val enSuites: Int,
-    val doubleBeds: Int,
-    val singleBeds: Int,
-    val bathrooms: Int,
-    val parkingSpots: Int,
+    val bedroomsCount: Int,
+    val enSuitesCount: Int,
+    val doubleBedsCount: Int,
+    val singleBedsCount: Int,
+    val bathroomsCount: Int,
+    val parkingSpotsCount: Int,
 ) {
     companion object {
         fun parse(
-            bedrooms: Int,
-            enSuites: Int,
-            doubleBeds: Int,
-            singleBeds: Int,
-            bathrooms: Int,
-            parkingSpots: Int,
-        ): AssistancePreferredFeaturesCount {
-            validate(
-                bedrooms = bedrooms,
-                enSuites = enSuites,
-                doubleBeds = doubleBeds,
-                singleBeds = singleBeds,
-                bathrooms = bathrooms,
-                parkingSpots = parkingSpots,
-            )
-                .onError { throw it.asException() }
+            bedroomsCount: Int,
+            enSuitesCount: Int,
+            doubleBedsCount: Int,
+            singleBedsCount: Int,
+            bathroomsCount: Int,
+            parkingSpotsCount: Int,
+        ): AppResultCompound<AssistancePreferredFeaturesCount, DomainError.Assistance> {
+            val errors = persistentListOf<DomainError.Assistance>()
 
-            return AssistancePreferredFeaturesCount(
-                bedrooms = bedrooms,
-                enSuites = enSuites,
-                doubleBeds = doubleBeds,
-                singleBeds = singleBeds,
-                bathrooms = bathrooms,
-                parkingSpots = parkingSpots,
-            )
-        }
+            if (bedroomsCount < 0) errors.add(DomainError.Assistance.BedroomsCountIsNegative)
+            if (enSuitesCount < 0) errors.add(DomainError.Assistance.EnSuitesCountIsNegative)
+            if (doubleBedsCount < 0) errors.add(DomainError.Assistance.DoubleBedsCountIsNegative)
+            if (singleBedsCount < 0) errors.add(DomainError.Assistance.SingleBedsCountIsNegative)
+            if (bathroomsCount < 0) errors.add(DomainError.Assistance.BathroomsCountIsNegative)
+            if (parkingSpotsCount < 0) errors.add(DomainError.Assistance.ParkingSpotsCountIsNegative)
 
-        fun validate(
-            bedrooms: Int,
-            enSuites: Int,
-            doubleBeds: Int,
-            singleBeds: Int,
-            bathrooms: Int,
-            parkingSpots: Int,
-        ): AppResult<Unit, DomainError.Assistance> {
-            return when {
-                bedrooms < 0 -> AppResult.Error(DomainError.Assistance.BedroomsCountIsNegative)
-                enSuites < 0 -> AppResult.Error(DomainError.Assistance.EnSuitesCountIsNegative)
-                doubleBeds < 0 -> AppResult.Error(DomainError.Assistance.DoubleBedsCountIsNegative)
-                singleBeds < 0 -> AppResult.Error(DomainError.Assistance.SingleBedsCountIsNegative)
-                bathrooms < 0 -> AppResult.Error(DomainError.Assistance.BathroomsCountIsNegative)
-                parkingSpots < 0 -> AppResult.Error(DomainError.Assistance.ParkingSpotsCountIsNegative)
-                else -> AppResult.Success(Unit)
-            }
+            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+
+            val parsed = AssistancePreferredFeaturesCount(
+                bedroomsCount = bedroomsCount,
+                enSuitesCount = enSuitesCount,
+                doubleBedsCount = doubleBedsCount,
+                singleBedsCount = singleBedsCount,
+                bathroomsCount = bathroomsCount,
+                parkingSpotsCount = parkingSpotsCount,
+            )
+
+            return AppResultCompound.Success(data = parsed)
         }
     }
 }

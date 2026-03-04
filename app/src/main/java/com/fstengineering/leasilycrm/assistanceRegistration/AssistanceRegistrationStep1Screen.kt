@@ -4,11 +4,8 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -21,26 +18,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Error
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.BottomSheetError
 import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Exit
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationFormSectionStep1
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationTopAppBar
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceSearchedNeighborhoodRegistrationDialog
-import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceNeighborhoodField
-import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationFormSectionStep1
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationTopAppBar
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistancePreferredNeighborhoodRegistrationDialog
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceStep1Field
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel.UiEvents.AssistanceSearchedNeighborhoodSaveSuccess
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel.UiEvents.ScrollToField
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel.UiEvents.ValidateSuccess
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
-import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
@@ -68,39 +62,32 @@ fun AssistanceRegistrationStep1Screen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val assistanceForm by parentViewModel.assistanceForm.collectAsStateWithLifecycle()
+    val draftForm by parentViewModel.draftForm.collectAsStateWithLifecycle()
+    val loadedDraftForm = draftForm as? AssistanceDraftFormUiState.Loaded
     val formErrors by stepViewModel.formErrors.collectAsStateWithLifecycle()
 
-    val searchedNeighborhoodForm by stepViewModel.searchedNeighborhoodForm.collectAsStateWithLifecycle()
-    var searchedNeighborhoodFormBeforeEdit by rememberSaveable {
-        mutableStateOf<AssistanceSearchedNeighborhood?>(null)
-    }
+    val neighborhoodForm by stepViewModel.neighborhoodForm.collectAsStateWithLifecycle()
+    var neighborhoodFormBeforeEdit by rememberSaveable { mutableStateOf<String?>(null) }
 
-    val searchedNeighborhoodErrors by stepViewModel.searchedNeighborhoodErrors.collectAsStateWithLifecycle()
+    val neighborhoodFormError by stepViewModel.neighborhoodFormError.collectAsStateWithLifecycle()
     val pastNeighborhoods by parentViewModel.pastNeighborhoods.collectAsStateWithLifecycle()
-
-    val seaProximityTypes by parentViewModel.seaProximityTypes.collectAsStateWithLifecycle()
-    val assistancePropertyCharacteristics by parentViewModel.assistancePropertyCharacteristics
-        .collectAsStateWithLifecycle()
 
     val scrollToFieldChannel = remember { Channel<AssistanceStep1Field>() }
     val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
-    val isLoading by parentViewModel.isLoading.collectAsStateWithLifecycle()
-
-    var isRegisteringNewSearchedNeighborhood by rememberSaveable { mutableStateOf(false) }
+    var isRegisteringNewPreferredNeighborhood by rememberSaveable { mutableStateOf(false) }
     var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         parentViewModel.init(
-            assistanceId = assistanceId,
             leadTenantId = leadTenantId,
+            assistanceId = assistanceId,
         )
 
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is Error -> {
+                    is BottomSheetError -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
@@ -132,28 +119,28 @@ fun AssistanceRegistrationStep1Screen(
                     }
 
                     is AssistanceSearchedNeighborhoodSaveSuccess -> {
-                        if (searchedNeighborhoodForm == null) return@collect
+                        if (neighborhoodForm == null || loadedDraftForm == null) return@collect
 
                         val assistanceSearchedNeighborhoods =
-                            assistanceForm.searchedNeighborhoods.toPersistentList()
+                            loadedDraftForm.preferredNeighborhoods.toPersistentList()
 
-                        val newAssistanceSearchedNeighborhoods =
-                            if (isRegisteringNewSearchedNeighborhood) {
-                                assistanceSearchedNeighborhoods.add(searchedNeighborhoodForm!!)
+                        val newPreferredNeighborhoods =
+                            if (isRegisteringNewPreferredNeighborhood) {
+                                assistanceSearchedNeighborhoods.add(neighborhoodForm!!)
                             } else {
                                 assistanceSearchedNeighborhoods.mutate {
                                     val i = assistanceSearchedNeighborhoods
-                                        .indexOf(searchedNeighborhoodFormBeforeEdit!!)
-                                    it[i] = searchedNeighborhoodForm!!
+                                        .indexOf(neighborhoodFormBeforeEdit!!)
+                                    it[i] = neighborhoodForm!!
                                 }
                             }
 
-                        parentViewModel.onAssistanceFormChange(
-                            assistanceForm.copy(searchedNeighborhoods = newAssistanceSearchedNeighborhoods)
-                        )
+                        val newForm =
+                            loadedDraftForm.copy(preferredNeighborhoods = newPreferredNeighborhoods)
+                        parentViewModel.onAssistanceFormChange(newForm)
 
-                        stepViewModel.onSearchedNeighborhoodFormChange(form = null)
-                        isRegisteringNewSearchedNeighborhood = false
+                        stepViewModel.onNeighborhoodChange(neighborhood = null)
+                        isRegisteringNewPreferredNeighborhood = false
                     }
                 }
             }
@@ -172,9 +159,10 @@ fun AssistanceRegistrationStep1Screen(
 
     Scaffold(
         topBar = {
+            if (loadedDraftForm == null) return@Scaffold
             Column {
                 AssistanceRegistrationTopAppBar(
-                    leadTenantName = assistanceForm.tenant?.name ?: "",
+                    leadTenantName = loadedDraftForm.leadTenantName,
                     onBack = parentViewModel::onExit,
                 )
                 HorizontalDivider()
@@ -185,85 +173,67 @@ fun AssistanceRegistrationStep1Screen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) { innerPadding ->
-        AnimatedContent(
-            targetState = isLoading,
-        ) { isLoading ->
-            if (isLoading) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    AppCircularProgressIndicator(
+        AnimatedContent(targetState = draftForm) { form ->
+            when (form) {
+                is AssistanceDraftFormUiState.Loading -> {
+                    FullScreenLoadingIndicator(innerPadding)
+                }
+
+                is AssistanceDraftFormUiState.Loaded -> {
+                    AssistanceRegistrationFormSectionStep1(
+                        assistanceForm = form,
+                        onAssistanceFormChange = { newForm ->
+                            parentViewModel.onAssistanceFormChange(newForm)
+                            stepViewModel.onAssistanceFormChange(newForm, oldForm = form)
+                        },
+                        onAddPreferredNeighborhood = {
+                            stepViewModel.onNeighborhoodChange(neighborhood = null)
+                            isRegisteringNewPreferredNeighborhood = true
+                        },
+                        onEditPreferredNeighborhood = { neighborhood ->
+                            stepViewModel.onNeighborhoodChange(neighborhood = neighborhood)
+                            neighborhoodFormBeforeEdit = neighborhood
+                        },
+                        onDeletePreferredNeighborhood = { neighborhood ->
+                            val assistancePreferredNeighborhoods =
+                                form.preferredNeighborhoods.toPersistentList()
+
+                            val newPreferredNeighborhoods =
+                                assistancePreferredNeighborhoods.remove(neighborhood)
+
+                            parentViewModel.onAssistanceFormChange(
+                                form.copy(preferredNeighborhoods = newPreferredNeighborhoods)
+                            )
+                        },
+                        formErrors = formErrors.errors,
+                        scrollToFieldFlow = scrollToFieldFlow,
+                        onNext = {
+                            focusManager.clearFocus()
+
+                            stepViewModel.validateAssistanceStep1(assistanceForm = form)
+                        },
                         modifier = Modifier
-                            .size(64.dp)
+                            .padding(innerPadding)
                     )
                 }
-            } else {
-                AssistanceRegistrationFormSectionStep1(
-                    assistanceForm = assistanceForm,
-                    onAssistanceFormChange = { newAssistance ->
-                        parentViewModel.onAssistanceFormChange(newAssistance)
-                        stepViewModel.onAssistanceFormChange(newAssistance, assistanceForm)
-                    },
-                    onAddSearchedNeighborhood = {
-                        stepViewModel.onSearchedNeighborhoodFormChange(form = AssistanceSearchedNeighborhood())
-                        isRegisteringNewSearchedNeighborhood = true
-                    },
-                    onEditSearchedNeighborhood = { searchedNeighborhood ->
-                        stepViewModel.onSearchedNeighborhoodFormChange(form = searchedNeighborhood)
-                        searchedNeighborhoodFormBeforeEdit = searchedNeighborhood
-                    },
-                    onDeleteSearchedNeighborhood = { searchedNeighborhood ->
-                        val assistanceSearchedNeighborhoods =
-                            assistanceForm.searchedNeighborhoods.toPersistentList()
-
-                        val newAssistanceSearchedNeighborhoods =
-                            if (searchedNeighborhood.id == null) {
-                                assistanceSearchedNeighborhoods.remove(searchedNeighborhood)
-                            } else {
-                                assistanceSearchedNeighborhoods.mutate {
-                                    val i = assistanceSearchedNeighborhoods
-                                        .indexOf(searchedNeighborhood)
-                                    it[i] = searchedNeighborhood.copy(isDeleted = true)
-                                }
-                            }
-
-                        parentViewModel.onAssistanceFormChange(
-                            assistanceForm.copy(searchedNeighborhoods = newAssistanceSearchedNeighborhoods)
-                        )
-                    },
-                    seaProximityTypes = seaProximityTypes,
-                    assistancePropertyCharacteristics = assistancePropertyCharacteristics,
-                    formErrors = formErrors.errors,
-                    scrollToFieldFlow = scrollToFieldFlow,
-                    onNext = {
-                        focusManager.clearFocus()
-
-                        stepViewModel.validateAssistanceStep1(
-                            assistanceForm = assistanceForm,
-                        )
-                    },
-                    modifier = Modifier
-                        .padding(innerPadding)
-                )
             }
         }
-        if (searchedNeighborhoodForm != null) {
-            AssistanceSearchedNeighborhoodRegistrationDialog(
-                searchedNeighborhoodForm = searchedNeighborhoodForm!!,
-                onSearchedNeighborhoodFormChange = stepViewModel::onSearchedNeighborhoodFormChange,
+
+        if (neighborhoodForm != null && loadedDraftForm != null) {
+            AssistancePreferredNeighborhoodRegistrationDialog(
+                neighborhood = neighborhoodForm!!,
+                onNeighborhoodChange = stepViewModel::onNeighborhoodChange,
                 pastNeighborhoods = pastNeighborhoods,
-                error = searchedNeighborhoodErrors.errors[AssistanceNeighborhoodField.Neighborhood],
-                isEditing = searchedNeighborhoodForm!!.id != null,
-                onSave = stepViewModel::saveSearchedNeighborhood,
+                error = neighborhoodFormError,
+                isEditing = neighborhoodForm in loadedDraftForm.preferredNeighborhoods,
+                onSave = stepViewModel::savePreferredNeighborhood,
                 onCancel = {
-                    stepViewModel.clearSearchedNeighborhoodErrors()
-                    stepViewModel.onSearchedNeighborhoodFormChange(form = null)
+                    stepViewModel.clearPreferredNeighborhoodErrors()
+                    stepViewModel.onNeighborhoodChange(neighborhood = null)
                 },
             )
         }
+
         if (mustShowConfirmLeaveRegistrationDialog) {
             ConfirmLeaveRegistrationDialog(
                 isEditing = parentViewModel.assistanceId != null,

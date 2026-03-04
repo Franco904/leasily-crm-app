@@ -6,5 +6,6 @@ enum class ApplicationError : SystemError {
     NoInternet,
     Timeout,
     Unauthorized,
+    Inconsistency,
     Unknown,
 }

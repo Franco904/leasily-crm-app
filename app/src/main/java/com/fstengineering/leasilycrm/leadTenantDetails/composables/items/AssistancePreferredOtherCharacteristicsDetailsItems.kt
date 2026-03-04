@@ -23,8 +23,8 @@ fun AssistancePreferredOtherCharacteristicsDetailsItems(
     assistancePropertyCharacteristics: ImmutableList<AssistanceCharacteristic>,
     modifier: Modifier = Modifier,
 ) {
-    val checkedCharacteristics = remember(assistance.characteristics) {
-        assistance.characteristics
+    val checkedCharacteristics = remember(assistance.preferredPropertyCharacteristics) {
+        assistance.preferredPropertyCharacteristics
     }
 
     val notCheckedCharacteristics = remember(checkedCharacteristics) {

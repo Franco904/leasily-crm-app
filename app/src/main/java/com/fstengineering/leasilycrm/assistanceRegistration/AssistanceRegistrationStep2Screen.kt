@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.assistanceRegistration
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -22,11 +23,13 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationFormSectionStep2
-import com.fstengineering.leasilycrm.assistanceRegistration.composables.AssistanceRegistrationTopAppBar
-import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceRegistrationStep2ListState
+import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.BottomSheetError
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationFormSectionStep2
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationTopAppBar
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceRegistrationStep2ListState
 import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep2ViewModel
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
@@ -49,26 +52,21 @@ fun AssistanceRegistrationStep2Screen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val assistanceForm by parentViewModel.assistanceForm.collectAsStateWithLifecycle()
-
-    val isLoadingParent by parentViewModel.isLoading.collectAsStateWithLifecycle()
-    val isLoadingStep by stepViewModel.isLoading.collectAsStateWithLifecycle()
+    val draftForm by parentViewModel.draftForm.collectAsStateWithLifecycle()
+    val loadedDraftForm = draftForm as? AssistanceDraftFormUiState.Loaded
 
     val searchInput by stepViewModel.searchInput.collectAsStateWithLifecycle()
-    val selectableProperties by stepViewModel.selectableProperties.collectAsStateWithLifecycle()
+    val selectableProperties by stepViewModel.properties.collectAsStateWithLifecycle()
 
     var isAddingSentProperty by rememberSaveable { mutableStateOf(false) }
     var isSearchingPropertyToSend by rememberSaveable { mutableStateOf(false) }
     var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
 
     val listStatus = remember(
-        isLoadingParent,
-        isLoadingStep,
         isAddingSentProperty,
         selectableProperties,
     ) {
         when {
-            isLoadingParent || isLoadingStep -> AssistanceRegistrationStep2ListState.Loading
             !isAddingSentProperty -> AssistanceRegistrationStep2ListState.ShowingSelectedSentProperties
             selectableProperties.isEmpty() -> AssistanceRegistrationStep2ListState.Empty
             else -> AssistanceRegistrationStep2ListState.AddingSentProperties
@@ -81,7 +79,7 @@ fun AssistanceRegistrationStep2Screen(
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is Error -> {
+                    is BottomSheetError -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
@@ -124,8 +122,10 @@ fun AssistanceRegistrationStep2Screen(
     Scaffold(
         topBar = {
             Column {
+                if (loadedDraftForm == null) return@Scaffold
+
                 AssistanceRegistrationTopAppBar(
-                    leadTenantName = assistanceForm.tenant?.name ?: "",
+                    leadTenantName = loadedDraftForm.leadTenantName,
                     isAddingSentProperty = isAddingSentProperty,
                     mustShowSearchPropertyAction = isAddingSentProperty
                             && selectableProperties.isNotEmpty()
@@ -154,38 +154,48 @@ fun AssistanceRegistrationStep2Screen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) { innerPadding ->
-        AssistanceRegistrationFormSectionStep2(
-            listStatus = listStatus,
-            assistanceForm = assistanceForm,
-            selectableProperties = selectableProperties,
-            onAddSentProperty = { isAddingSentProperty = true },
-            isSearchingPropertyToSend = isSearchingPropertyToSend,
-            onBack = onBack,
-            onCancelPropertySelection = { isAddingSentProperty = false },
-            onNext = {
-                focusManager.clearFocus()
-                onNext()
-            },
-            onSelectProperties = { selectedSentProperties ->
-                parentViewModel.onAssistanceFormChange(
-                    assistanceForm.copy(sentProperties = selectedSentProperties)
-                )
+        AnimatedContent(targetState = draftForm) { form ->
+            when (form) {
+                is AssistanceDraftFormUiState.Loading -> {
+                    FullScreenLoadingIndicator(innerPadding)
+                }
 
-                isAddingSentProperty = false
-            },
-            modifier = Modifier
-                .padding(innerPadding)
-        )
-    }
-    if (mustShowConfirmLeaveRegistrationDialog) {
-        ConfirmLeaveRegistrationDialog(
-            isEditing = parentViewModel.assistanceId != null,
-            onConfirmLeave = {
-                mustShowConfirmLeaveRegistrationDialog = false
+                is AssistanceDraftFormUiState.Loaded -> {
+                    AssistanceRegistrationFormSectionStep2(
+                        listStatus = listStatus,
+                        assistanceForm = form,
+                        selectableProperties = selectableProperties,
+                        onAddSentProperty = { isAddingSentProperty = true },
+                        isSearchingPropertyToSend = isSearchingPropertyToSend,
+                        onBack = onBack,
+                        onCancelPropertySelection = { isAddingSentProperty = false },
+                        onNext = {
+                            focusManager.clearFocus()
+                            onNext()
+                        },
+                        onSelectProperties = { selectedSentProperties ->
+                            val newForm = form.copy(sentProperties = selectedSentProperties)
+                            parentViewModel.onAssistanceFormChange(newForm)
 
-                onLeaveRegistration()
-            },
-            onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
-        )
+                            isAddingSentProperty = false
+                        },
+                        modifier = Modifier
+                            .padding(innerPadding)
+                    )
+                }
+            }
+        }
+
+        if (mustShowConfirmLeaveRegistrationDialog) {
+            ConfirmLeaveRegistrationDialog(
+                isEditing = parentViewModel.assistanceId != null,
+                onConfirmLeave = {
+                    mustShowConfirmLeaveRegistrationDialog = false
+
+                    onLeaveRegistration()
+                },
+                onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
+            )
+        }
     }
 }

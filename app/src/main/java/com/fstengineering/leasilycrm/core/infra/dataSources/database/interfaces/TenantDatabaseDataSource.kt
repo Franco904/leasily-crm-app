@@ -13,6 +13,8 @@ interface TenantDatabaseDataSource {
 
     suspend fun getById(id: Long): AppResult<TenantCompound?, InfraError>
 
+    suspend fun getNameById(id: Long): AppResult<String?, InfraError>
+
     suspend fun getAllLeadsMatching(
         matching: String?,
         order: Int,
@@ -27,8 +29,6 @@ interface TenantDatabaseDataSource {
         matching: String?,
         currentTenantId: Long?,
     ): AppResult<List<TenantCompound>, InfraError>
-
-    suspend fun getNameById(id: Long): AppResult<String, InfraError>
 
     suspend fun getAllTagNames(): AppResult<List<String>, InfraError>
 

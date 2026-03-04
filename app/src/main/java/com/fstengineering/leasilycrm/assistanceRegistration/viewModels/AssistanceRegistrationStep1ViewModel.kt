@@ -2,15 +2,14 @@ package com.fstengineering.leasilycrm.assistanceRegistration.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceSearchedNeighborhoodErrorUiState
-import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceStep1ErrorUiState
-import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceNeighborhoodField
-import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceStep1Field
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceStep1ErrorUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceStep1Field
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onErrors
-import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceSearchedNeighborhoodValidator
+import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Neighborhood
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
@@ -29,20 +28,19 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
     private val _formErrors = MutableStateFlow(AssistanceStep1ErrorUiState())
     val formErrors = _formErrors.asStateFlow()
 
-    private val _searchedNeighborhoodForm = MutableStateFlow<AssistanceSearchedNeighborhood?>(null)
-    val searchedNeighborhoodForm = _searchedNeighborhoodForm.asStateFlow()
+    private val _neighborhoodForm = MutableStateFlow<String?>(null)
+    val neighborhoodForm = _neighborhoodForm.asStateFlow()
 
-    private val _searchedNeighborhoodErrors =
-        MutableStateFlow(AssistanceSearchedNeighborhoodErrorUiState())
-    val searchedNeighborhoodErrors = _searchedNeighborhoodErrors.asStateFlow()
+    private val _neighborhoodFormError = MutableStateFlow<Int?>(null)
+    val neighborhoodFormError = _neighborhoodFormError.asStateFlow()
 
     fun onAssistanceFormChange(
-        assistanceForm: Assistance,
-        form: Assistance,
+        newForm: AssistanceDraftFormUiState.Loaded,
+        oldForm: AssistanceDraftFormUiState.Loaded,
     ) {
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                if (assistanceForm.distanceToSea != form.distanceToSea) {
+                if (oldForm.preferredDistanceToSea != newForm.preferredDistanceToSea) {
                     map[AssistanceStep1Field.DistanceToSea] = null
                 }
             }
@@ -51,15 +49,11 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
         }
     }
 
-    fun onSearchedNeighborhoodFormChange(
-        form: AssistanceSearchedNeighborhood?,
-    ) {
-        _searchedNeighborhoodForm.update { form }
+    fun onNeighborhoodChange(neighborhood: String?) {
+        _neighborhoodForm.update { neighborhood }
     }
 
-    fun validateAssistanceStep1(
-        assistanceForm: Assistance,
-    ) {
+    fun validateAssistanceStep1(assistanceForm: AssistanceDraftFormUiState.Loaded) {
         viewModelScope.launch {
             assistanceValidator.validate(assistance = assistanceForm)
                 .onErrors { errors ->
@@ -71,34 +65,23 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
         }
     }
 
-    fun saveSearchedNeighborhood() {
+    fun savePreferredNeighborhood() {
         viewModelScope.launch {
-            val newSearchedNeighborhood = searchedNeighborhoodForm.value ?: return@launch
+            val newNeighborhood = neighborhoodForm.value ?: return@launch
 
-            assistanceSearchedNeighborhoodValidator.validate(newSearchedNeighborhood)
-                .onErrors { errors ->
-                    val nameError =
-                        errors.firstOrNull { it is DomainError.AssistanceSearchedNeighborhoodName }
+            val validationResult = Neighborhood.parse(newNeighborhood)
 
-                    _searchedNeighborhoodErrors.update {
-                        val newErrors = it.errors.mutate { map ->
-                            map[AssistanceNeighborhoodField.Neighborhood] =
-                                nameError?.toInlineMessage()
-                        }
-
-                        it.copy(errors = newErrors)
-                    }
-
-                    return@launch
+            validationResult
+                .onError { e -> _neighborhoodFormError.update { e.toInlineMessage() } }
+                .onSuccess {
+                    clearPreferredNeighborhoodErrors()
+                    _uiEvents.send(UiEvents.AssistanceSearchedNeighborhoodSaveSuccess)
                 }
-
-            clearSearchedNeighborhoodErrors()
-            _uiEvents.send(UiEvents.AssistanceSearchedNeighborhoodSaveSuccess)
         }
     }
 
-    fun clearSearchedNeighborhoodErrors() {
-        _searchedNeighborhoodErrors.update { AssistanceSearchedNeighborhoodErrorUiState() }
+    fun clearPreferredNeighborhoodErrors() {
+        _neighborhoodFormError.update { null }
     }
 
     private suspend fun setFieldErrors(errors: List<DomainError>) {
@@ -106,7 +89,7 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
         delay(150.milliseconds)
 
         val propertyDistanceToSeaError =
-            errors.firstOrNull { it is DomainError.PropertyDistanceToSea }
+            errors.firstOrNull { it is DomainError.PropertySeaProximity }
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->

@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyCharacteristicCrossRef
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic

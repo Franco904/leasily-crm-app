@@ -8,12 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
 
 @Composable
 fun AssistanceSearchedNeighborhoodsDetailsItem(
-    searchedNeighborhoods: List<AssistanceSearchedNeighborhood>,
+    searchedNeighborhoods: List<AssistancePreferredNeighborhood>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current

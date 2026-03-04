@@ -14,19 +14,18 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UseCas
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.proxies.RequireAuthUseCaseProxy
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.userCreciNumberUseCaseQualifier
-import com.fstengineering.leasilycrm.profile.application.models.UserWriteModel
-import com.fstengineering.leasilycrm.profile.application.useCases.UpdateUserCreciNumberUseCaseImpl
-import org.koin.core.qualifier.named
+import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
+import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    factory<UseCase<UserWriteModel, Unit>>(userCreciNumberUseCaseQualifier) {
-        UpdateUserCreciNumberUseCaseImpl(
+    factory<UseCase<UserCommandModel, Unit>>(userCreciNumberUseCaseQualifier) {
+        WriteUserUseCase(
             userRepository = get(),
         )
     }
 
-    factory<UseCase<UserWriteModel, Unit>> {
+    factory<UseCase<UserCommandModel, Unit>> {
         RequireAuthUseCaseProxy(
             delegate = get(userCreciNumberUseCaseQualifier),
             userSessionService = get()

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import kotlinx.coroutines.flow.Flow
@@ -53,6 +54,16 @@ interface PropertyDao {
     """
     )
     suspend fun getAllNeighborHoodNames(): List<String>
+
+    @Query(
+        """
+        SELECT * FROM properties
+        INNER JOIN assistance_sent_properties asp ON properties.id = asp.property_id
+        WHERE asp.assistance_id = :assistanceId
+        AND is_deleted = 0
+    """
+    )
+    suspend fun getAllSentInAssistance(assistanceId: Long): List<PropertyCompound>
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")

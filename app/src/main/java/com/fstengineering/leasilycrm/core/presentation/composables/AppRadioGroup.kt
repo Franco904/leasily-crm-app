@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun AppRadioGroup(
-    radioOptions: ImmutableList<AppRadioOption>,
-    selectedOptionLabel: String?,
-    onOptionSelected: (String) -> Unit,
+fun <T> AppRadioGroup(
+    radioOptions: ImmutableList<AppRadioOption<T>>,
+    selectedOptionLabel: T?,
+    onOptionSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
     groupTitle: String? = null,
     supportingText: String? = null,
@@ -43,32 +43,34 @@ fun AppRadioGroup(
             modifier = Modifier
                 .selectableGroup()
         ) {
-            radioOptions.forEachIndexed { i, option ->
-                if (i > 0) Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .selectable(
-                            selected = option.label == selectedOptionLabel,
-                            onClick = { onOptionSelected(option.label) },
-                            role = Role.RadioButton,
-                        )
-                ) {
-                    RadioButton(
-                        selected = option.label == selectedOptionLabel,
-                        onClick = null,
-                    )
-                    Text(
-                        text = option.label,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
+            radioOptions
+                .sorted()
+                .forEachIndexed { i, option ->
+                    if (i > 0) Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(start = 8.dp)
-                    )
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = option == selectedOptionLabel,
+                                onClick = { onOptionSelected(option.type) },
+                                role = Role.RadioButton,
+                            )
+                    ) {
+                        RadioButton(
+                            selected = option.type == selectedOptionLabel,
+                            onClick = null,
+                        )
+                        Text(
+                            text = option.label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                        )
+                    }
+                    option.contentOnCheck?.invoke()
                 }
-                option.relatedContent?.invoke()
-            }
             if (supportingText != null) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -84,7 +86,12 @@ fun AppRadioGroup(
     }
 }
 
-data class AppRadioOption(
+data class AppRadioOption<T>(
+    val type: T,
     val label: String,
-    val relatedContent: (@Composable () -> Unit)? = null,
-)
+    val contentOnCheck: (@Composable () -> Unit)? = null,
+) : Comparable<AppRadioOption<T>> {
+    override fun compareTo(other: AppRadioOption<T>): Int {
+        return label.compareTo(other.label)
+    }
+}

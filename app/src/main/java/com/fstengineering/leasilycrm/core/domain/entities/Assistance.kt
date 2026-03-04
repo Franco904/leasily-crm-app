@@ -3,30 +3,35 @@ package com.fstengineering.leasilycrm.core.domain.entities
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistanceGuestsCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistancePreferredFeaturesCount
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistanceSearchedPeriod
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistancePreferredPeriod
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Neighborhood
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 class Assistance private constructor(
     val id: Long?,
     val createDateTime: AppDateTime?,
     val updateDateTime: AppDateTime?,
-    val searchedPeriod: AssistanceSearchedPeriod?,
+    val preferredPeriod: AssistancePreferredPeriod?,
     val hasFlexibilityForPeriod: Boolean,
     val maxAcceptedNightlyRate: AppDecimal?,
     val guestsCount: AssistanceGuestsCount,
     val preferredFeaturesCount: AssistancePreferredFeaturesCount,
-    val seaProximityType: PropertySeaProximityType?,
-    val isFinished: Boolean,
-    val searchedNeighborhoods: ImmutableList<AssistanceSearchedNeighborhood>,
-    val characteristics: ImmutableList<AssistancePropertyCharacteristic>,
+    val preferredSeaProximityType: PropertySeaProximityType?,
+    val preferredNeighborhoods: ImmutableList<Neighborhood>,
+    val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
     val observations: String?,
-    val sentProperties: ImmutableList<AssistanceSentProperty>,
+    val sentPropertiesIds: ImmutableList<Long>,
     val interactions: ImmutableList<AssistanceInteraction>,
     val tenantId: Long,
+    val isFinished: Boolean,
     val inconsistencies: ImmutableList<DomainError>,
     val contractVersion: Int,
 ) {
@@ -38,38 +43,38 @@ class Assistance private constructor(
         id: Long? = this.id,
         createDateTime: AppDateTime? = this.createDateTime,
         updateDateTime: AppDateTime? = this.updateDateTime,
-        searchedPeriod: AssistanceSearchedPeriod? = this.searchedPeriod,
+        searchedPeriod: AssistancePreferredPeriod? = this.preferredPeriod,
         hasFlexibilityForPeriod: Boolean = this.hasFlexibilityForPeriod,
         maxAcceptedNightlyRate: AppDecimal? = this.maxAcceptedNightlyRate,
         guestsCount: AssistanceGuestsCount = this.guestsCount,
         preferredFeaturesCount: AssistancePreferredFeaturesCount = this.preferredFeaturesCount,
-        seaProximityType: PropertySeaProximityType? = this.seaProximityType,
-        isFinished: Boolean = this.isFinished,
-        searchedNeighborhoods: ImmutableList<AssistanceSearchedNeighborhood> = this.searchedNeighborhoods,
-        characteristics: ImmutableList<AssistancePropertyCharacteristic> = this.characteristics,
+        preferredSeaProximityType: PropertySeaProximityType? = this.preferredSeaProximityType,
+        preferredNeighborhoods: ImmutableList<Neighborhood> = this.preferredNeighborhoods,
+        preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic> = this.preferredPropertyCharacteristics,
         observations: String? = this.observations,
-        sentProperties: ImmutableList<AssistanceSentProperty> = this.sentProperties,
+        sentPropertiesIds: ImmutableList<Long> = this.sentPropertiesIds,
         interactions: ImmutableList<AssistanceInteraction> = this.interactions,
         tenantId: Long = this.tenantId,
+        isFinished: Boolean = this.isFinished,
         inconsistencies: ImmutableList<DomainError> = this.inconsistencies,
         contractVersion: Int = this.contractVersion,
     ) = Assistance(
         id = id,
         createDateTime = createDateTime,
         updateDateTime = updateDateTime,
-        searchedPeriod = searchedPeriod,
+        preferredPeriod = searchedPeriod,
         hasFlexibilityForPeriod = hasFlexibilityForPeriod,
         maxAcceptedNightlyRate = maxAcceptedNightlyRate,
         guestsCount = guestsCount,
         preferredFeaturesCount = preferredFeaturesCount,
-        seaProximityType = seaProximityType,
-        isFinished = isFinished,
-        searchedNeighborhoods = searchedNeighborhoods,
-        characteristics = characteristics,
+        preferredSeaProximityType = preferredSeaProximityType,
+        preferredNeighborhoods = preferredNeighborhoods,
+        preferredPropertyCharacteristics = preferredPropertyCharacteristics,
         observations = observations,
-        sentProperties = sentProperties,
+        sentPropertiesIds = sentPropertiesIds,
         interactions = interactions,
         tenantId = tenantId,
+        isFinished = isFinished,
         inconsistencies = inconsistencies,
         contractVersion = contractVersion,
     )
@@ -79,102 +84,94 @@ class Assistance private constructor(
             id: Long?,
             createDateTime: AppDateTime?,
             updateDateTime: AppDateTime?,
-            searchedStartDate: AppDate?,
-            searchedEndDate: AppDate?,
+            preferredStartDate: AppDate?,
+            preferredEndDate: AppDate?,
             hasFlexibilityForPeriod: Boolean,
             maxAcceptedNightlyRate: AppDecimal?,
-            adults: Int,
-            kids: Int,
-            babies: Int,
-            animals: Int,
-            bedrooms: Int,
-            enSuites: Int,
-            doubleBeds: Int,
-            singleBeds: Int,
-            bathrooms: Int,
-            parkingSpots: Int,
-            seaProximityTypeId: Long?,
-            distanceToSea: AppDecimal?,
-            isFinished: Boolean,
-            searchedNeighborhoods: ImmutableList<AssistanceSearchedNeighborhood>,
-            characteristics: ImmutableList<AssistancePropertyCharacteristic>,
+            adultsCount: Int,
+            kidsCount: Int,
+            babiesCount: Int,
+            animalsCount: Int,
+            bedroomsCount: Int,
+            enSuitesCount: Int,
+            doubleBedsCount: Int,
+            singleBedsCount: Int,
+            bathroomsCount: Int,
+            parkingSpotsCount: Int,
+            preferredSeaProximityTypeId: Long?,
+            preferredDistanceToSea: AppDecimal?,
+            preferredNeighborhoods: ImmutableList<Neighborhood>,
+            preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
             observations: String?,
-            sentProperties: ImmutableList<AssistanceSentProperty>,
+            sentPropertiesIds: ImmutableList<Long>,
             interactions: ImmutableList<AssistanceInteraction>,
-            tenantId: Long,
+            tenantId: Long?,
+            isFinished: Boolean,
             inconsistencies: ImmutableList<DomainError>,
             contractVersion: Int,
-        ): Assistance {
-            val searchedPeriod =
-                if (searchedStartDate == null && searchedEndDate == null) null else {
-                    AssistanceSearchedPeriod.parse(
-                        startDate = searchedStartDate,
-                        endDate = searchedEndDate,
-                    )
-                }
+        ): AppResultCompound<Assistance, DomainError> {
+            val errors = persistentListOf<DomainError>()
 
-            val guestsCount = AssistanceGuestsCount.parse(
-                adults = adults,
-                kids = kids,
-                babies = babies,
-                animals = animals,
-            )
-
-            val preferredFeaturesCount = AssistancePreferredFeaturesCount.parse(
-                bedrooms = bedrooms,
-                enSuites = enSuites,
-                doubleBeds = doubleBeds,
-                singleBeds = singleBeds,
-                bathrooms = bathrooms,
-                parkingSpots = parkingSpots,
-            )
-
-            val seaProximityType = seaProximityTypeId?.let {
-                PropertySeaProximityType.parse(it, distanceToSea = distanceToSea)
+            val tenantId = tenantId ?: run {
+                errors.add(DomainError.Assistance.TenantRequired); null
             }
 
-            return Assistance(
+            val isPeriodNull = preferredStartDate == null && preferredEndDate == null
+            val preferredPeriod = if (isPeriodNull) null else {
+                AssistancePreferredPeriod.parse(
+                    startDate = preferredStartDate,
+                    endDate = preferredEndDate,
+                )
+                    .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+            }
+
+            val guestsCount = AssistanceGuestsCount.parse(
+                adultsCount = adultsCount,
+                kidsCount = kidsCount,
+                babiesCount = babiesCount,
+                animalsCount = animalsCount,
+            )
+                .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+
+            val preferredFeaturesCount = AssistancePreferredFeaturesCount.parse(
+                bedroomsCount = bedroomsCount,
+                enSuitesCount = enSuitesCount,
+                doubleBedsCount = doubleBedsCount,
+                singleBedsCount = singleBedsCount,
+                bathroomsCount = bathroomsCount,
+                parkingSpotsCount = parkingSpotsCount,
+            )
+                .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+
+            val preferredSeaProximityType = preferredSeaProximityTypeId?.let { typeId ->
+                PropertySeaProximityType.parse(typeId, distanceToSea = preferredDistanceToSea)
+                    .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+            }
+
+            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+
+            val parsed = Assistance(
                 id = id,
                 createDateTime = createDateTime,
                 updateDateTime = updateDateTime,
-                searchedPeriod = searchedPeriod,
+                preferredPeriod = preferredPeriod,
                 hasFlexibilityForPeriod = hasFlexibilityForPeriod,
                 maxAcceptedNightlyRate = maxAcceptedNightlyRate,
-                guestsCount = guestsCount,
-                preferredFeaturesCount = preferredFeaturesCount,
-                seaProximityType = seaProximityType,
+                guestsCount = requireNotNull(guestsCount),
+                preferredFeaturesCount = requireNotNull(preferredFeaturesCount),
+                preferredSeaProximityType = preferredSeaProximityType,
                 isFinished = isFinished,
-                searchedNeighborhoods = searchedNeighborhoods,
-                characteristics = characteristics,
+                preferredNeighborhoods = preferredNeighborhoods,
+                preferredPropertyCharacteristics = preferredPropertyCharacteristics,
                 observations = observations,
-                sentProperties = sentProperties,
+                sentPropertiesIds = sentPropertiesIds,
                 interactions = interactions,
-                tenantId = tenantId,
+                tenantId = requireNotNull(tenantId),
                 inconsistencies = inconsistencies,
                 contractVersion = contractVersion,
             )
+
+            return AppResultCompound.Success(data = parsed)
         }
     }
 }
-
-//val isAnyFormFieldInitialized = searchedStartDate != null
-//        || searchedEndDate != null
-//        || hasFlexibilityForPeriod
-//        || maxAcceptedNightlyRate != null
-//        || qtAdultGuests > 0
-//        || qtKidGuests > 0
-//        || qtBabyGuests > 0
-//        || qtAnimalGuests > 0
-//        || qtBedrooms > 0
-//        || qtEnSuites > 0
-//        || qtDoubleBeds > 0
-//        || qtSingleBeds > 0
-//        || qtBathrooms > 0
-//        || qtParkingSpots > 0
-//        || seaProximityType != null
-//        || distanceToSea != null
-//        || searchedNeighborhoods != null
-//        || characteristics != null
-//        || observations != null
-//        || sentProperties != null
-//        || interactions != null

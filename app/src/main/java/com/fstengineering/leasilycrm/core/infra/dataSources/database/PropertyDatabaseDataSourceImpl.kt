@@ -29,8 +29,14 @@ class PropertyDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getAllMatching(matching) }
     }
 
-    override suspend fun getAllNeighborHoodNames(): AppResult<List<String>, InfraError> {
+    override suspend fun getAllNeighborHoodNames(): AppResult<List<PropertyCompound>, InfraError> {
         return onDatabaseSafe { dao.getAllNeighborHoodNames() }
+    }
+
+    override suspend fun getAllSentInAssistance(
+        assistanceId: Long,
+    ): AppResult<List<String>, InfraError> {
+        return onDatabaseSafe { dao.getAllSentInAssistance(assistanceId) }
     }
 
     override fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, InfraError> {

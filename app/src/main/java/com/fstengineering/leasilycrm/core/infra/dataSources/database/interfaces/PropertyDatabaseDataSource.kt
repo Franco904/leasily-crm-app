@@ -19,6 +19,8 @@ interface PropertyDatabaseDataSource {
 
     suspend fun getAllNeighborHoodNames(): AppResult<List<String>, InfraError>
 
+    suspend fun getAllSentInAssistance(assistanceId: Long): AppResult<List<PropertyCompound>, InfraError>
+
     fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, InfraError>
 
     fun watchAll(): AppResult<Flow<List<PropertyCompound>>, InfraError>

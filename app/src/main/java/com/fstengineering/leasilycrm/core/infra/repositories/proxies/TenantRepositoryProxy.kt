@@ -30,6 +30,10 @@ class TenantRepositoryProxy(
             .onSuccess { tenant -> tenantInMemoryDataSource.putTenant(tenant) }
     }
 
+    override suspend fun getNameById(tenantId: Long): AppResult<String, ApplicationError> {
+        return tenantRepository.getNameById(tenantId)
+    }
+
     override suspend fun getAllLeadsMatching(
         matching: String?,
         orderTypeId: Int

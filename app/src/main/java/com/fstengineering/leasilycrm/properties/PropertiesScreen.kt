@@ -215,7 +215,7 @@ fun PropertiesScreen(
                             contentType = { _, entryType -> entryType },
                         ) { _, property ->
                             PropertyCard(
-                                property = property,
+                                propertyDetails = property,
                                 onCardClick = { onViewPropertyDashboard(property.id!!) },
                                 onViewPropertyDetails = { onViewPropertyDetails(property.id!!) },
                                 onEditProperty = { onRegisterProperty(property.id) },

@@ -4,20 +4,22 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.fstengineering.leasilycrm.core.domain.entities.Assistance
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
-import com.fstengineering.leasilycrm.core.domain.entities.AssistancePropertyCharacteristic
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSearchedNeighborhood
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceSentProperty
+import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Neighborhood
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSearchedNeighborhoodEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 data class AssistanceCompound(
     @Embedded val assistance: AssistanceEntity,
@@ -30,15 +32,15 @@ data class AssistanceCompound(
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",
-        entity = AssistanceSearchedNeighborhoodEntity::class,
+        entity = AssistancePreferredNeighborhoodEntity::class,
     )
-    val searchedNeighborhoods: List<AssistanceSearchedNeighborhoodEntity>,
+    val preferredNeighborhoods: List<AssistancePreferredNeighborhoodEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",
         entity = AssistancePropertyCharacteristicCrossRefEntity::class
     )
-    val checkedCharacteristics: List<AssistancePropertyCharacteristicCrossRefEntity>,
+    val preferredPropertyCharacteristics: List<AssistancePropertyCharacteristicCrossRefEntity>,
     @Relation(
         parentColumn = "id",
         entity = PropertyEntity::class,
@@ -63,80 +65,77 @@ data class AssistanceCompound(
     )
     val interactions: List<AssistanceInteractionEntity>,
 ) {
-    private val activeSearchedNeighborhoods: List<AssistanceSearchedNeighborhood>
-        get() = searchedNeighborhoods
-            .filter { !it.isDeleted }
-            .map { it.toDomain() }
-
-    private val activeCharacteristics: List<AssistancePropertyCharacteristic>
+    private val sentPropertiesIds: ImmutableList<Long>
         get() {
-            val activeCharacteristicIds = checkedCharacteristics
-                .filter { !it.isDeleted }
-                .map { it.propertyCharacteristicId }
-                .toSet()
-
-            return activeCharacteristicIds.map { activeCharacteristicId ->
-                val characteristic = PropertyCharacteristic.parse(activeCharacteristicId)
-
-                AssistancePropertyCharacteristic(
-                    propertyCharacteristic = characteristic,
-                    createDateTime = assistance.createDateTime,
-                    updateDateTime = assistance.updateDateTime,
-                )
-            }
-        }
-
-    private val activeSentProperties: List<AssistanceSentProperty>
-        get() {
-            val activeSentPropertyIds = checkedSentProperties
-                .filter { !it.isDeleted }
+            return checkedSentProperties
                 .map { it.propertyId }
                 .toSet()
-
-            return activeSentPropertyIds.map { activeSentPropertyId ->
-                val sentProperty = allSentProperties.find { it.property.id == activeSentPropertyId }
-
-                AssistanceSentProperty(
-                    property = requireNotNull(sentProperty).toDomain(),
-                    createDateTime = assistance.createDateTime,
-                    updateDateTime = assistance.updateDateTime,
-                )
-            }
+                .mapNotNull { activeSentPropertyId ->
+                    allSentProperties.find { it.property.id == activeSentPropertyId }?.property?.id
+                }
+                .toImmutableList()
         }
 
-    private val activeInteractions: List<AssistanceInteraction>
-        get() = interactions
-            .filter { !it.isDeleted }
-            .map { it.toDomain() }
+    fun toDomain(): AppResultCompound<Assistance, DomainError> {
+        val errors = persistentListOf<DomainError>()
 
-    fun toDomain() = Assistance.parse(
-        id = assistance.id,
-        createDateTime = assistance.createDateTime,
-        updateDateTime = assistance.updateDateTime,
-        searchedStartDate = assistance.searchedStartDate,
-        searchedEndDate = assistance.searchedEndDate,
-        hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,
-        maxAcceptedNightlyRate = assistance.maxAcceptedNightlyRate,
-        adults = assistance.adults,
-        kids = assistance.kids,
-        babies = assistance.babies,
-        animals = assistance.animals,
-        bedrooms = assistance.bedrooms,
-        enSuites = assistance.enSuites,
-        doubleBeds = assistance.doubleBeds,
-        singleBeds = assistance.singleBeds,
-        bathrooms = assistance.bathrooms,
-        parkingSpots = assistance.parkingSpots,
-        seaProximityTypeId = assistance.propertySeaProximityTypeId,
-        distanceToSea = assistance.distanceToSea,
-        observations = assistance.observations,
-        isFinished = assistance.isFinished,
-        tenantId = requireNotNull(tenant.id),
-        searchedNeighborhoods = activeSearchedNeighborhoods.toImmutableList(),
-        characteristics = activeCharacteristics.toImmutableList(),
-        sentProperties = activeSentProperties.toImmutableList(),
-        interactions = activeInteractions.toImmutableList(),
-        inconsistencies = persistentListOf(), // assistance.inconsistencies,
-        contractVersion = assistance.contractVersion,
-    )
+        val preferredNeighborhoods = preferredNeighborhoods
+            .mapNotNull { neighborhood ->
+                Neighborhood.parse(neighborhood.neighborhood)
+                    .fold(onError = { errors.add(it); null }, onSuccess = { it })
+            }
+            .toImmutableList()
+
+        val preferredCharacteristicIds = preferredPropertyCharacteristics
+            .map { it.propertyCharacteristicId }
+            .toSet()
+            .mapNotNull { propertyCharacteristicId ->
+                PropertyCharacteristic.parse(propertyCharacteristicId)
+                    .fold(onError = { errors.add(it); null }, onSuccess = { it })
+            }
+            .toImmutableList()
+
+        val interactions = interactions
+            .mapNotNull { interaction ->
+                interaction.toDomain()
+                    .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+            }
+            .toPersistentList()
+
+        val parsed = Assistance.parse(
+            id = assistance.id,
+            createDateTime = assistance.createDateTime,
+            updateDateTime = assistance.updateDateTime,
+            preferredStartDate = assistance.searchedStartDate,
+            preferredEndDate = assistance.searchedEndDate,
+            hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,
+            maxAcceptedNightlyRate = assistance.maxAcceptedNightlyRate,
+            adultsCount = assistance.adults,
+            kidsCount = assistance.kids,
+            babiesCount = assistance.babies,
+            animalsCount = assistance.animals,
+            bedroomsCount = assistance.bedrooms,
+            enSuitesCount = assistance.enSuites,
+            doubleBedsCount = assistance.doubleBeds,
+            singleBedsCount = assistance.singleBeds,
+            bathroomsCount = assistance.bathrooms,
+            parkingSpotsCount = assistance.parkingSpots,
+            preferredSeaProximityTypeId = assistance.propertySeaProximityTypeId,
+            preferredDistanceToSea = assistance.distanceToSea,
+            observations = assistance.observations,
+            isFinished = assistance.isFinished,
+            tenantId = requireNotNull(tenant.id),
+            preferredNeighborhoods = preferredNeighborhoods,
+            preferredPropertyCharacteristics = preferredCharacteristicIds,
+            sentPropertiesIds = sentPropertiesIds,
+            interactions = interactions,
+            inconsistencies = persistentListOf(),
+            contractVersion = assistance.contractVersion,
+        )
+            .fold(onErrors = { errors.addAll(0, it); null }, onSuccess = { it })
+
+        if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+
+        return AppResultCompound.Success(data = requireNotNull(parsed))
+    }
 }

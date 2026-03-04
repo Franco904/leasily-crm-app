@@ -76,7 +76,7 @@ interface TenantDao {
     ): List<TenantCompound>
 
     @Query("SELECT name FROM tenants_read_view WHERE id = :id AND is_deleted = 0")
-    suspend fun getNameById(id: Long): String
+    suspend fun getNameById(id: Long): String?
 
     @Query(
         """

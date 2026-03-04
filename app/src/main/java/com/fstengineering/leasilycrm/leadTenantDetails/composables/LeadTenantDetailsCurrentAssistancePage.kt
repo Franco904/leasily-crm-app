@@ -118,12 +118,12 @@ fun LeadTenantDetailsCurrentAssistancePage(
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(24.dp))
                 PreferredSeaProximityTypeDetailsItem(
-                    seaProximityType = currentAssistance.seaProximityType,
+                    seaProximityType = currentAssistance.preferredSeaProximityType,
                     distanceToSea = currentAssistance.distanceToSea,
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 AssistanceSearchedNeighborhoodsDetailsItem(
-                    searchedNeighborhoods = currentAssistance.searchedNeighborhoods,
+                    searchedNeighborhoods = currentAssistance.preferredNeighborhoods,
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()

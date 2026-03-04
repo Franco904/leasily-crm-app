@@ -7,9 +7,9 @@ private val INLINE_REQUIRED = R.string.inline_required
 private val INLINE_GENERIC_INVALID_DATA = R.string.inline_invalid_data
 
 fun DomainError.toInlineMessage() = when (this) {
-    DomainError.Assistance.SearchingPeriodRequired -> INLINE_REQUIRED
-    DomainError.Assistance.SearchingPeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
-    DomainError.Assistance.SearchingPeriodStartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
+    DomainError.Assistance.PreferredPeriodRequired -> INLINE_REQUIRED
+    DomainError.Assistance.PreferredPeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
+    DomainError.Assistance.PreferredPeriodStartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
     DomainError.Assistance.AdultGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
     DomainError.Assistance.KidsGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
     DomainError.Assistance.BabiesGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
@@ -20,7 +20,7 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.Assistance.SingleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
     DomainError.Assistance.BathroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
     DomainError.Assistance.ParkingSpotsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.SearchedNeighborhoodNameRequired -> INLINE_REQUIRED
+    DomainError.Assistance.PreferredNeighborhoodNameRequired -> INLINE_REQUIRED
     DomainError.Assistance.InteractionDateRequired -> INLINE_REQUIRED
     DomainError.Assistance.InteractionTitleRequired -> INLINE_REQUIRED
 

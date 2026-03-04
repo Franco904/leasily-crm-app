@@ -31,7 +31,7 @@ fun StayPropertyDetailsItem(
         Spacer(modifier = Modifier.height(16.dp))
         if (property != null) {
             PropertyCard(
-                property = property,
+                propertyDetails = property,
                 onCardClick = if (cameFromProperty) null else onViewPropertyDashboard,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,

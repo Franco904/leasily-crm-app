@@ -21,6 +21,10 @@ class TenantDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getById(id) }
     }
 
+    override suspend fun getNameById(id: Long): AppResult<String?, InfraError> {
+        return onDatabaseSafe { dao.getNameById(id) }
+    }
+
     override suspend fun getAllLeadsMatching(
         matching: String?,
         order: Int,
@@ -45,10 +49,6 @@ class TenantDatabaseDataSourceImpl(
                 currentTenantId = currentTenantId,
             )
         }
-    }
-
-    override suspend fun getNameById(id: Long): AppResult<String, InfraError> {
-        return onDatabaseSafe { dao.getNameById(id) }
     }
 
     override suspend fun getAllTagNames(): AppResult<List<String>, InfraError> {

@@ -2,13 +2,14 @@ package com.fstengineering.leasilycrm.assistanceRegistration.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,15 +28,12 @@ class AssistanceRegistrationStep2ViewModel(
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _selectableProperties =
-        MutableStateFlow<ImmutableList<Property>>(persistentListOf())
-    val selectableProperties = _selectableProperties.asStateFlow()
+    private val _properties =
+        MutableStateFlow<ImmutableList<PropertyCardDetailsUiState>>(persistentListOf())
+    val properties = _properties.asStateFlow()
 
     private val _searchInput = MutableStateFlow<String?>(null)
     val searchInput = _searchInput.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
 
     fun init() {
         if (isInitialized) return
@@ -47,14 +45,16 @@ class AssistanceRegistrationStep2ViewModel(
     }
 
     private fun getProperties() {
-        _isLoading.update { true }
-
         viewModelScope.launch {
             propertyRepository.getAll()
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { properties -> _selectableProperties.update { properties } }
+                .onSuccess { properties ->
+                    val uiStates = properties
+                        .map { PropertyCardDetailsUiState.fromDomain(it) }
+                        .toImmutableList()
 
-            _isLoading.update { false }
+                    _properties.update { uiStates }
+                }
         }
     }
 
@@ -64,13 +64,14 @@ class AssistanceRegistrationStep2ViewModel(
             searchInput
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
-                    _isLoading.update { true }
-
                     propertyRepository.getAllMatching(matching = searchInput)
                         .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                         .onSuccess { matchingProperties ->
-                            _selectableProperties.update { matchingProperties }
-                            _isLoading.update { false }
+                            val uiStates = matchingProperties
+                                .map { PropertyCardDetailsUiState.fromDomain(it) }
+                                .toImmutableList()
+
+                            _properties.update { uiStates }
                         }
                 }
         }
@@ -81,6 +82,6 @@ class AssistanceRegistrationStep2ViewModel(
     }
 
     sealed interface UiEvents {
-        data class Error(val error: InfraError) : UiEvents
+        data class Error(val error: ApplicationError) : UiEvents
     }
 }

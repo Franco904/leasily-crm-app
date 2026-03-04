@@ -20,6 +20,8 @@ interface PropertyRepository {
 
     suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, ApplicationError>
 
+    suspend fun getAllSentInAssistance(assistanceId: Long): AppResult<ImmutableList<Property>, ApplicationError>
+
     fun watchById(propertyId: Long): Flow<AppResult<Property?, ApplicationError>>
 
     fun watchAll(): Flow<AppResult<ImmutableList<Property>, ApplicationError>>

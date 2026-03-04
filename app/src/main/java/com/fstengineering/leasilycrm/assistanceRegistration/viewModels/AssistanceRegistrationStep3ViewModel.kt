@@ -3,13 +3,13 @@ package com.fstengineering.leasilycrm.assistanceRegistration.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.assistanceRegistration.models.AssistanceInteractionErrorUiState
-import com.fstengineering.leasilycrm.assistanceRegistration.models.fields.AssistanceInteractionField
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionErrorUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceInteractionField
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
-import com.fstengineering.leasilycrm.core.domain.validators.interfaces.AssistanceInteractionValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
@@ -23,23 +23,27 @@ class AssistanceRegistrationStep3ViewModel : ViewModel() {
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _interactionForm = MutableStateFlow<AssistanceInteraction?>(null)
+    private val _interactionForm = MutableStateFlow<AssistanceInteractionDraftFormUiState?>(null)
     val interactionForm = _interactionForm.asStateFlow()
 
-    var interactionFormBeforeEdit: AssistanceInteraction? = null
+    var interactionFormBeforeEdit: AssistanceInteractionDraftFormUiState.Loaded? = null
 
     private val _formErrors = MutableStateFlow(AssistanceInteractionErrorUiState())
     val formErrors = _formErrors.asStateFlow()
 
-    fun onInteractionFormChange(
-        form: AssistanceInteraction?,
-    ) {
+    fun onOpenInteractionForm() {
+        _interactionForm.update { AssistanceInteractionDraftFormUiState.Loading }
+    }
+
+    fun onInteractionFormChange(newForm: AssistanceInteractionDraftFormUiState.Loaded) {
+        val form = interactionForm.value as? AssistanceInteractionDraftFormUiState.Loaded ?: return
+
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                if (interactionForm.value?.date != form?.date) {
-                    map[AssistanceInteractionField.InteractionDate] = null
+                if (form.date != newForm.date) {
+                    map[AssistanceInteractionField.Date] = null
                 }
-                if (interactionForm.value?.title != form?.title) {
+                if (form.title != newForm.title) {
                     map[AssistanceInteractionField.Title] = null
                 }
             }
@@ -47,48 +51,56 @@ class AssistanceRegistrationStep3ViewModel : ViewModel() {
             it.copy(errors = newErrors)
         }
 
-        _interactionForm.update { form }
+        _interactionForm.update { newForm }
     }
 
-    fun onEditInteraction(interaction: AssistanceInteraction) {
-        interactionFormBeforeEdit = interaction
-    }
-
-    fun onDismissInteraction() {
+    fun clearInteractionForm() {
+        _interactionForm.update { null }
+        _formErrors.update { AssistanceInteractionErrorUiState() }
         interactionFormBeforeEdit = null
     }
 
-    fun validateInteractionForm(
-        assistanceForm: Assistance,
-    ) {
+    fun onEditInteraction(interaction: AssistanceInteractionDraftFormUiState.Loaded) {
+        interactionFormBeforeEdit = interaction
+    }
+
+    fun validateInteractionForm(assistanceForm: AssistanceDraftFormUiState.Loaded) {
         clearErrors()
 
-        viewModelScope.launch {
-            val interactionFromForm = interactionForm.value ?: return@launch
-            val isEditing = interactionFormBeforeEdit != null
+        val interactionFromForm =
+            interactionForm.value as? AssistanceInteractionDraftFormUiState.Loaded ?: return
 
-            if (isEditing) {
-                val storedInteraction = assistanceForm.interactions
-                    .find { it == interactionFormBeforeEdit }
+        val isEditing = interactionFormBeforeEdit != null
 
-                if (interactionFromForm == storedInteraction) {
-                    _uiEvents.send(
-                        UiEvents.InteractionEditSuccess(messageId = R.string.no_data_changed_success_message)
-                    )
-                    return@launch
-                }
+        if (isEditing) {
+            val storedInteraction = assistanceForm.interactions
+                .find { it == interactionFormBeforeEdit }
+
+            if (interactionFromForm == storedInteraction) {
+                val msg = R.string.no_data_changed_success_message
+                _uiEvents.trySend(UiEvents.InteractionEditSuccess(messageId = msg))
+                return
             }
+        }
 
-            assistanceInteractionValidator.validate(interactionFromForm)
+        viewModelScope.launch {
+            val validationResults = AssistanceInteraction.parse(
+                id = interactionFromForm.id,
+                date = interactionFromForm.date,
+                title = interactionFromForm.title,
+                description = interactionFromForm.description,
+            )
+
+            validationResults
                 .onErrors { errors ->
                     val interactionDateError =
-                        errors.firstOrNull { it is DomainError.AssistanceInteractionDate }
+                        errors.firstOrNull { it == DomainError.Assistance.InteractionDateRequired }
                     val titleError =
-                        errors.firstOrNull { it is DomainError.AssistanceInteractionTitle }
+                        errors.firstOrNull { it == DomainError.Assistance.InteractionTitleRequired }
 
                     _formErrors.update {
                         val newErrors = it.errors.mutate { map ->
-                            map[AssistanceInteractionField.InteractionDate] =
+                            map[AssistanceInteractionField.Date] =
                                 interactionDateError?.toInlineMessage()
                             map[AssistanceInteractionField.Title] = titleError?.toInlineMessage()
                         }
@@ -103,11 +115,11 @@ class AssistanceRegistrationStep3ViewModel : ViewModel() {
                 if (isEditing) UiEvents.InteractionEditSuccess(messageId = R.string.edit_assistance_interaction_success_message)
                 else UiEvents.InteractionCreateSuccess
 
-            _uiEvents.send(saveEvent)
+            _uiEvents.trySend(saveEvent)
         }
     }
 
-    fun clearErrors() {
+    private fun clearErrors() {
         _formErrors.update { AssistanceInteractionErrorUiState() }
     }
 

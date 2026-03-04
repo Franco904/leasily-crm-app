@@ -1,7 +1,5 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
-fun <D, E : BaseError> AppResult<D, E>.hasError(): Boolean = this is AppResult.Error
-
 inline fun <D, E : BaseError> AppResult<D, E>.onSuccess(
     block: (D) -> Unit,
 ) = apply {

@@ -24,16 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
+import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionCardDetailsState
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun AssistanceInteractionCard(
-    interaction: AssistanceInteraction,
+    interaction: AssistanceInteractionCardDetailsState,
     onViewInteractionDetails: () -> Unit,
     modifier: Modifier = Modifier,
     onEditInteraction: () -> Unit = {},
@@ -74,7 +74,7 @@ fun AssistanceInteractionCard(
                     Text(
                         text = stringResource(
                             R.string.assistance_registration_interaction_registration_interaction_date_value,
-                            interaction.date!!.dayOfMonth.formatToTwoDigitsDateTime(),
+                            interaction.date.dayOfMonth.formatToTwoDigitsDateTime(),
                             interaction.date.month.formatToTwoDigitsDateTime(),
                             interaction.date.year,
                         ),
@@ -102,7 +102,7 @@ fun AssistanceInteractionCard(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = interaction.title!!,
+                    text = interaction.title,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier

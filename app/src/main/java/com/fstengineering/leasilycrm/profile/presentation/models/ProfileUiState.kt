@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueSt
 import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.Applicable
 
 sealed interface ProfileUiState {
-    data object Empty : ProfileUiState
+    data object Loading : ProfileUiState
 
     data class Loaded(
         val name: FieldValueState<String>,

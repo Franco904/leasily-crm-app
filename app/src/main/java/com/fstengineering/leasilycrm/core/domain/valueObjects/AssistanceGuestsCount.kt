@@ -1,38 +1,40 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onError
+import kotlinx.collections.immutable.persistentListOf
 
 class AssistanceGuestsCount private constructor(
-    val adults: Int,
-    val kids: Int,
-    val babies: Int,
-    val animals: Int,
+    val adultsCount: Int,
+    val kidsCount: Int,
+    val babiesCount: Int,
+    val animalsCount: Int,
 ) {
-    val totalGuests get() = adults + kids + babies + animals
-
     companion object {
-        fun parse(adults: Int, kids: Int, babies: Int, animals: Int): AssistanceGuestsCount {
-            validate(adults, kids, babies, animals)
-                .onError { throw it.asException() }
+        fun parse(
+            adultsCount: Int,
+            kidsCount: Int,
+            babiesCount: Int,
+            animalsCount: Int,
+        ): AppResultCompound<AssistanceGuestsCount, DomainError.Assistance> {
+            val errors = persistentListOf<DomainError.Assistance>()
 
-            return AssistanceGuestsCount(adults, kids, babies, animals)
-        }
+            if (adultsCount < 0) errors.add(DomainError.Assistance.AdultGuestsCountIsNegative)
+            if (kidsCount < 0) errors.add(DomainError.Assistance.KidsGuestsCountIsNegative)
+            if (babiesCount < 0) errors.add(DomainError.Assistance.BabiesGuestsCountIsNegative)
+            if (animalsCount < 0) errors.add(DomainError.Assistance.AnimalsGuestsCountIsNegative)
 
-        fun validate(
-            adults: Int,
-            kids: Int,
-            babies: Int,
-            animals: Int,
-        ): AppResult<Unit, DomainError.Assistance> {
-            return when {
-                adults < 0 -> AppResult.Error(DomainError.Assistance.AdultGuestsCountIsNegative)
-                kids < 0 -> AppResult.Error(DomainError.Assistance.KidsGuestsCountIsNegative)
-                babies < 0 -> AppResult.Error(DomainError.Assistance.BabiesGuestsCountIsNegative)
-                animals < 0 -> AppResult.Error(DomainError.Assistance.AnimalsGuestsCountIsNegative)
-                else -> AppResult.Success(Unit)
-            }
+            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+
+            val parsed = AssistanceGuestsCount(
+                adultsCount = adultsCount,
+                kidsCount = kidsCount,
+                babiesCount = babiesCount,
+                animalsCount = animalsCount,
+            )
+
+            return AppResultCompound.Success(data = parsed)
         }
     }
 }
