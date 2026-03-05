@@ -1,23 +1,21 @@
 package com.fstengineering.leasilycrm.profile.presentation.models
 
 import com.fstengineering.leasilycrm.core.domain.entities.User
-import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState
-import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.Applicable
 
 sealed interface ProfileUiState {
     data object Loading : ProfileUiState
 
     data class Loaded(
-        val name: FieldValueState<String>,
-        val creciNumber: FieldValueState<String>,
-        val profilePictureUrl: FieldValueState<String>,
+        val name: String,
+        val creciNumber: String?,
+        val profilePictureUrl: String,
     ) : ProfileUiState {
         companion object {
             fun fromDomain(user: User): Loaded {
                 return Loaded(
-                    name = Applicable(user.name.value),
-                    creciNumber = Applicable(user.creci?.value),
-                    profilePictureUrl = Applicable(user.profilePictureUrl),
+                    name = user.name.value,
+                    creciNumber = user.creci?.value,
+                    profilePictureUrl = user.profilePictureUrl,
                 )
             }
         }

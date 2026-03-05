@@ -112,45 +112,30 @@ fun ProfileDataSection(
 
 @Composable
 fun NameDetailsItem(
-    name: FieldValueState<String>,
+    name: String,
     modifier: Modifier = Modifier,
 ) {
-    when (name) {
-        NotApplicable -> {}
-        else -> {
-            val value = name.valueOrNull
-            Text(
-                text = value ?: stringResource(R.string.profile_name_blank_body_text),
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = if (value != null) FontStyle.Normal else FontStyle.Italic,
-                ),
-                modifier = modifier
-            )
-        }
-    }
+    Text(
+        text = name,
+        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium),
+        modifier = modifier
+    )
 }
 
 @Composable
 fun CreciNumberDetailsItem(
-    creciNumber: FieldValueState<String>,
+    creciNumber: String?,
     modifier: Modifier = Modifier,
 ) {
-    when (creciNumber) {
-        NotApplicable -> {}
-        else -> {
-            val value = creciNumber.valueOrNull
-            Text(
-                text = if (value != null) "CRECI  ·  $value" else stringResource(
-                    R.string.profile_creci_blank_body_text
-                ),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.outline,
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = if (value != null) FontStyle.Normal else FontStyle.Italic,
-                ),
-                modifier = modifier
-            )
-        }
-    }
+    Text(
+        text = if (creciNumber != null) "CRECI  ·  $creciNumber" else stringResource(
+            R.string.profile_creci_blank_body_text
+        ),
+        style = MaterialTheme.typography.bodyMedium.copy(
+            color = MaterialTheme.colorScheme.outline,
+            fontWeight = FontWeight.Medium,
+            fontStyle = if (creciNumber != null) FontStyle.Normal else FontStyle.Italic,
+        ),
+        modifier = modifier
+    )
 }

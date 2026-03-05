@@ -57,17 +57,3 @@ fun ProfileScreenTopBar(
         modifier = modifier
     )
 }
-
-@Preview
-@Composable
-fun ProfileScreenTopBarPreview(
-    modifier: Modifier = Modifier,
-) {
-    AppTheme {
-        ProfileScreenTopBar(
-            isSigningOut = true,
-            onBack = {},
-            modifier = modifier
-        )
-    }
-}

@@ -66,7 +66,7 @@ fun ProfileScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is ProfileViewModel.ProfileUiEvent.Error -> {
+                is ProfileViewModel.UiEvent.BottomSheetError -> {
                     isSigningOut = false
 
                     val errorData = uiEvent.error.toBottomSheetData(
@@ -75,11 +75,11 @@ fun ProfileScreen(
                     onUiEvent(ShowErrorBottomSheet(errorData))
                 }
 
-                is ProfileViewModel.ProfileUiEvent.EditUserSuccess -> {
+                is ProfileViewModel.UiEvent.EditUserSuccess -> {
                     onUiEvent(ShowSnackBar(uiEvent.messageId))
                 }
 
-                is ProfileViewModel.ProfileUiEvent.ContinueSignOut -> {
+                is ProfileViewModel.UiEvent.ContinueSignOut -> {
                     launch {
                         credentialManager.clearGoogleCredentialState(activityContext = activity)
                             .onError { e ->
@@ -90,7 +90,7 @@ fun ProfileScreen(
                     }
                 }
 
-                is ProfileViewModel.ProfileUiEvent.SignOutSuccess -> {
+                is ProfileViewModel.UiEvent.SignOutSuccess -> {
                     isSigningOut = false
                 }
             }
@@ -147,10 +147,7 @@ fun ProfileScreen(
 
             if (isEditingUser && uiState is ProfileUiState.Loaded) {
                 val loadedState = (uiState as ProfileUiState.Loaded)
-                val creciNumber = when (val field = loadedState.creciNumber) {
-                    is NotApplicable -> return@Column
-                    else -> field.valueOrNull
-                }
+                val creciNumber = loadedState.creciNumber
 
                 EditCreciNumberDialog(
                     initialCreciNumber = creciNumber,
@@ -160,8 +157,7 @@ fun ProfileScreen(
                     onEdit = { creciNumber ->
                         isEditingUser = false
 
-                        val newCreciNumber = Applicable(creciNumber)
-                        val editedUser = loadedState.copy(creciNumber = newCreciNumber)
+                        val editedUser = loadedState.copy(creciNumber = creciNumber)
 
                         viewModel.editUser(editedUser)
                     },

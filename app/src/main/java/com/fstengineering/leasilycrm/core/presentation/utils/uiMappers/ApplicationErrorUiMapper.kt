@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetDa
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.ErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChannel
 
-fun ApplicationError.External.toBottomSheetData(
+fun ApplicationError.toBottomSheetData(
     properties: ErrorBottomSheetDataPropertiesStrategy,
 ): ErrorBottomSheetData =
     when (this) {
@@ -41,12 +41,14 @@ fun ApplicationError.External.toBottomSheetData(
             ErrorBottomSheetData(
                 title = properties.inconsistencyErrorTitle,
                 description = properties.inconsistencyErrorDescription,
-                onSecondaryAction = null,
-                secondaryActionLabel = null,
+                secondaryActionLabel = R.string.contact_support_action_button_text,
+                onSecondaryAction = { onErrorEvent ->
+                    mailToSupportChannel { errorUiEvent -> onErrorEvent(errorUiEvent) }
+                },
             )
         }
 
-        ApplicationError.External.Unknown -> {
+        else -> {
             ErrorBottomSheetData(
                 title = properties.unknownErrorTitle,
                 description = properties.unknownErrorDescription,

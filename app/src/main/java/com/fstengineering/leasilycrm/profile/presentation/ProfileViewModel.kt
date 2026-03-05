@@ -10,9 +10,10 @@ import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Creci
-import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.NotApplicable
+import com.fstengineering.leasilycrm.core.presentation.utils.onExternalError
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
@@ -32,7 +33,7 @@ class ProfileViewModel(
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<ProfileUiEvent>()
+    private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
@@ -53,7 +54,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             userRepository.watchUser().collect { result ->
                 result
-                    .onError { e -> _uiEvents.trySend(ProfileUiEvent.Error(e)) }
+                    .onExternalError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { user -> _uiState.update { ProfileUiState.Loaded.fromDomain(user) } }
             }
         }
@@ -62,29 +63,23 @@ class ProfileViewModel(
     fun editUser(editedUiState: ProfileUiState.Loaded) {
         if (editedUiState == uiState.value) {
             _uiEvents.trySend(
-                ProfileUiEvent.EditUserSuccess(messageId = R.string.no_data_changed_success_message)
+                UiEvent.EditUserSuccess(messageId = R.string.no_data_changed_success_message)
             )
             return
         }
 
-        val creciNumber = when (val field = editedUiState.creciNumber) {
-            is NotApplicable -> return
-            else -> field.valueOrNull
-        }
-
-        val command = UserCommandModel(creciNumber = creciNumber)
+        val command = UserCommandModel(creciNumber = editedUiState.creciNumber)
 
         viewModelScope.launch {
             writeUser(command)
-                .onError { e ->
-                    when (e) {
-                        is ApplicationError -> _uiEvents.trySend(ProfileUiEvent.Error(e))
-                        is DomainError -> _creciFieldError.update { e.toInlineMessage() }
-                    }
+                .onExternalError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
+                .onErrors { errors ->
+                    val domainError = errors.find { it is DomainError } as DomainError?
+                    _creciFieldError.update { domainError?.toInlineMessage() }
                 }
                 .onSuccess {
                     val event =
-                        ProfileUiEvent.EditUserSuccess(messageId = R.string.edit_user_creci_success_message)
+                        UiEvent.EditUserSuccess(messageId = R.string.edit_user_creci_success_message)
                     _uiEvents.trySend(event)
                 }
         }
@@ -97,8 +92,10 @@ class ProfileViewModel(
     fun onCreciFocusLoss(input: String?) {
         if (input == null) return
 
-        Creci.validate(creciNumber = input)
-            .onError { e -> _creciFieldError.update { e.toInlineMessage() } }
+        Creci.parse(creciNumber = input)
+            .onErrors { errors ->
+                _creciFieldError.update { errors.firstOrNull()?.toInlineMessage() }
+            }
     }
 
     fun clearErrors() {
@@ -108,8 +105,8 @@ class ProfileViewModel(
     fun onSignOut() {
         val event = authRepository.checkDeviceIsConnectedToInternet()
             .fold(
-                onError = { e -> ProfileUiEvent.Error(e) },
-                onSuccess = { ProfileUiEvent.ContinueSignOut }
+                onError = { e -> UiEvent.BottomSheetError(e) },
+                onSuccess = { UiEvent.ContinueSignOut }
             )
 
         _uiEvents.trySend(event)
@@ -118,8 +115,8 @@ class ProfileViewModel(
     fun signOutUser() {
         viewModelScope.launch {
             userSessionService.onUserInitiatedSignOut()
-                .onError { e -> _uiEvents.trySend(ProfileUiEvent.Error(e)) }
-                .onSuccess { _uiEvents.trySend(ProfileUiEvent.SignOutSuccess) }
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onSuccess { _uiEvents.trySend(UiEvent.SignOutSuccess) }
         }
     }
 
@@ -129,10 +126,10 @@ class ProfileViewModel(
         super.onCleared()
     }
 
-    sealed interface ProfileUiEvent {
-        data class Error(val error: ApplicationError) : ProfileUiEvent
-        data class EditUserSuccess(val messageId: Int) : ProfileUiEvent
-        data object ContinueSignOut : ProfileUiEvent
-        data object SignOutSuccess : ProfileUiEvent
+    sealed interface UiEvent {
+        data class BottomSheetError(val error: ApplicationError) : UiEvent
+        data class EditUserSuccess(val messageId: Int) : UiEvent
+        data object ContinueSignOut : UiEvent
+        data object SignOutSuccess : UiEvent
     }
 }
