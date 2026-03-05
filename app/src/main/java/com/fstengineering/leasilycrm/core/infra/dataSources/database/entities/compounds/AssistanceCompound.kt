@@ -42,15 +42,15 @@ data class AssistanceCompound(
     val preferredPropertyCharacteristics: List<AssistancePropertyCharacteristicCrossRefEntity>,
     @Relation(
         parentColumn = "id",
-        entity = PropertyEntity::class,
         entityColumn = "id",
+        entity = PropertyEntity::class,
         associateBy = Junction(
             value = AssistanceSentPropertyCrossRefEntity::class,
             parentColumn = "assistance_id",
             entityColumn = "property_id"
         )
     )
-    val allSentProperties: List<PropertyCompound>,
+    val allSentProperties: List<PropertyEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",
@@ -70,7 +70,7 @@ data class AssistanceCompound(
                 .map { it.propertyId }
                 .toSet()
                 .mapNotNull { sentPropertyId ->
-                    allSentProperties.find { it.property.id == sentPropertyId }?.property?.id
+                    allSentProperties.find { it.id == sentPropertyId }?.id
                 }
                 .toImmutableList()
         }
