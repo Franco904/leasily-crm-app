@@ -9,7 +9,6 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.valueObjects.Neighborhood
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -44,14 +43,10 @@ data class AssistanceCommandModel(
     val leadTenantId: Long?,
 ) : CommandUseCase.CommandModel {
     fun toDomain(): AppResultCompound<Assistance, DomainError> {
-        val errors = persistentListOf<DomainError>()
+        val errors = mutableListOf<DomainError>()
 
-        val preferredNeighborhoods = preferredNeighborhoods
-            .mapNotNull { neighborhood ->
-                Neighborhood.parse(neighborhood)
-                    .fold(onError = { errors.add(it); null }, onSuccess = { it })
-            }
-            .toImmutableList()
+        val isAnyNeighborhoodEmpty = preferredNeighborhoods.any { it.isBlank() }
+        if (isAnyNeighborhoodEmpty) errors.add(DomainError.Neighborhood.Required)
 
         val interactions = interactions
             .mapNotNull { interaction ->
@@ -92,7 +87,7 @@ data class AssistanceCommandModel(
         )
             .fold(onErrors = { errors.addAll(0, it); null }, onSuccess = { it })
 
-        if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+        if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
 
         return AppResultCompound.Success(data = requireNotNull(parsed))
     }

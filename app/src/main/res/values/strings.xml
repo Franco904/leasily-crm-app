@@ -743,6 +743,9 @@
     <string name="unauthorized_error_title">Sessão expirada</string>
     <string name="unauthorized_error_description">Sua sessão expirou. Faça login novamente.</string>
 
+    <string name="inconsistency_error_title">Inconsistências nas informações fornecidas</string>
+    <string name="inconsistency_error_description">Inconsistências foram encontradas no preenchimento das informações do cadastro, o que impede a sua criação. Tente revisar mas, se isto parecer um erro, contate o suporte.</string>
+
     <string name="unknown_error_title">Houve um problema</string>
     <string name="unknown_error_description_default">Não foi possível realizar a última ação. Tente reiniciar o aplicativo e se o problema persistir contate o suporte.</string>
     <string name="unknown_error_description_sign_in">Não foi possível realizar a última ação. Tente reiniciar o aplicativo, entrar na conta novamente e se o problema persistir contate o suporte.</string>

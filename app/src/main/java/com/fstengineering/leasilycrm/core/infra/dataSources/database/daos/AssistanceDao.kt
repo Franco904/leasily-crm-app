@@ -21,10 +21,9 @@ interface AssistanceDao {
 
     @Query(
         """
-        SELECT DISTINCT(neighborhood) FROM assistance_searched_neighborhoods asn
-        INNER JOIN assistances a ON a.id = asn.assistance_id
+        SELECT DISTINCT(neighborhood) FROM assistance_preferred_neighborhoods apn
+        INNER JOIN assistances a ON a.id = apn.assistance_id
         INNER JOIN tenants_read_view t ON t.id = a.tenant_id
-        WHERE asn.is_deleted = 0
         ORDER BY neighborhood
     """
     )

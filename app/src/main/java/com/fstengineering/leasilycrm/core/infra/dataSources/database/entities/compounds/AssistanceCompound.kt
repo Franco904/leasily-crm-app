@@ -7,12 +7,11 @@ import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.valueObjects.Neighborhood
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
@@ -77,14 +76,14 @@ data class AssistanceCompound(
         }
 
     fun toDomain(): AppResultCompound<Assistance, DomainError> {
-        val errors = persistentListOf<DomainError>()
+        val errors = mutableListOf<DomainError>()
 
-        val preferredNeighborhoods = preferredNeighborhoods
-            .mapNotNull { neighborhood ->
-                Neighborhood.parse(neighborhood.neighborhood)
-                    .fold(onError = { errors.add(it); null }, onSuccess = { it })
-            }
-            .toImmutableList()
+        val isAnyNeighborhoodEmpty = preferredNeighborhoods.any { it.neighborhood.isBlank() }
+        if (isAnyNeighborhoodEmpty) errors.add(DomainError.Neighborhood.Required)
+
+        val preferredNeighborhoodsNames = preferredNeighborhoods
+            .map { it.neighborhood }
+            .toPersistentList()
 
         val preferredCharacteristicIds = preferredPropertyCharacteristics
             .map { it.propertyCharacteristicId }
@@ -125,7 +124,7 @@ data class AssistanceCompound(
             observations = assistance.observations,
             isFinished = assistance.isFinished,
             tenantId = requireNotNull(tenant.id),
-            preferredNeighborhoods = preferredNeighborhoods,
+            preferredNeighborhoods = preferredNeighborhoodsNames,
             preferredPropertyCharacteristics = preferredCharacteristicIds,
             sentPropertiesIds = sentPropertiesIds,
             interactions = interactions,
@@ -134,7 +133,7 @@ data class AssistanceCompound(
         )
             .fold(onErrors = { errors.addAll(0, it); null }, onSuccess = { it })
 
-        if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+        if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
 
         return AppResultCompound.Success(data = requireNotNull(parsed))
     }

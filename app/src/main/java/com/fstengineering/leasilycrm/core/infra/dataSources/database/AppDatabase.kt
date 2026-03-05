@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSearchedNeighborhoodDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.CrmMetricsDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyCharacteristicPropertyCrossRefDao
@@ -80,7 +80,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun assistanceInteractionDao(): AssistanceInteractionDao
 
-    abstract fun assistanceSearchedNeighborhoodDao(): AssistanceSearchedNeighborhoodDao
+    abstract fun assistanceSearchedNeighborhoodDao(): AssistancePreferredNeighborhoodDao
 
     abstract fun assistanceSentPropertyCrossRefDao(): AssistanceSentPropertyCrossRefDao
 

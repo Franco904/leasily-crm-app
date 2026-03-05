@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 data class AssistancePreferredFeaturesCount(
     val bedroomsCount: Int,
@@ -21,17 +21,17 @@ data class AssistancePreferredFeaturesCount(
             singleBedsCount: Int,
             bathroomsCount: Int,
             parkingSpotsCount: Int,
-        ): AppResultCompound<AssistancePreferredFeaturesCount, DomainError.Assistance> {
-            val errors = persistentListOf<DomainError.Assistance>()
+        ): AppResultCompound<AssistancePreferredFeaturesCount, DomainError> {
+            val errors = mutableListOf<DomainError>()
 
-            if (bedroomsCount < 0) errors.add(DomainError.Assistance.BedroomsCountIsNegative)
-            if (enSuitesCount < 0) errors.add(DomainError.Assistance.EnSuitesCountIsNegative)
-            if (doubleBedsCount < 0) errors.add(DomainError.Assistance.DoubleBedsCountIsNegative)
-            if (singleBedsCount < 0) errors.add(DomainError.Assistance.SingleBedsCountIsNegative)
-            if (bathroomsCount < 0) errors.add(DomainError.Assistance.BathroomsCountIsNegative)
-            if (parkingSpotsCount < 0) errors.add(DomainError.Assistance.ParkingSpotsCountIsNegative)
+            if (bedroomsCount < 0) errors.add(DomainError.AssistanceOtherFields.BedroomsCountIsNegative)
+            if (enSuitesCount < 0) errors.add(DomainError.AssistanceOtherFields.EnSuitesCountIsNegative)
+            if (doubleBedsCount < 0) errors.add(DomainError.AssistanceOtherFields.DoubleBedsCountIsNegative)
+            if (singleBedsCount < 0) errors.add(DomainError.AssistanceOtherFields.SingleBedsCountIsNegative)
+            if (bathroomsCount < 0) errors.add(DomainError.AssistanceOtherFields.BathroomsCountIsNegative)
+            if (parkingSpotsCount < 0) errors.add(DomainError.AssistanceOtherFields.ParkingSpotsCountIsNegative)
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
 
             val parsed = AssistancePreferredFeaturesCount(
                 bedroomsCount = bedroomsCount,

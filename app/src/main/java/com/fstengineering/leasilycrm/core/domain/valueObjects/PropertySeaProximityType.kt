@@ -1,11 +1,10 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 sealed class PropertySeaProximityType(val id: Long) {
     data object SeaAccess : PropertySeaProximityType(SEA_ACCESS_ID)
@@ -20,13 +19,13 @@ sealed class PropertySeaProximityType(val id: Long) {
         companion object {
             fun parse(
                 distance: AppDecimal?,
-            ): AppResultCompound<DistanceToSea, DomainError.PropertySeaProximity> {
-                val errors = persistentListOf<DomainError.PropertySeaProximity>()
+            ): AppResultCompound<DistanceToSea, DomainError> {
+                val errors = mutableListOf<DomainError>()
 
-                if (distance == null) errors.add(DomainError.PropertySeaProximity.DistanceToSeaRequired)
-                if (distance?.isNegative == true) errors.add(DomainError.PropertySeaProximity.DistanceToSeaIsNegative)
+                if (distance == null) errors.add(DomainError.PropertySeaProximityDistanceToSea.Required)
+                if (distance?.isNegative == true) errors.add(DomainError.PropertySeaProximityDistanceToSea.IsNegative)
 
-                if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+                if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
 
                 return AppResultCompound.Success(data = DistanceToSea(requireNotNull(distance)))
             }
@@ -42,8 +41,8 @@ sealed class PropertySeaProximityType(val id: Long) {
         fun parse(
             id: Long,
             distanceToSea: AppDecimal?,
-        ): AppResultCompound<PropertySeaProximityType, DomainError.PropertySeaProximity> {
-            val errors = persistentListOf<DomainError.PropertySeaProximity>()
+        ): AppResultCompound<PropertySeaProximityType, DomainError> {
+            val errors = mutableListOf<DomainError>()
 
             val parsed = when (id) {
                 SEA_ACCESS_ID -> SeaAccess
@@ -61,7 +60,7 @@ sealed class PropertySeaProximityType(val id: Long) {
                 }
             }
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
 
             return AppResultCompound.Success(data = requireNotNull(parsed))
         }

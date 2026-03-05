@@ -1,11 +1,10 @@
 package com.fstengineering.leasilycrm.core.domain.entities
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 class AssistanceInteraction private constructor(
     val id: Long?,
@@ -19,13 +18,13 @@ class AssistanceInteraction private constructor(
             date: AppDate?,
             title: String?,
             description: String?,
-        ): AppResultCompound<AssistanceInteraction, DomainError.Assistance> {
-            val errors = persistentListOf<DomainError.Assistance>()
+        ): AppResultCompound<AssistanceInteraction, DomainError> {
+            val errors = mutableListOf<DomainError>()
 
-            if (date == null) errors.add(DomainError.Assistance.InteractionDateRequired)
-            if (title.isNullOrBlank()) errors.add(DomainError.Assistance.InteractionTitleRequired)
+            if (date == null) errors.add(DomainError.AssistanceInteractionDate.Required)
+            if (title.isNullOrBlank()) errors.add(DomainError.AssistanceInteractionTitle.Required)
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
 
             val parsed = AssistanceInteraction(
                 id = id,

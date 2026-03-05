@@ -84,24 +84,24 @@ class AssistanceRegistrationStep3ViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            val validationResults = AssistanceInteraction.parse(
+            val parsingResults = AssistanceInteraction.parse(
                 id = interactionFromForm.id,
                 date = interactionFromForm.date,
                 title = interactionFromForm.title,
                 description = interactionFromForm.description,
             )
 
-            validationResults
+            parsingResults
                 .onErrors { errors ->
-                    val interactionDateError =
-                        errors.firstOrNull { it == DomainError.Assistance.InteractionDateRequired }
+                    val dateError =
+                        errors.firstOrNull { it is DomainError.AssistanceInteractionDate }
                     val titleError =
-                        errors.firstOrNull { it == DomainError.Assistance.InteractionTitleRequired }
+                        errors.firstOrNull { it is DomainError.AssistanceInteractionTitle }
 
                     _formErrors.update {
                         val newErrors = it.errors.mutate { map ->
                             map[AssistanceInteractionField.Date] =
-                                interactionDateError?.toInlineMessage()
+                                dateError?.toInlineMessage()
                             map[AssistanceInteractionField.Title] = titleError?.toInlineMessage()
                         }
 

@@ -104,9 +104,7 @@ sealed interface AssistanceDraftFormUiState {
                     singleBedsCount = a.preferredFeaturesCount.singleBedsCount,
                     bathroomsCount = a.preferredFeaturesCount.bathroomsCount,
                     parkingSpotsCount = a.preferredFeaturesCount.parkingSpotsCount,
-                    preferredNeighborhoods = a.preferredNeighborhoods
-                        .map { it.value }
-                        .toImmutableList(),
+                    preferredNeighborhoods = a.preferredNeighborhoods.toPersistentList(),
                     preferredSeaProximityTypeId = a.preferredSeaProximityType?.id,
                     preferredDistanceToSea = (a.preferredSeaProximityType as? PropertySeaProximityType.DistanceToSea)?.distance,
                     preferredPropertyCharacteristics = a.preferredPropertyCharacteristics,

@@ -7,27 +7,28 @@ private val INLINE_REQUIRED = R.string.inline_required
 private val INLINE_GENERIC_INVALID_DATA = R.string.inline_invalid_data
 
 fun DomainError.toInlineMessage() = when (this) {
-    DomainError.Assistance.PreferredPeriodRequired -> INLINE_REQUIRED
-    DomainError.Assistance.PreferredPeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
-    DomainError.Assistance.PreferredPeriodStartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
-    DomainError.Assistance.AdultGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.KidsGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.BabiesGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.AnimalsGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.BedroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.EnSuitesCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.DoubleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.SingleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.BathroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.ParkingSpotsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Assistance.PreferredNeighborhoodNameRequired -> INLINE_REQUIRED
-    DomainError.Assistance.InteractionDateRequired -> INLINE_REQUIRED
-    DomainError.Assistance.InteractionTitleRequired -> INLINE_REQUIRED
+    DomainError.AssistanceOtherFields.TenantRequired -> INLINE_REQUIRED
+    DomainError.AssistanceOtherFields.PreferredPeriodRequired -> INLINE_REQUIRED
+    DomainError.AssistanceOtherFields.PreferredPeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
+    DomainError.AssistanceOtherFields.PreferredPeriodStartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
+    DomainError.AssistanceOtherFields.AdultGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.KidsGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.BabiesGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.AnimalsGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.BedroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.EnSuitesCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.DoubleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.SingleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.BathroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.ParkingSpotsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceInteractionDate.Required -> INLINE_REQUIRED
+    DomainError.AssistanceInteractionTitle.Required -> INLINE_REQUIRED
+
+    DomainError.Neighborhood.Required -> INLINE_REQUIRED
 
     DomainError.Property.OwnerRequired -> INLINE_REQUIRED
     DomainError.Property.TypeRequired -> INLINE_REQUIRED
     DomainError.Property.TypeInvalid -> INLINE_GENERIC_INVALID_DATA
-    DomainError.Property.NeighborhoodRequired -> INLINE_REQUIRED
     DomainError.Property.StreetAddressRequired -> INLINE_REQUIRED
     DomainError.Property.CharacteristicInvalid -> INLINE_GENERIC_INVALID_DATA
     DomainError.Property.PricePeriodRequired -> INLINE_REQUIRED
@@ -47,8 +48,8 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.PropertyOwner.PaymentKeyLengthIsGreaterThan120Chars -> R.string.inline_too_big_120_chars
 
     DomainError.PropertySeaProximity.PropertySeaProximityInvalid -> INLINE_GENERIC_INVALID_DATA
-    DomainError.PropertySeaProximity.DistanceToSeaRequired -> INLINE_REQUIRED
-    DomainError.PropertySeaProximity.DistanceToSeaIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertySeaProximityDistanceToSea.Required -> INLINE_REQUIRED
+    DomainError.PropertySeaProximityDistanceToSea.IsNegative -> INLINE_GENERIC_INVALID_DATA
 
     DomainError.Stay.PropertyRequired -> INLINE_REQUIRED
     DomainError.Stay.TenantRequired -> INLINE_REQUIRED

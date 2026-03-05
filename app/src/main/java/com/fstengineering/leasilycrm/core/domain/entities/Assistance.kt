@@ -9,11 +9,10 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistanceGuestsCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistancePreferredFeaturesCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AssistancePreferredPeriod
-import com.fstengineering.leasilycrm.core.domain.valueObjects.Neighborhood
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 class Assistance private constructor(
     val id: Long?,
@@ -25,7 +24,7 @@ class Assistance private constructor(
     val guestsCount: AssistanceGuestsCount,
     val preferredFeaturesCount: AssistancePreferredFeaturesCount,
     val preferredSeaProximityType: PropertySeaProximityType?,
-    val preferredNeighborhoods: ImmutableList<Neighborhood>,
+    val preferredNeighborhoods: ImmutableList<String>,
     val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
     val observations: String?,
     val sentPropertiesIds: ImmutableList<Long>,
@@ -49,7 +48,7 @@ class Assistance private constructor(
         guestsCount: AssistanceGuestsCount = this.guestsCount,
         preferredFeaturesCount: AssistancePreferredFeaturesCount = this.preferredFeaturesCount,
         preferredSeaProximityType: PropertySeaProximityType? = this.preferredSeaProximityType,
-        preferredNeighborhoods: ImmutableList<Neighborhood> = this.preferredNeighborhoods,
+        preferredNeighborhoods: ImmutableList<String> = this.preferredNeighborhoods,
         preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic> = this.preferredPropertyCharacteristics,
         observations: String? = this.observations,
         sentPropertiesIds: ImmutableList<Long> = this.sentPropertiesIds,
@@ -100,7 +99,7 @@ class Assistance private constructor(
             parkingSpotsCount: Int,
             preferredSeaProximityTypeId: Long?,
             preferredDistanceToSea: AppDecimal?,
-            preferredNeighborhoods: ImmutableList<Neighborhood>,
+            preferredNeighborhoods: ImmutableList<String>,
             preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
             observations: String?,
             sentPropertiesIds: ImmutableList<Long>,
@@ -110,20 +109,19 @@ class Assistance private constructor(
             inconsistencies: ImmutableList<DomainError>,
             contractVersion: Int,
         ): AppResultCompound<Assistance, DomainError> {
-            val errors = persistentListOf<DomainError>()
+            val errors = mutableListOf<DomainError>()
 
             val tenantId = tenantId ?: run {
-                errors.add(DomainError.Assistance.TenantRequired); null
+                errors.add(DomainError.AssistanceOtherFields.TenantRequired); null
             }
 
-            val isPeriodNull = preferredStartDate == null && preferredEndDate == null
-            val preferredPeriod = if (isPeriodNull) null else {
-                AssistancePreferredPeriod.parse(
+            val preferredPeriod =
+                if (preferredStartDate == null && preferredEndDate == null) null
+                else AssistancePreferredPeriod.parse(
                     startDate = preferredStartDate,
                     endDate = preferredEndDate,
                 )
                     .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
-            }
 
             val guestsCount = AssistanceGuestsCount.parse(
                 adultsCount = adultsCount,
@@ -148,7 +146,10 @@ class Assistance private constructor(
                     .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
             }
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors)
+            val isAnyNeighborhoodEmpty = preferredNeighborhoods.any { it.isBlank() }
+            if (isAnyNeighborhoodEmpty) errors.add(DomainError.Neighborhood.Required)
+
+            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
 
             val parsed = Assistance(
                 id = id,

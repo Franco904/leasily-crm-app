@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.core.infra.di.modules.daoModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.databaseDataSourceModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.applicationServiceModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.inMemoryDataSourceModule
+import com.fstengineering.leasilycrm.core.infra.di.modules.monitoringModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.preferencesDataSourceModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.presentationModule
 import com.fstengineering.leasilycrm.core.infra.di.modules.remoteDataSourceModule
@@ -41,6 +42,7 @@ fun Application.configureDependencyInjection() {
             daoModule,
             coroutineModule,
             workerModule,
+            monitoringModule,
         )
     }
 }

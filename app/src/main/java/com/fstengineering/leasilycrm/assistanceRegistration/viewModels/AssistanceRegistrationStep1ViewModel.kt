@@ -6,9 +6,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceStep1ErrorUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceStep1Field
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.domain.valueObjects.Neighborhood
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.mutate
@@ -55,53 +54,56 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
 
     fun validateAssistanceStep1(assistanceForm: AssistanceDraftFormUiState.Loaded) {
         viewModelScope.launch {
-            assistanceValidator.validate(assistance = assistanceForm)
-                .onErrors { errors ->
-                    setFieldErrors(errors)
-                    return@launch
-                }
+            _formErrors.update { AssistanceStep1ErrorUiState() }
+            delay(150.milliseconds)
 
-            _uiEvents.send(UiEvents.ValidateSuccess)
+            if (assistanceForm.preferredSeaProximityTypeId == null) return@launch
+
+            val parsingResults = PropertySeaProximityType.parse(
+                id = assistanceForm.preferredSeaProximityTypeId,
+                distanceToSea = assistanceForm.preferredDistanceToSea,
+            )
+
+            parsingResults
+                .onSuccess { _uiEvents.send(UiEvents.ValidateSuccess) }
+                .onErrors { errors ->
+                    val distanceToSeaError =
+                        errors.firstOrNull { it is DomainError.PropertySeaProximity }
+
+                    _formErrors.update {
+                        val newErrors = it.errors.mutate { map ->
+                            map[AssistanceStep1Field.DistanceToSea] =
+                                distanceToSeaError?.toInlineMessage()
+                        }
+
+                        it.copy(errors = newErrors)
+                    }
+
+                    val firstFieldWithError =
+                        _formErrors.value.errors.entries.first { it.value != null }.key
+                    _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
+                }
         }
     }
 
     fun savePreferredNeighborhood() {
         viewModelScope.launch {
-            val newNeighborhood = neighborhoodForm.value ?: return@launch
+            val newNeighborhood = neighborhoodForm.value
 
-            val validationResult = Neighborhood.parse(newNeighborhood)
+            if (newNeighborhood.isNullOrBlank()) {
+                val error = DomainError.Neighborhood.Required
+                _neighborhoodFormError.update { error.toInlineMessage() }
 
-            validationResult
-                .onError { e -> _neighborhoodFormError.update { e.toInlineMessage() } }
-                .onSuccess {
-                    clearPreferredNeighborhoodErrors()
-                    _uiEvents.send(UiEvents.AssistanceSearchedNeighborhoodSaveSuccess)
-                }
+                return@launch
+            }
+
+            clearPreferredNeighborhoodErrors()
+            _uiEvents.send(UiEvents.AssistanceSearchedNeighborhoodSaveSuccess)
         }
     }
 
     fun clearPreferredNeighborhoodErrors() {
         _neighborhoodFormError.update { null }
-    }
-
-    private suspend fun setFieldErrors(errors: List<DomainError>) {
-        _formErrors.update { AssistanceStep1ErrorUiState() }
-        delay(150.milliseconds)
-
-        val propertyDistanceToSeaError =
-            errors.firstOrNull { it is DomainError.PropertySeaProximity }
-
-        _formErrors.update {
-            val newErrors = it.errors.mutate { map ->
-                map[AssistanceStep1Field.DistanceToSea] =
-                    propertyDistanceToSeaError?.toInlineMessage()
-            }
-
-            it.copy(errors = newErrors)
-        }
-
-        val firstFieldWithError = _formErrors.value.errors.entries.first { it.value != null }.key
-        _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
     }
 
     sealed interface UiEvents {

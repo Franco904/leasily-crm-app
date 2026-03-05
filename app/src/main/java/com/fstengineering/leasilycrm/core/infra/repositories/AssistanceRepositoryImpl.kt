@@ -1,15 +1,16 @@
 package com.fstengineering.leasilycrm.core.infra.repositories
 
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
+import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.MonitoringAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
@@ -26,6 +27,7 @@ class AssistanceRepositoryImpl(
     private val assistanceInteractionDatabaseDataSource: AssistanceInteractionDatabaseDataSource,
     private val assistanceSearchedNeighborhoodDatabaseDataSource: AssistanceSearchedNeighborhoodDatabaseDataSource,
     private val assistanceSentPropertyCrossRefDatabaseDataSource: AssistanceSentPropertyCrossRefDatabaseDataSource,
+    private val monitoringAdapter: MonitoringAdapter,
 ) : AssistanceRepository {
     override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
@@ -45,7 +47,7 @@ class AssistanceRepositoryImpl(
 
         assistance.preferredPropertyCharacteristics.forEach {
             val characteristic =
-                AssistancePropertyCharacteristicCrossRefEntity.fromDomain(it, assistanceId)
+                AssistancePropertyCharacteristicCrossRefEntity.fromDomain(it.id, assistanceId)
             assistanceCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
         }
 
@@ -77,13 +79,20 @@ class AssistanceRepositoryImpl(
     }
 
     override suspend fun getById(assistanceId: Long): AppResult<Assistance, ApplicationError> {
-        val assistance = assistanceDatabaseDataSource.getById(id = assistanceId)
+        val parsingResults = assistanceDatabaseDataSource.getById(id = assistanceId)
             .fold(
                 onError = { return AppResult.Error(error = it.toApplication()) },
                 onSuccess = { assistance -> assistance.toDomain() }
             )
 
-        return AppResult.Success(data = assistance)
+        return parsingResults
+            .fold(
+                onErrors = { errors ->
+                    monitoringAdapter.logDomainErrors(TAG, errors)
+                    AppResult.Error(error = ApplicationError.Inconsistency)
+                },
+                onSuccess = { assistance -> AppResult.Success(data = assistance) }
+            )
     }
 
     override suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>, ApplicationError> {
@@ -95,5 +104,9 @@ class AssistanceRepositoryImpl(
                 )
 
         return AppResult.Success(data = neighborhoodNames)
+    }
+
+    companion object {
+        private const val TAG = "AssistanceRepositoryImpl"
     }
 }

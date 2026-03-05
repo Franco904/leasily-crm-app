@@ -8,31 +8,43 @@ import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChanne
 
 fun ApplicationError.toBottomSheetData(properties: ErrorBottomSheetDataPropertiesStrategy): ErrorBottomSheetData =
     when (this) {
-        ApplicationError.NoInternet ->
+        ApplicationError.NoInternet -> {
             ErrorBottomSheetData(
                 title = properties.noInternetErrorTitle,
                 description = properties.noInternetErrorDescription,
                 onSecondaryAction = null,
                 secondaryActionLabel = null,
             )
+        }
 
-        ApplicationError.Timeout ->
+        ApplicationError.Timeout -> {
             ErrorBottomSheetData(
                 title = properties.timeOutErrorTitle,
                 description = properties.timeOutErrorDescription,
                 onSecondaryAction = null,
                 secondaryActionLabel = null,
             )
+        }
 
-        ApplicationError.Unauthorized ->
+        ApplicationError.Unauthorized -> {
             ErrorBottomSheetData(
                 title = properties.unauthorizedErrorTitle,
                 description = properties.unauthorizedErrorDescription,
                 onSecondaryAction = null,
                 secondaryActionLabel = null,
             )
+        }
 
-        ApplicationError.Unknown ->
+        ApplicationError.Inconsistency -> {
+            ErrorBottomSheetData(
+                title = properties.inconsistencyErrorTitle,
+                description = properties.inconsistencyErrorDescription,
+                onSecondaryAction = null,
+                secondaryActionLabel = null,
+            )
+        }
+
+        ApplicationError.Unknown -> {
             ErrorBottomSheetData(
                 title = properties.unknownErrorTitle,
                 description = properties.unknownErrorDescription,
@@ -41,4 +53,5 @@ fun ApplicationError.toBottomSheetData(properties: ErrorBottomSheetDataPropertie
                     mailToSupportChannel { errorUiEvent -> onErrorEvent(errorUiEvent) }
                 },
             )
+        }
     }

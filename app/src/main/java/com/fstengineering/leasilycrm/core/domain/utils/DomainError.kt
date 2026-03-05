@@ -3,7 +3,15 @@ package com.fstengineering.leasilycrm.core.domain.utils
 sealed interface DomainError : SystemError {
     fun asException() = DomainException(this)
 
-    enum class Assistance : DomainError {
+    enum class AssistanceInteractionDate : DomainError {
+        Required,
+    }
+
+    enum class AssistanceInteractionTitle : DomainError {
+        Required,
+    }
+
+    enum class AssistanceOtherFields : DomainError {
         TenantRequired,
         PreferredPeriodRequired,
         PreferredPeriodStartAndEndDatesAreTheSame,
@@ -18,12 +26,10 @@ sealed interface DomainError : SystemError {
         SingleBedsCountIsNegative,
         BathroomsCountIsNegative,
         ParkingSpotsCountIsNegative,
-        InteractionDateRequired,
-        InteractionTitleRequired,
     }
 
     enum class Neighborhood : DomainError {
-        NeighborhoodRequired,
+        Required,
     }
 
     enum class Property : DomainError {
@@ -43,8 +49,11 @@ sealed interface DomainError : SystemError {
 
     enum class PropertySeaProximity : DomainError {
         PropertySeaProximityInvalid,
-        DistanceToSeaRequired,
-        DistanceToSeaIsNegative,
+    }
+
+    enum class PropertySeaProximityDistanceToSea : DomainError {
+        Required,
+        IsNegative,
     }
 
     enum class PropertyOwner : DomainError {
