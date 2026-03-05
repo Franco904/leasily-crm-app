@@ -79,28 +79,28 @@ fun AssistanceRegistrationStep3Screen(
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is AssistanceRegistrationViewModel.UiEvents.BottomSheetError -> {
+                    is AssistanceRegistrationViewModel.UiEvent.BottomSheetError -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
                         onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
-                    is AssistanceRegistrationViewModel.UiEvents.AssistanceCreateSuccess -> {
+                    is AssistanceRegistrationViewModel.UiEvent.AssistanceCreateSuccess -> {
                         onLeaveRegistration()
                         onUiEvent(UiEvent.ShowSnackBar(R.string.create_assistance_success_message))
                     }
 
-                    is AssistanceRegistrationViewModel.UiEvents.AssistanceEditSuccess -> {
+                    is AssistanceRegistrationViewModel.UiEvent.AssistanceEditSuccess -> {
                         onLeaveRegistration()
                         onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                     }
 
-                    is AssistanceRegistrationViewModel.UiEvents.ConvertOldTenantToLead -> {
+                    is AssistanceRegistrationViewModel.UiEvent.ConvertOldTenantToLead -> {
                         onUiEvent(UiEvent.ShowSnackBar(R.string.convert_tenant_to_lead_success_message))
                     }
 
-                    is AssistanceRegistrationViewModel.UiEvents.Exit -> {
+                    is AssistanceRegistrationViewModel.UiEvent.Exit -> {
                         if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
                         else {
                             mustShowConfirmLeaveRegistrationDialog = false
@@ -114,7 +114,7 @@ fun AssistanceRegistrationStep3Screen(
         launch {
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is AssistanceRegistrationStep3ViewModel.UiEvents.InteractionCreateSuccess -> {
+                    is AssistanceRegistrationStep3ViewModel.UiEvent.InteractionCreateSuccess -> {
                         if (loadedInteractionForm == null) return@collect
                         if (loadedDraftForm?.interactions == null) return@collect
 
@@ -128,7 +128,7 @@ fun AssistanceRegistrationStep3Screen(
                         onUiEvent(UiEvent.ShowSnackBar(R.string.create_assistance_interaction_success_message))
                     }
 
-                    is AssistanceRegistrationStep3ViewModel.UiEvents.InteractionEditSuccess -> {
+                    is AssistanceRegistrationStep3ViewModel.UiEvent.InteractionEditSuccess -> {
                         if (loadedInteractionForm == null) return@collect
                         if (loadedDraftForm?.interactions == null) return@collect
 

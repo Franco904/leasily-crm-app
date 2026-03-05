@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AssistanceRegistrationStep3ViewModel : ViewModel() {
-    private val _uiEvents = Channel<UiEvents>()
+    private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _interactionForm = MutableStateFlow<AssistanceInteractionDraftFormUiState?>(null)
@@ -78,7 +78,7 @@ class AssistanceRegistrationStep3ViewModel : ViewModel() {
 
             if (interactionFromForm == storedInteraction) {
                 val msg = R.string.no_data_changed_success_message
-                _uiEvents.trySend(UiEvents.InteractionEditSuccess(messageId = msg))
+                _uiEvents.trySend(UiEvent.InteractionEditSuccess(messageId = msg))
                 return
             }
         }
@@ -112,8 +112,8 @@ class AssistanceRegistrationStep3ViewModel : ViewModel() {
                 }
 
             val saveEvent =
-                if (isEditing) UiEvents.InteractionEditSuccess(messageId = R.string.edit_assistance_interaction_success_message)
-                else UiEvents.InteractionCreateSuccess
+                if (isEditing) UiEvent.InteractionEditSuccess(messageId = R.string.edit_assistance_interaction_success_message)
+                else UiEvent.InteractionCreateSuccess
 
             _uiEvents.trySend(saveEvent)
         }
@@ -123,9 +123,9 @@ class AssistanceRegistrationStep3ViewModel : ViewModel() {
         _formErrors.update { AssistanceInteractionErrorUiState() }
     }
 
-    sealed interface UiEvents {
-        data object InteractionCreateSuccess : UiEvents
+    sealed interface UiEvent {
+        data object InteractionCreateSuccess : UiEvent
 
-        data class InteractionEditSuccess(val messageId: Int) : UiEvents
+        data class InteractionEditSuccess(val messageId: Int) : UiEvent
     }
 }

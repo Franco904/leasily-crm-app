@@ -78,7 +78,7 @@ fun AssistanceRegistrationStep2Screen(
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is AssistanceRegistrationViewModel.UiEvents.BottomSheetError -> {
+                    is AssistanceRegistrationViewModel.UiEvent.BottomSheetError -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
@@ -93,7 +93,7 @@ fun AssistanceRegistrationStep2Screen(
         launch {
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is AssistanceRegistrationStep2ViewModel.UiEvents.Error -> {
+                    is AssistanceRegistrationStep2ViewModel.UiEvent.BottomSheetError -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )

@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class AssistanceRegistrationStep1ViewModel : ViewModel() {
-    private val _uiEvents = Channel<UiEvents>()
+    private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _formErrors = MutableStateFlow(AssistanceStep1ErrorUiState())
@@ -65,7 +65,7 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
             )
 
             parsingResults
-                .onSuccess { _uiEvents.send(UiEvents.ValidateSuccess) }
+                .onSuccess { _uiEvents.send(UiEvent.ValidateSuccess) }
                 .onErrors { errors ->
                     val distanceToSeaError =
                         errors.firstOrNull { it is DomainError.PropertySeaProximity }
@@ -81,7 +81,7 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
 
                     val firstFieldWithError =
                         _formErrors.value.errors.entries.first { it.value != null }.key
-                    _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
+                    _uiEvents.send(UiEvent.ScrollToField(firstFieldWithError))
                 }
         }
     }
@@ -98,7 +98,7 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
             }
 
             clearPreferredNeighborhoodErrors()
-            _uiEvents.send(UiEvents.AssistanceSearchedNeighborhoodSaveSuccess)
+            _uiEvents.send(UiEvent.AssistanceSearchedNeighborhoodSaveSuccess)
         }
     }
 
@@ -106,11 +106,11 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
         _neighborhoodFormError.update { null }
     }
 
-    sealed interface UiEvents {
-        data class ScrollToField(val field: AssistanceStep1Field) : UiEvents
+    sealed interface UiEvent {
+        data class ScrollToField(val field: AssistanceStep1Field) : UiEvent
 
-        data object ValidateSuccess : UiEvents
+        data object ValidateSuccess : UiEvent
 
-        data object AssistanceSearchedNeighborhoodSaveSuccess : UiEvents
+        data object AssistanceSearchedNeighborhoodSaveSuccess : UiEvent
     }
 }

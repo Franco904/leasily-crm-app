@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import kotlinx.collections.immutable.ImmutableList
 
 inline fun <D, E : BaseError> AppResultCompound<D, E>.onSuccess(
@@ -15,6 +16,15 @@ inline fun <D, E : BaseError> AppResultCompound<D, E>.onErrors(
 ) = apply {
     if (this is AppResultCompound.Errors<D, E>) {
         block(errors)
+    }
+}
+
+inline fun <D, E : BaseError> AppResultCompound<D, E>.onApplicationError(
+    block: (ApplicationError) -> Unit,
+) = apply {
+    if (this is AppResultCompound.Errors<D, E> && errors.any { it is ApplicationError }) {
+        val error = errors.filterIsInstance<ApplicationError>().firstOrNull() ?: return@apply
+        block(error)
     }
 }
 

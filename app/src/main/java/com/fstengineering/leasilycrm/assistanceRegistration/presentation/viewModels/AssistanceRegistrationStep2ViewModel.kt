@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState
+import com.fstengineering.leasilycrm.core.presentation.utils.onExternalError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -25,7 +26,7 @@ class AssistanceRegistrationStep2ViewModel(
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvents>()
+    private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _properties =
@@ -47,7 +48,7 @@ class AssistanceRegistrationStep2ViewModel(
     private fun getProperties() {
         viewModelScope.launch {
             propertyRepository.getAll()
-                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onExternalError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                 .onSuccess { properties ->
                     val uiStates = properties
                         .map { PropertyCardDetailsUiState.fromDomain(it) }
@@ -65,7 +66,7 @@ class AssistanceRegistrationStep2ViewModel(
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
                     propertyRepository.getAllMatching(matching = searchInput)
-                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                        .onExternalError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingProperties ->
                             val uiStates = matchingProperties
                                 .map { PropertyCardDetailsUiState.fromDomain(it) }
@@ -81,7 +82,7 @@ class AssistanceRegistrationStep2ViewModel(
         _searchInput.update { searchInput?.ifBlank { null } }
     }
 
-    sealed interface UiEvents {
-        data class Error(val error: ApplicationError) : UiEvents
+    sealed interface UiEvent {
+        data class BottomSheetError(val error: ApplicationError.External) : UiEvent
     }
 }

@@ -6,9 +6,11 @@ import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetDa
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.ErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChannel
 
-fun ApplicationError.toBottomSheetData(properties: ErrorBottomSheetDataPropertiesStrategy): ErrorBottomSheetData =
+fun ApplicationError.External.toBottomSheetData(
+    properties: ErrorBottomSheetDataPropertiesStrategy,
+): ErrorBottomSheetData =
     when (this) {
-        ApplicationError.NoInternet -> {
+        ApplicationError.External.NoInternet -> {
             ErrorBottomSheetData(
                 title = properties.noInternetErrorTitle,
                 description = properties.noInternetErrorDescription,
@@ -17,7 +19,7 @@ fun ApplicationError.toBottomSheetData(properties: ErrorBottomSheetDataPropertie
             )
         }
 
-        ApplicationError.Timeout -> {
+        ApplicationError.External.Timeout -> {
             ErrorBottomSheetData(
                 title = properties.timeOutErrorTitle,
                 description = properties.timeOutErrorDescription,
@@ -26,7 +28,7 @@ fun ApplicationError.toBottomSheetData(properties: ErrorBottomSheetDataPropertie
             )
         }
 
-        ApplicationError.Unauthorized -> {
+        ApplicationError.External.Unauthorized -> {
             ErrorBottomSheetData(
                 title = properties.unauthorizedErrorTitle,
                 description = properties.unauthorizedErrorDescription,
@@ -35,7 +37,7 @@ fun ApplicationError.toBottomSheetData(properties: ErrorBottomSheetDataPropertie
             )
         }
 
-        ApplicationError.Inconsistency -> {
+        ApplicationError.External.Inconsistency -> {
             ErrorBottomSheetData(
                 title = properties.inconsistencyErrorTitle,
                 description = properties.inconsistencyErrorDescription,
@@ -44,7 +46,7 @@ fun ApplicationError.toBottomSheetData(properties: ErrorBottomSheetDataPropertie
             )
         }
 
-        ApplicationError.Unknown -> {
+        ApplicationError.External.Unknown -> {
             ErrorBottomSheetData(
                 title = properties.unknownErrorTitle,
                 description = properties.unknownErrorDescription,

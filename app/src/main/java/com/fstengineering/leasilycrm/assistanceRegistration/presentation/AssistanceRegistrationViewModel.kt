@@ -32,7 +32,7 @@ class AssistanceRegistrationViewModel(
     var assistanceId: Long? = null
         private set
 
-    private val _uiEvents = Channel<UiEvents>()
+    private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _pastNeighborhoods =
@@ -71,7 +71,7 @@ class AssistanceRegistrationViewModel(
             )
 
             readAssistance.invoke(query)
-                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { storedAssistance ->
                     val draftForm =
                         AssistanceDraftFormUiState.Loaded.fromReadModel(storedAssistance)
@@ -85,7 +85,7 @@ class AssistanceRegistrationViewModel(
     private fun getPastNeighborhoods() {
         viewModelScope.launch {
             assistanceRepository.getAllNeighborhoodNames()
-                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { neighborhoodNames -> _pastNeighborhoods.update { neighborhoodNames } }
         }
     }
@@ -100,7 +100,7 @@ class AssistanceRegistrationViewModel(
 
         viewModelScope.launch {
             if (formToEdit != null && form == formToEdit) {
-                _uiEvents.trySend(UiEvents.AssistanceEditSuccess(messageId = R.string.no_data_changed_success_message))
+                _uiEvents.trySend(UiEvent.AssistanceEditSuccess(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
 
@@ -108,7 +108,7 @@ class AssistanceRegistrationViewModel(
                 .onErrors { errors ->
                     errors.filterIsInstance<ApplicationError>()
                         .firstOrNull()
-                        ?.let { _uiEvents.send(UiEvents.BottomSheetError(it)) }
+                        ?.let { _uiEvents.send(UiEvent.BottomSheetError(it)) }
 
                     val hasDomainError = errors.any { it is DomainError }
                     if (hasDomainError) {
@@ -117,8 +117,8 @@ class AssistanceRegistrationViewModel(
                 }
 
             val saveEvent =
-                if (formToEdit != null) UiEvents.AssistanceEditSuccess(messageId = R.string.edit_assistance_success_message)
-                else UiEvents.AssistanceCreateSuccess
+                if (formToEdit != null) UiEvent.AssistanceEditSuccess(messageId = R.string.edit_assistance_success_message)
+                else UiEvent.AssistanceCreateSuccess
 
             _uiEvents.trySend(saveEvent)
         }
@@ -128,7 +128,7 @@ class AssistanceRegistrationViewModel(
         val needConfirmation = formToEdit != draftForm.value
 
         viewModelScope.launch {
-            _uiEvents.trySend(UiEvents.Exit(needConfirmation))
+            _uiEvents.trySend(UiEvent.Exit(needConfirmation))
         }
     }
 
@@ -138,15 +138,15 @@ class AssistanceRegistrationViewModel(
         super.onCleared()
     }
 
-    sealed interface UiEvents {
-        data class BottomSheetError(val error: ApplicationError) : UiEvents
+    sealed interface UiEvent {
+        data class BottomSheetError(val error: ApplicationError) : UiEvent
 
-        data object AssistanceCreateSuccess : UiEvents
+        data object AssistanceCreateSuccess : UiEvent
 
-        data class AssistanceEditSuccess(val messageId: Int) : UiEvents
+        data class AssistanceEditSuccess(val messageId: Int) : UiEvent
 
-        data object ConvertOldTenantToLead : UiEvents
+        data object ConvertOldTenantToLead : UiEvent
 
-        data class Exit(val needConfirmation: Boolean) : UiEvents
+        data class Exit(val needConfirmation: Boolean) : UiEvent
     }
 }

@@ -100,7 +100,7 @@ sealed interface DomainError : SystemError {
         StatusInvalid,
     }
 
-    enum class User : DomainError {
-        CreciNumberLengthIsGreaterThan8Chars,
+    enum class UserCreci : DomainError {
+        LengthIsGreaterThan8Chars,
     }
 }

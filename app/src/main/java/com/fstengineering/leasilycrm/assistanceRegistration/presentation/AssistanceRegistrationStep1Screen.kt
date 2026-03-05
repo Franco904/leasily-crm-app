@@ -82,14 +82,14 @@ fun AssistanceRegistrationStep1Screen(
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is AssistanceRegistrationViewModel.UiEvents.BottomSheetError -> {
+                    is AssistanceRegistrationViewModel.UiEvent.BottomSheetError -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
                         onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
-                    is AssistanceRegistrationViewModel.UiEvents.Exit -> {
+                    is AssistanceRegistrationViewModel.UiEvent.Exit -> {
                         if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
                         else {
                             mustShowConfirmLeaveRegistrationDialog = false
@@ -105,15 +105,15 @@ fun AssistanceRegistrationStep1Screen(
         launch {
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is AssistanceRegistrationStep1ViewModel.UiEvents.ScrollToField -> {
+                    is AssistanceRegistrationStep1ViewModel.UiEvent.ScrollToField -> {
                         scrollToFieldChannel.trySend(uiEvent.field)
                     }
 
-                    is AssistanceRegistrationStep1ViewModel.UiEvents.ValidateSuccess -> {
+                    is AssistanceRegistrationStep1ViewModel.UiEvent.ValidateSuccess -> {
                         onNext()
                     }
 
-                    is AssistanceRegistrationStep1ViewModel.UiEvents.AssistanceSearchedNeighborhoodSaveSuccess -> {
+                    is AssistanceRegistrationStep1ViewModel.UiEvent.AssistanceSearchedNeighborhoodSaveSuccess -> {
                         if (neighborhoodForm == null || loadedDraftForm == null) return@collect
 
                         val assistanceSearchedNeighborhoods =
