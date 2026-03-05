@@ -10,9 +10,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationStep1Screen
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationStep2Screen
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationStep3Screen
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.AssistanceRegistrationStep1Screen
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.AssistanceRegistrationStep2Screen
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.AssistanceRegistrationStep3Screen
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsScreen

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.assistanceRegistration
+package com.fstengineering.leasilycrm.assistanceRegistration.presentation
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
@@ -16,34 +16,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceCreateSuccess
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.AssistanceEditSuccess
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.ConvertOldTenantToLead
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.BottomSheetError
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceInteractionRegistrationBottomSheet
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationFormSectionStep3
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationTopAppBar
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.ConfirmDeleteAssistanceInteractionDialog
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
-import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel
-import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel.UiEvents.InteractionCreateSuccess
-import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep3ViewModel.UiEvents.InteractionEditSuccess
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
-import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
@@ -89,28 +79,28 @@ fun AssistanceRegistrationStep3Screen(
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is BottomSheetError -> {
+                    is AssistanceRegistrationViewModel.UiEvents.BottomSheetError -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
                         onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
-                    is AssistanceCreateSuccess -> {
+                    is AssistanceRegistrationViewModel.UiEvents.AssistanceCreateSuccess -> {
                         onLeaveRegistration()
                         onUiEvent(UiEvent.ShowSnackBar(R.string.create_assistance_success_message))
                     }
 
-                    is AssistanceEditSuccess -> {
+                    is AssistanceRegistrationViewModel.UiEvents.AssistanceEditSuccess -> {
                         onLeaveRegistration()
                         onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                     }
 
-                    is ConvertOldTenantToLead -> {
+                    is AssistanceRegistrationViewModel.UiEvents.ConvertOldTenantToLead -> {
                         onUiEvent(UiEvent.ShowSnackBar(R.string.convert_tenant_to_lead_success_message))
                     }
 
-                    is Exit -> {
+                    is AssistanceRegistrationViewModel.UiEvents.Exit -> {
                         if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
                         else {
                             mustShowConfirmLeaveRegistrationDialog = false
@@ -124,7 +114,7 @@ fun AssistanceRegistrationStep3Screen(
         launch {
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is InteractionCreateSuccess -> {
+                    is AssistanceRegistrationStep3ViewModel.UiEvents.InteractionCreateSuccess -> {
                         if (loadedInteractionForm == null) return@collect
                         if (loadedDraftForm?.interactions == null) return@collect
 
@@ -138,7 +128,7 @@ fun AssistanceRegistrationStep3Screen(
                         onUiEvent(UiEvent.ShowSnackBar(R.string.create_assistance_interaction_success_message))
                     }
 
-                    is InteractionEditSuccess -> {
+                    is AssistanceRegistrationStep3ViewModel.UiEvents.InteractionEditSuccess -> {
                         if (loadedInteractionForm == null) return@collect
                         if (loadedDraftForm?.interactions == null) return@collect
 

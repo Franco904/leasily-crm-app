@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.assistanceRegistration.viewModels
+package com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.assistanceRegistration
+package com.fstengineering.leasilycrm.assistanceRegistration.presentation
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
@@ -23,17 +23,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.BottomSheetError
-import com.fstengineering.leasilycrm.assistanceRegistration.AssistanceRegistrationViewModel.UiEvents.Exit
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationFormSectionStep1
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistanceRegistrationTopAppBar
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.AssistancePreferredNeighborhoodRegistrationDialog
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceStep1Field
-import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel
-import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel.UiEvents.AssistanceSearchedNeighborhoodSaveSuccess
-import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel.UiEvents.ScrollToField
-import com.fstengineering.leasilycrm.assistanceRegistration.viewModels.AssistanceRegistrationStep1ViewModel.UiEvents.ValidateSuccess
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
@@ -87,14 +82,14 @@ fun AssistanceRegistrationStep1Screen(
         launch {
             parentViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is BottomSheetError -> {
+                    is AssistanceRegistrationViewModel.UiEvents.BottomSheetError -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
                         onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                     }
 
-                    is Exit -> {
+                    is AssistanceRegistrationViewModel.UiEvents.Exit -> {
                         if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
                         else {
                             mustShowConfirmLeaveRegistrationDialog = false
@@ -110,15 +105,15 @@ fun AssistanceRegistrationStep1Screen(
         launch {
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is ScrollToField -> {
+                    is AssistanceRegistrationStep1ViewModel.UiEvents.ScrollToField -> {
                         scrollToFieldChannel.trySend(uiEvent.field)
                     }
 
-                    is ValidateSuccess -> {
+                    is AssistanceRegistrationStep1ViewModel.UiEvents.ValidateSuccess -> {
                         onNext()
                     }
 
-                    is AssistanceSearchedNeighborhoodSaveSuccess -> {
+                    is AssistanceRegistrationStep1ViewModel.UiEvents.AssistanceSearchedNeighborhoodSaveSuccess -> {
                         if (neighborhoodForm == null || loadedDraftForm == null) return@collect
 
                         val assistanceSearchedNeighborhoods =
