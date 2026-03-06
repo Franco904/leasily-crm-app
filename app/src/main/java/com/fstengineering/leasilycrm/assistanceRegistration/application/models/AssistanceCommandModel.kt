@@ -1,8 +1,10 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.models
 
 import com.fstengineering.leasilycrm.BuildConfig
+import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.application.utils.toApplicationError
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
@@ -42,7 +44,7 @@ data class AssistanceCommandModel(
     val interactions: ImmutableList<AssistanceInteractionCommandModel>,
     val leadTenantId: Long?,
 ) : CommandUseCase.CommandModel {
-    fun toDomain(): AppResultCompound<Assistance, DomainError> {
+    fun toAggregate(): AppResultCompound<Assistance, ApplicationError> {
         val errors = mutableListOf<DomainError>()
 
         val isAnyNeighborhoodEmpty = preferredNeighborhoods.any { it.isBlank() }
@@ -50,7 +52,7 @@ data class AssistanceCommandModel(
 
         val interactions = interactions
             .mapNotNull { interaction ->
-                interaction.toDomain()
+                interaction.toEntity()
                     .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
             }
             .toImmutableList()
@@ -87,7 +89,8 @@ data class AssistanceCommandModel(
         )
             .fold(onErrors = { errors.addAll(0, it); null }, onSuccess = { it })
 
-        if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+        val applicationErrors = errors.map { it.toApplicationError() }.toPersistentList()
+        if (errors.isNotEmpty()) return AppResultCompound.Errors(applicationErrors)
 
         return AppResultCompound.Success(data = requireNotNull(parsed))
     }

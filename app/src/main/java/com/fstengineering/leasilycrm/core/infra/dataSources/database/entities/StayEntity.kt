@@ -9,7 +9,6 @@ import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
-import kotlinx.collections.immutable.persistentListOf
 
 @Entity(
     tableName = "stays",

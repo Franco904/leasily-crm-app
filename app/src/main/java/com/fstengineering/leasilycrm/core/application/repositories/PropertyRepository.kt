@@ -14,13 +14,9 @@ interface PropertyRepository {
 
     suspend fun getById(propertyId: Long): AppResult<Property, ApplicationError>
 
-    suspend fun getAll(): AppResult<ImmutableList<Property>, ApplicationError>
-
     suspend fun getAllMatching(matching: String?): AppResult<ImmutableList<Property>, ApplicationError>
 
     suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, ApplicationError>
-
-    suspend fun getAllSentInAssistance(assistanceId: Long): AppResult<ImmutableList<Property>, ApplicationError>
 
     fun watchById(propertyId: Long): Flow<AppResult<Property?, ApplicationError>>
 

@@ -14,8 +14,8 @@ class ConnectivityAdapterImpl(
                 connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
 
             val hasNonMobileConnection =
-                capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
-            capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) == true
+                capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true ||
+                        capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) == true
 
             if (hasNonMobileConnection) return true
 

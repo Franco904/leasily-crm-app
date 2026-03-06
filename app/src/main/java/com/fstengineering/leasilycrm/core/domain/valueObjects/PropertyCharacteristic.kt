@@ -1,8 +1,5 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-
 enum class PropertyCharacteristic(val id: Long) {
     Accessibility(id = 1L),
     Balcony(id = 2L),
@@ -22,11 +19,6 @@ enum class PropertyCharacteristic(val id: Long) {
     WashingMachine(id = 16L);
 
     companion object {
-        fun parse(id: Long): AppResult<PropertyCharacteristic, DomainError.Property> {
-            val characteristic = entries.find { it.id == id }
-
-            return characteristic?.let { AppResult.Success(data = it) }
-                ?: AppResult.Error(DomainError.Property.CharacteristicInvalid)
-        }
+        fun fromId(id: Long) = entries.find { it.id == id }
     }
 }

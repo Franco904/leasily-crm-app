@@ -7,6 +7,9 @@ private val INLINE_REQUIRED = R.string.inline_required
 private val INLINE_GENERIC_INVALID_DATA = R.string.inline_invalid_data
 
 fun DomainError.toInlineMessage() = when (this) {
+    DomainError.AssistanceInteractionDate.Required -> INLINE_REQUIRED
+    DomainError.AssistanceInteractionTitle.Required -> INLINE_REQUIRED
+
     DomainError.AssistanceOtherFields.TenantRequired -> INLINE_REQUIRED
     DomainError.AssistanceOtherFields.PreferredPeriodRequired -> INLINE_REQUIRED
     DomainError.AssistanceOtherFields.PreferredPeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
@@ -21,8 +24,6 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.AssistanceOtherFields.SingleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
     DomainError.AssistanceOtherFields.BathroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
     DomainError.AssistanceOtherFields.ParkingSpotsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
-    DomainError.AssistanceInteractionDate.Required -> INLINE_REQUIRED
-    DomainError.AssistanceInteractionTitle.Required -> INLINE_REQUIRED
 
     DomainError.Neighborhood.Required -> INLINE_REQUIRED
 
@@ -30,7 +31,6 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.Property.TypeRequired -> INLINE_REQUIRED
     DomainError.Property.TypeInvalid -> INLINE_GENERIC_INVALID_DATA
     DomainError.Property.StreetAddressRequired -> INLINE_REQUIRED
-    DomainError.Property.CharacteristicInvalid -> INLINE_GENERIC_INVALID_DATA
     DomainError.Property.PricePeriodRequired -> INLINE_REQUIRED
     DomainError.Property.PricePeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
     DomainError.Property.PricePeriodStartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
@@ -81,5 +81,5 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.Tenant.EmailLengthIsGreaterThan120Chars -> R.string.inline_too_big_120_chars
     DomainError.Tenant.StatusInvalid -> INLINE_GENERIC_INVALID_DATA
 
-    DomainError.User.CreciNumberLengthIsGreaterThan8Chars -> R.string.inline_too_big_8_chars
+    DomainError.UserCreci.LengthIsGreaterThan8Chars -> R.string.inline_too_big_8_chars
 }

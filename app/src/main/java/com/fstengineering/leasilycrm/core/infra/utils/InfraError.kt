@@ -9,10 +9,10 @@ enum class InfraError : BaseError {
     Unauthorized,
     Unknown;
 
-    fun toApplication(): ApplicationError = when (this) {
-        NoInternet -> ApplicationError.External.NoInternet
-        Timeout -> ApplicationError.External.Timeout
-        Unauthorized -> ApplicationError.External.Unauthorized
-        Unknown -> ApplicationError.External.Unknown
+    fun toApplicationError(): ApplicationError = when (this) {
+        NoInternet -> ApplicationError.Infra.NoInternet
+        Timeout -> ApplicationError.Infra.Timeout
+        Unauthorized -> ApplicationError.Infra.Unauthorized
+        Unknown -> ApplicationError.Infra.Unknown
     }
 }

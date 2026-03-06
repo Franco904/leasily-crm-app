@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.entities.StayFile
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.stayDetails.composables.items.StayCheckInCheckOutDetailsItem
 import com.fstengineering.leasilycrm.stayDetails.composables.items.StayCommissionDetailsItem
 import com.fstengineering.leasilycrm.stayDetails.composables.items.StayObservationsDetailsItem

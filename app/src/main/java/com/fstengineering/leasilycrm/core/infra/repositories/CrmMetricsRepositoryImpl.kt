@@ -27,7 +27,7 @@ class CrmMetricsRepositoryImpl(
             val generatedLeadsPerMonthFlow = databaseDataSource
                 .watchGeneratedLeadsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 
@@ -68,7 +68,7 @@ class CrmMetricsRepositoryImpl(
             val generatedLeadsPerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchGeneratedLeadsPerTenantTagPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 
@@ -116,7 +116,7 @@ class CrmMetricsRepositoryImpl(
             val leadContactChannelDistributionFlow = databaseDataSource
                 .watchCountLeadsByContactChannelType()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 
@@ -146,7 +146,7 @@ class CrmMetricsRepositoryImpl(
             val newStayBookingsPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 
@@ -187,7 +187,7 @@ class CrmMetricsRepositoryImpl(
             val newStayBookingsPerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerTenantTagPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 
@@ -235,7 +235,7 @@ class CrmMetricsRepositoryImpl(
             val newStayBookingsPerTop3NeighborhoodsPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 
@@ -284,7 +284,7 @@ class CrmMetricsRepositoryImpl(
             val commissionInvoicePerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 
@@ -326,7 +326,7 @@ class CrmMetricsRepositoryImpl(
             val commissionInvoicePerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerTenantTagPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 
@@ -374,7 +374,7 @@ class CrmMetricsRepositoryImpl(
             val commissionInvoicePerTop3NeighborhoodsPerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 
@@ -423,7 +423,7 @@ class CrmMetricsRepositoryImpl(
             val averageTicketPerMonthFlow = databaseDataSource
                 .watchAverageTicketPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it }
                 )
 

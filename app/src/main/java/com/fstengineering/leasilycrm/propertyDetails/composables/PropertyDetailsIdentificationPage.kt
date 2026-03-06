@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyIncludedItemsDetailsItem
 import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyLocationDetailsItem
 import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyObservationsDetailsItem

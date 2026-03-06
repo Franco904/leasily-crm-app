@@ -1,34 +1,34 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
+import com.fstengineering.leasilycrm.settings.application.repositories.SettingsRepository
+import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.repositories.UserSessionRepository
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckNotificationStatus
-import com.fstengineering.leasilycrm.core.application.repositories.AuthRepository
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsRepository
-import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 
 class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
-    private val authRepository: AuthRepository,
+    private val userSessionRepository: UserSessionRepository,
     private val stayRepository: StayRepository,
     private val settingsRepository: SettingsRepository,
     private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
     override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, InfraError> {
         val isTodayCheckInCheckOutNotificationEnabled =
-            settingsRepository.watchSettings().firstOrNull()
+            settingsRepository.watch().firstOrNull()
                 ?.fold(
                     onError = { false },
                     onSuccess = { it.isTodayCheckInCheckOutNotificationEnabled }
                 ) ?: false
 
-        val isSessionAlive = authRepository.isSessionAlive()
+        val isSessionAlive = userSessionRepository.isSessionAlive()
             .fold(onError = { false }, onSuccess = { it })
 
         if (now.dateTime().hour > 9 || !isTodayCheckInCheckOutNotificationEnabled || !isSessionAlive) {
@@ -52,7 +52,7 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
 
                             StayCheckNotificationStatus(
                                 tenantName = requireNotNull(it.tenantName),
-                                propertyType = PropertyType.parse(requireNotNull(it.propertyTypeId)),
+                                propertyType = PropertyType.fromId(requireNotNull(it.propertyTypeId)),
                                 propertyOwnerName = requireNotNull(it.propertyOwnerName),
                                 hourMinute = if (mustNotifyCheckIn) {
                                     it.checkInDateTime.toHourMinute()

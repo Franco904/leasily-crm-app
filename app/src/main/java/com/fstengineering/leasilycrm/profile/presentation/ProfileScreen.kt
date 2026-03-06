@@ -31,8 +31,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularPr
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
-import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.NotApplicable
-import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.Applicable
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.profile.presentation.composables.ConfirmSignOutUserDialog
 import com.fstengineering.leasilycrm.profile.presentation.composables.EditCreciNumberDialog

@@ -36,7 +36,7 @@ class StayRepositoryImpl(
             saveDataInDatabase(stay)
         }
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = Unit) }
             )
     }
@@ -65,7 +65,7 @@ class StayRepositoryImpl(
             stayDatabaseDataSource.delete(id)
         }
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = Unit) }
             )
     }
@@ -73,7 +73,7 @@ class StayRepositoryImpl(
     override suspend fun getById(stayId: Long): AppResult<Stay, ApplicationError> {
         val stay = stayDatabaseDataSource.getById(id = stayId)
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { it.toDomain() },
             )
 
@@ -84,7 +84,7 @@ class StayRepositoryImpl(
         flow {
             val stayFlow = stayDatabaseDataSource.watchById(id = stayId)
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it },
                 )
                 .map { stayEntity ->
@@ -101,7 +101,7 @@ class StayRepositoryImpl(
         flow {
             val staysFlow = stayDatabaseDataSource.watchAll()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it },
                 )
                 .map {
@@ -118,7 +118,7 @@ class StayRepositoryImpl(
             val staysStatusFlow = stayDatabaseDataSource
                 .watchAllUpcomingCheckInsAndCheckOuts()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it },
                 )
                 .map {
@@ -135,7 +135,7 @@ class StayRepositoryImpl(
         flow {
             plainPreferencesDataSource.readPreferences()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { prefsFlow ->
                         emitAll(
                             prefsFlow.map {
@@ -154,7 +154,7 @@ class StayRepositoryImpl(
         plainPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore)
         }
-            .onError { return AppResult.Error(error = it.toApplication()) }
+            .onError { return AppResult.Error(error = it.toApplicationError()) }
 
         return AppResult.Success(data = Unit)
     }

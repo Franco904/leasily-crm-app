@@ -4,15 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceQueryModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
-import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.toCommand
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.toDraftForm
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.presentation.utils.onInfraError
+import com.fstengineering.leasilycrm.core.presentation.utils.onNonInfraErrors
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
@@ -23,7 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AssistanceRegistrationViewModel(
-    private val assistanceRepository: AssistanceRepository,
+    private val assistanceQueryRepository: AssistanceQueryRepository,
     private val readAssistance: ReadAssistanceUseCase,
     private val writeAssistance: WriteAssistanceUseCase,
 ) : ViewModel() {
@@ -73,8 +75,7 @@ class AssistanceRegistrationViewModel(
             readAssistance.invoke(query)
                 .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { storedAssistance ->
-                    val draftForm =
-                        AssistanceDraftFormUiState.Loaded.fromReadModel(storedAssistance)
+                    val draftForm = storedAssistance.toDraftForm()
 
                     _draftFormUiState.update { draftForm }
                     formToEdit = draftForm
@@ -84,7 +85,7 @@ class AssistanceRegistrationViewModel(
 
     private fun getPastNeighborhoods() {
         viewModelScope.launch {
-            assistanceRepository.getAllNeighborhoodNames()
+            assistanceQueryRepository.getAllNeighborhoodNames()
                 .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { neighborhoodNames -> _pastNeighborhoods.update { neighborhoodNames } }
         }
@@ -105,15 +106,11 @@ class AssistanceRegistrationViewModel(
             }
 
             writeAssistance(command = form.toCommand())
-                .onErrors { errors ->
-                    errors.filterIsInstance<ApplicationError>()
-                        .firstOrNull()
+                .onInfraError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
+                .onNonInfraErrors { errors ->
+                    // TODO: Show something in the UI with the Application errors
+                    errors.firstOrNull()
                         ?.let { _uiEvents.send(UiEvent.BottomSheetError(it)) }
-
-                    val hasDomainError = errors.any { it is DomainError }
-                    if (hasDomainError) {
-                        _draftFormUiState.update { form.copy(hasDomainError = true) }
-                    }
                 }
 
             val saveEvent =

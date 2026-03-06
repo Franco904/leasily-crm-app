@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.presentation.models
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionCommandModel
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionBottomSheetDetailsUiState
 import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionCardDetailsState
@@ -34,12 +34,12 @@ sealed interface AssistanceInteractionDraftFormUiState {
         )
 
         companion object {
-            fun fromDomain(storedInteraction: AssistanceInteraction): Loaded {
+            fun fromReadModel(readModel: AssistanceInteractionReadModel): Loaded {
                 return Loaded(
-                    id = storedInteraction.id,
-                    date = storedInteraction.date,
-                    title = storedInteraction.title,
-                    description = storedInteraction.description,
+                    id = readModel.id,
+                    date = readModel.date,
+                    title = readModel.title,
+                    description = readModel.description,
                 )
             }
         }

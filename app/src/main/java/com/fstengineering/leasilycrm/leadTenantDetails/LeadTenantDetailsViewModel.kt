@@ -2,14 +2,14 @@ package com.fstengineering.leasilycrm.leadTenantDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
+import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
-import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
-import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Job
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class LeadTenantDetailsViewModel(
     private val tenantRepository: TenantRepository,
-    private val assistanceRepository: AssistanceRepository,
+    private val assistanceCommandRepository: AssistanceCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -97,7 +97,7 @@ class LeadTenantDetailsViewModel(
 
     fun deleteCurrentAssistance(currentAssistance: Assistance) {
         viewModelScope.launch {
-            assistanceRepository.delete(id = currentAssistance.id!!)
+            assistanceCommandRepository.delete(id = currentAssistance.id!!)
                 .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             _uiEvents.send(UiEvents.CurrentAssistanceDeleteSuccess)

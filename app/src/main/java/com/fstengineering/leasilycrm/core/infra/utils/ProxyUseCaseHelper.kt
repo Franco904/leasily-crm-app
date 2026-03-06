@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.core.infra.utils
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interceptors.RequireAuthCommandInterceptor
 import com.fstengineering.leasilycrm.core.application.useCases.interceptors.RequireAuthQueryInterceptor
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import org.koin.core.module.Module
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.scope.Scope

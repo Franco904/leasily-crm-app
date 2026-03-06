@@ -41,9 +41,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
+import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomSheet

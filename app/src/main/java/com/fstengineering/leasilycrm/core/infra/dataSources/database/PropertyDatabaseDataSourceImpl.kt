@@ -1,10 +1,10 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database
 
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.coroutines.flow.Flow
 
@@ -21,12 +21,8 @@ class PropertyDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getById(id) }
     }
 
-    override suspend fun getAll(): AppResult<List<PropertyCompound>, InfraError> {
+    override suspend fun getAll(matching: String?): AppResult<List<PropertyCompound>, InfraError> {
         return onDatabaseSafe { dao.getAll() }
-    }
-
-    override suspend fun getAllMatching(matching: String?): AppResult<List<PropertyCompound>, InfraError> {
-        return onDatabaseSafe { dao.getAllMatching(matching) }
     }
 
     override suspend fun getAllNeighborHoodNames(): AppResult<List<String>, InfraError> {

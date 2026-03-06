@@ -29,8 +29,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
+import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DatePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates

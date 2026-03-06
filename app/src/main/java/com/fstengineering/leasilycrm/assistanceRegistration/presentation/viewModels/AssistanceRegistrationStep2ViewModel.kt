@@ -2,12 +2,12 @@ package com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewMo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectablePropertyQueryRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.toCardDetails
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState
-import com.fstengineering.leasilycrm.core.presentation.utils.onExternalError
+import com.fstengineering.leasilycrm.core.presentation.utils.onInfraError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class AssistanceRegistrationStep2ViewModel(
-    private val propertyRepository: PropertyRepository,
+    private val assistanceSelectablePropertyQueryRepository: AssistanceSelectablePropertyQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -47,11 +47,11 @@ class AssistanceRegistrationStep2ViewModel(
 
     private fun getProperties() {
         viewModelScope.launch {
-            propertyRepository.getAll()
-                .onExternalError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
+            assistanceSelectablePropertyQueryRepository.getAll()
+                .onInfraError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                 .onSuccess { properties ->
                     val uiStates = properties
-                        .map { PropertyCardDetailsUiState.fromDomain(it) }
+                        .map { it.toCardDetails() }
                         .toImmutableList()
 
                     _properties.update { uiStates }
@@ -65,11 +65,11 @@ class AssistanceRegistrationStep2ViewModel(
             searchInput
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
-                    propertyRepository.getAllMatching(matching = searchInput)
-                        .onExternalError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
+                    assistanceSelectablePropertyQueryRepository.getAll(matching = searchInput)
+                        .onInfraError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingProperties ->
                             val uiStates = matchingProperties
-                                .map { PropertyCardDetailsUiState.fromDomain(it) }
+                                .map { it.toCardDetails() }
                                 .toImmutableList()
 
                             _properties.update { uiStates }
@@ -83,6 +83,6 @@ class AssistanceRegistrationStep2ViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError.External) : UiEvent
+        data class BottomSheetError(val error: ApplicationError.Infra) : UiEvent
     }
 }

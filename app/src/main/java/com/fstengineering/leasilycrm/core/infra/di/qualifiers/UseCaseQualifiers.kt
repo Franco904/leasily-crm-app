@@ -8,3 +8,6 @@ val writeAssistanceQualifier = named("writeAssistance")
 
 // Profile
 val writeUserQualifier = named("writeUser")
+
+// Sign-in
+val signInUserQualifier = named("signInUser")

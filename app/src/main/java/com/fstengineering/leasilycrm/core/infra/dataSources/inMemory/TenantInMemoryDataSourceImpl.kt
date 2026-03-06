@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.inMemory
 
+import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.infra.dataSources.inMemory.interfaces.InMemoryDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.inMemory.interfaces.TenantInMemoryDataSource
-import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 
 class TenantInMemoryDataSourceImpl(
     private val inMemoryDataSource: InMemoryDataSource,

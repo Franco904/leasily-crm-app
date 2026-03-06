@@ -3,11 +3,11 @@ package com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewMo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionErrorUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceInteractionField
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage

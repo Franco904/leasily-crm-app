@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
-sealed interface DomainError : SystemError {
+sealed interface DomainError : BaseError {
     fun asException() = DomainException(this)
 
     enum class AssistanceInteractionDate : DomainError {
@@ -35,9 +35,7 @@ sealed interface DomainError : SystemError {
     enum class Property : DomainError {
         OwnerRequired,
         TypeRequired,
-        TypeInvalid,
         StreetAddressRequired,
-        CharacteristicInvalid,
         PricePeriodRequired,
         PricePeriodStartAndEndDatesAreTheSame,
         PricePeriodStartDateIsAfterEndDate,

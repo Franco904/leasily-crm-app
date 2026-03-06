@@ -31,7 +31,7 @@ class PropertyOwnerRepositoryImpl(
             saveDataInDatabase(propertyOwner)
         }
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = Unit) }
             )
     }
@@ -53,7 +53,7 @@ class PropertyOwnerRepositoryImpl(
             propertyOwnerDatabaseDataSource.delete(id)
         }
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = Unit) }
             )
     }
@@ -63,7 +63,7 @@ class PropertyOwnerRepositoryImpl(
     ): AppResult<PropertyOwner, ApplicationError> {
         val propertyOwner = propertyOwnerDatabaseDataSource.getById(id = propertyOwnerId)
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { it }
             )
             .toDomain()
@@ -76,7 +76,7 @@ class PropertyOwnerRepositoryImpl(
     ): Flow<AppResult<PropertyOwner, ApplicationError>> = flow {
         val propertyOwnerFlow = propertyOwnerDatabaseDataSource.watchById(id = propertyOwnerId)
             .fold(
-                onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                 onSuccess = { it }
             )
             .map { propertyOwner ->
@@ -94,7 +94,7 @@ class PropertyOwnerRepositoryImpl(
             emitAll(
                 propertyOwnerDatabaseDataSource.watchAll()
                     .fold(
-                        onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                        onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                         onSuccess = { it }
                     )
                     .map {
@@ -114,7 +114,7 @@ class PropertyOwnerRepositoryImpl(
             currentStoredPropertyOwnerName = currentStoredPropertyOwnerName,
         )
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { count -> count }
             )
 

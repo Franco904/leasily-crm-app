@@ -30,8 +30,8 @@ import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationSt
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep4Screen
 import com.fstengineering.leasilycrm.propertyStays.PropertyStaysScreen
 import com.fstengineering.leasilycrm.root.RootScreen
-import com.fstengineering.leasilycrm.settings.SettingsScreen
-import com.fstengineering.leasilycrm.signin.SignInScreen
+import com.fstengineering.leasilycrm.settings.presentation.SettingsScreen
+import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsScreen
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationScreen
 import org.koin.androidx.compose.koinViewModel

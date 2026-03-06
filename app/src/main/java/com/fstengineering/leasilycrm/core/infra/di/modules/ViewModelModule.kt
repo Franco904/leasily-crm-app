@@ -6,6 +6,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewMod
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
+import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.home.dashboard.DashboardViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
@@ -26,8 +28,8 @@ import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyReg
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
-import com.fstengineering.leasilycrm.settings.SettingsViewModel
-import com.fstengineering.leasilycrm.signin.SignInViewModel
+import com.fstengineering.leasilycrm.settings.presentation.SettingsViewModel
+import com.fstengineering.leasilycrm.signin.presentation.SignInViewModel
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel
 import org.koin.core.module.dsl.viewModel
@@ -36,14 +38,14 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel {
         RootViewModel(
-            authRepository = get(),
+            userSessionRepository = get(),
             settingsRepository = get(),
         )
     }
 
     viewModel {
         SignInViewModel(
-            authRepository = get(),
+            userSessionRepository = get(),
             userRepository = get(),
         )
     }
@@ -56,8 +58,8 @@ val viewModelModule = module {
 
     viewModel {
         ProfileViewModel(
-            authRepository = get(),
-            userRepository = get(),
+            userSessionRepository = get(),
+            userQueryRepository = get(),
             writeUser = get(),
             userSessionService = get(),
         )
@@ -65,9 +67,9 @@ val viewModelModule = module {
 
     viewModel {
         HomeViewModel(
-            assistanceRepository = get(),
+            assistanceCommandRepository = get(),
             stayRepository = get(),
-            userRepository = get(),
+            userQueryRepository = get(),
             now = AppDateTime.lazyNow(),
         )
     }
@@ -161,7 +163,7 @@ val viewModelModule = module {
     viewModel {
         LeadTenantDetailsViewModel(
             tenantRepository = get(),
-            assistanceRepository = get(),
+            assistanceCommandRepository = get(),
         )
     }
 
@@ -173,8 +175,9 @@ val viewModelModule = module {
 
     viewModel {
         AssistanceRegistrationViewModel(
-            assistanceRepository = get(),
-            tenantRepository = get(),
+            assistanceQueryRepository = get(),
+            readAssistance = get(readAssistanceQualifier),
+            writeAssistance = get(writeAssistanceQualifier),
         )
     }
 

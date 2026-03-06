@@ -3,8 +3,7 @@ package com.fstengineering.leasilycrm.profile.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.repositories.AuthRepository
-import com.fstengineering.leasilycrm.core.application.repositories.UserRepository
+import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
 import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
@@ -12,10 +11,12 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.domain.valueObjects.Creci
-import com.fstengineering.leasilycrm.core.presentation.utils.onExternalError
+import com.fstengineering.leasilycrm.profile.domain.valueObjects.Creci
+import com.fstengineering.leasilycrm.core.presentation.utils.onInfraError
+import com.fstengineering.leasilycrm.core.presentation.utils.onNonInfraErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
+import com.fstengineering.leasilycrm.profile.application.repositories.UserProfileQueryRepository
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
 import kotlinx.coroutines.channels.Channel
@@ -26,10 +27,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
     private val writeUser: WriteUserUseCase,
+    private val connectivityService: ConnectivityService,
     private val userSessionService: UserSessionService,
+    private val userProfileQueryRepository: UserProfileQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -52,10 +53,10 @@ class ProfileViewModel(
 
     private fun watchUser() {
         viewModelScope.launch {
-            userRepository.watchUser().collect { result ->
+            userProfileQueryRepository.watch().collect { result ->
                 result
-                    .onExternalError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                    .onSuccess { user -> _uiState.update { ProfileUiState.Loaded.fromDomain(user) } }
+                    .onInfraError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onSuccess { user -> _uiState.update { ProfileUiState.Loaded.fromReadModel(user) } }
             }
         }
     }
@@ -72,9 +73,10 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             writeUser(command)
-                .onExternalError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
-                .onErrors { errors ->
+                .onInfraError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
+                .onNonInfraErrors { errors ->
                     val domainError = errors.find { it is DomainError } as DomainError?
+
                     _creciFieldError.update { domainError?.toInlineMessage() }
                 }
                 .onSuccess {
@@ -93,9 +95,7 @@ class ProfileViewModel(
         if (input == null) return
 
         Creci.parse(creciNumber = input)
-            .onErrors { errors ->
-                _creciFieldError.update { errors.firstOrNull()?.toInlineMessage() }
-            }
+            .onError { e -> _creciFieldError.update { e.toInlineMessage() } }
     }
 
     fun clearErrors() {
@@ -103,7 +103,7 @@ class ProfileViewModel(
     }
 
     fun onSignOut() {
-        val event = authRepository.checkDeviceIsConnectedToInternet()
+        val event = connectivityService.checkDeviceIsConnectedToInternet()
             .fold(
                 onError = { e -> UiEvent.BottomSheetError(e) },
                 onSuccess = { UiEvent.ContinueSignOut }

@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacteristic
 import com.fstengineering.leasilycrm.core.presentation.composables.HasCharacteristicRow
 import kotlinx.collections.immutable.ImmutableList

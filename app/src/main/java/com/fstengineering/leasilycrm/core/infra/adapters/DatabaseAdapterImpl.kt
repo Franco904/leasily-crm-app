@@ -3,9 +3,9 @@ package com.fstengineering.leasilycrm.core.infra.adapters
 import androidx.room.withTransaction
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlin.coroutines.cancellation.CancellationException
 
 class DatabaseAdapterImpl(private val db: AppDatabase) : DatabaseAdapter {

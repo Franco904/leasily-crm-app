@@ -1,12 +1,12 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
-import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
-import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
-import com.fstengineering.leasilycrm.core.domain.helpers.StayCalendarDate
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
+import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.helpers.StayCalendarDate
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableMap

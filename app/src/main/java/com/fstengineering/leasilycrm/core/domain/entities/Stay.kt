@@ -132,7 +132,7 @@ sealed class Stay(
                 inconsistencies: ImmutableList<DomainError>,
                 contractVersion: Int,
             ): Owned {
-                validateProperty(propertyId) .onError { throw it.asException() }
+                validateProperty(propertyId).onError { throw it.asException() }
                 validateTenant(tenantId).onError { throw it.asException() }
 
                 val guestsCount = StayGuestsCount.parse(guests)

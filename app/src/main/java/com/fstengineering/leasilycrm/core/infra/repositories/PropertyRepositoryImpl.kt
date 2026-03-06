@@ -8,7 +8,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
@@ -41,7 +40,7 @@ class PropertyRepositoryImpl(
             saveDataInDatabase(property)
         }
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = Unit) }
             )
     }
@@ -73,7 +72,7 @@ class PropertyRepositoryImpl(
             propertyDatabaseDataSource.delete(id)
         }
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = Unit) }
             )
     }
@@ -81,7 +80,7 @@ class PropertyRepositoryImpl(
     override suspend fun getById(propertyId: Long): AppResult<Property, ApplicationError> {
         val property = propertyDatabaseDataSource.getById(id = propertyId)
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { it },
             )
             .toDomain()
@@ -89,23 +88,12 @@ class PropertyRepositoryImpl(
         return AppResult.Success(data = property)
     }
 
-    override suspend fun getAll(): AppResult<ImmutableList<Property>, ApplicationError> {
-        val properties = propertyDatabaseDataSource.getAll()
-            .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
-                onSuccess = { it },
-            )
-            .map { property -> property.toDomain() }.toPersistentList()
-
-        return AppResult.Success(data = properties)
-    }
-
     override suspend fun getAllMatching(
         matching: String?,
     ): AppResult<ImmutableList<Property>, ApplicationError> {
-        val properties = propertyDatabaseDataSource.getAllMatching(matching)
+        val properties = propertyDatabaseDataSource.getAll(matching)
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { it },
             )
             .map { property -> property.toDomain() }.toPersistentList()
@@ -117,7 +105,7 @@ class PropertyRepositoryImpl(
         val neighborHoodNames =
             propertyDatabaseDataSource.getAllNeighborHoodNames()
                 .fold(
-                    onError = { return AppResult.Error(error = it.toApplication()) },
+                    onError = { return AppResult.Error(error = it.toApplicationError()) },
                     onSuccess = { it },
                 )
                 .toPersistentList()
@@ -125,23 +113,10 @@ class PropertyRepositoryImpl(
         return AppResult.Success(data = neighborHoodNames)
     }
 
-    override suspend fun getAllSentInAssistance(
-        assistanceId: Long,
-    ): AppResult<ImmutableList<Property>, ApplicationError> {
-        val sentProperties = propertyDatabaseDataSource.getAllSentInAssistance(assistanceId)
-            .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
-                onSuccess = { it.map { property -> property.toDomain() } },
-            )
-            .toPersistentList()
-
-        return AppResult.Success(data = sentProperties)
-    }
-
     override fun watchById(propertyId: Long): Flow<AppResult<Property?, ApplicationError>> = flow {
         val propertyFlow = propertyDatabaseDataSource.watchById(id = propertyId)
             .fold(
-                onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                 onSuccess = { it },
             )
             .map { property ->
@@ -156,7 +131,7 @@ class PropertyRepositoryImpl(
         flow {
             val propertiesFlow = propertyDatabaseDataSource.watchAll()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it },
                 )
                 .map {
@@ -173,7 +148,7 @@ class PropertyRepositoryImpl(
         return plainPreferencesDataSource.readPreferences()
             .fold(
                 onError = { error ->
-                    flow { emit(AppResult.Error(error = error.toApplication())) }
+                    flow { emit(AppResult.Error(error = error.toApplicationError())) }
                 },
                 onSuccess = { prefsFlow ->
                     prefsFlow.mapLatest { prefs ->
@@ -215,7 +190,7 @@ class PropertyRepositoryImpl(
                 propertyStaysSelectedPeriodEndYear = selectedEndYear,
             )
         }
-            .onError { return AppResult.Error(error = it.toApplication()) }
+            .onError { return AppResult.Error(error = it.toApplicationError()) }
 
         return AppResult.Success(data = Unit)
     }

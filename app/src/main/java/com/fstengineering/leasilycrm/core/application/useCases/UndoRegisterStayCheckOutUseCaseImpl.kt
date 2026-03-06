@@ -1,16 +1,16 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
-import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 
 class UndoRegisterStayCheckOutUseCaseImpl(
     private val stayRepository: StayRepository,
-    private val assistanceRepository: AssistanceRepository,
+    private val assistanceCommandRepository: AssistanceCommandRepository,
 ) : UndoRegisterStayCheckOutUseCase {
     override suspend operator fun invoke(stay: Stay.Owned): AppResult<Unit, InfraError> {
         val updatedStay = stay.undoRegisterCheckOut()
@@ -23,7 +23,7 @@ class UndoRegisterStayCheckOutUseCaseImpl(
             ?.unfinish()
 
         if (updatedAssistance != null) {
-            assistanceRepository.insertOrUpdate(updatedAssistance)
+            assistanceCommandRepository.insertOrUpdate(updatedAssistance)
                 .onError { return AppResult.Error(error = it) }
         }
 

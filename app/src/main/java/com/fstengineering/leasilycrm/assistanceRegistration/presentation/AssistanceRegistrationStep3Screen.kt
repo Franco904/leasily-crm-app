@@ -118,11 +118,11 @@ fun AssistanceRegistrationStep3Screen(
                         if (loadedInteractionForm == null) return@collect
                         if (loadedDraftForm?.interactions == null) return@collect
 
-                        val newInterations = loadedDraftForm.interactions
+                        val newInteractions = loadedDraftForm.interactions
                             .toPersistentList()
                             .add(loadedInteractionForm)
 
-                        parentViewModel.onAssistanceFormChange(loadedDraftForm.copy(interactions = newInterations))
+                        parentViewModel.onAssistanceFormChange(loadedDraftForm.copy(interactions = newInteractions))
                         stepViewModel.clearInteractionForm()
 
                         onUiEvent(UiEvent.ShowSnackBar(R.string.create_assistance_interaction_success_message))
@@ -132,14 +132,14 @@ fun AssistanceRegistrationStep3Screen(
                         if (loadedInteractionForm == null) return@collect
                         if (loadedDraftForm?.interactions == null) return@collect
 
-                        val newInterations = loadedDraftForm.interactions
+                        val newInteractions = loadedDraftForm.interactions
                             .toPersistentList()
                             .mutate { list ->
                                 val i = list.indexOf(stepViewModel.interactionFormBeforeEdit)
                                 list[i] = loadedInteractionForm
                             }
 
-                        parentViewModel.onAssistanceFormChange(loadedDraftForm.copy(interactions = newInterations))
+                        parentViewModel.onAssistanceFormChange(loadedDraftForm.copy(interactions = newInteractions))
                         stepViewModel.clearInteractionForm()
 
                         onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))

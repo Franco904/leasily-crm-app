@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.remote.cookies
 
 import com.fstengineering.leasilycrm.BuildConfig
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.http.Cookie
 import io.ktor.http.Url

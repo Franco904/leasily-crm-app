@@ -30,8 +30,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState
-import com.fstengineering.leasilycrm.core.presentation.utils.models.FieldValueState.NotApplicable
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
 
 @Composable

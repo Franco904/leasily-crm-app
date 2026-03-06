@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import kotlinx.coroutines.flow.Flow
@@ -26,16 +25,6 @@ interface PropertyDao {
         """
         SELECT * FROM properties
         WHERE is_deleted = 0
-        ORDER BY neighborhood
-    """
-    )
-    suspend fun getAll(): List<PropertyCompound>
-
-    @Transaction
-    @Query(
-        """
-        SELECT * FROM properties
-        WHERE is_deleted = 0
         AND (
             :matching IS NULL OR
             neighborhood   LIKE '%' || :matching || '%' ESCAPE '\' COLLATE NOCASE OR
@@ -44,7 +33,7 @@ interface PropertyDao {
         ORDER BY neighborhood
     """
     )
-    suspend fun getAllMatching(matching: String?): List<PropertyCompound>
+    suspend fun getAll(matching: String? = null): List<PropertyCompound>
 
     @Query(
         """

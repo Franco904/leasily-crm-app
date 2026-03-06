@@ -5,6 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import kotlinx.collections.immutable.ImmutableList
@@ -34,7 +35,7 @@ data class Property(
     val seaProximityType: PropertySeaProximityType?,
     val includedItems: String?,
     val hasIncludedItems: Boolean,
-    val characteristics: ImmutableList<PropertyCharacteristicCrossRef>,
+    val characteristics: ImmutableList<PropertyCharacteristic>,
     val cleaningServiceTax: AppDecimal?,
     val hasCleaningServiceIncluded: Boolean,
     val prices: ImmutableList<PropertyPrice>,
@@ -86,7 +87,7 @@ data class Property(
             validateNeighborhood(neighborhood).onError { throw it.asException() }
             validateStreetAddress(streetAddress).onError { throw it.asException() }
 
-            val type = PropertyType.parse(requireNotNull(typeId))
+            val type = PropertyType.fromId(requireNotNull(typeId))
 
             if (neighborhood.isNullOrBlank()) throw DomainError.Property.NeighborhoodRequired.asException()
             if (streetAddress.isNullOrBlank()) throw DomainError.Property.StreetAddressRequired.asException()

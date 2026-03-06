@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.profile.presentation.models
 
-import com.fstengineering.leasilycrm.core.domain.entities.User
+import com.fstengineering.leasilycrm.profile.application.models.UserReadModel
 
 sealed interface ProfileUiState {
     data object Loading : ProfileUiState
@@ -11,11 +11,11 @@ sealed interface ProfileUiState {
         val profilePictureUrl: String,
     ) : ProfileUiState {
         companion object {
-            fun fromDomain(user: User): Loaded {
+            fun fromReadModel(readModel: UserReadModel): Loaded {
                 return Loaded(
-                    name = user.name.value,
-                    creciNumber = user.creci?.value,
-                    profilePictureUrl = user.profilePictureUrl,
+                    name = readModel.name,
+                    creciNumber = readModel.creci,
+                    profilePictureUrl = readModel.profilePictureUrl,
                 )
             }
         }

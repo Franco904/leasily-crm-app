@@ -2,15 +2,15 @@ package com.fstengineering.leasilycrm.root
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.AuthRepository
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsRepository
+import com.fstengineering.leasilycrm.settings.application.repositories.SettingsRepository
+import com.fstengineering.leasilycrm.core.application.repositories.UserSessionRepository
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class RootViewModel(
-    private val authRepository: AuthRepository,
+    private val userSessionRepository: UserSessionRepository,
     private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
     private var isInitialized = false
@@ -28,7 +28,7 @@ class RootViewModel(
 
     private fun checkIsUserSignedIn() {
         viewModelScope.launch {
-            authRepository.isSessionAlive()
+            userSessionRepository.isSessionAlive()
                 .onSuccess { isSessionAlive ->
                     _uiEvents.send(UiEvents.SignInState(isSessionAlive))
                 }

@@ -1,10 +1,10 @@
 package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.UserRemoteDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.cookies.UserSessionCookieStorage
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
+import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

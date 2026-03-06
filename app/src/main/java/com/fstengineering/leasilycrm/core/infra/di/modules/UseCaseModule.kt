@@ -19,49 +19,54 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRe
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
+import com.fstengineering.leasilycrm.core.infra.di.qualifiers.signInUserQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeUserQualifier
 import com.fstengineering.leasilycrm.core.infra.utils.authCommandUseCase
 import com.fstengineering.leasilycrm.core.infra.utils.authQueryUseCase
 import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
+import com.fstengineering.leasilycrm.signin.application.models.SignInCommandModel
+import com.fstengineering.leasilycrm.signin.application.useCases.SignInUserUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    // Proxies
-    authCommandUseCase<CommandUseCase<AssistanceCommandModel>>(writeAssistanceQualifier) {
-        WriteAssistanceUseCase(
-            assistanceRepository = get()
-        )
-    }
-
     authQueryUseCase<QueryUseCase<AssistanceQueryModel, AssistanceReadModel>>(
         readAssistanceQualifier,
     ) {
         ReadAssistanceUseCase(
             tenantRepository = get(),
-            assistanceRepository = get(),
-            propertyRepository = get()
+            assistanceQueryRepository = get(),
+            assistanceSentPropertyQueryRepository = get(),
+        )
+    }
+
+    authCommandUseCase<CommandUseCase<AssistanceCommandModel>>(writeAssistanceQualifier) {
+        WriteAssistanceUseCase(assistanceCommandRepository = get())
+    }
+
+    single<CommandUseCase<SignInCommandModel>>(signInUserQualifier) {
+        SignInUserUseCase(
+            signInRepository = get(),
+            userSignInCommandRepository = get(),
         )
     }
 
     authCommandUseCase<CommandUseCase<UserCommandModel>>(writeUserQualifier) {
-        WriteUserUseCase(
-            userRepository = get()
-        )
+        WriteUserUseCase(repository = get())
     }
 
     single<RegisterStayCheckOutUseCase> {
         RegisterStayCheckOutUseCaseImpl(
             stayRepository = get(),
-            assistanceRepository = get(),
+            assistanceCommandRepository = get(),
         )
     }
 
     single<UndoRegisterStayCheckOutUseCase> {
         UndoRegisterStayCheckOutUseCaseImpl(
             stayRepository = get(),
-            assistanceRepository = get(),
+            assistanceCommandRepository = get(),
         )
     }
 
@@ -80,7 +85,7 @@ val useCaseModule = module {
         GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
             stayRepository = get(),
             settingsRepository = get(),
-            authRepository = get(),
+            userSessionRepository = get(),
             now = AppDateTime.lazyNow(),
         )
     }

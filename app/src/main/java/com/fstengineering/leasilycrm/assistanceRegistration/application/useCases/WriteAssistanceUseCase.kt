@@ -1,27 +1,24 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.useCases
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
-import com.fstengineering.leasilycrm.core.application.repositories.AssistanceRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.DomainException
-import com.fstengineering.leasilycrm.core.domain.utils.SystemError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import kotlinx.collections.immutable.persistentListOf
 
 class WriteAssistanceUseCase(
-    private val assistanceRepository: AssistanceRepository,
+    private val assistanceCommandRepository: AssistanceCommandRepository,
 ) : CommandUseCase<AssistanceCommandModel> {
     override suspend fun invoke(
         command: AssistanceCommandModel,
-    ): AppResultCompound<Unit, SystemError> {
-        val assistance = command.toDomain()
+    ): AppResultCompound<Unit, ApplicationError> {
+        val assistance = command.toAggregate()
             .fold(onErrors = { return AppResultCompound.Errors(it) }, onSuccess = { it })
 
-        assistanceRepository.insertOrUpdate(assistance)
+        assistanceCommandRepository.insertOrUpdate(assistance)
             .onError { e -> return AppResultCompound.Errors(errors = persistentListOf(e)) }
 
         return AppResultCompound.Success(data = Unit)

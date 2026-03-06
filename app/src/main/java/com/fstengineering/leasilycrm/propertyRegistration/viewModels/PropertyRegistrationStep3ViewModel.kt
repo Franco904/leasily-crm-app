@@ -6,7 +6,6 @@ import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.domain.validators.interfaces.PropertyPriceValidator
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyRegistration.models.PropertyPriceErrorUiState
 import com.fstengineering.leasilycrm.propertyRegistration.models.fields.PropertyPriceField

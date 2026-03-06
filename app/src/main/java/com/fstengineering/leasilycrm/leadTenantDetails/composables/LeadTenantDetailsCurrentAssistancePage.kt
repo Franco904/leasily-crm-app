@@ -23,11 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.entities.Assistance
+import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
+import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.entities.AssistanceCharacteristic
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppTonalButton
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceLastInteractionDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.composables.items.AssistanceLastSentPropertyDetailsItem

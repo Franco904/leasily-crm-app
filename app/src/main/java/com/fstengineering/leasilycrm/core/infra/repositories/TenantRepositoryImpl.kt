@@ -36,7 +36,7 @@ class TenantRepositoryImpl(
             databaseDataSource.insertOrUpdate(tenantEntity)
         }
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = Unit) }
             )
     }
@@ -46,7 +46,7 @@ class TenantRepositoryImpl(
             databaseDataSource.delete(id)
         }
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = Unit) }
             )
     }
@@ -56,7 +56,7 @@ class TenantRepositoryImpl(
     ): AppResult<Tenant, ApplicationError> {
         val tenant = databaseDataSource.getById(id = tenantId)
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { it?.toDomain() }
             )
 
@@ -69,7 +69,7 @@ class TenantRepositoryImpl(
     ): AppResult<String, ApplicationError> {
         val tenantName = databaseDataSource.getNameById(id = tenantId)
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { it ?: return AppResult.Error(error = ApplicationError.Unknown) }
             )
 
@@ -85,7 +85,7 @@ class TenantRepositoryImpl(
             order = orderTypeId,
         )
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { it },
             )
             .map { lead -> lead.toDomain() }
@@ -103,7 +103,7 @@ class TenantRepositoryImpl(
             order = orderTypeId,
         )
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { it },
             )
             .map { tenant -> tenant.toDomain() }
@@ -121,7 +121,7 @@ class TenantRepositoryImpl(
             currentTenantId = currentTenantId,
         )
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { it },
             )
             .map { tenant -> tenant.toDomain() }
@@ -133,7 +133,7 @@ class TenantRepositoryImpl(
     override suspend fun getAllTagNames(): AppResult<ImmutableList<String>, ApplicationError> {
         return databaseDataSource.getAllTagNames()
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = it.toPersistentList()) },
             )
     }
@@ -141,7 +141,7 @@ class TenantRepositoryImpl(
     override suspend fun getAllCityNames(): AppResult<ImmutableList<String>, ApplicationError> {
         return databaseDataSource.getAllCityNames()
             .fold(
-                onError = { AppResult.Error(error = it.toApplication()) },
+                onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = it.toPersistentList()) },
             )
     }
@@ -149,7 +149,7 @@ class TenantRepositoryImpl(
     override suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, ApplicationError> {
         val preferredLeadsOrderTypeId = plainPreferencesDataSource.readPreferences()
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.leadsOrderTypeId ?: 1 }
             )
 
@@ -159,7 +159,7 @@ class TenantRepositoryImpl(
     override suspend fun getPreferredTenantsOrderTypeId(): AppResult<Int, ApplicationError> {
         val preferredTenantsOrderTypeId = plainPreferencesDataSource.readPreferences()
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.tenantsOrderTypeId ?: 1 }
             )
 
@@ -172,7 +172,7 @@ class TenantRepositoryImpl(
         plainPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(leadsOrderTypeId = orderTypeId)
         }
-            .onError { return AppResult.Error(error = it.toApplication()) }
+            .onError { return AppResult.Error(error = it.toApplicationError()) }
 
         return AppResult.Success(data = Unit)
     }
@@ -183,7 +183,7 @@ class TenantRepositoryImpl(
         plainPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(tenantsOrderTypeId = orderTypeId)
         }
-            .onError { return AppResult.Error(error = it.toApplication()) }
+            .onError { return AppResult.Error(error = it.toApplicationError()) }
 
         return AppResult.Success(data = Unit)
     }
@@ -193,7 +193,7 @@ class TenantRepositoryImpl(
     ): Flow<AppResult<Tenant?, ApplicationError>> = flow {
         val tenantFlow = databaseDataSource.watchById(id = tenantId)
             .fold(
-                onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                 onSuccess = { it },
             )
             .map { tenant ->
@@ -218,7 +218,7 @@ class TenantRepositoryImpl(
                 orderTypeId = orderTypeId,
             )
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplication())) },
+                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it },
                 )
                 .map {
@@ -241,7 +241,7 @@ class TenantRepositoryImpl(
             currentStoredTenantName = currentStoredTenantName,
         )
             .fold(
-                onError = { return AppResult.Error(error = it.toApplication()) },
+                onError = { return AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { count -> count },
             )
 

@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.entities.AssistanceInteraction
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 
 @Entity(
     tableName = "assistance_interactions",
@@ -27,7 +27,7 @@ data class AssistanceInteractionEntity(
     val description: String?,
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
 ) {
-    fun toDomain() = AssistanceInteraction.parse(
+    fun toReadModel() = AssistanceInteractionReadModel(
         id = id,
         date = interactionDate,
         title = title,
@@ -35,12 +35,12 @@ data class AssistanceInteractionEntity(
     )
 
     companion object {
-        fun fromDomain(domain: AssistanceInteraction, assistanceId: Long) =
+        fun fromEntity(entity: AssistanceInteraction, assistanceId: Long) =
             AssistanceInteractionEntity(
-                id = domain.id,
-                interactionDate = domain.date,
-                title = domain.title,
-                description = domain.description,
+                id = entity.id,
+                interactionDate = entity.date,
+                title = entity.title,
+                description = entity.description,
                 assistanceId = assistanceId,
             )
     }

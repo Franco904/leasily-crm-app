@@ -1,10 +1,10 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database
 
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.TenantDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.TenantCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.coroutines.flow.Flow
 

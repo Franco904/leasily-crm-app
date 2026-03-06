@@ -3,8 +3,6 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Index
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 
 @Entity(
     tableName = "property_characteristics_properties",
