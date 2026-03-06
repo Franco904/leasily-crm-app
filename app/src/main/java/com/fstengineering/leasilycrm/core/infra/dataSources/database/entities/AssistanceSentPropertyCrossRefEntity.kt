@@ -27,12 +27,4 @@ import androidx.room.Index
 data class AssistanceSentPropertyCrossRefEntity(
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
     @ColumnInfo(name = "property_id") val propertyId: Long,
-) {
-    companion object {
-        fun fromDomain(propertyId: Long, assistanceId: Long) =
-            AssistanceSentPropertyCrossRefEntity(
-                assistanceId = assistanceId,
-                propertyId = propertyId,
-            )
-    }
-}
+)

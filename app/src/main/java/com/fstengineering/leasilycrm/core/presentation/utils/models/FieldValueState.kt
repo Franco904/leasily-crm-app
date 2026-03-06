@@ -14,3 +14,13 @@ sealed interface FieldValueState<out T> {
 
     val valueOrNull: T? get() = (this as? Applicable)?.value
 }
+
+fun <T> T?.applicableIf(
+    contractVersion: Int,
+    min: Int,
+): FieldValueState<T> {
+    return if (contractVersion >= min)
+        FieldValueState.Applicable(this)
+    else
+        FieldValueState.NotApplicable
+}

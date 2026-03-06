@@ -5,12 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 
 @Entity(
     tableName = "assistances",
@@ -50,39 +47,4 @@ data class AssistanceEntity(
     @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Long?,
     @ColumnInfo(name = "tenant_id") val tenantId: Long,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
-) {
-    companion object {
-        fun fromDomain(domain: Assistance): AssistanceEntity {
-            val seaProximityType = domain.preferredSeaProximityType
-
-            return AssistanceEntity(
-                id = domain.id,
-                createDateTime = domain.createDateTime ?: AppDateTime.now(),
-                updateDateTime = AppDateTime.now(),
-                searchedStartDate = domain.preferredPeriod?.startDate,
-                searchedEndDate = domain.preferredPeriod?.endDate,
-                hasFlexibilityForPeriod = domain.hasFlexibilityForPeriod,
-                maxAcceptedNightlyRate = domain.maxAcceptedNightlyRate,
-                adults = domain.guestsCount.adultsCount,
-                kids = domain.guestsCount.kidsCount,
-                babies = domain.guestsCount.babiesCount,
-                animals = domain.guestsCount.animalsCount,
-                bedrooms = domain.preferredFeaturesCount.bedroomsCount,
-                enSuites = domain.preferredFeaturesCount.enSuitesCount,
-                doubleBeds = domain.preferredFeaturesCount.doubleBedsCount,
-                singleBeds = domain.preferredFeaturesCount.singleBedsCount,
-                bathrooms = domain.preferredFeaturesCount.bathroomsCount,
-                parkingSpots = domain.preferredFeaturesCount.parkingSpotsCount,
-                propertySeaProximityTypeId = seaProximityType?.id,
-                distanceToSea = if (seaProximityType is PropertySeaProximityType.DistanceToSea) {
-                    seaProximityType.distance
-                } else null,
-                observations = domain.observations,
-                isFinished = domain.isFinished,
-                isDeleted = false,
-                tenantId = domain.tenantId,
-                contractVersion = BuildConfig.CONTRACT_VERSION,
-            )
-        }
-    }
-}
+)

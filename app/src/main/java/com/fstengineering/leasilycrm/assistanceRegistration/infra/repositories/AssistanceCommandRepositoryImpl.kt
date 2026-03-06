@@ -2,12 +2,12 @@ package com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
+import com.fstengineering.leasilycrm.assistanceRegistration.infra.utils.toLocalDataModel
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
@@ -36,7 +36,7 @@ class AssistanceCommandRepositoryImpl(
     }
 
     private suspend fun saveDataInDatabase(assistance: Assistance) {
-        val assistanceEntity = AssistanceEntity.fromDomain(assistance)
+        val assistanceEntity = assistance.toLocalDataModel()
 
         val assistanceId = assistanceDatabaseDataSource.insertOrUpdate(assistanceEntity)
             .let { id -> assistanceEntity.id ?: id }
@@ -51,7 +51,7 @@ class AssistanceCommandRepositoryImpl(
         }
 
         assistance.interactions.forEach {
-            val interaction = AssistanceInteractionEntity.fromEntity(it, assistanceId)
+            val interaction = it.toLocalDataModel(assistanceId)
             assistanceInteractionDatabaseDataSource.insertOrUpdate(interaction)
         }
 
@@ -65,7 +65,11 @@ class AssistanceCommandRepositoryImpl(
         }
 
         assistance.sentPropertiesIds.forEach {
-            val sentProperty = AssistanceSentPropertyCrossRefEntity.fromDomain(it, assistanceId)
+            val sentProperty = AssistanceSentPropertyCrossRefEntity(
+                assistanceId = assistanceId,
+                propertyId = it,
+            )
+
             assistanceSentPropertyCrossRefDatabaseDataSource.insertOrUpdate(sentProperty)
         }
     }

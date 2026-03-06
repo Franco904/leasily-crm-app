@@ -1,11 +1,13 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.infra.utils
 
 import androidx.core.net.toUri
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceRawReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSelectablePropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.AssistanceCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import kotlinx.collections.immutable.persistentListOf
@@ -53,6 +55,13 @@ fun AssistanceCompound.toAssistanceRawReadModel(): AssistanceRawReadModel {
         contractVersion = assistance.contractVersion,
     )
 }
+
+private fun AssistanceInteractionEntity.toReadModel() = AssistanceInteractionReadModel(
+    id = id,
+    date = date,
+    title = title,
+    description = description,
+)
 
 fun PropertyCompound.toAssistanceSentPropertyReadModel(): AssistanceSentPropertyReadModel {
     return AssistanceSentPropertyReadModel(
