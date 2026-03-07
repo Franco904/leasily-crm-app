@@ -13,8 +13,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.t
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.onInfraError
-import com.fstengineering.leasilycrm.core.presentation.utils.onNonInfraErrors
+import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
+import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
@@ -106,11 +106,11 @@ class AssistanceRegistrationViewModel(
             }
 
             writeAssistance(command = form.toCommand())
-                .onInfraError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
-                .onNonInfraErrors { errors ->
-                    // TODO: Show something in the UI with the Application errors
+                .onApplicationError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
+                .onDomainErrors { errors ->
+                    // TODO: Show something in the UI with the Domain errors
                     errors.firstOrNull()
-                        ?.let { _uiEvents.send(UiEvent.BottomSheetError(it)) }
+                        ?.let { _uiEvents.send(UiEvent.BottomSheetError(ApplicationError.Unknown)) }
                 }
 
             val saveEvent =

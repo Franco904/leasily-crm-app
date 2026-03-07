@@ -6,18 +6,16 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
 import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.utils.onErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.profile.domain.valueObjects.Creci
-import com.fstengineering.leasilycrm.core.presentation.utils.onInfraError
-import com.fstengineering.leasilycrm.core.presentation.utils.onNonInfraErrors
+import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
+import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserProfileQueryRepository
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
+import com.fstengineering.leasilycrm.profile.domain.valueObjects.Creci
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,7 +53,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             userProfileQueryRepository.watch().collect { result ->
                 result
-                    .onInfraError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { user -> _uiState.update { ProfileUiState.Loaded.fromReadModel(user) } }
             }
         }
@@ -73,11 +71,9 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             writeUser(command)
-                .onInfraError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
-                .onNonInfraErrors { errors ->
-                    val domainError = errors.find { it is DomainError } as DomainError?
-
-                    _creciFieldError.update { domainError?.toInlineMessage() }
+                .onApplicationError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
+                .onDomainErrors { errors ->
+                    _creciFieldError.update { errors.firstOrNull()?.toInlineMessage() }
                 }
                 .onSuccess {
                     val event =

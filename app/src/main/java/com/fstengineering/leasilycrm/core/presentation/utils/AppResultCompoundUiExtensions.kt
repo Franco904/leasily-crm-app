@@ -2,25 +2,27 @@ package com.fstengineering.leasilycrm.core.presentation.utils
 
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 
-inline fun <D, E : ApplicationError> AppResultCompound<D, E>.onInfraError(
-    block: (ApplicationError.Infra) -> Unit,
+inline fun <D, E : BusinessRuleError> AppResultCompound<D, E>.onApplicationError(
+    block: (ApplicationError) -> Unit,
 ) = apply {
-    if (this is AppResultCompound.Errors<D, E> && errors.any { it is ApplicationError.Infra }) {
+    if (this is AppResultCompound.Errors<D, E>) {
         val error = errors
-            .filterIsInstance<ApplicationError.Infra>()
+            .filterIsInstance<ApplicationError>()
             .firstOrNull() ?: return@apply
 
         block(error)
     }
 }
 
-inline fun <D, E : ApplicationError> AppResultCompound<D, E>.onNonInfraErrors(
-    block: (List<E>) -> Unit,
+inline fun <D, E : BusinessRuleError> AppResultCompound<D, E>.onDomainErrors(
+    block: (List<DomainError>) -> Unit,
 ) = apply {
     if (this is AppResultCompound.Errors<D, E>) {
         val errors = errors
-            .filter { it !is ApplicationError.Infra }
+            .filterIsInstance<DomainError>()
             .takeIf { it.isNotEmpty() } ?: return@apply
 
         block(errors)

@@ -13,7 +13,7 @@ class RequireAuthQueryInterceptor<Q : QueryUseCase.QueryModel, R : QueryUseCase.
     override suspend fun invoke(query: Q): AppResult<R, ApplicationError> {
         return delegate(query)
             .onError {
-                if (it == ApplicationError.Infra.Unauthorized) {
+                if (it == ApplicationError.Unauthorized) {
                     userSessionService.onSessionExpired()
                 }
             }

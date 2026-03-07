@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.profile.application.useCases
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserProfileCommandRepository
@@ -11,7 +12,7 @@ import kotlinx.collections.immutable.persistentListOf
 class WriteUserUseCase(
     private val repository: UserProfileCommandRepository,
 ) : CommandUseCase<UserCommandModel> {
-    override suspend fun invoke(command: UserCommandModel): AppResultCompound<Unit, ApplicationError> {
+    override suspend fun invoke(command: UserCommandModel): AppResultCompound<Unit, BusinessRuleError> {
         val user = command.toAggregate()
             .fold(
                 onError = { return AppResultCompound.Errors(errors = persistentListOf(it)) },

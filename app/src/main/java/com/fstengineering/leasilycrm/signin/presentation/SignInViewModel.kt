@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.presentation.utils.onInfraError
+import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.signin.application.repositories.SignInRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -33,7 +33,7 @@ class SignInViewModel(
     fun signInUser(idToken: String) {
         viewModelScope.launch {
             signInRepository.signIn(idToken = idToken)
-                .onInfraError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
+                .onApplicationError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
         }
     }
 

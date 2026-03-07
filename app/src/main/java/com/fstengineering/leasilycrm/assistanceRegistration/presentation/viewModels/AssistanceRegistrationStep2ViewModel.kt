@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.t
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState
-import com.fstengineering.leasilycrm.core.presentation.utils.onInfraError
+import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -48,7 +48,7 @@ class AssistanceRegistrationStep2ViewModel(
     private fun getProperties() {
         viewModelScope.launch {
             assistanceSelectablePropertyQueryRepository.getAll()
-                .onInfraError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
+                .onApplicationError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                 .onSuccess { properties ->
                     val uiStates = properties
                         .map { it.toCardDetails() }
@@ -66,7 +66,7 @@ class AssistanceRegistrationStep2ViewModel(
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
                     assistanceSelectablePropertyQueryRepository.getAll(matching = searchInput)
-                        .onInfraError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
+                        .onApplicationError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingProperties ->
                             val uiStates = matchingProperties
                                 .map { it.toCardDetails() }
@@ -83,6 +83,6 @@ class AssistanceRegistrationStep2ViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError.Infra) : UiEvent
+        data class BottomSheetError(val error: ApplicationError) : UiEvent
     }
 }

@@ -5,6 +5,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.reposito
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import kotlinx.collections.immutable.persistentListOf
@@ -14,7 +15,7 @@ class WriteAssistanceUseCase(
 ) : CommandUseCase<AssistanceCommandModel> {
     override suspend fun invoke(
         command: AssistanceCommandModel,
-    ): AppResultCompound<Unit, ApplicationError> {
+    ): AppResultCompound<Unit, BusinessRuleError> {
         val assistance = command.toAggregate()
             .fold(onErrors = { return AppResultCompound.Errors(it) }, onSuccess = { it })
 
