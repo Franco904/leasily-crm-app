@@ -1,7 +1,9 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted
 
+import android.util.Log
 import androidx.datastore.core.Serializer
 import com.fstengineering.leasilycrm.BuildConfig
+import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferencesSerializer
 import com.fstengineering.leasilycrm.core.infra.utils.CryptoUtils
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +30,7 @@ object EncryptedPreferencesSerializer : Serializer<EncryptedPreferences> {
             }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            if (BuildConfig.DEBUG) e.printStackTrace()
+            if (BuildConfig.DEBUG) Log.e(TAG, e.toString())
         }
     }
 
@@ -47,7 +49,7 @@ object EncryptedPreferencesSerializer : Serializer<EncryptedPreferences> {
             preferences
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            if (BuildConfig.DEBUG) e.printStackTrace()
+            if (BuildConfig.DEBUG) Log.e(TAG, e.toString())
 
             defaultValue
         }

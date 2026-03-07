@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain
 
 import android.util.Log
 import androidx.datastore.core.Serializer
+import com.fstengineering.leasilycrm.BuildConfig
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,8 +25,7 @@ object PlainPreferencesSerializer : Serializer<PlainPreferences> {
             }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-
-            Log.e(TAG, e.toString())
+            if (BuildConfig.DEBUG) Log.e(TAG, e.toString())
         }
     }
 
@@ -38,8 +38,8 @@ object PlainPreferencesSerializer : Serializer<PlainPreferences> {
             }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
+            if (BuildConfig.DEBUG) Log.e(TAG, e.toString())
 
-            Log.e(TAG, e.toString())
             defaultValue
         }
     }
