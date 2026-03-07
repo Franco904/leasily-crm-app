@@ -6,14 +6,13 @@ import com.fstengineering.leasilycrm.core.application.services.interfaces.Connec
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.presentation.utils.onInfraError
-import com.fstengineering.leasilycrm.signin.application.models.SignInCommandModel
-import com.fstengineering.leasilycrm.signin.application.useCases.SignInUserUseCase
+import com.fstengineering.leasilycrm.signin.application.repositories.SignInRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val signInUser: SignInUserUseCase,
+    private val signInRepository: SignInRepository,
     private val connectivityService: ConnectivityService,
 ) : ViewModel() {
     private val _uiEvents = Channel<UiEvent>()
@@ -33,9 +32,7 @@ class SignInViewModel(
 
     fun signInUser(idToken: String) {
         viewModelScope.launch {
-            val command = SignInCommandModel(idToken = idToken)
-
-            signInUser.invoke(command)
+            signInRepository.signIn(idToken = idToken)
                 .onInfraError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
         }
     }

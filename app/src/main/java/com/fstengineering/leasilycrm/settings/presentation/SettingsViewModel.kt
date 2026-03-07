@@ -39,7 +39,7 @@ class SettingsViewModel(
                 result
                     .onError { e -> _uiEvents.send(UiEvent.Error(e)) }
                     .onSuccess { settings ->
-                        _settingsUiState.update { SettingsUiState.Loaded.fromValueObject(settings) }
+                        _settingsUiState.update { SettingsUiState.Loaded.fromReadModel(settings) }
                     }
             }
         }

@@ -1,6 +1,6 @@
-package com.fstengineering.leasilycrm.signin.domain.entities
+package com.fstengineering.leasilycrm.signin.application.models
 
-data class User(
+data class SignInResultWriteModel(
     val remoteId: Long,
     val name: String,
     val creci: String?,

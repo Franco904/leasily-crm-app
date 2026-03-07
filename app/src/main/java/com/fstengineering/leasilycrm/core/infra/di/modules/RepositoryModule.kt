@@ -35,9 +35,7 @@ import com.fstengineering.leasilycrm.profile.application.repositories.UserProfil
 import com.fstengineering.leasilycrm.profile.infra.repositories.UserProfileCommandRepositoryImpl
 import com.fstengineering.leasilycrm.profile.infra.repositories.UserProfileQueryRepositoryImpl
 import com.fstengineering.leasilycrm.signin.application.repositories.SignInRepository
-import com.fstengineering.leasilycrm.signin.application.repositories.UserSignInCommandRepository
 import com.fstengineering.leasilycrm.signin.infra.repositories.SignInRepositoryImpl
-import com.fstengineering.leasilycrm.signin.infra.repositories.UserSignInCommandRepositoryImpl
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -71,13 +69,13 @@ val repositoryModule = module {
     single<UserProfileCommandRepository> {
         UserProfileCommandRepositoryImpl(
             remoteDataSource = get(),
-            encryptedPreferencesDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
     }
 
     single<UserProfileQueryRepository> {
         UserProfileQueryRepositoryImpl(
-            encryptedPreferencesDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
     }
 
@@ -86,12 +84,7 @@ val repositoryModule = module {
     single<SignInRepository> {
         SignInRepositoryImpl(
             remoteDataSource = get(),
-        )
-    }
-
-    single<UserSignInCommandRepository> {
-        UserSignInCommandRepositoryImpl(
-            encryptedPreferencesDataSource = get(),
+            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
     }
 
