@@ -33,18 +33,4 @@ interface PropertyOwnerDao {
     """
     )
     fun watchAll(): Flow<List<PropertyOwnerCompound>>
-
-    @Query(
-        """
-        SELECT COUNT(name) FROM property_owners
-        WHERE (
-            name = :propertyOwnerName AND (:currentStoredPropertyOwnerName IS NULL OR name <> :currentStoredPropertyOwnerName)
-        )
-        AND is_deleted = 0
-    """
-    )
-    suspend fun countPropertyOwnersWithName(
-        propertyOwnerName: String,
-        currentStoredPropertyOwnerName: String?,
-    ): Int
 }

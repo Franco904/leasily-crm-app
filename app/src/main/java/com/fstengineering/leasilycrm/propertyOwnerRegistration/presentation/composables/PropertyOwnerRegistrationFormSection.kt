@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerRegistration.composables
+package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
@@ -29,21 +29,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.DocumentFileCard
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerDraftFormUiState
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerField
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun PropertyOwnerRegistrationFormSection(
-    propertyOwnerForm: PropertyOwner,
-    onPropertyOwnerFormChange: (PropertyOwner) -> Unit,
+    propertyOwnerForm: PropertyOwnerDraftFormUiState.Loaded,
+    onPropertyOwnerFormChange: (PropertyOwnerDraftFormUiState.Loaded) -> Unit,
     formErrors: ImmutableMap<PropertyOwnerField, Int?>,
     onLastTextFieldDone: () -> Unit,
     onAddPropertyOwnerFile: () -> Unit,
@@ -62,7 +61,7 @@ fun PropertyOwnerRegistrationFormSection(
     val paymentKeyFieldFocusRequester = remember { FocusRequester() }
 
     val propertyOwnerNotDeletedFiles = remember(propertyOwnerForm) {
-        propertyOwnerForm.files.filter { !it.isDeleted }.toPersistentList()
+        propertyOwnerForm.files.toPersistentList()
     }
 
     LaunchedEffect(Unit) {
@@ -221,21 +220,15 @@ fun PropertyOwnerRegistrationFormSection(
             )
         }
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        itemsIndexed(
+        items(
             items = propertyOwnerNotDeletedFiles,
-            key = { i, file -> file.id ?: "${file.name}$i" },
-        ) { i, file ->
+            key = { file -> file.id ?: file.name },
+        ) { file ->
             DocumentFileCard(
                 fileName = file.name,
                 actionIcon = Icons.Filled.Close,
                 onAction = {
-                    val newFiles = if (file.id == null) {
-                        propertyOwnerNotDeletedFiles.remove(file)
-                    } else {
-                        propertyOwnerNotDeletedFiles.mutate {
-                            it[i] = file.copy(isDeleted = true)
-                        }
-                    }
+                    val newFiles = propertyOwnerNotDeletedFiles.remove(file)
 
                     onPropertyOwnerFormChange(
                         propertyOwnerForm.copy(files = newFiles),

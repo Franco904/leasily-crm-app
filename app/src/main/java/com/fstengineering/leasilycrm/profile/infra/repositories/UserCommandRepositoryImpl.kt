@@ -9,13 +9,13 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfac
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.infra.models.SyncState
-import com.fstengineering.leasilycrm.profile.application.repositories.UserProfileCommandRepository
+import com.fstengineering.leasilycrm.profile.application.repositories.UserCommandRepository
 import com.fstengineering.leasilycrm.profile.domain.entities.User
 
-class UserProfileCommandRepositoryImpl(
+class UserCommandRepositoryImpl(
     private val remoteDataSource: UserRemoteDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
-) : UserProfileCommandRepository {
+) : UserCommandRepository {
     override suspend fun update(user: User): AppResult<Unit, ApplicationError> {
         val creciNumber = user.creci?.value
 

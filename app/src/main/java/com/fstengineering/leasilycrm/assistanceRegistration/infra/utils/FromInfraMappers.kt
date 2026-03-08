@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.infra.utils
 
-import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceRawReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSelectablePropertyReadModel
@@ -13,7 +12,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
-fun AssistanceCompound.toAssistanceRawReadModel(): AssistanceRawReadModel {
+fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
     val preferredNeighborhoodsNames = preferredNeighborhoods
         .map { it.neighborhood }
         .toPersistentList()
@@ -63,7 +62,7 @@ private fun AssistanceInteractionEntity.toReadModel() = AssistanceInteractionRea
     description = description,
 )
 
-fun PropertyCompound.toAssistanceSentPropertyReadModel(): AssistanceSentPropertyReadModel {
+fun PropertyCompound.toSentPropertyReadModel(): AssistanceSentPropertyReadModel {
     return AssistanceSentPropertyReadModel(
         id = property.id,
         type = requireNotNull(PropertyType.fromId(property.typeId)),
@@ -73,13 +72,13 @@ fun PropertyCompound.toAssistanceSentPropertyReadModel(): AssistanceSentProperty
         seaProximityTypeId = property.seaProximityTypeId,
         distanceToSea = property.distanceToSea?.toString(),
         bedroomsCount = property.bedrooms,
-        mainPictureUri = files
+        mainPictureUriString = files
             .find { picture -> picture.isMainPicture }
-            ?.propertyFileUri?.toUri()
+            ?.propertyFileUri
     )
 }
 
-fun PropertyCompound.toAssistanceSelectablePropertyReadModel(): AssistanceSelectablePropertyReadModel {
+fun PropertyCompound.toSelectablePropertyReadModel(): AssistanceSelectablePropertyReadModel {
     return AssistanceSelectablePropertyReadModel(
         id = property.id,
         type = requireNotNull(PropertyType.fromId(property.typeId)),
@@ -89,8 +88,8 @@ fun PropertyCompound.toAssistanceSelectablePropertyReadModel(): AssistanceSelect
         seaProximityTypeId = property.seaProximityTypeId,
         distanceToSea = property.distanceToSea?.toString(),
         bedroomsCount = property.bedrooms,
-        mainPictureUri = files
+        mainPictureUriString = files
             .find { picture -> picture.isMainPicture }
-            ?.propertyFileUri?.toUri()
+            ?.propertyFileUri
     )
 }

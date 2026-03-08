@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerRegistration.composables
+package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
@@ -76,20 +76,5 @@ fun PropertyOwnerRegistrationTopAppBar(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun PropertyOwnerRegistrationTopAppBarPreview(
-    modifier: Modifier = Modifier,
-) {
-    AppTheme {
-        PropertyOwnerRegistrationTopAppBar(
-            isEditing = false,
-            onBack = {},
-            onSavePropertyOwner = {},
-            modifier = modifier
-        )
     }
 }

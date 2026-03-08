@@ -20,7 +20,7 @@ import com.fstengineering.leasilycrm.properties.PropertiesViewModel
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel
 import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsViewModel
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationViewModel
 import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep1ViewModel
@@ -45,8 +45,8 @@ val viewModelModule = module {
 
     viewModel {
         SignInViewModel(
-            userSessionRepository = get(),
-            userRepository = get(),
+            signInRepository = get(),
+            connectivityService = get(),
         )
     }
 
@@ -58,10 +58,10 @@ val viewModelModule = module {
 
     viewModel {
         ProfileViewModel(
-            userSessionRepository = get(),
-            userQueryRepository = get(),
             writeUser = get(),
+            connectivityService = get(),
             userSessionService = get(),
+            userQueryRepository = get(),
         )
     }
 
@@ -89,7 +89,7 @@ val viewModelModule = module {
     viewModel {
         PropertyRegistrationViewModel(
             propertyRepository = get(),
-            propertyOwnerRepository = get(),
+            propertyOwnerSharedRepository = get(),
         )
     }
 
@@ -131,14 +131,15 @@ val viewModelModule = module {
 
     viewModel {
         PropertyOwnersViewModel(
-            propertyOwnerRepository = get(),
+            propertyOwnerSharedRepository = get(),
         )
     }
 
     viewModel {
         PropertyOwnerRegistrationViewModel(
-            propertyOwnerRepository = get(),
-            propertyOwnerFileRepository = get(),
+            writePropertyOwner = get(),
+            propertyOwnerQueryRepository = get(),
+            fileStorageService = get(),
         )
     }
 
@@ -169,7 +170,7 @@ val viewModelModule = module {
 
     viewModel {
         PropertyOwnerDetailsViewModel(
-            propertyOwnerRepository = get(),
+            propertyOwnerSharedRepository = get(),
         )
     }
 
@@ -187,7 +188,7 @@ val viewModelModule = module {
 
     viewModel {
         AssistanceRegistrationStep2ViewModel(
-            propertyRepository = get(),
+            assistanceSelectablePropertyQueryRepository = get(),
         )
     }
 

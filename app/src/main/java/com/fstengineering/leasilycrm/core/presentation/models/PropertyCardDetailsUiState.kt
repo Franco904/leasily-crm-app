@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 
 data class PropertyCardDetailsUiState(
     val id: Long,
-    val mainPictureUriString: Uri?,
+    val mainPictureUri: Uri?,
     val neighborhood: String,
     val streetAddressAndNumber: String,
     val type: PropertyType,

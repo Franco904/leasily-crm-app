@@ -4,7 +4,6 @@ import android.content.Context
 import android.provider.OpenableColumns
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.interfaces.SharedStorageDataSource
 import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +14,7 @@ class SharedStorageDataSourceImpl(
 ) : SharedStorageDataSource {
     override suspend fun getFileName(
         contentUriString: String,
-    ): String = withContext(Dispatchers.IO) {
+    ): String? = withContext(Dispatchers.IO) {
         try {
             val query = appContext.contentResolver.query(
                 /* uri = */ contentUriString.toUri(),
@@ -29,12 +28,12 @@ class SharedStorageDataSourceImpl(
                 if (cursor.moveToFirst()) cursor.getString(0) else null
             }
 
-            name ?: appContext.getString(R.string.unknown_text).lowercase()
+            name
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             if (BuildConfig.DEBUG) e.printStackTrace()
 
-            appContext.getString(R.string.unknown_text).lowercase()
+            null
         }
     }
 }

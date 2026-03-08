@@ -54,6 +54,24 @@ sealed interface DomainError : BusinessRuleError {
         IsNegative,
     }
 
+    enum class Name : DomainError {
+        Required,
+        LengthIsGreaterThan100Chars,
+    }
+
+    enum class Phone : DomainError {
+        LengthIsGreaterThan20Chars,
+    }
+
+    enum class Email : DomainError {
+        Invalid,
+        LengthIsGreaterThan120Chars,
+    }
+
+    enum class PaymentKey : DomainError {
+        LengthIsGreaterThan120Chars,
+    }
+
     enum class PropertyOwner : DomainError {
         NameRequired,
         NameBelongsToOtherOwner,
@@ -98,7 +116,7 @@ sealed interface DomainError : BusinessRuleError {
         StatusInvalid,
     }
 
-    enum class UserCreci : DomainError {
+    enum class Creci : DomainError {
         LengthIsGreaterThan8Chars,
     }
 }

@@ -52,6 +52,12 @@ class SettingsViewModel(
         }
     }
 
+    override fun onCleared() {
+        _uiEvents.close()
+
+        super.onCleared()
+    }
+
     sealed interface UiEvent {
         data class Error(val error: ApplicationError) : UiEvent
     }

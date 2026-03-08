@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.models
 
-import android.net.Uri
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 
@@ -13,5 +12,5 @@ data class AssistanceSelectablePropertyReadModel(
     val seaProximityTypeId: Long?,
     val distanceToSea: String?,
     val bedroomsCount: Int,
-    val mainPictureUri: Uri?,
+    val mainPictureUriString: String?,
 ) : QueryUseCase.ReadModel

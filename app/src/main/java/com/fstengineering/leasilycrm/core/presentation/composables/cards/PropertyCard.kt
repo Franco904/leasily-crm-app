@@ -61,7 +61,7 @@ fun PropertyCard(
             .fillMaxWidth()
     ) {
         Column {
-            if (propertyDetails.mainPictureUriString != null) {
+            if (propertyDetails.mainPictureUri != null) {
                 Card(
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
@@ -69,7 +69,7 @@ fun PropertyCard(
                         .height(180.dp)
                 ) {
                     AsyncImage(
-                        model = propertyDetails.mainPictureUriString,
+                        model = propertyDetails.mainPictureUri,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

@@ -5,6 +5,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.profile.application.models.UserReadModel
 import kotlinx.coroutines.flow.Flow
 
-interface UserProfileQueryRepository {
+interface UserQueryRepository {
     fun watch(): Flow<AppResult<UserReadModel, ApplicationError>>
 }

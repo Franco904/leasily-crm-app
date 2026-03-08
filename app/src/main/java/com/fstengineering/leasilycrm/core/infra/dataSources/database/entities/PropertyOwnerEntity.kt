@@ -20,22 +20,5 @@ data class PropertyOwnerEntity(
     val email: String?,
     @ColumnInfo(name = "payment_key") val paymentKey: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
-    val inconsistencies: String?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
-) {
-    companion object {
-        fun fromDomain(domain: PropertyOwner) =
-            PropertyOwnerEntity(
-                id = domain.id,
-                createDateTime = domain.createDateTime ?: AppDateTime.now(),
-                updateDateTime = AppDateTime.now(),
-                name = domain.name.value.normalizeEncoding(),
-                phone = domain.phone?.value,
-                email = domain.email?.value,
-                paymentKey = domain.paymentKey,
-                isDeleted = false,
-                inconsistencies = domain.inconsistencies.joinToString(", "),
-                contractVersion = BuildConfig.CONTRACT_VERSION,
-            )
-    }
-}
+)

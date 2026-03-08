@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils
 
+import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSelectablePropertyReadModel
@@ -49,7 +50,7 @@ fun AssistanceSentPropertyReadModel.toCardDetails(): PropertyCardDetailsUiState 
 
     return PropertyCardDetailsUiState(
         id = requireNotNull(id),
-        mainPictureUriString = mainPictureUri,
+        mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,
         streetAddressAndNumber = streetAddressAndNumber,
         type = type,
@@ -65,44 +66,12 @@ fun AssistanceSelectablePropertyReadModel.toCardDetails(): PropertyCardDetailsUi
 
     return PropertyCardDetailsUiState(
         id = requireNotNull(id),
-        mainPictureUriString = mainPictureUri,
+        mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,
         streetAddressAndNumber = streetAddressAndNumber,
         type = type,
         seaProximityTypeId = seaProximityTypeId,
         distanceToSea = distanceToSea,
         bedroomsCount = bedroomsCount,
-    )
-}
-
-fun Loaded.toCommand(): AssistanceCommandModel {
-    return AssistanceCommandModel(
-        id = id,
-        createDateTime = createDateTime,
-        updateDateTime = updateDateTime,
-        preferredStartDate = preferredStartDate,
-        preferredEndDate = preferredEndDate,
-        hasFlexibilityForPeriod = hasFlexibilityForPeriod,
-        maxAcceptedNightlyRate = maxAcceptedNightlyRate,
-        adultsCount = adultsCount,
-        kidsCount = kidsCount,
-        babiesCount = babiesCount,
-        animalsCount = animalsCount,
-        bedroomsCount = bedroomsCount,
-        enSuitesCount = enSuitesCount,
-        doubleBedsCount = doubleBedsCount,
-        singleBedsCount = singleBedsCount,
-        bathroomsCount = bathroomsCount,
-        parkingSpotsCount = parkingSpotsCount,
-        preferredNeighborhoods = preferredNeighborhoods,
-        preferredSeaProximityTypeId = preferredSeaProximityTypeId,
-        preferredDistanceToSea = preferredDistanceToSea,
-        preferredPropertyCharacteristics = preferredPropertyCharacteristics,
-        observations = observations,
-        sentPropertiesIds = sentProperties.map { it.id }.toPersistentList(),
-        interactions = interactions
-            .map { it.toCommand() }
-            .toPersistentList(),
-        leadTenantId = leadTenantId,
     )
 }

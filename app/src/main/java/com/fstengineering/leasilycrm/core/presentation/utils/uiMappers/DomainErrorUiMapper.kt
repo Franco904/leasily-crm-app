@@ -81,5 +81,5 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.Tenant.EmailLengthIsGreaterThan120Chars -> R.string.inline_too_big_120_chars
     DomainError.Tenant.StatusInvalid -> INLINE_GENERIC_INVALID_DATA
 
-    DomainError.UserCreci.LengthIsGreaterThan8Chars -> R.string.inline_too_big_8_chars
+    DomainError.Creci.LengthIsGreaterThan8Chars -> R.string.inline_too_big_8_chars
 }

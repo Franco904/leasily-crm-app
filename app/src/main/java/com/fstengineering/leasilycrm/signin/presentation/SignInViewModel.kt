@@ -37,6 +37,12 @@ class SignInViewModel(
         }
     }
 
+    override fun onCleared() {
+        _uiEvents.close()
+
+        super.onCleared()
+    }
+
     sealed interface UiEvent {
         data class BottomSheetError(val error: ApplicationError) : UiEvent
         data object ContinueSignIn : UiEvent

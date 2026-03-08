@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.reposito
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.toCommand
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.toCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.toDraftForm
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -43,7 +43,7 @@ class AssistanceRegistrationViewModel(
 
     private val _draftFormUiState =
         MutableStateFlow<AssistanceDraftFormUiState>(AssistanceDraftFormUiState.Loading)
-    val draftForm = _draftFormUiState.asStateFlow()
+    val draftFormUiState = _draftFormUiState.asStateFlow()
 
     private var formToEdit: AssistanceDraftFormUiState? = null
 
@@ -96,7 +96,7 @@ class AssistanceRegistrationViewModel(
     }
 
     fun saveAssistance() {
-        val form = draftForm.value
+        val form = draftFormUiState.value
         if (form !is AssistanceDraftFormUiState.Loaded) return
 
         viewModelScope.launch {
@@ -105,12 +105,16 @@ class AssistanceRegistrationViewModel(
                 return@launch
             }
 
-            writeAssistance(command = form.toCommand())
-                .onApplicationError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
+            writeAssistance(command = form.toCommandModel())
+                .onApplicationError {
+                    _uiEvents.trySend(UiEvent.BottomSheetError(it))
+                    return@launch
+                }
                 .onDomainErrors { errors ->
                     // TODO: Show something in the UI with the Domain errors
                     errors.firstOrNull()
-                        ?.let { _uiEvents.send(UiEvent.BottomSheetError(ApplicationError.Unknown)) }
+                        ?.let { _uiEvents.trySend(UiEvent.BottomSheetError(ApplicationError.Unknown)) }
+                    return@launch
                 }
 
             val saveEvent =
@@ -122,11 +126,9 @@ class AssistanceRegistrationViewModel(
     }
 
     fun onExit() {
-        val needConfirmation = formToEdit != draftForm.value
+        val needConfirmation = formToEdit != draftFormUiState.value
 
-        viewModelScope.launch {
-            _uiEvents.trySend(UiEvent.Exit(needConfirmation))
-        }
+        _uiEvents.trySend(UiEvent.Exit(needConfirmation))
     }
 
     override fun onCleared() {

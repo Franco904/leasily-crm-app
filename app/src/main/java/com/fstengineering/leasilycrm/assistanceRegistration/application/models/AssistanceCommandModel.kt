@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.models
 
-import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
@@ -11,8 +10,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 data class AssistanceCommandModel(
@@ -53,7 +50,7 @@ data class AssistanceCommandModel(
                 interaction.toEntity()
                     .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
             }
-            .toImmutableList()
+            .toPersistentList()
 
         val parsed = Assistance.parse(
             id = id,
@@ -80,10 +77,8 @@ data class AssistanceCommandModel(
             observations = observations,
             sentPropertiesIds = sentPropertiesIds,
             interactions = interactions,
-            tenantId = leadTenantId,
+            leadTenantId = leadTenantId,
             isFinished = false,
-            inconsistencies = persistentListOf(),
-            contractVersion = BuildConfig.CONTRACT_VERSION,
         )
             .fold(onErrors = { errors.addAll(0, it); null }, onSuccess = { it })
 

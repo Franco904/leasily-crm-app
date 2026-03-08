@@ -51,9 +51,3 @@ class PropertyOwner private constructor(
         }
     }
 }
-
-// val isAnyFormFieldInitialized = name != null
-//            || phone != null
-//            || email != null
-//            || paymentKey != null
-//            || files.isNotEmpty()

@@ -20,11 +20,14 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchP
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
+import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writePropertyOwnerQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeUserQualifier
 import com.fstengineering.leasilycrm.core.infra.utils.authCommandUseCase
 import com.fstengineering.leasilycrm.core.infra.utils.authQueryUseCase
 import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerCommandModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -40,6 +43,10 @@ val useCaseModule = module {
 
     authCommandUseCase<CommandUseCase<AssistanceCommandModel>>(writeAssistanceQualifier) {
         WriteAssistanceUseCase(assistanceCommandRepository = get())
+    }
+
+    authCommandUseCase<CommandUseCase<PropertyOwnerCommandModel>>(writePropertyOwnerQualifier) {
+        WritePropertyOwnerUseCase(propertyOwnerCommandRepository = get())
     }
 
     authCommandUseCase<CommandUseCase<UserCommandModel>>(writeUserQualifier) {

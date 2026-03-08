@@ -17,7 +17,7 @@ val workerModule = module {
         LazyWritesWorker(
             applicationContext = get(),
             workerParameters = get(),
-            userQueryRepository = get(),
+            userRetryInfoCommandRepository = get(),
         )
     }
 }

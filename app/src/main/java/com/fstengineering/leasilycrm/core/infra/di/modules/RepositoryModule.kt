@@ -7,10 +7,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.A
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceQueryRepositoryImpl
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceSentPropertyQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.application.repositories.CrmMetricsRepository
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerFileRepository
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.settings.application.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
@@ -20,20 +18,24 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.plainPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.repositories.CrmMetricsRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.PropertyOwnerFileRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.PropertyOwnerRepositoryImpl
+import com.fstengineering.leasilycrm.core.infra.repositories.PropertyOwnerSharedRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.PropertyRepositoryImpl
-import com.fstengineering.leasilycrm.settings.infra.repositories.SettingsRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.TenantRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.UserRetryInfoCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.UserSessionRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.proxies.TenantRepositoryProxy
-import com.fstengineering.leasilycrm.profile.application.repositories.UserProfileCommandRepository
-import com.fstengineering.leasilycrm.profile.application.repositories.UserProfileQueryRepository
-import com.fstengineering.leasilycrm.profile.infra.repositories.UserProfileCommandRepositoryImpl
-import com.fstengineering.leasilycrm.profile.infra.repositories.UserProfileQueryRepositoryImpl
+import com.fstengineering.leasilycrm.profile.application.repositories.UserCommandRepository
+import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
+import com.fstengineering.leasilycrm.profile.infra.repositories.UserCommandRepositoryImpl
+import com.fstengineering.leasilycrm.profile.infra.repositories.UserQueryRepositoryImpl
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerCommandRepository
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerQueryRepository
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.repositories.PropertyOwnerCommandRepositoryImpl
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.repositories.PropertyOwnerQueryRepositoryImpl
+import com.fstengineering.leasilycrm.settings.application.repositories.SettingsRepository
+import com.fstengineering.leasilycrm.settings.infra.repositories.SettingsRepositoryImpl
 import com.fstengineering.leasilycrm.signin.application.repositories.SignInRepository
 import com.fstengineering.leasilycrm.signin.infra.repositories.SignInRepositoryImpl
 import org.koin.dsl.module
@@ -66,16 +68,32 @@ val repositoryModule = module {
 
     // Profile
 
-    single<UserProfileCommandRepository> {
-        UserProfileCommandRepositoryImpl(
+    single<UserCommandRepository> {
+        UserCommandRepositoryImpl(
             remoteDataSource = get(),
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
     }
 
-    single<UserProfileQueryRepository> {
-        UserProfileQueryRepositoryImpl(
+    single<UserQueryRepository> {
+        UserQueryRepositoryImpl(
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
+        )
+    }
+
+    // Property owner registration
+
+    single<PropertyOwnerCommandRepository> {
+        PropertyOwnerCommandRepositoryImpl(
+            databaseAdapter = get(),
+            propertyOwnerDatabaseDataSource = get(),
+            propertyOwnerFileDatabaseDataSource = get(),
+        )
+    }
+
+    single<PropertyOwnerQueryRepository> {
+        PropertyOwnerQueryRepositoryImpl(
+            propertyOwnerDatabaseDataSource = get(),
         )
     }
 
@@ -105,17 +123,10 @@ val repositoryModule = module {
         )
     }
 
-    single<PropertyOwnerFileRepository> {
-        PropertyOwnerFileRepositoryImpl(
-            sharedStorageDataSource = get(),
-        )
-    }
-
-    single<PropertyOwnerRepository> {
-        PropertyOwnerRepositoryImpl(
+    single<PropertyOwnerSharedRepository> {
+        PropertyOwnerSharedRepositoryImpl(
             databaseAdapter = get(),
             propertyOwnerDatabaseDataSource = get(),
-            propertyOwnerFileDatabaseDataSource = get(),
         )
     }
 

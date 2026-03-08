@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerRegistration.models
+package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models
 
 enum class PropertyOwnerField(val scrollIndex: Int) {
     Name(scrollIndex = 2),

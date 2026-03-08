@@ -16,6 +16,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 class Assistance private constructor(
     val id: Long?,
+    val leadTenantId: Long,
     val createDateTime: AppDateTime?,
     val updateDateTime: AppDateTime?,
     val preferredPeriod: AssistancePreferredPeriod?,
@@ -29,14 +30,12 @@ class Assistance private constructor(
     val observations: String?,
     val sentPropertiesIds: ImmutableList<Long>,
     val interactions: ImmutableList<AssistanceInteraction>,
-    val tenantId: Long,
     val isFinished: Boolean,
-    val inconsistencies: ImmutableList<DomainError>,
-    val contractVersion: Int,
 ) {
     companion object {
         fun parse(
             id: Long?,
+            leadTenantId: Long?,
             createDateTime: AppDateTime?,
             updateDateTime: AppDateTime?,
             preferredStartDate: AppDate?,
@@ -60,14 +59,11 @@ class Assistance private constructor(
             observations: String?,
             sentPropertiesIds: ImmutableList<Long>,
             interactions: ImmutableList<AssistanceInteraction>,
-            tenantId: Long?,
             isFinished: Boolean,
-            inconsistencies: ImmutableList<DomainError>,
-            contractVersion: Int,
         ): AppResultCompound<Assistance, DomainError> {
             val errors = mutableListOf<DomainError>()
 
-            val tenantId = tenantId ?: run {
+            val tenantId = leadTenantId ?: run {
                 errors.add(DomainError.AssistanceOtherFields.TenantRequired); null
             }
 
@@ -123,9 +119,7 @@ class Assistance private constructor(
                 observations = observations,
                 sentPropertiesIds = sentPropertiesIds,
                 interactions = interactions,
-                tenantId = requireNotNull(tenantId),
-                inconsistencies = inconsistencies,
-                contractVersion = contractVersion,
+                leadTenantId = requireNotNull(tenantId),
             )
 
             return AppResultCompound.Success(data = parsed)

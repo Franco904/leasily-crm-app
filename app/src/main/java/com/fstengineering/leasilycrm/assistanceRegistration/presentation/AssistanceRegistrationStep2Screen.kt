@@ -51,7 +51,7 @@ fun AssistanceRegistrationStep2Screen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val draftForm by parentViewModel.draftForm.collectAsStateWithLifecycle()
+    val draftForm by parentViewModel.draftFormUiState.collectAsStateWithLifecycle()
     val loadedDraftForm = draftForm as? AssistanceDraftFormUiState.Loaded
 
     val searchInput by stepViewModel.searchInput.collectAsStateWithLifecycle()

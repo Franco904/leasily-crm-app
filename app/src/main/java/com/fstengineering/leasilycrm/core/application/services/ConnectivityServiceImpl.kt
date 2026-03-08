@@ -10,7 +10,7 @@ class ConnectivityServiceImpl(
 ) : ConnectivityService {
     override fun checkDeviceIsConnectedToInternet(): AppResult<Unit, ApplicationError> {
         if (!connectivityAdapter.isDeviceConnectedToInternet(canUseMobile = true)) {
-            return AppResult.Error(error = ApplicationError.Infra.NoInternet)
+            return AppResult.Error(error = ApplicationError.NoInternet)
         }
 
         return AppResult.Success(data = Unit)

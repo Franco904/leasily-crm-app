@@ -21,31 +21,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 )
 data class PropertyOwnerFileEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
-    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "property_owner_file_uri") val propertyOwnerFileUri: String,
     @ColumnInfo(name = "property_owner_file_name") val propertyOwnerFileName: String,
     @ColumnInfo(name = "property_owner_id") val propertyOwnerId: Long,
-    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
-) {
-    fun toDomain() = PropertyOwnerFile(
-        id = id,
-        createDateTime = createDateTime,
-        updateDateTime = updateDateTime,
-        uriString = propertyOwnerFileUri,
-        name = propertyOwnerFileName,
-    )
-
-    companion object {
-        fun fromDomain(domain: PropertyOwnerFile, propertyOwnerId: Long) =
-            PropertyOwnerFileEntity(
-                id = domain.id,
-                createDateTime = domain.createDateTime ?: AppDateTime.now(),
-                updateDateTime = AppDateTime.now(),
-                propertyOwnerFileUri = domain.uriString,
-                propertyOwnerFileName = domain.name,
-                propertyOwnerId = propertyOwnerId,
-                isDeleted = false,
-            )
-    }
-}
+)

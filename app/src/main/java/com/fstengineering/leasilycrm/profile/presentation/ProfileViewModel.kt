@@ -13,7 +13,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
-import com.fstengineering.leasilycrm.profile.application.repositories.UserProfileQueryRepository
+import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
 import com.fstengineering.leasilycrm.profile.domain.valueObjects.Creci
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
@@ -28,7 +28,7 @@ class ProfileViewModel(
     private val writeUser: WriteUserUseCase,
     private val connectivityService: ConnectivityService,
     private val userSessionService: UserSessionService,
-    private val userProfileQueryRepository: UserProfileQueryRepository,
+    private val userQueryRepository: UserQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -51,7 +51,7 @@ class ProfileViewModel(
 
     private fun watchUser() {
         viewModelScope.launch {
-            userProfileQueryRepository.watch().collect { result ->
+            userQueryRepository.watch().collect { result ->
                 result
                     .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { user -> _uiState.update { ProfileUiState.Loaded.fromReadModel(user) } }

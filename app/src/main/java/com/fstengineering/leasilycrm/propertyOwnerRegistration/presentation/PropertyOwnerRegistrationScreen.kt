@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerRegistration
+package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation
 
 import android.content.Intent
 import androidx.activity.compose.BackHandler
@@ -6,11 +6,8 @@ import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
@@ -31,19 +27,20 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.Exit
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerCreateSuccess
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.PropertyOwnerEditSuccess
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.PropertyOwnerRegistrationViewModel.UiEvents.ScrollToField
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationFormSection
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.composables.PropertyOwnerRegistrationTopAppBar
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.models.PropertyOwnerField
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationViewModel.UiEvent.BottomSheetError
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationViewModel.UiEvent.Exit
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationViewModel.UiEvent.PropertyOwnerCreateSuccess
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationViewModel.UiEvent.PropertyOwnerEditSuccess
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationViewModel.UiEvent.ScrollToField
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.composables.PropertyOwnerRegistrationFormSection
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.composables.PropertyOwnerRegistrationTopAppBar
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerDraftFormUiState
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerField
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -62,13 +59,11 @@ fun PropertyOwnerRegistrationScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val propertyOwnerForm by viewModel.propertyOwnerForm.collectAsStateWithLifecycle()
+    val draftForm by viewModel.draftFormUiState.collectAsStateWithLifecycle()
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
     val scrollToFieldChannel = remember { Channel<PropertyOwnerField>() }
     val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
-
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
 
@@ -82,7 +77,10 @@ fun PropertyOwnerRegistrationScreen(
                 Intent.FLAG_GRANT_READ_URI_PERMISSION,
             )
 
-            viewModel.onPropertyOwnerFilePick(contentUriString = contentUri.toString())
+            viewModel.onPropertyOwnerFilePick(
+                contentUriString = contentUri.toString(),
+                defaultFileName = context.getString(R.string.unknown_text),
+            )
         }
     )
 
@@ -91,7 +89,7 @@ fun PropertyOwnerRegistrationScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is Error -> {
+                is BottomSheetError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
@@ -151,34 +149,29 @@ fun PropertyOwnerRegistrationScreen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) { innerPadding ->
-        if (isLoading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                AppCircularProgressIndicator(
+        when (draftForm) {
+            is PropertyOwnerDraftFormUiState.Loading -> {
+                FullScreenLoadingIndicator(innerPadding)
+            }
+
+            is PropertyOwnerDraftFormUiState.Loaded -> {
+                PropertyOwnerRegistrationFormSection(
+                    propertyOwnerForm = draftForm as PropertyOwnerDraftFormUiState.Loaded,
+                    onPropertyOwnerFormChange = viewModel::onPropertyOwnerFormChange,
+                    formErrors = formErrors.errors,
+                    onLastTextFieldDone = { focusManager.clearFocus() },
+                    onAddPropertyOwnerFile = {
+                        val acceptedMimeTypes = arrayOf("application/*", "text/*")
+                        openDocumentFile.launch(acceptedMimeTypes)
+                    },
+                    scrollToFieldFlow = scrollToFieldFlow,
                     modifier = Modifier
-                        .size(64.dp)
+                        .padding(innerPadding)
+                        .padding(horizontal = 24.dp)
                 )
             }
-        } else {
-            PropertyOwnerRegistrationFormSection(
-                propertyOwnerForm = propertyOwnerForm,
-                onPropertyOwnerFormChange = viewModel::onPropertyOwnerFormChange,
-                formErrors = formErrors.errors,
-                onLastTextFieldDone = { focusManager.clearFocus() },
-                onAddPropertyOwnerFile = {
-                    val acceptedMimeTypes = arrayOf("application/*", "text/*")
-                    openDocumentFile.launch(acceptedMimeTypes)
-                },
-                scrollToFieldFlow = scrollToFieldFlow,
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp)
-            )
         }
+
         if (mustShowConfirmLeaveRegistrationDialog) {
             ConfirmLeaveRegistrationDialog(
                 isEditing = propertyOwnerId != null,
