@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.utils
+package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers
 
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerFileCommandModel

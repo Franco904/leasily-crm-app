@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.assistanceRegistration.infra.utils
+package com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceRawReadModel

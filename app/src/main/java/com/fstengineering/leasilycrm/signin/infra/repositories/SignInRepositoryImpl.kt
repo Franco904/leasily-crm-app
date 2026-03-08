@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.Us
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.infra.models.SyncState
 import com.fstengineering.leasilycrm.signin.application.repositories.SignInRepository
-import com.fstengineering.leasilycrm.signin.infra.utils.toWriteModel
+import com.fstengineering.leasilycrm.signin.infra.mappers.toWriteModel
 
 class SignInRepositoryImpl(
     private val remoteDataSource: UserRemoteDataSource,

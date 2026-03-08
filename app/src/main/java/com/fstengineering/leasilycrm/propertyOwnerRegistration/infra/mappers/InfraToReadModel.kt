@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.utils
+package com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyOwnerCompound

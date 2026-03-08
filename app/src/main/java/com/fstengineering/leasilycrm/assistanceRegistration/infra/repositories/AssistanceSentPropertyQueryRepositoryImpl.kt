@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentPropertyQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.infra.utils.toSentPropertyReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers.toSentPropertyReadModel
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold

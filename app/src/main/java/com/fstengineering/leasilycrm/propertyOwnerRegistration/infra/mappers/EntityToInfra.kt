@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.utils
+package com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime

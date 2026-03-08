@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.assistanceRegistration.infra.utils
+package com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance

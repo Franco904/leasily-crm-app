@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerFileDatabaseDataSource
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerCommandRepository
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.domain.entities.PropertyOwner
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.utils.toLocalDataModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.mappers.toLocalDataModel
 
 class PropertyOwnerCommandRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,

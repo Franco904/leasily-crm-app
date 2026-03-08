@@ -8,8 +8,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.reposito
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.toCommandModel
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.toDraftForm
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toCommandModel
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toDraftForm
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess

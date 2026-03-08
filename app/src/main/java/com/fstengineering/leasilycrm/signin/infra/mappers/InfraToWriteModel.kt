@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.signin.infra.utils
+package com.fstengineering.leasilycrm.signin.infra.mappers
 
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.responseDtos.user.SignInUserResponseDto

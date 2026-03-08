@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.utils
+package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers
 
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerFileReadModel

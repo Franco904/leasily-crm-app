@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewMo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectablePropertyQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils.toCardDetails
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toCardDetails
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState

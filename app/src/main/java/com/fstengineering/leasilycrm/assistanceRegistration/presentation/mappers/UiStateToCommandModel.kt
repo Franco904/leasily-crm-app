@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils
+package com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState

@@ -25,11 +25,22 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.AssistanceOtherFields.BathroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
     DomainError.AssistanceOtherFields.ParkingSpotsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
 
+    DomainError.Creci.LengthIsGreaterThan8Chars -> R.string.inline_too_big_8_chars
+
+    DomainError.Email.Invalid -> R.string.inline_invalid_email
+    DomainError.Email.LengthIsGreaterThan120Chars -> R.string.inline_too_big_120_chars
+
+    DomainError.Name.Required -> INLINE_REQUIRED
+    DomainError.Name.LengthIsGreaterThan100Chars -> R.string.inline_too_big_100_chars
+
     DomainError.Neighborhood.Required -> INLINE_REQUIRED
+
+    DomainError.PaymentKey.LengthIsGreaterThan120Chars -> R.string.inline_too_big_120_chars
+
+    DomainError.Phone.LengthIsGreaterThan20Chars -> R.string.inline_too_big_20_chars
 
     DomainError.Property.OwnerRequired -> INLINE_REQUIRED
     DomainError.Property.TypeRequired -> INLINE_REQUIRED
-    DomainError.Property.TypeInvalid -> INLINE_GENERIC_INVALID_DATA
     DomainError.Property.StreetAddressRequired -> INLINE_REQUIRED
     DomainError.Property.PricePeriodRequired -> INLINE_REQUIRED
     DomainError.Property.PricePeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
@@ -80,6 +91,4 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.Tenant.EmailInvalidFormat -> R.string.inline_invalid_email
     DomainError.Tenant.EmailLengthIsGreaterThan120Chars -> R.string.inline_too_big_120_chars
     DomainError.Tenant.StatusInvalid -> INLINE_GENERIC_INVALID_DATA
-
-    DomainError.Creci.LengthIsGreaterThan8Chars -> R.string.inline_too_big_8_chars
 }

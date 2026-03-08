@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypte
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.profile.application.models.UserReadModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
-import com.fstengineering.leasilycrm.profile.infra.utils.toReadModel
+import com.fstengineering.leasilycrm.profile.infra.mappers.toReadModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll

@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSelectablePropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectablePropertyQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.infra.utils.toSelectablePropertyReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers.toSelectablePropertyReadModel
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold

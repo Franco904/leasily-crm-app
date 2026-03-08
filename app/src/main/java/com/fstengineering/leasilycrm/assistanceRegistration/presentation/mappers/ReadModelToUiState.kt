@@ -1,17 +1,16 @@
-package com.fstengineering.leasilycrm.assistanceRegistration.presentation.utils
+package com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers
 
 import androidx.core.net.toUri
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSelectablePropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSentPropertyReadModel
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState.Loaded
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
-fun AssistanceReadModel.toDraftForm() = Loaded(
+fun AssistanceReadModel.toDraftForm() = AssistanceDraftFormUiState.Loaded(
     id = id,
     leadTenantId = leadTenantId,
     leadTenantName = leadTenantName,

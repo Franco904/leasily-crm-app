@@ -19,8 +19,8 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mode
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerErrorUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerField
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerFileDraftFormUiState
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.utils.toCommandModel
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.utils.toDraftForm
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toCommandModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toDraftForm
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

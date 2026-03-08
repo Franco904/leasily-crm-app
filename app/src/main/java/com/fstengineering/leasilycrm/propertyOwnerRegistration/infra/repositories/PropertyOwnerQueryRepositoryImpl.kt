@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerDatabaseDataSource
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerReadModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerQueryRepository
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.utils.toReadModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.mappers.toReadModel
 
 class PropertyOwnerQueryRepositoryImpl(
     private val propertyOwnerDatabaseDataSource: PropertyOwnerDatabaseDataSource,
