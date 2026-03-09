@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.settings.presentation.composables
+package com.fstengineering.leasilycrm.settings.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

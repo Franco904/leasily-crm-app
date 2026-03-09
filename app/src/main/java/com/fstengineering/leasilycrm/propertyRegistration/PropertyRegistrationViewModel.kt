@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyRegistration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 class PropertyRegistrationViewModel(
     private val propertyRepository: PropertyRepository,
-    private val propertyOwnerSharedRepository: PropertyOwnerSharedRepository,
+    private val propertyOwnerSharedCommandRepository: PropertyOwnerSharedCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -98,7 +98,7 @@ class PropertyRegistrationViewModel(
 
     private fun watchPropertyOwners() {
         viewModelScope.launch {
-            propertyOwnerSharedRepository.watchAll().collect { result ->
+            propertyOwnerSharedCommandRepository.watchAll().collect { result ->
                 result
                     .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { propertyOwners -> _propertyOwners.update { propertyOwners } }

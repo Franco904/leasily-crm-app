@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
-interface PropertyOwnerSharedRepository {
+interface PropertyOwnerSharedCommandRepository {
     suspend fun delete(id: Long): AppResult<Unit, ApplicationError>
 
     fun watchById(propertyOwnerId: Long): Flow<AppResult<PropertyOwner, ApplicationError>>

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.settings.presentation.composables
+package com.fstengineering.leasilycrm.settings.composables
 
 import android.Manifest
 import android.app.Activity
@@ -27,7 +27,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.utils.hasNotificationPermission
-import com.fstengineering.leasilycrm.settings.presentation.models.SettingsUiState
+import com.fstengineering.leasilycrm.settings.models.SettingsUiState
 
 @Composable
 fun SettingsSection(

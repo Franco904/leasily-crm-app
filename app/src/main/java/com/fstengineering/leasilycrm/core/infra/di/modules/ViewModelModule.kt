@@ -28,7 +28,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyReg
 import com.fstengineering.leasilycrm.propertyRegistration.viewModels.PropertyRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
-import com.fstengineering.leasilycrm.settings.presentation.SettingsViewModel
+import com.fstengineering.leasilycrm.settings.SettingsViewModel
 import com.fstengineering.leasilycrm.signin.presentation.SignInViewModel
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel
@@ -39,7 +39,7 @@ val viewModelModule = module {
     viewModel {
         RootViewModel(
             userSessionRepository = get(),
-            settingsRepository = get(),
+            settingsSharedCommandRepository = get(),
         )
     }
 
@@ -52,7 +52,8 @@ val viewModelModule = module {
 
     viewModel {
         SettingsViewModel(
-            settingsRepository = get(),
+            settingsSharedQueryRepository = get(),
+            settingsSharedCommandRepository = get(),
         )
     }
 
@@ -89,7 +90,7 @@ val viewModelModule = module {
     viewModel {
         PropertyRegistrationViewModel(
             propertyRepository = get(),
-            propertyOwnerSharedRepository = get(),
+            propertyOwnerSharedCommandRepository = get(),
         )
     }
 
@@ -131,7 +132,7 @@ val viewModelModule = module {
 
     viewModel {
         PropertyOwnersViewModel(
-            propertyOwnerSharedRepository = get(),
+            propertyOwnerSharedCommandRepository = get(),
         )
     }
 
@@ -170,7 +171,7 @@ val viewModelModule = module {
 
     viewModel {
         PropertyOwnerDetailsViewModel(
-            propertyOwnerSharedRepository = get(),
+            propertyOwnerSharedCommandRepository = get(),
         )
     }
 

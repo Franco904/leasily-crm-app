@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.settings.presentation.models
+package com.fstengineering.leasilycrm.settings.models
 
 import com.fstengineering.leasilycrm.settings.application.models.SettingsReadModel
 

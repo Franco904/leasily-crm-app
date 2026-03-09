@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class PropertyOwnerSharedRepositoryImpl(
+class PropertyOwnerSharedCommandRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val propertyOwnerDatabaseDataSource: PropertyOwnerDatabaseDataSource,
-) : PropertyOwnerSharedRepository {
+) : PropertyOwnerSharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
             propertyOwnerDatabaseDataSource.delete(id)

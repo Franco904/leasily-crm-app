@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.propertyOwnerDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedCommandRepository
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PropertyOwnerDetailsViewModel(
-    private val propertyOwnerSharedRepository: PropertyOwnerSharedRepository,
+    private val propertyOwnerSharedCommandRepository: PropertyOwnerSharedCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -43,7 +43,7 @@ class PropertyOwnerDetailsViewModel(
         _isLoading.update { true }
 
         watchPropertyOwnerJob = viewModelScope.launch {
-            propertyOwnerSharedRepository.watchById(propertyOwnerId).collect { result ->
+            propertyOwnerSharedCommandRepository.watchById(propertyOwnerId).collect { result ->
                 result
                     .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { propertyOwner -> _propertyOwner.update { propertyOwner } }
@@ -59,7 +59,7 @@ class PropertyOwnerDetailsViewModel(
         watchPropertyOwnerJob?.cancel()
 
         viewModelScope.launch {
-            propertyOwnerSharedRepository.delete(id = propertyOwnerId)
+            propertyOwnerSharedCommandRepository.delete(id = propertyOwnerId)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { _uiEvents.send(UiEvents.PropertyOwnerDeleteSuccess) }
         }

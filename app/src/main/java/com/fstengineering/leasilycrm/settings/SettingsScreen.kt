@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.settings.presentation
+package com.fstengineering.leasilycrm.settings
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.strategies.Default
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.settings.presentation.composables.SettingsScreenTopBar
 import com.fstengineering.leasilycrm.settings.presentation.composables.SettingsSection
-import com.fstengineering.leasilycrm.settings.presentation.models.SettingsUiState
+import com.fstengineering.leasilycrm.settings.models.SettingsUiState
 
 @Composable
 fun SettingsScreen(
@@ -59,7 +59,9 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             Column {
-                SettingsScreenTopBar(onBack = onBack)
+                _root_ide_package_.com.fstengineering.leasilycrm.settings.composables.SettingsScreenTopBar(
+                    onBack = onBack
+                )
                 HorizontalDivider()
             }
         },
@@ -68,7 +70,7 @@ fun SettingsScreen(
         when (settings) {
             SettingsUiState.Loading -> FullScreenLoadingIndicator(innerPadding)
             is SettingsUiState.Loaded -> {
-                SettingsSection(
+                _root_ide_package_.com.fstengineering.leasilycrm.settings.composables.SettingsSection(
                     settings = settings as SettingsUiState.Loaded,
                     onIsTodayCheckInCheckOutNotificationEnabledChange = { isEnabled ->
                         viewModel.onIsTodayCheckInCheckOutNotificationEnabledChange(isEnabled)

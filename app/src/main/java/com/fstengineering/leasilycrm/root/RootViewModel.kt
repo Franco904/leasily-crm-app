@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.root
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.settings.application.repositories.SettingsRepository
+import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.UserSessionRepository
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.coroutines.channels.Channel
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class RootViewModel(
     private val userSessionRepository: UserSessionRepository,
-    private val settingsRepository: SettingsRepository,
+    private val settingsSharedCommandRepository: SettingsSharedCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -37,7 +37,8 @@ class RootViewModel(
 
     fun uncheckAppNotificationSettings() {
         viewModelScope.launch {
-            settingsRepository.setIsTodayCheckInCheckOutNotificationEnabled(isEnabled = false)
+            settingsSharedCommandRepository
+                .setIsTodayCheckInCheckOutNotificationEnabled(isEnabled = false)
         }
     }
 

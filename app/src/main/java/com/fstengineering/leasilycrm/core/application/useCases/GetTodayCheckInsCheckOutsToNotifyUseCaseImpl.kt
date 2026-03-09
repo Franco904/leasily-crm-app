@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
-import com.fstengineering.leasilycrm.settings.application.repositories.SettingsRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.repositories.UserSessionRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
@@ -10,6 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
+import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedQueryRepository
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -17,12 +17,12 @@ import kotlinx.coroutines.flow.firstOrNull
 class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
     private val userSessionRepository: UserSessionRepository,
     private val stayRepository: StayRepository,
-    private val settingsRepository: SettingsRepository,
+    private val settingsSharedQueryRepository: SettingsSharedQueryRepository,
     private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
     override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, InfraError> {
         val isTodayCheckInCheckOutNotificationEnabled =
-            settingsRepository.watch().firstOrNull()
+            settingsSharedQueryRepository.watch().firstOrNull()
                 ?.fold(
                     onError = { false },
                     onSuccess = { it.isTodayCheckInCheckOutNotificationEnabled }
@@ -37,7 +37,7 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
 
         return stayRepository.watchAllUpcomingCheckInsAndCheckOuts().first()
             .fold(
-                onError = { error -> AppResult.Success(data = persistentListOf()) },
+                onError = { _ -> AppResult.Success(data = persistentListOf()) },
                 onSuccess = { upcomingCheckInsAndCheckOuts ->
                     val todayCheckInsAndCheckOutsToNotify = upcomingCheckInsAndCheckOuts
                         .filter {
@@ -50,9 +50,11 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
                                 !it.isCheckInDone && it.checkInDateTime.isToday()
                             val mustNotifyCheckOut = it.checkOutDateTime.isToday()
 
+                            val type = PropertyType.fromId(requireNotNull(it.propertyTypeId))
+
                             StayCheckNotificationStatus(
                                 tenantName = requireNotNull(it.tenantName),
-                                propertyType = PropertyType.fromId(requireNotNull(it.propertyTypeId)),
+                                propertyType = requireNotNull(type),
                                 propertyOwnerName = requireNotNull(it.propertyOwnerName),
                                 hourMinute = if (mustNotifyCheckIn) {
                                     it.checkInDateTime.toHourMinute()
