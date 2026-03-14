@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.useCases
 
+import com.fstengineering.leasilycrm.assistanceRegistration.application.mappers.toEntity
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -16,7 +16,7 @@ class WriteAssistanceUseCase(
     override suspend fun invoke(
         command: AssistanceCommandModel,
     ): AppResultCompound<Unit, BusinessRuleError> {
-        val assistance = command.toAggregate()
+        val assistance = command.toEntity()
             .fold(onErrors = { return AppResultCompound.Errors(it) }, onSuccess = { it })
 
         assistanceCommandRepository.insertOrUpdate(assistance)

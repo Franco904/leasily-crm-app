@@ -18,7 +18,6 @@ class Assistance private constructor(
     val id: Long?,
     val leadTenantId: Long,
     val createDateTime: AppDateTime?,
-    val updateDateTime: AppDateTime?,
     val preferredPeriod: AssistancePreferredPeriod?,
     val hasFlexibilityForPeriod: Boolean,
     val maxAcceptedNightlyRate: AppDecimal?,
@@ -37,7 +36,6 @@ class Assistance private constructor(
             id: Long?,
             leadTenantId: Long?,
             createDateTime: AppDateTime?,
-            updateDateTime: AppDateTime?,
             preferredStartDate: AppDate?,
             preferredEndDate: AppDate?,
             hasFlexibilityForPeriod: Boolean,
@@ -106,7 +104,6 @@ class Assistance private constructor(
             val parsed = Assistance(
                 id = id,
                 createDateTime = createDateTime,
-                updateDateTime = updateDateTime,
                 preferredPeriod = preferredPeriod,
                 hasFlexibilityForPeriod = hasFlexibilityForPeriod,
                 maxAcceptedNightlyRate = maxAcceptedNightlyRate,

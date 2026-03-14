@@ -14,7 +14,6 @@ import kotlinx.collections.immutable.toPersistentList
 class PropertyOwner private constructor(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val updateDateTime: AppDateTime?,
     val name: Name,
     val phone: Phone?,
     val email: Email?,
@@ -25,7 +24,6 @@ class PropertyOwner private constructor(
         fun parse(
             id: Long?,
             createDateTime: AppDateTime?,
-            updateDateTime: AppDateTime?,
             name: String?,
             phone: String?,
             email: String?,
@@ -53,7 +51,6 @@ class PropertyOwner private constructor(
             val parsed = PropertyOwner(
                 id = id,
                 createDateTime = createDateTime,
-                updateDateTime = updateDateTime,
                 name = requireNotNull(parsedName),
                 phone = parsedPhone,
                 email = parsedEmail,

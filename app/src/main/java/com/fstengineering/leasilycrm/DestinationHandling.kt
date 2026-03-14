@@ -16,7 +16,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.Assista
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsScreen
-import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationScreen
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.LeadTenantRegistrationScreen
 import com.fstengineering.leasilycrm.profile.presentation.ProfileScreen
 import com.fstengineering.leasilycrm.properties.PropertiesScreen
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardScreen
@@ -30,7 +30,6 @@ import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationSt
 import com.fstengineering.leasilycrm.propertyRegistration.PropertyRegistrationStep4Screen
 import com.fstengineering.leasilycrm.propertyStays.PropertyStaysScreen
 import com.fstengineering.leasilycrm.root.RootScreen
-import com.fstengineering.leasilycrm.settings.presentation.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsScreen
 import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationScreen

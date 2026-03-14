@@ -28,14 +28,14 @@ class PropertyOwnerCommandRepositoryImpl(
     }
 
     private suspend fun saveDataInDatabase(propertyOwner: PropertyOwner) {
-        val propertyOwnerEntity = propertyOwner.toLocalDataModel()
+        val ownerLocalModel = propertyOwner.toLocalDataModel()
 
-        val propertyOwnerId = propertyOwnerDatabaseDataSource.insertOrUpdate(propertyOwnerEntity)
+        val propertyOwnerId = propertyOwnerDatabaseDataSource.insertOrUpdate(ownerLocalModel)
             .let { id -> propertyOwner.id ?: id }
 
         propertyOwner.files.forEach {
-            val file = it.toLocalDataModel(propertyOwnerId)
-            propertyOwnerFileDatabaseDataSource.insertOrUpdate(file)
+            val fileLocalModel = it.toLocalDataModel(propertyOwnerId)
+            propertyOwnerFileDatabaseDataSource.insertOrUpdate(fileLocalModel)
         }
     }
 }

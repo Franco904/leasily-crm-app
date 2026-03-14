@@ -5,7 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.TenantCompound
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.TenantReadView
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -18,7 +18,7 @@ interface TenantDao {
 
     @Transaction
     @Query("SELECT * FROM tenants_read_view WHERE id = :id AND is_deleted = 0")
-    suspend fun getById(id: Long): TenantCompound?
+    suspend fun getById(id: Long): TenantReadView
 
     @Transaction
     @Query(
@@ -36,7 +36,7 @@ interface TenantDao {
             CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
-    suspend fun getAllLeadsMatching(matching: String?, order: Int): List<TenantCompound>
+    suspend fun getAllLeadsMatching(matching: String?, order: Int): List<TenantReadView>
 
     @Transaction
     @Query(
@@ -54,7 +54,7 @@ interface TenantDao {
             CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
-    suspend fun getAllTenantsMatching(matching: String?, order: Int): List<TenantCompound>
+    suspend fun getAllTenantsMatching(matching: String?, order: Int): List<TenantReadView>
 
     @Transaction
     @Query(
@@ -73,7 +73,7 @@ interface TenantDao {
     suspend fun getAllWithoutUpcomingStaysMatching(
         matching: String?,
         currentTenantId: Long?,
-    ): List<TenantCompound>
+    ): List<TenantReadView>
 
     @Query("SELECT name FROM tenants_read_view WHERE id = :id AND is_deleted = 0")
     suspend fun getNameById(id: Long): String?
@@ -98,9 +98,19 @@ interface TenantDao {
     )
     suspend fun getAllCityNames(): List<String>
 
+    @Query(
+        """
+        SELECT DISTINCT(contact_origin) FROM tenants_read_view
+        WHERE contact_origin IS NOT NULL
+        AND is_deleted = 0
+        ORDER BY contact_origin
+    """
+    )
+    suspend fun getAllContactOrigins(): List<String>
+
     @Transaction
     @Query("SELECT * FROM tenants_read_view WHERE id = :id AND is_deleted = 0")
-    fun watchById(id: Long): Flow<TenantCompound?>
+    fun watchById(id: Long): Flow<TenantReadView?>
 
     @Transaction
     @Query(
@@ -126,19 +136,5 @@ interface TenantDao {
         tenantStatusIdFilter: Int?,
         matching: String?,
         orderTypeId: Int?,
-    ): Flow<List<TenantCompound>>
-
-    @Query(
-        """
-        SELECT COUNT(name) FROM tenants_read_view
-        WHERE (
-            name = :tenantName AND (:currentStoredTenantName IS NULL OR name <> :currentStoredTenantName)
-        )
-        AND is_deleted = 0
-    """
-    )
-    suspend fun countTenantsWithName(
-        tenantName: String,
-        currentStoredTenantName: String?,
-    ): Int
+    ): Flow<List<TenantReadView>>
 }

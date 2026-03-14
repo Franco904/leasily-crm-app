@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.leadTenantRegistration.composables
+package com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row

@@ -27,20 +27,6 @@ class TenantRepositoryImpl(
     private val databaseDataSource: TenantDatabaseDataSource,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : TenantRepository {
-    override suspend fun insertOrUpdate(
-        tenant: Tenant,
-    ): AppResult<Unit, ApplicationError> {
-        val tenantEntity = TenantEntity.fromDomain(tenant)
-
-        return databaseAdapter.withTransaction {
-            databaseDataSource.insertOrUpdate(tenantEntity)
-        }
-            .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { AppResult.Success(data = Unit) }
-            )
-    }
-
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
             databaseDataSource.delete(id)
@@ -130,22 +116,6 @@ class TenantRepositoryImpl(
         return AppResult.Success(data = tenants)
     }
 
-    override suspend fun getAllTagNames(): AppResult<ImmutableList<String>, ApplicationError> {
-        return databaseDataSource.getAllTagNames()
-            .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { AppResult.Success(data = it.toPersistentList()) },
-            )
-    }
-
-    override suspend fun getAllCityNames(): AppResult<ImmutableList<String>, ApplicationError> {
-        return databaseDataSource.getAllCityNames()
-            .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { AppResult.Success(data = it.toPersistentList()) },
-            )
-    }
-
     override suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, ApplicationError> {
         val preferredLeadsOrderTypeId = plainPreferencesDataSource.readPreferences()
             .fold(
@@ -231,20 +201,4 @@ class TenantRepositoryImpl(
 
             emitAll(tenantsFlow)
         }
-
-    override suspend fun isThereTenantWithName(
-        tenantName: String,
-        currentStoredTenantName: String?,
-    ): AppResult<Boolean, ApplicationError> {
-        val count = databaseDataSource.countTenantsWithName(
-            tenantName = tenantName.normalizeEncoding(),
-            currentStoredTenantName = currentStoredTenantName,
-        )
-            .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { count -> count },
-            )
-
-        return AppResult.Success(data = count > 0)
-    }
 }

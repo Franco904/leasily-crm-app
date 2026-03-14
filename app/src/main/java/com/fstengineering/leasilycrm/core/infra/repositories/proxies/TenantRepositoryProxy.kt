@@ -12,11 +12,6 @@ class TenantRepositoryProxy(
     private val tenantInMemoryDataSource: TenantInMemoryDataSource,
     private val tenantRepository: TenantRepository,
 ) : TenantRepository {
-    override suspend fun insertOrUpdate(tenant: Tenant): AppResult<Unit, ApplicationError> {
-        return tenantRepository.insertOrUpdate(tenant)
-            .onSuccess { tenantInMemoryDataSource.removeTenant(tenant.id) }
-    }
-
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
         return tenantRepository.delete(id)
             .onSuccess { tenantInMemoryDataSource.removeTenant(id = id) }
@@ -76,10 +71,4 @@ class TenantRepositoryProxy(
         orderTypeId: Int?,
     ) =
         tenantRepository.watchAll(tenantStatusFilter, matching, orderTypeId)
-
-    override suspend fun isThereTenantWithName(
-        tenantName: String,
-        currentStoredTenantName: String?
-    ) =
-        tenantRepository.isThereTenantWithName(tenantName, currentStoredTenantName)
 }

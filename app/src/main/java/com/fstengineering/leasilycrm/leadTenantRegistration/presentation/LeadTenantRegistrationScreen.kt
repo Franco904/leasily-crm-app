@@ -1,13 +1,10 @@
-package com.fstengineering.leasilycrm.leadTenantRegistration
+package com.fstengineering.leasilycrm.leadTenantRegistration.presentation
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
@@ -28,19 +24,15 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.Exit
-import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.LeadCreateSuccess
-import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.LeadTenantEditSuccess
-import com.fstengineering.leasilycrm.leadTenantRegistration.LeadTenantRegistrationViewModel.UiEvents.ScrollToField
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationFormSection
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.LeadTenantRegistrationTopAppBar
-import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.LeadTenantRegistrationFormSection
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.LeadTenantRegistrationTopAppBar
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantField
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -58,19 +50,15 @@ fun LeadTenantRegistrationScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val leadTenantForm by viewModel.leadTenantForm.collectAsStateWithLifecycle()
+    val draftForm by viewModel.draftFormUiState.collectAsStateWithLifecycle()
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
     val pastTags by viewModel.pastTags.collectAsStateWithLifecycle()
     val pastCities by viewModel.pastCities.collectAsStateWithLifecycle()
-
-    // TODO: Excluir tabela e pegar nomes direto de Tenants
-    val pastContactOriginTypes by viewModel.pastContactOriginTypes.collectAsStateWithLifecycle()
+    val pastContactOrigins by viewModel.pastContactOrigins.collectAsStateWithLifecycle()
 
     val scrollToFieldChannel = remember { Channel<LeadTenantField>() }
     val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
-
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -79,30 +67,30 @@ fun LeadTenantRegistrationScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is Error -> {
+                is LeadTenantRegistrationViewModel.UiEvent.BottomSheetError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is ScrollToField -> {
+                is LeadTenantRegistrationViewModel.UiEvent.ScrollToField -> {
                     scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
-                is LeadCreateSuccess -> {
+                is LeadTenantRegistrationViewModel.UiEvent.LeadCreateSuccess -> {
                     onBack()
 
                     onUiEvent(UiEvent.ShowSnackBar(R.string.create_lead_success_message))
                 }
 
-                is LeadTenantEditSuccess -> {
+                is LeadTenantRegistrationViewModel.UiEvent.LeadTenantEditSuccess -> {
                     onBack()
 
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
 
-                is Exit -> {
+                is LeadTenantRegistrationViewModel.UiEvent.Exit -> {
                     if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
                     else {
                         mustShowConfirmLeaveRegistrationDialog = false
@@ -126,9 +114,11 @@ fun LeadTenantRegistrationScreen(
     Scaffold(
         topBar = {
             Column {
+                val loadedForm = (draftForm as? LeadTenantDraftFormUiState.Loaded)
+
                 LeadTenantRegistrationTopAppBar(
                     isEditing = leadTenantId != null,
-                    isLead = leadTenantForm.isLead,
+                    isLead = loadedForm?.isLead == true,
                     onBack = viewModel::onExit,
                     onSaveLeadTenant = viewModel::saveLeadTenant,
                 )
@@ -140,32 +130,28 @@ fun LeadTenantRegistrationScreen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) { innerPadding ->
-        if (isLoading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                AppCircularProgressIndicator(
+        when (draftForm) {
+            is LeadTenantDraftFormUiState.Loading -> {
+                FullScreenLoadingIndicator(innerPadding)
+            }
+
+            is LeadTenantDraftFormUiState.Loaded -> {
+                LeadTenantRegistrationFormSection(
+                    leadTenantForm = draftForm as LeadTenantDraftFormUiState.Loaded,
+                    onLeadTenantFormChange = viewModel::onLeadTenantFormChange,
+                    pastTags = pastTags,
+                    pastCities = pastCities,
+                    pastContactOrigins = pastContactOrigins,
+                    formErrors = formErrors.errors,
+                    onLastTextFieldDone = { focusManager.clearFocus() },
+                    scrollToFieldFlow = scrollToFieldFlow,
                     modifier = Modifier
-                        .size(64.dp)
+                        .padding(innerPadding)
+                        .padding(horizontal = 24.dp)
                 )
             }
-        } else {
-            LeadTenantRegistrationFormSection(
-                leadTenantForm = leadTenantForm,
-                onLeadTenantFormChange = viewModel::onLeadTenantFormChange,
-                pastTags = pastTags,
-                pastCities = pastCities,
-                formErrors = formErrors.errors,
-                onLastTextFieldDone = { focusManager.clearFocus() },
-                scrollToFieldFlow = scrollToFieldFlow,
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp)
-            )
         }
+
         if (mustShowConfirmLeaveRegistrationDialog) {
             ConfirmLeaveRegistrationDialog(
                 isEditing = leadTenantId != null,

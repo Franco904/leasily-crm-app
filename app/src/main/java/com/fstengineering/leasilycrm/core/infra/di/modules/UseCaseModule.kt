@@ -20,10 +20,13 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchP
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
+import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeLeadTenantQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writePropertyOwnerQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeUserQualifier
 import com.fstengineering.leasilycrm.core.infra.utils.authCommandUseCase
 import com.fstengineering.leasilycrm.core.infra.utils.authQueryUseCase
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.LeadTenantCommandModel
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.useCases.WriteLeadTenantUseCase
 import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerCommandModel
@@ -43,6 +46,10 @@ val useCaseModule = module {
 
     authCommandUseCase<CommandUseCase<AssistanceCommandModel>>(writeAssistanceQualifier) {
         WriteAssistanceUseCase(assistanceCommandRepository = get())
+    }
+
+    authCommandUseCase<CommandUseCase<LeadTenantCommandModel>>(writeLeadTenantQualifier) {
+        WriteLeadTenantUseCase(leadTenantCommandRepository = get())
     }
 
     authCommandUseCase<CommandUseCase<PropertyOwnerCommandModel>>(writePropertyOwnerQualifier) {

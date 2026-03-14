@@ -8,7 +8,6 @@ fun AssistanceDraftFormUiState.Loaded.toCommandModel(): AssistanceCommandModel {
     return AssistanceCommandModel(
         id = id,
         createDateTime = createDateTime,
-        updateDateTime = updateDateTime,
         preferredStartDate = preferredStartDate,
         preferredEndDate = preferredEndDate,
         hasFlexibilityForPeriod = hasFlexibilityForPeriod,

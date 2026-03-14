@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields
+package com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable

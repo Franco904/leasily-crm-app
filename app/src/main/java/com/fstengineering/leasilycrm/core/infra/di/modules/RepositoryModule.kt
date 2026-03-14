@@ -30,6 +30,10 @@ import com.fstengineering.leasilycrm.core.infra.repositories.TenantRepositoryImp
 import com.fstengineering.leasilycrm.core.infra.repositories.UserRetryInfoCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.UserSessionRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.proxies.TenantRepositoryProxy
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.repositories.LeadTenantCommandRepository
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.repositories.LeadTenantQueryRepository
+import com.fstengineering.leasilycrm.leadTenantRegistration.infra.repositories.LeadTenantCommandRepositoryImpl
+import com.fstengineering.leasilycrm.leadTenantRegistration.infra.repositories.LeadTenantQueryRepositoryImpl
 import com.fstengineering.leasilycrm.profile.application.repositories.UserCommandRepository
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
 import com.fstengineering.leasilycrm.profile.infra.repositories.UserCommandRepositoryImpl
@@ -83,6 +87,21 @@ val repositoryModule = module {
         )
     }
 
+    // Lead/tenant registration
+
+    single<LeadTenantCommandRepository> {
+        LeadTenantCommandRepositoryImpl(
+            databaseAdapter = get(),
+            databaseDataSource = get(),
+        )
+    }
+
+    single<LeadTenantQueryRepository> {
+        LeadTenantQueryRepositoryImpl(
+            databaseDataSource = get(),
+        )
+    }
+
     // Property owner registration
 
     single<PropertyOwnerCommandRepository> {
@@ -95,7 +114,7 @@ val repositoryModule = module {
 
     single<PropertyOwnerQueryRepository> {
         PropertyOwnerQueryRepositoryImpl(
-            propertyOwnerDatabaseDataSource = get(),
+            databaseDataSource = get(),
         )
     }
 

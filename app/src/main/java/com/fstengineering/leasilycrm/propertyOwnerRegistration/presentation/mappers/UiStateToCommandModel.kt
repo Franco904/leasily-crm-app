@@ -10,7 +10,6 @@ fun PropertyOwnerDraftFormUiState.Loaded.toCommandModel(): PropertyOwnerCommandM
     return PropertyOwnerCommandModel(
         id = id,
         createDateTime = createDateTime,
-        updateDateTime = updateDateTime,
         name = name,
         phone = phone,
         email = email,

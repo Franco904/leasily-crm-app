@@ -24,26 +24,5 @@ data class TenantEntity(
     @ColumnInfo(name = "contact_origin") val contactOrigin: String?,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
-    val inconsistencies: String?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
-) {
-    companion object {
-        fun fromDomain(domain: Tenant) =
-            TenantEntity(
-                id = domain.id,
-                createDateTime = domain.createDateTime ?: AppDateTime.now(),
-                updateDateTime = AppDateTime.now(),
-                tag = domain.tag,
-                name = domain.name.value.normalizeEncoding(),
-                city = domain.city,
-                identityDocument = domain.identityDocument,
-                phone = domain.phone?.value,
-                email = domain.email?.value,
-                contactOrigin = domain.contactOrigin,
-                observations = domain.observations,
-                isDeleted = false,
-                inconsistencies = domain.inconsistencies.joinToString(", "),
-                contractVersion = BuildConfig.CONTRACT_VERSION,
-            )
-    }
-}
+)

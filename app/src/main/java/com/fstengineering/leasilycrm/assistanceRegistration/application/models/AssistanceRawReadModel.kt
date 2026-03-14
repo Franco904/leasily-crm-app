@@ -11,7 +11,6 @@ import kotlinx.collections.immutable.ImmutableList
 data class AssistanceRawReadModel(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val updateDateTime: AppDateTime?,
     val preferredStartDate: AppDate?,
     val preferredEndDate: AppDate?,
     val hasFlexibilityForPeriod: Boolean,

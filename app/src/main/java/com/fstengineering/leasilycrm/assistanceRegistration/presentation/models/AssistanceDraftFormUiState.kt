@@ -13,7 +13,6 @@ sealed interface AssistanceDraftFormUiState {
     data class Loaded(
         val id: Long? = null,
         val createDateTime: AppDateTime? = null,
-        val updateDateTime: AppDateTime? = null,
         val preferredStartDate: AppDate? = null,
         val preferredEndDate: AppDate? = null,
         val hasFlexibilityForPeriod: Boolean,

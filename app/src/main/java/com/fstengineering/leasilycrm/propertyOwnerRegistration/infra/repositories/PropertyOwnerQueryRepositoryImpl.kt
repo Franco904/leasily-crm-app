@@ -9,12 +9,12 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repos
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.mappers.toReadModel
 
 class PropertyOwnerQueryRepositoryImpl(
-    private val propertyOwnerDatabaseDataSource: PropertyOwnerDatabaseDataSource,
+    private val databaseDataSource: PropertyOwnerDatabaseDataSource,
 ) : PropertyOwnerQueryRepository {
     override suspend fun getById(
         propertyOwnerId: Long,
     ): AppResult<PropertyOwnerReadModel, ApplicationError> {
-        return propertyOwnerDatabaseDataSource.getById(id = propertyOwnerId)
+        return databaseDataSource.getById(id = propertyOwnerId)
             .fold(
                 onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = it.toReadModel()) }

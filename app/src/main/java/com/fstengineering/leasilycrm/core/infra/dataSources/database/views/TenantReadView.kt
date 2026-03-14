@@ -49,7 +49,6 @@ data class TenantReadView(
     @ColumnInfo(name = "contact_origin") val contactOrigin: String?,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
-    val inconsistencies: String?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
     val status: Int,
 )

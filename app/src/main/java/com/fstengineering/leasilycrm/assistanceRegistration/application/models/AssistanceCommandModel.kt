@@ -1,21 +1,15 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.models
 
-import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
 
 data class AssistanceCommandModel(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val updateDateTime: AppDateTime?,
     val preferredStartDate: AppDate?,
     val preferredEndDate: AppDate?,
     val hasFlexibilityForPeriod: Boolean,
@@ -38,52 +32,4 @@ data class AssistanceCommandModel(
     val sentPropertiesIds: ImmutableList<Long>,
     val interactions: ImmutableList<AssistanceInteractionCommandModel>,
     val leadTenantId: Long?,
-) : CommandUseCase.CommandModel {
-    fun toAggregate(): AppResultCompound<Assistance, DomainError> {
-        val errors = mutableListOf<DomainError>()
-
-        val isAnyNeighborhoodEmpty = preferredNeighborhoods.any { it.isBlank() }
-        if (isAnyNeighborhoodEmpty) errors.add(DomainError.Neighborhood.Required)
-
-        val interactions = interactions
-            .mapNotNull { interaction ->
-                interaction.toEntity()
-                    .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
-            }
-            .toPersistentList()
-
-        val parsed = Assistance.parse(
-            id = id,
-            createDateTime = createDateTime,
-            updateDateTime = updateDateTime,
-            preferredStartDate = preferredStartDate,
-            preferredEndDate = preferredEndDate,
-            hasFlexibilityForPeriod = hasFlexibilityForPeriod,
-            maxAcceptedNightlyRate = maxAcceptedNightlyRate,
-            adultsCount = adultsCount,
-            kidsCount = kidsCount,
-            babiesCount = babiesCount,
-            animalsCount = animalsCount,
-            bedroomsCount = bedroomsCount,
-            enSuitesCount = enSuitesCount,
-            doubleBedsCount = doubleBedsCount,
-            singleBedsCount = singleBedsCount,
-            bathroomsCount = bathroomsCount,
-            parkingSpotsCount = parkingSpotsCount,
-            preferredNeighborhoods = preferredNeighborhoods,
-            preferredSeaProximityTypeId = preferredSeaProximityTypeId,
-            preferredDistanceToSea = preferredDistanceToSea,
-            preferredPropertyCharacteristics = preferredPropertyCharacteristics,
-            observations = observations,
-            sentPropertiesIds = sentPropertiesIds,
-            interactions = interactions,
-            leadTenantId = leadTenantId,
-            isFinished = false,
-        )
-            .fold(onErrors = { errors.addAll(0, it); null }, onSuccess = { it })
-
-        if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
-
-        return AppResultCompound.Success(data = requireNotNull(parsed))
-    }
-}
+) : CommandUseCase.CommandModel

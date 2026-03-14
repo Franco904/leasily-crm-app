@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields
+package com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,22 +9,22 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.FormTextField
 
 @Composable
-fun LeadTenantEmailFormField(
-    email: String?,
-    onEmailChange: (String?) -> Unit,
+fun LeadTenantPhoneFormField(
+    phone: String?,
+    onPhoneChange: (String?) -> Unit,
     error: Int?,
     onDone: () -> Unit,
     fieldFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
     FormTextField(
-        label = stringResource(R.string.property_owner_registration_email_label),
-        value = email ?: "",
-        onValueChange = onEmailChange,
+        label = stringResource(R.string.property_owner_registration_phone_label),
+        value = phone ?: "",
+        onValueChange = onPhoneChange,
         isInvalid = error != null,
         supportingText = if (error != null) stringResource(error) else null,
-        maxLength = 120,
-        keyboardType = KeyboardType.Email,
+        maxLength = 20,
+        keyboardType = KeyboardType.Phone,
         onDone = { onDone() },
         fieldFocusRequester = fieldFocusRequester,
         modifier = modifier

@@ -28,7 +28,6 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
     return AssistanceRawReadModel(
         id = assistance.id,
         createDateTime = assistance.createDateTime,
-        updateDateTime = assistance.updateDateTime,
         preferredStartDate = assistance.searchedStartDate,
         preferredEndDate = assistance.searchedEndDate,
         hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,

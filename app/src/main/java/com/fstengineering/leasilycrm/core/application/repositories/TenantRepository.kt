@@ -8,10 +8,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface TenantRepository {
-    suspend fun insertOrUpdate(
-        tenant: Tenant,
-    ): AppResult<Unit, ApplicationError>
-
     suspend fun delete(id: Long): AppResult<Unit, ApplicationError>
 
     suspend fun getById(tenantId: Long): AppResult<Tenant, ApplicationError>
@@ -33,10 +29,6 @@ interface TenantRepository {
         currentTenantId: Long?,
     ): AppResult<ImmutableList<Tenant>, ApplicationError>
 
-    suspend fun getAllTagNames(): AppResult<ImmutableList<String>, ApplicationError>
-
-    suspend fun getAllCityNames(): AppResult<ImmutableList<String>, ApplicationError>
-
     suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, ApplicationError>
 
     suspend fun getPreferredTenantsOrderTypeId(): AppResult<Int, ApplicationError>
@@ -52,9 +44,4 @@ interface TenantRepository {
         matching: String? = null,
         orderTypeId: Int? = null,
     ): Flow<AppResult<ImmutableList<Tenant>, ApplicationError>>
-
-    suspend fun isThereTenantWithName(
-        tenantName: String,
-        currentStoredTenantName: String?,
-    ): AppResult<Boolean, ApplicationError>
 }

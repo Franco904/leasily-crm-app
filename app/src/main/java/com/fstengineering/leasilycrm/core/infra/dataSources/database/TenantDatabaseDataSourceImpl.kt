@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.TenantDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.TenantCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.TenantReadView
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.coroutines.flow.Flow
 
@@ -17,7 +17,7 @@ class TenantDatabaseDataSourceImpl(
     override suspend fun delete(id: Long) =
         dao.delete(id)
 
-    override suspend fun getById(id: Long): AppResult<TenantCompound?, InfraError> {
+    override suspend fun getById(id: Long): AppResult<TenantReadView, InfraError> {
         return onDatabaseSafe { dao.getById(id) }
     }
 
@@ -28,21 +28,21 @@ class TenantDatabaseDataSourceImpl(
     override suspend fun getAllLeadsMatching(
         matching: String?,
         order: Int,
-    ): AppResult<List<TenantCompound>, InfraError> {
+    ): AppResult<List<TenantReadView>, InfraError> {
         return onDatabaseSafe { dao.getAllLeadsMatching(matching, order) }
     }
 
     override suspend fun getAllTenantsMatching(
         matching: String?,
         order: Int,
-    ): AppResult<List<TenantCompound>, InfraError> {
+    ): AppResult<List<TenantReadView>, InfraError> {
         return onDatabaseSafe { dao.getAllTenantsMatching(matching, order) }
     }
 
     override suspend fun getAllWithoutUpcomingStaysMatching(
         matching: String?,
         currentTenantId: Long?,
-    ): AppResult<List<TenantCompound>, InfraError> {
+    ): AppResult<List<TenantReadView>, InfraError> {
         return onDatabaseSafe {
             dao.getAllWithoutUpcomingStaysMatching(
                 matching = matching,
@@ -59,7 +59,11 @@ class TenantDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getAllCityNames() }
     }
 
-    override fun watchById(id: Long): AppResult<Flow<TenantCompound?>, InfraError> {
+    override suspend fun getAllContactOrigins(): AppResult<List<String>, InfraError> {
+        return onDatabaseSafe { dao.getAllContactOrigins() }
+    }
+
+    override fun watchById(id: Long): AppResult<Flow<TenantReadView?>, InfraError> {
         return onDatabaseSafe { dao.watchById(id) }
     }
 
@@ -67,24 +71,12 @@ class TenantDatabaseDataSourceImpl(
         tenantStatusIdFilter: Int?,
         matching: String?,
         orderTypeId: Int?,
-    ): AppResult<Flow<List<TenantCompound>>, InfraError> {
+    ): AppResult<Flow<List<TenantReadView>>, InfraError> {
         return onDatabaseSafe {
             dao.watchAll(
                 tenantStatusIdFilter = tenantStatusIdFilter,
                 matching = matching,
                 orderTypeId = orderTypeId,
-            )
-        }
-    }
-
-    override suspend fun countTenantsWithName(
-        tenantName: String,
-        currentStoredTenantName: String?,
-    ): AppResult<Int, InfraError> {
-        return onDatabaseSafe {
-            dao.countTenantsWithName(
-                tenantName = tenantName,
-                currentStoredTenantName = currentStoredTenantName,
             )
         }
     }

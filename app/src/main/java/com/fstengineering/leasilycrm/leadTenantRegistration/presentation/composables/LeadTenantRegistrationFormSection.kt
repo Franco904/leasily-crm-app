@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.leadTenantRegistration.composables
+package com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,17 +16,17 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberVerticalCenterScroller
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantCityFormField
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantContactOriginTypeFormField
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantEmailFormField
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantIdentityDocumentFormField
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantNameFormField
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantObservationsFormField
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantPhoneFormField
-import com.fstengineering.leasilycrm.leadTenantRegistration.composables.fields.LeadTenantTagFormField
-import com.fstengineering.leasilycrm.leadTenantRegistration.models.LeadTenantField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields.LeadTenantCityFormField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields.LeadTenantContactOriginFormField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields.LeadTenantEmailFormField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields.LeadTenantIdentityDocumentFormField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields.LeadTenantNameFormField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields.LeadTenantObservationsFormField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields.LeadTenantPhoneFormField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.composables.fields.LeadTenantTagFormField
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantField
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
@@ -36,10 +36,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun LeadTenantRegistrationFormSection(
-    leadTenantForm: Tenant,
-    onLeadTenantFormChange: (Tenant) -> Unit,
+    leadTenantForm: LeadTenantDraftFormUiState.Loaded,
+    onLeadTenantFormChange: (LeadTenantDraftFormUiState.Loaded) -> Unit,
     pastTags: ImmutableList<String>,
     pastCities: ImmutableList<String>,
+    pastContactOrigins: ImmutableList<String>,
     formErrors: ImmutableMap<LeadTenantField, Int?>,
     onLastTextFieldDone: () -> Unit,
     scrollToFieldFlow: Flow<LeadTenantField>,
@@ -62,6 +63,7 @@ fun LeadTenantRegistrationFormSection(
     val identityDocumentFieldFocusRequester = remember { FocusRequester() }
     val phoneFieldFocusRequester = remember { FocusRequester() }
     val emailFieldFocusRequester = remember { FocusRequester() }
+    val contactOriginFieldFocusRequester = remember { FocusRequester() }
     val observationsFieldFocusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
@@ -129,7 +131,7 @@ fun LeadTenantRegistrationFormSection(
             email = leadTenantForm.email,
             onEmailChange = { onLeadTenantFormChange(leadTenantForm.copy(email = it)) },
             error = formErrors[LeadTenantField.Email],
-            onDone = onLastTextFieldDone,
+            onDone = { contactOriginFieldFocusRequester.requestFocus() },
             fieldFocusRequester = emailFieldFocusRequester,
             modifier = Modifier
                 .onGloballyPositioned { coords ->
@@ -137,8 +139,14 @@ fun LeadTenantRegistrationFormSection(
                 }
         )
         Spacer(modifier = Modifier.height(28.dp))
-        LeadTenantContactOriginTypeFormField(
-            tenantContactOriginTypeName = leadTenantForm.contactOrigin?.name,
+        LeadTenantContactOriginFormField(
+            contactOrigin = leadTenantForm.contactOrigin,
+            onContactOriginChange = {
+                onLeadTenantFormChange(leadTenantForm.copy(contactOrigin = it))
+            },
+            pastContactOrigins = pastContactOrigins,
+            onDone = onLastTextFieldDone,
+            fieldFocusRequester = contactOriginFieldFocusRequester,
         )
         Spacer(modifier = Modifier.height(28.dp))
         LeadTenantObservationsFormField(

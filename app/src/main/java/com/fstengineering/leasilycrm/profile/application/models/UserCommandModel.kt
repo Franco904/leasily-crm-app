@@ -6,12 +6,4 @@ import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.profile.domain.entities.User
 
-data class UserCommandModel(val creciNumber: String?) : CommandUseCase.CommandModel {
-    fun toAggregate(): AppResult<User, DomainError> {
-        return User.parse(creciNumber = creciNumber)
-            .fold(
-                onError = { AppResult.Error(error = it) },
-                onSuccess = { AppResult.Success(data = it) },
-            )
-    }
-}
+data class UserCommandModel(val creciNumber: String?) : CommandUseCase.CommandModel

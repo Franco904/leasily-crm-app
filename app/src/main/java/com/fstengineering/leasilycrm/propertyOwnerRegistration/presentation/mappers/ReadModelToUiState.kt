@@ -10,7 +10,6 @@ import kotlinx.collections.immutable.toPersistentList
 fun PropertyOwnerReadModel.toDraftForm() = PropertyOwnerDraftFormUiState.Loaded(
     id = id,
     createDateTime = createDateTime,
-    updateDateTime = updateDateTime,
     name = name,
     phone = phone,
     email = email,

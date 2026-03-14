@@ -15,7 +15,6 @@ fun AssistanceReadModel.toDraftForm() = AssistanceDraftFormUiState.Loaded(
     leadTenantId = leadTenantId,
     leadTenantName = leadTenantName,
     createDateTime = createDateTime,
-    updateDateTime = updateDateTime,
     preferredStartDate = preferredStartDate,
     preferredEndDate = preferredEndDate,
     hasFlexibilityForPeriod = hasFlexibilityForPeriod ?: false,
