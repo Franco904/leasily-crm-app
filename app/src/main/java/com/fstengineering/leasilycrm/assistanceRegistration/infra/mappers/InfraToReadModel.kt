@@ -49,8 +49,6 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
         preferredNeighborhoods = preferredNeighborhoodsNames,
         preferredPropertyCharacteristics = preferredCharacteristics,
         interactions = interactions,
-        inconsistencies = persistentListOf(),
-        contractVersion = assistance.contractVersion,
     )
 }
 

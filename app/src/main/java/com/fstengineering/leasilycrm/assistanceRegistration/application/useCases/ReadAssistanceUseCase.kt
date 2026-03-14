@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.A
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentPropertyQueryRepository
-import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.LeadTenantQueryRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -15,17 +15,17 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 class ReadAssistanceUseCase(
-    private val tenantRepository: TenantRepository,
+    private val leadTenantQueryRepository: LeadTenantQueryRepository,
     private val assistanceQueryRepository: AssistanceQueryRepository,
     private val assistanceSentPropertyQueryRepository: AssistanceSentPropertyQueryRepository,
 ) : QueryUseCase<AssistanceQueryModel, AssistanceReadModel> {
     override suspend fun invoke(
         query: AssistanceQueryModel,
     ): AppResult<AssistanceReadModel, ApplicationError> {
-        val tenantName = tenantRepository.getNameById(tenantId = query.leadTenantId)
+        val leadTenantName = leadTenantQueryRepository.getNameById(tenantId = query.leadTenantId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
-                onSuccess = { tenantName -> tenantName },
+                onSuccess = { leadTenantName -> leadTenantName },
             )
 
         val assistanceRaw = loadAssistance(query.assistanceId)
@@ -42,7 +42,7 @@ class ReadAssistanceUseCase(
 
         val updatedReadModel = AssistanceReadModel.create(
             leadTenantId = query.leadTenantId,
-            leadTenantName = tenantName,
+            leadTenantName = leadTenantName,
             assistanceRaw = assistanceRaw,
             sentProperties = sentProperties,
         )

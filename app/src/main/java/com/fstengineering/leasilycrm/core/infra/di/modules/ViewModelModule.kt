@@ -146,13 +146,13 @@ val viewModelModule = module {
 
     viewModel {
         LeadsViewModel(
-            tenantRepository = get(),
+            leadTenantSharedCommandRepository = get(),
         )
     }
 
     viewModel {
         TenantsViewModel(
-            tenantRepository = get(),
+            leadTenantSharedCommandRepository = get(),
         )
     }
 
@@ -164,7 +164,7 @@ val viewModelModule = module {
 
     viewModel {
         LeadTenantDetailsViewModel(
-            tenantRepository = get(),
+            leadTenantSharedCommandRepository = get(),
             assistanceCommandRepository = get(),
         )
     }
@@ -210,7 +210,7 @@ val viewModelModule = module {
         StayRegistrationViewModel(
             stayRepository = get(),
             propertyRepository = get(),
-            tenantRepository = get(),
+            leadTenantSharedCommandRepository = get(),
             stayFileRepository = get(),
         )
     }

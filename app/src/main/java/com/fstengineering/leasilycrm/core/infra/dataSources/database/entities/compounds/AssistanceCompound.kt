@@ -6,16 +6,16 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.As
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.LeadTenantEntity
 
 data class AssistanceCompound(
     @Embedded val assistance: AssistanceEntity,
     @Relation(
-        parentColumn = "tenant_id",
+        parentColumn = "lead_tenant_id",
         entityColumn = "id",
-        entity = TenantEntity::class,
+        entity = LeadTenantEntity::class,
     )
-    val tenant: TenantEntity,
+    val tenant: LeadTenantEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",

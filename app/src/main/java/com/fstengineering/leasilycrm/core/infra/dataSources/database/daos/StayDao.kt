@@ -39,7 +39,7 @@ interface StayDao {
             s.check_out_date_time, 
             s.status
         FROM stays s
-        LEFT JOIN tenants_read_view t ON s.tenant_id = t.id AND t.is_deleted = 0
+        LEFT JOIN lead_tenants_read_view t ON s.tenant_id = t.id AND t.is_deleted = 0
         LEFT JOIN properties p ON s.property_id = p.id AND p.is_deleted = 0
         LEFT JOIN property_owners po ON p.property_owner_id = po.id AND po.is_deleted = 0
         WHERE (s.status = 0 OR s.status = 1)

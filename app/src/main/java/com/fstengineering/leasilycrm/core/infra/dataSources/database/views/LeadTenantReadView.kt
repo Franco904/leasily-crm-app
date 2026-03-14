@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 
 @DatabaseView(
-    viewName = "tenants_read_view",
+    viewName = "lead_tenants_read_view",
     value = """
         SELECT
             base.*,
@@ -32,11 +32,11 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
                 WHERE (s.tenant_id = t.id AND s.is_deleted = 0)
                 AND (s.status = 0 OR s.status = 1)
             ) AS has_upcoming_check_out
-            FROM tenants t
+            FROM lead_tenants t
         ) AS base
     """
 )
-data class TenantReadView(
+data class LeadTenantReadView(
     @PrimaryKey val id: Long?,
     @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
     @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,

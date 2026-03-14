@@ -19,7 +19,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
             childColumns = ["property_id"],
         ),
         ForeignKey(
-            entity = TenantEntity::class,
+            entity = LeadTenantEntity::class,
             parentColumns = ["id"],
             childColumns = ["tenant_id"],
         ),

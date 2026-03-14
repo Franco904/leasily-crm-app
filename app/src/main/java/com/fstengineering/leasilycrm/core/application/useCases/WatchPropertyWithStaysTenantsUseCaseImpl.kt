@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.transformLatest
 
 class WatchPropertyWithStaysTenantsUseCaseImpl(
     private val propertyRepository: PropertyRepository,
-    private val tenantRepository: TenantRepository,
+    private val leadTenantSharedCommandRepository: LeadTenantSharedCommandRepository,
 ) : WatchPropertyWithStaysTenantsUseCase {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(
@@ -56,7 +56,7 @@ class WatchPropertyWithStaysTenantsUseCaseImpl(
             .map { stay ->
                 async {
                     val tenantId = stay.tenant.tenantId
-                    val tenant = tenantRepository.getById(tenantId)
+                    val tenant = leadTenantSharedCommandRepository.getById(tenantId)
                         .fold(
                             onError = { stay.tenant },
                             onSuccess = { tenant -> StayOwnedTenant.WithData(tenant) },

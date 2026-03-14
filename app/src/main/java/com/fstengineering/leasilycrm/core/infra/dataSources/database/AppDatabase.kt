@@ -24,7 +24,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.Proper
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.TenantDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTenantDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
@@ -39,8 +39,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Pr
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.TenantReadView
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.LeadTenantEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 
 @Database(
     entities = [
@@ -49,6 +49,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.Tenan
         AssistanceInteractionEntity::class,
         AssistancePreferredNeighborhoodEntity::class,
         AssistanceSentPropertyCrossRefEntity::class,
+        LeadTenantEntity::class,
         PropertyEntity::class,
         PropertyCharacteristicCrossRefEntity::class,
         PropertyFileEntity::class,
@@ -58,10 +59,9 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.Tenan
         StayEntity::class,
         StayFileEntity::class,
         StayTransferEntity::class,
-        TenantEntity::class,
     ],
     views = [
-        TenantReadView::class,
+        LeadTenantReadView::class,
     ],
     version = AppDatabase.DB_VERSION,
 )
@@ -86,6 +86,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun crmMetricsDao(): CrmMetricsDao
 
+    abstract fun leadTenantDao(): LeadTenantDao
+
     abstract fun propertyDao(): PropertyDao
 
     abstract fun propertyCharacteristicPropertyCrossRefDao(): PropertyCharacteristicPropertyCrossRefDao
@@ -103,8 +105,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun stayFileDao(): StayFileDao
 
     abstract fun stayTransferDao(): StayTransferDao
-
-    abstract fun tenantDao(): TenantDao
 
     companion object {
         const val DB_VERSION = 1

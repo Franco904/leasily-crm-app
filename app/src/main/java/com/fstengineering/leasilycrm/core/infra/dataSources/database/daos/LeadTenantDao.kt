@@ -4,26 +4,26 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.TenantReadView
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.LeadTenantEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface TenantDao {
+interface LeadTenantDao {
     @Upsert
-    suspend fun insertOrUpdate(tenant: TenantEntity): Long
+    suspend fun insertOrUpdate(tenant: LeadTenantEntity): Long
 
-    @Query("UPDATE tenants SET is_deleted = 1 WHERE id = :id")
+    @Query("UPDATE lead_tenants SET is_deleted = 1 WHERE id = :id")
     suspend fun delete(id: Long)
 
     @Transaction
-    @Query("SELECT * FROM tenants_read_view WHERE id = :id AND is_deleted = 0")
-    suspend fun getById(id: Long): TenantReadView
+    @Query("SELECT * FROM lead_tenants_read_view WHERE id = :id AND is_deleted = 0")
+    suspend fun getById(id: Long): LeadTenantReadView
 
     @Transaction
     @Query(
         """
-        SELECT * FROM tenants_read_view
+        SELECT * FROM lead_tenants_read_view
         WHERE status = 0
         AND is_deleted = 0
         AND (
@@ -36,12 +36,12 @@ interface TenantDao {
             CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
-    suspend fun getAllLeadsMatching(matching: String?, order: Int): List<TenantReadView>
+    suspend fun getAllLeadsMatching(matching: String?, order: Int): List<LeadTenantReadView>
 
     @Transaction
     @Query(
         """
-        SELECT * FROM tenants_read_view
+        SELECT * FROM lead_tenants_read_view
         WHERE status <> 0
         AND is_deleted = 0
         AND (
@@ -54,12 +54,12 @@ interface TenantDao {
             CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
-    suspend fun getAllTenantsMatching(matching: String?, order: Int): List<TenantReadView>
+    suspend fun getAllTenantsMatching(matching: String?, order: Int): List<LeadTenantReadView>
 
     @Transaction
     @Query(
         """
-        SELECT * FROM tenants_read_view
+        SELECT * FROM lead_tenants_read_view
         WHERE (status <> 1 OR (:currentTenantId IS NOT NULL AND id = :currentTenantId))
         AND is_deleted = 0
         AND (
@@ -73,14 +73,14 @@ interface TenantDao {
     suspend fun getAllWithoutUpcomingStaysMatching(
         matching: String?,
         currentTenantId: Long?,
-    ): List<TenantReadView>
+    ): List<LeadTenantReadView>
 
-    @Query("SELECT name FROM tenants_read_view WHERE id = :id AND is_deleted = 0")
+    @Query("SELECT name FROM lead_tenants_read_view WHERE id = :id AND is_deleted = 0")
     suspend fun getNameById(id: Long): String?
 
     @Query(
         """
-        SELECT DISTINCT(tag) FROM tenants_read_view
+        SELECT DISTINCT(tag) FROM lead_tenants_read_view
         WHERE tag IS NOT NULL
         AND is_deleted = 0
         ORDER BY tag
@@ -90,7 +90,7 @@ interface TenantDao {
 
     @Query(
         """
-        SELECT DISTINCT(city) FROM tenants_read_view
+        SELECT DISTINCT(city) FROM lead_tenants_read_view
         WHERE city IS NOT NULL
         AND is_deleted = 0
         ORDER BY city
@@ -100,7 +100,7 @@ interface TenantDao {
 
     @Query(
         """
-        SELECT DISTINCT(contact_origin) FROM tenants_read_view
+        SELECT DISTINCT(contact_origin) FROM lead_tenants_read_view
         WHERE contact_origin IS NOT NULL
         AND is_deleted = 0
         ORDER BY contact_origin
@@ -109,14 +109,14 @@ interface TenantDao {
     suspend fun getAllContactOrigins(): List<String>
 
     @Transaction
-    @Query("SELECT * FROM tenants_read_view WHERE id = :id AND is_deleted = 0")
-    fun watchById(id: Long): Flow<TenantReadView?>
+    @Query("SELECT * FROM lead_tenants_read_view WHERE id = :id AND is_deleted = 0")
+    fun watchById(id: Long): Flow<LeadTenantReadView?>
 
     @Transaction
     @Query(
         """
         SELECT *
-        FROM tenants_read_view t
+        FROM lead_tenants_read_view t
         WHERE is_deleted = 0
         AND (
             :tenantStatusIdFilter IS NULL OR
@@ -136,5 +136,5 @@ interface TenantDao {
         tenantStatusIdFilter: Int?,
         matching: String?,
         orderTypeId: Int?,
-    ): Flow<List<TenantReadView>>
+    ): Flow<List<LeadTenantReadView>>
 }

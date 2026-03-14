@@ -2,12 +2,12 @@ package com.fstengineering.leasilycrm.leadTenantRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.LeadTenantEntity
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import com.fstengineering.leasilycrm.leadTenantRegistration.domain.entities.LeadTenant
 
-fun LeadTenant.toLocalDataModel(): TenantEntity {
-    return TenantEntity(
+fun LeadTenant.toLocalDataModel(): LeadTenantEntity {
+    return LeadTenantEntity(
         id = id,
         createDateTime = createDateTime ?: AppDateTime.now(),
         updateDateTime = AppDateTime.now(),

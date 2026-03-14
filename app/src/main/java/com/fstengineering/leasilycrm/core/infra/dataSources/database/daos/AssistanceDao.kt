@@ -23,7 +23,7 @@ interface AssistanceDao {
         """
         SELECT DISTINCT(neighborhood) FROM assistance_preferred_neighborhoods apn
         INNER JOIN assistances a ON a.id = apn.assistance_id
-        INNER JOIN tenants_read_view t ON t.id = a.tenant_id
+        INNER JOIN lead_tenants_read_view lt ON lt.id = a.lead_tenant_id
         ORDER BY neighborhood
     """
     )

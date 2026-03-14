@@ -81,7 +81,7 @@ val useCaseModule = module {
     single<WatchPropertyWithStaysTenantsUseCase> {
         WatchPropertyWithStaysTenantsUseCaseImpl(
             propertyRepository = get(),
-            tenantRepository = get(),
+            leadTenantSharedCommandRepository = get(),
         )
     }
 

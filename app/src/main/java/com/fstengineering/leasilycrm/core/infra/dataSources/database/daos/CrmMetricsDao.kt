@@ -24,7 +24,7 @@ interface CrmMetricsDao {
         SELECT
             strftime('%m-%Y', datetime(create_date_time / 1000, 'unixepoch')) AS month_year,
             COUNT(*) AS total
-        FROM tenants
+        FROM lead_tenants
         WHERE is_deleted = 0
             AND datetime(create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
         GROUP BY month_year
@@ -38,7 +38,7 @@ interface CrmMetricsDao {
             strftime('%m-%Y', datetime(t.create_date_time / 1000, 'unixepoch')) AS month_year,
             t.tag AS tenant_tag_name,
             COUNT(*) AS total
-        FROM tenants_read_view t
+        FROM lead_tenants_read_view t
         WHERE t.is_deleted = 0
             AND datetime(t.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
         GROUP BY month_year, t.tag
@@ -52,7 +52,7 @@ interface CrmMetricsDao {
         SELECT
             t.contact_origin AS lead_contact_channel_name,
             COUNT(*) AS lead_count
-        FROM tenants_read_view t
+        FROM lead_tenants_read_view t
         WHERE status = 0
             AND is_deleted = 0
         GROUP BY t.contact_origin
@@ -84,7 +84,7 @@ interface CrmMetricsDao {
             t.tag AS tenant_tag_name,
             COUNT(*) AS total
         FROM stays s
-        INNER JOIN tenants t
+        INNER JOIN lead_tenants t
             ON s.tenant_id = t.id
             AND t.is_deleted = 0
         WHERE s.is_deleted = 0
@@ -140,7 +140,7 @@ interface CrmMetricsDao {
             t.tag AS tenant_tag_name,
             SUM(commission) AS commission_invoice
         FROM stays s
-        INNER JOIN tenants t
+        INNER JOIN lead_tenants t
             ON s.tenant_id = t.id
             AND t.is_deleted = 0
         WHERE s.is_deleted = 0

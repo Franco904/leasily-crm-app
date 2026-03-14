@@ -16,7 +16,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.Proper
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.TenantDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTenantDao
 import org.koin.dsl.module
 
 val daoModule = module {
@@ -43,5 +43,5 @@ val daoModule = module {
     single<StayDao> { get<AppDatabase>().stayDao() }
     single<StayFileDao> { get<AppDatabase>().stayFileDao() }
     single<StayTransferDao> { get<AppDatabase>().stayTransferDao() }
-    single<TenantDao> { get<AppDatabase>().tenantDao() }
+    single<LeadTenantDao> { get<AppDatabase>().leadTenantDao() }
 }

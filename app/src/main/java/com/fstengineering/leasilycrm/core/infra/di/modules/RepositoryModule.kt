@@ -7,26 +7,26 @@ import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.A
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceQueryRepositoryImpl
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceSentPropertyQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.application.repositories.CrmMetricsRepository
+import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
 import com.fstengineering.leasilycrm.core.application.repositories.UserRetryInfoCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.UserSessionRepository
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.plainPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.repositories.CrmMetricsRepositoryImpl
+import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.PropertyOwnerSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.PropertyRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.SettingsSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.SettingsSharedQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.TenantRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.UserRetryInfoCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.UserSessionRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.proxies.TenantRepositoryProxy
@@ -69,6 +69,13 @@ val repositoryModule = module {
     single<AssistanceSentPropertyQueryRepository> {
         AssistanceSentPropertyQueryRepositoryImpl(
             propertyDatabaseDataSource = get(),
+        )
+    }
+
+    // TODO: improve this
+    single<com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.LeadTenantQueryRepository> {
+        com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.LeadTenantQueryRepositoryImpl(
+            databaseDataSource = get(),
         )
     }
 
@@ -190,8 +197,8 @@ val repositoryModule = module {
         )
     }
 
-    single<TenantRepository> {
-        val realRepository = TenantRepositoryImpl(
+    single<LeadTenantSharedCommandRepository> {
+        val realRepository = LeadTenantSharedCommandRepositoryImpl(
             databaseAdapter = get(),
             databaseDataSource = get(),
             plainPreferencesDataSource = get(plainPreferencesQualifier),
@@ -199,7 +206,7 @@ val repositoryModule = module {
 
         TenantRepositoryProxy(
             tenantInMemoryDataSource = get(),
-            tenantRepository = realRepository,
+            leadTenantSharedCommandRepository = realRepository,
         )
     }
 

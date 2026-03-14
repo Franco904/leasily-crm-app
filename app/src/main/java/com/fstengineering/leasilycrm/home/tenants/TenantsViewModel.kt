@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.home.tenants
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class TenantsViewModel(
-    private val tenantRepository: TenantRepository,
+    private val leadTenantSharedCommandRepository: LeadTenantSharedCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -69,7 +69,7 @@ class TenantsViewModel(
 
     private fun getPreferredTenantsOrderTypeId() {
         viewModelScope.launch {
-            val orderTypeId = tenantRepository.getPreferredTenantsOrderTypeId()
+            val orderTypeId = leadTenantSharedCommandRepository.getPreferredTenantsOrderTypeId()
                 .fold(
                     onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
                     onSuccess = { orderTypeId -> orderTypeId },
@@ -93,7 +93,7 @@ class TenantsViewModel(
                 .flatMapLatest { (order, filter, searchInput) ->
                     _isLoading.update { true }
 
-                    tenantRepository.watchAll(
+                    leadTenantSharedCommandRepository.watchAll(
                         tenantStatusFilter = filter?.status,
                         matching = searchInput,
                         orderTypeId = order.id,
@@ -119,7 +119,7 @@ class TenantsViewModel(
         _orderType.update { orderType }
 
         viewModelScope.launch {
-            tenantRepository.updatePreferredLeadsOrderTypeId(orderType.id)
+            leadTenantSharedCommandRepository.updatePreferredLeadsOrderTypeId(orderType.id)
         }
     }
 
@@ -135,7 +135,7 @@ class TenantsViewModel(
         viewModelScope.launch {
             val tenantToDelete = this@TenantsViewModel.tenantToDelete.value ?: return@launch
 
-            tenantRepository.delete(tenantToDelete.id!!)
+            leadTenantSharedCommandRepository.delete(tenantToDelete.id!!)
                 .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
 
             _uiEvents.send(UiEvents.LeadDeleteSuccess)

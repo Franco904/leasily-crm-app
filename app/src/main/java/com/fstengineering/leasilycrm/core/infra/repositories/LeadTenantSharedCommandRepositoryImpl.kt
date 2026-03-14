@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -8,11 +8,9 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.TenantEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
-import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
@@ -22,11 +20,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class TenantRepositoryImpl(
+class LeadTenantSharedCommandRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val databaseDataSource: TenantDatabaseDataSource,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
-) : TenantRepository {
+) : LeadTenantSharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
             databaseDataSource.delete(id)
@@ -48,54 +46,6 @@ class TenantRepositoryImpl(
 
         return tenant?.let { AppResult.Success(data = tenant) }
             ?: AppResult.Error(ApplicationError.Unknown)
-    }
-
-    override suspend fun getNameById(
-        tenantId: Long,
-    ): AppResult<String, ApplicationError> {
-        val tenantName = databaseDataSource.getNameById(id = tenantId)
-            .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { it ?: return AppResult.Error(error = ApplicationError.Unknown) }
-            )
-
-        return AppResult.Success(data = tenantName)
-    }
-
-    override suspend fun getAllLeadsMatching(
-        matching: String?,
-        orderTypeId: Int,
-    ): AppResult<ImmutableList<Tenant>, ApplicationError> {
-        val leads = databaseDataSource.getAllLeadsMatching(
-            matching = matching,
-            order = orderTypeId,
-        )
-            .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { it },
-            )
-            .map { lead -> lead.toDomain() }
-            .toPersistentList()
-
-        return AppResult.Success(data = leads)
-    }
-
-    override suspend fun getAllTenantsMatching(
-        matching: String?,
-        orderTypeId: Int,
-    ): AppResult<ImmutableList<Tenant>, ApplicationError> {
-        val tenants = databaseDataSource.getAllTenantsMatching(
-            matching = matching,
-            order = orderTypeId,
-        )
-            .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { it },
-            )
-            .map { tenant -> tenant.toDomain() }
-            .toPersistentList()
-
-        return AppResult.Success(data = tenants)
     }
 
     override suspend fun getAllWithoutUpcomingStaysMatching(

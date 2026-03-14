@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.entities.StayFile
@@ -43,7 +43,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class StayRegistrationViewModel(
     private val stayRepository: StayRepository,
     private val propertyRepository: PropertyRepository,
-    private val tenantRepository: TenantRepository,
+    private val leadTenantSharedCommandRepository: LeadTenantSharedCommandRepository,
     private val stayFileRepository: StayFileRepository,
 ) : ViewModel() {
     private var isInitialized = false
@@ -127,7 +127,7 @@ class StayRegistrationViewModel(
 
     private fun getTenantToAutofill(tenantId: Long) {
         viewModelScope.launch {
-            tenantRepository.getById(tenantId)
+            leadTenantSharedCommandRepository.getById(tenantId)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { storedTenant ->
                     _stayForm.update { it.copy(tenant = storedTenant) }
@@ -161,7 +161,7 @@ class StayRegistrationViewModel(
                 .collect { searchInput ->
                     _isLoading.update { true }
 
-                    tenantRepository.getAllWithoutUpcomingStaysMatching(
+                    leadTenantSharedCommandRepository.getAllWithoutUpcomingStaysMatching(
                         matching = searchInput,
                         currentTenantId = stayToEdit?.tenant?.id,
                     )

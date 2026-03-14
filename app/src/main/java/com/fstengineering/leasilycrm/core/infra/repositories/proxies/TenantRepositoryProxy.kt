@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.repositories.proxies
 
-import com.fstengineering.leasilycrm.core.application.repositories.TenantRepository
+import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -10,10 +10,10 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.inMemory.interfaces.
 
 class TenantRepositoryProxy(
     private val tenantInMemoryDataSource: TenantInMemoryDataSource,
-    private val tenantRepository: TenantRepository,
-) : TenantRepository {
+    private val leadTenantSharedCommandRepository: LeadTenantSharedCommandRepository,
+) : LeadTenantSharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
-        return tenantRepository.delete(id)
+        return leadTenantSharedCommandRepository.delete(id)
             .onSuccess { tenantInMemoryDataSource.removeTenant(id = id) }
     }
 
@@ -21,54 +21,34 @@ class TenantRepositoryProxy(
         val inMemoryTenant = tenantInMemoryDataSource.getTenantById(tenantId)
         if (inMemoryTenant != null) return AppResult.Success(data = inMemoryTenant)
 
-        return tenantRepository.getById(tenantId)
+        return leadTenantSharedCommandRepository.getById(tenantId)
             .onSuccess { tenant -> tenantInMemoryDataSource.putTenant(tenant) }
     }
-
-    override suspend fun getNameById(tenantId: Long): AppResult<String, ApplicationError> {
-        return tenantRepository.getNameById(tenantId)
-    }
-
-    override suspend fun getAllLeadsMatching(
-        matching: String?,
-        orderTypeId: Int
-    ) =
-        tenantRepository.getAllLeadsMatching(matching, orderTypeId)
-
-    override suspend fun getAllTenantsMatching(
-        matching: String?,
-        orderTypeId: Int
-    ) =
-        tenantRepository.getAllTenantsMatching(matching, orderTypeId)
 
     override suspend fun getAllWithoutUpcomingStaysMatching(
         matching: String?,
         currentTenantId: Long?
     ) =
-        tenantRepository.getAllWithoutUpcomingStaysMatching(matching, currentTenantId)
-
-    override suspend fun getAllTagNames() = tenantRepository.getAllTagNames()
-
-    override suspend fun getAllCityNames() = tenantRepository.getAllCityNames()
+        leadTenantSharedCommandRepository.getAllWithoutUpcomingStaysMatching(matching, currentTenantId)
 
     override suspend fun getPreferredLeadsOrderTypeId() =
-        tenantRepository.getPreferredLeadsOrderTypeId()
+        leadTenantSharedCommandRepository.getPreferredLeadsOrderTypeId()
 
     override suspend fun getPreferredTenantsOrderTypeId() =
-        tenantRepository.getPreferredTenantsOrderTypeId()
+        leadTenantSharedCommandRepository.getPreferredTenantsOrderTypeId()
 
     override suspend fun updatePreferredLeadsOrderTypeId(orderTypeId: Int) =
-        tenantRepository.updatePreferredLeadsOrderTypeId(orderTypeId)
+        leadTenantSharedCommandRepository.updatePreferredLeadsOrderTypeId(orderTypeId)
 
     override suspend fun updatePreferredTenantsOrderTypeId(orderTypeId: Int) =
-        tenantRepository.updatePreferredTenantsOrderTypeId(orderTypeId)
+        leadTenantSharedCommandRepository.updatePreferredTenantsOrderTypeId(orderTypeId)
 
-    override fun watchById(tenantId: Long) = tenantRepository.watchById(tenantId)
+    override fun watchById(tenantId: Long) = leadTenantSharedCommandRepository.watchById(tenantId)
 
     override fun watchAll(
         tenantStatusFilter: TenantStatus?,
         matching: String?,
         orderTypeId: Int?,
     ) =
-        tenantRepository.watchAll(tenantStatusFilter, matching, orderTypeId)
+        leadTenantSharedCommandRepository.watchAll(tenantStatusFilter, matching, orderTypeId)
 }
