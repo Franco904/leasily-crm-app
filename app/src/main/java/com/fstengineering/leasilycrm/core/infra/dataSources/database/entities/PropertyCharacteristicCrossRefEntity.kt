@@ -18,12 +18,4 @@ import androidx.room.ForeignKey
 data class PropertyCharacteristicCrossRefEntity(
     @ColumnInfo(name = "property_id") val propertyId: Long,
     @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Long,
-) {
-    companion object {
-        fun fromDomain(propertyId: Long, propertyCharacteristicId: Long) =
-            PropertyCharacteristicCrossRefEntity(
-                propertyId = propertyId,
-                propertyCharacteristicId = propertyCharacteristicId,
-            )
-    }
-}
+)
