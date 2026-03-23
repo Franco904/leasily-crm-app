@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.leadTenantRegistration.presentation.mapper
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.LeadTenantReadModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
 
-fun LeadTenantReadModel.toDraftForm() = LeadTenantDraftFormUiState.Loaded(
+fun LeadTenantReadModel.toUiState() = LeadTenantDraftFormUiState.Loaded(
     id = id,
     createDateTime = createDateTime,
     tag = tag,

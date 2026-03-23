@@ -1,16 +1,17 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers
 
 import androidx.core.net.toUri
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSelectablePropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
-fun AssistanceReadModel.toDraftForm() = AssistanceDraftFormUiState.Loaded(
+fun AssistanceReadModel.toUiState() = AssistanceDraftFormUiState.Loaded(
     id = id,
     leadTenantId = leadTenantId,
     leadTenantName = leadTenantName,
@@ -35,18 +36,18 @@ fun AssistanceReadModel.toDraftForm() = AssistanceDraftFormUiState.Loaded(
     preferredPropertyCharacteristics = preferredPropertyCharacteristics ?: persistentListOf(),
     observations = observations,
     sentProperties = sentProperties
-        ?.map { it.toCardDetails() }
+        ?.map { it.toUiState() }
         ?.toPersistentList() ?: persistentListOf(),
     interactions = interactions
-        ?.map { AssistanceInteractionDraftFormUiState.Loaded.fromReadModel(it) }
+        ?.map { it.toUiState() }
         ?.toPersistentList() ?: persistentListOf(),
 )
 
-fun AssistanceSentPropertyReadModel.toCardDetails(): PropertyCardDetailsUiState {
+fun AssistanceSentPropertyReadModel.toUiState(): PropertyUiState {
     val numberText = if (number != null) ", $number" else ""
     val streetAddressAndNumber = "${streetAddress}$numberText"
 
-    return PropertyCardDetailsUiState(
+    return PropertyUiState(
         id = requireNotNull(id),
         mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,
@@ -58,11 +59,11 @@ fun AssistanceSentPropertyReadModel.toCardDetails(): PropertyCardDetailsUiState 
     )
 }
 
-fun AssistanceSelectablePropertyReadModel.toCardDetails(): PropertyCardDetailsUiState {
+fun AssistanceSelectablePropertyReadModel.toUiState(): PropertyUiState {
     val numberText = if (number != null) ", $number" else ""
     val streetAddressAndNumber = "${streetAddress}$numberText"
 
-    return PropertyCardDetailsUiState(
+    return PropertyUiState(
         id = requireNotNull(id),
         mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,
@@ -73,3 +74,11 @@ fun AssistanceSelectablePropertyReadModel.toCardDetails(): PropertyCardDetailsUi
         bedroomsCount = bedroomsCount,
     )
 }
+
+private fun AssistanceInteractionReadModel.toUiState() =
+    AssistanceInteractionDraftFormUiState.Loaded(
+        id = id,
+        date = date,
+        title = title,
+        description = description,
+    )

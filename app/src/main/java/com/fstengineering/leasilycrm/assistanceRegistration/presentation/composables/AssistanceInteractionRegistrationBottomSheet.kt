@@ -29,9 +29,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.AssistanceInteractionDateFormField
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.AssistanceInteractionDescriptionFormField
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.AssistanceInteractionTitleFormField
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.InteractionDateFormField
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.InteractionDescriptionFormField
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.InteractionTitleFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceInteractionField
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DatePickerDialog
@@ -110,13 +110,13 @@ fun AssistanceInteractionRegistrationBottomSheet(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            AssistanceInteractionDateFormField(
+            InteractionDateFormField(
                 interactionDate = interactionForm.date,
                 error = formErrors[AssistanceInteractionField.Date],
                 onTap = { mustShowDatePickerDialog = true },
             )
             Spacer(modifier = Modifier.height(16.dp))
-            AssistanceInteractionTitleFormField(
+            InteractionTitleFormField(
                 value = interactionForm.title,
                 onValueChange = { onInteractionFormChange(interactionForm.copy(title = it)) },
                 error = formErrors[AssistanceInteractionField.Title],
@@ -124,7 +124,7 @@ fun AssistanceInteractionRegistrationBottomSheet(
                 fieldFocusRequester = interactionTitleFieldFocusRequester,
             )
             Spacer(modifier = Modifier.height(16.dp))
-            AssistanceInteractionDescriptionFormField(
+            InteractionDescriptionFormField(
                 value = interactionForm.description,
                 onValueChange = { onInteractionFormChange(interactionForm.copy(description = it)) },
                 fieldFocusRequester = interactionDescriptionFieldFocusRequester,

@@ -21,7 +21,7 @@ data class PropertyCompound(
         entityColumn = "property_id",
         entity = PropertyCharacteristicCrossRefEntity::class
     )
-    val checkedCharacteristics: List<PropertyCharacteristicCrossRefEntity>,
+    val characteristics: List<PropertyCharacteristicCrossRefEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "property_id",
@@ -34,28 +34,9 @@ data class PropertyCompound(
         entity = PropertyFileEntity::class,
     )
     val files: List<PropertyFileEntity>,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "property_id",
-        entity = StayEntity::class,
-    )
-    val stays: List<StayEntity>,
 ) {
-    private val activePrices: List<PropertyPrice>
-        get() = prices
-            .map { it.toDomain() }
-
-    private val activeFiles: List<PropertyFile>
-        get() = files
-            .map { it.toDomain() }
-
-    private val activeStays: List<Long>
-        get() = stays
-            .filter { !it.isDeleted }
-            .mapNotNull { it.id }
-
     fun toDomain(): Property {
-        val characteristics = checkedCharacteristics
+        val characteristics = characteristics
             .mapNotNull { PropertyCharacteristic.fromId(it.propertyCharacteristicId) }
             .toPersistentList()
 

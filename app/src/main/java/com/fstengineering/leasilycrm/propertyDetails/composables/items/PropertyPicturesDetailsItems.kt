@@ -58,8 +58,8 @@ fun PropertyPicturesDetailsItems(
             PropertyPicturesEmptySection()
         } else {
             PropertyPicturesRow(
-                propertyNotDeletedPictures = pictures.toPersistentList(),
-                onViewPropertyPicture = onViewPropertyPicture,
+                pictures = pictures.toPersistentList(),
+                onSelectMainPicture = onViewPropertyPicture,
                 isReadOnly = true,
             )
         }

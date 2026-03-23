@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toCommandModel
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toDraftForm
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -25,9 +25,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AssistanceRegistrationViewModel(
-    private val assistanceQueryRepository: AssistanceQueryRepository,
     private val readAssistance: ReadAssistanceUseCase,
     private val writeAssistance: WriteAssistanceUseCase,
+    private val assistanceQueryRepository: AssistanceQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -66,16 +66,16 @@ class AssistanceRegistrationViewModel(
         leadTenantId: Long,
         assistanceId: Long?,
     ) {
-        viewModelScope.launch {
-            val query = AssistanceQueryModel(
-                leadTenantId = leadTenantId,
-                assistanceId = assistanceId,
-            )
+        val query = AssistanceQueryModel(
+            leadTenantId = leadTenantId,
+            assistanceId = assistanceId,
+        )
 
+        viewModelScope.launch {
             readAssistance.invoke(query)
                 .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { storedAssistance ->
-                    val draftForm = storedAssistance.toDraftForm()
+                    val draftForm = storedAssistance.toUiState()
 
                     _draftFormUiState.update { draftForm }
                     formToEdit = draftForm
@@ -96,8 +96,7 @@ class AssistanceRegistrationViewModel(
     }
 
     fun saveAssistance() {
-        val form = draftFormUiState.value
-        if (form !is AssistanceDraftFormUiState.Loaded) return
+        val form = (draftFormUiState.value as? AssistanceDraftFormUiState.Loaded) ?: return
 
         viewModelScope.launch {
             if (formToEdit != null && form == formToEdit) {

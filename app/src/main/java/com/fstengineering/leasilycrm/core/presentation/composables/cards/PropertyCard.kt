@@ -36,13 +36,13 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOption
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicReadOnlyChip
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryIconButton
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun PropertyCard(
-    propertyDetails: PropertyCardDetailsUiState,
+    property: PropertyUiState,
     modifier: Modifier = Modifier,
     onCardClick: (() -> Unit)? = null,
     onViewPropertyDetails: () -> Unit = {},
@@ -61,7 +61,7 @@ fun PropertyCard(
             .fillMaxWidth()
     ) {
         Column {
-            if (propertyDetails.mainPictureUri != null) {
+            if (property.mainPictureUri != null) {
                 Card(
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
@@ -69,7 +69,7 @@ fun PropertyCard(
                         .height(180.dp)
                 ) {
                     AsyncImage(
-                        model = propertyDetails.mainPictureUri,
+                        model = property.mainPictureUri,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -87,18 +87,18 @@ fun PropertyCard(
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = propertyDetails.neighborhood,
+                        text = property.neighborhood,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                     Text(
-                        text = propertyDetails.streetAddressAndNumber,
+                        text = property.streetAddressAndNumber,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (hasCharacteristicsChipsRow) {
                         Spacer(modifier = Modifier.height(12.dp))
-                        CharacteristicsChipsRow(propertyDetails = propertyDetails)
+                        CharacteristicsChipsRow(propertyDetails = property)
                     }
                 }
 
@@ -161,7 +161,7 @@ fun PropertyCard(
 
 @Composable
 fun CharacteristicsChipsRow(
-    propertyDetails: PropertyCardDetailsUiState,
+    propertyDetails: PropertyUiState,
     modifier: Modifier = Modifier,
 ) {
     Row(

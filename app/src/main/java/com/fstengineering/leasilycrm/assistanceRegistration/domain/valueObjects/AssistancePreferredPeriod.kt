@@ -11,27 +11,19 @@ class AssistancePreferredPeriod private constructor(
 ) {
     companion object {
         fun parse(
-            startDate: AppDate?,
-            endDate: AppDate?,
+            startDate: AppDate,
+            endDate: AppDate,
         ): AppResultCompound<AssistancePreferredPeriod, DomainError> {
             val errors = mutableListOf<DomainError>()
 
-            when {
-                startDate == null || endDate == null -> {
-                    errors.add(DomainError.AssistanceOtherFields.PreferredPeriodRequired)
-                }
-
-                else -> {
-                    if (startDate == endDate) errors.add(DomainError.AssistanceOtherFields.PreferredPeriodStartAndEndDatesAreTheSame)
-                    if (startDate > endDate) errors.add(DomainError.AssistanceOtherFields.PreferredPeriodStartDateIsAfterEndDate)
-                }
-            }
+            if (startDate == endDate) errors.add(DomainError.AssistanceOtherFields.PreferredPeriodStartAndEndDatesAreTheSame)
+            if (startDate > endDate) errors.add(DomainError.AssistanceOtherFields.PreferredPeriodStartDateIsAfterEndDate)
 
             if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
 
             val parsed = AssistancePreferredPeriod(
-                startDate = requireNotNull(startDate),
-                endDate = requireNotNull(endDate),
+                startDate = startDate,
+                endDate = endDate,
             )
 
             return AppResultCompound.Success(data = parsed)

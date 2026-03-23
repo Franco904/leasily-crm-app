@@ -36,7 +36,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.AssistanceObservationsFormField
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.ObservationsFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.GuestsCountFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.MaxAcceptedNightlyRateFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.PreferredCharacteristicsCountFormField
@@ -271,15 +271,15 @@ fun AssistanceRegistrationFormSectionStep1(
             item { Spacer(modifier = Modifier.height(16.dp)) }
             item {
                 PreferredOtherCharacteristicsFormField(
-                    assistanceForm = assistanceForm,
-                    onAssistanceFormChange = onAssistanceFormChange,
+                    form = assistanceForm,
+                    onFormChange = onAssistanceFormChange,
                 )
             }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item { HorizontalDivider() }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item {
-                AssistanceObservationsFormField(
+                ObservationsFormField(
                     value = assistanceForm.observations,
                     onValueChange = {
                         onAssistanceFormChange(assistanceForm.copy(observations = it))

@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyPricePeriod
+import com.fstengineering.leasilycrm.propertyRegistration.domain.valueObjects.PropertyPricePeriod
 
 class PropertyPrice private constructor(
     val id: Long?,

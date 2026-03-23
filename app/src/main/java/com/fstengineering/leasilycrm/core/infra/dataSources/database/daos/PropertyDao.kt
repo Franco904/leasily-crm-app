@@ -42,7 +42,7 @@ interface PropertyDao {
         ORDER BY neighborhood
     """
     )
-    suspend fun getAllNeighborHoodNames(): List<String>
+    suspend fun getAllNeighborhoodNames(): List<String>
 
     @Query(
         """

@@ -18,9 +18,9 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCa
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerDraftFormUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerErrorUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerField
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerFileDraftFormUiState
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerFileUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toCommandModel
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toDraftForm
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toUiState
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -65,7 +65,7 @@ class PropertyOwnerRegistrationViewModel(
             propertyOwnerQueryRepository.getById(propertyOwnerId)
                 .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { storedOwner ->
-                    val draftForm = storedOwner.toDraftForm()
+                    val draftForm = storedOwner.toUiState()
 
                     _draftFormUiState.update { draftForm }
                     formToEdit = draftForm
@@ -106,7 +106,7 @@ class PropertyOwnerRegistrationViewModel(
                     onSuccess = { fileName -> fileName },
                 )
 
-            val fileDraft = PropertyOwnerFileDraftFormUiState(
+            val fileDraft = PropertyOwnerFileUiState(
                 uri = contentUriString.toUri(),
                 name = fileName ?: defaultFileName,
             )

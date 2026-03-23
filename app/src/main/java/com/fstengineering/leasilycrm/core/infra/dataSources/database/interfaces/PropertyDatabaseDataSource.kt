@@ -15,7 +15,7 @@ interface PropertyDatabaseDataSource {
 
     suspend fun getAll(matching: String? = null): AppResult<List<PropertyCompound>, InfraError>
 
-    suspend fun getAllNeighborHoodNames(): AppResult<List<String>, InfraError>
+    suspend fun getAllNeighborhoodNames(): AppResult<List<String>, InfraError>
 
     suspend fun getAllSentInAssistance(assistanceId: Long): AppResult<List<PropertyCompound>, InfraError>
 

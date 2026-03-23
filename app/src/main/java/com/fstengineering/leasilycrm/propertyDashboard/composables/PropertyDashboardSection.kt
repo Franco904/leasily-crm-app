@@ -100,7 +100,7 @@ fun PropertyDashboardSection(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         PropertyCard(
-            propertyDetails = property,
+            property = property,
             onViewPropertyDetails = onViewPropertyDetails,
             hasMoreOptionsMenu = false,
             hasCharacteristicsChipsRow = false,

@@ -26,14 +26,14 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
-import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionCardDetailsState
+import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionCardUiState
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun AssistanceInteractionCard(
-    interaction: AssistanceInteractionCardDetailsState,
+    interaction: AssistanceInteractionCardUiState,
     onViewInteractionDetails: () -> Unit,
     modifier: Modifier = Modifier,
     onEditInteraction: () -> Unit = {},

@@ -8,11 +8,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
 interface PropertyRepository {
-    suspend fun insertOrUpdate(property: Property): AppResult<Unit, ApplicationError>
-
     suspend fun delete(id: Long): AppResult<Unit, ApplicationError>
-
-    suspend fun getById(propertyId: Long): AppResult<Property, ApplicationError>
 
     suspend fun getAllMatching(matching: String?): AppResult<ImmutableList<Property>, ApplicationError>
 

@@ -16,13 +16,25 @@ interface PropertyOwnerDao {
     @Query("UPDATE property_owners SET is_deleted = 1 WHERE id = :id")
     suspend fun delete(id: Long)
 
+    @Query("SELECT name FROM property_owners WHERE id = :id AND is_deleted = 0")
+    suspend fun getNameById(id: Long): String
+
     @Transaction
     @Query("SELECT * FROM property_owners WHERE id = :id AND is_deleted = 0")
-    suspend fun getById(id: Long): PropertyOwnerCompound
+    suspend fun getByIdCompound(id: Long): PropertyOwnerCompound
 
     @Transaction
     @Query("SELECT * FROM property_owners WHERE id = :id AND is_deleted = 0")
     fun watchById(id: Long): Flow<PropertyOwnerCompound>
+
+    @Query(
+        """
+        SELECT * FROM property_owners
+        WHERE is_deleted = 0
+        ORDER BY name
+    """
+    )
+    fun watchAll(): Flow<List<PropertyOwnerEntity>>
 
     @Transaction
     @Query(
@@ -32,5 +44,5 @@ interface PropertyOwnerDao {
         ORDER BY name
     """
     )
-    fun watchAll(): Flow<List<PropertyOwnerCompound>>
+    fun watchAllCompound(): Flow<List<PropertyOwnerCompound>>
 }

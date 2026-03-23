@@ -17,7 +17,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioGroup
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioOption
-import com.fstengineering.leasilycrm.propertyRegistration.composables.fields.DistanceToSeaFormField
+import com.fstengineering.leasilycrm.propertyRegistration.presentation.composables.fields.DistanceToSeaFormField
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable

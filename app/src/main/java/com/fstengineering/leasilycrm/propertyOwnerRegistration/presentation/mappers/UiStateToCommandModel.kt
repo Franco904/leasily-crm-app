@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.map
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerFileCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerDraftFormUiState
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerFileDraftFormUiState
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerFileUiState
 import kotlinx.collections.immutable.toPersistentList
 
 fun PropertyOwnerDraftFormUiState.Loaded.toCommandModel(): PropertyOwnerCommandModel {
@@ -18,7 +18,7 @@ fun PropertyOwnerDraftFormUiState.Loaded.toCommandModel(): PropertyOwnerCommandM
     )
 }
 
-fun PropertyOwnerFileDraftFormUiState.toCommandModel(): PropertyOwnerFileCommandModel {
+fun PropertyOwnerFileUiState.toCommandModel(): PropertyOwnerFileCommandModel {
     return PropertyOwnerFileCommandModel(
         id = id,
         uriString = uri.toString(),

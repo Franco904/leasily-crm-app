@@ -122,7 +122,7 @@ fun LazyListScope.pricesDetailsItems(
 
             if (i > 0) Spacer(modifier = Modifier.height(8.dp))
             PropertyPriceCard(
-                monthLabel = finalMonthLabel,
+                monthYearLabel = finalMonthLabel,
                 monthPrices = monthPrices.value.toImmutableList(),
                 hasMoreOptionsMenu = false,
             )

@@ -37,9 +37,7 @@ fun Assistance.toLocalDataModel(): AssistanceEntity {
     )
 }
 
-fun AssistanceInteraction.toLocalDataModel(
-    assistanceId: Long,
-): AssistanceInteractionEntity {
+fun AssistanceInteraction.toLocalDataModel(assistanceId: Long): AssistanceInteractionEntity {
     return AssistanceInteractionEntity(
         id = id,
         date = date,

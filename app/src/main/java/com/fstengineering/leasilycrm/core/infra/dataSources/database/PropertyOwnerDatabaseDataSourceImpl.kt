@@ -17,15 +17,23 @@ class PropertyOwnerDatabaseDataSourceImpl(
     override suspend fun delete(id: Long) =
         dao.delete(id)
 
-    override suspend fun getById(id: Long): AppResult<PropertyOwnerCompound, InfraError> {
-        return onDatabaseSafe { dao.getById(id) }
+    override suspend fun getNameById(id: Long): AppResult<String, InfraError> {
+        return onDatabaseSafe { dao.getNameById(id) }
+    }
+
+    override suspend fun getByIdCompound(id: Long): AppResult<PropertyOwnerCompound, InfraError> {
+        return onDatabaseSafe { dao.getByIdCompound(id) }
     }
 
     override fun watchById(id: Long): AppResult<Flow<PropertyOwnerCompound>, InfraError> {
         return onDatabaseSafe { dao.watchById(id) }
     }
 
-    override fun watchAll(): AppResult<Flow<List<PropertyOwnerCompound>>, InfraError> {
+    override fun watchAll(): AppResult<Flow<List<PropertyOwnerEntity>>, InfraError> {
         return onDatabaseSafe { dao.watchAll() }
+    }
+
+    override fun watchAllCompound(): AppResult<Flow<List<PropertyOwnerCompound>>, InfraError> {
+        return onDatabaseSafe { dao.watchAllCompound() }
     }
 }

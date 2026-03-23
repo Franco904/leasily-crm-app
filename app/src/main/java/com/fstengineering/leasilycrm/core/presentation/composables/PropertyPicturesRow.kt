@@ -24,74 +24,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.mutate
-import kotlinx.collections.immutable.toPersistentList
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun PropertyPicturesRow(
-    propertyNotDeletedPictures: PersistentList<PropertyFile>,
+    pictures: ImmutableList<PropertyFileUiState>,
     modifier: Modifier = Modifier,
-    propertyForm: Property? = null,
-    onPropertyFormChange: ((Property) -> Unit)? = null,
-    onViewPropertyPicture: ((PropertyFile) -> Unit)? = null,
+    onSelectMainPicture: ((Int, PropertyFileUiState) -> Unit)? = null,
+    onDeletePicture: ((PropertyFileUiState) -> Unit)? = null,
     isReadOnly: Boolean = false,
 ) {
     LazyRow(
         modifier = modifier
     ) {
         itemsIndexed(
-            items = propertyNotDeletedPictures,
-            key = { i, file -> file.id ?: "${file.uriString}$i" },
+            items = pictures,
+            key = { i, file -> file.id ?: "${file.uri}$i" },
         ) { i, file ->
-            if (file.uriString == null) return@itemsIndexed
-
             PropertyPictureItem(
-                propertyPicture = file,
-                isMainPicture = !isReadOnly && file.isMainPicture && propertyNotDeletedPictures.size > 1,
+                picture = file,
+                isMainPicture = !isReadOnly && file.isMainPicture && pictures.size > 1,
                 isReadOnly = isReadOnly,
-                onClick = if (isReadOnly) {
-                    { onViewPropertyPicture?.invoke(file) }
-                } else {
-                    {
-                        if (file.isMainPicture || propertyNotDeletedPictures.size == 1) return@PropertyPictureItem
-
-                        val newFiles = propertyNotDeletedPictures
-                            .map { file -> file.copy(isMainPicture = false) }
-                            .toPersistentList()
-                            .mutate { it[i] = file.copy(isMainPicture = true) }
-
-                        if (propertyForm == null) return@PropertyPictureItem
-                        onPropertyFormChange?.invoke(propertyForm.copy(files = newFiles))
-                    }
-                },
-                onDeletePicture = if (isReadOnly) {
-                    {}
-                } else {
-                    {
-                        val newFiles = if (file.id == null) {
-                            propertyNotDeletedPictures.remove(file)
-                        } else {
-                            propertyNotDeletedPictures.mutate {
-                                it[i] = file.copy(isDeleted = true)
-                            }
-                        }
-
-                        val hasMainPicture = newFiles.any { !it.isDeleted && it.isMainPicture }
-
-                        val newFilesUpdated = if (newFiles.isNotEmpty() && !hasMainPicture) {
-                            newFiles.mutate { it[0] = it[0].copy(isMainPicture = true) }
-                        } else newFiles
-
-                        if (propertyForm == null) return@PropertyPictureItem
-                        onPropertyFormChange?.invoke(propertyForm.copy(files = newFilesUpdated))
-                    }
-                },
+                onClick = { onSelectMainPicture?.invoke(i, file) },
+                onDeletePicture = { onDeletePicture?.invoke(file) },
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
@@ -100,7 +58,7 @@ fun PropertyPicturesRow(
 
 @Composable
 private fun PropertyPictureItem(
-    propertyPicture: PropertyFile,
+    picture: PropertyFileUiState,
     isMainPicture: Boolean,
     isReadOnly: Boolean,
     onClick: () -> Unit,
@@ -124,7 +82,7 @@ private fun PropertyPictureItem(
                     .size(96.dp),
             ) {
                 AsyncImage(
-                    model = propertyPicture.uriString!!.toUri(),
+                    model = picture.uri,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                 )

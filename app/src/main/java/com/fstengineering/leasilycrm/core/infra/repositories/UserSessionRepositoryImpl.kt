@@ -31,7 +31,7 @@ class UserSessionRepositoryImpl(
 
     override suspend fun killSession(): AppResult<Unit, ApplicationError> {
         if (!connectivityAdapter.isDeviceConnectedToInternet(canUseMobile = true)) {
-            return AppResult.Error(error = ApplicationError.Infra.NoInternet)
+            return AppResult.Error(error = ApplicationError.NoInternet)
         }
 
         remoteDataSource.signOutUser()

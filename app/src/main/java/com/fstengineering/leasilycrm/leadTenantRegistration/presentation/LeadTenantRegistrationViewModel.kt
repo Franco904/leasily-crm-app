@@ -13,11 +13,10 @@ import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineM
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.repositories.LeadTenantQueryRepository
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.useCases.WriteLeadTenantUseCase
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.mappers.toCommandModel
-import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.mappers.toDraftForm
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantErrorUiState
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantField
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerDraftFormUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
@@ -78,7 +77,7 @@ class LeadTenantRegistrationViewModel(
             leadTenantQueryRepository.getById(leadTenantId)
                 .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { storedLeadTenant ->
-                    val form = storedLeadTenant.toDraftForm()
+                    val form = storedLeadTenant.toUiState()
 
                     _draftFormUiState.update { form }
                     formToEdit = form

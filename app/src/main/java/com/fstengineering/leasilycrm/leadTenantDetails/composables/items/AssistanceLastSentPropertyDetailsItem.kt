@@ -70,7 +70,7 @@ fun AssistanceLastSentPropertyDetailsItem(
             )
         } else {
             PropertyCard(
-                propertyDetails = lastSentProperty,
+                property = lastSentProperty,
                 onCardClick = onViewSentPropertyDetails,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,

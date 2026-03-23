@@ -31,7 +31,7 @@ fun StayPropertySelectionList(
             contentType = { _, entryType -> entryType },
         ) { _, property ->
             PropertyCard(
-                propertyDetails = property,
+                property = property,
                 onCardClick = { onPropertySelect(property) },
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,

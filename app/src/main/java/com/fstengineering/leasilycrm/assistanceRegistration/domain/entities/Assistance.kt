@@ -61,12 +61,10 @@ class Assistance private constructor(
         ): AppResultCompound<Assistance, DomainError> {
             val errors = mutableListOf<DomainError>()
 
-            val tenantId = leadTenantId ?: run {
-                errors.add(DomainError.AssistanceOtherFields.TenantRequired); null
-            }
+            if (leadTenantId == null) errors.add(DomainError.AssistanceOtherFields.TenantRequired)
 
             val preferredPeriod =
-                if (preferredStartDate == null && preferredEndDate == null) null
+                if (preferredStartDate == null || preferredEndDate == null) null
                 else AssistancePreferredPeriod.parse(
                     startDate = preferredStartDate,
                     endDate = preferredEndDate,
@@ -116,7 +114,7 @@ class Assistance private constructor(
                 observations = observations,
                 sentPropertiesIds = sentPropertiesIds,
                 interactions = interactions,
-                leadTenantId = requireNotNull(tenantId),
+                leadTenantId = requireNotNull(leadTenantId),
             )
 
             return AppResultCompound.Success(data = parsed)

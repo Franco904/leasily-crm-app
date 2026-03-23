@@ -24,14 +24,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionBottomSheetDetailsUiState
+import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssistanceInteractionDetailsBottomSheet(
     sheetState: SheetState,
-    interaction: AssistanceInteractionBottomSheetDetailsUiState,
+    interaction: AssistanceInteractionBottomSheetUiState,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

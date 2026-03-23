@@ -13,4 +13,4 @@ data class AssistanceSelectablePropertyReadModel(
     val distanceToSea: String?,
     val bedroomsCount: Int,
     val mainPictureUriString: String?,
-) : QueryUseCase.ReadModel
+)

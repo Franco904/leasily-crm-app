@@ -4,19 +4,19 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface AssistanceDraftFormUiState {
     data object Loading : AssistanceDraftFormUiState
 
     data class Loaded(
-        val id: Long? = null,
-        val createDateTime: AppDateTime? = null,
-        val preferredStartDate: AppDate? = null,
-        val preferredEndDate: AppDate? = null,
+        val id: Long?,
+        val createDateTime: AppDateTime?,
+        val preferredStartDate: AppDate?,
+        val preferredEndDate: AppDate?,
         val hasFlexibilityForPeriod: Boolean,
-        val maxAcceptedNightlyRate: AppDecimal? = null,
+        val maxAcceptedNightlyRate: AppDecimal?,
         val adultsCount: Int,
         val kidsCount: Int,
         val babiesCount: Int,
@@ -28,11 +28,11 @@ sealed interface AssistanceDraftFormUiState {
         val bathroomsCount: Int,
         val parkingSpotsCount: Int,
         val preferredNeighborhoods: ImmutableList<String>,
-        val preferredSeaProximityTypeId: Long? = null,
-        val preferredDistanceToSea: AppDecimal? = null,
+        val preferredSeaProximityTypeId: Long?,
+        val preferredDistanceToSea: AppDecimal?,
         val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
-        val observations: String? = null,
-        val sentProperties: ImmutableList<PropertyCardDetailsUiState>,
+        val observations: String?,
+        val sentProperties: ImmutableList<PropertyUiState>,
         val interactions: ImmutableList<AssistanceInteractionDraftFormUiState.Loaded>,
         val leadTenantId: Long,
         val leadTenantName: String,

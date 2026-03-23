@@ -15,7 +15,7 @@ data class AssistanceCompound(
         entityColumn = "id",
         entity = LeadTenantEntity::class,
     )
-    val tenant: LeadTenantEntity,
+    val leadTenant: LeadTenantEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",

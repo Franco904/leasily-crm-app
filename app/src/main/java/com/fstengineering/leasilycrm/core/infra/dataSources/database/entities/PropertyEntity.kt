@@ -54,7 +54,6 @@ data class PropertyEntity(
     @ColumnInfo(name = "property_owner_id") val ownerId: Long,
     @ColumnInfo(name = "property_type_id") val typeId: Long,
     @ColumnInfo(name = "property_sea_proximity_type_id") val seaProximityTypeId: Long?,
-    val inconsistencies: String?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
 ) {
     companion object {
@@ -92,7 +91,6 @@ data class PropertyEntity(
                 isDeleted = false,
                 ownerId = domain.ownerId,
                 typeId = domain.type.id,
-                inconsistencies = domain.inconsistencies.joinToString(", "),
                 contractVersion = BuildConfig.CONTRACT_VERSION,
             )
         }

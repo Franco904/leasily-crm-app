@@ -14,12 +14,12 @@ sealed interface PropertyOwnerDraftFormUiState {
         val phone: String?,
         val email: String?,
         val paymentKey: String?,
-        val files: ImmutableList<PropertyOwnerFileDraftFormUiState>,
+        val files: ImmutableList<PropertyOwnerFileUiState>,
     ) : PropertyOwnerDraftFormUiState {
         val isAnyFormFieldInitialized: Boolean
             get() = name != null || phone != null || email != null || paymentKey != null
 
-        fun addFile(newFile: PropertyOwnerFileDraftFormUiState) = copy(
+        fun addFile(newFile: PropertyOwnerFileUiState) = copy(
             files = (files + newFile).toPersistentList(),
         )
     }

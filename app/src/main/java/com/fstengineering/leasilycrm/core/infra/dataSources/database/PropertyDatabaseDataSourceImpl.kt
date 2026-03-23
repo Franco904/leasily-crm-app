@@ -25,8 +25,8 @@ class PropertyDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getAll() }
     }
 
-    override suspend fun getAllNeighborHoodNames(): AppResult<List<String>, InfraError> {
-        return onDatabaseSafe { dao.getAllNeighborHoodNames() }
+    override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, InfraError> {
+        return onDatabaseSafe { dao.getAllNeighborhoodNames() }
     }
 
     override suspend fun getAllSentInAssistance(

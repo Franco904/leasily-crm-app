@@ -14,7 +14,7 @@ class PropertyOwnerQueryRepositoryImpl(
     override suspend fun getById(
         propertyOwnerId: Long,
     ): AppResult<PropertyOwnerReadModel, ApplicationError> {
-        return databaseDataSource.getById(id = propertyOwnerId)
+        return databaseDataSource.getByIdCompound(id = propertyOwnerId)
             .fold(
                 onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = it.toReadModel()) }

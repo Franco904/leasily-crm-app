@@ -50,7 +50,7 @@ class PropertyOwnerSharedCommandRepositoryImpl(
     override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, ApplicationError>> =
         flow {
             emitAll(
-                propertyOwnerDatabaseDataSource.watchAll()
+                propertyOwnerDatabaseDataSource.watchAllCompound()
                     .fold(
                         onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                         onSuccess = { it }

@@ -1,7 +1,9 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
 import kotlinx.collections.immutable.toPersistentList
 
 fun AssistanceDraftFormUiState.Loaded.toCommandModel(): AssistanceCommandModel {
@@ -34,3 +36,11 @@ fun AssistanceDraftFormUiState.Loaded.toCommandModel(): AssistanceCommandModel {
         leadTenantId = leadTenantId,
     )
 }
+
+private fun AssistanceInteractionDraftFormUiState.Loaded.toCommand() =
+    AssistanceInteractionCommandModel(
+        id = id,
+        date = date,
+        title = title,
+        description = description,
+    )

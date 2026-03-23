@@ -34,6 +34,8 @@ private val months = mapOf(
     12 to R.string.december_label,
 )
 
+fun getMonthStringIdByNumber(monthNumber: Int) = months[monthNumber] ?: 1
+
 fun Context.getMonthLabelByNumber(monthNumber: Int): String {
     return getString(months[monthNumber] ?: R.string.january_label)
 }

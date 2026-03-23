@@ -8,13 +8,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyCharacteristicCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyFileDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyPriceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
 import kotlinx.collections.immutable.ImmutableList
@@ -30,43 +24,8 @@ import kotlinx.coroutines.flow.mapLatest
 class PropertyRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val propertyDatabaseDataSource: PropertyDatabaseDataSource,
-    private val propertyCharacteristicCrossRefDatabaseDataSource: PropertyCharacteristicCrossRefDatabaseDataSource,
-    private val propertyFileDatabaseDataSource: PropertyFileDatabaseDataSource,
-    private val propertyPriceDatabaseDataSource: PropertyPriceDatabaseDataSource,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : PropertyRepository {
-    override suspend fun insertOrUpdate(property: Property): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
-            saveDataInDatabase(property)
-        }
-            .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { AppResult.Success(data = Unit) }
-            )
-    }
-
-    private suspend fun saveDataInDatabase(property: Property) {
-        val propertyEntity = PropertyEntity.fromDomain(property)
-
-        val propertyId = propertyDatabaseDataSource.insertOrUpdate(propertyEntity)
-            .let { property.id ?: it }
-
-//        property.characteristics.forEach {
-//            val characteristic = PropertyCharacteristicCrossRefEntity.fromDomain(it, propertyId)
-//            propertyCharacteristicCrossRefDatabaseDataSource.insertOrUpdate(characteristic)
-//        }
-
-        property.files.forEach {
-            val file = PropertyFileEntity.fromDomain(it, propertyId)
-            propertyFileDatabaseDataSource.insertOrUpdate(file)
-        }
-
-        property.prices.forEach {
-            val price = PropertyPriceEntity.fromDomain(it, propertyId)
-            propertyPriceDatabaseDataSource.insertOrUpdate(price)
-        }
-    }
-
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
             propertyDatabaseDataSource.delete(id)
@@ -75,17 +34,6 @@ class PropertyRepositoryImpl(
                 onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = { AppResult.Success(data = Unit) }
             )
-    }
-
-    override suspend fun getById(propertyId: Long): AppResult<Property, ApplicationError> {
-        val property = propertyDatabaseDataSource.getById(id = propertyId)
-            .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { it },
-            )
-            .toDomain()
-
-        return AppResult.Success(data = property)
     }
 
     override suspend fun getAllMatching(
@@ -103,7 +51,7 @@ class PropertyRepositoryImpl(
 
     override suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, ApplicationError> {
         val neighborHoodNames =
-            propertyDatabaseDataSource.getAllNeighborHoodNames()
+            propertyDatabaseDataSource.getAllNeighborhoodNames()
                 .fold(
                     onError = { return AppResult.Error(error = it.toApplicationError()) },
                     onSuccess = { it },

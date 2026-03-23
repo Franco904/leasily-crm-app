@@ -289,7 +289,7 @@ fun LeadTenantDetailsScreen(
 
                                 if (i > 0) Spacer(modifier = Modifier.height(8.dp))
                                 PropertyCard(
-                                    propertyDetails = selectedProperty,
+                                    property = selectedProperty,
                                     onCardClick = { onViewSentPropertyDetails(selectedProperty.id!!) },
                                     hasMoreOptionsMenu = false,
                                     hasCharacteristicsChipsRow = false,

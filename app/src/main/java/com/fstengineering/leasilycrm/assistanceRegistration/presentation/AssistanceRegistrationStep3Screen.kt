@@ -218,7 +218,7 @@ fun AssistanceRegistrationStep3Screen(
         if (interactionToView != null) {
             AssistanceInteractionDetailsBottomSheet(
                 sheetState = sheetState,
-                interaction = interactionToView!!.toBottomSheetDetails(),
+                interaction = interactionToView!!.toBottomSheetUiState(),
                 onDismissRequest = { interactionToView = null },
             )
         }

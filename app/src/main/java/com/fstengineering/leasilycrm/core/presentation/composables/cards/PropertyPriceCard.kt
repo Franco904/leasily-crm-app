@@ -22,17 +22,20 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun PropertyPriceCard(
-    monthLabel: String,
-    monthPrices: ImmutableList<PropertyPrice>,
+    monthYearLabel: String,
+    monthPrices: ImmutableList<PropertyPriceUiState>,
     modifier: Modifier = Modifier,
-    onEditPropertyPrice: (PropertyPrice) -> Unit = {},
-    onDeletePropertyPrice: (PropertyPrice) -> Unit = {},
+    onEditPropertyPrice: (PropertyPriceUiState) -> Unit = {},
+    onDeletePropertyPrice: (PropertyPriceUiState) -> Unit = {},
+    onEditPropertyPriceOld: (PropertyPrice) -> Unit = {},
+    onDeletePropertyPriceOld: (PropertyPrice) -> Unit = {},
     hasMoreOptionsMenu: Boolean = true,
 ) {
     AppCard(
@@ -43,7 +46,7 @@ fun PropertyPriceCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = monthLabel,
+                text = monthYearLabel,
                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -61,10 +64,10 @@ fun PropertyPriceCard(
                     Text(
                         text = stringResource(
                             id = R.string.property_registration_date_range_value,
-                            price.startDate?.dayOfMonth.toString(),
-                            price.startDate?.month.toString(),
-                            price.endDate?.dayOfMonth.toString(),
-                            price.endDate?.month.toString(),
+                            price.startDate.dayOfMonth.toString(),
+                            price.startDate.month.toString(),
+                            price.endDate.dayOfMonth.toString(),
+                            price.endDate.month.toString(),
                         ),
                         modifier = Modifier
                             .padding(start = 8.dp)

@@ -3,10 +3,10 @@ package com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewMo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectablePropertyQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toCardDetails
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardDetailsUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -30,7 +30,7 @@ class AssistanceRegistrationStep2ViewModel(
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _properties =
-        MutableStateFlow<ImmutableList<PropertyCardDetailsUiState>>(persistentListOf())
+        MutableStateFlow<ImmutableList<PropertyUiState>>(persistentListOf())
     val properties = _properties.asStateFlow()
 
     private val _searchInput = MutableStateFlow<String?>(null)
@@ -51,7 +51,7 @@ class AssistanceRegistrationStep2ViewModel(
                 .onApplicationError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                 .onSuccess { properties ->
                     val uiStates = properties
-                        .map { it.toCardDetails() }
+                        .map { it.toUiState() }
                         .toImmutableList()
 
                     _properties.update { uiStates }
@@ -69,7 +69,7 @@ class AssistanceRegistrationStep2ViewModel(
                         .onApplicationError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingProperties ->
                             val uiStates = matchingProperties
-                                .map { it.toCardDetails() }
+                                .map { it.toUiState() }
                                 .toImmutableList()
 
                             _properties.update { uiStates }

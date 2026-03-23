@@ -3,6 +3,11 @@ package com.fstengineering.leasilycrm.core.domain.utils
 sealed interface DomainError : BusinessRuleError {
     fun asException() = DomainException(this)
 
+    enum class Amount : DomainError {
+        Required,
+        IsNegative,
+    }
+
     enum class AssistanceInteractionDate : DomainError {
         Required,
     }
@@ -32,16 +37,34 @@ sealed interface DomainError : BusinessRuleError {
         Required,
     }
 
-    enum class Property : DomainError {
-        OwnerRequired,
-        TypeRequired,
-        StreetAddressRequired,
-        PricePeriodRequired,
-        PricePeriodStartAndEndDatesAreTheSame,
-        PricePeriodStartDateIsAfterEndDate,
-        PricePeriodIsOverlappingOtherPricePeriod,
-        PriceAmountRequired,
-        PriceAmountIsNegative,
+    enum class PropertyPropertyOwner : DomainError {
+        Required,
+    }
+
+    enum class PropertyType : DomainError {
+        Required,
+    }
+
+    enum class PropertyStreetAddress : DomainError {
+        Required,
+    }
+
+    enum class PropertyPricePeriod : DomainError {
+        Required,
+        StartAndEndDatesAreTheSame,
+        StartDateIsAfterEndDate,
+        IsOverlappingOtherPricePeriod,
+    }
+
+    enum class PropertyOtherFields : DomainError {
+        BedroomsCountIsNegative,
+        EnSuitesCountIsNegative,
+        DoubleBedsCountIsNegative,
+        SingleBedsCountIsNegative,
+        BathroomsCountIsNegative,
+        ParkingSpotsCountIsNegative,
+        AirConditionersCountIsNegative,
+        MaxGuestsCountIsNegative,
         MoreThanOneMainPictureFile,
     }
 

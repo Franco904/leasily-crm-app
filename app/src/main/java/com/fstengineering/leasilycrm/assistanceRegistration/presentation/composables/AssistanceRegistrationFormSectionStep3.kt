@@ -105,7 +105,7 @@ fun AssistanceRegistrationFormSectionStep3(
                 ) { i, interaction ->
                     if (i > 0) Spacer(modifier = Modifier.height(8.dp))
                     AssistanceInteractionCard(
-                        interaction = interaction.toCardDetails(),
+                        interaction = interaction.toCardUiState(),
                         onViewInteractionDetails = {
                             onViewInteractionDetails(interaction)
                         },

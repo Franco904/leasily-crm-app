@@ -11,9 +11,13 @@ interface PropertyOwnerDatabaseDataSource {
 
     suspend fun delete(id: Long)
 
-    suspend fun getById(id: Long): AppResult<PropertyOwnerCompound, InfraError>
+    suspend fun getNameById(id: Long): AppResult<String, InfraError>
+
+    suspend fun getByIdCompound(id: Long): AppResult<PropertyOwnerCompound, InfraError>
 
     fun watchById(id: Long): AppResult<Flow<PropertyOwnerCompound>, InfraError>
 
-    fun watchAll(): AppResult<Flow<List<PropertyOwnerCompound>>, InfraError>
+    fun watchAll(): AppResult<Flow<List<PropertyOwnerEntity>>, InfraError>
+
+    fun watchAllCompound(): AppResult<Flow<List<PropertyOwnerCompound>>, InfraError>
 }
