@@ -36,9 +36,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.ObservationsFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.GuestsCountFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.MaxAcceptedNightlyRateFormField
+import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.ObservationsFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.PreferredCharacteristicsCountFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.PreferredOtherCharacteristicsFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.PreferredSeaProximityTypeFormField

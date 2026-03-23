@@ -18,8 +18,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoa
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.settings.presentation.composables.SettingsScreenTopBar
-import com.fstengineering.leasilycrm.settings.presentation.composables.SettingsSection
 import com.fstengineering.leasilycrm.settings.models.SettingsUiState
 
 @Composable

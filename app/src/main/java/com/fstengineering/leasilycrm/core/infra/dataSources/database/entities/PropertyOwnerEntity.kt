@@ -3,10 +3,7 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 
 @Entity(
     tableName = "property_owners",

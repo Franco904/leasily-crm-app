@@ -29,7 +29,10 @@ class TenantRepositoryProxy(
         matching: String?,
         currentTenantId: Long?
     ) =
-        leadTenantSharedCommandRepository.getAllWithoutUpcomingStaysMatching(matching, currentTenantId)
+        leadTenantSharedCommandRepository.getAllWithoutUpcomingStaysMatching(
+            matching,
+            currentTenantId
+        )
 
     override suspend fun getPreferredLeadsOrderTypeId() =
         leadTenantSharedCommandRepository.getPreferredLeadsOrderTypeId()

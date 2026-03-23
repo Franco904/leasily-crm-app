@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.Assist
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.CrmMetricsDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTenantDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyCharacteristicPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyFileDao
@@ -16,7 +17,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.Proper
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTenantDao
 import org.koin.dsl.module
 
 val daoModule = module {

@@ -15,12 +15,12 @@ import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerQueryRepository
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toCommandModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerDraftFormUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerErrorUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerField
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerFileUiState
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toCommandModel
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toUiState
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

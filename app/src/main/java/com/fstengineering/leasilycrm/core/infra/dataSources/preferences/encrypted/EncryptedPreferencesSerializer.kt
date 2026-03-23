@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypt
 import android.util.Log
 import androidx.datastore.core.Serializer
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferencesSerializer
 import com.fstengineering.leasilycrm.core.infra.utils.CryptoUtils
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers

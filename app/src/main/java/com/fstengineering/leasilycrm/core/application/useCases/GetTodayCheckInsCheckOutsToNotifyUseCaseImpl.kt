@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
+import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.repositories.UserSessionRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
@@ -9,7 +10,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedQueryRepository
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.models
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 
 data class AssistanceSelectablePropertyReadModel(

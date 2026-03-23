@@ -1,7 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.presentation.models
 
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionCommandModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionCardUiState

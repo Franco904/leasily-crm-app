@@ -1,8 +1,6 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import kotlinx.collections.immutable.ImmutableList
 
 sealed interface LeadTenantDraftFormUiState {
     data object Loading : LeadTenantDraftFormUiState

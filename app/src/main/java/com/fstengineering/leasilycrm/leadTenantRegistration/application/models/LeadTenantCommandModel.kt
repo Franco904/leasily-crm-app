@@ -2,11 +2,6 @@ package com.fstengineering.leasilycrm.leadTenantRegistration.application.models
 
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.leadTenantRegistration.domain.entities.LeadTenant
-import kotlinx.collections.immutable.toPersistentList
 
 data class LeadTenantCommandModel(
     val id: Long?,
