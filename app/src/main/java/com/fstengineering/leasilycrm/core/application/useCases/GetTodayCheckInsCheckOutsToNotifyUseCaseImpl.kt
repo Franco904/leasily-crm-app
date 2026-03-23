@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.application.repositories.UserSessionRepository
+import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
+import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckNotificationStatus
@@ -15,21 +15,17 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 
 class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
-    private val userSessionRepository: UserSessionRepository,
+    private val userSessionSharedStore: UserSessionSharedStore,
     private val stayRepository: StayRepository,
-    private val settingsSharedQueryRepository: SettingsSharedQueryRepository,
+    private val settingsSharedStore: SettingsSharedStore,
     private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
     override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, InfraError> {
         val isTodayCheckInCheckOutNotificationEnabled =
-            settingsSharedQueryRepository.watch().firstOrNull()
-                ?.fold(
-                    onError = { false },
-                    onSuccess = { it.isTodayCheckInCheckOutNotificationEnabled }
-                ) ?: false
+            settingsSharedStore.watch().firstOrNull()?.isTodayCheckInCheckOutNotificationEnabled
+                ?: false
 
-        val isSessionAlive = userSessionRepository.isSessionAlive()
-            .fold(onError = { false }, onSuccess = { it })
+        val isSessionAlive = userSessionSharedStore.isSessionAlive()
 
         if (now.dateTime().hour > 9 || !isTodayCheckInCheckOutNotificationEnabled || !isSessionAlive) {
             return AppResult.Success(data = emptyList())

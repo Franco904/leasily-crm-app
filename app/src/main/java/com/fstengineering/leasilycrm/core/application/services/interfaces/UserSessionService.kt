@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.Flow
 interface UserSessionService {
     val userSessionEvents: Flow<UserSessionEvent>
 
-    suspend fun onUserInitiatedSignOut(): AppResult<Unit, ApplicationError>
+    suspend fun onUserInitiatedSignOut()
 
-    suspend fun onSessionExpired(): AppResult<Unit, ApplicationError>
+    suspend fun onSessionExpired()
 
     sealed interface UserSessionEvent {
         data object UserInitiatedSignOutEvent : UserSessionEvent

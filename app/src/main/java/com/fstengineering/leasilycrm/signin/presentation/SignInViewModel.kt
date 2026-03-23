@@ -5,14 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
-import com.fstengineering.leasilycrm.signin.application.repositories.SignInRepository
+import com.fstengineering.leasilycrm.signin.application.models.IdToken
+import com.fstengineering.leasilycrm.signin.application.useCases.SignInUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val signInRepository: SignInRepository,
+    private val signIn: SignInUseCase,
     private val connectivityService: ConnectivityService,
 ) : ViewModel() {
     private val _uiEvents = Channel<UiEvent>()
@@ -32,8 +34,9 @@ class SignInViewModel(
 
     fun signInUser(idToken: String) {
         viewModelScope.launch {
-            signInRepository.signIn(idToken = idToken)
-                .onApplicationError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
+            signIn(command = IdToken(idToken))
+                .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onSuccess { _uiEvents.trySend(UiEvent.SignInSuccess) }
         }
     }
 

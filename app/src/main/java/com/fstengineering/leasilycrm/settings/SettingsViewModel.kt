@@ -2,11 +2,8 @@ package com.fstengineering.leasilycrm.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedQueryRepository
+import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.settings.models.SettingsUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,8 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val settingsSharedQueryRepository: SettingsSharedQueryRepository,
-    private val settingsSharedCommandRepository: SettingsSharedCommandRepository,
+    private val settingsSharedStore: SettingsSharedStore,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -37,20 +33,15 @@ class SettingsViewModel(
 
     private fun watchSettings() {
         viewModelScope.launch {
-            settingsSharedQueryRepository.watch().collect { result ->
-                result
-                    .onError { e -> _uiEvents.send(UiEvent.Error(e)) }
-                    .onSuccess { settings ->
-                        _settingsUiState.update { SettingsUiState.Loaded.fromReadModel(settings) }
-                    }
+            settingsSharedStore.watch().collect { settings ->
+                _settingsUiState.update { SettingsUiState.Loaded.fromReadModel(settings) }
             }
         }
     }
 
     fun onIsTodayCheckInCheckOutNotificationEnabledChange(isEnabled: Boolean) {
         viewModelScope.launch {
-            settingsSharedCommandRepository.setIsTodayCheckInCheckOutNotificationEnabled(isEnabled = isEnabled)
-                .onError { e -> _uiEvents.send(UiEvent.Error(e)) }
+            settingsSharedStore.setIsTodayCheckInCheckOutNotificationEnabled(isEnabled = isEnabled)
         }
     }
 

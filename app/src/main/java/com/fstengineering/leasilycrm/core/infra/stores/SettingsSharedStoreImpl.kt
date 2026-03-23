@@ -1,9 +1,7 @@
-package com.fstengineering.leasilycrm.core.infra.repositories
+package com.fstengineering.leasilycrm.core.infra.stores
 
 import com.fstengineering.leasilycrm.core.application.models.SettingsSharedReadModel
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedQueryRepository
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
@@ -12,20 +10,30 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class SettingsSharedQueryRepositoryImpl(
+class SettingsSharedStoreImpl(
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
-) : SettingsSharedQueryRepository {
-    override fun watch(): Flow<AppResult<SettingsSharedReadModel, ApplicationError>> = flow {
+) : SettingsSharedStore {
+    override suspend fun setIsTodayCheckInCheckOutNotificationEnabled(
+        isEnabled: Boolean,
+    ) {
+        plainPreferencesDataSource.savePreferences { prefs ->
+            prefs.copy(isTodayCheckInCheckOutNotificationEnabled = isEnabled)
+        }
+    }
+
+    override fun watch(): Flow<SettingsSharedReadModel> = flow {
+        val defaultSettings = SettingsSharedReadModel(
+            isTodayCheckInCheckOutNotificationEnabled = false
+        )
+
         plainPreferencesDataSource.readPreferences()
             .fold(
-                onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                onError = { return@flow emit(defaultSettings) },
                 onSuccess = { prefsFlow ->
                     val settingsFlow = prefsFlow.map {
-                        val settings = SettingsSharedReadModel(
+                        SettingsSharedReadModel(
                             isTodayCheckInCheckOutNotificationEnabled = it.isTodayCheckInCheckOutNotificationEnabled == true,
                         )
-
-                        AppResult.Success<SettingsSharedReadModel, ApplicationError>(data = settings)
                     }
 
                     emitAll(settingsFlow)

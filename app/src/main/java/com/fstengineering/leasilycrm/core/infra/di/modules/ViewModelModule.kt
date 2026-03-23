@@ -38,14 +38,14 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel {
         RootViewModel(
-            userSessionRepository = get(),
-            settingsSharedCommandRepository = get(),
+            userSessionSharedGateway = get(),
+            settingsSharedStore = get(),
         )
     }
 
     viewModel {
         SignInViewModel(
-            signInRepository = get(),
+            userSessionGateway = get(),
             connectivityService = get(),
         )
     }
@@ -53,7 +53,7 @@ val viewModelModule = module {
     viewModel {
         SettingsViewModel(
             settingsSharedQueryRepository = get(),
-            settingsSharedCommandRepository = get(),
+            settingsSharedStore = get(),
         )
     }
 

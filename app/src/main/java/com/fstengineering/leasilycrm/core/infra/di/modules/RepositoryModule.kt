@@ -10,12 +10,11 @@ import com.fstengineering.leasilycrm.core.application.repositories.CrmMetricsRep
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedQueryRepository
+import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
 import com.fstengineering.leasilycrm.core.application.repositories.UserRetryInfoCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.UserSessionRepository
+import com.fstengineering.leasilycrm.core.application.gateways.UserSessionSharedGateway
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.plainPreferencesQualifier
@@ -23,12 +22,11 @@ import com.fstengineering.leasilycrm.core.infra.repositories.CrmMetricsRepositor
 import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.PropertyOwnerSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.PropertyRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.SettingsSharedCommandRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.SettingsSharedQueryRepositoryImpl
+import com.fstengineering.leasilycrm.core.infra.stores.SettingsSharedStoreImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.UserRetryInfoCommandRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.UserSessionRepositoryImpl
+import com.fstengineering.leasilycrm.core.infra.gateways.UserSessionSharedGatewayImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.proxies.TenantRepositoryProxy
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.repositories.LeadTenantCommandRepository
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.repositories.LeadTenantQueryRepository
@@ -42,8 +40,8 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repos
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerQueryRepository
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.repositories.PropertyOwnerCommandRepositoryImpl
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.repositories.PropertyOwnerQueryRepositoryImpl
-import com.fstengineering.leasilycrm.signin.application.repositories.SignInRepository
-import com.fstengineering.leasilycrm.signin.infra.repositories.SignInRepositoryImpl
+import com.fstengineering.leasilycrm.signin.application.gateways.UserSessionGateway
+import com.fstengineering.leasilycrm.signin.infra.gateways.UserSessionGatewayImpl
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -127,8 +125,8 @@ val repositoryModule = module {
 
     // Sign in
 
-    single<SignInRepository> {
-        SignInRepositoryImpl(
+    single<UserSessionGateway> {
+        UserSessionGatewayImpl(
             remoteDataSource = get(),
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
@@ -136,8 +134,8 @@ val repositoryModule = module {
 
     // Core
 
-    single<UserSessionRepository> {
-        UserSessionRepositoryImpl(
+    single<UserSessionSharedGateway> {
+        UserSessionSharedGatewayImpl(
             connectivityAdapter = get(),
             remoteDataSource = get(),
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
@@ -169,8 +167,8 @@ val repositoryModule = module {
         )
     }
 
-    single<SettingsSharedCommandRepository> {
-        SettingsSharedCommandRepositoryImpl(
+    single<SettingsSharedStore> {
+        SettingsSharedStoreImpl(
             plainPreferencesDataSource = get(plainPreferencesQualifier),
         )
     }

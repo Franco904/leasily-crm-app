@@ -111,8 +111,8 @@ class ProfileViewModel(
     fun signOutUser() {
         viewModelScope.launch {
             userSessionService.onUserInitiatedSignOut()
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                .onSuccess { _uiEvents.trySend(UiEvent.SignOutSuccess) }
+
+            _uiEvents.trySend(UiEvent.SignOutSuccess)
         }
     }
 

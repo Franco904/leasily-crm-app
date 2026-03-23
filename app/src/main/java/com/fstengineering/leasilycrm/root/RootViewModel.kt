@@ -2,16 +2,15 @@ package com.fstengineering.leasilycrm.root
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.SettingsSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.UserSessionRepository
-import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
+import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class RootViewModel(
-    private val userSessionRepository: UserSessionRepository,
-    private val settingsSharedCommandRepository: SettingsSharedCommandRepository,
+    private val userSessionSharedStore: UserSessionSharedStore,
+    private val settingsSharedStore: SettingsSharedStore,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -28,16 +27,15 @@ class RootViewModel(
 
     private fun checkIsUserSignedIn() {
         viewModelScope.launch {
-            userSessionRepository.isSessionAlive()
-                .onSuccess { isSessionAlive ->
-                    _uiEvents.send(UiEvents.SignInState(isSessionAlive))
-                }
+            val isSessionAlive = userSessionSharedStore.isSessionAlive()
+
+            _uiEvents.send(UiEvents.SignInState(isSessionAlive))
         }
     }
 
     fun uncheckAppNotificationSettings() {
         viewModelScope.launch {
-            settingsSharedCommandRepository
+            settingsSharedStore
                 .setIsTodayCheckInCheckOutNotificationEnabled(isEnabled = false)
         }
     }
