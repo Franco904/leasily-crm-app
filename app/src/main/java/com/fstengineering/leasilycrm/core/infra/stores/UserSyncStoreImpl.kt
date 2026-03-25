@@ -1,8 +1,8 @@
-package com.fstengineering.leasilycrm.core.infra.repositories
+package com.fstengineering.leasilycrm.core.infra.stores
 
-import com.fstengineering.leasilycrm.core.application.repositories.UserRetryInfoCommandRepository
+import com.fstengineering.leasilycrm.core.application.models.UserRetryInfoWriteModel
+import com.fstengineering.leasilycrm.core.application.stores.UserSyncStore
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.entities.UserRetryInfo
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -14,10 +14,10 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.u
 import com.fstengineering.leasilycrm.core.infra.models.SyncState
 import kotlinx.coroutines.flow.firstOrNull
 
-class UserRetryInfoCommandRepositoryImpl(
+class UserSyncStoreImpl(
     private val remoteDataSource: UserRemoteDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
-) : UserRetryInfoCommandRepository {
+) : UserSyncStore {
     override suspend fun retryUpdate(): AppResult<Unit, ApplicationError> {
         val prefs = encryptedPreferencesDataSource.readPreferences()
             .fold(
@@ -26,13 +26,13 @@ class UserRetryInfoCommandRepositoryImpl(
             )
 
         val syncStateId = prefs?.userSyncStateId
-        val user = UserRetryInfo(prefs?.creciNumber)
+        val writeModel = UserRetryInfoWriteModel(prefs?.creciNumber)
 
         if (syncStateId != SyncState.PendingSync.id) {
             return AppResult.Success(data = Unit) // no update needed
         }
 
-        remoteDataSource.updateUser(updateUserDto = UpdateUserDto(user.creci))
+        remoteDataSource.updateUser(updateUserDto = UpdateUserDto(writeModel.creci))
             .onError { remoteBackendError ->
                 encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.PendingSync.id)

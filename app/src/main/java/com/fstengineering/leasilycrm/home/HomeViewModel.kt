@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.application.repositories.UserRetryInfoCommandRepository
+import com.fstengineering.leasilycrm.core.application.stores.UserSyncStore
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val assistanceCommandRepository: AssistanceCommandRepository,
     private val stayRepository: StayRepository,
-    private val userQueryRepository: UserRetryInfoCommandRepository,
+    private val userQueryRepository: UserSyncStore,
     private val now: AppDateTime,
 ) : ViewModel() {
     private var isInitialized = false

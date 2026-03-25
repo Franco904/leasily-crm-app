@@ -13,7 +13,6 @@ import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepos
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.application.repositories.UserRetryInfoCommandRepository
 import com.fstengineering.leasilycrm.core.application.gateways.UserSessionSharedGateway
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
@@ -25,7 +24,6 @@ import com.fstengineering.leasilycrm.core.infra.repositories.PropertyRepositoryI
 import com.fstengineering.leasilycrm.core.infra.stores.SettingsSharedStoreImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.UserRetryInfoCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.gateways.UserSessionSharedGatewayImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.proxies.TenantRepositoryProxy
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.repositories.LeadTenantCommandRepository
@@ -80,7 +78,7 @@ val repositoryModule = module {
     // Profile
 
     single<UserCommandRepository> {
-        UserCommandRepositoryImpl(
+        com.fstengineering.leasilycrm.profile.infra.repositories.UserCommandRepositoryImpl(
             remoteDataSource = get(),
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
@@ -208,8 +206,8 @@ val repositoryModule = module {
         )
     }
 
-    single<UserRetryInfoCommandRepository> {
-        UserRetryInfoCommandRepositoryImpl(
+    single<UserCommandRepository> {
+        UserCommandRepositoryImpl(
             remoteDataSource = get(),
             encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
         )
