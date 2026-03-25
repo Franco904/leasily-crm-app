@@ -30,7 +30,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.constants.APARTMENT_PROPERTY_TYPE_ID
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberVerticalCenterScroller
 import com.fstengineering.leasilycrm.core.presentation.composables.textFields.NeighborhoodFormField
@@ -134,12 +134,14 @@ fun PropertyRegistrationFormSectionStep1(
             TypeFormField(
                 selectedPropertyType = form.type,
                 onPropertyTypeChange = { type ->
+                    val isApartment = type == PropertyType.Apartment
+
                     onFormChange(
                         form.copy(
                             type = type,
-                            parkingSpotNumber = if (type?.id != APARTMENT_PROPERTY_TYPE_ID) null else form.parkingSpotNumber,
-                            parkingBasementLevelNumber = if (type?.id != APARTMENT_PROPERTY_TYPE_ID) null else form.parkingBasementLevelNumber,
-                            hobbyBoxNumber = if (type?.id != APARTMENT_PROPERTY_TYPE_ID) null else form.hobbyBoxNumber,
+                            parkingSpotNumber = if (isApartment) null else form.parkingSpotNumber,
+                            parkingBasementLevelNumber = if (isApartment) null else form.parkingBasementLevelNumber,
+                            hobbyBoxNumber = if (isApartment) null else form.hobbyBoxNumber,
                         ),
                     )
                 },
@@ -205,7 +207,7 @@ fun PropertyRegistrationFormSectionStep1(
                 value = form.addressLine2,
                 onValueChange = { onFormChange(form.copy(addressLine2 = it)) },
                 onDone = {
-                    if (form.type?.id == APARTMENT_PROPERTY_TYPE_ID && form.parkingSpotNumber == null) {
+                    if (form.type == PropertyType.Apartment && form.parkingSpotNumber == null) {
                         parkingSpotNumberFieldFocusRequester.requestFocus()
                     } else {
                         onLastTextFieldDone()
@@ -213,7 +215,7 @@ fun PropertyRegistrationFormSectionStep1(
                 },
                 fieldFocusRequester = addressLine2FieldFocusRequester,
             )
-            if (form.type?.id == APARTMENT_PROPERTY_TYPE_ID) {
+            if (form.type == PropertyType.Apartment) {
                 Column {
                     Spacer(modifier = Modifier.height(28.dp))
                     ParkingSpotNumberFormField(
