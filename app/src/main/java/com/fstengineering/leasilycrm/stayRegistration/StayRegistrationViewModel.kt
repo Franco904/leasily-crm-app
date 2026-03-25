@@ -10,7 +10,6 @@ import com.fstengineering.leasilycrm.core.application.repositories.StayRepositor
 import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.entities.StayFile
-import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError

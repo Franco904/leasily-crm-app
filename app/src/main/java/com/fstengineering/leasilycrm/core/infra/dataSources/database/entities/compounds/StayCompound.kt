@@ -4,7 +4,6 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.entities.StayFile
-import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity

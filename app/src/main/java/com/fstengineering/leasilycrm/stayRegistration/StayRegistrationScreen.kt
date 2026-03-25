@@ -33,7 +33,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
 import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection

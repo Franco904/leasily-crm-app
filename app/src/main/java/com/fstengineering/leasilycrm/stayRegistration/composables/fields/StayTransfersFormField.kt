@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.StayTransfer
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.StayTransfersCard
 import kotlinx.collections.immutable.PersistentList
 
