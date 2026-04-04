@@ -24,7 +24,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
             ) AS has_no_stays,
             EXISTS (
                 SELECT 1 FROM assistances a
-                WHERE (a.tenant_id = t.id AND a.is_deleted = 0)
+                WHERE (a.lead_tenant_id = t.id AND a.is_deleted = 0)
                 AND a.is_finished = 0
             ) AS has_unfinished_assistance,
             EXISTS (

@@ -5,8 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 
@@ -44,39 +42,8 @@ data class StayEntity(
     @ColumnInfo(name = "total_price") val totalPrice: AppDecimal?,
     val commission: AppDecimal?,
     val observations: String?,
-    val status: Int?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "property_id") val propertyId: Long,
     @ColumnInfo(name = "tenant_id") val tenantId: Long?,
-    val inconsistencies: String?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
-) {
-    companion object {
-        fun fromDomain(domain: Stay): StayEntity {
-            val ownedStay = domain as? Stay.Owned
-
-            return StayEntity(
-                id = domain.id,
-                createDateTime = domain.createDateTime ?: AppDateTime.now(),
-                updateDateTime = AppDateTime.now(),
-                vehicleMake = ownedStay?.vehicleMake,
-                vehicleColor = ownedStay?.vehicleColor,
-                vehicleLicensePlate = ownedStay?.vehicleLicensePlate,
-                guests = ownedStay?.guestsCount?.count,
-                checkInDateTime = domain.period.checkInDateTime,
-                checkOutDateTime = domain.period.checkOutDateTime,
-                isAutoCheckIn = ownedStay?.isAutoCheckIn,
-                isAutoCheckOut = ownedStay?.isAutoCheckOut,
-                totalPrice = ownedStay?.totalPrice,
-                commission = ownedStay?.commission,
-                observations = domain.observations,
-                status = ownedStay?.status?.id,
-                isDeleted = false,
-                propertyId = domain.propertyId,
-                tenantId = ownedStay?.tenantId,
-                inconsistencies = domain.inconsistencies.joinToString(", "),
-                contractVersion = BuildConfig.CONTRACT_VERSION,
-            )
-        }
-    }
-}
+)

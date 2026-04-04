@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwner
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
-import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.gateways.UserSessionSharedGateway
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
@@ -23,7 +23,7 @@ import com.fstengineering.leasilycrm.core.infra.repositories.PropertyOwnerShared
 import com.fstengineering.leasilycrm.core.infra.repositories.PropertyRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.stores.SettingsSharedStoreImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayFileRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.StayRepositoryImpl
+import com.fstengineering.leasilycrm.core.infra.repositories.StaySharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.gateways.UserSessionSharedGatewayImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.proxies.TenantRepositoryProxy
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.repositories.LeadTenantCommandRepository
@@ -177,8 +177,8 @@ val repositoryModule = module {
         )
     }
 
-    single<StayRepository> {
-        StayRepositoryImpl(
+    single<StaySharedCommandRepository> {
+        StaySharedCommandRepositoryImpl(
             databaseAdapter = get(),
             stayDatabaseDataSource = get(),
             stayFileDatabaseDataSource = get(),

@@ -12,7 +12,7 @@ interface LeadTenantSharedCommandRepository {
 
     suspend fun getById(tenantId: Long): AppResult<Tenant, ApplicationError>
 
-    suspend fun getAllWithoutUpcomingStaysMatching(
+    suspend fun getAllWithoutUpcomingStays(
         matching: String?,
         currentTenantId: Long?,
     ): AppResult<ImmutableList<Tenant>, ApplicationError>

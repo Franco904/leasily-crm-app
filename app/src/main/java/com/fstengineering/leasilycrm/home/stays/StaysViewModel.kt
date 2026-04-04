@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.home.stays
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
@@ -30,7 +30,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class StaysViewModel(
     private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
     private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
-    private val stayRepository: StayRepository,
+    private val staySharedCommandRepository: StaySharedCommandRepository,
     private val now: AppDateTime,
 ) : ViewModel() {
     private var isInitialized = false
@@ -79,7 +79,7 @@ class StaysViewModel(
 
     private fun watchMustNotShowCheckOutDialogAnymore() {
         viewModelScope.launch {
-            stayRepository.watchMustNotShowCheckOutDialogAnymore().collect { result ->
+            staySharedCommandRepository.watchMustNotShowCheckOutDialogAnymore().collect { result ->
                 result
                     .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { mustNotShowCheckOutDialogAnymore ->
@@ -96,7 +96,7 @@ class StaysViewModel(
                 .flatMapLatest { newFilter ->
                     _isLoading.update { true }
 
-                    stayRepository.watchAll()
+                    staySharedCommandRepository.watchAll()
                         .map { it to newFilter }
                 }
                 .collect { (watchAllResult, newFilter) ->
@@ -135,7 +135,7 @@ class StaysViewModel(
 
     private fun watchTodayCheckInsAndCheckouts() {
         viewModelScope.launch {
-            stayRepository.watchAllUpcomingCheckInsAndCheckOuts().collect { result ->
+            staySharedCommandRepository.watchAllUpcomingCheckInsAndCheckOuts().collect { result ->
                 result
                     .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { upcomingCheckInsAndCheckOuts ->
@@ -166,7 +166,7 @@ class StaysViewModel(
         viewModelScope.launch {
             val stayToDelete = this@StaysViewModel.stayToDelete.value ?: return@launch
 
-            stayRepository.delete(id = stayToDelete.id!!)
+            staySharedCommandRepository.delete(id = stayToDelete.id!!)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
 
             _uiEvents.send(UiEvents.StayDeleteSuccess)
@@ -177,7 +177,7 @@ class StaysViewModel(
         viewModelScope.launch {
             stayToRegisterCheckIn = stay.copy(isCheckInDone = true)
 
-            stayRepository.insertOrUpdate(stay = stayToRegisterCheckIn!!)
+            staySharedCommandRepository.insertOrUpdate(stay = stayToRegisterCheckIn!!)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess {
                     _uiEvents.send(UiEvents.RegisterCheckInSuccess)
@@ -192,7 +192,7 @@ class StaysViewModel(
         viewModelScope.launch {
             stayToRegisterCheckIn = stayToRegisterCheckIn?.copy(isCheckInDone = false)
 
-            stayRepository.insertOrUpdate(stay = stayToRegisterCheckIn!!)
+            staySharedCommandRepository.insertOrUpdate(stay = stayToRegisterCheckIn!!)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
         }
     }
@@ -218,7 +218,7 @@ class StaysViewModel(
         }
 
         viewModelScope.launch {
-            stayRepository.setMustNotShowCheckOutDialogAnymore(
+            staySharedCommandRepository.setMustNotShowCheckOutDialogAnymore(
                 mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore,
             )
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }

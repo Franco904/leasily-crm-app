@@ -1,30 +1,38 @@
 package com.fstengineering.leasilycrm.stayRegistration.presentation
 
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
-import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
-import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
-import com.fstengineering.leasilycrm.core.domain.entities.StayFile
-import com.fstengineering.leasilycrm.core.domain.entities.Tenant
+import com.fstengineering.leasilycrm.core.application.services.interfaces.FileStorageService
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
+import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
+import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
-import com.fstengineering.leasilycrm.stayRegistration.models.StayErrorUiState
-import com.fstengineering.leasilycrm.stayRegistration.models.StayField
-import com.fstengineering.leasilycrm.stayRegistration.models.StayTransferErrorUiState
+import com.fstengineering.leasilycrm.stayRegistration.application.models.StayCommandModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.StayQueryModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodCommandModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodQueryModel
+import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
+import com.fstengineering.leasilycrm.stayRegistration.application.repositories.TenantQueryRepository
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadStayUseCase
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadUnavailablePeriodUseCase
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.WriteStayUseCase
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.WriteUnavailablePeriodUseCase
+import com.fstengineering.leasilycrm.stayRegistration.presentation.mappers.toCommandModel
+import com.fstengineering.leasilycrm.stayRegistration.presentation.mappers.toUiState
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDraftFormUiState
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayErrorUiState
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField
-import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayTransferErrorUiState
-import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayTransferField
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayFileUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.mutate
@@ -43,45 +51,40 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class StayRegistrationViewModel(
-    private val stayRepository: StayRepository,
-    private val propertyRepository: PropertyRepository,
-    private val leadTenantSharedCommandRepository: LeadTenantSharedCommandRepository,
-    private val stayFileRepository: StayFileRepository,
+    private val readStay: ReadStayUseCase,
+    private val readUnavailablePeriod: ReadUnavailablePeriodUseCase,
+    private val writeStay: WriteStayUseCase,
+    private val writeUnavailablePeriod: WriteUnavailablePeriodUseCase,
+    private val propertyQueryRepository: PropertyQueryRepository,
+    private val tenantQueryRepository: TenantQueryRepository,
+    private val fileStorageService: FileStorageService,
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvents>()
+    private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _stayForm = MutableStateFlow(Stay())
-    val stayForm = _stayForm.asStateFlow()
-
-    private val _transferForm = MutableStateFlow<StayTransfer?>(null)
-    val transferForm = _transferForm.asStateFlow()
-
-    private var stayToEdit: Stay? = null
-    private var transferFormBeforeEdit: StayTransfer? = null
-
-    private val _stayFormErrors = MutableStateFlow(StayErrorUiState())
-    val stayFormErrors = _stayFormErrors.asStateFlow()
-
-    private val _transferFormErrors = MutableStateFlow(StayTransferErrorUiState())
-    val transferFormErrors = _transferFormErrors.asStateFlow()
-
-    private val _properties = MutableStateFlow<ImmutableList<Property>>(persistentListOf())
+    private val _properties =
+        MutableStateFlow<ImmutableList<PropertyUiState>>(persistentListOf())
     val properties = _properties.asStateFlow()
 
-    private val _tenants = MutableStateFlow<ImmutableList<Tenant>>(persistentListOf())
+    private val _tenants = MutableStateFlow<ImmutableList<LeadTenantUiState>>(persistentListOf())
     val tenants = _tenants.asStateFlow()
+
+    private val _draftFormUiState =
+        MutableStateFlow<StayDraftFormUiState>(StayDraftFormUiState.Loading)
+    val draftFormUiState = _draftFormUiState.asStateFlow()
+
+    private var formToEdit: StayDraftFormUiState? = null
+
+    private val _formErrors = MutableStateFlow(StayErrorUiState())
+    val formErrors = _formErrors.asStateFlow()
 
     private val _propertySearchInput = MutableStateFlow<String?>(null)
     val propertySearchInput = _propertySearchInput.asStateFlow()
 
     private val _tenantSearchInput = MutableStateFlow<String?>(null)
     val tenantSearchInput = _tenantSearchInput.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
 
     fun init(
         stayId: Long?,
@@ -91,14 +94,7 @@ class StayRegistrationViewModel(
     ) {
         if (isInitialized) return
 
-        _isLoading.update { true }
-
-        if (stayId != null) getStayToEdit(stayId)
-
-        if (stayId == null && propertyId != null) getPropertyToAutofill(propertyId)
-        if (stayId == null && tenantId != null) getTenantToAutofill(tenantId)
-
-        _stayForm.update { it.copy(isUnavailablePeriod = isUnavailablePeriod) }
+        loadData(stayId, propertyId, tenantId, isUnavailablePeriod)
 
         watchPropertySearchInput()
         watchTenantSearchInput()
@@ -106,33 +102,71 @@ class StayRegistrationViewModel(
         isInitialized = true
     }
 
-    private fun getStayToEdit(stayId: Long) {
+    private fun loadData(
+        stayId: Long?,
+        propertyId: Long?,
+        tenantId: Long?,
+        isUnavailablePeriod: Boolean,
+    ) {
         viewModelScope.launch {
-            stayRepository.getById(stayId)
-                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                .onSuccess { storedStay ->
-                    _stayForm.update { storedStay }
-                    stayToEdit = storedStay
-                }
+            if (isUnavailablePeriod) {
+                val query = UnavailablePeriodQueryModel(id = stayId)
+
+                readUnavailablePeriod(query)
+                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onSuccess { storedUnavailablePeriod ->
+                        val draftForm = storedUnavailablePeriod.toUiState()
+
+                        _draftFormUiState.update { draftForm }
+                        formToEdit = stayId?.let { draftForm }
+                    }
+            } else {
+                val query = StayQueryModel(id = stayId)
+
+                readStay(query)
+                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onSuccess { storedStay ->
+                        val draftForm = storedStay.toUiState()
+
+                        _draftFormUiState.update { draftForm }
+                        formToEdit = stayId?.let { draftForm }
+                    }
+            }
+
+            if (stayId == null) {
+                if (propertyId != null) getPropertyToAutofill(propertyId)
+                if (tenantId != null) getTenantToAutofill(tenantId)
+            }
         }
     }
 
     private fun getPropertyToAutofill(propertyId: Long) {
         viewModelScope.launch {
-            propertyRepository.getById(propertyId)
-                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+            propertyQueryRepository.getById(propertyId)
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { storedProperty ->
-                    _stayForm.update { it.copy(property = storedProperty) }
+                    _draftFormUiState.update {
+                        when (it) {
+                            is StayDraftFormUiState.StayOwnedLoaded -> it.copy(property = storedProperty.toUiState())
+                            is StayDraftFormUiState.UnavailablePeriodLoaded -> it.copy(property = storedProperty.toUiState())
+                            else -> it
+                        }
+                    }
                 }
         }
     }
 
     private fun getTenantToAutofill(tenantId: Long) {
         viewModelScope.launch {
-            leadTenantSharedCommandRepository.getById(tenantId)
-                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+            tenantQueryRepository.getById(tenantId)
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { storedTenant ->
-                    _stayForm.update { it.copy(tenant = storedTenant) }
+                    _draftFormUiState.update {
+                        when (it) {
+                            is StayDraftFormUiState.StayOwnedLoaded -> it.copy(tenant = storedTenant.toUiState())
+                            else -> it
+                        }
+                    }
                 }
         }
     }
@@ -143,13 +177,12 @@ class StayRegistrationViewModel(
             propertySearchInput
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
-                    _isLoading.update { true }
-
-                    propertyRepository.getAllMatching(matching = searchInput)
-                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                    propertyQueryRepository.getAllMatching(matching = searchInput)
+                        .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingProperties ->
-                            _properties.update { matchingProperties }
-                            _isLoading.update { false }
+                            val properties =
+                                matchingProperties.map { it.toUiState() }.toPersistentList()
+                            _properties.update { properties }
                         }
                 }
         }
@@ -161,16 +194,17 @@ class StayRegistrationViewModel(
             tenantSearchInput
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
-                    _isLoading.update { true }
+                    val stayOwnedForm = (formToEdit as? StayDraftFormUiState.StayOwnedLoaded)
 
-                    leadTenantSharedCommandRepository.getAllWithoutUpcomingStaysMatching(
+                    tenantQueryRepository.getAllWithoutUpcomingStays(
                         matching = searchInput,
-                        currentTenantId = stayToEdit?.tenant?.id,
+                        currentTenantId = stayOwnedForm?.tenant?.id,
                     )
-                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                        .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingTenants ->
-                            _tenants.update { matchingTenants }
-                            _isLoading.update { false }
+                            val tenants =
+                                matchingTenants.map { it.toUiState() }.toPersistentList()
+                            _tenants.update { tenants }
                         }
                 }
         }
@@ -184,71 +218,78 @@ class StayRegistrationViewModel(
         _tenantSearchInput.update { searchInput?.ifBlank { null } }
     }
 
-    fun onStayFormChange(form: Stay) {
-        _stayFormErrors.update {
+    fun onStayOwnedFormChange(newForm: StayDraftFormUiState.StayOwnedLoaded) {
+        val form = (draftFormUiState.value as? StayDraftFormUiState.StayOwnedLoaded) ?: return
+
+        _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                if (stayForm.value.property != form.property) {
-                    map[StayField.Property] = null
-                }
-                if (stayForm.value.tenant != form.tenant) {
-                    map[StayField.Tenant] = null
-                }
-                if (stayForm.value.checkInDateTime != form.checkInDateTime) {
-                    map[StayField.Period] = null
-                }
-                if (stayForm.value.checkInHourMinute != form.checkInHourMinute) {
-                    map[StayField.CheckInTime] = null
-                }
-                if (stayForm.value.checkOutHourMinute != form.checkOutHourMinute) {
-                    map[StayField.CheckOutTime] = null
-                }
+                if (form.property != newForm.property) map[StayField.Property] = null
+                if (form.tenant != newForm.tenant) map[StayField.Tenant] = null
+                if (form.checkInDateTime != newForm.checkInDateTime) map[StayField.Period] = null
+                if (form.checkInTime != newForm.checkInTime) map[StayField.CheckInTime] = null
+                if (form.checkOutTime != newForm.checkOutTime) map[StayField.CheckOutTime] = null
+                if (form.commission != newForm.commission) map[StayField.Commission] = null
             }
 
             it.copy(errors = newErrors)
         }
 
-        _stayForm.update { form }
+        _draftFormUiState.update { form }
+    }
+
+    fun onUnavailablePeriodFormChange(newForm: StayDraftFormUiState.UnavailablePeriodLoaded) {
+        val form =
+            (draftFormUiState.value as? StayDraftFormUiState.UnavailablePeriodLoaded) ?: return
+
+        _formErrors.update {
+            val newErrors = it.errors.mutate { map ->
+                if (form.property != newForm.property) map[StayField.Property] = null
+                if (form.checkInDateTime != newForm.checkInDateTime) map[StayField.Period] = null
+            }
+
+            it.copy(errors = newErrors)
+        }
+
+        _draftFormUiState.update { form }
     }
 
     fun clearCommissionError() {
-        _stayFormErrors.update {
+        _formErrors.update {
             val newErrors = it.errors.mutate { map -> map[StayField.Commission] = null }
             it.copy(errors = newErrors)
         }
     }
 
     fun getPropertyAlreadySelectedDatesForStay(
-        propertyStays: ImmutableList<Stay>,
+        propertyStaysPeriods: ImmutableList<Pair<AppDateTime, AppDateTime>>,
     ): ImmutableSet<AppDate> {
-        val isEditing = stayToEdit != null
+        val isEditing = formToEdit != null
 
-        val sortedPropertyStays = propertyStays
-            .sortedBy { it.checkInDateTime?.dateTime() }
+        val formCheckInDateTime = when (val form = draftFormUiState.value) {
+            is StayDraftFormUiState.StayOwnedLoaded -> form.checkInDateTime
+            is StayDraftFormUiState.UnavailablePeriodLoaded -> form.checkInDateTime
+            else -> null
+        }
 
-        val propertyAlreadySelectedDatesForStay = sortedPropertyStays
+        val sortedStaysPeriods = propertyStaysPeriods.sortedBy { it.first }
+
+        val propertyAlreadySelectedDatesForStay = sortedStaysPeriods
             .asSequence()
-            .filter {
-                if (it.isDeleted) return@filter false
-
+            .filter { (checkInDateTime, _) ->
                 val isSelectedDate =
-                    it.checkInDateTime?.dayOfMonth == stayForm.value.checkInDateTime?.dayOfMonth &&
-                            it.checkInDateTime?.month == stayForm.value.checkInDateTime?.month &&
-                            it.checkInDateTime?.year == stayForm.value.checkInDateTime?.year
+                    checkInDateTime.dayOfMonth == formCheckInDateTime?.dayOfMonth &&
+                            checkInDateTime.month == formCheckInDateTime.month &&
+                            checkInDateTime.year == formCheckInDateTime.year
 
-                if (isEditing && isSelectedDate) return@filter false
-
-                it.checkInDateTime != null && it.checkOutDateTime != null
+                !isEditing || !isSelectedDate
             }
-            .flatMap { stay ->
-                val checkInDateTime = stay.checkInDateTime!!
-                val checkOutDateTime = stay.checkOutDateTime!!
-
-                val isCheckInAlsoACheckOut = sortedPropertyStays.any { anyStay ->
-                    checkInDateTime.toDate() == anyStay.checkOutDateTime?.toDate()
+            .flatMap { (checkInDateTime, checkOutDateTime) ->
+                val isCheckInAlsoACheckOut = sortedStaysPeriods.any { (_, anyCheckOutDateTime) ->
+                    checkInDateTime.toDate() == anyCheckOutDateTime.toDate()
                 }
 
-                val isCheckOutAlsoACheckIn = sortedPropertyStays.any { anyStay ->
-                    checkOutDateTime.toDate() == anyStay.checkInDateTime?.toDate()
+                val isCheckOutAlsoACheckIn = sortedStaysPeriods.any { (anyCheckInDateTime, _) ->
+                    checkOutDateTime.toDate() == anyCheckInDateTime.toDate()
                 }
 
                 val startDateTime =
@@ -268,151 +309,86 @@ class StayRegistrationViewModel(
         return propertyAlreadySelectedDatesForStay
     }
 
-    fun onStayTransferFormChange(form: StayTransfer?) {
-        _transferFormErrors.update {
-            val newErrors = it.errors.mutate { map ->
-                if (transferForm.value?.date != form?.date) {
-                    map[StayTransferField.TransferDate] = null
-                }
-                if (transferForm.value?.transferAmount != form?.transferAmount) {
-                    map[StayTransferField.TransferAmount] = null
-                }
-            }
-
-            it.copy(errors = newErrors)
-        }
-
-        _transferForm.update { form }
-    }
-
-    fun onEditTransfer(transfer: StayTransfer) {
-        transferFormBeforeEdit = transfer
-    }
-
-    fun onDismissTransfer() {
-        transferFormBeforeEdit = null
-    }
-
-    fun saveStayTransfer() {
-        clearStayTransferErrors()
+    fun onStayFilePick(
+        contentUriString: String,
+        defaultFileName: String,
+    ) {
+        val form = (draftFormUiState.value as? StayDraftFormUiState.StayOwnedLoaded) ?: return
 
         viewModelScope.launch {
-            if (transferForm.value == null) return@launch
-            val isEditing = transferFormBeforeEdit != null
-
-            if (isEditing) {
-                val storedTransfer = stayForm.value.transfers
-                    .find { it == transferFormBeforeEdit }
-
-                if (transferForm.value == storedTransfer) {
-                    _uiEvents.send(
-                        UiEvents.TransferEditSuccess(messageId = R.string.no_data_changed_success_message)
-                    )
-                    return@launch
-                }
-            }
-
-            stayTransferValidator.validate(stayTransfer = transferForm.value!!)
-                .onErrors { errors ->
-                    setTransferFieldErrors(errors)
-                    return@launch
-                }
-
-            val newTransfers = if (isEditing) {
-                stayForm.value.transfers
-                    .toPersistentList()
-                    .mutate { list ->
-                        val i = list.indexOf(transferFormBeforeEdit)
-                        list[i] = transferForm.value!!
-                    }
-            } else {
-                stayForm.value.transfers
-                    .toPersistentList()
-                    .add(transferForm.value!!)
-            }
-
-            onStayFormChange(form = stayForm.value.copy(transfers = newTransfers))
-            onStayTransferFormChange(form = null)
-            transferFormBeforeEdit = null
-
-            val saveEvent =
-                if (stayToEdit != null) UiEvents.TransferEditSuccess(messageId = R.string.edit_stay_success_message)
-                else UiEvents.TransferCreateSuccess
-
-            _uiEvents.send(saveEvent)
-        }
-    }
-
-    private suspend fun setTransferFieldErrors(errors: List<DomainError>) {
-        _transferFormErrors.update { StayTransferErrorUiState() }
-        delay(150.milliseconds)
-
-        val transferDateError = errors.firstOrNull { it is DomainError.StayTransferDate }
-        val transferAmountError = errors.firstOrNull { it is DomainError.StayTransferAmount }
-
-        _transferFormErrors.update {
-            val newErrors = it.errors.mutate { map ->
-                map[StayTransferField.TransferDate] = transferDateError?.toInlineMessage()
-                map[StayTransferField.TransferAmount] = transferAmountError?.toInlineMessage()
-            }
-
-            it.copy(errors = newErrors)
-        }
-    }
-
-    private fun clearStayTransferErrors() {
-        _transferFormErrors.update { StayTransferErrorUiState() }
-    }
-
-    fun onStayFilePick(contentUriString: String) {
-        viewModelScope.launch {
-            val newFile = StayFile(uriString = contentUriString)
-
-            val fileName = stayFileRepository.getFileName(file = newFile)
+            val fileName = fileStorageService.getFileName(contentUriString)
                 .fold(
-                    onError = { e -> return@launch _uiEvents.send(UiEvents.Error(e)) },
+                    onError = { e ->
+                        _uiEvents.trySend(UiEvent.BottomSheetError(e))
+                        return@launch
+                    },
                     onSuccess = { fileName -> fileName },
                 )
 
-            val newFiles =
-                (stayForm.value.files + newFile.copy(name = fileName)).toPersistentList()
-            onStayFormChange(form = stayForm.value.copy(files = newFiles))
+            val fileDraft = StayFileUiState(
+                uri = contentUriString.toUri(),
+                name = fileName ?: defaultFileName,
+            )
+
+            onStayOwnedFormChange(newForm = form.addFile(fileDraft))
         }
     }
 
     fun saveStay() {
-        viewModelScope.launch {
-            if (stayToEdit != null && stayForm.value == stayToEdit) {
-                _uiEvents.send(UiEvents.StayEditSuccess(messageId = R.string.no_data_changed_success_message))
-                return@launch
-            }
+        if (formToEdit != null && draftFormUiState.value == formToEdit) {
+            _uiEvents.trySend(UiEvent.StayEditSuccess(messageId = R.string.no_data_changed_success_message))
+            return
+        }
 
-            stayValidator.validate(
-                stay = stayForm.value,
-                stayBeforeEdit = stayToEdit,
-            )
-                .onErrors { errors ->
-                    setFieldErrors(errors)
-                    return@launch
+        val command = when (val form = draftFormUiState.value) {
+            is StayDraftFormUiState.StayOwnedLoaded -> form.toCommandModel()
+            is StayDraftFormUiState.UnavailablePeriodLoaded -> form.toCommandModel()
+            else -> return
+        }
+
+        viewModelScope.launch {
+            val editMessageId = when (command) {
+                is StayCommandModel -> {
+                    writeStay(command)
+                        .onApplicationError {
+                            _uiEvents.trySend(UiEvent.BottomSheetError(it))
+                            return@launch
+                        }
+                        .onDomainErrors { errors ->
+                            setFieldErrors(errors)
+                            return@launch
+                        }
+
+                    R.string.edit_stay_success_message
                 }
 
-            stayRepository.insertOrUpdate(stayForm.value)
-                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
+                is UnavailablePeriodCommandModel -> {
+                    writeUnavailablePeriod(command)
+                        .onApplicationError {
+                            _uiEvents.trySend(UiEvent.BottomSheetError(it))
+                            return@launch
+                        }
+                        .onDomainErrors { errors ->
+                            setFieldErrors(errors)
+                            return@launch
+                        }
 
-            val editMessageId =
-                if (stayForm.value.isUnavailablePeriod) R.string.edit_unavailable_period_success_message
-                else R.string.edit_stay_success_message
+                    R.string.edit_unavailable_period_success_message
+                }
+
+                else -> return@launch
+            }
 
             val saveEvent =
-                if (stayToEdit != null) UiEvents.StayEditSuccess(messageId = editMessageId)
-                else UiEvents.StayCreateSuccess
+                if (formToEdit != null) UiEvent.StayEditSuccess(messageId = editMessageId)
+                else UiEvent.StayCreateSuccess
 
-            _uiEvents.send(saveEvent)
+            _uiEvents.trySend(saveEvent)
         }
     }
 
     private suspend fun setFieldErrors(errors: List<DomainError>) {
-        _stayFormErrors.update { StayErrorUiState() }
+        _formErrors.update { StayErrorUiState() }
         delay(150.milliseconds)
 
         val stayPropertyError = errors.firstOrNull { it is DomainError.StayProperty }
@@ -422,7 +398,7 @@ class StayRegistrationViewModel(
         val checkOutTimeError = errors.firstOrNull { it is DomainError.StayCheckOutTime }
         val commissionError = errors.firstOrNull { it is DomainError.StayCommission }
 
-        _stayFormErrors.update {
+        _formErrors.update {
             val newErrors = it.errors.mutate { map ->
                 map[StayField.Property] = stayPropertyError?.toInlineMessage()
                 map[StayField.Tenant] = stayTenantError?.toInlineMessage()
@@ -436,34 +412,41 @@ class StayRegistrationViewModel(
         }
 
         val firstFieldWithError =
-            _stayFormErrors.value.errors.entries.first { it.value != null }.key
-        _uiEvents.send(UiEvents.ScrollToField(firstFieldWithError))
+            _formErrors.value.errors.entries.first { it.value != null }.key
+        _uiEvents.trySend(UiEvent.ScrollToField(firstFieldWithError))
     }
 
     fun onExit() {
         val needConfirmation = when {
-            stayToEdit != null -> stayToEdit != stayForm.value
-            else -> stayForm.value.isAnyFormFieldInitialized
+            formToEdit != null -> {
+                formToEdit != draftFormUiState.value
+            }
+
+            else -> when (val form = draftFormUiState.value) {
+                is StayDraftFormUiState.StayOwnedLoaded -> form.isAnyFormFieldInitialized
+                is StayDraftFormUiState.UnavailablePeriodLoaded -> form.isAnyFormFieldInitialized
+                else -> false
+            }
         }
 
-        viewModelScope.launch {
-            _uiEvents.send(UiEvents.Exit(needConfirmation))
-        }
+        _uiEvents.trySend(UiEvent.Exit(needConfirmation))
     }
 
-    sealed interface UiEvents {
-        data class Error(val error: InfraError) : UiEvents
+    override fun onCleared() {
+        _uiEvents.close()
 
-        data class ScrollToField(val field: StayField) : UiEvents
+        super.onCleared()
+    }
 
-        data class StayEditSuccess(val messageId: Int) : UiEvents
+    sealed interface UiEvent {
+        data class BottomSheetError(val error: ApplicationError) : UiEvent
 
-        data class TransferEditSuccess(val messageId: Int) : UiEvents
+        data class ScrollToField(val field: StayField) : UiEvent
 
-        data object StayCreateSuccess : UiEvents
+        data class StayEditSuccess(val messageId: Int) : UiEvent
 
-        data object TransferCreateSuccess : UiEvents
+        data object StayCreateSuccess : UiEvent
 
-        data class Exit(val needConfirmation: Boolean) : UiEvents
+        data class Exit(val needConfirmation: Boolean) : UiEvent
     }
 }

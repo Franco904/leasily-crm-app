@@ -15,17 +15,17 @@ interface TenantDatabaseDataSource {
 
     suspend fun getNameById(id: Long): AppResult<String?, InfraError>
 
-    suspend fun getAllLeadsMatching(
+    suspend fun getAllLeads(
         matching: String?,
         order: Int,
     ): AppResult<List<LeadTenantReadView>, InfraError>
 
-    suspend fun getAllTenantsMatching(
+    suspend fun getAllTenants(
         matching: String?,
         order: Int,
     ): AppResult<List<LeadTenantReadView>, InfraError>
 
-    suspend fun getAllWithoutUpcomingStaysMatching(
+    suspend fun getAllWithoutUpcomingStays(
         matching: String?,
         currentTenantId: Long?,
     ): AppResult<List<LeadTenantReadView>, InfraError>

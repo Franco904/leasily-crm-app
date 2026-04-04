@@ -25,11 +25,11 @@ class TenantRepositoryProxy(
             .onSuccess { tenant -> tenantInMemoryDataSource.putTenant(tenant) }
     }
 
-    override suspend fun getAllWithoutUpcomingStaysMatching(
+    override suspend fun getAllWithoutUpcomingStays(
         matching: String?,
         currentTenantId: Long?
     ) =
-        leadTenantSharedCommandRepository.getAllWithoutUpcomingStaysMatching(
+        leadTenantSharedCommandRepository.getAllWithoutUpcomingStays(
             matching,
             currentTenantId
         )

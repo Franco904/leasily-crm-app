@@ -209,17 +209,6 @@ fun LeadsPage(
 
                             LeadTenantCard(
                                 leadTenant = lead,
-                                qtGuestsLabelText = when {
-                                    unfinishedAssistance != null && unfinishedAssistance.qtGuests > 0 -> {
-                                        pluralStringResource(
-                                            id = R.plurals.lead_searching_qt_guests_label,
-                                            count = unfinishedAssistance.qtGuests,
-                                            unfinishedAssistance.qtGuests,
-                                        )
-                                    }
-
-                                    else -> null
-                                },
                                 onCardClick = { onViewLeadDetails(lead.id!!) },
                                 onEditLeadTenant = { onRegisterLead(lead.id) },
                                 onDeleteLeadTenant = { viewModel.onDeleteLead(lead = lead) },
@@ -228,9 +217,9 @@ fun LeadsPage(
                                 onNewStay = { onNewStay(lead.id!!) },
                                 hasUnfinishedAssistance = unfinishedAssistance != null,
                                 hasUnfinishedStay = unfinishedStay != null,
-                                mustShowAssistanceText = true,
-                                mustShowMoreOptionsMenu = true,
-                                mustShowPrimaryActions = true,
+                                hasMoreOptionsMenu = true,
+                                hasAssistanceText = true,
+                                hasPrimaryActions = true,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

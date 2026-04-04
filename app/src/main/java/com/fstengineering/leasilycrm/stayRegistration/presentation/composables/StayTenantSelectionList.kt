@@ -10,12 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun StayTenantSelectionList(
-    tenants: ImmutableList<Tenant>,
-    onTenantSelect: (Tenant) -> Unit,
+    tenants: ImmutableList<LeadTenantUiState>,
+    onTenantSelect: (LeadTenantUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -27,7 +28,7 @@ fun StayTenantSelectionList(
         item { Spacer(modifier = Modifier.height(16.dp)) }
         itemsIndexed(
             items = tenants,
-            key = { _, tenant -> tenant.id!! },
+            key = { _, tenant -> tenant.id },
             contentType = { _, entryType -> entryType },
         ) { _, tenant ->
             LeadTenantCard(

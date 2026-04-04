@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckStatus
@@ -24,42 +24,11 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class StayRepositoryImpl(
+class StaySharedCommandRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val stayDatabaseDataSource: StayDatabaseDataSource,
-    private val stayFileDatabaseDataSource: StayFileDatabaseDataSource,
-    private val stayTransferDatabaseDataSource: StayTransferDatabaseDataSource,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
-) : StayRepository {
-    override suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
-            saveDataInDatabase(stay)
-        }
-            .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { AppResult.Success(data = Unit) }
-            )
-    }
-
-    private suspend fun saveDataInDatabase(stay: Stay) {
-        val stayEntity = StayEntity.fromDomain(stay)
-
-        val stayId = stayDatabaseDataSource.insertOrUpdate(stayEntity)
-            .let { stay.id ?: it }
-
-        if (stay is Stay.Owned) {
-            stay.files.forEach {
-                val file = StayFileEntity.fromDomain(it, stayId)
-                stayFileDatabaseDataSource.insertOrUpdate(file)
-            }
-
-            stay.transfers.forEach {
-                val transfer = StayTransferEntity.fromDomain(it, stayId)
-                stayTransferDatabaseDataSource.insertOrUpdate(transfer)
-            }
-        }
-    }
-
+) : StaySharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
             stayDatabaseDataSource.delete(id)

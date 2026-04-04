@@ -27,20 +27,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.toDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.TimePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckInTimeFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckOutTimeFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPeriodFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPropertyFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StaysObservationsFormField
-import com.fstengineering.leasilycrm.stayRegistration.models.StayField
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayCheckInTimeFormField
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayCheckOutTimeFormField
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayPeriodFormField
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayPropertyFormField
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StaysObservationsFormField
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDraftFormUiState
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.ImmutableSet
@@ -52,20 +53,20 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UnavailablePeriodRegistrationFormSection(
-    stayForm: Stay,
-    onStayFormChange: (Stay) -> Unit,
-    stayFormErrors: ImmutableMap<com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField, Int?>,
-    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<AppDate>,
+    form: StayDraftFormUiState.UnavailablePeriodLoaded,
+    onFormChange: (StayDraftFormUiState.UnavailablePeriodLoaded) -> Unit,
+    stayFormErrors: ImmutableMap<StayField, Int?>,
+    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Pair<AppDateTime, AppDateTime>>) -> ImmutableSet<AppDate>,
     onSelectProperty: () -> Unit,
     onPeriodDisabledByPropertyUnselected: () -> Unit,
-    scrollToFieldFlow: Flow<com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField>,
+    scrollToFieldFlow: Flow<StayField>,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
 
     val bringIntoViewRequesters = remember {
-        _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.entries.associateWith { BringIntoViewRequester() }
+        StayField.entries.associateWith { BringIntoViewRequester() }
     }
 
     val initialDateSelection = remember {
@@ -78,8 +79,8 @@ fun UnavailablePeriodRegistrationFormSection(
         )
     }
 
-    val propertyAlreadySelectedDatesForStay = remember(stayForm.property) {
-        getPropertyAlreadySelectedDatesForStay(stayForm.property?.stays ?: persistentListOf())
+    val propertyAlreadySelectedDatesForStay = remember(form.property) {
+        getPropertyAlreadySelectedDatesForStay(form.property?.staysDates ?: persistentListOf())
     }
 
     var mustShowStayDateRangePickerDialog by rememberSaveable { mutableStateOf(false) }
@@ -104,16 +105,16 @@ fun UnavailablePeriodRegistrationFormSection(
         modifier = modifier
     ) {
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item(key = _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.Property) {
+        item(key = StayField.Property) {
             Box(
                 modifier = Modifier
-                    .bringIntoViewRequester(bringIntoViewRequesters.getValue(_root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.Property))
+                    .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Property))
             ) {
-                _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayPropertyFormField(
-                    stayProperty = stayForm.property,
+                StayPropertyFormField(
+                    stayProperty = form.property,
                     onSelectStayProperty = onSelectProperty,
                     isEnabled = true,
-                    error = stayFormErrors[_root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.Property],
+                    error = stayFormErrors[StayField.Property],
                 )
             }
         }
@@ -128,17 +129,17 @@ fun UnavailablePeriodRegistrationFormSection(
             )
         }
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item(key = _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.Period) {
+        item(key = StayField.Period) {
             Box(
                 modifier = Modifier
-                    .bringIntoViewRequester(bringIntoViewRequesters.getValue(_root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.Period))
+                    .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Period))
             ) {
-                val isEnabled = stayForm.property != null
+                val isEnabled = form.property != null
 
-                _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayPeriodFormField(
-                    checkInDateTime = stayForm.checkInDateTime,
-                    checkOutDateTime = stayForm.checkOutDateTime,
-                    error = stayFormErrors[_root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.Period],
+                StayPeriodFormField(
+                    checkInDateTime = form.checkInDateTime,
+                    checkOutDateTime = form.checkOutDateTime,
+                    error = stayFormErrors[StayField.Period],
                     isEnabled = isEnabled,
                     onTap = {
                         if (isEnabled) {
@@ -149,8 +150,8 @@ fun UnavailablePeriodRegistrationFormSection(
                         coroutineScope.launch {
                             centerVisibleLazyItemByKey(
                                 lazyListState = lazyListState,
-                                key = _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.Property,
-                                fallbackIndex = _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.Property.scrollIndex,
+                                key = StayField.Property,
+                                fallbackIndex = StayField.Property.scrollIndex,
                             )
 
                             onPeriodDisabledByPropertyUnselected()
@@ -160,20 +161,20 @@ fun UnavailablePeriodRegistrationFormSection(
             }
         }
         item { Spacer(modifier = Modifier.height(28.dp)) }
-        item(key = _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.CheckInTime) {
+        item(key = StayField.CheckInTime) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .bringIntoViewRequester(bringIntoViewRequesters.getValue(_root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.CheckInTime))
+                        .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.CheckInTime))
                 ) {
-                    _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayCheckInTimeFormField(
-                        checkInHour = stayForm.checkInHourMinute.first,
-                        checkInMinute = stayForm.checkInHourMinute.second,
+                    StayCheckInTimeFormField(
+                        checkInHour = 0,
+                        checkInMinute = 0,
                         isUnavailablePeriod = true,
-                        error = stayFormErrors[_root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.CheckInTime],
+                        error = stayFormErrors[StayField.CheckInTime],
                         onTap = { mustShowStayCheckInTimePickerDialog = true },
                     )
                 }
@@ -181,13 +182,13 @@ fun UnavailablePeriodRegistrationFormSection(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .bringIntoViewRequester(bringIntoViewRequesters.getValue(_root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.CheckOutTime))
+                        .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.CheckOutTime))
                 ) {
-                    _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayCheckOutTimeFormField(
-                        checkOutHour = stayForm.checkOutHourMinute.first,
-                        checkOutMinute = stayForm.checkOutHourMinute.second,
+                    StayCheckOutTimeFormField(
+                        checkOutHour = 0,
+                        checkOutMinute = 0,
                         isUnavailablePeriod = true,
-                        error = stayFormErrors[_root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField.CheckOutTime],
+                        error = stayFormErrors[StayField.CheckOutTime],
                         onTap = { mustShowStayCheckOutTimePickerDialog = true },
                     )
                 }
@@ -197,9 +198,9 @@ fun UnavailablePeriodRegistrationFormSection(
         item { HorizontalDivider() }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
-            _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StaysObservationsFormField(
-                value = stayForm.observations,
-                onValueChange = { onStayFormChange(stayForm.copy(observations = it)) },
+            StaysObservationsFormField(
+                value = form.observations,
+                onValueChange = { onFormChange(form.copy(observations = it)) },
                 isUnavailablePeriod = true,
             )
         }
@@ -219,8 +220,8 @@ fun UnavailablePeriodRegistrationFormSection(
                 alreadySelectedDates = propertyAlreadySelectedDatesForStay,
             ),
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
-                onStayFormChange(
-                    stayForm.copy(
+                onFormChange(
+                    form.copy(
                         checkInDateTime = startDateTimestamp.toDateTime(),
                         checkOutDateTime = endDateTimestamp.toDateTime(),
                     )
@@ -228,30 +229,32 @@ fun UnavailablePeriodRegistrationFormSection(
 
                 mustShowStayDateRangePickerDialog = false
             },
-            isDateSelectionEmpty = stayForm.checkInDateTime == null,
+            isDateSelectionEmpty = form.checkInDateTime == null,
             onDismiss = { mustShowStayDateRangePickerDialog = false },
         )
     }
-    if (mustShowStayCheckInTimePickerDialog) {
-        TimePickerDialog(
-            title = stringResource(R.string.stay_registration_start_time_picker_dialog_title),
-            onTimeSelect = {
-                onStayFormChange(
-                    stayForm.copy(checkInHourMinute = Pair(it.hour, it.minute))
-                )
-            },
-            onDismiss = { mustShowStayCheckInTimePickerDialog = false },
-        )
-    }
-    if (mustShowStayCheckOutTimePickerDialog) {
-        TimePickerDialog(
-            title = stringResource(R.string.stay_registration_end_time_picker_dialog_title),
-            onTimeSelect = {
-                onStayFormChange(
-                    stayForm.copy(checkOutHourMinute = Pair(it.hour, it.minute))
-                )
-            },
-            onDismiss = { mustShowStayCheckOutTimePickerDialog = false },
-        )
-    }
+
+//    if (mustShowStayCheckInTimePickerDialog) {
+//        TimePickerDialog(
+//            title = stringResource(R.string.stay_registration_start_time_picker_dialog_title),
+//            onTimeSelect = {
+//                onFormChange(
+//                    form.copy(checkInHourMinute = Pair(it.hour, it.minute))
+//                )
+//            },
+//            onDismiss = { mustShowStayCheckInTimePickerDialog = false },
+//        )
+//    }
+//
+//    if (mustShowStayCheckOutTimePickerDialog) {
+//        TimePickerDialog(
+//            title = stringResource(R.string.stay_registration_end_time_picker_dialog_title),
+//            onTimeSelect = {
+//                onFormChange(
+//                    form.copy(checkOutHourMinute = Pair(it.hour, it.minute))
+//                )
+//            },
+//            onDismiss = { mustShowStayCheckOutTimePickerDialog = false },
+//        )
+//    }
 }

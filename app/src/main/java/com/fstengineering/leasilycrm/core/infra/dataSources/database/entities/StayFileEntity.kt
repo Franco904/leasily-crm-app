@@ -5,8 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.fstengineering.leasilycrm.core.domain.entities.StayFile
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 
 @Entity(
     tableName = "stay_files",
@@ -21,31 +19,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 )
 data class StayFileEntity(
     @PrimaryKey(autoGenerate = true) val id: Long?,
-    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
-    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     @ColumnInfo(name = "stay_file_uri") val stayFileUri: String,
     @ColumnInfo(name = "stay_file_name") val stayFileName: String,
-    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "stay_id") val stayId: Long,
-) {
-    fun toDomain() = StayFile(
-        id = id,
-        createDateTime = createDateTime,
-        updateDateTime = updateDateTime,
-        uriString = stayFileUri,
-        name = stayFileName,
-    )
-
-    companion object {
-        fun fromDomain(domain: StayFile, stayId: Long) =
-            StayFileEntity(
-                id = domain.id,
-                createDateTime = domain.createDateTime ?: AppDateTime.now(),
-                updateDateTime = AppDateTime.now(),
-                stayFileUri = domain.uriString,
-                stayFileName = domain.name,
-                isDeleted = false,
-                stayId = stayId,
-            )
-    }
-}
+)

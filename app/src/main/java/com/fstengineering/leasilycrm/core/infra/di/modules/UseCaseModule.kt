@@ -62,14 +62,14 @@ val useCaseModule = module {
 
     single<RegisterStayCheckOutUseCase> {
         RegisterStayCheckOutUseCaseImpl(
-            stayRepository = get(),
+            staySharedCommandRepository = get(),
             assistanceCommandRepository = get(),
         )
     }
 
     single<UndoRegisterStayCheckOutUseCase> {
         UndoRegisterStayCheckOutUseCaseImpl(
-            stayRepository = get(),
+            staySharedCommandRepository = get(),
             assistanceCommandRepository = get(),
         )
     }
@@ -87,7 +87,7 @@ val useCaseModule = module {
 
     single<GetTodayCheckInsCheckOutsToNotifyUseCase> {
         GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
-            stayRepository = get(),
+            staySharedCommandRepository = get(),
             settingsSharedQueryRepository = get(),
             userSessionSharedGateway = get(),
             now = AppDateTime.lazyNow(),

@@ -69,7 +69,7 @@ val viewModelModule = module {
     viewModel {
         HomeViewModel(
             assistanceCommandRepository = get(),
-            stayRepository = get(),
+            staySharedCommandRepository = get(),
             userQueryRepository = get(),
             now = AppDateTime.lazyNow(),
         )
@@ -201,7 +201,7 @@ val viewModelModule = module {
         StaysViewModel(
             registerStayCheckOutUseCase = get(),
             undoRegisterStayCheckOutUseCase = get(),
-            stayRepository = get(),
+            staySharedCommandRepository = get(),
             now = AppDateTime.lazyNow(),
         )
     }
@@ -220,7 +220,7 @@ val viewModelModule = module {
             registerStayCheckOutUseCase = get(),
             undoRegisterStayCheckOutUseCase = get(),
             getStaysStructuredDatesUseCase = get(),
-            stayRepository = get(),
+            staySharedCommandRepository = get(),
         )
     }
 }

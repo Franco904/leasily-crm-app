@@ -25,7 +25,7 @@ class ReadPropertyUseCase(
         val propertyOwner = propertyOwnerQueryRepository.getById(propertyRaw.ownerId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
-                onSuccess = { leadTenantName -> leadTenantName },
+                onSuccess = { storedPropertyOwner -> storedPropertyOwner },
             )
 
         val updatedReadModel = PropertyReadModel.create(

@@ -33,7 +33,7 @@ import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
 import com.fstengineering.leasilycrm.stayDetails.StayDetailsScreen
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationScreen
+import com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 

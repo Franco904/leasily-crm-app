@@ -198,17 +198,6 @@ fun TenantsPage(
 
                             LeadTenantCard(
                                 leadTenant = tenant,
-                                qtGuestsLabelText = when {
-                                    unfinishedStay?.qtGuests != null && unfinishedStay.qtGuests > 0 -> {
-                                        pluralStringResource(
-                                            id = R.plurals.tenant_stay_qt_guests_label,
-                                            count = unfinishedStay.qtGuests,
-                                            unfinishedStay.qtGuests,
-                                        )
-                                    }
-
-                                    else -> null
-                                },
                                 onCardClick = { onViewTenantDetails(tenant.id!!) },
                                 onEditLeadTenant = { onRegisterTenant(tenant.id) },
                                 onDeleteLeadTenant = { viewModel.onDeleteTenant(tenant = tenant) },
@@ -217,9 +206,9 @@ fun TenantsPage(
                                 onNewStay = { onNewStay(tenant.id!!) },
                                 hasUnfinishedAssistance = unfinishedAssistance != null,
                                 hasUnfinishedStay = unfinishedStay != null,
-                                mustShowAssistanceText = true,
-                                mustShowMoreOptionsMenu = true,
-                                mustShowPrimaryActions = true,
+                                hasMoreOptionsMenu = true,
+                                hasAssistanceText = true,
+                                hasPrimaryActions = true,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

@@ -130,31 +130,3 @@ class Property private constructor(
         }
     }
 }
-
-// val isAnyFormFieldInitialized = owner != null
-//            || type != null
-//            || neighborhood != null
-//            || streetAddress != null
-//            || cepPostalCode != null
-//            || number != null
-//            || addressLine2 != null
-//            || parkingSpotNumber != null
-//            || parkingBasementLevelNumber != null
-//            || hobbyBoxNumber != null
-//            || qtBedrooms > 0
-//            || qtEnSuites > 0
-//            || qtDoubleBeds > 0
-//            || qtSingleBeds > 0
-//            || qtBathrooms > 0
-//            || qtParkingSpots > 0
-//            || qtAirConditioners > 0
-//            || qtMaxGuests > 0
-//            || seaProximityType != null
-//            || includedItems != null
-//            || hasIncludedItems != null
-//            || characteristics.isNotEmpty()
-//            || cleaningServiceTax != null
-//            || hasCleaningServiceIncluded != null
-//            || prices.isNotEmpty()
-//            || files.isNotEmpty()
-//            || observations != null

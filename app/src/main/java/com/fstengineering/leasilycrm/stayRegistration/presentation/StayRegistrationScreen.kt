@@ -7,11 +7,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
@@ -34,30 +30,21 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
-import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.home.tenants.composables.TenantsEmptySection
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.Exit
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.ScrollToField
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.StayCreateSuccess
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.StayEditSuccess
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.TransferCreateSuccess
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel.UiEvents.TransferEditSuccess
-import com.fstengineering.leasilycrm.stayRegistration.composables.ConfirmDeleteStayTransferDialog
-import com.fstengineering.leasilycrm.stayRegistration.composables.StayPropertySelectionList
-import com.fstengineering.leasilycrm.stayRegistration.composables.StayRegistrationFormSection
-import com.fstengineering.leasilycrm.stayRegistration.composables.StayRegistrationTopAppBar
-import com.fstengineering.leasilycrm.stayRegistration.composables.StayTenantSelectionList
-import com.fstengineering.leasilycrm.stayRegistration.composables.UnavailablePeriodRegistrationFormSection
-import com.fstengineering.leasilycrm.stayRegistration.models.StayField
-import com.fstengineering.leasilycrm.stayRegistration.models.StayRegistrationListState
-import kotlinx.collections.immutable.mutate
-import kotlinx.collections.immutable.toPersistentList
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.StayPropertySelectionList
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.StayRegistrationFormSection
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.StayRegistrationTopAppBar
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.StayTenantSelectionList
+import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.UnavailablePeriodRegistrationFormSection
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDraftFormUiState
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -79,12 +66,11 @@ fun StayRegistrationScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val stayForm by viewModel.stayForm.collectAsStateWithLifecycle()
-    val stayFormErrors by viewModel.stayFormErrors.collectAsStateWithLifecycle()
+    val draftForm by viewModel.draftFormUiState.collectAsStateWithLifecycle()
+    val stayOwnedForm = (draftForm as? StayDraftFormUiState.StayOwnedLoaded)
+    val unavailablePeriodForm = (draftForm as? StayDraftFormUiState.UnavailablePeriodLoaded)
 
-    val transferForm by viewModel.transferForm.collectAsStateWithLifecycle()
-    val transferFormErrors by viewModel.transferFormErrors.collectAsStateWithLifecycle()
-    var transferToDelete by rememberSaveable { mutableStateOf<StayTransfer?>(null) }
+    val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
     val propertySearchInput by viewModel.propertySearchInput.collectAsStateWithLifecycle()
     val properties by viewModel.properties.collectAsStateWithLifecycle()
@@ -94,20 +80,18 @@ fun StayRegistrationScreen(
 
     var isSearching by rememberSaveable { mutableStateOf(false) }
 
-    val scrollToFieldChannel = remember { Channel<com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField>() }
+    val scrollToFieldChannel = remember { Channel<StayField>() }
     val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-
-    var listStatus by rememberSaveable { mutableStateOf(_root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.ShowingMainForm) }
+    var listStatus by rememberSaveable { mutableStateOf(StayRegistrationListState.ShowingMainForm) }
 
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
 
-    var totalPriceInput by rememberSaveable(stayForm.totalPrice) {
-        mutableStateOf(stayForm.totalPrice?.toString() ?: "")
+    var totalPriceInput by rememberSaveable(stayOwnedForm?.totalPrice) {
+        mutableStateOf(stayOwnedForm?.totalPrice?.toString() ?: "")
     }
-    var commissionInput by rememberSaveable(stayForm.commission) {
-        mutableStateOf(stayForm.commission?.toString() ?: "")
+    var commissionInput by rememberSaveable(stayOwnedForm?.commission) {
+        mutableStateOf(stayOwnedForm?.commission?.toString() ?: "")
     }
 
     val openDocumentFile = rememberLauncherForActivityResult(
@@ -120,7 +104,10 @@ fun StayRegistrationScreen(
                 Intent.FLAG_GRANT_READ_URI_PERMISSION,
             )
 
-            viewModel.onStayFilePick(contentUriString = contentUri.toString())
+            viewModel.onStayFilePick(
+                contentUriString = contentUri.toString(),
+                defaultFileName = context.getString(R.string.unknown_text),
+            )
         }
     )
 
@@ -134,18 +121,18 @@ fun StayRegistrationScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel.UiEvents.Error -> {
+                is StayRegistrationViewModel.UiEvent.BottomSheetError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel.UiEvents.ScrollToField -> {
+                is StayRegistrationViewModel.UiEvent.ScrollToField -> {
                     scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
-                is com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel.UiEvents.StayCreateSuccess -> {
+                is StayRegistrationViewModel.UiEvent.StayCreateSuccess -> {
                     onBack(true)
 
                     val messageId =
@@ -154,21 +141,13 @@ fun StayRegistrationScreen(
                     onUiEvent(UiEvent.ShowSnackBar(messageId))
                 }
 
-                is com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel.UiEvents.StayEditSuccess -> {
+                is StayRegistrationViewModel.UiEvent.StayEditSuccess -> {
                     onBack(true)
 
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
 
-                is com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel.UiEvents.TransferCreateSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_stay_transfer_success_message))
-                }
-
-                is com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel.UiEvents.TransferEditSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
-                }
-
-                is com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel.UiEvents.Exit -> {
+                is StayRegistrationViewModel.UiEvent.Exit -> {
                     if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
                     else {
                         mustShowConfirmLeaveRegistrationDialog = false
@@ -187,8 +166,7 @@ fun StayRegistrationScreen(
 
     BackHandler {
         when {
-            isLoading -> Unit
-            listStatus == _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.ShowingMainForm -> {
+            listStatus == StayRegistrationListState.ShowingMainForm -> {
                 viewModel.onExit()
             }
 
@@ -198,21 +176,26 @@ fun StayRegistrationScreen(
                 viewModel.onTenantSearchInputChange(searchInput = null)
             }
 
-            else -> listStatus = _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.ShowingMainForm
+            else -> listStatus =
+                StayRegistrationListState.ShowingMainForm
         }
     }
 
     Scaffold(
         topBar = {
-            val isSelectingProperty = listStatus == _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.SelectingProperty
-            val isSelectingTenant = listStatus == _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.SelectingTenant
+            val isSelectingProperty =
+                listStatus == StayRegistrationListState.SelectingProperty
+            val isSelectingTenant =
+                listStatus == StayRegistrationListState.SelectingTenant
 
             Column {
-                _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.StayRegistrationTopAppBar(
+                StayRegistrationTopAppBar(
                     isEditing = stayId != null,
                     onSaveStay = {
-                        viewModel.onStayFormChange(
-                            stayForm.copy(
+                        val form = stayOwnedForm ?: return@StayRegistrationTopAppBar
+
+                        viewModel.onStayOwnedFormChange(
+                            form.copy(
                                 totalPrice = totalPriceInput.replace(',', '.').toDecimalOrNull(),
                                 commission = commissionInput.replace(',', '.').toDecimalOrNull(),
                             )
@@ -246,8 +229,7 @@ fun StayRegistrationScreen(
                     },
                     onBack = {
                         when {
-                            isLoading -> Unit
-                            listStatus == _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.ShowingMainForm -> {
+                            listStatus == StayRegistrationListState.ShowingMainForm -> {
                                 viewModel.onExit()
                             }
 
@@ -258,7 +240,7 @@ fun StayRegistrationScreen(
                             }
 
                             else -> listStatus =
-                                _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.ShowingMainForm
+                                StayRegistrationListState.ShowingMainForm
                         }
                     },
                 )
@@ -270,195 +252,153 @@ fun StayRegistrationScreen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) { innerPadding ->
-        if (isLoading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                AppCircularProgressIndicator(
-                    modifier = Modifier
-                        .size(64.dp)
-                )
+        when (draftForm) {
+            is StayDraftFormUiState.Loading -> {
+                FullScreenLoadingIndicator(innerPadding)
             }
-        } else {
-            AnimatedContent(
-                targetState = listStatus,
-            ) { status ->
-                when (status) {
-                    _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.ShowingMainForm -> {
-                        if (isUnavailablePeriod) {
-                            _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.UnavailablePeriodRegistrationFormSection(
-                                stayForm = stayForm,
-                                onStayFormChange = viewModel::onStayFormChange,
-                                stayFormErrors = stayFormErrors.errors,
-                                getPropertyAlreadySelectedDatesForStay = viewModel::getPropertyAlreadySelectedDatesForStay,
-                                onSelectProperty = {
-                                    listStatus =
-                                        _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.SelectingProperty
-                                },
-                                onPeriodDisabledByPropertyUnselected = {
-                                    onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
-                                },
-                                scrollToFieldFlow = scrollToFieldFlow,
-                                modifier = Modifier
-                                    .padding(innerPadding)
-                                    .padding(horizontal = 24.dp)
-                            )
-                        } else {
-                            _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.StayRegistrationFormSection(
-                                stayForm = stayForm,
-                                onStayFormChange = viewModel::onStayFormChange,
-                                totalPriceInput = totalPriceInput,
-                                onTotalPriceChange = { totalPriceInput = it },
-                                commissionInput = commissionInput,
-                                onCommissionChange = {
-                                    commissionInput = it
-                                    viewModel.clearCommissionError()
-                                },
-                                stayFormErrors = stayFormErrors.errors,
-                                getPropertyAlreadySelectedDatesForStay = viewModel::getPropertyAlreadySelectedDatesForStay,
-                                transferForm = transferForm,
-                                onTransferFormChange = viewModel::onStayTransferFormChange,
-                                transferFormErrors = transferFormErrors.errors,
-                                onSelectProperty = { isEnabled ->
-                                    if (isEnabled) {
-                                        listStatus =
-                                            _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.SelectingProperty
-                                    } else {
-                                        onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
-                                    }
-                                },
-                                onSelectTenant = { isEnabled ->
-                                    if (isEnabled) {
-                                        listStatus =
-                                            _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.SelectingTenant
-                                    } else {
-                                        onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
-                                    }
-                                },
-                                onPeriodDisabledByPropertyUnselected = {
-                                    onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
-                                },
-                                onPeriodDisabledByCheckInDone = {
-                                    onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
-                                },
-                                onLastTextFieldDone = { focusManager.clearFocus() },
-                                onAddTransfer = {
-                                    viewModel.onStayTransferFormChange(form = StayTransfer())
-                                },
-                                onEditTransfer = { transfer ->
-                                    viewModel.onStayTransferFormChange(form = transfer)
-                                    viewModel.onEditTransfer(transfer = transfer)
-                                },
-                                onDeleteTransfer = { transfer ->
-                                    transferToDelete = transfer
-                                },
-                                onSaveTransfer = {
-                                    viewModel.saveStayTransfer()
-                                },
-                                onDismissTransfer = {
-                                    viewModel.onStayTransferFormChange(form = null)
-                                    viewModel.onDismissTransfer()
-                                },
-                                onAddStayFile = {
-                                    val acceptedMimeTypes = arrayOf("application/*", "text/*")
-                                    openDocumentFile.launch(acceptedMimeTypes)
-                                },
-                                scrollToFieldFlow = scrollToFieldFlow,
-                                modifier = Modifier
-                                    .padding(innerPadding)
-                                    .padding(horizontal = 24.dp),
-                            )
-                        }
-                    }
 
-                    _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.SelectingProperty -> {
-                        if (properties.isEmpty()) {
-                            PropertiesEmptySection(isSearchingProperty = isSearching)
-                        } else {
-                            _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.StayPropertySelectionList(
-                                properties = properties,
-                                onPropertySelect = { property ->
-                                    viewModel.onStayFormChange(
-                                        stayForm.copy(
-                                            property = property,
-                                            checkInDateTime = null,
-                                            checkOutDateTime = null,
+            else -> {
+                AnimatedContent(
+                    targetState = listStatus,
+                ) { status ->
+                    when (status) {
+                        StayRegistrationListState.ShowingMainForm -> {
+                            if (isUnavailablePeriod) {
+                                val form = unavailablePeriodForm ?: return@AnimatedContent
+
+                                UnavailablePeriodRegistrationFormSection(
+                                    form = form,
+                                    onFormChange = viewModel::onUnavailablePeriodFormChange,
+                                    stayFormErrors = formErrors.errors,
+                                    getPropertyAlreadySelectedDatesForStay = viewModel::getPropertyAlreadySelectedDatesForStay,
+                                    onSelectProperty = {
+                                        listStatus =
+                                            StayRegistrationListState.SelectingProperty
+                                    },
+                                    onPeriodDisabledByPropertyUnselected = {
+                                        onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
+                                    },
+                                    scrollToFieldFlow = scrollToFieldFlow,
+                                    modifier = Modifier
+                                        .padding(innerPadding)
+                                        .padding(horizontal = 24.dp)
+                                )
+                            } else {
+                                val form = stayOwnedForm ?: return@AnimatedContent
+
+                                StayRegistrationFormSection(
+                                    form = form,
+                                    onFormChange = viewModel::onStayOwnedFormChange,
+                                    totalPriceInput = totalPriceInput,
+                                    onTotalPriceChange = { totalPriceInput = it },
+                                    commissionInput = commissionInput,
+                                    onCommissionChange = {
+                                        commissionInput = it
+                                        viewModel.clearCommissionError()
+                                    },
+                                    stayFormErrors = formErrors.errors,
+                                    getPropertyAlreadySelectedDatesForStay = viewModel::getPropertyAlreadySelectedDatesForStay,
+                                    onSelectProperty = { isEnabled ->
+                                        if (isEnabled) {
+                                            listStatus =
+                                                StayRegistrationListState.SelectingProperty
+                                        } else {
+                                            onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
+                                        }
+                                    },
+                                    onSelectTenant = { isEnabled ->
+                                        if (isEnabled) {
+                                            listStatus =
+                                                StayRegistrationListState.SelectingTenant
+                                        } else {
+                                            onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
+                                        }
+                                    },
+                                    onPeriodDisabledByPropertyUnselected = {
+                                        onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
+                                    },
+                                    onPeriodDisabledByCheckInDone = {
+                                        onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
+                                    },
+                                    onLastTextFieldDone = { focusManager.clearFocus() },
+                                    onAddStayFile = {
+                                        val acceptedMimeTypes = arrayOf("application/*", "text/*")
+                                        openDocumentFile.launch(acceptedMimeTypes)
+                                    },
+                                    scrollToFieldFlow = scrollToFieldFlow,
+                                    modifier = Modifier
+                                        .padding(innerPadding)
+                                        .padding(horizontal = 24.dp),
+                                )
+                            }
+                        }
+
+                        StayRegistrationListState.SelectingProperty -> {
+                            if (properties.isEmpty()) {
+                                PropertiesEmptySection(isSearchingProperty = isSearching)
+                            } else {
+                                StayPropertySelectionList(
+                                    properties = properties,
+                                    onPropertySelect = { property ->
+                                        val form = stayOwnedForm ?: return@StayPropertySelectionList
+                                        viewModel.onStayOwnedFormChange(
+                                            form.copy(
+                                                property = property,
+                                                checkInDateTime = null,
+                                                checkOutDateTime = null,
+                                            )
                                         )
-                                    )
 
-                                    listStatus =
-                                        _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.ShowingMainForm
-                                    isSearching = false
-                                    viewModel.onPropertySearchInputChange(searchInput = null)
-                                },
-                                modifier = Modifier
-                                    .padding(innerPadding)
-                                    .padding(horizontal = 24.dp),
-                            )
+                                        listStatus =
+                                            StayRegistrationListState.ShowingMainForm
+                                        isSearching = false
+                                        viewModel.onPropertySearchInputChange(searchInput = null)
+                                    },
+                                    modifier = Modifier
+                                        .padding(innerPadding)
+                                        .padding(horizontal = 24.dp),
+                                )
+                            }
                         }
-                    }
 
-                    _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.SelectingTenant -> {
-                        if (tenants.isEmpty()) {
-                            TenantsEmptySection(
-                                isSearchingTenant = isSearching,
-                                isSelectingTenant = true,
-                            )
-                        } else {
-                            _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.StayTenantSelectionList(
-                                tenants = tenants,
-                                onTenantSelect = { tenant ->
-                                    viewModel.onStayFormChange(stayForm.copy(tenant = tenant))
+                        StayRegistrationListState.SelectingTenant -> {
+                            if (tenants.isEmpty()) {
+                                TenantsEmptySection(
+                                    isSearchingTenant = isSearching,
+                                    isSelectingTenant = true,
+                                )
+                            } else {
+                                StayTenantSelectionList(
+                                    tenants = tenants,
+                                    onTenantSelect = { tenant ->
+                                        val form = stayOwnedForm ?: return@StayTenantSelectionList
+                                        viewModel.onStayOwnedFormChange(form.copy(tenant = tenant))
 
-                                    listStatus =
-                                        _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayRegistrationListState.ShowingMainForm
-                                    isSearching = false
-                                    viewModel.onTenantSearchInputChange(searchInput = null)
-                                },
-                                modifier = Modifier
-                                    .padding(innerPadding)
-                                    .padding(horizontal = 24.dp),
-                            )
+                                        listStatus =
+                                            StayRegistrationListState.ShowingMainForm
+                                        isSearching = false
+                                        viewModel.onTenantSearchInputChange(searchInput = null)
+                                    },
+                                    modifier = Modifier
+                                        .padding(innerPadding)
+                                        .padding(horizontal = 24.dp),
+                                )
+                            }
                         }
                     }
                 }
             }
-            if (transferToDelete != null) {
-                _root_ide_package_.com.fstengineering.leasilycrm.stayRegistration.presentation.composables.ConfirmDeleteStayTransferDialog(
-                    onConfirmDelete = {
-                        val newTransfers = stayForm.transfers
-                            .toPersistentList()
-                            .mutate { list ->
-                                if (transferToDelete?.id == null) {
-                                    list.remove(transferToDelete)
-                                } else {
-                                    val i = list.indexOf(transferToDelete)
-                                    list[i] = list[i].copy(isDeleted = true)
-                                }
-                            }
+        }
 
-                        viewModel.onStayFormChange(
-                            form = stayForm.copy(transfers = newTransfers),
-                        )
-
-                        transferToDelete = null
-                    },
-                    onCancel = { transferToDelete = null },
-                )
-            }
-            if (mustShowConfirmLeaveRegistrationDialog) {
-                ConfirmLeaveRegistrationDialog(
-                    isEditing = stayId != null,
-                    onConfirmLeave = {
-                        mustShowConfirmLeaveRegistrationDialog = false
-                        onBack(false)
-                    },
-                    onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
-                )
-            }
+        if (mustShowConfirmLeaveRegistrationDialog) {
+            ConfirmLeaveRegistrationDialog(
+                isEditing = stayId != null,
+                onConfirmLeave = {
+                    mustShowConfirmLeaveRegistrationDialog = false
+                    onBack(false)
+                },
+                onCancel = { mustShowConfirmLeaveRegistrationDialog = false }
+            )
         }
     }
 }

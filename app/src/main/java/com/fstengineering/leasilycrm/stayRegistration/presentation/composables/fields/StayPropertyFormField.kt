@@ -16,13 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppOutlinedButton
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
 
 @Composable
 fun StayPropertyFormField(
-    stayProperty: Property?,
+    stayProperty: PropertyUiState?,
     onSelectStayProperty: () -> Unit,
     isEnabled: Boolean,
     error: Int?,

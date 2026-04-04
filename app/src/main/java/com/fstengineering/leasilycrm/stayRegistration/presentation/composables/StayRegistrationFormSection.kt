@@ -15,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,8 +29,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.toDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
 import com.fstengineering.leasilycrm.core.presentation.composables.CountAnswerCounter
@@ -40,20 +39,6 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateR
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.TimePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckInTimeFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCheckOutTimeFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayCommissionFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPeriodFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayPropertyFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTenantFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTenantVehicleColorFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTenantVehicleLicensePlateFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTenantVehicleMakeFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTotalPriceFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StayTransfersFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.StaysObservationsFormField
-import com.fstengineering.leasilycrm.stayRegistration.composables.fields.stayDocumentsFormField
-import com.fstengineering.leasilycrm.stayRegistration.models.StayField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayCheckInTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayCheckOutTimeFormField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayCommissionFormField
@@ -64,11 +49,10 @@ import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.f
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayTenantVehicleLicensePlateFormField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayTenantVehicleMakeFormField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayTotalPriceFormField
-import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayTransfersFormField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StaysObservationsFormField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.stayDocumentsFormField
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDraftFormUiState
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField
-import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayTransferField
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.ImmutableSet
@@ -81,36 +65,25 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StayRegistrationFormSection(
-    stayForm: Stay,
-    onStayFormChange: (Stay) -> Unit,
+    form: StayDraftFormUiState.StayOwnedLoaded,
+    onFormChange: (StayDraftFormUiState.StayOwnedLoaded) -> Unit,
     totalPriceInput: String,
     onTotalPriceChange: (String) -> Unit,
     commissionInput: String,
     onCommissionChange: (String) -> Unit,
     stayFormErrors: ImmutableMap<StayField, Int?>,
-    transferForm: StayTransfer?,
-    onTransferFormChange: (StayTransfer) -> Unit,
-    transferFormErrors: ImmutableMap<StayTransferField, Int?>,
-    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Stay>) -> ImmutableSet<AppDate>,
+    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Pair<AppDateTime, AppDateTime>>) -> ImmutableSet<AppDate>,
     onSelectProperty: (isEnabled: Boolean) -> Unit,
     onSelectTenant: (isEnabled: Boolean) -> Unit,
     onPeriodDisabledByPropertyUnselected: () -> Unit,
     onPeriodDisabledByCheckInDone: () -> Unit,
     onLastTextFieldDone: () -> Unit,
-    onAddTransfer: () -> Unit,
-    onEditTransfer: (StayTransfer) -> Unit,
-    onDeleteTransfer: (StayTransfer) -> Unit,
-    onSaveTransfer: () -> Unit,
-    onDismissTransfer: () -> Unit,
     onAddStayFile: () -> Unit,
     scrollToFieldFlow: Flow<StayField>,
     modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
 
     val bringIntoViewRequesters = remember {
         StayField.entries.associateWith { BringIntoViewRequester() }
@@ -130,19 +103,8 @@ fun StayRegistrationFormSection(
         )
     }
 
-    val propertyAlreadySelectedDatesForStay = remember(stayForm.property) {
-        getPropertyAlreadySelectedDatesForStay(stayForm.property?.stays ?: persistentListOf())
-    }
-
-    val stayNotDeletedTransfers = remember(stayForm.transfers) {
-        stayForm.transfers
-            .filter { !it.isDeleted }
-            .sortedByDescending { it.transferDate?.date() }
-            .toPersistentList()
-    }
-
-    val stayNotDeletedFiles = remember(stayForm.files) {
-        stayForm.files.filter { !it.isDeleted }.toPersistentList()
+    val propertyAlreadySelectedDatesForStay = remember(form.property) {
+        getPropertyAlreadySelectedDatesForStay(form.property?.staysDates ?: persistentListOf())
     }
 
     var mustShowStayDateRangePickerDialog by rememberSaveable { mutableStateOf(false) }
@@ -172,10 +134,10 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Property))
             ) {
-                val isEnabled = !stayForm.isCheckInDone
+                val isEnabled = form.checkInDateTime?.toDate()?.isBefore(AppDate.now()) ?: true
 
                 StayPropertyFormField(
-                    stayProperty = stayForm.property,
+                    stayProperty = form.property,
                     onSelectStayProperty = { onSelectProperty(isEnabled) },
                     isEnabled = isEnabled,
                     error = stayFormErrors[StayField.Property],
@@ -190,10 +152,10 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Tenant))
             ) {
-                val isEnabled = !stayForm.isCheckInDone
+                val isEnabled = form.checkInDateTime?.toDate()?.isBefore(AppDate.now()) ?: true
 
                 StayTenantFormField(
-                    stayTenant = stayForm.tenant,
+                    stayTenant = form.tenant,
                     onSelectStayTenant = { onSelectTenant(isEnabled) },
                     isEnabled = isEnabled,
                     error = stayFormErrors[StayField.Tenant],
@@ -206,16 +168,16 @@ fun StayRegistrationFormSection(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 StayTenantVehicleMakeFormField(
-                    value = stayForm.vehicleMake,
-                    onValueChange = { onStayFormChange(stayForm.copy(vehicleMake = it)) },
+                    value = form.vehicleMake,
+                    onValueChange = { onFormChange(form.copy(vehicleMake = it)) },
                     onDone = { vehicleColorFieldFocusRequester.requestFocus() },
                     modifier = Modifier
                         .weight(1f)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 StayTenantVehicleColorFormField(
-                    value = stayForm.vehicleColor,
-                    onValueChange = { onStayFormChange(stayForm.copy(vehicleColor = it)) },
+                    value = form.vehicleColor,
+                    onValueChange = { onFormChange(form.copy(vehicleColor = it)) },
                     onDone = { vehicleLicensePlateFieldFocusRequester.requestFocus() },
                     fieldFocusRequester = vehicleColorFieldFocusRequester,
                     modifier = Modifier
@@ -226,8 +188,8 @@ fun StayRegistrationFormSection(
         item { Spacer(modifier = Modifier.height(28.dp)) }
         item {
             StayTenantVehicleLicensePlateFormField(
-                value = stayForm.vehicleLicensePlate,
-                onValueChange = { onStayFormChange(stayForm.copy(vehicleLicensePlate = it)) },
+                value = form.vehicleLicensePlate,
+                onValueChange = { onFormChange(form.copy(vehicleLicensePlate = it)) },
                 onDone = { onLastTextFieldDone() },
                 fieldFocusRequester = vehicleLicensePlateFieldFocusRequester,
             )
@@ -246,8 +208,8 @@ fun StayRegistrationFormSection(
         item {
             CountAnswerCounter(
                 label = stringResource(R.string.stay_registration_qt_guests_label),
-                count = stayForm.qtGuests ?: 1,
-                onCountChange = { onStayFormChange(stayForm.copy(qtGuests = it)) },
+                count = form.guests,
+                onCountChange = { onFormChange(form.copy(guests = it)) },
             )
         }
         item { Spacer(modifier = Modifier.height(28.dp)) }
@@ -256,17 +218,18 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.Period))
             ) {
-                val isEnabled = stayForm.property != null && !stayForm.isCheckInDone
+                val isPastCheckIn = form.checkInDateTime?.toDate()?.isBefore(AppDate.now()) ?: true
+                val isEnabled = form.property != null && !isPastCheckIn
 
                 StayPeriodFormField(
-                    checkInDateTime = stayForm.checkInDateTime,
-                    checkOutDateTime = stayForm.checkOutDateTime,
+                    checkInDateTime = form.checkInDateTime,
+                    checkOutDateTime = form.checkOutDateTime,
                     error = stayFormErrors[StayField.Period],
                     isEnabled = isEnabled,
                     onTap = {
                         when {
                             isEnabled -> mustShowStayDateRangePickerDialog = true
-                            stayForm.property == null -> {
+                            form.property == null -> {
                                 coroutineScope.launch {
                                     centerVisibleLazyItemByKey(
                                         lazyListState = lazyListState,
@@ -278,7 +241,7 @@ fun StayRegistrationFormSection(
                                 }
                             }
 
-                            stayForm.isCheckInDone -> onPeriodDisabledByCheckInDone()
+                            isPastCheckIn -> onPeriodDisabledByCheckInDone()
                         }
                     },
                 )
@@ -298,8 +261,8 @@ fun StayRegistrationFormSection(
                             .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.CheckInTime))
                     ) {
                         StayCheckInTimeFormField(
-                            checkInHour = stayForm.checkInHourMinute.first,
-                            checkInMinute = stayForm.checkInHourMinute.second,
+                            checkInHour = form.checkInTime.first,
+                            checkInMinute = form.checkInTime.second,
                             error = stayFormErrors[StayField.CheckInTime],
                             onTap = { mustShowStayCheckInTimePickerDialog = true },
                         )
@@ -307,11 +270,11 @@ fun StayRegistrationFormSection(
                     Spacer(modifier = Modifier.height(16.dp))
                     AppCheckbox(
                         label = stringResource(R.string.stay_registration_is_auto_check_in_label),
-                        isChecked = stayForm.isAutoCheckIn,
+                        isChecked = form.isAutoCheckIn,
                         onCheckedChange = { newIsAutoCheckIn ->
-                            onStayFormChange(stayForm.copy(isAutoCheckIn = newIsAutoCheckIn))
+                            onFormChange(form.copy(isAutoCheckIn = newIsAutoCheckIn))
                         },
-                        isEnabled = stayForm.checkInHourMinute.first != null,
+                        isEnabled = form.checkInTime.first != null,
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
@@ -324,8 +287,8 @@ fun StayRegistrationFormSection(
                             .bringIntoViewRequester(bringIntoViewRequesters.getValue(StayField.CheckOutTime))
                     ) {
                         StayCheckOutTimeFormField(
-                            checkOutHour = stayForm.checkOutHourMinute.first,
-                            checkOutMinute = stayForm.checkOutHourMinute.second,
+                            checkOutHour = form.checkOutTime.first,
+                            checkOutMinute = form.checkOutTime.second,
                             error = stayFormErrors[StayField.CheckOutTime],
                             onTap = { mustShowStayCheckOutTimePickerDialog = true },
                         )
@@ -333,11 +296,11 @@ fun StayRegistrationFormSection(
                     Spacer(modifier = Modifier.height(16.dp))
                     AppCheckbox(
                         label = stringResource(R.string.stay_registration_is_auto_check_out_label),
-                        isChecked = stayForm.isAutoCheckOut,
+                        isChecked = form.isAutoCheckOut,
                         onCheckedChange = { newIsAutoCheckOut ->
-                            onStayFormChange(stayForm.copy(isAutoCheckOut = newIsAutoCheckOut))
+                            onFormChange(form.copy(isAutoCheckOut = newIsAutoCheckOut))
                         },
-                        isEnabled = stayForm.checkOutHourMinute.first != null,
+                        isEnabled = form.checkOutTime.first != null,
                     )
                 }
             }
@@ -368,21 +331,12 @@ fun StayRegistrationFormSection(
             }
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item {
-            StayTransfersFormField(
-                stayNotDeletedTransfers = stayNotDeletedTransfers,
-                onAddTransfer = onAddTransfer,
-                onEditTransfer = onEditTransfer,
-                onDeleteTransfer = onDeleteTransfer,
-            )
-        }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
         item { HorizontalDivider() }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         stayDocumentsFormField(
-            stayForm = stayForm,
-            onStayFormChange = onStayFormChange,
-            stayNotDeletedFiles = stayNotDeletedFiles,
+            form = form,
+            onFormChange = onFormChange,
+            stayFiles = form.files.toPersistentList(),
             onAddStayFile = onAddStayFile,
         )
         item { Spacer(modifier = Modifier.height(24.dp)) }
@@ -390,8 +344,8 @@ fun StayRegistrationFormSection(
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item {
             StaysObservationsFormField(
-                value = stayForm.observations,
-                onValueChange = { onStayFormChange(stayForm.copy(observations = it)) },
+                value = form.observations,
+                onValueChange = { onFormChange(form.copy(observations = it)) },
             )
         }
     }
@@ -410,8 +364,8 @@ fun StayRegistrationFormSection(
                 alreadySelectedDates = propertyAlreadySelectedDatesForStay,
             ),
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
-                onStayFormChange(
-                    stayForm.copy(
+                onFormChange(
+                    form.copy(
                         checkInDateTime = startDateTimestamp.toDateTime(),
                         checkOutDateTime = endDateTimestamp.toDateTime(),
                     )
@@ -419,7 +373,7 @@ fun StayRegistrationFormSection(
 
                 mustShowStayDateRangePickerDialog = false
             },
-            isDateSelectionEmpty = stayForm.checkInDateTime == null,
+            isDateSelectionEmpty = form.checkInDateTime == null,
             onDismiss = { mustShowStayDateRangePickerDialog = false },
         )
     }
@@ -427,8 +381,8 @@ fun StayRegistrationFormSection(
         TimePickerDialog(
             title = stringResource(R.string.stay_registration_check_in_time_picker_dialog_title),
             onTimeSelect = {
-                onStayFormChange(
-                    stayForm.copy(checkInHourMinute = Pair(it.hour, it.minute))
+                onFormChange(
+                    form.copy(checkInTime = Pair(it.hour, it.minute))
                 )
             },
             onDismiss = { mustShowStayCheckInTimePickerDialog = false },
@@ -438,21 +392,11 @@ fun StayRegistrationFormSection(
         TimePickerDialog(
             title = stringResource(R.string.stay_registration_check_out_time_picker_dialog_title),
             onTimeSelect = {
-                onStayFormChange(
-                    stayForm.copy(checkOutHourMinute = Pair(it.hour, it.minute))
+                onFormChange(
+                    form.copy(checkOutTime = Pair(it.hour, it.minute))
                 )
             },
             onDismiss = { mustShowStayCheckOutTimePickerDialog = false },
-        )
-    }
-    if (transferForm != null) {
-        StayTransferRegistrationBottomsheet(
-            sheetState = sheetState,
-            transferForm = transferForm,
-            onTransferFormChange = { onTransferFormChange(it) },
-            formErrors = transferFormErrors,
-            onSave = onSaveTransfer,
-            onDismissRequest = onDismissTransfer,
         )
     }
 }

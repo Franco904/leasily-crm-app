@@ -382,7 +382,7 @@ fun SelectedCalendarDate(
                         text = stringResource(
                             when {
                                 selectedDate?.firstHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX -> {
-                                    R.string.view_unvailable_period_action_button_text
+                                    R.string.view_unavailable_period_action_button_text
                                 }
 
                                 else -> R.string.view_property_stay_action_button_text

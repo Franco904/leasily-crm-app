@@ -25,26 +25,26 @@ class TenantDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getNameById(id) }
     }
 
-    override suspend fun getAllLeadsMatching(
+    override suspend fun getAllLeads(
         matching: String?,
         order: Int,
     ): AppResult<List<LeadTenantReadView>, InfraError> {
-        return onDatabaseSafe { dao.getAllLeadsMatching(matching, order) }
+        return onDatabaseSafe { dao.getAllLeads(matching, order) }
     }
 
-    override suspend fun getAllTenantsMatching(
+    override suspend fun getAllTenants(
         matching: String?,
         order: Int,
     ): AppResult<List<LeadTenantReadView>, InfraError> {
-        return onDatabaseSafe { dao.getAllTenantsMatching(matching, order) }
+        return onDatabaseSafe { dao.getAllTenants(matching, order) }
     }
 
-    override suspend fun getAllWithoutUpcomingStaysMatching(
+    override suspend fun getAllWithoutUpcomingStays(
         matching: String?,
         currentTenantId: Long?,
     ): AppResult<List<LeadTenantReadView>, InfraError> {
         return onDatabaseSafe {
-            dao.getAllWithoutUpcomingStaysMatching(
+            dao.getAllWithoutUpcomingStays(
                 matching = matching,
                 currentTenantId = currentTenantId,
             )

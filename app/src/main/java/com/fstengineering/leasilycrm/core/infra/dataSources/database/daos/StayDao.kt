@@ -21,6 +21,9 @@ interface StayDao {
     @Query("SELECT * FROM stays WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): StayCompound
 
+    @Query("SELECT * FROM stays WHERE property_id = :propertyId AND is_deleted = 0")
+    suspend fun getAllByPropertyId(propertyId: Long): List<StayEntity>
+
     @Transaction
     @Query("SELECT * FROM stays WHERE id = :id AND is_deleted = 0")
     fun watchById(id: Long): Flow<StayCompound?>

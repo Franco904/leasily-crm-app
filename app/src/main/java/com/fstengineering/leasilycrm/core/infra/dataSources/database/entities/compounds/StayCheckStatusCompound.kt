@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 import androidx.room.ColumnInfo
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckStatus
-import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 
 data class StayCheckStatusCompound(
     @ColumnInfo(name = "tenant_name") val tenantName: String?,
@@ -19,6 +18,6 @@ data class StayCheckStatusCompound(
         propertyOwnerName = propertyOwnerName,
         checkInDateTime = checkInDateTime,
         checkOutDateTime = checkOutDateTime,
-        isCheckInDone = StayStatus.parse(status).isCheckInDone,
+        isCheckInDone = true, // TODO: Fix this
     )
 }

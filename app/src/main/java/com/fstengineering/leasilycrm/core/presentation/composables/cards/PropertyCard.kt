@@ -193,7 +193,7 @@ fun CharacteristicsChipsRow(
                 }
             )
         }
-        if (propertyDetails.bedroomsCount > 0) {
+        if (propertyDetails.bedroomsCount != null && propertyDetails.bedroomsCount > 0) {
             Spacer(modifier = Modifier.width(4.dp))
             CharacteristicReadOnlyChip(
                 characteristicText = pluralStringResource(

@@ -33,8 +33,8 @@ class PropertyPricePeriod private constructor(
         fun parse(
             startDate: AppDate,
             endDate: AppDate,
-        ): AppResultCompound<PropertyPricePeriod, DomainError> {
-            val errors = mutableListOf<DomainError>()
+        ): AppResultCompound<PropertyPricePeriod, DomainError.PropertyPricePeriod> {
+            val errors = mutableListOf<DomainError.PropertyPricePeriod>()
 
             if (startDate == endDate) errors.add(DomainError.PropertyPricePeriod.StartAndEndDatesAreTheSame)
             if (startDate > endDate) errors.add(DomainError.PropertyPricePeriod.StartDateIsAfterEndDate)

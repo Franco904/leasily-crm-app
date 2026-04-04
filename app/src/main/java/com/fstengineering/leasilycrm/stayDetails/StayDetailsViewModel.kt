@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.stayDetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
@@ -24,7 +24,7 @@ class StayDetailsViewModel(
     private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
     private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
     private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
-    private val stayRepository: StayRepository,
+    private val staySharedCommandRepository: StaySharedCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -55,7 +55,7 @@ class StayDetailsViewModel(
         _isLoading.update { true }
 
         viewModelScope.launch {
-            stayRepository.watchById(stayId).collect { result ->
+            staySharedCommandRepository.watchById(stayId).collect { result ->
                 result
                     .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { storedStay ->
@@ -78,7 +78,7 @@ class StayDetailsViewModel(
 
     fun deleteStay() {
         viewModelScope.launch {
-            stayRepository.delete(id = stay.value?.id!!)
+            staySharedCommandRepository.delete(id = stay.value?.id!!)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { _uiEvents.send(UiEvents.StayDeleteSuccess) }
         }
@@ -88,7 +88,7 @@ class StayDetailsViewModel(
         viewModelScope.launch {
             val updatedStay = stay.value?.copy(isCheckInDone = true)
 
-            stayRepository.insertOrUpdate(stay = updatedStay)
+            staySharedCommandRepository.insertOrUpdate(stay = updatedStay)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { _uiEvents.send(UiEvents.RegisterCheckInSuccess) }
         }
@@ -98,7 +98,7 @@ class StayDetailsViewModel(
         viewModelScope.launch {
             val updatedStay = stay.value.copy(isCheckInDone = false)
 
-            stayRepository.insertOrUpdate(stay = updatedStay)
+            staySharedCommandRepository.insertOrUpdate(stay = updatedStay)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
         }
     }
@@ -113,7 +113,7 @@ class StayDetailsViewModel(
         }
 
         viewModelScope.launch {
-            stayRepository.setMustNotShowCheckOutDialogAnymore(
+            staySharedCommandRepository.setMustNotShowCheckOutDialogAnymore(
                 mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore,
             )
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }

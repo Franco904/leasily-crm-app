@@ -48,11 +48,11 @@ class LeadTenantSharedCommandRepositoryImpl(
             ?: AppResult.Error(ApplicationError.Unknown)
     }
 
-    override suspend fun getAllWithoutUpcomingStaysMatching(
+    override suspend fun getAllWithoutUpcomingStays(
         matching: String?,
         currentTenantId: Long?,
     ): AppResult<ImmutableList<Tenant>, ApplicationError> {
-        val tenants = databaseDataSource.getAllWithoutUpcomingStaysMatching(
+        val tenants = databaseDataSource.getAllWithoutUpcomingStays(
             matching = matching,
             currentTenantId = currentTenantId,
         )

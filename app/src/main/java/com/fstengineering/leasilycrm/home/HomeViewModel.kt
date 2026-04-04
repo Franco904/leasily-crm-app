@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
-import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.stores.UserSyncStore
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val assistanceCommandRepository: AssistanceCommandRepository,
-    private val stayRepository: StayRepository,
+    private val staySharedCommandRepository: StaySharedCommandRepository,
     private val userQueryRepository: UserSyncStore,
     private val now: AppDateTime,
 ) : ViewModel() {
@@ -55,7 +55,7 @@ class HomeViewModel(
 
     private fun watchTodayCheckInsAndCheckouts() {
         viewModelScope.launch {
-            stayRepository.watchAllUpcomingCheckInsAndCheckOuts().collect { result ->
+            staySharedCommandRepository.watchAllUpcomingCheckInsAndCheckOuts().collect { result ->
                 result
                     .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { upcomingCheckInsAndCheckOuts ->

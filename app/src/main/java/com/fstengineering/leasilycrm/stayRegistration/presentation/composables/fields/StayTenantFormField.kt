@@ -19,10 +19,11 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppOutlinedButton
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
 
 @Composable
 fun StayTenantFormField(
-    stayTenant: Tenant?,
+    stayTenant: LeadTenantUiState?,
     onSelectStayTenant: () -> Unit,
     isEnabled: Boolean,
     error: Int?,

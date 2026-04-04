@@ -7,9 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
-interface StayRepository {
-    suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, ApplicationError>
-
+interface StaySharedCommandRepository {
     suspend fun delete(id: Long): AppResult<Unit, ApplicationError>
 
     suspend fun getById(stayId: Long): AppResult<Stay, ApplicationError>

@@ -55,44 +55,4 @@ data class PropertyEntity(
     @ColumnInfo(name = "property_type_id") val typeId: Long,
     @ColumnInfo(name = "property_sea_proximity_type_id") val seaProximityTypeId: Long?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
-) {
-    companion object {
-        fun fromDomain(domain: Property): PropertyEntity {
-            val seaProximityDistanceToSeaType =
-                domain.seaProximityType as? PropertySeaProximityType.DistanceToSea
-
-            return PropertyEntity(
-                id = domain.id,
-                createDateTime = domain.createDateTime ?: AppDateTime.now(),
-                updateDateTime = AppDateTime.now(),
-                neighborhood = domain.neighborhood,
-                streetAddress = domain.streetAddress,
-                cepPostalCode = domain.cepPostalCode,
-                number = domain.number,
-                addressLine2 = domain.addressLine2,
-                parkingSpotNumber = domain.parkingSpotNumber,
-                parkingBasementLevelNumber = domain.parkingBasementLevelNumber,
-                hobbyBoxNumber = domain.hobbyBoxNumber,
-                bedrooms = domain.bedrooms,
-                enSuites = domain.enSuites,
-                doubleBeds = domain.doubleBeds,
-                singleBeds = domain.singleBeds,
-                bathrooms = domain.bathrooms,
-                parkingSpots = domain.parkingSpots,
-                airConditioners = domain.airConditioners,
-                maxGuests = domain.maxGuests,
-                seaProximityTypeId = domain.seaProximityType?.id,
-                distanceToSea = seaProximityDistanceToSeaType?.distance,
-                includedItems = domain.includedItems,
-                hasIncludedItems = domain.hasIncludedItems,
-                cleaningServiceTax = domain.cleaningServiceTax,
-                hasCleaningServiceIncluded = domain.hasCleaningServiceIncluded,
-                observations = domain.observations,
-                isDeleted = false,
-                ownerId = domain.ownerId,
-                typeId = domain.type.id,
-                contractVersion = BuildConfig.CONTRACT_VERSION,
-            )
-        }
-    }
-}
+)

@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -18,16 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
-import com.fstengineering.leasilycrm.core.domain.entities.StayFile
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.DocumentFileCard
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDraftFormUiState
+import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayFileUiState
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.mutate
 
 fun LazyListScope.stayDocumentsFormField(
-    stayForm: Stay,
-    onStayFormChange: (Stay) -> Unit,
-    stayNotDeletedFiles: PersistentList<StayFile>,
+    form: StayDraftFormUiState.StayOwnedLoaded,
+    onFormChange: (StayDraftFormUiState.StayOwnedLoaded) -> Unit,
+    stayFiles: PersistentList<StayFileUiState>,
     onAddStayFile: () -> Unit,
 ) {
     item {
@@ -65,25 +64,17 @@ fun LazyListScope.stayDocumentsFormField(
         )
     }
     item { Spacer(modifier = Modifier.height(16.dp)) }
-    itemsIndexed(
-        items = stayNotDeletedFiles,
-        key = { i, file -> file.id ?: "${file.name}$i" },
-    ) { i, file ->
+    items(
+        items = stayFiles,
+        key = { file -> file.id ?: file.name },
+    ) { file ->
         DocumentFileCard(
             fileName = file.name,
             actionIcon = Icons.Filled.Close,
             onAction = {
-                val newFiles = if (file.id == null) {
-                    stayNotDeletedFiles.remove(file)
-                } else {
-                    stayNotDeletedFiles.mutate {
-                        it[i] = file.copy(isDeleted = true)
-                    }
-                }
+                val newFiles = stayFiles.remove(file)
 
-                onStayFormChange(
-                    stayForm.copy(files = newFiles),
-                )
+                onFormChange(form.copy(files = newFiles))
             },
         )
         Spacer(modifier = Modifier.height(8.dp))

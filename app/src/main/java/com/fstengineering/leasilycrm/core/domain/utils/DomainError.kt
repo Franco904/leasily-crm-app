@@ -95,48 +95,35 @@ sealed interface DomainError : BusinessRuleError {
         LengthIsGreaterThan120Chars,
     }
 
-    enum class PropertyOwner : DomainError {
-        NameRequired,
-        NameBelongsToOtherOwner,
-        NameLengthIsGreaterThan100Chars,
-        PhoneLengthIsGreaterThan20Chars,
-        EmailInvalidFormat,
-        EmailLengthIsGreaterThan120Chars,
-        PaymentKeyLengthIsGreaterThan120Chars,
+    enum class StayProperty : DomainError {
+        Required,
     }
 
-    enum class Tenant : DomainError {
-        NameRequired,
-        NameBelongsToOtherTenant,
-        NameLengthIsGreaterThan100Chars,
-        PhoneLengthIsGreaterThan20Chars,
-        EmailInvalidFormat,
-        EmailLengthIsGreaterThan120Chars,
-        StatusInvalid,
+    enum class StayTenant : DomainError {
+        Required,
     }
 
-    enum class Stay : DomainError {
-        PropertyRequired,
-        TenantRequired,
-        GuestsCountRequired,
-        GuestsCountIsNegative,
-        PeriodStartAndEndDatesAreTheSame,
-        PeriodStartDateIsAfterEndDate,
+    enum class StayPeriod : DomainError {
+        Required,
+        StartAndEndDatesAreTheSame,
+        StartDateIsAfterEndDate,
         Overbooking,
-        CheckInDateRequired,
-        CheckInTimeRequired,
-        CheckOutDateRequired,
-        CheckOutTimeRequired,
-        IsAutoCheckInRequired,
-        IsAutoCheckOutRequired,
-        TotalPriceIsNegative,
-        CommissionRequired,
-        CommissionIsNegative,
-        TransferDateRequired,
-        TransferAmountRequired,
-        TransferAmountIsNegative,
-        StatusRequired,
-        StatusInvalid,
+    }
+
+    enum class StayCheckInTime : DomainError {
+        Required,
+    }
+
+    enum class StayCheckOutTime : DomainError {
+        Required,
+    }
+
+    enum class StayCommission : DomainError {
+        Required,
+    }
+
+    enum class StayOtherFields : DomainError {
+        GuestsCountIsNegative,
     }
 
     enum class Creci : DomainError {

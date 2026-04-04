@@ -36,7 +36,7 @@ interface LeadTenantDao {
             CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
-    suspend fun getAllLeadsMatching(matching: String?, order: Int): List<LeadTenantReadView>
+    suspend fun getAllLeads(matching: String?, order: Int): List<LeadTenantReadView>
 
     @Transaction
     @Query(
@@ -54,7 +54,7 @@ interface LeadTenantDao {
             CASE WHEN :order = 2 THEN update_date_time END COLLATE NOCASE DESC
     """
     )
-    suspend fun getAllTenantsMatching(matching: String?, order: Int): List<LeadTenantReadView>
+    suspend fun getAllTenants(matching: String?, order: Int): List<LeadTenantReadView>
 
     @Transaction
     @Query(
@@ -70,7 +70,7 @@ interface LeadTenantDao {
         ORDER BY name
     """
     )
-    suspend fun getAllWithoutUpcomingStaysMatching(
+    suspend fun getAllWithoutUpcomingStays(
         matching: String?,
         currentTenantId: Long?,
     ): List<LeadTenantReadView>

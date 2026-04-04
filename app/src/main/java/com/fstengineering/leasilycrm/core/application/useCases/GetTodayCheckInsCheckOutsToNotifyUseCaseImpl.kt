@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
-import com.fstengineering.leasilycrm.core.application.repositories.StayRepository
+import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.firstOrNull
 
 class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
     private val userSessionSharedStore: UserSessionSharedStore,
-    private val stayRepository: StayRepository,
+    private val staySharedCommandRepository: StaySharedCommandRepository,
     private val settingsSharedStore: SettingsSharedStore,
     private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
@@ -31,7 +31,7 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
             return AppResult.Success(data = emptyList())
         }
 
-        return stayRepository.watchAllUpcomingCheckInsAndCheckOuts().first()
+        return staySharedCommandRepository.watchAllUpcomingCheckInsAndCheckOuts().first()
             .fold(
                 onError = { _ -> AppResult.Success(data = persistentListOf()) },
                 onSuccess = { upcomingCheckInsAndCheckOuts ->

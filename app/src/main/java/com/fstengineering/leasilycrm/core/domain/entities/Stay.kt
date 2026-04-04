@@ -7,7 +7,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayGuestsCount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayPeriod
-import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import kotlinx.collections.immutable.ImmutableList
 
 sealed class Stay(
