@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyQueryModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyArgs
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyOwnerQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.useCases.ReadPropertyUseCase
@@ -72,7 +72,7 @@ class PropertyRegistrationViewModel(
     }
 
     private fun getPropertyToEdit(propertyId: Long) {
-        val query = PropertyQueryModel(id = propertyId)
+        val query = PropertyArgs(id = propertyId)
 
         viewModelScope.launch {
             readProperty(query)

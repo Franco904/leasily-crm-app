@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
-class RequireAuthQueryInterceptor<Q : QueryUseCase.QueryModel, R : QueryUseCase.ReadModel>(
+class RequireAuthQueryInterceptor<Q : QueryUseCase.Args, R : QueryUseCase.ReadModel>(
     private val delegate: QueryUseCase<Q, R>,
     private val userSessionService: UserSessionService,
 ) : QueryUseCase<Q, R> {

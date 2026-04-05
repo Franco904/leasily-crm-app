@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceQueryModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceArgs
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
@@ -34,7 +34,7 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCa
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    authQueryUseCase<QueryUseCase<AssistanceQueryModel, AssistanceReadModel>>(
+    authQueryUseCase<QueryUseCase<AssistanceArgs, AssistanceReadModel>>(
         readAssistanceQualifier,
     ) {
         ReadAssistanceUseCase(

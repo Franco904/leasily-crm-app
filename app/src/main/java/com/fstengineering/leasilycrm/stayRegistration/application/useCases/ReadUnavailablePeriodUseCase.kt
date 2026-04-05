@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryU
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodQueryModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodArgs
 import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.StayQueryRepository
@@ -12,9 +12,9 @@ import com.fstengineering.leasilycrm.stayRegistration.application.repositories.S
 class ReadUnavailablePeriodUseCase(
     private val stayQueryRepository: StayQueryRepository,
     private val propertyQueryRepository: PropertyQueryRepository,
-) : QueryUseCase<UnavailablePeriodQueryModel, UnavailablePeriodReadModel> {
+) : QueryUseCase<UnavailablePeriodArgs, UnavailablePeriodReadModel> {
     override suspend fun invoke(
-        query: UnavailablePeriodQueryModel,
+        query: UnavailablePeriodArgs,
     ): AppResult<UnavailablePeriodReadModel, ApplicationError> {
         val unavailablePeriodRaw = query.id?.let {
             stayQueryRepository.getUnavailablePeriodById(query.id)

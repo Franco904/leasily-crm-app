@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryU
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyQueryModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyArgs
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyOwnerQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyQueryRepository
@@ -12,9 +12,9 @@ import com.fstengineering.leasilycrm.propertyRegistration.application.repositori
 class ReadPropertyUseCase(
     private val propertyQueryRepository: PropertyQueryRepository,
     private val propertyOwnerQueryRepository: PropertyOwnerQueryRepository,
-) : QueryUseCase<PropertyQueryModel, PropertyReadModel> {
+) : QueryUseCase<PropertyArgs, PropertyReadModel> {
     override suspend fun invoke(
-        query: PropertyQueryModel,
+        query: PropertyArgs,
     ): AppResult<PropertyReadModel, ApplicationError> {
         val propertyRaw = propertyQueryRepository.getById(query.id)
             .fold(

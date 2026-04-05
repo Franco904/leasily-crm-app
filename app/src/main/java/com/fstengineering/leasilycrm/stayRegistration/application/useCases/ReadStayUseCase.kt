@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryU
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayQueryModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.StayArgs
 import com.fstengineering.leasilycrm.stayRegistration.application.models.StayReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.StayQueryRepository
@@ -14,9 +14,9 @@ class ReadStayUseCase(
     private val stayQueryRepository: StayQueryRepository,
     private val propertyQueryRepository: PropertyQueryRepository,
     private val tenantQueryRepository: TenantQueryRepository,
-) : QueryUseCase<StayQueryModel, StayReadModel> {
+) : QueryUseCase<StayArgs, StayReadModel> {
     override suspend fun invoke(
-        query: StayQueryModel,
+        query: StayArgs,
     ): AppResult<StayReadModel, ApplicationError> {
         val stayRaw = query.id?.let {
             stayQueryRepository.getStayById(query.id)

@@ -17,10 +17,10 @@ import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
+import com.fstengineering.leasilycrm.stayRegistration.application.models.StayArgs
 import com.fstengineering.leasilycrm.stayRegistration.application.models.StayCommandModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayQueryModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodArgs
 import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodCommandModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodQueryModel
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.TenantQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadStayUseCase
@@ -110,9 +110,7 @@ class StayRegistrationViewModel(
     ) {
         viewModelScope.launch {
             if (isUnavailablePeriod) {
-                val query = UnavailablePeriodQueryModel(id = stayId)
-
-                readUnavailablePeriod(query)
+                readUnavailablePeriod(UnavailablePeriodArgs(id = stayId))
                     .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { storedUnavailablePeriod ->
                         val draftForm = storedUnavailablePeriod.toUiState()
@@ -121,9 +119,7 @@ class StayRegistrationViewModel(
                         formToEdit = stayId?.let { draftForm }
                     }
             } else {
-                val query = StayQueryModel(id = stayId)
-
-                readStay(query)
+                readStay(StayArgs(id = stayId))
                     .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { storedStay ->
                         val draftForm = storedStay.toUiState()

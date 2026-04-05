@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.useCases
 
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceQueryModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceArgs
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceRawReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSentPropertyReadModel
@@ -18,9 +18,9 @@ class ReadAssistanceUseCase(
     private val leadTenantQueryRepository: LeadTenantQueryRepository,
     private val assistanceQueryRepository: AssistanceQueryRepository,
     private val assistanceSentPropertyQueryRepository: AssistanceSentPropertyQueryRepository,
-) : QueryUseCase<AssistanceQueryModel, AssistanceReadModel> {
+) : QueryUseCase<AssistanceArgs, AssistanceReadModel> {
     override suspend fun invoke(
-        query: AssistanceQueryModel,
+        query: AssistanceArgs,
     ): AppResult<AssistanceReadModel, ApplicationError> {
         val leadTenantName = leadTenantQueryRepository.getNameById(tenantId = query.leadTenantId)
             .fold(
