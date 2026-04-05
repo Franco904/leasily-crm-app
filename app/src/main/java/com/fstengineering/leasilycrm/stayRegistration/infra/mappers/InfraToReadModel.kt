@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.stayRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
@@ -10,7 +11,8 @@ import com.fstengineering.leasilycrm.stayRegistration.application.models.StayFil
 import com.fstengineering.leasilycrm.stayRegistration.application.models.StayRawReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.models.TenantReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodRawReadModel
-import kotlinx.collections.immutable.persistentListOf
+import com.fstengineering.leasilycrm.stayRegistration.domain.valueObjects.OccupiedPeriod
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
 
 fun StayCompound.toStayRawReadModel(): StayRawReadModel {
@@ -49,6 +51,12 @@ fun StayCompound.toUnavailablePeriodRawReadModel() = UnavailablePeriodRawReadMod
     observations = stay.observations,
 )
 
+fun StayEntity.toCheckInCheckOutReadModel() = OccupiedPeriod(
+    stayId = requireNotNull(id),
+    checkInDateTime = checkInDateTime,
+    checkOutDateTime = checkOutDateTime,
+)
+
 private fun StayFileEntity.toReadModel() = StayFileReadModel(
     id = id,
     uriString = stayFileUri,
@@ -64,7 +72,7 @@ fun PropertyCompound.toReadModel() = PropertyReadModel(
     mainPictureUriString = files
         .find { picture -> picture.isMainPicture }
         ?.propertyFileUri,
-    staysDates = persistentListOf(),
+    occupiedDates = persistentSetOf(),
 )
 
 fun LeadTenantReadView.toReadModel() = TenantReadModel(

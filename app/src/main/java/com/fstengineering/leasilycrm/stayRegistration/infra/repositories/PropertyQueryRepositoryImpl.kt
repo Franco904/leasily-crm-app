@@ -21,7 +21,7 @@ class PropertyQueryRepositoryImpl(
             )
     }
 
-    override suspend fun getAllMatching(
+    override suspend fun getAll(
         matching: String?,
     ): AppResult<ImmutableList<PropertyReadModel>, ApplicationError> {
         val properties = databaseDataSource.getAll(matching)

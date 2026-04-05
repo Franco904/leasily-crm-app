@@ -6,8 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.services.interfaces.FileStorageService
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -17,12 +15,14 @@ import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
+import com.fstengineering.leasilycrm.stayRegistration.application.models.SelectablePropertiesArgs
 import com.fstengineering.leasilycrm.stayRegistration.application.models.StayArgs
 import com.fstengineering.leasilycrm.stayRegistration.application.models.StayCommandModel
 import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodArgs
 import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodCommandModel
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.TenantQueryRepository
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadSelectablePropertiesUseCase
 import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadStayUseCase
 import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadUnavailablePeriodUseCase
 import com.fstengineering.leasilycrm.stayRegistration.application.useCases.WriteStayUseCase
@@ -34,11 +34,9 @@ import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayEr
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayFileUiState
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -53,6 +51,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class StayRegistrationViewModel(
     private val readStay: ReadStayUseCase,
     private val readUnavailablePeriod: ReadUnavailablePeriodUseCase,
+    private val readSelectableProperties: ReadSelectablePropertiesUseCase,
     private val writeStay: WriteStayUseCase,
     private val writeUnavailablePeriod: WriteUnavailablePeriodUseCase,
     private val propertyQueryRepository: PropertyQueryRepository,
@@ -96,9 +95,6 @@ class StayRegistrationViewModel(
 
         loadData(stayId, propertyId, tenantId, isUnavailablePeriod)
 
-        watchPropertySearchInput()
-        watchTenantSearchInput()
-
         isInitialized = true
     }
 
@@ -133,6 +129,9 @@ class StayRegistrationViewModel(
                 if (propertyId != null) getPropertyToAutofill(propertyId)
                 if (tenantId != null) getTenantToAutofill(tenantId)
             }
+
+            watchPropertySearchInput(stayId)
+            watchTenantSearchInput()
         }
     }
 
@@ -143,8 +142,8 @@ class StayRegistrationViewModel(
                 .onSuccess { storedProperty ->
                     _draftFormUiState.update {
                         when (it) {
-                            is StayDraftFormUiState.StayOwnedLoaded -> it.copy(property = storedProperty.toUiState())
-                            is StayDraftFormUiState.UnavailablePeriodLoaded -> it.copy(property = storedProperty.toUiState())
+                            is StayDraftFormUiState.Loaded.OwnedStay -> it.copy(property = storedProperty.toUiState())
+                            is StayDraftFormUiState.Loaded.UnavailablePeriod -> it.copy(property = storedProperty.toUiState())
                             else -> it
                         }
                     }
@@ -159,7 +158,7 @@ class StayRegistrationViewModel(
                 .onSuccess { storedTenant ->
                     _draftFormUiState.update {
                         when (it) {
-                            is StayDraftFormUiState.StayOwnedLoaded -> it.copy(tenant = storedTenant.toUiState())
+                            is StayDraftFormUiState.Loaded.OwnedStay -> it.copy(tenant = storedTenant.toUiState())
                             else -> it
                         }
                     }
@@ -168,12 +167,17 @@ class StayRegistrationViewModel(
     }
 
     @OptIn(FlowPreview::class)
-    fun watchPropertySearchInput() {
+    fun watchPropertySearchInput(stayId: Long?) {
         viewModelScope.launch {
             propertySearchInput
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
-                    propertyQueryRepository.getAllMatching(matching = searchInput)
+                    val args = SelectablePropertiesArgs(
+                        matching = searchInput,
+                        stayId = stayId,
+                    )
+
+                    readSelectableProperties(args)
                         .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingProperties ->
                             val properties =
@@ -190,11 +194,11 @@ class StayRegistrationViewModel(
             tenantSearchInput
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
-                    val stayOwnedForm = (formToEdit as? StayDraftFormUiState.StayOwnedLoaded)
+                    val tenant = (formToEdit as? StayDraftFormUiState.Loaded.OwnedStay)?.tenant
 
                     tenantQueryRepository.getAllWithoutUpcomingStays(
                         matching = searchInput,
-                        currentTenantId = stayOwnedForm?.tenant?.id,
+                        currentTenantId = tenant?.id,
                     )
                         .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingTenants ->
@@ -214,8 +218,8 @@ class StayRegistrationViewModel(
         _tenantSearchInput.update { searchInput?.ifBlank { null } }
     }
 
-    fun onStayOwnedFormChange(newForm: StayDraftFormUiState.StayOwnedLoaded) {
-        val form = (draftFormUiState.value as? StayDraftFormUiState.StayOwnedLoaded) ?: return
+    fun onOwnedStayFormChange(newForm: StayDraftFormUiState.Loaded.OwnedStay) {
+        val form = (draftFormUiState.value as? StayDraftFormUiState.Loaded.OwnedStay) ?: return
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
@@ -233,9 +237,9 @@ class StayRegistrationViewModel(
         _draftFormUiState.update { form }
     }
 
-    fun onUnavailablePeriodFormChange(newForm: StayDraftFormUiState.UnavailablePeriodLoaded) {
+    fun onUnavailablePeriodFormChange(newForm: StayDraftFormUiState.Loaded.UnavailablePeriod) {
         val form =
-            (draftFormUiState.value as? StayDraftFormUiState.UnavailablePeriodLoaded) ?: return
+            (draftFormUiState.value as? StayDraftFormUiState.Loaded.UnavailablePeriod) ?: return
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
@@ -256,60 +260,11 @@ class StayRegistrationViewModel(
         }
     }
 
-    fun getPropertyAlreadySelectedDatesForStay(
-        propertyStaysPeriods: ImmutableList<Pair<AppDateTime, AppDateTime>>,
-    ): ImmutableSet<AppDate> {
-        val isEditing = formToEdit != null
-
-        val formCheckInDateTime = when (val form = draftFormUiState.value) {
-            is StayDraftFormUiState.StayOwnedLoaded -> form.checkInDateTime
-            is StayDraftFormUiState.UnavailablePeriodLoaded -> form.checkInDateTime
-            else -> null
-        }
-
-        val sortedStaysPeriods = propertyStaysPeriods.sortedBy { it.first }
-
-        val propertyAlreadySelectedDatesForStay = sortedStaysPeriods
-            .asSequence()
-            .filter { (checkInDateTime, _) ->
-                val isSelectedDate =
-                    checkInDateTime.dayOfMonth == formCheckInDateTime?.dayOfMonth &&
-                            checkInDateTime.month == formCheckInDateTime.month &&
-                            checkInDateTime.year == formCheckInDateTime.year
-
-                !isEditing || !isSelectedDate
-            }
-            .flatMap { (checkInDateTime, checkOutDateTime) ->
-                val isCheckInAlsoACheckOut = sortedStaysPeriods.any { (_, anyCheckOutDateTime) ->
-                    checkInDateTime.toDate() == anyCheckOutDateTime.toDate()
-                }
-
-                val isCheckOutAlsoACheckIn = sortedStaysPeriods.any { (anyCheckInDateTime, _) ->
-                    checkOutDateTime.toDate() == anyCheckInDateTime.toDate()
-                }
-
-                val startDateTime =
-                    if (isCheckInAlsoACheckOut) checkInDateTime
-                    else checkInDateTime.plusDays(1)
-
-                val endDateTime =
-                    if (isCheckOutAlsoACheckIn) checkOutDateTime
-                    else checkOutDateTime.minusDays(1)
-
-                generateSequence(startDateTime) { it.plusDays(1) }
-                    .takeWhile { it <= endDateTime }
-                    .map { it.toDate() }
-            }
-            .toPersistentSet()
-
-        return propertyAlreadySelectedDatesForStay
-    }
-
     fun onStayFilePick(
         contentUriString: String,
         defaultFileName: String,
     ) {
-        val form = (draftFormUiState.value as? StayDraftFormUiState.StayOwnedLoaded) ?: return
+        val form = (draftFormUiState.value as? StayDraftFormUiState.Loaded.OwnedStay) ?: return
 
         viewModelScope.launch {
             val fileName = fileStorageService.getFileName(contentUriString)
@@ -326,7 +281,7 @@ class StayRegistrationViewModel(
                 name = fileName ?: defaultFileName,
             )
 
-            onStayOwnedFormChange(newForm = form.addFile(fileDraft))
+            onOwnedStayFormChange(newForm = form.addFile(fileDraft))
         }
     }
 
@@ -337,8 +292,8 @@ class StayRegistrationViewModel(
         }
 
         val command = when (val form = draftFormUiState.value) {
-            is StayDraftFormUiState.StayOwnedLoaded -> form.toCommandModel()
-            is StayDraftFormUiState.UnavailablePeriodLoaded -> form.toCommandModel()
+            is StayDraftFormUiState.Loaded.OwnedStay -> form.toCommandModel()
+            is StayDraftFormUiState.Loaded.UnavailablePeriod -> form.toCommandModel()
             else -> return
         }
 
@@ -418,10 +373,9 @@ class StayRegistrationViewModel(
                 formToEdit != draftFormUiState.value
             }
 
-            else -> when (val form = draftFormUiState.value) {
-                is StayDraftFormUiState.StayOwnedLoaded -> form.isAnyFormFieldInitialized
-                is StayDraftFormUiState.UnavailablePeriodLoaded -> form.isAnyFormFieldInitialized
-                else -> false
+            else -> {
+                val loadedForm = (draftFormUiState.value as? StayDraftFormUiState.Loaded)
+                loadedForm?.isAnyFormFieldInitialized ?: false
             }
         }
 

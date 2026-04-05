@@ -13,7 +13,7 @@ import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayFi
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
-fun StayReadModel.toUiState() = StayDraftFormUiState.StayOwnedLoaded(
+fun StayReadModel.toUiState() = StayDraftFormUiState.Loaded.OwnedStay(
     id = id,
     createDateTime = createDateTime,
     property = property?.toUiState(),
@@ -34,7 +34,7 @@ fun StayReadModel.toUiState() = StayDraftFormUiState.StayOwnedLoaded(
     observations = observations,
 )
 
-fun UnavailablePeriodReadModel.toUiState() = StayDraftFormUiState.UnavailablePeriodLoaded(
+fun UnavailablePeriodReadModel.toUiState() = StayDraftFormUiState.Loaded.UnavailablePeriod(
     id = id,
     createDateTime = createDateTime,
     property = property?.toUiState(),
@@ -53,6 +53,7 @@ fun PropertyReadModel.toUiState(): PropertyUiState {
         neighborhood = neighborhood,
         streetAddressAndNumber = streetAddressAndNumber,
         type = type,
+        occupiedDates = occupiedDates,
     )
 }
 

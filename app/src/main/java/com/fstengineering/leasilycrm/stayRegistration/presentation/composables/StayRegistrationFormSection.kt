@@ -30,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.toDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
 import com.fstengineering.leasilycrm.core.presentation.composables.CountAnswerCounter
@@ -53,10 +52,8 @@ import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.f
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.stayDocumentsFormField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDraftFormUiState
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.ImmutableSet
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -65,14 +62,13 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StayRegistrationFormSection(
-    form: StayDraftFormUiState.StayOwnedLoaded,
-    onFormChange: (StayDraftFormUiState.StayOwnedLoaded) -> Unit,
+    form: StayDraftFormUiState.Loaded.OwnedStay,
+    onFormChange: (StayDraftFormUiState.Loaded.OwnedStay) -> Unit,
     totalPriceInput: String,
     onTotalPriceChange: (String) -> Unit,
     commissionInput: String,
     onCommissionChange: (String) -> Unit,
     stayFormErrors: ImmutableMap<StayField, Int?>,
-    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Pair<AppDateTime, AppDateTime>>) -> ImmutableSet<AppDate>,
     onSelectProperty: (isEnabled: Boolean) -> Unit,
     onSelectTenant: (isEnabled: Boolean) -> Unit,
     onPeriodDisabledByPropertyUnselected: () -> Unit,
@@ -101,10 +97,6 @@ fun StayRegistrationFormSection(
             (calendar.get(Calendar.MONTH) + 1),
             calendar.get(Calendar.YEAR)
         )
-    }
-
-    val propertyAlreadySelectedDatesForStay = remember(form.property) {
-        getPropertyAlreadySelectedDatesForStay(form.property?.staysDates ?: persistentListOf())
     }
 
     var mustShowStayDateRangePickerDialog by rememberSaveable { mutableStateOf(false) }
@@ -361,7 +353,7 @@ fun StayRegistrationFormSection(
                 initialDayOfMonth = initialDayOfMonth,
                 initialMonth = initialMonth,
                 initialYear = initialYear,
-                alreadySelectedDates = propertyAlreadySelectedDatesForStay,
+                fixedNonSelectableDates = form.property?.occupiedDates ?: persistentSetOf(),
             ),
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onFormChange(

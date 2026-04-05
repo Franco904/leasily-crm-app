@@ -27,12 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.toDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.TimePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StayCheckInTimeFormField
@@ -42,10 +39,8 @@ import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.f
 import com.fstengineering.leasilycrm.stayRegistration.presentation.composables.fields.StaysObservationsFormField
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDraftFormUiState
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayField
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.ImmutableSet
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -53,10 +48,9 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UnavailablePeriodRegistrationFormSection(
-    form: StayDraftFormUiState.UnavailablePeriodLoaded,
-    onFormChange: (StayDraftFormUiState.UnavailablePeriodLoaded) -> Unit,
+    form: StayDraftFormUiState.Loaded.UnavailablePeriod,
+    onFormChange: (StayDraftFormUiState.Loaded.UnavailablePeriod) -> Unit,
     stayFormErrors: ImmutableMap<StayField, Int?>,
-    getPropertyAlreadySelectedDatesForStay: (ImmutableList<Pair<AppDateTime, AppDateTime>>) -> ImmutableSet<AppDate>,
     onSelectProperty: () -> Unit,
     onPeriodDisabledByPropertyUnselected: () -> Unit,
     scrollToFieldFlow: Flow<StayField>,
@@ -77,10 +71,6 @@ fun UnavailablePeriodRegistrationFormSection(
             (calendar.get(Calendar.MONTH) + 1),
             calendar.get(Calendar.YEAR)
         )
-    }
-
-    val propertyAlreadySelectedDatesForStay = remember(form.property) {
-        getPropertyAlreadySelectedDatesForStay(form.property?.staysDates ?: persistentListOf())
     }
 
     var mustShowStayDateRangePickerDialog by rememberSaveable { mutableStateOf(false) }
@@ -217,7 +207,7 @@ fun UnavailablePeriodRegistrationFormSection(
                 initialDayOfMonth = initialDayOfMonth,
                 initialMonth = initialMonth,
                 initialYear = initialYear,
-                alreadySelectedDates = propertyAlreadySelectedDatesForStay,
+                fixedNonSelectableDates = form.property?.occupiedDates ?: persistentSetOf(),
             ),
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onFormChange(

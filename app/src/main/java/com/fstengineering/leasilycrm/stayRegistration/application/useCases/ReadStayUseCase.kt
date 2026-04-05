@@ -9,6 +9,8 @@ import com.fstengineering.leasilycrm.stayRegistration.application.models.StayRea
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.StayQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.TenantQueryRepository
+import com.fstengineering.leasilycrm.stayRegistration.domain.services.PropertyOccupiedDatesPolicy
+import kotlinx.collections.immutable.persistentListOf
 
 class ReadStayUseCase(
     private val stayQueryRepository: StayQueryRepository,
@@ -16,10 +18,10 @@ class ReadStayUseCase(
     private val tenantQueryRepository: TenantQueryRepository,
 ) : QueryUseCase<StayArgs, StayReadModel> {
     override suspend fun invoke(
-        query: StayArgs,
+        args: StayArgs,
     ): AppResult<StayReadModel, ApplicationError> {
-        val stayRaw = query.id?.let {
-            stayQueryRepository.getStayById(query.id)
+        val stayRaw = args.id?.let {
+            stayQueryRepository.getStayById(args.id)
                 .fold(
                     onError = { e -> return AppResult.Error(error = e) },
                     onSuccess = { storedStay -> storedStay },
@@ -34,17 +36,18 @@ class ReadStayUseCase(
                 )
         }
 
-        val propertyCurrentStays = property?.id?.let { propertyId ->
-            stayQueryRepository.getAllByPropertyId(propertyId)
+        val propertyOccupiedPeriods = property?.id?.let { propertyId ->
+            stayQueryRepository.getOccupiedPeriodsByPropertyId(propertyId)
                 .fold(
                     onError = { e -> return AppResult.Error(error = e) },
                     onSuccess = { it },
                 )
-        }
+        } ?: persistentListOf()
 
-        val propertyWithCurrentStays = propertyCurrentStays?.let {
-            property.copy(staysDates = it)
-        }
+        val propertyOccupiedDates = PropertyOccupiedDatesPolicy.getOccupiedDates(
+            occupiedPeriods = propertyOccupiedPeriods,
+            stayToEditId = args.id,
+        )
 
         val tenant = stayRaw?.tenantId?.let {
             tenantQueryRepository.getById(stayRaw.tenantId)
@@ -56,7 +59,7 @@ class ReadStayUseCase(
 
         val updatedReadModel = StayReadModel.create(
             stayRaw = stayRaw,
-            property = propertyWithCurrentStays,
+            property = property?.copy(occupiedDates = propertyOccupiedDates),
             tenant = tenant,
         )
 

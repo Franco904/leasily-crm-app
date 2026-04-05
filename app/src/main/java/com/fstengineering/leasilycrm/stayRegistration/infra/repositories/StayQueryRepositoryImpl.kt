@@ -1,13 +1,14 @@
 package com.fstengineering.leasilycrm.stayRegistration.infra.repositories
 
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.stayRegistration.application.models.StayRawReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodRawReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.StayQueryRepository
+import com.fstengineering.leasilycrm.stayRegistration.domain.valueObjects.OccupiedPeriod
+import com.fstengineering.leasilycrm.stayRegistration.infra.mappers.toCheckInCheckOutReadModel
 import com.fstengineering.leasilycrm.stayRegistration.infra.mappers.toStayRawReadModel
 import com.fstengineering.leasilycrm.stayRegistration.infra.mappers.toUnavailablePeriodRawReadModel
 import kotlinx.collections.immutable.ImmutableList
@@ -34,15 +35,14 @@ class StayQueryRepositoryImpl(
             )
     }
 
-    override suspend fun getAllByPropertyId(
+    override suspend fun getOccupiedPeriodsByPropertyId(
         propertyId: Long,
-    ): AppResult<ImmutableList<Pair<AppDateTime, AppDateTime>>, ApplicationError> {
+    ): AppResult<ImmutableList<OccupiedPeriod>, ApplicationError> {
         return databaseDataSource.getAllByPropertyId(propertyId = propertyId)
             .fold(
                 onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = {
-                    val dates =
-                        it.map { entity -> entity.checkInDateTime to entity.checkOutDateTime }
+                    val dates = it.map { localModel -> localModel.toCheckInCheckOutReadModel() }
                     AppResult.Success(data = dates.toPersistentList())
                 },
             )

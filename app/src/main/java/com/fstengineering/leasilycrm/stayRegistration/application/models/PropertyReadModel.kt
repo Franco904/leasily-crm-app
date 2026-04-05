@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.stayRegistration.application.models
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
-import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
 
 data class PropertyReadModel(
     val id: Long?,
@@ -11,5 +11,5 @@ data class PropertyReadModel(
     val streetAddress: String,
     val number: Int?,
     val mainPictureUriString: String?,
-    val staysDates: ImmutableList<Pair<AppDateTime, AppDateTime>>,
+    val occupiedDates: ImmutableSet<AppDate>,
 )

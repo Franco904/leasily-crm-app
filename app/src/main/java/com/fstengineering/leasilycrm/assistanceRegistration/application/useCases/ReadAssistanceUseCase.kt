@@ -20,28 +20,28 @@ class ReadAssistanceUseCase(
     private val assistanceSentPropertyQueryRepository: AssistanceSentPropertyQueryRepository,
 ) : QueryUseCase<AssistanceArgs, AssistanceReadModel> {
     override suspend fun invoke(
-        query: AssistanceArgs,
+        args: AssistanceArgs,
     ): AppResult<AssistanceReadModel, ApplicationError> {
-        val leadTenantName = leadTenantQueryRepository.getNameById(tenantId = query.leadTenantId)
+        val leadTenantName = leadTenantQueryRepository.getNameById(tenantId = args.leadTenantId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
                 onSuccess = { leadTenantName -> leadTenantName },
             )
 
-        val assistanceRaw = loadAssistance(query.assistanceId)
+        val assistanceRaw = loadAssistance(args.assistanceId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
                 onSuccess = { storedAssistance -> storedAssistance },
             )
 
-        val sentProperties = loadSentProperties(query.assistanceId)
+        val sentProperties = loadSentProperties(args.assistanceId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
                 onSuccess = { storedSentProperties -> storedSentProperties },
             )
 
         val updatedReadModel = AssistanceReadModel.create(
-            leadTenantId = query.leadTenantId,
+            leadTenantId = args.leadTenantId,
             leadTenantName = leadTenantName,
             assistanceRaw = assistanceRaw,
             sentProperties = sentProperties,

@@ -71,7 +71,7 @@ fun getSelectableDates(
     initialMonth: Int,
     initialYear: Int,
     forceBelow: Boolean = false,
-    alreadySelectedDates: ImmutableSet<AppDate>,
+    fixedNonSelectableDates: ImmutableSet<AppDate>,
 ): SelectableDates {
     val initialDate = AppDate.of(initialYear, initialMonth, initialDayOfMonth)
 
@@ -83,7 +83,7 @@ fun getSelectableDates(
                 if (forceBelow) date <= initialDate
                 else date >= initialDate
 
-            return minMaxCondition && date !in alreadySelectedDates
+            return minMaxCondition && date !in fixedNonSelectableDates
         }
 
         override fun isSelectableYear(year: Int): Boolean {

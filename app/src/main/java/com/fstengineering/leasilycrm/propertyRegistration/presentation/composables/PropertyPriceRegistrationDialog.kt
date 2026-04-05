@@ -154,7 +154,7 @@ fun PropertyPriceRegistrationDialog(
                 initialDayOfMonth = initialDayOfMonth,
                 initialMonth = initialMonth,
                 initialYear = initialYear,
-                alreadySelectedDates = alreadySelectedDates,
+                fixedNonSelectableDates = alreadySelectedDates,
             ),
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onPriceFormChange(

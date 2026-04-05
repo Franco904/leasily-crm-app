@@ -14,9 +14,9 @@ class ReadPropertyUseCase(
     private val propertyOwnerQueryRepository: PropertyOwnerQueryRepository,
 ) : QueryUseCase<PropertyArgs, PropertyReadModel> {
     override suspend fun invoke(
-        query: PropertyArgs,
+        args: PropertyArgs,
     ): AppResult<PropertyReadModel, ApplicationError> {
-        val propertyRaw = propertyQueryRepository.getById(query.id)
+        val propertyRaw = propertyQueryRepository.getById(args.id)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
                 onSuccess = { storedProperty -> storedProperty },

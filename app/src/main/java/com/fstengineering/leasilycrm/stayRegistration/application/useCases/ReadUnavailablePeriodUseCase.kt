@@ -14,10 +14,10 @@ class ReadUnavailablePeriodUseCase(
     private val propertyQueryRepository: PropertyQueryRepository,
 ) : QueryUseCase<UnavailablePeriodArgs, UnavailablePeriodReadModel> {
     override suspend fun invoke(
-        query: UnavailablePeriodArgs,
+        args: UnavailablePeriodArgs,
     ): AppResult<UnavailablePeriodReadModel, ApplicationError> {
-        val unavailablePeriodRaw = query.id?.let {
-            stayQueryRepository.getUnavailablePeriodById(query.id)
+        val unavailablePeriodRaw = args.id?.let {
+            stayQueryRepository.getUnavailablePeriodById(args.id)
                 .fold(
                     onError = { e -> return AppResult.Error(error = e) },
                     onSuccess = { storedUnavailablePeriod -> storedUnavailablePeriod },

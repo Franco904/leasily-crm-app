@@ -329,7 +329,7 @@ fun AssistanceRegistrationFormSectionStep1(
                 initialDayOfMonth = initialDayOfMonth,
                 initialMonth = initialMonth,
                 initialYear = initialYear,
-                alreadySelectedDates = persistentSetOf(),
+                fixedNonSelectableDates = persistentSetOf(),
             ),
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onAssistanceFormChange(

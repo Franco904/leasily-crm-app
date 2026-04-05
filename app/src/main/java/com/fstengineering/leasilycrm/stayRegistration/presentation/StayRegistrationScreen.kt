@@ -67,8 +67,8 @@ fun StayRegistrationScreen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     val draftForm by viewModel.draftFormUiState.collectAsStateWithLifecycle()
-    val stayOwnedForm = (draftForm as? StayDraftFormUiState.StayOwnedLoaded)
-    val unavailablePeriodForm = (draftForm as? StayDraftFormUiState.UnavailablePeriodLoaded)
+    val ownedStayForm = (draftForm as? StayDraftFormUiState.Loaded.OwnedStay)
+    val unavailablePeriodForm = (draftForm as? StayDraftFormUiState.Loaded.UnavailablePeriod)
 
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
@@ -87,11 +87,11 @@ fun StayRegistrationScreen(
 
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
 
-    var totalPriceInput by rememberSaveable(stayOwnedForm?.totalPrice) {
-        mutableStateOf(stayOwnedForm?.totalPrice?.toString() ?: "")
+    var totalPriceInput by rememberSaveable(ownedStayForm?.totalPrice) {
+        mutableStateOf(ownedStayForm?.totalPrice?.toString() ?: "")
     }
-    var commissionInput by rememberSaveable(stayOwnedForm?.commission) {
-        mutableStateOf(stayOwnedForm?.commission?.toString() ?: "")
+    var commissionInput by rememberSaveable(ownedStayForm?.commission) {
+        mutableStateOf(ownedStayForm?.commission?.toString() ?: "")
     }
 
     val openDocumentFile = rememberLauncherForActivityResult(
@@ -192,9 +192,9 @@ fun StayRegistrationScreen(
                 StayRegistrationTopAppBar(
                     isEditing = stayId != null,
                     onSaveStay = {
-                        val form = stayOwnedForm ?: return@StayRegistrationTopAppBar
+                        val form = ownedStayForm ?: return@StayRegistrationTopAppBar
 
-                        viewModel.onStayOwnedFormChange(
+                        viewModel.onOwnedStayFormChange(
                             form.copy(
                                 totalPrice = totalPriceInput.replace(',', '.').toDecimalOrNull(),
                                 commission = commissionInput.replace(',', '.').toDecimalOrNull(),
@@ -270,7 +270,6 @@ fun StayRegistrationScreen(
                                     form = form,
                                     onFormChange = viewModel::onUnavailablePeriodFormChange,
                                     stayFormErrors = formErrors.errors,
-                                    getPropertyAlreadySelectedDatesForStay = viewModel::getPropertyAlreadySelectedDatesForStay,
                                     onSelectProperty = {
                                         listStatus =
                                             StayRegistrationListState.SelectingProperty
@@ -284,11 +283,11 @@ fun StayRegistrationScreen(
                                         .padding(horizontal = 24.dp)
                                 )
                             } else {
-                                val form = stayOwnedForm ?: return@AnimatedContent
+                                val form = ownedStayForm ?: return@AnimatedContent
 
                                 StayRegistrationFormSection(
                                     form = form,
-                                    onFormChange = viewModel::onStayOwnedFormChange,
+                                    onFormChange = viewModel::onOwnedStayFormChange,
                                     totalPriceInput = totalPriceInput,
                                     onTotalPriceChange = { totalPriceInput = it },
                                     commissionInput = commissionInput,
@@ -297,7 +296,6 @@ fun StayRegistrationScreen(
                                         viewModel.clearCommissionError()
                                     },
                                     stayFormErrors = formErrors.errors,
-                                    getPropertyAlreadySelectedDatesForStay = viewModel::getPropertyAlreadySelectedDatesForStay,
                                     onSelectProperty = { isEnabled ->
                                         if (isEnabled) {
                                             listStatus =
@@ -340,8 +338,8 @@ fun StayRegistrationScreen(
                                 StayPropertySelectionList(
                                     properties = properties,
                                     onPropertySelect = { property ->
-                                        val form = stayOwnedForm ?: return@StayPropertySelectionList
-                                        viewModel.onStayOwnedFormChange(
+                                        val form = ownedStayForm ?: return@StayPropertySelectionList
+                                        viewModel.onOwnedStayFormChange(
                                             form.copy(
                                                 property = property,
                                                 checkInDateTime = null,
@@ -371,8 +369,8 @@ fun StayRegistrationScreen(
                                 StayTenantSelectionList(
                                     tenants = tenants,
                                     onTenantSelect = { tenant ->
-                                        val form = stayOwnedForm ?: return@StayTenantSelectionList
-                                        viewModel.onStayOwnedFormChange(form.copy(tenant = tenant))
+                                        val form = ownedStayForm ?: return@StayTenantSelectionList
+                                        viewModel.onOwnedStayFormChange(form.copy(tenant = tenant))
 
                                         listStatus =
                                             StayRegistrationListState.ShowingMainForm

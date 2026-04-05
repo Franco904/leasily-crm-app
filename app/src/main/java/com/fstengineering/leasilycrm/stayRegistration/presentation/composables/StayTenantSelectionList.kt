@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.entities.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
 import kotlinx.collections.immutable.ImmutableList

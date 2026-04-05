@@ -8,7 +8,7 @@ import kotlinx.collections.immutable.ImmutableList
 interface PropertyQueryRepository {
     suspend fun getById(propertyId: Long): AppResult<PropertyReadModel, ApplicationError>
 
-    suspend fun getAllMatching(
+    suspend fun getAll(
         matching: String?,
     ): AppResult<ImmutableList<PropertyReadModel>, ApplicationError>
 }

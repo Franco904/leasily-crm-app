@@ -145,7 +145,7 @@ fun AssistanceInteractionRegistrationBottomSheet(
                 initialMonth = initialMonth,
                 initialYear = initialYear,
                 forceBelow = true,
-                alreadySelectedDates = persistentSetOf(),
+                fixedNonSelectableDates = persistentSetOf(),
             ),
             onDateSelected = { selectedDate ->
                 onInteractionFormChange(

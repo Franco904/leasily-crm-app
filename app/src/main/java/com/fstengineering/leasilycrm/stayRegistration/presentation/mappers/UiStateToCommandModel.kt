@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDr
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayFileUiState
 import kotlinx.collections.immutable.toPersistentList
 
-fun StayDraftFormUiState.StayOwnedLoaded.toCommandModel(): StayCommandModel {
+fun StayDraftFormUiState.Loaded.OwnedStay.toCommandModel(): StayCommandModel {
     return StayCommandModel(
         id = id,
         createDateTime = createDateTime,
@@ -30,7 +30,7 @@ fun StayDraftFormUiState.StayOwnedLoaded.toCommandModel(): StayCommandModel {
     )
 }
 
-fun StayDraftFormUiState.UnavailablePeriodLoaded.toCommandModel() = UnavailablePeriodCommandModel(
+fun StayDraftFormUiState.Loaded.UnavailablePeriod.toCommandModel() = UnavailablePeriodCommandModel(
     id = id,
     createDateTime = createDateTime,
     propertyId = property?.id,
