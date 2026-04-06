@@ -17,8 +17,6 @@ fun PropertyOwnerCompound.toReadModel(): PropertyOwnerReadModel {
         email = propertyOwner.email,
         paymentKey = propertyOwner.paymentKey,
         files = files.map { it.toReadModel() }.toPersistentList(),
-        inconsistencies = persistentListOf(),
-        contractVersion = propertyOwner.contractVersion,
     )
 }
 

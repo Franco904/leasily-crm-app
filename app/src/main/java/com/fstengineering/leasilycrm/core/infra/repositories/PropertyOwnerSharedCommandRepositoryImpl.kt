@@ -29,24 +29,6 @@ class PropertyOwnerSharedCommandRepositoryImpl(
             )
     }
 
-    override fun watchById(
-        propertyOwnerId: Long,
-    ): Flow<AppResult<PropertyOwner, ApplicationError>> = flow {
-        val propertyOwnerFlow = propertyOwnerDatabaseDataSource.watchById(id = propertyOwnerId)
-            .fold(
-                onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
-                onSuccess = { it }
-            )
-            .map { propertyOwner ->
-                val domain = propertyOwner.toDomain()
-
-                AppResult.Success<PropertyOwner, ApplicationError>(data = domain)
-            }
-            .distinctUntilChanged()
-
-        emitAll(propertyOwnerFlow)
-    }
-
     override fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, ApplicationError>> =
         flow {
             emitAll(

@@ -14,6 +14,4 @@ data class PropertyOwnerReadModel(
     val email: String?,
     val paymentKey: String?,
     val files: ImmutableList<PropertyOwnerFileReadModel>,
-    val inconsistencies: ImmutableList<DomainError>,
-    val contractVersion: Int,
 ) : QueryUseCase.ReadModel

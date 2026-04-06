@@ -54,7 +54,7 @@ fun AppMoreOptionsIconDropdownMenu(
             shape = MaterialTheme.shapes.small,
             onDismissRequest = { isMenuExpanded = false }
         ) {
-            options.map {
+            options.forEach {
                 if (it.isHorizontalDivider) {
                     Spacer(modifier = Modifier.height(8.dp))
                     HorizontalDivider()

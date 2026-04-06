@@ -1,11 +1,9 @@
-package com.fstengineering.leasilycrm.propertyOwnerDetails
+package com.fstengineering.leasilycrm.propertyOwnerDetails.presentation
 
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -16,14 +14,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyOwnerDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
@@ -31,10 +28,9 @@ import com.fstengineering.leasilycrm.core.presentation.models.strategies.Default
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.propertyOwnerDetails.PropertyOwnerDetailsViewModel.UiEvents.PropertyOwnerDeleteSuccess
-import com.fstengineering.leasilycrm.propertyOwnerDetails.composables.PropertyOwnerDetailsSection
-import com.fstengineering.leasilycrm.propertyOwnerDetails.composables.PropertyOwnerDetailsTopAppBar
+import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.composables.PropertyOwnerDetailsSection
+import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.composables.PropertyOwnerDetailsTopAppBar
+import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.models.PropertyOwnerUiState
 
 @Composable
 fun PropertyOwnerDetailsScreen(
@@ -52,8 +48,6 @@ fun PropertyOwnerDetailsScreen(
 
     val propertyOwner by viewModel.propertyOwner.collectAsStateWithLifecycle()
 
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-
     var mustShowConfirmDeleteDialog by remember { mutableStateOf(false) }
     var mustShowNoAppToShowFileContentDialog by remember { mutableStateOf(false) }
 
@@ -62,14 +56,14 @@ fun PropertyOwnerDetailsScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is Error -> {
+                is PropertyOwnerDetailsViewModel.UiEvent.BottomSheetError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is PropertyOwnerDeleteSuccess -> {
+                is PropertyOwnerDetailsViewModel.UiEvent.PropertyOwnerDeleteSuccess -> {
                     onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_owner_success_message))
                 }
             }
@@ -95,37 +89,32 @@ fun PropertyOwnerDetailsScreen(
         },
         modifier = modifier
     ) { innerPadding ->
-        if (isLoading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                AppCircularProgressIndicator(
+        when (propertyOwner) {
+            is PropertyOwnerUiState.Loading -> {
+                FullScreenLoadingIndicator(innerPadding)
+            }
+
+            is PropertyOwnerUiState.Loaded -> {
+                PropertyOwnerDetailsSection(
+                    propertyOwner = propertyOwner as PropertyOwnerUiState.Loaded,
+                    onOpenPropertyOwnerFile = { file ->
+                        context.openFileWithChooser(
+                            uriString = file.uriString,
+                            onActivityNotFound = { mustShowNoAppToShowFileContentDialog = true }
+                        )
+                    },
                     modifier = Modifier
-                        .size(64.dp)
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(horizontal = 16.dp)
                 )
             }
-        } else {
-            PropertyOwnerDetailsSection(
-                propertyOwner = propertyOwner,
-                onOpenPropertyOwnerFile = { file ->
-                    context.openFileWithChooser(
-                        uriString = file.uriString,
-                        onActivityNotFound = { mustShowNoAppToShowFileContentDialog = true }
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 16.dp)
-            )
         }
+
         if (mustShowConfirmDeleteDialog) {
             ConfirmDeletePropertyOwnerDialog(
                 onConfirmDelete = {
-                    viewModel.deletePropertyOwner()
+                    viewModel.deletePropertyOwner(propertyOwnerId)
 
                     mustShowConfirmDeleteDialog = false
                     onBack()
@@ -133,6 +122,7 @@ fun PropertyOwnerDetailsScreen(
                 onCancel = { mustShowConfirmDeleteDialog = false },
             )
         }
+
         if (mustShowNoAppToShowFileContentDialog) {
             NoAppToShowFileContentDialog(
                 onOpenPlayStore = { context.openPlayStoreApp() },

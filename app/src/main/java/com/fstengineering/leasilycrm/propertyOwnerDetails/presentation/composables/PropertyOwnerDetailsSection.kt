@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerDetails.composables
+package com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.composables
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,15 +24,15 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwnerFile
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.DocumentFileCard
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
+import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.models.PropertyOwnerFileUiState
+import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.models.PropertyOwnerUiState
 
 @Composable
 fun PropertyOwnerDetailsSection(
-    propertyOwner: PropertyOwner,
-    onOpenPropertyOwnerFile: (PropertyOwnerFile) -> Unit,
+    propertyOwner: PropertyOwnerUiState.Loaded,
+    onOpenPropertyOwnerFile: (PropertyOwnerFileUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -112,7 +112,7 @@ fun PropertyOwnerDetailsSection(
         } else {
             itemsIndexed(
                 items = propertyOwner.files,
-                key = { i, file -> file.id ?: "${file.name}$i" },
+                key = { i, file -> "${file.name}$i" },
             ) { _, file ->
                 DocumentFileCard(
                     fileName = file.name,

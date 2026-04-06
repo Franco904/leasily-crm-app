@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwnerDetails.composables
+package com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.composables
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
