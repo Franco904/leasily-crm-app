@@ -1,13 +1,11 @@
-package com.fstengineering.leasilycrm.propertyOwners
+package com.fstengineering.leasilycrm.propertyOwners.presentation
 
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -22,24 +20,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyOwnerDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.propertyOwners.PropertyOwnersViewModel.UiEvents.PropertyOwnerDeleteSuccess
-import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
-import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersEmptySection
-import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnersTopAppBar
+import com.fstengineering.leasilycrm.propertyOwners.presentation.composables.PropertyOwnerCard
+import com.fstengineering.leasilycrm.propertyOwners.presentation.composables.PropertyOwnersEmptySection
+import com.fstengineering.leasilycrm.propertyOwners.presentation.composables.PropertyOwnersTopAppBar
 
 @Composable
 fun PropertyOwnersScreen(
@@ -56,8 +50,6 @@ fun PropertyOwnersScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-
     val propertyOwners by viewModel.propertyOwners.collectAsStateWithLifecycle()
     val propertyOwnerToDelete by viewModel.propertyOwnerToDelete.collectAsStateWithLifecycle()
 
@@ -66,14 +58,14 @@ fun PropertyOwnersScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is Error -> {
+                is PropertyOwnersViewModel.UiEvent.BottomSheetError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is PropertyOwnerDeleteSuccess -> {
+                is PropertyOwnersViewModel.UiEvent.PropertyOwnerDeleteSuccess -> {
                     onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_owner_success_message))
                 }
             }
@@ -108,20 +100,6 @@ fun PropertyOwnersScreen(
         modifier = modifier
     ) { innerPadding ->
         when {
-            isLoading -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    AppCircularProgressIndicator(
-                        modifier = Modifier
-                            .size(64.dp)
-                    )
-                }
-            }
-
             propertyOwners.isEmpty() -> {
                 PropertyOwnersEmptySection()
             }
@@ -137,7 +115,7 @@ fun PropertyOwnersScreen(
                     item { Spacer(modifier = Modifier.height(16.dp)) }
                     itemsIndexed(
                         items = propertyOwners.groupBy {
-                            it.name?.first()?.uppercaseChar().toString()
+                            it.name.firstOrNull()?.uppercaseChar().toString()
                         },
                         key = { _, (nameFirstChar, _) -> nameFirstChar },
                         contentType = { _, entryType -> entryType },
@@ -159,7 +137,6 @@ fun PropertyOwnersScreen(
                                         viewModel.onDeletePropertyOwner(propertyOwner = propertyOwner)
                                     },
                                     onViewPropertyOwnerDetails = {
-                                        if (propertyOwner.id == null) return@PropertyOwnerCard
                                         onViewPropertyOwnerDetails(propertyOwner.id)
                                     },
                                 )
@@ -172,6 +149,7 @@ fun PropertyOwnersScreen(
                 }
             }
         }
+
         if (propertyOwnerToDelete != null) {
             ConfirmDeletePropertyOwnerDialog(
                 onConfirmDelete = viewModel::deletePropertyOwner,

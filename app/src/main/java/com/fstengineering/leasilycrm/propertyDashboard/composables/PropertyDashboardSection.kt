@@ -27,7 +27,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import com.fstengineering.leasilycrm.core.presentation.theme.customColors
-import com.fstengineering.leasilycrm.propertyOwners.composables.PropertyOwnerCard
+import com.fstengineering.leasilycrm.propertyOwners.presentation.composables.PropertyOwnerCard
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwners.composables
+package com.fstengineering.leasilycrm.propertyOwners.presentation.composables
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,11 +18,12 @@ import com.fstengineering.leasilycrm.core.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.propertyOwners.presentation.models.PropertyOwnerUiState
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun PropertyOwnerCard(
-    propertyOwner: PropertyOwner,
+    propertyOwner: PropertyOwnerUiState,
     onViewPropertyOwnerDetails: () -> Unit,
     modifier: Modifier = Modifier,
     onEditPropertyOwner: () -> Unit = {},
@@ -40,7 +41,7 @@ fun PropertyOwnerCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = propertyOwner.name!!,
+                text = propertyOwner.name,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier

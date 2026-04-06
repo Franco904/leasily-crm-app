@@ -8,6 +8,4 @@ import kotlinx.coroutines.flow.Flow
 
 interface PropertyOwnerSharedCommandRepository {
     suspend fun delete(id: Long): AppResult<Unit, ApplicationError>
-
-    fun watchAll(): Flow<AppResult<ImmutableList<PropertyOwner>, ApplicationError>>
 }

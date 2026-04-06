@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyOwners.composables
+package com.fstengineering.leasilycrm.propertyOwners.presentation.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
