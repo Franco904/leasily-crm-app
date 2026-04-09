@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.profile.application.mappers.toEntity
-import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
+import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserCommandRepository
 import kotlinx.collections.immutable.persistentListOf
 

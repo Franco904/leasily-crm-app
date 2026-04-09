@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.leadTenantRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
-import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.LeadTenantReadModel
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.dtos.LeadTenantReadModel
 
 fun LeadTenantReadView.toReadModel(): LeadTenantReadModel {
     return LeadTenantReadModel(

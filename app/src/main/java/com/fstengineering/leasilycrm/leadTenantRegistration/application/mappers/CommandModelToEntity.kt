@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.leadTenantRegistration.application.mappers
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.LeadTenantCommandModel
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.commands.LeadTenantCommandModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.domain.entities.LeadTenant
 import kotlinx.collections.immutable.toPersistentList
 

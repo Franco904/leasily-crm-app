@@ -4,8 +4,8 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryU
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.stayRegistration.application.models.PropertyReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.SelectablePropertiesArgs
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.PropertyReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.queries.SelectablePropertiesArgs
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.StayQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.domain.services.PropertyOccupiedDatesPolicy

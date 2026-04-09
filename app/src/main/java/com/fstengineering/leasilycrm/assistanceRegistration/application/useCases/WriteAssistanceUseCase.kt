@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.useCases
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.mappers.toEntity
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.commands.AssistanceCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound

@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.propertyRegistration.application.repositor
 
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyRawReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyRawReadModel
 import kotlinx.collections.immutable.ImmutableList
 
 interface PropertyQueryRepository {

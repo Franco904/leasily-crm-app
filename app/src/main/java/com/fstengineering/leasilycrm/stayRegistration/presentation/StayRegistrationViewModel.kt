@@ -15,11 +15,11 @@ import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
-import com.fstengineering.leasilycrm.stayRegistration.application.models.SelectablePropertiesArgs
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayArgs
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayCommandModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodArgs
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodCommandModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.queries.SelectablePropertiesArgs
+import com.fstengineering.leasilycrm.stayRegistration.application.models.queries.StayArgs
+import com.fstengineering.leasilycrm.stayRegistration.application.models.commands.StayCommandModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.queries.UnavailablePeriodArgs
+import com.fstengineering.leasilycrm.stayRegistration.application.models.commands.UnavailablePeriodCommandModel
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.TenantQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadSelectablePropertiesUseCase

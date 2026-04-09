@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.signin.infra.stores
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.models.SyncState
-import com.fstengineering.leasilycrm.signin.application.models.SignInResultWriteModel
+import com.fstengineering.leasilycrm.signin.application.models.dtos.SignInResultWriteModel
 import com.fstengineering.leasilycrm.signin.application.stores.UserSessionStore
 
 class UserSessionStoreImpl(

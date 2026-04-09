@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.propertyOwnerRegistration.application.mapp
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerCommandModel
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerFileCommandModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerCommandModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerFileCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.domain.entities.PropertyOwner
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.domain.entities.PropertyOwnerFile
 import kotlinx.collections.immutable.toPersistentList

@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.profile.application.models.UserReadModel
+import com.fstengineering.leasilycrm.profile.application.models.dtos.UserReadModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
 import com.fstengineering.leasilycrm.profile.infra.mappers.toReadModel
 import kotlinx.coroutines.flow.Flow

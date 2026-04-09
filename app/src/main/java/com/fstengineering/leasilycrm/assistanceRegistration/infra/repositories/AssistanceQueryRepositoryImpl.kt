@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories
 
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceRawReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceRawReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers.toRawReadModel
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError

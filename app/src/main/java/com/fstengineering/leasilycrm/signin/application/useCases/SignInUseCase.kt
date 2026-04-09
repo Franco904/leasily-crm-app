@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.signin.application.gateways.UserSessionGateway
-import com.fstengineering.leasilycrm.signin.application.models.IdToken
+import com.fstengineering.leasilycrm.signin.application.models.commands.IdToken
 import com.fstengineering.leasilycrm.signin.application.stores.UserSessionStore
 import kotlinx.collections.immutable.persistentListOf
 

@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.infra.di.modules
 
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceArgs
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.commands.AssistanceCommandModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.queries.AssistanceArgs
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.GetStaysStructuredDatesUseCaseImpl
@@ -25,11 +25,11 @@ import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writePropertyOwner
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeUserQualifier
 import com.fstengineering.leasilycrm.core.infra.utils.authCommandUseCase
 import com.fstengineering.leasilycrm.core.infra.utils.authQueryUseCase
-import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.LeadTenantCommandModel
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.commands.LeadTenantCommandModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.useCases.WriteLeadTenantUseCase
-import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
+import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerCommandModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
 import org.koin.dsl.module
 

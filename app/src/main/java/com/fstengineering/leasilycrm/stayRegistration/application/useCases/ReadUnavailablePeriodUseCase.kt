@@ -4,8 +4,8 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryU
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodArgs
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.queries.UnavailablePeriodArgs
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.UnavailablePeriodReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.StayQueryRepository
 

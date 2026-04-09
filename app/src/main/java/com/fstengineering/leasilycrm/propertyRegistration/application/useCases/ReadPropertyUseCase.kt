@@ -4,8 +4,8 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryU
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyArgs
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.queries.PropertyArgs
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyOwnerQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyQueryRepository
 

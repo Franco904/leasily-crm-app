@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.assistanceRegistration.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceArgs
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.queries.AssistanceArgs
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase

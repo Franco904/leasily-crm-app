@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyRawReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyRawReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.infra.mappers.toRawReadModel
 import kotlinx.collections.immutable.ImmutableList

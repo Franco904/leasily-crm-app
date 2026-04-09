@@ -4,8 +4,8 @@ import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayRawReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodRawReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.StayRawReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.UnavailablePeriodRawReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.StayQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.domain.valueObjects.OccupiedPeriod
 import com.fstengineering.leasilycrm.stayRegistration.infra.mappers.toCheckInCheckOutReadModel

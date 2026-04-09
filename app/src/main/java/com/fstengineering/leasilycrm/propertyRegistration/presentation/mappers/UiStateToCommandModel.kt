@@ -2,9 +2,9 @@ package com.fstengineering.leasilycrm.propertyRegistration.presentation.mappers
 
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyCommandModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyFileCommandModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyPriceCommandModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyCommandModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyFileCommandModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyPriceCommandModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
 import kotlinx.collections.immutable.toPersistentList
 

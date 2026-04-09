@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.profile.presentation.models
 
-import com.fstengineering.leasilycrm.profile.application.models.UserReadModel
+import com.fstengineering.leasilycrm.profile.application.models.dtos.UserReadModel
 
 sealed interface ProfileUiState {
     data object Loading : ProfileUiState

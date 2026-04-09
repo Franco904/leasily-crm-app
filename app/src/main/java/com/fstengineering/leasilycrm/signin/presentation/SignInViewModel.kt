@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
-import com.fstengineering.leasilycrm.signin.application.models.IdToken
+import com.fstengineering.leasilycrm.signin.application.models.commands.IdToken
 import com.fstengineering.leasilycrm.signin.application.useCases.SignInUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

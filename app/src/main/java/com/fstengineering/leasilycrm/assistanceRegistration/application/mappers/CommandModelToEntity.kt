@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.mappers
 
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceCommandModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceInteractionCommandModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.commands.AssistanceCommandModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.commands.AssistanceInteractionCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound

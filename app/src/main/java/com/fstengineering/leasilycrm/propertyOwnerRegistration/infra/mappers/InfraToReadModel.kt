@@ -2,9 +2,8 @@ package com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyOwnerCompound
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerFileReadModel
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.PropertyOwnerReadModel
-import kotlinx.collections.immutable.persistentListOf
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.dtos.PropertyOwnerFileReadModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.dtos.PropertyOwnerReadModel
 import kotlinx.collections.immutable.toPersistentList
 
 fun PropertyOwnerCompound.toReadModel(): PropertyOwnerReadModel {

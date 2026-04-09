@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.propertyRegistration.application.mappers.toEntity
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyCommandModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyCommandModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyCommandRepository
 import kotlinx.collections.immutable.persistentListOf
 

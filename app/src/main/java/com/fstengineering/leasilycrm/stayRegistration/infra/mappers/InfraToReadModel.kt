@@ -6,11 +6,11 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.St
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
-import com.fstengineering.leasilycrm.stayRegistration.application.models.PropertyReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayFileReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayRawReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.TenantReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodRawReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.PropertyReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.StayFileReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.StayRawReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.TenantReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.UnavailablePeriodRawReadModel
 import com.fstengineering.leasilycrm.stayRegistration.domain.valueObjects.OccupiedPeriod
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList

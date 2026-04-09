@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.presentation.mappers
 
-import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.LeadTenantCommandModel
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.commands.LeadTenantCommandModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
 
 fun LeadTenantDraftFormUiState.Loaded.toCommandModel(): LeadTenantCommandModel {

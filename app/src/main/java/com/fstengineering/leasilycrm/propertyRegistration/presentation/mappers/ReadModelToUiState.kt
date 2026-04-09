@@ -3,10 +3,10 @@ package com.fstengineering.leasilycrm.propertyRegistration.presentation.mappers
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyFileReadModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyOwnerReadModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyPriceReadModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyFileReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyOwnerReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyPriceReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyOwnerUiState

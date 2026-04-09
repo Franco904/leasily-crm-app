@@ -3,11 +3,11 @@ package com.fstengineering.leasilycrm.stayRegistration.presentation.mappers
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
-import com.fstengineering.leasilycrm.stayRegistration.application.models.PropertyReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayFileReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.TenantReadModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.PropertyReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.StayFileReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.StayReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.TenantReadModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.UnavailablePeriodReadModel
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDraftFormUiState
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayFileUiState
 import kotlinx.collections.immutable.persistentListOf

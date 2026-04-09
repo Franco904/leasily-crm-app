@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
-import com.fstengineering.leasilycrm.profile.application.models.UserCommandModel
+import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
 import com.fstengineering.leasilycrm.profile.domain.valueObjects.Creci

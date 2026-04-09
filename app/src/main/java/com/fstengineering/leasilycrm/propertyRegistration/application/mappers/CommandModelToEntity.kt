@@ -3,9 +3,9 @@ package com.fstengineering.leasilycrm.propertyRegistration.application.mappers
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyCommandModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyFileCommandModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyPriceCommandModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyCommandModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyFileCommandModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyPriceCommandModel
 import com.fstengineering.leasilycrm.propertyRegistration.domain.entities.Property
 import com.fstengineering.leasilycrm.propertyRegistration.domain.entities.PropertyFile
 import com.fstengineering.leasilycrm.propertyRegistration.domain.entities.PropertyPrice

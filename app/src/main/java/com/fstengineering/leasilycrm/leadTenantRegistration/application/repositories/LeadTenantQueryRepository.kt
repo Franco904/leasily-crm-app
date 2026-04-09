@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.leadTenantRegistration.application.reposit
 
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.LeadTenantReadModel
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.dtos.LeadTenantReadModel
 import kotlinx.collections.immutable.ImmutableList
 
 interface LeadTenantQueryRepository {

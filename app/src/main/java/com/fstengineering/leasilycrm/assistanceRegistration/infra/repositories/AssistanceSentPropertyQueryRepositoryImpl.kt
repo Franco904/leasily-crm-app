@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories
 
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.AssistanceSentPropertyReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentPropertyQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers.toSentPropertyReadModel
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError

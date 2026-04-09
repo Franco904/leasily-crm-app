@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.stayRegistration.presentation.mappers
 
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayCommandModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.StayFileCommandModel
-import com.fstengineering.leasilycrm.stayRegistration.application.models.UnavailablePeriodCommandModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.commands.StayCommandModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.commands.StayFileCommandModel
+import com.fstengineering.leasilycrm.stayRegistration.application.models.commands.UnavailablePeriodCommandModel
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayDraftFormUiState
 import com.fstengineering.leasilycrm.stayRegistration.presentation.models.StayFileUiState
 import kotlinx.collections.immutable.toPersistentList

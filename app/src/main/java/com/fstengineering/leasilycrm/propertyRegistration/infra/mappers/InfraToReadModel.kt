@@ -6,10 +6,10 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Pr
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyFileReadModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyOwnerReadModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyPriceReadModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.PropertyRawReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyFileReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyOwnerReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyPriceReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyRawReadModel
 import kotlinx.collections.immutable.toPersistentList
 
 fun PropertyCompound.toRawReadModel(): PropertyRawReadModel {
