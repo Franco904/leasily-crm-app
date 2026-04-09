@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyDetails.composables.items
+package com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,16 +17,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPicturesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPicturesRow
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun PropertyPicturesDetailsItems(
-    pictures: ImmutableList<PropertyFile>,
-    onViewPropertyPicture: (PropertyFile) -> Unit,
+    pictures: ImmutableList<PropertyFileUiState>,
+    onViewPropertyPicture: (PropertyFileUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -59,7 +59,7 @@ fun PropertyPicturesDetailsItems(
         } else {
             PropertyPicturesRow(
                 pictures = pictures.toPersistentList(),
-                onSelectMainPicture = onViewPropertyPicture,
+                onSelectMainPicture = { _, picture -> onViewPropertyPicture(picture) },
                 isReadOnly = true,
             )
         }

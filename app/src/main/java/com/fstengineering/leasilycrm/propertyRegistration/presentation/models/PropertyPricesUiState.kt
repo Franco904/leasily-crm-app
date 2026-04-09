@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.propertyRegistration.presentation.models
 
+import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap

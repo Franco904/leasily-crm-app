@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyDetails.composables.items
+package com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,24 +21,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconValueDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.utils.orNotRegistered
+import com.fstengineering.leasilycrm.propertyDetails.presentation.models.PropertyAddressUiState
 
 @Composable
 fun PropertyLocationDetailsItem(
-    property: Property,
+    propertyAddress: PropertyAddressUiState,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val notRegisteredString =
         remember { context.getString(R.string.not_registered_info_var_1_body_text).lowercase() }
 
-    val numberText = if (property.number != null) ", ${property.number}" else ""
+    val numberText = if (propertyAddress.number != null) ", ${propertyAddress.number}" else ""
 
-    val hasApartmentSpecificCharacteristics = property.parkingSpotNumber != null
-            || property.parkingBasementLevelNumber != null
-            || property.hobbyBoxNumber != null
+    val hasApartmentSpecificCharacteristics = propertyAddress.parkingSpotNumber != null
+            || propertyAddress.parkingBasementLevelNumber != null
+            || propertyAddress.hobbyBoxNumber != null
 
     Column(
         modifier = modifier
@@ -62,18 +62,18 @@ fun PropertyLocationDetailsItem(
             Spacer(modifier = Modifier.width(8.dp))
             Column {
                 Text(
-                    text = property.neighborhood ?: "",
+                    text = propertyAddress.neighborhood ?: "",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
-                    text = "${property.streetAddress}$numberText",
+                    text = "${propertyAddress.streetAddress}$numberText",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                if (property.cepPostalCode != null) {
+                if (propertyAddress.cepPostalCode != null) {
                     Text(
-                        text = property.cepPostalCode,
+                        text = propertyAddress.cepPostalCode,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -81,10 +81,10 @@ fun PropertyLocationDetailsItem(
             }
         }
         if (hasApartmentSpecificCharacteristics) {
-            val parkingSpotNumber = property.parkingSpotNumber.orNotRegistered(notRegisteredString)
+            val parkingSpotNumber = propertyAddress.parkingSpotNumber.orNotRegistered(notRegisteredString)
             val parkingBasementLevelNumber =
-                property.parkingBasementLevelNumber.orNotRegistered(notRegisteredString)
-            val hobbyBoxNumber = property.hobbyBoxNumber.orNotRegistered(notRegisteredString)
+                propertyAddress.parkingBasementLevelNumber.orNotRegistered(notRegisteredString)
+            val hobbyBoxNumber = propertyAddress.hobbyBoxNumber.orNotRegistered(notRegisteredString)
 
             Spacer(modifier = Modifier.height(16.dp))
             IconValueDetailsItem(

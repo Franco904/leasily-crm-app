@@ -1,8 +1,9 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -18,24 +19,24 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.transformLatest
 
 class WatchPropertyWithStaysTenantsUseCaseImpl(
-    private val propertyRepository: PropertyRepository,
+    private val propertySharedCommandRepository: PropertySharedCommandRepository,
     private val leadTenantSharedCommandRepository: LeadTenantSharedCommandRepository,
 ) : WatchPropertyWithStaysTenantsUseCase {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(
         propertyId: Long,
-    ): Flow<AppResult<Property?, InfraError>> {
-        return propertyRepository.watchById(propertyId)
-            .transformLatest { result ->
+    ): Flow<AppResult<Property?, ApplicationError>> {
+        return propertySharedCommandRepository.watchById(propertyId)
+            .mapLatest { result ->
                 result
-                    .onError { error -> emit(AppResult.Error(error)) }
+                    .onError { error -> return@mapLatest AppResult.Error(error) }
                     .onSuccess { storedProperty ->
                         if (storedProperty == null) {
-                            emit(AppResult.Success(data = null))
-                            return@onSuccess
+                            return@mapLatest AppResult.Success(data = null)
                         }
 
                         val ownedStays = storedProperty.stays
@@ -44,7 +45,7 @@ class WatchPropertyWithStaysTenantsUseCaseImpl(
                         val updatedStays = resolveTenantsForStays(currentStays = ownedStays)
 
                         val newProperty = storedProperty.copy(stays = updatedStays)
-                        emit(AppResult.Success(data = newProperty))
+                        return@mapLatest AppResult.Success(data = newProperty)
                     }
             }
     }

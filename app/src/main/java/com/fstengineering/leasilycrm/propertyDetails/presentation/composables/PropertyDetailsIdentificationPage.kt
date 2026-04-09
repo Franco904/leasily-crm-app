@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyDetails.composables
+package com.fstengineering.leasilycrm.propertyDetails.presentation.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,24 +10,21 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyFile
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyIncludedItemsDetailsItem
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyLocationDetailsItem
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyObservationsDetailsItem
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyOtherCharacteristicsDetailsItems
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyPicturesDetailsItems
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyQuantityCharacteristicsDetailsItems
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertySeaProximityTypeDetailsItem
-import com.fstengineering.leasilycrm.propertyDetails.composables.items.PropertyTypeDetailsItem
-import kotlinx.collections.immutable.ImmutableList
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
+import com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items.PropertyIncludedItemsDetailsItem
+import com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items.PropertyLocationDetailsItem
+import com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items.PropertyObservationsDetailsItem
+import com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items.PropertyOtherCharacteristicsDetailsItems
+import com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items.PropertyPicturesDetailsItems
+import com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items.PropertyQuantityCharacteristicsDetailsItems
+import com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items.PropertySeaProximityTypeDetailsItem
+import com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items.PropertyTypeDetailsItem
+import com.fstengineering.leasilycrm.propertyDetails.presentation.models.PropertyUiState
 
 @Composable
 fun PropertyDetailsIdentificationPage(
-    property: Property,
-    propertyCharacteristics: ImmutableList<PropertyCharacteristic>,
-    onViewPropertyPicture: (PropertyFile) -> Unit,
+    property: PropertyUiState.Loaded,
+    onViewPropertyPicture: (PropertyFileUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -40,14 +37,14 @@ fun PropertyDetailsIdentificationPage(
         Spacer(modifier = Modifier.height(24.dp))
         PropertyTypeDetailsItem(propertyType = property.type)
         Spacer(modifier = Modifier.height(24.dp))
-        PropertyLocationDetailsItem(property = property)
+        PropertyLocationDetailsItem(propertyAddress = property.address)
         Spacer(modifier = Modifier.height(24.dp))
-        PropertyQuantityCharacteristicsDetailsItems(property = property)
+        PropertyQuantityCharacteristicsDetailsItems(qtCharacteristics = property.quantityCharacteristics)
         Spacer(modifier = Modifier.height(24.dp))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(24.dp))
         PropertySeaProximityTypeDetailsItem(
-            seaProximityType = property.seaProximityType,
+            seaProximityTypeId = property.seaProximityTypeId,
             distanceToSea = property.distanceToSea,
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -58,10 +55,7 @@ fun PropertyDetailsIdentificationPage(
         Spacer(modifier = Modifier.height(24.dp))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(24.dp))
-        PropertyOtherCharacteristicsDetailsItems(
-            property = property,
-            propertyCharacteristics = propertyCharacteristics,
-        )
+        PropertyOtherCharacteristicsDetailsItems(checkedCharacteristics = property.characteristics)
         Spacer(modifier = Modifier.height(24.dp))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(24.dp))

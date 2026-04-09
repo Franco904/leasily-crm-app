@@ -19,7 +19,7 @@ interface PropertyDatabaseDataSource {
 
     suspend fun getAllSentInAssistance(assistanceId: Long): AppResult<List<PropertyCompound>, InfraError>
 
-    fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, InfraError>
+    fun watchById(id: Long): Flow<AppResult<PropertyCompound, InfraError>>
 
     fun watchAll(): AppResult<Flow<List<PropertyCompound>>, InfraError>
 }

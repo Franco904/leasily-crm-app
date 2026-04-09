@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.properties
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
 import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class PropertiesViewModel(
-    private val propertyRepository: PropertyRepository,
+    private val propertySharedCommandRepository: PropertySharedCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -52,7 +52,7 @@ class PropertiesViewModel(
         _isLoading.update { true }
 
         viewModelScope.launch {
-            propertyRepository.watchAll().collect { result ->
+            propertySharedCommandRepository.watchAll().collect { result ->
                 result
                     .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                     .onSuccess { properties ->
@@ -72,7 +72,7 @@ class PropertiesViewModel(
                 .collect { searchInput ->
                     _isLoading.update { true }
 
-                    propertyRepository.getAllMatching(matching = searchInput)
+                    propertySharedCommandRepository.getAllMatching(matching = searchInput)
                         .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                         .onSuccess { matchingProperties ->
                             _properties.update { matchingProperties }
@@ -94,7 +94,7 @@ class PropertiesViewModel(
         viewModelScope.launch {
             val id = propertyToDelete.value?.id ?: return@launch
 
-            propertyRepository.delete(id)
+            propertySharedCommandRepository.delete(id)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess {
                     _uiEvents.send(UiEvents.PropertyDeleteSuccess)

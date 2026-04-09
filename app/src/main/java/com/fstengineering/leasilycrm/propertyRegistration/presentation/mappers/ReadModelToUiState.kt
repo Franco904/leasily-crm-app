@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.propertyRegistration.presentation.mappers
 
 import androidx.core.net.toUri
+import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyFileReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyOwnerReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyPriceReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyReadModel
-import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyOwnerUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyPricesUiState
@@ -51,7 +51,7 @@ fun PropertyReadModel.toUiState() = PropertyDraftFormUiState.Loaded(
     observations = observations,
 )
 
-fun ImmutableList<PropertyPriceReadModel>.toUiState(): PropertyPricesUiState {
+private fun ImmutableList<PropertyPriceReadModel>.toUiState(): PropertyPricesUiState {
     val pricesByMonthYear = this
         .sortedBy { it.startDate }
         .groupBy {
@@ -70,14 +70,14 @@ fun ImmutableList<PropertyPriceReadModel>.toUiState(): PropertyPricesUiState {
     return PropertyPricesUiState(pricesByMonthYear)
 }
 
-fun PropertyPriceReadModel.toUiState() = PropertyPriceUiState(
+private fun PropertyPriceReadModel.toUiState() = PropertyPriceUiState(
     id = id,
     startDate = startDate,
     endDate = endDate,
     amount = amount,
 )
 
-fun PropertyFileReadModel.toUiState() = PropertyFileUiState(
+private fun PropertyFileReadModel.toUiState() = PropertyFileUiState(
     id = id,
     uri = uriString.toUri(),
     isMainPicture = isMainPicture,

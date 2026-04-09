@@ -35,8 +35,8 @@ class PropertyDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getAllSentInAssistance(assistanceId) }
     }
 
-    override fun watchById(id: Long): AppResult<Flow<PropertyCompound?>, InfraError> {
-        return onDatabaseSafe { dao.watchById(id) }
+    override fun watchById(id: Long): Flow<AppResult<PropertyCompound, InfraError>> {
+        return dao.watchById(id).asDatabaseFlowResult()
     }
 
     override fun watchAll(): AppResult<Flow<List<PropertyCompound>>, InfraError> {

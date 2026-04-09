@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.propertyDashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.domain.entities.Property
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 class PropertyDashboardViewModel(
     private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
     private val watchPropertyWithStaysTenantsUseCase: WatchPropertyWithStaysTenantsUseCase,
-    private val propertyRepository: PropertyRepository,
+    private val propertySharedCommandRepository: PropertySharedCommandRepository,
     private val now: AppDate,
 ) : ViewModel() {
     private var isInitialized = false
@@ -101,7 +101,7 @@ class PropertyDashboardViewModel(
         val propertyId = property.value.id ?: return
 
         viewModelScope.launch {
-            propertyRepository.delete(id = propertyId)
+            propertySharedCommandRepository.delete(id = propertyId)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess { _uiEvents.send(UiEvents.PropertyDeleteSuccess) }
         }

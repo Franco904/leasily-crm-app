@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyDetails.composables.items
+package com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Apartment

@@ -7,14 +7,12 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 
-interface PropertyRepository {
+interface PropertySharedCommandRepository {
     suspend fun delete(id: Long): AppResult<Unit, ApplicationError>
 
     suspend fun getAllMatching(matching: String?): AppResult<ImmutableList<Property>, ApplicationError>
 
     suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, ApplicationError>
-
-    fun watchById(propertyId: Long): Flow<AppResult<Property?, ApplicationError>>
 
     fun watchAll(): Flow<AppResult<ImmutableList<Property>, ApplicationError>>
 

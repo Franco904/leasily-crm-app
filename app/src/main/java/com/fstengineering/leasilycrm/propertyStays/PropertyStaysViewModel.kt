@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.propertyStays
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 class PropertyStaysViewModel(
     private val getStaysStructuredDatesUseCase: GetStaysStructuredDatesUseCase,
     private val watchPropertyWithStaysTenantsUseCase: WatchPropertyWithStaysTenantsUseCase,
-    private val propertyRepository: PropertyRepository,
+    private val propertySharedCommandRepository: PropertySharedCommandRepository,
     private val now: AppDate,
 ) : ViewModel() {
     private var isInitialized = false
@@ -63,7 +63,7 @@ class PropertyStaysViewModel(
     private fun watchProperty(propertyId: Long) {
         viewModelScope.launch {
             val watchPropertyWithStaysTenantsFlow = watchPropertyWithStaysTenantsUseCase(propertyId)
-            val staysSelectedPeriodFlow = propertyRepository.watchPropertyStaysSelectedPeriod()
+            val staysSelectedPeriodFlow = propertySharedCommandRepository.watchPropertyStaysSelectedPeriod()
 
             watchPropertyWithStaysTenantsFlow
                 .combine(staysSelectedPeriodFlow) { watchPropertyResult, selectedPeriod ->
@@ -154,7 +154,7 @@ class PropertyStaysViewModel(
         selectedEndYear: Int? = null,
     ) {
         viewModelScope.launch {
-            propertyRepository.updatePropertyStaysSelectedPeriod(
+            propertySharedCommandRepository.updatePropertyStaysSelectedPeriod(
                 selectedStartMonth = selectedStartMonth,
                 selectedStartYear = selectedStartYear,
                 selectedEndMonth = selectedEndMonth,

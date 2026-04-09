@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
@@ -21,11 +21,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 
-class PropertyRepositoryImpl(
+class PropertySharedCommandRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val propertyDatabaseDataSource: PropertyDatabaseDataSource,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
-) : PropertyRepository {
+) : PropertySharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
             propertyDatabaseDataSource.delete(id)
@@ -59,20 +59,6 @@ class PropertyRepositoryImpl(
                 .toPersistentList()
 
         return AppResult.Success(data = neighborHoodNames)
-    }
-
-    override fun watchById(propertyId: Long): Flow<AppResult<Property?, ApplicationError>> = flow {
-        val propertyFlow = propertyDatabaseDataSource.watchById(id = propertyId)
-            .fold(
-                onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
-                onSuccess = { it },
-            )
-            .map { property ->
-                AppResult.Success<Property?, ApplicationError>(data = property?.toDomain())
-            }
-            .distinctUntilChanged()
-
-        emitAll(propertyFlow)
     }
 
     override fun watchAll(): Flow<AppResult<ImmutableList<Property>, ApplicationError>> =

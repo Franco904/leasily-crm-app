@@ -18,7 +18,7 @@ import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.LeadTen
 import com.fstengineering.leasilycrm.profile.presentation.ProfileViewModel
 import com.fstengineering.leasilycrm.properties.PropertiesViewModel
 import com.fstengineering.leasilycrm.propertyDashboard.PropertyDashboardViewModel
-import com.fstengineering.leasilycrm.propertyDetails.PropertyDetailsViewModel
+import com.fstengineering.leasilycrm.propertyDetails.presentation.PropertyDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.PropertyOwnerDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationViewModel
 import com.fstengineering.leasilycrm.propertyOwners.presentation.PropertyOwnersViewModel
@@ -83,7 +83,7 @@ val viewModelModule = module {
 
     viewModel {
         PropertiesViewModel(
-            propertyRepository = get(),
+            propertySharedCommandRepository = get(),
         )
     }
 
@@ -110,7 +110,7 @@ val viewModelModule = module {
         PropertyDashboardViewModel(
             getStaysStructuredDatesUseCase = get(),
             watchPropertyWithStaysTenantsUseCase = get(),
-            propertyRepository = get(),
+            propertySharedCommandRepository = get(),
             now = AppDate.lazyNow(),
         )
     }
@@ -125,7 +125,7 @@ val viewModelModule = module {
         PropertyStaysViewModel(
             getStaysStructuredDatesUseCase = get(),
             watchPropertyWithStaysTenantsUseCase = get(),
-            propertyRepository = get(),
+            propertySharedCommandRepository = get(),
             now = AppDate.lazyNow(),
         )
     }

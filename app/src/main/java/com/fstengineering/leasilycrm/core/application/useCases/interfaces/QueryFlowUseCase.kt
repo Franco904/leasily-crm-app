@@ -4,6 +4,6 @@ import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import kotlinx.coroutines.flow.Flow
 
-interface QueryFlowUseCase<Q : QueryUseCase.Args, R : QueryUseCase.ReadModel> {
-    operator fun invoke(query: Q): Flow<AppResult<R, ApplicationError>>
+interface QueryFlowUseCase<Q, R> {
+    suspend operator fun invoke(args: Q): Flow<AppResult<R, ApplicationError>>
 }

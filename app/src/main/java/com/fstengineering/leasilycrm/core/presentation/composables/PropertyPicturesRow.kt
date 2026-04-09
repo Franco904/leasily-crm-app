@@ -46,7 +46,7 @@ fun PropertyPicturesRow(
         ) { i, file ->
             PropertyPictureItem(
                 picture = file,
-                isMainPicture = !isReadOnly && file.isMainPicture && pictures.size > 1,
+                mustShowMainPictureIndicator = !isReadOnly && file.isMainPicture && pictures.size > 1,
                 isReadOnly = isReadOnly,
                 onClick = { onSelectMainPicture?.invoke(i, file) },
                 onDeletePicture = { onDeletePicture?.invoke(file) },
@@ -59,7 +59,7 @@ fun PropertyPicturesRow(
 @Composable
 private fun PropertyPictureItem(
     picture: PropertyFileUiState,
-    isMainPicture: Boolean,
+    mustShowMainPictureIndicator: Boolean,
     isReadOnly: Boolean,
     onClick: () -> Unit,
     onDeletePicture: () -> Unit,
@@ -71,8 +71,8 @@ private fun PropertyPictureItem(
         Box {
             Card(
                 border = BorderStroke(
-                    width = if (isMainPicture) 2.dp else 1.dp,
-                    color = if (isMainPicture) {
+                    width = if (mustShowMainPictureIndicator) 2.dp else 1.dp,
+                    color = if (mustShowMainPictureIndicator) {
                         MaterialTheme.colorScheme.tertiary
                     } else MaterialTheme.colorScheme.outlineVariant,
                 ),
@@ -107,7 +107,7 @@ private fun PropertyPictureItem(
                 }
             }
         }
-        if (isMainPicture) {
+        if (mustShowMainPictureIndicator) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = stringResource(R.string.property_registration_pictures_main_picture_label),

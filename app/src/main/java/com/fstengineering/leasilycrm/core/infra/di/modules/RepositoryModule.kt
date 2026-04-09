@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.A
 import com.fstengineering.leasilycrm.core.application.repositories.CrmMetricsRepository
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.PropertyRepository
+import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
@@ -20,7 +20,7 @@ import com.fstengineering.leasilycrm.core.infra.di.qualifiers.plainPreferencesQu
 import com.fstengineering.leasilycrm.core.infra.repositories.CrmMetricsRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.PropertyOwnerSharedCommandRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.PropertyRepositoryImpl
+import com.fstengineering.leasilycrm.core.infra.repositories.PropertySharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.stores.SettingsSharedStoreImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StayFileRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.StaySharedCommandRepositoryImpl
@@ -154,8 +154,8 @@ val repositoryModule = module {
         )
     }
 
-    single<PropertyRepository> {
-        PropertyRepositoryImpl(
+    single<PropertySharedCommandRepository> {
+        PropertySharedCommandRepositoryImpl(
             databaseAdapter = get(),
             propertyDatabaseDataSource = get(),
             propertyCharacteristicCrossRefDatabaseDataSource = get(),

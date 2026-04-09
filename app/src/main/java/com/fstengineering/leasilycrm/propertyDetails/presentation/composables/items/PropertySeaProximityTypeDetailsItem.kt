@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyDetails.composables.items
+package com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BeachAccess
@@ -6,35 +6,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXIMITY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
+import com.fstengineering.leasilycrm.core.presentation.models.PropertySeaProximityTypeDetails
 
 @Composable
 fun PropertySeaProximityTypeDetailsItem(
-    seaProximityType: PropertySeaProximityType?,
+    seaProximityTypeId: Long?,
     distanceToSea: AppDecimal?,
     modifier: Modifier = Modifier,
 ) {
     IconLabelValueDetailsItem(
         icon = Icons.Outlined.BeachAccess,
         label = stringResource(R.string.property_registration_sea_proximity_type_title),
-        value = when {
-            seaProximityType == null -> {
-                stringResource(R.string.not_registered_info_body_text)
-            }
+        value = when (seaProximityTypeId) {
+            null -> stringResource(R.string.not_registered_info_body_text)
 
-            seaProximityType.id == DISTANCE_TO_SEA_PROXIMITY_TYPE_ID -> {
+            PropertySeaProximityType.DISTANCE_TO_SEA_ID -> {
                 stringResource(
                     R.string.properties_sea_proximity_distance_to_sea,
-                    distanceToSea ?: "",
+                    distanceToSea ?: R.string.not_registered_info_body_text,
                 )
             }
 
-            else -> seaProximityType.name ?: ""
+            else -> PropertySeaProximityTypeDetails.fromId(seaProximityTypeId)?.name
+                ?: stringResource(R.string.not_registered_info_body_text)
         },
-        isEmptyText = seaProximityType == null,
+        isEmptyText = seaProximityTypeId == null,
         modifier = modifier
     )
 }

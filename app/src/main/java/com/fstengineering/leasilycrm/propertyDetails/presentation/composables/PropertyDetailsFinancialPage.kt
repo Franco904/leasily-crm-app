@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyDetails.composables
+package com.fstengineering.leasilycrm.propertyDetails.presentation.composables
 
 import android.content.Context
 import androidx.compose.foundation.layout.Row
@@ -22,26 +22,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.entities.Property
-import com.fstengineering.leasilycrm.core.domain.entities.PropertyPrice
-import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPricesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyPriceCard
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
+import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
+import com.fstengineering.leasilycrm.propertyDetails.presentation.models.PropertyUiState
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
-import okhttp3.internal.toImmutableMap
+import kotlinx.collections.immutable.ImmutableMap
 import java.util.Calendar
 
 @Composable
 fun PropertyDetailsFinancialPage(
-    property: Property,
+    property: PropertyUiState.Loaded,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val currentCalendar = remember { Calendar.getInstance() }
+
+    val calendar = remember { Calendar.getInstance() }
 
     LazyColumn(
         modifier = modifier
@@ -65,7 +65,7 @@ fun PropertyDetailsFinancialPage(
         item { Spacer(modifier = Modifier.height(16.dp)) }
         pricesDetailsItems(
             context = context,
-            currentCalendar = currentCalendar,
+            calendar = calendar,
             prices = property.prices,
         )
         item { Spacer(modifier = Modifier.height(120.dp)) }
@@ -74,8 +74,8 @@ fun PropertyDetailsFinancialPage(
 
 fun LazyListScope.pricesDetailsItems(
     context: Context,
-    currentCalendar: Calendar,
-    prices: ImmutableList<PropertyPrice>,
+    calendar: Calendar,
+    prices: ImmutableMap<PriceMonthYearUiState, ImmutableList<PropertyPriceUiState>>,
     modifier: Modifier = Modifier,
 ) {
     item {
@@ -101,29 +101,19 @@ fun LazyListScope.pricesDetailsItems(
         item { PropertyPricesEmptySection() }
     } else {
         itemsIndexed(
-            items = prices
-                .sortedBy { it.startDate?.date() }
-                .groupBy { price ->
-                    CalendarMonthYear(
-                        month = price.startDate?.month ?: 0,
-                        year = price.startDate?.year ?: 0,
-                    )
-                }
-                .toImmutableMap(),
-            key = { _, entry -> entry.key.id },
+            items = prices,
+            key = { _, entry -> entry.key },
             contentType = { _, entryType -> entryType },
-        ) { i, monthPrices ->
-            val monthLabel =
-                context.getMonthLabelByNumber(monthNumber = monthPrices.key.month)
-            val isCurrentYear = monthPrices.key.year == currentCalendar.get(Calendar.YEAR)
+        ) { i, (monthYear, prices) ->
+            val isCurrentYear = monthYear.year == calendar.get(Calendar.YEAR)
 
-            val finalMonthLabel =
-                "$monthLabel ${if (isCurrentYear) "" else monthPrices.key.year}"
+            val monthLabel = context.getMonthLabelByNumber(monthNumber = monthYear.month)
+            val monthYearLabel = "$monthLabel ${if (isCurrentYear) "" else monthYear.year}"
 
             if (i > 0) Spacer(modifier = Modifier.height(8.dp))
             PropertyPriceCard(
-                monthYearLabel = finalMonthLabel,
-                monthPrices = monthPrices.value.toImmutableList(),
+                monthYearLabel = monthYearLabel,
+                monthPrices = prices,
                 hasMoreOptionsMenu = false,
             )
         }

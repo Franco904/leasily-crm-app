@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyDetails.composables.items
+package com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

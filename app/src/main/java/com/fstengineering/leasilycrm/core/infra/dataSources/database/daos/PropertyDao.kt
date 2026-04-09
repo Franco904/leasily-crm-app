@@ -56,7 +56,7 @@ interface PropertyDao {
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
-    fun watchById(id: Long): Flow<PropertyCompound?>
+    fun watchById(id: Long): Flow<PropertyCompound>
 
     @Transaction
     @Query(

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyDetails.composables.items
+package com.fstengineering.leasilycrm.propertyDetails.presentation.composables.items
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,10 +20,12 @@ import com.fstengineering.leasilycrm.core.presentation.composables.details.Bedro
 import com.fstengineering.leasilycrm.core.presentation.composables.details.DoubleSingleBedsDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconValueDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.ParkingSpotsDetailsItem
+import com.fstengineering.leasilycrm.propertyDetails.presentation.models.PropertyQuantityCharacteristicsUiState
+import com.fstengineering.leasilycrm.propertyDetails.presentation.models.PropertyUiState
 
 @Composable
 fun PropertyQuantityCharacteristicsDetailsItems(
-    property: Property,
+    qtCharacteristics: PropertyQuantityCharacteristicsUiState,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -36,22 +38,22 @@ fun PropertyQuantityCharacteristicsDetailsItems(
         )
         Spacer(modifier = Modifier.height(16.dp))
         BedroomsEnSuitesDetailsItem(
-            qtBedrooms = property.bedrooms,
-            qtEnSuites = property.enSuites,
+            qtBedrooms = qtCharacteristics.bedroomsCount,
+            qtEnSuites = qtCharacteristics.enSuitesCount,
         )
         Spacer(modifier = Modifier.height(16.dp))
         DoubleSingleBedsDetailsItem(
-            qtDoubleBeds = property.doubleBeds,
-            qtSingleBeds = property.singleBeds,
+            qtDoubleBeds = qtCharacteristics.doubleBedsCount,
+            qtSingleBeds = qtCharacteristics.singleBedsCount,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        BathroomsDetailsItem(qtBathrooms = property.bathrooms)
+        BathroomsDetailsItem(qtBathrooms = qtCharacteristics.bathroomsCount)
         Spacer(modifier = Modifier.height(16.dp))
-        ParkingSpotsDetailsItem(qtParkingSpots = property.parkingSpots)
+        ParkingSpotsDetailsItem(qtParkingSpots = qtCharacteristics.parkingSpotsCount)
         Spacer(modifier = Modifier.height(16.dp))
-        AirConditionersDetailsItem(qtAirConditioners = property.airConditioners)
+        AirConditionersDetailsItem(qtAirConditioners = qtCharacteristics.airConditionersCount)
         Spacer(modifier = Modifier.height(16.dp))
-        MaxGuestsDetailsItem(qtMaxGuests = property.maxGuests)
+        MaxGuestsDetailsItem(qtMaxGuests = qtCharacteristics.maxGuestsCount)
     }
 }
 
