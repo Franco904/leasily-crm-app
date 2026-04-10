@@ -1,9 +1,0 @@
-package com.fstengineering.leasilycrm.core.application.useCases.interfaces
-
-import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckNotificationStatus
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
-
-interface GetTodayCheckInsCheckOutsToNotifyUseCase {
-    suspend operator fun invoke(): AppResult<List<StayCheckNotificationStatus>, InfraError>
-}

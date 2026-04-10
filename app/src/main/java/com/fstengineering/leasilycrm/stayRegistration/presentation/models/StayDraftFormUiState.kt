@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.stayRegistration.presentation.models
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -13,7 +13,7 @@ sealed interface StayDraftFormUiState {
     sealed interface Loaded : StayDraftFormUiState {
         val id: Long?
         val createDateTime: AppDateTime?
-        val property: PropertyUiState?
+        val property: PropertyCardUiState?
         val checkInDateTime: AppDateTime?
         val checkOutDateTime: AppDateTime?
         val observations: String?
@@ -23,7 +23,7 @@ sealed interface StayDraftFormUiState {
         data class OwnedStay(
             override val id: Long?,
             override val createDateTime: AppDateTime?,
-            override val property: PropertyUiState?,
+            override val property: PropertyCardUiState?,
             val tenant: LeadTenantUiState?,
             val vehicleMake: String?,
             val vehicleColor: String?,
@@ -66,7 +66,7 @@ sealed interface StayDraftFormUiState {
         data class UnavailablePeriod(
             override val id: Long?,
             override val createDateTime: AppDateTime?,
-            override val property: PropertyUiState?,
+            override val property: PropertyCardUiState?,
             override val checkInDateTime: AppDateTime?,
             override val checkOutDateTime: AppDateTime?,
             override val observations: String?,

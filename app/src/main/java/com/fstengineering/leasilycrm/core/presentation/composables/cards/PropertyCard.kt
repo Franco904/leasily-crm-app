@@ -36,13 +36,13 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOption
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicReadOnlyChip
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryIconButton
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun PropertyCard(
-    property: PropertyUiState,
+    property: PropertyCardUiState,
     modifier: Modifier = Modifier,
     onCardClick: (() -> Unit)? = null,
     onViewPropertyDetails: () -> Unit = {},
@@ -161,7 +161,7 @@ fun PropertyCard(
 
 @Composable
 fun CharacteristicsChipsRow(
-    propertyDetails: PropertyUiState,
+    propertyDetails: PropertyCardUiState,
     modifier: Modifier = Modifier,
 ) {
     Row(

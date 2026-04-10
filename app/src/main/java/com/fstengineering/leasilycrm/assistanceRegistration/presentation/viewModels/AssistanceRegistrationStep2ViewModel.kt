@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.reposito
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -30,7 +30,7 @@ class AssistanceRegistrationStep2ViewModel(
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _properties =
-        MutableStateFlow<ImmutableList<PropertyUiState>>(persistentListOf())
+        MutableStateFlow<ImmutableList<PropertyCardUiState>>(persistentListOf())
     val properties = _properties.asStateFlow()
 
     private val _searchInput = MutableStateFlow<String?>(null)

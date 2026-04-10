@@ -13,7 +13,7 @@ interface TenantDatabaseDataSource {
 
     suspend fun getById(id: Long): AppResult<LeadTenantReadView, InfraError>
 
-    suspend fun getNameById(id: Long): AppResult<String?, InfraError>
+    suspend fun getNameById(id: Long): AppResult<String, InfraError>
 
     suspend fun getAllLeads(
         matching: String?,

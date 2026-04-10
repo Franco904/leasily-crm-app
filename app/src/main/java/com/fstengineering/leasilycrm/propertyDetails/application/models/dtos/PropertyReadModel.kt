@@ -8,7 +8,6 @@ import kotlinx.collections.immutable.ImmutableList
 
 data class PropertyReadModel(
     val id: Long,
-    val ownerName: String,
     val type: PropertyType,
     val neighborhood: String,
     val streetAddress: String,
@@ -36,41 +35,4 @@ data class PropertyReadModel(
     val prices: ImmutableList<PropertyPriceReadModel>,
     val files: ImmutableList<PropertyFileReadModel>,
     val observations: String?,
-) : QueryUseCase.ReadModel {
-    companion object {
-        fun create(
-            propertyRaw: PropertyRawReadModel,
-            ownerName: String,
-        ) = PropertyReadModel(
-            id = propertyRaw.id,
-            ownerName = ownerName,
-            type = propertyRaw.type,
-            neighborhood = propertyRaw.neighborhood,
-            streetAddress = propertyRaw.streetAddress,
-            cepPostalCode = propertyRaw.cepPostalCode,
-            number = propertyRaw.number,
-            addressLine2 = propertyRaw.addressLine2,
-            parkingSpotNumber = propertyRaw.parkingSpotNumber,
-            parkingBasementLevelNumber = propertyRaw.parkingBasementLevelNumber,
-            hobbyBoxNumber = propertyRaw.hobbyBoxNumber,
-            bedroomsCount = propertyRaw.bedroomsCount,
-            enSuitesCount = propertyRaw.enSuitesCount,
-            doubleBedsCount = propertyRaw.doubleBedsCount,
-            singleBedsCount = propertyRaw.singleBedsCount,
-            bathroomsCount = propertyRaw.bathroomsCount,
-            parkingSpotsCount = propertyRaw.parkingSpotsCount,
-            airConditionersCount = propertyRaw.airConditionersCount,
-            maxGuestsCount = propertyRaw.maxGuestsCount,
-            seaProximityTypeId = propertyRaw.seaProximityTypeId,
-            distanceToSea = propertyRaw.distanceToSea,
-            includedItems = propertyRaw.includedItems,
-            hasIncludedItems = propertyRaw.hasIncludedItems,
-            characteristics = propertyRaw.characteristics,
-            cleaningServiceTax = propertyRaw.cleaningServiceTax,
-            hasCleaningServiceIncluded = propertyRaw.hasCleaningServiceIncluded,
-            prices = propertyRaw.prices,
-            files = propertyRaw.files,
-            observations = propertyRaw.observations,
-        )
-    }
-}
+) : QueryUseCase.ReadModel

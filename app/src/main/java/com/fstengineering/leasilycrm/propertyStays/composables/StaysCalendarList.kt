@@ -16,7 +16,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
-import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
+import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsCalendar
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -102,11 +102,11 @@ fun StaysCalendarList(
         val isNotFirst = monthYear != selectedYearStaysDates.keys.first()
         if (isNotFirst) Spacer(modifier = Modifier.height(8.dp))
 
-        StayPeriodsCalendar(
+        OccupiedPeriodsCalendar(
             month = monthYear.month,
             year = monthYear.year,
-            selectedDatesWithMonthYear = monthYear to staysDates,
-            onViewStay = onViewStay,
+            occupiedPeriods = monthYear to staysDates,
+            onViewPeriod = onViewStay,
         )
     }
 }

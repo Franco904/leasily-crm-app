@@ -21,7 +21,7 @@ class TenantDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getById(id) }
     }
 
-    override suspend fun getNameById(id: Long): AppResult<String?, InfraError> {
+    override suspend fun getNameById(id: Long): AppResult<String, InfraError> {
         return onDatabaseSafe { dao.getNameById(id) }
     }
 

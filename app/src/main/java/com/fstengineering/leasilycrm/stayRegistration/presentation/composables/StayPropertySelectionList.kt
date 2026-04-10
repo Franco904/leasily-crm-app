@@ -9,13 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun StayPropertySelectionList(
-    properties: ImmutableList<PropertyUiState>,
-    onPropertySelect: (PropertyUiState) -> Unit,
+    properties: ImmutableList<PropertyCardUiState>,
+    onPropertySelect: (PropertyCardUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()

@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
-import com.fstengineering.leasilycrm.core.presentation.composables.StayPeriodsCalendar
+import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsCalendar
 
 @Composable
 fun StayPeriodDetailsItem(
@@ -53,12 +53,12 @@ fun StayPeriodDetailsItem(
         Column {
             stayStructuredDates.entries.forEachIndexed { i, (monthYear, stayDates) ->
                 if (i > 0) Spacer(modifier = Modifier.height(8.dp))
-                StayPeriodsCalendar(
+                OccupiedPeriodsCalendar(
                     month = monthYear.month,
                     year = monthYear.year,
                     periodDailiesCount = if (isUnavailablePeriod) null else periodDailiesCount,
-                    selectedDatesWithMonthYear = monthYear to stayDates,
-                    singleStayPeriodColor = defaultPeriodColor,
+                    occupiedPeriods = monthYear to stayDates,
+                    singlePeriodColor = defaultPeriodColor,
                 )
             }
         }

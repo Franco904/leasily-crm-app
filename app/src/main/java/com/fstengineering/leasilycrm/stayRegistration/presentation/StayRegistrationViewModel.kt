@@ -11,7 +11,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -64,7 +64,7 @@ class StayRegistrationViewModel(
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _properties =
-        MutableStateFlow<ImmutableList<PropertyUiState>>(persistentListOf())
+        MutableStateFlow<ImmutableList<PropertyCardUiState>>(persistentListOf())
     val properties = _properties.asStateFlow()
 
     private val _tenants = MutableStateFlow<ImmutableList<LeadTenantUiState>>(persistentListOf())

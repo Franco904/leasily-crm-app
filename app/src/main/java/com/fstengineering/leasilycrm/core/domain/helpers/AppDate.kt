@@ -64,6 +64,14 @@ data class AppDate(val date: () -> LocalDate) : Comparable<AppDate> {
             .toInt()
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (other !is AppDate) return false
+
+        return date() == other.date()
+    }
+
+    override fun hashCode(): Int = date().hashCode()
+
     override fun compareTo(other: AppDate): Int {
         return date().compareTo(other.date())
     }

@@ -3,9 +3,9 @@ package com.fstengineering.leasilycrm.propertyDetails.presentation.models
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 
@@ -14,7 +14,6 @@ sealed interface PropertyUiState {
 
     data class Loaded(
         val id: Long,
-        val ownerName: String,
         val type: PropertyType,
         val address: PropertyAddressUiState,
         val quantityCharacteristics: PropertyQuantityCharacteristicsUiState,

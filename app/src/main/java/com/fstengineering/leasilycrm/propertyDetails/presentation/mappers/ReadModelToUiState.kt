@@ -17,7 +17,6 @@ import kotlinx.collections.immutable.toPersistentMap
 
 fun PropertyReadModel.toUiState() = PropertyUiState.Loaded(
     id = id,
-    ownerName = ownerName,
     type = type,
     address = PropertyAddressUiState(
         neighborhood = neighborhood,

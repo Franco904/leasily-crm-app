@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.propertyOwners.application.repositories.PropertyOwnerQueryRepository
 import com.fstengineering.leasilycrm.propertyOwners.presentation.mappers.toUiState
-import com.fstengineering.leasilycrm.propertyOwners.presentation.models.PropertyOwnerUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyOwnerUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList

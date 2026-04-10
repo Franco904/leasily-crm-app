@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.WatchPropertyWithStaysTenantsUseCase
 import com.fstengineering.leasilycrm.core.domain.entities.Property
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear

@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.core.application.useCases
 import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckNotificationStatus
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult

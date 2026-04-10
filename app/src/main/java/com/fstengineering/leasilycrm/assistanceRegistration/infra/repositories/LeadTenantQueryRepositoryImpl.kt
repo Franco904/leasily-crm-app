@@ -10,12 +10,10 @@ class LeadTenantQueryRepositoryImpl(
     private val databaseDataSource: TenantDatabaseDataSource,
 ) : LeadTenantQueryRepository {
     override suspend fun getNameById(tenantId: Long): AppResult<String, ApplicationError> {
-        val tenantName = databaseDataSource.getNameById(id = tenantId)
+        return databaseDataSource.getNameById(id = tenantId)
             .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { it ?: return AppResult.Error(error = ApplicationError.Unknown) }
+                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onSuccess = { AppResult.Success(data = it) }
             )
-
-        return AppResult.Success(data = tenantName)
     }
 }

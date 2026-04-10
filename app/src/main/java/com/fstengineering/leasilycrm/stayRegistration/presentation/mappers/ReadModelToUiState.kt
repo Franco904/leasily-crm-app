@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.stayRegistration.presentation.mappers
 
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.StayFileReadModel
 import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.StayReadModel
@@ -43,11 +43,11 @@ fun UnavailablePeriodReadModel.toUiState() = StayDraftFormUiState.Loaded.Unavail
     observations = observations,
 )
 
-fun PropertyReadModel.toUiState(): PropertyUiState {
+fun PropertyReadModel.toUiState(): PropertyCardUiState {
     val numberText = if (number != null) ", $number" else ""
     val streetAddressAndNumber = "${streetAddress}$numberText"
 
-    return PropertyUiState(
+    return PropertyCardUiState(
         id = requireNotNull(id),
         mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,

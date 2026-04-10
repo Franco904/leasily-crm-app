@@ -7,10 +7,10 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Pr
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.propertyDetails.application.models.dtos.PropertyFileReadModel
 import com.fstengineering.leasilycrm.propertyDetails.application.models.dtos.PropertyPriceReadModel
-import com.fstengineering.leasilycrm.propertyDetails.application.models.dtos.PropertyRawReadModel
+import com.fstengineering.leasilycrm.propertyDetails.application.models.dtos.PropertyReadModel
 import kotlinx.collections.immutable.toPersistentList
 
-fun PropertyCompound.toRawReadModel(): PropertyRawReadModel {
+fun PropertyCompound.toRawReadModel(): PropertyReadModel {
     val characteristics = characteristics
         .mapNotNull { PropertyCharacteristic.fromId(it.propertyCharacteristicId) }
         .toPersistentList()
@@ -23,9 +23,8 @@ fun PropertyCompound.toRawReadModel(): PropertyRawReadModel {
         .map { it.toReadModel() }
         .toPersistentList()
 
-    return PropertyRawReadModel(
+    return PropertyReadModel(
         id = requireNotNull(property.id),
-        ownerId = property.ownerId,
         type = requireNotNull(PropertyType.fromId(property.typeId)),
         neighborhood = property.neighborhood,
         streetAddress = property.streetAddress,

@@ -4,10 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.propertyDetails.application.models.queries.PropertyArgs
-import com.fstengineering.leasilycrm.propertyDetails.application.useCases.WatchPropertyUseCase
+import com.fstengineering.leasilycrm.propertyDetails.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.propertyDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.propertyDetails.presentation.models.PropertyUiState
 import kotlinx.coroutines.Job
@@ -15,12 +16,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PropertyDetailsViewModel(
-    private val watchProperty: WatchPropertyUseCase,
+    private val propertyQueryRepository: PropertyQueryRepository,
     private val propertySharedCommandRepository: PropertySharedCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false
@@ -48,7 +50,7 @@ class PropertyDetailsViewModel(
         _isLoading.update { true }
 
         watchPropertyJob = viewModelScope.launch {
-            watchProperty.invoke(PropertyArgs(propertyId))
+            propertyQueryRepository.watchById(propertyId)
                 .collectLatest { result ->
                     result
                         .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }

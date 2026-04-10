@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface AssistanceDraftFormUiState {
@@ -32,7 +32,7 @@ sealed interface AssistanceDraftFormUiState {
         val preferredDistanceToSea: AppDecimal?,
         val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
         val observations: String?,
-        val sentProperties: ImmutableList<PropertyUiState>,
+        val sentProperties: ImmutableList<PropertyCardUiState>,
         val interactions: ImmutableList<AssistanceInteractionDraftFormUiState.Loaded>,
         val leadTenantId: Long,
         val leadTenantName: String,
