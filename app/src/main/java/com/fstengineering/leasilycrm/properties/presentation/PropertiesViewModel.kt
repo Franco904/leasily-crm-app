@@ -1,14 +1,17 @@
-package com.fstengineering.leasilycrm.properties
+package com.fstengineering.leasilycrm.properties.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
-import com.fstengineering.leasilycrm.core.domain.entities.Property
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.properties.application.repositories.PropertyQueryRepository
+import com.fstengineering.leasilycrm.properties.presentation.mappers.toUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,24 +23,23 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class PropertiesViewModel(
+    private val propertyQueryRepository: PropertyQueryRepository,
     private val propertySharedCommandRepository: PropertySharedCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvents>()
+    private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _properties = MutableStateFlow<ImmutableList<Property>>(persistentListOf())
+    private val _properties =
+        MutableStateFlow<ImmutableList<PropertyCardUiState>>(persistentListOf())
     val properties = _properties.asStateFlow()
 
-    private val _propertyToDelete = MutableStateFlow<Property?>(null)
+    private val _propertyToDelete = MutableStateFlow<PropertyCardUiState?>(null)
     val propertyToDelete = _propertyToDelete.asStateFlow()
 
     private val _searchInput = MutableStateFlow<String?>(null)
     val searchInput = _searchInput.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
 
     fun init() {
         if (isInitialized) return
@@ -49,17 +51,14 @@ class PropertiesViewModel(
     }
 
     private fun watchProperties() {
-        _isLoading.update { true }
-
         viewModelScope.launch {
-            propertySharedCommandRepository.watchAll().collect { result ->
+            propertyQueryRepository.watchAll().collect { result ->
                 result
-                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                    .onSuccess { properties ->
+                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onSuccess { storedProperties ->
+                        val properties = storedProperties.map { it.toUiState() }.toPersistentList()
                         _properties.update { properties }
                     }
-
-                _isLoading.update { false }
             }
         }
     }
@@ -70,13 +69,12 @@ class PropertiesViewModel(
             searchInput
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
-                    _isLoading.update { true }
-
-                    propertySharedCommandRepository.getAllMatching(matching = searchInput)
-                        .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                    propertyQueryRepository.getAllMatching(matching = searchInput)
+                        .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingProperties ->
-                            _properties.update { matchingProperties }
-                            _isLoading.update { false }
+                            val properties =
+                                matchingProperties.map { it.toUiState() }.toPersistentList()
+                            _properties.update { properties }
                         }
                 }
         }
@@ -86,7 +84,7 @@ class PropertiesViewModel(
         _searchInput.update { searchInput?.ifBlank { null } }
     }
 
-    fun onDeleteProperty(property: Property?) {
+    fun onDeleteProperty(property: PropertyCardUiState?) {
         _propertyToDelete.update { property }
     }
 
@@ -95,17 +93,23 @@ class PropertiesViewModel(
             val id = propertyToDelete.value?.id ?: return@launch
 
             propertySharedCommandRepository.delete(id)
-                .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess {
-                    _uiEvents.send(UiEvents.PropertyDeleteSuccess)
+                    _uiEvents.trySend(UiEvent.PropertyDeleteSuccess)
 
                     onDeleteProperty(property = null)
                 }
         }
     }
 
-    sealed interface UiEvents {
-        data class Error(val error: InfraError) : UiEvents
-        data object PropertyDeleteSuccess : UiEvents
+    override fun onCleared() {
+        _uiEvents.close()
+
+        super.onCleared()
+    }
+
+    sealed interface UiEvent {
+        data class BottomSheetError(val error: ApplicationError) : UiEvent
+        data object PropertyDeleteSuccess : UiEvent
     }
 }

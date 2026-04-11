@@ -46,7 +46,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularPr
 import com.fstengineering.leasilycrm.core.presentation.composables.StaysEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteStayDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.OccupiedPeriodTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.rememberHorizontalCenterScroller
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
@@ -311,7 +311,7 @@ fun StaysScreen(
             )
         }
         if (mustShowStayTypeDialog) {
-            StayTypeDialog(
+            OccupiedPeriodTypeDialog(
                 onTenantStayType = {
                     onRegisterStayBlank(null, false)
                     mustShowStayTypeDialog = false

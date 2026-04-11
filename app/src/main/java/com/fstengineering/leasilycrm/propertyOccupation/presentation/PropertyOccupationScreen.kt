@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.OccupiedPeriodTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
@@ -123,7 +123,7 @@ fun PropertyOccupationScreen(
         }
 
         if (mustShowStayTypeDialog) {
-            StayTypeDialog(
+            OccupiedPeriodTypeDialog(
                 onTenantStayType = {
                     mustShowStayTypeDialog = false
                     onNewStay(false)

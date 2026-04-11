@@ -36,7 +36,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.OccupiedPeriodTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
@@ -218,7 +218,7 @@ fun PropertyDetailsScreen(
         }
 
         if (mustShowStayTypeDialog) {
-            StayTypeDialog(
+            OccupiedPeriodTypeDialog(
                 onTenantStayType = {
                     mustShowStayTypeDialog = false
                     onNewStay(false)

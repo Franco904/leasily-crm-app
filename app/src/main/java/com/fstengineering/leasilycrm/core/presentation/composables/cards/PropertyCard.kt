@@ -48,7 +48,7 @@ fun PropertyCard(
     onViewPropertyDetails: () -> Unit = {},
     onEditProperty: () -> Unit = {},
     onDeleteProperty: () -> Unit = {},
-    onNewStay: () -> Unit = {},
+    onNewOccupiedPeriod: () -> Unit = {},
     hasMoreOptionsMenu: Boolean = true,
     hasCharacteristicsChipsRow: Boolean = true,
     hasViewDetailsButton: Boolean = false,
@@ -125,7 +125,7 @@ fun PropertyCard(
                 if (hasCharacteristicsChipsRow) {
                     AppPrimaryIconButton(
                         icon = painterResource(R.drawable.calendar_add_on),
-                        onClick = onNewStay,
+                        onClick = onNewOccupiedPeriod,
                         modifier = Modifier
                             .padding(bottom = 8.dp, end = 8.dp)
                             .align(Alignment.BottomEnd)

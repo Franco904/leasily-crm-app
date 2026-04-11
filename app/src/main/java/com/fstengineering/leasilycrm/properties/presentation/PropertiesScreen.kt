@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.properties
+package com.fstengineering.leasilycrm.properties.presentation
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
@@ -7,13 +7,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
@@ -41,18 +38,17 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.OccupiedPeriodTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.properties.PropertiesViewModel.UiEvents.PropertyDeleteSuccess
-import com.fstengineering.leasilycrm.properties.composables.PropertiesTopAppBar
+import com.fstengineering.leasilycrm.properties.presentation.PropertiesViewModel.UiEvent.BottomSheetError
+import com.fstengineering.leasilycrm.properties.presentation.PropertiesViewModel.UiEvent.PropertyDeleteSuccess
+import com.fstengineering.leasilycrm.properties.presentation.composables.PropertiesTopAppBar
 
 @Composable
 fun PropertiesScreen(
@@ -72,17 +68,14 @@ fun PropertiesScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
-
     val properties by viewModel.properties.collectAsStateWithLifecycle()
     val propertyToDelete by viewModel.propertyToDelete.collectAsStateWithLifecycle()
 
     var isSearchingProperty by remember { mutableStateOf(false) }
     val searchInput by viewModel.searchInput.collectAsStateWithLifecycle()
 
-    val listStatus by remember(isLoading, properties) {
+    val listStatus by remember(properties) {
         val status = when {
-            isLoading -> ListState.Loading
             properties.isEmpty() -> ListState.Empty
             else -> ListState.Idle
         }
@@ -90,14 +83,14 @@ fun PropertiesScreen(
         mutableStateOf(status)
     }
 
-    var propertyIdToRegisterStay by remember { mutableStateOf<Long?>(null) }
+    var propertyIdToRegisterOccupiedPeriod by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.init()
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is Error -> {
+                is BottomSheetError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
@@ -170,21 +163,7 @@ fun PropertiesScreen(
             targetState = listStatus,
         ) { listStatus ->
             when (listStatus) {
-                ListState.Loading -> {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    ) {
-                        AppCircularProgressIndicator(
-                            modifier = Modifier
-                                .size(64.dp)
-                        )
-                    }
-                }
-
-                ListState.Empty -> {
+                ListState.Loading, ListState.Empty -> {
                     PropertiesEmptySection(isSearchingProperty = isSearchingProperty)
                 }
 
@@ -211,17 +190,17 @@ fun PropertiesScreen(
                         item { Spacer(modifier = Modifier.height(16.dp)) }
                         itemsIndexed(
                             items = properties,
-                            key = { _, property -> property.id!! },
+                            key = { _, property -> property.id },
                             contentType = { _, entryType -> entryType },
                         ) { _, property ->
                             PropertyCard(
                                 property = property,
-                                onCardClick = { onViewPropertyDashboard(property.id!!) },
-                                onViewPropertyDetails = { onViewPropertyDetails(property.id!!) },
+                                onCardClick = { onViewPropertyDashboard(property.id) },
+                                onViewPropertyDetails = { onViewPropertyDetails(property.id) },
                                 onEditProperty = { onRegisterProperty(property.id) },
                                 onDeleteProperty = { viewModel.onDeleteProperty(property = property) },
-                                onNewStay = {
-                                    propertyIdToRegisterStay = property.id!!
+                                onNewOccupiedPeriod = {
+                                    propertyIdToRegisterOccupiedPeriod = property.id
                                 }
                             )
                             Spacer(modifier = Modifier.height(8.dp))
@@ -231,6 +210,7 @@ fun PropertiesScreen(
                 }
             }
         }
+
         if (propertyToDelete != null) {
             ConfirmDeletePropertyDialog(
                 onConfirmDelete = viewModel::deleteProperty,
@@ -239,17 +219,18 @@ fun PropertiesScreen(
                 },
             )
         }
-        if (propertyIdToRegisterStay != null) {
-            StayTypeDialog(
+
+        if (propertyIdToRegisterOccupiedPeriod != null) {
+            OccupiedPeriodTypeDialog(
                 onTenantStayType = {
-                    onNewStay(propertyIdToRegisterStay!!, false)
-                    propertyIdToRegisterStay = null
+                    onNewStay(propertyIdToRegisterOccupiedPeriod!!, false)
+                    propertyIdToRegisterOccupiedPeriod = null
                 },
                 onUnavailablePeriodStayType = {
-                    onNewStay(propertyIdToRegisterStay!!, true)
-                    propertyIdToRegisterStay = null
+                    onNewStay(propertyIdToRegisterOccupiedPeriod!!, true)
+                    propertyIdToRegisterOccupiedPeriod = null
                 },
-                onCancel = { propertyIdToRegisterStay = null }
+                onCancel = { propertyIdToRegisterOccupiedPeriod = null }
             )
         }
     }

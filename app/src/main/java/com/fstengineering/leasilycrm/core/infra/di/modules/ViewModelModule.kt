@@ -16,7 +16,7 @@ import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel
 import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.LeadTenantRegistrationViewModel
 import com.fstengineering.leasilycrm.profile.presentation.ProfileViewModel
-import com.fstengineering.leasilycrm.properties.PropertiesViewModel
+import com.fstengineering.leasilycrm.properties.presentation.PropertiesViewModel
 import com.fstengineering.leasilycrm.propertyDashboard.presentation.PropertyDashboardViewModel
 import com.fstengineering.leasilycrm.propertyDetails.presentation.PropertyDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.PropertyOwnerDetailsViewModel

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.properties.composables
+package com.fstengineering.leasilycrm.properties.presentation.composables
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.WindowInsets

@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 
 @Composable
-fun StayTypeDialog(
+fun OccupiedPeriodTypeDialog(
     onTenantStayType: () -> Unit,
     onUnavailablePeriodStayType: () -> Unit,
     onCancel: () -> Unit,
