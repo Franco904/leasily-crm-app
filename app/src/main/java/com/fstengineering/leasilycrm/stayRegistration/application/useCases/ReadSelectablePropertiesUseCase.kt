@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.Pr
 import com.fstengineering.leasilycrm.stayRegistration.application.models.queries.SelectablePropertiesArgs
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.StayQueryRepository
-import com.fstengineering.leasilycrm.stayRegistration.domain.services.PropertyOccupiedDatesPolicy
+import com.fstengineering.leasilycrm.stayRegistration.domain.services.PropertyOccupiedDatesService
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -34,7 +34,7 @@ class ReadSelectablePropertiesUseCase(
                             onSuccess = { it },
                         )
 
-                val occupiedDates = PropertyOccupiedDatesPolicy.getOccupiedDates(
+                val occupiedDates = PropertyOccupiedDatesService.getOccupiedDates(
                     occupiedPeriods = occupiedPeriods,
                     stayToEditId = args.stayId,
                 )

@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_IN
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedPeriod
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedPeriodDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentList
@@ -17,11 +17,11 @@ class PropertyOccupiedDatesService {
     companion object {
         fun getOccupiedPeriodsGroupedByMonthYear(
             occupiedPeriods: ImmutableList<PropertyOccupiedPeriod>
-        ): ImmutableMap<AppYearMonth, PersistentList<PropertyOccupiedPeriodDate>> {
+        ): ImmutableMap<AppYearMonth, PersistentList<PropertyOccupiedDate>> {
             if (occupiedPeriods.isEmpty()) return persistentMapOf()
 
             val occupiedDatesGrouped =
-                mutableMapOf<AppYearMonth, PersistentList<PropertyOccupiedPeriodDate>>()
+                mutableMapOf<AppYearMonth, PersistentList<PropertyOccupiedDate>>()
 
             var previousIndex: Int? = null
             var periodIndex = 0
@@ -82,7 +82,7 @@ class PropertyOccupiedDatesService {
             previousIndex: Int?,
             currentIndex: Int,
             nextIndex: Int?,
-        ): ImmutableMap<AppYearMonth, PersistentList<PropertyOccupiedPeriodDate>> {
+        ): ImmutableMap<AppYearMonth, PersistentList<PropertyOccupiedDate>> {
             var date = checkInDate
 
             val allOccupiedDates = mutableListOf<AppDate>()
@@ -101,7 +101,7 @@ class PropertyOccupiedDatesService {
                             val isCheckOutDate = allOccupiedDates.size > 1
                                     && occupiedDate == checkOutDate
 
-                            PropertyOccupiedPeriodDate(
+                            PropertyOccupiedDate(
                                 date = occupiedDate,
                                 firstHalfPeriodIndex = if (isCheckInDate) previousIndex else currentIndex,
                                 secondHalfPeriodIndex = if (isCheckOutDate) nextIndex else currentIndex,

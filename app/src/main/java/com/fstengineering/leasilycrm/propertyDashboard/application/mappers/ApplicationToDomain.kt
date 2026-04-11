@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.P
 
 fun PropertyOccupiedPeriodRawReadModel.toValueObject() = PropertyOccupiedPeriod(
     id = id,
-    tenantId = tenantId,
     checkInDateTime = checkInDateTime,
     checkOutDateTime = checkOutDateTime,
+    tenantId = tenantId,
 )

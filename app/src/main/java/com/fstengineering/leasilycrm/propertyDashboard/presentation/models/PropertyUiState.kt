@@ -16,7 +16,7 @@ sealed interface PropertyUiState {
         val type: PropertyType,
         val address: PropertyAddressUiState,
         val owner: PropertyOwnerUiState,
-        val currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<PropertyOccupiedPeriodDateUiState>>,
+        val currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<PropertyOccupiedDateUiState>>,
     ) : PropertyUiState {
         fun toCardDetails(): PropertyCardUiState {
             val numberText = if (address.number != null) ", ${address.number}" else ""

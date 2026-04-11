@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.propertyDashboard.presentation.models
 
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCalendarDateUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCalendarOccupiedDateUiState
 
-data class PropertyOccupiedPeriodDateUiState(
+data class PropertyOccupiedDateUiState(
     val dayOfMonth: String,
     val firstHalfPeriodIndex: Int?,
     val secondHalfPeriodIndex: Int?,
@@ -11,7 +11,7 @@ data class PropertyOccupiedPeriodDateUiState(
 ) {
     val isUnavailablePeriod = tenantName == null
 
-    fun toCalendarState() = PropertyCalendarDateUiState(
+    fun toCalendarState() = PropertyCalendarOccupiedDateUiState(
         dayOfMonth = dayOfMonth,
         firstHalfPeriodIndex = firstHalfPeriodIndex,
         secondHalfPeriodIndex = secondHalfPeriodIndex,

@@ -1,11 +1,11 @@
-package com.fstengineering.leasilycrm.core.domain.valueObjects
+package com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos
 
 import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
 
-data class PropertyOccupiedPeriodDate(
+data class PropertyOccupiedDateReadModel(
     val date: AppDate,
     val firstHalfPeriodIndex: Int?,
     val secondHalfPeriodIndex: Int?,
     val periodId: Long,
-    val tenantId: Long?,
+    val tenantName: String?,
 )

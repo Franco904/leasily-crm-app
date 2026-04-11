@@ -1,10 +1,10 @@
 package com.fstengineering.leasilycrm.propertyDashboard.application.mappers
 
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedPeriodDate
-import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOccupiedPeriodDateReadModel
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedDate
+import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOccupiedDateReadModel
 
-fun PropertyOccupiedPeriodDate.toReadModel(tenantName: String?) =
-    PropertyOccupiedPeriodDateReadModel(
+fun PropertyOccupiedDate.toReadModel(tenantName: String?) =
+    PropertyOccupiedDateReadModel(
         date = date,
         firstHalfPeriodIndex = firstHalfPeriodIndex,
         secondHalfPeriodIndex = secondHalfPeriodIndex,

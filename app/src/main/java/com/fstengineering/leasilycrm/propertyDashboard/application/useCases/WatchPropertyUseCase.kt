@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.propertyDashboard.application.mappers.toReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.mappers.toValueObject
-import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOccupiedPeriodDateReadModel
+import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOccupiedDateReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOwnerReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.queries.PropertyArgs
@@ -69,7 +69,7 @@ class WatchPropertyUseCase(
 
     private suspend fun getCurrentMonthOccupiedPeriods(
         propertyId: Long,
-    ): AppResult<Pair<AppYearMonth, ImmutableList<PropertyOccupiedPeriodDateReadModel>>, ApplicationError> {
+    ): AppResult<Pair<AppYearMonth, ImmutableList<PropertyOccupiedDateReadModel>>, ApplicationError> {
         val occupiedPeriods = stayQueryRepository.getAllByPropertyId(propertyId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },

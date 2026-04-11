@@ -12,13 +12,13 @@ data class PropertyReadModel(
     val streetAddress: String,
     val number: Int?,
     val owner: PropertyOwnerReadModel,
-    val currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<PropertyOccupiedPeriodDateReadModel>>,
+    val currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<PropertyOccupiedDateReadModel>>,
 ) {
     companion object {
         fun create(
             propertyRaw: PropertyRawReadModel,
             owner: PropertyOwnerReadModel,
-            currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<PropertyOccupiedPeriodDateReadModel>>,
+            currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<PropertyOccupiedDateReadModel>>,
         ) = PropertyReadModel(
             id = propertyRaw.id,
             mainPictureUriString = propertyRaw.mainPictureUriString,

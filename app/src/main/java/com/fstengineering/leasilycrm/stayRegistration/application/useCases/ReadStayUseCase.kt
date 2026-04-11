@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.stayRegistration.application.models.dtos.St
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.StayQueryRepository
 import com.fstengineering.leasilycrm.stayRegistration.application.repositories.TenantQueryRepository
-import com.fstengineering.leasilycrm.stayRegistration.domain.services.PropertyOccupiedDatesPolicy
+import com.fstengineering.leasilycrm.stayRegistration.domain.services.PropertyOccupiedDatesService
 import kotlinx.collections.immutable.persistentListOf
 
 class ReadStayUseCase(
@@ -44,7 +44,7 @@ class ReadStayUseCase(
                 )
         } ?: persistentListOf()
 
-        val propertyOccupiedDates = PropertyOccupiedDatesPolicy.getOccupiedDates(
+        val propertyOccupiedDates = PropertyOccupiedDatesService.getOccupiedDates(
             occupiedPeriods = propertyOccupiedPeriods,
             stayToEditId = args.id,
         )

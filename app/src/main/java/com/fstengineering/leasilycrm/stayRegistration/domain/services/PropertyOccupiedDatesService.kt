@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentSet
 
-class PropertyOccupiedDatesPolicy {
+class PropertyOccupiedDatesService {
     companion object {
         fun getOccupiedDates(
             occupiedPeriods: ImmutableList<OccupiedPeriod>,
