@@ -28,7 +28,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyR
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep2Screen
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep3Screen
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep4Screen
-import com.fstengineering.leasilycrm.propertyStays.PropertyStaysScreen
+import com.fstengineering.leasilycrm.propertyStays.presentation.PropertyStaysScreen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen

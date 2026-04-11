@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyStays.composables
+package com.fstengineering.leasilycrm.propertyStays.presentation.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,21 +13,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.StaysStructuredDatesMap
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsCalendar
+import com.fstengineering.leasilycrm.propertyStays.presentation.models.PropertyOccupiedPeriodsUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlin.math.roundToInt
 
 @Composable
-fun StaysCalendarList(
+fun OccupiedDatesCalendarsSection(
+    occupiedPeriods: PropertyOccupiedPeriodsUiState.Loaded,
     stayColorToTenantsNames: ImmutableList<Triple<Long, @Composable () -> Color, String>>,
-    stays: ImmutableList<Stay>,
-    selectedYearStaysDates: StaysStructuredDatesMap,
-    onViewStay: (Long) -> Unit,
+    hasUnavailablePeriod: Boolean,
+    onViewPeriod: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val stayColorToTenantsNamesChunked =
@@ -66,7 +65,7 @@ fun StaysCalendarList(
                         ColoredLabel(
                             color = stayTenantColor(),
                             label = tenantName,
-                            onClick = { onViewStay(stayId) },
+                            onClick = { onViewPeriod(stayId) },
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -83,30 +82,31 @@ fun StaysCalendarList(
                             ColoredLabel(
                                 color = stayTenantColor(),
                                 label = tenantName,
-                                onClick = { onViewStay(stayId) },
+                                onClick = { onViewPeriod(stayId) },
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                 }
             }
         }
-        if (stays.any { it.isUnavailablePeriod }) {
-            ColoredLabel(
-                color = null,
-                label = stringResource(R.string.stay_type_unavailable_period_title),
-            )
+        if (hasUnavailablePeriod) {
+            ColoredLabel(label = stringResource(R.string.stay_type_unavailable_period_title))
         }
     }
     Spacer(modifier = Modifier.height(24.dp))
-    selectedYearStaysDates.forEach { (monthYear, staysDates) ->
-        val isNotFirst = monthYear != selectedYearStaysDates.keys.first()
+    occupiedPeriods.selected.forEach { (yearMonth, occupiedDates) ->
+        val isNotFirst = yearMonth != occupiedPeriods.selected.keys.first()
         if (isNotFirst) Spacer(modifier = Modifier.height(8.dp))
 
+        val occupiedDatesStates = occupiedDates
+            .map { it.toCalendarState() }
+            .toImmutableList()
+
         OccupiedPeriodsCalendar(
-            month = monthYear.month,
-            year = monthYear.year,
-            occupiedPeriods = monthYear to staysDates,
-            onViewPeriod = onViewStay,
+            month = yearMonth.month,
+            year = yearMonth.year,
+            occupiedPeriods = yearMonth to occupiedDatesStates,
+            onViewPeriod = onViewPeriod,
         )
     }
 }

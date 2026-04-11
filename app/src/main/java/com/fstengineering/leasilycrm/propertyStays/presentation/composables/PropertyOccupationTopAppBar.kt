@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyStays.composables
+package com.fstengineering.leasilycrm.propertyStays.presentation.composables
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
@@ -19,7 +19,7 @@ import com.fstengineering.leasilycrm.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PropertyStaysTopAppBar(
+fun PropertyOccupationTopAppBar(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

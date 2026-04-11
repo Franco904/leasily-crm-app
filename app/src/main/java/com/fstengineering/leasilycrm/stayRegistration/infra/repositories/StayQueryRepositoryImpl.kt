@@ -38,7 +38,7 @@ class StayQueryRepositoryImpl(
     override suspend fun getOccupiedPeriodsByPropertyId(
         propertyId: Long,
     ): AppResult<ImmutableList<OccupiedPeriod>, ApplicationError> {
-        return databaseDataSource.getAllByPropertyId(propertyId = propertyId)
+        return databaseDataSource.watchAllByPropertyId(propertyId = propertyId)
             .fold(
                 onError = { AppResult.Error(error = it.toApplicationError()) },
                 onSuccess = {

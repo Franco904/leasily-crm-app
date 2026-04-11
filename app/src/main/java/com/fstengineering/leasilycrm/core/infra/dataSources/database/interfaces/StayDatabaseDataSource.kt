@@ -14,11 +14,11 @@ interface StayDatabaseDataSource {
 
     suspend fun getById(id: Long): AppResult<StayCompound, InfraError>
 
-    suspend fun getAllByPropertyId(propertyId: Long): AppResult<List<StayEntity>, InfraError>
-
     fun watchById(id: Long): AppResult<Flow<StayCompound?>, InfraError>
 
     fun watchAll(): AppResult<Flow<List<StayCompound>>, InfraError>
+
+    fun watchAllByPropertyId(propertyId: Long): Flow<AppResult<List<StayEntity>, InfraError>>
 
     fun watchAllUpcomingCheckInsAndCheckOuts(): AppResult<Flow<List<StayCheckStatusCompound>>, InfraError>
 }

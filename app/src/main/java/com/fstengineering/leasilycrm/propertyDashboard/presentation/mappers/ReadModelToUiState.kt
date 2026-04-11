@@ -32,7 +32,7 @@ fun PropertyReadModel.toUiState(): PropertyUiState.Loaded {
     )
 }
 
-fun PropertyOccupiedDateReadModel.toUiState() = PropertyOccupiedDateUiState(
+private fun PropertyOccupiedDateReadModel.toUiState() = PropertyOccupiedDateUiState(
     dayOfMonth = date.dayOfMonth.toString(),
     firstHalfPeriodIndex = firstHalfPeriodIndex,
     secondHalfPeriodIndex = secondHalfPeriodIndex,

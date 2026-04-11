@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.propertyStays
+package com.fstengineering.leasilycrm.propertyStays.presentation
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -24,14 +24,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.StayTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.propertyStays.PropertyStaysViewModel.UiEvents.NavigateUp
-import com.fstengineering.leasilycrm.propertyStays.composables.PropertyStaysSection
-import com.fstengineering.leasilycrm.propertyStays.composables.PropertyStaysTopAppBar
+import com.fstengineering.leasilycrm.propertyStays.presentation.PropertyStaysViewModel.UiEvent.BottomSheetError
+import com.fstengineering.leasilycrm.propertyStays.presentation.PropertyStaysViewModel.UiEvent.NavigateUp
+import com.fstengineering.leasilycrm.propertyStays.presentation.composables.PropertyOccupationTopAppBar
+import com.fstengineering.leasilycrm.propertyStays.presentation.composables.PropertyOccupiedDatesSection
+import com.fstengineering.leasilycrm.propertyStays.presentation.models.PropertyOccupiedPeriodsUiState
 
 @Composable
 fun PropertyStaysScreen(
@@ -48,14 +50,8 @@ fun PropertyStaysScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val property by viewModel.property.collectAsStateWithLifecycle()
-
-    val monthYearOptions by viewModel.monthYearOptions.collectAsStateWithLifecycle()
-
-    val selectedPeriod by viewModel.selectedPeriod.collectAsStateWithLifecycle()
-    val selectedYearStaysDates by viewModel.selectedYearStaysDates.collectAsStateWithLifecycle()
-
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val occupiedPeriods by viewModel.occupiedPeriods.collectAsStateWithLifecycle()
+    val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
 
     var mustShowStayTypeDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -64,7 +60,7 @@ fun PropertyStaysScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is Error -> {
+                is BottomSheetError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
@@ -87,7 +83,7 @@ fun PropertyStaysScreen(
     Scaffold(
         topBar = {
             Column {
-                PropertyStaysTopAppBar(onBack = onBack)
+                PropertyOccupationTopAppBar(onBack = onBack)
                 HorizontalDivider()
             }
         },
@@ -108,25 +104,24 @@ fun PropertyStaysScreen(
                 detectTapGestures { focusManager.clearFocus() }
             }
     ) { innerPadding ->
-        PropertyStaysSection(
-            property = property,
-            monthYearOptions = monthYearOptions,
-            selectedYearStaysDates = selectedYearStaysDates,
-            selectedPeriod = selectedPeriod,
-            onPeriodSelect = {
-                viewModel.updatePropertyStaysSelectedYear(
-                    selectedStartMonth = it.first?.month,
-                    selectedStartYear = it.first?.year,
-                    selectedEndMonth = it.second?.month,
-                    selectedEndYear = it.second?.year,
+        when (occupiedPeriods) {
+            is PropertyOccupiedPeriodsUiState.Loading -> {
+                FullScreenLoadingIndicator(innerPadding)
+            }
+
+            is PropertyOccupiedPeriodsUiState.Loaded -> {
+                PropertyOccupiedDatesSection(
+                    occupiedPeriods = occupiedPeriods as PropertyOccupiedPeriodsUiState.Loaded,
+                    selectedYear = selectedYear,
+                    onYearChange = viewModel::onYearChange,
+                    onViewPeriod = onViewStay,
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .padding(horizontal = 16.dp)
                 )
-            },
-            onViewStay = onViewStay,
-            isLoading = isLoading,
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-        )
+            }
+        }
+
         if (mustShowStayTypeDialog) {
             StayTypeDialog(
                 onTenantStayType = {

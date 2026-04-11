@@ -9,20 +9,26 @@ import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.
 import com.fstengineering.leasilycrm.propertyDashboard.infra.mappers.toRawReadModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class StayQueryRepositoryImpl(
     private val databaseDataSource: StayDatabaseDataSource,
 ) : StayQueryRepository {
-    override suspend fun getAllByPropertyId(
+    override fun watchAllByPropertyId(
         propertyId: Long,
-    ): AppResult<ImmutableList<PropertyOccupiedPeriodRawReadModel>, ApplicationError> {
-        return databaseDataSource.getAllByPropertyId(propertyId)
-            .fold(
-                onError = { e -> AppResult.Error(error = e.toApplicationError()) },
-                onSuccess = { stays ->
-                    val readModels = stays.map { it.toRawReadModel() }.toPersistentList()
-                    AppResult.Success(data = readModels)
-                },
-            )
+    ): Flow<AppResult<ImmutableList<PropertyOccupiedPeriodRawReadModel>, ApplicationError>> {
+        return databaseDataSource.watchAllByPropertyId(propertyId)
+            .map { result ->
+                result.fold(
+                    onError = { e -> AppResult.Error(error = e.toApplicationError()) },
+                    onSuccess = { occupiedPeriods ->
+                        val readModels = occupiedPeriods
+                            .map { it.toRawReadModel() }
+                            .toPersistentList()
+                        AppResult.Success(data = readModels)
+                    },
+                )
+            }
     }
 }

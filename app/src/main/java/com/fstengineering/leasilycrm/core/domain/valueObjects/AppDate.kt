@@ -1,11 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.collections.immutable.toPersistentMap
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -105,38 +101,6 @@ data class AppDate(val date: () -> LocalDate) : Comparable<AppDate> {
                     .atStartOfDay(ZoneOffset.UTC)
                     .toLocalDate()
             }
-        }
-
-        fun getDatesWithMissingMonthsBetween(
-            startDate: AppDate,
-            endDate: AppDate,
-            staysStructuredDatesMap: Map<CalendarMonthYear, PersistentList<StayCalendarDate>>,
-        ): ImmutableMap<CalendarMonthYear, PersistentList<StayCalendarDate>> {
-            val staysStructuredDatesWithMissingMonthsMap =
-                mutableMapOf<CalendarMonthYear, PersistentList<StayCalendarDate>>()
-
-            var currentDate = startDate.date()
-            while (currentDate <= endDate.date()) {
-                val calendarMonthYear = CalendarMonthYear(
-                    month = currentDate.monthValue,
-                    year = currentDate.year,
-                )
-
-                staysStructuredDatesWithMissingMonthsMap.put(calendarMonthYear, persistentListOf())
-                currentDate = currentDate.plusMonths(1)
-            }
-
-            staysStructuredDatesWithMissingMonthsMap.keys.forEach { monthYear ->
-                val stayDates = staysStructuredDatesMap[monthYear]
-
-                staysStructuredDatesWithMissingMonthsMap.put(
-                    monthYear,
-                    stayDates ?: persistentListOf()
-                )
-            }
-
-            return staysStructuredDatesWithMissingMonthsMap
-                .toPersistentMap()
         }
     }
 }

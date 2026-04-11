@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.core.domain.services
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedPeriod
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedPeriod
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentList
@@ -17,7 +17,7 @@ class PropertyOccupiedDatesService {
     companion object {
         fun getOccupiedPeriodsGroupedByMonthYear(
             occupiedPeriods: ImmutableList<PropertyOccupiedPeriod>
-        ): ImmutableMap<AppYearMonth, PersistentList<PropertyOccupiedDate>> {
+        ): ImmutableMap<AppYearMonth, ImmutableList<PropertyOccupiedDate>> {
             if (occupiedPeriods.isEmpty()) return persistentMapOf()
 
             val occupiedDatesGrouped =

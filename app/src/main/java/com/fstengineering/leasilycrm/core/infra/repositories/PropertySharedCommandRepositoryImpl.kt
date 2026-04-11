@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.mapLatest
 class PropertySharedCommandRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val propertyDatabaseDataSource: PropertyDatabaseDataSource,
-    private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : PropertySharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
         return databaseAdapter.withTransaction {
@@ -49,18 +48,6 @@ class PropertySharedCommandRepositoryImpl(
         return AppResult.Success(data = properties)
     }
 
-    override suspend fun getAllNeighborHoodNames(): AppResult<ImmutableList<String>, ApplicationError> {
-        val neighborHoodNames =
-            propertyDatabaseDataSource.getAllNeighborhoodNames()
-                .fold(
-                    onError = { return AppResult.Error(error = it.toApplicationError()) },
-                    onSuccess = { it },
-                )
-                .toPersistentList()
-
-        return AppResult.Success(data = neighborHoodNames)
-    }
-
     override fun watchAll(): Flow<AppResult<ImmutableList<Property>, ApplicationError>> =
         flow {
             val propertiesFlow = propertyDatabaseDataSource.watchAll()
@@ -76,56 +63,4 @@ class PropertySharedCommandRepositoryImpl(
 
             emitAll(propertiesFlow)
         }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override suspend fun watchPropertyStaysSelectedPeriod(): Flow<AppResult<Pair<CalendarMonthYear?, CalendarMonthYear?>, ApplicationError>> {
-        return plainPreferencesDataSource.readPreferences()
-            .fold(
-                onError = { error ->
-                    flow { emit(AppResult.Error(error = error.toApplicationError())) }
-                },
-                onSuccess = { prefsFlow ->
-                    prefsFlow.mapLatest { prefs ->
-                        val startMonth = prefs.propertyStaysSelectedPeriodStartMonth
-                        val startYear = prefs.propertyStaysSelectedPeriodStartYear
-                        val calendarStart = if (startMonth != null && startYear != null) {
-                            CalendarMonthYear(
-                                month = startMonth,
-                                year = startYear,
-                            )
-                        } else null
-
-                        val endMonth = prefs.propertyStaysSelectedPeriodEndMonth
-                        val endYear = prefs.propertyStaysSelectedPeriodEndYear
-                        val calendarEnd = if (endMonth != null && endYear != null) {
-                            CalendarMonthYear(
-                                month = endMonth,
-                                year = endYear,
-                            )
-                        } else null
-
-                        AppResult.Success(data = calendarStart to calendarEnd)
-                    }
-                }
-            )
-    }
-
-    override suspend fun updatePropertyStaysSelectedPeriod(
-        selectedStartMonth: Int?,
-        selectedStartYear: Int?,
-        selectedEndMonth: Int?,
-        selectedEndYear: Int?,
-    ): AppResult<Unit, ApplicationError> {
-        plainPreferencesDataSource.savePreferences { prefs ->
-            prefs.copy(
-                propertyStaysSelectedPeriodStartMonth = selectedStartMonth,
-                propertyStaysSelectedPeriodStartYear = selectedStartYear,
-                propertyStaysSelectedPeriodEndMonth = selectedEndMonth,
-                propertyStaysSelectedPeriodEndYear = selectedEndYear,
-            )
-        }
-            .onError { return AppResult.Error(error = it.toApplicationError()) }
-
-        return AppResult.Success(data = Unit)
-    }
 }

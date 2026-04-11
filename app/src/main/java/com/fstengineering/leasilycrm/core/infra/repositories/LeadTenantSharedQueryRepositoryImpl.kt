@@ -1,14 +1,14 @@
-package com.fstengineering.leasilycrm.propertyDashboard.infra.repositories
+package com.fstengineering.leasilycrm.core.infra.repositories
 
+import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource
-import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.TenantQueryRepository
 
-class TenantQueryRepositoryImpl(
+class LeadTenantSharedQueryRepositoryImpl(
     private val databaseDataSource: TenantDatabaseDataSource,
-) : TenantQueryRepository {
+) : LeadTenantSharedQueryRepository {
     override suspend fun getNameById(tenantId: Long): AppResult<String, ApplicationError> {
         return databaseDataSource.getNameById(tenantId)
             .fold(
