@@ -28,7 +28,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyR
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep2Screen
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep3Screen
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep4Screen
-import com.fstengineering.leasilycrm.propertyStays.presentation.PropertyStaysScreen
+import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOccupationScreen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
@@ -363,7 +363,7 @@ fun NavGraphBuilder.destinations(
     composable<Destinations.PropertyStays> { backStackEntry ->
         val args = backStackEntry.toRoute<Destinations.PropertyStays>()
 
-        PropertyStaysScreen(
+        PropertyOccupationScreen(
             propertyId = args.propertyId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },

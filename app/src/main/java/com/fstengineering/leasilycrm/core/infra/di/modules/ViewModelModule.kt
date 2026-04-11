@@ -26,7 +26,7 @@ import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyR
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.viewModels.PropertyRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.viewModels.PropertyRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.viewModels.PropertyRegistrationStep3ViewModel
-import com.fstengineering.leasilycrm.propertyStays.presentation.PropertyStaysViewModel
+import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOccupationViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.settings.SettingsViewModel
 import com.fstengineering.leasilycrm.signin.presentation.SignInViewModel
@@ -122,7 +122,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        PropertyStaysViewModel(
+        PropertyOccupationViewModel(
             getStaysStructuredDatesUseCase = get(),
             watchPropertyWithStaysTenantsUseCase = get(),
             propertySharedCommandRepository = get(),
