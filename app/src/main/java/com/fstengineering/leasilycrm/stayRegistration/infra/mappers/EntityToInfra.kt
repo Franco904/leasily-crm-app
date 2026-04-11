@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.stayRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.stayRegistration.domain.entities.Stay

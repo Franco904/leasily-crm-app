@@ -5,8 +5,8 @@ import com.fstengineering.leasilycrm.core.domain.entities.Saved
 import com.fstengineering.leasilycrm.core.domain.entities.Stay
 import com.fstengineering.leasilycrm.core.domain.entities.StayFileWithName
 import com.fstengineering.leasilycrm.core.domain.entities.TenantSaved
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface StayDetailsUiState {

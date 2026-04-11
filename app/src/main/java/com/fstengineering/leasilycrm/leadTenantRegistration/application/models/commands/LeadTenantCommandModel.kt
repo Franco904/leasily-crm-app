@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.application.models.commands
 
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 data class LeadTenantCommandModel(
     val id: Long?,

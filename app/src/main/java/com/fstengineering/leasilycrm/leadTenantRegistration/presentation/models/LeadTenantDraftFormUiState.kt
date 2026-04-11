@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 sealed interface LeadTenantDraftFormUiState {
     data object Loading : LeadTenantDraftFormUiState

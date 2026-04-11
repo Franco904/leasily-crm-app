@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.application.repositories
 
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.helpers.CalendarMonthYear
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.flow.Flow

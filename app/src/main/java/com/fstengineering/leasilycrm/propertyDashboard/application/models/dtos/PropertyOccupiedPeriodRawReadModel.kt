@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 data class PropertyOccupiedPeriodRawReadModel(
     val id: Long,

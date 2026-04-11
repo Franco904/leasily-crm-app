@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding

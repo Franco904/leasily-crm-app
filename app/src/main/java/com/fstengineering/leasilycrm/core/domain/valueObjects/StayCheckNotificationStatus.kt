@@ -1,6 +1,4 @@
-package com.fstengineering.leasilycrm.core.domain.helpers
-
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 data class StayCheckNotificationStatus(
     val tenantName: String,

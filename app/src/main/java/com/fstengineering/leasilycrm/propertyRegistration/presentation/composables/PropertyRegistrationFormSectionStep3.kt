@@ -31,7 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
+import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertyPricesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton

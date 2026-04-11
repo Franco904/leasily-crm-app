@@ -1,8 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
 sealed interface DomainError : BusinessRuleError {
-    fun asException() = DomainException(this)
-
     enum class Amount : DomainError {
         Required,
         IsNegative,

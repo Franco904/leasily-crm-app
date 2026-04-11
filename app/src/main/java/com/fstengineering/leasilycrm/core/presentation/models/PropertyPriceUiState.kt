@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.presentation.models
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 
 data class PropertyPriceUiState(
     val id: Long? = null,

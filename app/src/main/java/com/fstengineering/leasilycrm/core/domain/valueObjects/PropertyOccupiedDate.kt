@@ -1,7 +1,5 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
-
 data class PropertyOccupiedDate(
     val date: AppDate,
     val firstHalfPeriodIndex: Int?,

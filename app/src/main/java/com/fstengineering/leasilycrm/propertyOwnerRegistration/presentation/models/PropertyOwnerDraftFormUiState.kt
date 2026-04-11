@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 

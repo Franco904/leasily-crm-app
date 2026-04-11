@@ -13,7 +13,7 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetSta
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeLeadTenantQualifier

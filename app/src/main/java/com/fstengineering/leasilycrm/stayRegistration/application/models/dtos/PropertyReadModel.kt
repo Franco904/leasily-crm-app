@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.stayRegistration.application.models.dtos
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import kotlinx.collections.immutable.ImmutableSet
 

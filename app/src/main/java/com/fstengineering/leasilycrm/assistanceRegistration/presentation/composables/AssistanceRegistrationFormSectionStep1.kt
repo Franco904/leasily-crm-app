@@ -45,8 +45,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composa
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.composables.fields.PreferredStayPeriodFormField
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceStep1Field
-import com.fstengineering.leasilycrm.core.domain.helpers.toDate
-import com.fstengineering.leasilycrm.core.domain.helpers.toDecimalOrNull
+import com.fstengineering.leasilycrm.core.domain.valueObjects.toDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey

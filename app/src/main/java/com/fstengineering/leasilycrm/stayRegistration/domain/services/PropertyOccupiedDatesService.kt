@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.stayRegistration.domain.services
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.stayRegistration.domain.valueObjects.OccupiedPeriod
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet

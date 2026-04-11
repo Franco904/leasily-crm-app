@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.stayRegistration.application.models.dtos
 
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 data class UnavailablePeriodRawReadModel(
     val id: Long?,

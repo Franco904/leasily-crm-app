@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Email
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Name

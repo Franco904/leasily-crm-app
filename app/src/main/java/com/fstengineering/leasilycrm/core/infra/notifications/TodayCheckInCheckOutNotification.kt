@@ -10,7 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.graphics.toColorInt
 import com.fstengineering.leasilycrm.MainActivity
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.helpers.StayCheckNotificationStatus
+import com.fstengineering.leasilycrm.core.domain.valueObjects.StayCheckNotificationStatus
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel

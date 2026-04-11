@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.domain.helpers
+package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import java.time.Instant
 import java.time.LocalDateTime

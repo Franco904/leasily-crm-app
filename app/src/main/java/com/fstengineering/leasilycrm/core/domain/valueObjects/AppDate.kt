@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.domain.helpers
+package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap

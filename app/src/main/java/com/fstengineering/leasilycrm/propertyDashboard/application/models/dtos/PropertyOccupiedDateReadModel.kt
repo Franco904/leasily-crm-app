@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos
 
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 
 data class PropertyOccupiedDateReadModel(
     val date: AppDate,

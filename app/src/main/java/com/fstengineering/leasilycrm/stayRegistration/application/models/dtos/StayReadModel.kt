@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.stayRegistration.application.models.dtos
 
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import kotlinx.collections.immutable.ImmutableList
 
 data class StayReadModel(

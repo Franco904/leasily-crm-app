@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds
 
 import androidx.room.ColumnInfo
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 
 data class CommissionInvoicePerTop3NeighborhoodsPerMonthCompound(
     @ColumnInfo(name = "month_year") val monthYear: String,

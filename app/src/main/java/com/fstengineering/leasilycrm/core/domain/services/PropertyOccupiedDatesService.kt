@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.services
 
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
-import com.fstengineering.leasilycrm.core.domain.helpers.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedPeriod
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedDate

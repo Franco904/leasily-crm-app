@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.domain.helpers
+package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 data class StayCheckStatus(
     val tenantName: String?,
