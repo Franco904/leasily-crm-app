@@ -26,14 +26,12 @@ class PropertyOccupiedDatesService {
             var previousIndex: Int? = null
             var periodIndex = 0
 
-            val sortedOccupiedPeriods = occupiedPeriods.sortedBy { it.checkInDateTime }
-
-            sortedOccupiedPeriods.forEachIndexed { i, occupiedPeriod ->
+            occupiedPeriods.forEachIndexed { i, occupiedPeriod ->
                 val currentIndex =
                     if (occupiedPeriod.isUnavailablePeriod) UNAVAILABLE_PERIOD_INDEX else periodIndex
 
-                val isLast = sortedOccupiedPeriods.last() == occupiedPeriod
-                val next = sortedOccupiedPeriods.getOrNull(i + 1)
+                val isLast = occupiedPeriods.last() == occupiedPeriod
+                val next = occupiedPeriods.getOrNull(i + 1)
                 val isNextAdjacentToCurrentOne = occupiedPeriod.checkOutDateTime.toDate() ==
                         next?.checkInDateTime?.toDate()
 

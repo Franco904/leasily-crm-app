@@ -29,7 +29,14 @@ interface StayDao {
     @Query("SELECT * FROM stays WHERE is_deleted = 0")
     fun watchAll(): Flow<List<StayCompound>>
 
-    @Query("SELECT * FROM stays WHERE property_id = :propertyId AND is_deleted = 0")
+    @Query(
+        """
+        SELECT * FROM stays
+        WHERE property_id = :propertyId
+        AND is_deleted = 0
+        ORDER BY check_in_date_time
+        """
+    )
     fun watchAllByPropertyId(propertyId: Long): Flow<List<StayEntity>>
 
     @Query(
