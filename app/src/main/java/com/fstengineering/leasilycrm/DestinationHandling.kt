@@ -32,7 +32,7 @@ import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOcc
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
-import com.fstengineering.leasilycrm.stayDetails.presentation.StayDetailsScreen
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.StayDetailsScreen
 import com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject

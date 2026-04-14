@@ -9,8 +9,8 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
-import com.fstengineering.leasilycrm.stayDetails.application.useCases.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.stayDetails.application.useCases.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.UndoRegisterStayCheckOutUseCase
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList

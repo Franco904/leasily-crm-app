@@ -29,7 +29,7 @@ import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOcc
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.settings.SettingsViewModel
 import com.fstengineering.leasilycrm.signin.presentation.SignInViewModel
-import com.fstengineering.leasilycrm.stayDetails.presentation.OccupiedPeriodDetailsViewModel
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel
 import com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
