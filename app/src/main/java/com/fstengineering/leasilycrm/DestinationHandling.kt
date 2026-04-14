@@ -32,7 +32,7 @@ import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOcc
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
-import com.fstengineering.leasilycrm.stayDetails.StayDetailsScreen
+import com.fstengineering.leasilycrm.stayDetails.presentation.StayDetailsScreen
 import com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -148,8 +148,8 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(destination)
             },
             onViewStay = { stayId, cameFromLeadTenant ->
-                val destination = Destinations.StayDetails(
-                    stayId = stayId,
+                val destination = Destinations.OccupiedPeriodDetails(
+                    occupiedPeriodId = stayId,
                     cameFromProperty = false,
                     cameFromTenant = cameFromLeadTenant,
                 )
@@ -322,8 +322,8 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(destination)
             },
             onViewStay = { stayId ->
-                val destination = Destinations.StayDetails(
-                    stayId = stayId,
+                val destination = Destinations.OccupiedPeriodDetails(
+                    occupiedPeriodId = stayId,
                     cameFromProperty = true,
                     cameFromTenant = false,
                 )
@@ -378,8 +378,8 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(destination)
             },
             onViewStay = { stayId ->
-                val destination = Destinations.StayDetails(
-                    stayId = stayId,
+                val destination = Destinations.OccupiedPeriodDetails(
+                    occupiedPeriodId = stayId,
                     cameFromProperty = true,
                     cameFromTenant = false,
                 )
@@ -469,8 +469,8 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(destination)
             },
             onViewStay = { stayId ->
-                val destination = Destinations.StayDetails(
-                    stayId = stayId,
+                val destination = Destinations.OccupiedPeriodDetails(
+                    occupiedPeriodId = stayId,
                     cameFromProperty = false,
                     cameFromTenant = true,
                 )
@@ -574,11 +574,11 @@ fun NavGraphBuilder.destinations(
         )
     }
 
-    composable<Destinations.StayDetails> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.StayDetails>()
+    composable<Destinations.OccupiedPeriodDetails> { backStackEntry ->
+        val args = backStackEntry.toRoute<Destinations.OccupiedPeriodDetails>()
 
         StayDetailsScreen(
-            stayId = args.stayId,
+            occupiedPeriodId = args.occupiedPeriodId,
             cameFromProperty = args.cameFromProperty,
             cameFromTenant = args.cameFromTenant,
             viewModel = koinViewModel(),

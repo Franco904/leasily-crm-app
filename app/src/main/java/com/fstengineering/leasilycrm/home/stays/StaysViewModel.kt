@@ -2,15 +2,15 @@ package com.fstengineering.leasilycrm.home.stays
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.models.StayListReadModel
 import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
+import com.fstengineering.leasilycrm.stayDetails.application.useCases.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.stayDetails.application.useCases.UndoRegisterStayCheckOutUseCase
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -38,14 +38,14 @@ class StaysViewModel(
     private val _uiEvents = Channel<UiEvents>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _stays = MutableStateFlow<ImmutableList<Stay>>(persistentListOf())
+    private val _stays = MutableStateFlow<ImmutableList<StayListReadModel>>(persistentListOf())
     val stays = _stays.asStateFlow()
 
-    private val _stayToDelete = MutableStateFlow<Stay?>(null)
+    private val _stayToDelete = MutableStateFlow<StayListReadModel?>(null)
     val stayToDelete = _stayToDelete.asStateFlow()
 
-    private var stayToRegisterCheckIn: Stay? = null
-    private var stayToRegisterCheckOut: Stay? = null
+    private var stayIdToRegisterCheckIn: Long? = null
+    private var stayToRegisterCheckOut: StayListReadModel? = null
 
     var mustNotShowCheckOutDialog: Boolean = true
         private set
@@ -111,9 +111,9 @@ class StaysViewModel(
         }
     }
 
-    private fun ImmutableList<Stay>.filterAndSortStays(
+    private fun ImmutableList<StayListReadModel>.filterAndSortStays(
         filterType: StayFilterType,
-    ): ImmutableList<Stay> {
+    ): ImmutableList<StayListReadModel> {
         val filteredStays = filter { stay ->
             when (filterType) {
                 StayFilterType.UpcomingCheckIn -> !stay.isCheckInDone && !stay.isCheckOutDone && !stay.isUnavailablePeriod
@@ -125,9 +125,9 @@ class StaysViewModel(
         }
 
         val sortedStays = when (filterType) {
-            StayFilterType.Finished, StayFilterType.All -> filteredStays.sortedByDescending { it.checkInDateTime?.dateTime() }
-            StayFilterType.UpcomingCheckOut -> filteredStays.sortedBy { it.checkOutDateTime?.dateTime() }
-            else -> filteredStays.sortedBy { it.checkInDateTime?.dateTime() }
+            StayFilterType.Finished, StayFilterType.All -> filteredStays.sortedByDescending { it.checkInDateTime.dateTime() }
+            StayFilterType.UpcomingCheckOut -> filteredStays.sortedBy { it.checkOutDateTime.dateTime() }
+            else -> filteredStays.sortedBy { it.checkInDateTime.dateTime() }
         }
 
         return sortedStays.toPersistentList()
@@ -158,7 +158,7 @@ class StaysViewModel(
         _currentStayFilterType.update { stayFilterType }
     }
 
-    fun onDeleteStay(stay: Stay?) {
+    fun onDeleteStay(stay: StayListReadModel?) {
         _stayToDelete.update { stay }
     }
 
@@ -166,18 +166,18 @@ class StaysViewModel(
         viewModelScope.launch {
             val stayToDelete = this@StaysViewModel.stayToDelete.value ?: return@launch
 
-            staySharedCommandRepository.delete(id = stayToDelete.id!!)
+            staySharedCommandRepository.delete(id = stayToDelete.id)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
 
             _uiEvents.send(UiEvents.StayDeleteSuccess)
         }
     }
 
-    fun registerStayCheckIn(stay: Stay) {
+    fun registerStayCheckIn(stay: StayListReadModel) {
         viewModelScope.launch {
-            stayToRegisterCheckIn = stay.copy(isCheckInDone = true)
+            stayIdToRegisterCheckIn = stay.id
 
-            staySharedCommandRepository.insertOrUpdate(stay = stayToRegisterCheckIn!!)
+            staySharedCommandRepository.registerCheckIn(id = stay.id)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess {
                     _uiEvents.send(UiEvents.RegisterCheckInSuccess)
@@ -189,25 +189,25 @@ class StaysViewModel(
     }
 
     fun undoRegisterStayCheckIn() {
-        viewModelScope.launch {
-            stayToRegisterCheckIn = stayToRegisterCheckIn?.copy(isCheckInDone = false)
+        val id = stayIdToRegisterCheckIn ?: return
 
-            staySharedCommandRepository.insertOrUpdate(stay = stayToRegisterCheckIn!!)
+        viewModelScope.launch {
+            staySharedCommandRepository.undoRegisterCheckIn(id = id)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
         }
     }
 
-    fun onRegisterStayCheckOut(stay: Stay) {
+    fun onRegisterStayCheckOut(stay: StayListReadModel) {
         stayToRegisterCheckOut = stay
     }
 
     fun registerStayCheckOut(
         mustNotShowCheckOutDialogAnymore: Boolean = true,
     ) {
-        if (stayToRegisterCheckOut == null) return
+        val stay = stayToRegisterCheckOut ?: return
 
         viewModelScope.launch {
-            registerStayCheckOutUseCase(stay = stayToRegisterCheckOut!!)
+            registerStayCheckOutUseCase(stayId = stay.id, tenantId = stay.tenantId)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
                 .onSuccess {
                     _uiEvents.send(UiEvents.RegisterCheckOutSuccess)
@@ -226,14 +226,16 @@ class StaysViewModel(
     }
 
     fun undoRegisterStayCheckOut() {
+        val stay = stayToRegisterCheckOut ?: return
+
         viewModelScope.launch {
-            undoRegisterStayCheckOutUseCase(stay = stayToRegisterCheckOut!!)
+            undoRegisterStayCheckOutUseCase(stayId = stay.id, tenantId = stay.tenantId)
                 .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
         }
     }
 
     sealed interface UiEvents {
-        data class Error(val error: InfraError) : UiEvents
+        data class Error(val error: ApplicationError) : UiEvents
         data object StayDeleteSuccess : UiEvents
         data object RegisterCheckInSuccess : UiEvents
         data object RegisterCheckOutSuccess : UiEvents

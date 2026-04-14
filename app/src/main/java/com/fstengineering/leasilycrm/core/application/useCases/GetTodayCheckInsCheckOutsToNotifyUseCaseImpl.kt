@@ -3,8 +3,9 @@ package com.fstengineering.leasilycrm.core.application.useCases
 import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.valueObjects.StayCheckNotificationStatus
+import com.fstengineering.leasilycrm.core.domain.valueObjects.StayCheckNotificationStatusReadModel
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
@@ -14,12 +15,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 
 class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
-    private val userSessionSharedStore: UserSessionSharedStore,
-    private val staySharedCommandRepository: StaySharedCommandRepository,
     private val settingsSharedStore: SettingsSharedStore,
+    private val userSessionSharedStore: UserSessionSharedStore,
+    private val occupiedPeriodSharedCommandRepository: StaySharedCommandRepository,
     private val now: AppDateTime,
 ) : GetTodayCheckInsCheckOutsToNotifyUseCase {
-    override suspend fun invoke(): AppResult<List<StayCheckNotificationStatus>, InfraError> {
+    override suspend fun invoke(): AppResult<List<StayCheckNotificationStatusReadModel>, InfraError> {
         val isTodayCheckInCheckOutNotificationEnabled =
             settingsSharedStore.watch().firstOrNull()?.isTodayCheckInCheckOutNotificationEnabled
                 ?: false
@@ -30,7 +31,7 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
             return AppResult.Success(data = emptyList())
         }
 
-        return staySharedCommandRepository.watchAllUpcomingCheckInsAndCheckOuts().first()
+        return occupiedPeriodSharedCommandRepository.watchAllUpcomingCheckInsAndCheckOuts().first()
             .fold(
                 onError = { _ -> AppResult.Success(data = persistentListOf()) },
                 onSuccess = { upcomingCheckInsAndCheckOuts ->
@@ -47,7 +48,7 @@ class GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
 
                             val type = PropertyType.fromId(requireNotNull(it.propertyTypeId))
 
-                            StayCheckNotificationStatus(
+                            StayCheckNotificationStatusReadModel(
                                 tenantName = requireNotNull(it.tenantName),
                                 propertyType = requireNotNull(type),
                                 propertyOwnerName = requireNotNull(it.propertyOwnerName),

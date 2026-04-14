@@ -7,6 +7,7 @@ import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckStatusCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayListCompound
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,6 +17,9 @@ interface StayDao {
 
     @Query("UPDATE stays SET is_deleted = 1 WHERE id = :id")
     suspend fun delete(id: Long)
+
+    @Query("UPDATE stays SET status = :status WHERE id = :id")
+    suspend fun updateStatus(id: Long, status: Int)
 
     @Transaction
     @Query("SELECT * FROM stays WHERE id = :id AND is_deleted = 0")
@@ -41,12 +45,33 @@ interface StayDao {
 
     @Query(
         """
-        SELECT 
-            t.name AS tenant_name, 
-            p.property_type_id AS property_type_id, 
-            po.name AS property_owner_name, 
-            s.check_in_date_time, 
-            s.check_out_date_time, 
+        SELECT
+            s.id,
+            s.tenant_id,
+            s.check_in_date_time,
+            s.check_out_date_time,
+            s.is_auto_check_in,
+            s.is_auto_check_out,
+            s.status,
+            t.name AS tenant_name,
+            p.property_type_id,
+            p.neighborhood
+        FROM stays s
+        LEFT JOIN lead_tenants_read_view t ON s.tenant_id = t.id AND t.is_deleted = 0
+        LEFT JOIN properties p ON s.property_id = p.id AND p.is_deleted = 0
+        WHERE s.is_deleted = 0
+    """
+    )
+    fun watchAllWithDetails(): Flow<List<StayListCompound>>
+
+    @Query(
+        """
+        SELECT
+            t.name AS tenant_name,
+            p.property_type_id AS property_type_id,
+            po.name AS property_owner_name,
+            s.check_in_date_time,
+            s.check_out_date_time,
             s.status
         FROM stays s
         LEFT JOIN lead_tenants_read_view t ON s.tenant_id = t.id AND t.is_deleted = 0

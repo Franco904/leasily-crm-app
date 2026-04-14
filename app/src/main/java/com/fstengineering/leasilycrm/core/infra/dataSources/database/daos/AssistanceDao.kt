@@ -19,6 +19,12 @@ interface AssistanceDao {
     @Query("SELECT * FROM assistances WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): AssistanceCompound
 
+    @Query("UPDATE assistances SET is_finished = 1 WHERE lead_tenant_id = :tenantId AND is_finished = 0 AND is_deleted = 0")
+    suspend fun finishOpenAssistanceByTenantId(tenantId: Long)
+
+    @Query("UPDATE assistances SET is_finished = 0 WHERE lead_tenant_id = :tenantId AND is_finished = 1 AND is_deleted = 0")
+    suspend fun unfinishAssistanceByTenantId(tenantId: Long)
+
     @Query(
         """
         SELECT DISTINCT(neighborhood) FROM assistance_preferred_neighborhoods apn

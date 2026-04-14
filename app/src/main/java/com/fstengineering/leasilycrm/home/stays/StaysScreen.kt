@@ -58,7 +58,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.Error
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel.UiEvents.StayDeleteSuccess
-import com.fstengineering.leasilycrm.home.stays.composables.StayCard
+import com.fstengineering.leasilycrm.home.stays.composables.OccupiedPeriodCard
 import com.fstengineering.leasilycrm.home.stays.composables.StayFilterButtonGroup
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentMap
@@ -246,8 +246,8 @@ fun StaysScreen(
                             itemsIndexed(
                                 items = stays.groupBy { stay ->
                                     CalendarMonthYear(
-                                        month = stay.checkInDateTime?.month ?: 0,
-                                        year = stay.checkInDateTime?.year ?: 0,
+                                        month = stay.checkInDateTime.month,
+                                        year = stay.checkInDateTime.year,
                                     )
                                 },
                                 key = { i, (monthYear, _) -> monthYear.id },
@@ -272,12 +272,12 @@ fun StaysScreen(
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Column {
                                     stays.forEach { stay ->
-                                        StayCard(
+                                        OccupiedPeriodCard(
                                             stay = stay,
-                                            onCardClick = { onViewStayDetails(stay.id!!) },
+                                            onCardClick = { onViewStayDetails(stay.id) },
                                             onEditStay = {
                                                 onRegisterStayBlank(
-                                                    stay.id!!,
+                                                    stay.id,
                                                     stay.isUnavailablePeriod,
                                                 )
                                             },

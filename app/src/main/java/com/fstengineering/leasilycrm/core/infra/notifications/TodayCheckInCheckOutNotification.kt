@@ -10,7 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.graphics.toColorInt
 import com.fstengineering.leasilycrm.MainActivity
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.valueObjects.StayCheckNotificationStatus
+import com.fstengineering.leasilycrm.core.domain.valueObjects.StayCheckNotificationStatusReadModel
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
@@ -35,7 +35,7 @@ object TodayCheckInCheckOutNotification {
 
     fun buildNotification(
         context: Context,
-        status: StayCheckNotificationStatus,
+        status: StayCheckNotificationStatusReadModel,
     ): Notification {
         val title = when {
             status.mustNotifyCheckIn -> context.getString(R.string.upcoming_check_in_reminder_notification_title)

@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.Assista
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep3ViewModel
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
@@ -30,15 +29,15 @@ import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOcc
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.settings.SettingsViewModel
 import com.fstengineering.leasilycrm.signin.presentation.SignInViewModel
-import com.fstengineering.leasilycrm.stayDetails.StayDetailsViewModel
-import com.fstengineering.leasilycrm.stayRegistration.StayRegistrationViewModel
+import com.fstengineering.leasilycrm.stayDetails.presentation.OccupiedPeriodDetailsViewModel
+import com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel {
         RootViewModel(
-            userSessionSharedGateway = get(),
+            userSessionSharedStore = get(),
             settingsSharedStore = get(),
         )
     }
@@ -108,10 +107,8 @@ val viewModelModule = module {
 
     viewModel {
         PropertyDashboardViewModel(
-            getStaysStructuredDatesUseCase = get(),
-            watchPropertyWithStaysTenantsUseCase = get(),
+            watchProperty = get(),
             propertySharedCommandRepository = get(),
-            now = AppDate.lazyNow(),
         )
     }
 
@@ -123,10 +120,8 @@ val viewModelModule = module {
 
     viewModel {
         PropertyOccupationViewModel(
-            getStaysStructuredDatesUseCase = get(),
-            watchPropertyWithStaysTenantsUseCase = get(),
-            propertySharedCommandRepository = get(),
-            now = AppDate.lazyNow(),
+            watchPropertyOccupation = get(),
+            dateProvider = get(),
         )
     }
 
@@ -206,21 +201,30 @@ val viewModelModule = module {
         )
     }
 
+
     viewModel {
         StayRegistrationViewModel(
-            stayRepository = get(),
-            propertyRepository = get(),
-            leadTenantSharedCommandRepository = get(),
-            stayFileRepository = get(),
+            readStay = get(),
+            readUnavailablePeriod = get(),
+            readSelectableProperties = get(),
+            writeStay = get(),
+            writeUnavailablePeriod = get(),
+            propertyQueryRepository = get(),
+            tenantQueryRepository = get(),
+            fileStorageService = get(),
         )
     }
 
     viewModel {
-        StayDetailsViewModel(
-            registerStayCheckOutUseCase = get(),
-            undoRegisterStayCheckOutUseCase = get(),
-            getStaysStructuredDatesUseCase = get(),
-            staySharedCommandRepository = get(),
+        OccupiedPeriodDetailsViewModel(
+            watchOccupiedPeriod = get(),
+            deleteStayUseCase = get(),
+            registerStayCheckInUseCase = get(),
+            undoRegisterStayCheckInUseCase = get(),
+            registerStayCheckOut = get(),
+            undoRegisterStayCheckOut = get(),
+            watchMustNotShowCheckOutDialogAnymoreUseCase = get(),
+            setMustNotShowCheckOutDialogAnymoreUseCase = get(),
         )
     }
 }

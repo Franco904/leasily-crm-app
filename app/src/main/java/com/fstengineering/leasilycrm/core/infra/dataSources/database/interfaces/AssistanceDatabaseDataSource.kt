@@ -13,4 +13,8 @@ interface AssistanceDatabaseDataSource {
     suspend fun getById(id: Long): AppResult<AssistanceCompound, InfraError>
 
     suspend fun getAllNeighborhoodNames(): AppResult<List<String>, InfraError>
+
+    suspend fun finishOpenAssistanceByTenantId(tenantId: Long)
+
+    suspend fun unfinishAssistanceByTenantId(tenantId: Long)
 }

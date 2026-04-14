@@ -6,13 +6,9 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.d
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.GetTodayCheckInsCheckOutsToNotifyUseCaseImpl
-import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCaseImpl
-import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCaseImpl
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetStaysStructuredDatesUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
@@ -25,8 +21,18 @@ import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.c
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.useCases.WriteLeadTenantUseCase
 import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
+import com.fstengineering.leasilycrm.propertyDashboard.application.useCases.WatchPropertyUseCase
+import com.fstengineering.leasilycrm.propertyOccupation.application.useCases.WatchPropertyOccupationUseCase
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
+import com.fstengineering.leasilycrm.stayDetails.application.useCases.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.stayDetails.application.useCases.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.stayDetails.application.useCases.WatchOccupiedPeriodUseCase
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadSelectablePropertiesUseCase
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadStayUseCase
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadUnavailablePeriodUseCase
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.WriteStayUseCase
+import com.fstengineering.leasilycrm.stayRegistration.application.useCases.WriteUnavailablePeriodUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -56,37 +62,95 @@ val useCaseModule = module {
         WriteUserUseCase(repository = get())
     }
 
-    single<RegisterStayCheckOutUseCase> {
-        RegisterStayCheckOutUseCaseImpl(
-            staySharedCommandRepository = get(),
+    // Stay details
+
+    single {
+        WatchOccupiedPeriodUseCase(
+            occupiedPeriodQueryRepository = get(),
+            propertyQueryRepository = get(),
+            tenantQueryRepository = get(),
+        )
+    }
+
+    single { DeleteStayUseCase(occupiedPeriodCommandRepository = get()) }
+
+    single { RegisterStayCheckInUseCase(occupiedPeriodCommandRepository = get()) }
+
+    single { UndoRegisterStayCheckInUseCase(occupiedPeriodCommandRepository = get()) }
+
+    single {
+        RegisterStayCheckOutUseCase(
+            occupiedPeriodCommandRepository = get(),
             assistanceCommandRepository = get(),
         )
     }
 
-    single<UndoRegisterStayCheckOutUseCase> {
-        UndoRegisterStayCheckOutUseCaseImpl(
-            staySharedCommandRepository = get(),
+    single {
+        UndoRegisterStayCheckOutUseCase(
+            occupiedPeriodCommandRepository = get(),
             assistanceCommandRepository = get(),
         )
     }
 
-    single<GetStaysStructuredDatesUseCase> {
-        GetStaysStructuredDatesUseCaseImpl()
+    single { WatchMustNotShowCheckOutDialogAnymoreUseCase(occupiedPeriodQueryRepository = get()) }
+
+    single { SetMustNotShowCheckOutDialogAnymoreUseCase(occupiedPeriodCommandRepository = get()) }
+
+    // Property dashboard
+
+    single {
+        WatchPropertyUseCase(
+            propertyQueryRepository = get(),
+            propertyOwnerQueryRepository = get(),
+            stayQueryRepository = get(),
+            leadTenantSharedQueryRepository = get(),
+            dateProvider = get(),
+        )
     }
 
-    single<WatchPropertyWithStaysTenantsUseCase> {
-        WatchPropertyWithStaysTenantsUseCaseImpl(
-            propertySharedCommandRepository = get(),
-            leadTenantSharedCommandRepository = get(),
+    // Property occupation
+
+    single {
+        WatchPropertyOccupationUseCase(
+            stayQueryRepository = get(),
+            leadTenantSharedQueryRepository = get(),
         )
     }
 
     single<GetTodayCheckInsCheckOutsToNotifyUseCase> {
         GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
-            staySharedCommandRepository = get(),
-            settingsSharedQueryRepository = get(),
-            userSessionSharedGateway = get(),
+            occupiedPeriodSharedCommandRepository = get(),
+            settingsSharedStore = get(),
+            userSessionSharedStore = get(),
             now = AppDateTime.lazyNow(),
         )
     }
+
+    // Stay registration
+
+    single {
+        ReadStayUseCase(
+            stayQueryRepository = get(),
+            propertyQueryRepository = get(),
+            tenantQueryRepository = get(),
+        )
+    }
+
+    single {
+        ReadUnavailablePeriodUseCase(
+            stayQueryRepository = get(),
+            propertyQueryRepository = get(),
+        )
+    }
+
+    single {
+        ReadSelectablePropertiesUseCase(
+            propertyQueryRepository = get(),
+            stayQueryRepository = get(),
+        )
+    }
+
+    single { WriteStayUseCase(stayCommandRepository = get()) }
+
+    single { WriteUnavailablePeriodUseCase(stayCommandRepository = get()) }
 }

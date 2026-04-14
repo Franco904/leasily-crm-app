@@ -43,6 +43,7 @@ data class StayEntity(
     val commission: AppDecimal?,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
+    @ColumnInfo(name = "status") val status: Int?,
     @ColumnInfo(name = "property_id") val propertyId: Long,
     @ColumnInfo(name = "tenant_id") val tenantId: Long?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,

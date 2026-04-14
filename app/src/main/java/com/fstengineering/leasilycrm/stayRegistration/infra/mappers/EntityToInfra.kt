@@ -27,6 +27,7 @@ fun Stay.toLocalDataModel(): StayEntity {
         tenantId = tenantId,
         observations = observations,
         isDeleted = false,
+        status = null,
         contractVersion = BuildConfig.CONTRACT_VERSION,
     )
 }
@@ -50,6 +51,7 @@ fun UnavailablePeriod.toLocalDataModel(): StayEntity {
         tenantId = null,
         observations = observations,
         isDeleted = false,
+        status = null,
         contractVersion = BuildConfig.CONTRACT_VERSION,
     )
 }

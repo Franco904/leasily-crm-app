@@ -2,9 +2,9 @@ package com.fstengineering.leasilycrm.core.infra.repositories
 
 import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.entities.StayFile
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.interfaces.SharedStorageDataSource
+import com.fstengineering.leasilycrm.stayRegistration.domain.entities.StayFile
 
 class StayFileRepositoryImpl(
     private val sharedStorageDataSource: SharedStorageDataSource,

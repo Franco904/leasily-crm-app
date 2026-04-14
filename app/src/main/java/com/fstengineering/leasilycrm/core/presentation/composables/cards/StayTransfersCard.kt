@@ -23,22 +23,23 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.StayTransfersEmptySection
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.StayTransferUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun StayTransfersCard(
-    stayTransfers: ImmutableList<StayTransfer>,
+    stayTransferUiStates: ImmutableList<StayTransferUiState>,
     modifier: Modifier = Modifier,
     hasMoreOptionsMenu: Boolean = true,
-    onEditTransfer: (StayTransfer) -> Unit = {},
-    onDeleteTransfer: (StayTransfer) -> Unit = {},
+    onEditTransfer: (StayTransferUiState) -> Unit = {},
+    onDeleteTransfer: (StayTransferUiState) -> Unit = {},
 ) {
     AppCard(
         modifier = modifier
     ) {
-        if (stayTransfers.isEmpty()) {
+        if (stayTransferUiStates.isEmpty()) {
             StayTransfersEmptySection(
                 modifier = Modifier
                     .padding(vertical = 64.dp)
@@ -77,7 +78,7 @@ fun StayTransfersCard(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 HorizontalDivider()
-                stayTransfers.forEach { transfer ->
+                stayTransferUiStates.forEach { transfer ->
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,

@@ -1,13 +1,15 @@
 package com.fstengineering.leasilycrm.core.infra.repositories
 
+import com.fstengineering.leasilycrm.core.application.models.StayListReadModel
 import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.entities.Stay
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayCheckStatus
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayListCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
@@ -34,43 +36,16 @@ class StaySharedCommandRepositoryImpl(
             )
     }
 
-    override suspend fun getById(stayId: Long): AppResult<Stay, ApplicationError> {
-        val stay = stayDatabaseDataSource.getById(id = stayId)
-            .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
-                onSuccess = { it.toDomain() },
-            )
-
-        return AppResult.Success(data = stay)
-    }
-
-    override fun watchById(stayId: Long): Flow<AppResult<Stay?, ApplicationError>> =
+    override fun watchAll(): Flow<AppResult<ImmutableList<StayListReadModel>, ApplicationError>> =
         flow {
-            val stayFlow = stayDatabaseDataSource.watchById(id = stayId)
-                .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
-                    onSuccess = { it },
-                )
-                .map { stayEntity ->
-                    val stay = stayEntity?.toDomain() ?: return@map AppResult.Success(data = null)
-
-                    AppResult.Success<Stay, ApplicationError>(data = stay)
-                }
-                .distinctUntilChanged()
-
-            emitAll(stayFlow)
-        }
-
-    override fun watchAll(): Flow<AppResult<ImmutableList<Stay>, ApplicationError>> =
-        flow {
-            val staysFlow = stayDatabaseDataSource.watchAll()
+            val staysFlow = stayDatabaseDataSource.watchAllWithDetails()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
                     onSuccess = { it },
                 )
                 .map {
-                    val stays = it.map { stay -> stay.toDomain() }.toPersistentList()
-                    AppResult.Success<ImmutableList<Stay>, ApplicationError>(data = stays)
+                    val stays = it.map { compound -> compound.toListReadModel() }.toPersistentList()
+                    AppResult.Success<ImmutableList<StayListReadModel>, ApplicationError>(data = stays)
                 }
                 .distinctUntilChanged()
 
@@ -122,4 +97,40 @@ class StaySharedCommandRepositoryImpl(
 
         return AppResult.Success(data = Unit)
     }
+
+    override suspend fun registerCheckIn(id: Long): AppResult<Unit, ApplicationError> {
+        return databaseAdapter.withTransaction {
+            stayDatabaseDataSource.updateStatus(id = id, status = 1)
+        }
+            .fold(
+                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onSuccess = { AppResult.Success(data = Unit) }
+            )
+    }
+
+    override suspend fun undoRegisterCheckIn(id: Long): AppResult<Unit, ApplicationError> {
+        return databaseAdapter.withTransaction {
+            stayDatabaseDataSource.updateStatus(id = id, status = 0)
+        }
+            .fold(
+                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onSuccess = { AppResult.Success(data = Unit) }
+            )
+    }
+
+    private fun StayListCompound.toListReadModel() = StayListReadModel(
+        id = id,
+        tenantId = tenantId,
+        tenantName = tenantName,
+        propertyType = propertyTypeId?.let { PropertyType.fromId(it) },
+        propertyNeighborhood = neighborhood,
+        checkInDateTime = checkInDateTime,
+        checkInHourMinute = checkInDateTime.hour to checkInDateTime.minute,
+        checkOutDateTime = checkOutDateTime,
+        checkOutHourMinute = checkOutDateTime.hour to checkOutDateTime.minute,
+        isAutoCheckIn = isAutoCheckIn ?: false,
+        isAutoCheckOut = isAutoCheckOut ?: false,
+        isCheckInDone = (status ?: 0) >= 1,
+        isCheckOutDone = (status ?: 0) >= 2,
+    )
 }
