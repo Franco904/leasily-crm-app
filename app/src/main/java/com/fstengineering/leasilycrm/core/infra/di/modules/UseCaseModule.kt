@@ -28,11 +28,11 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCa
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.WatchOccupiedPeriodUseCase
-import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadSelectablePropertiesUseCase
-import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadStayUseCase
-import com.fstengineering.leasilycrm.stayRegistration.application.useCases.ReadUnavailablePeriodUseCase
-import com.fstengineering.leasilycrm.stayRegistration.application.useCases.WriteStayUseCase
-import com.fstengineering.leasilycrm.stayRegistration.application.useCases.WriteUnavailablePeriodUseCase
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadSelectablePropertiesUseCase
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadStayUseCase
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadUnavailablePeriodUseCase
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.WriteStayUseCase
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.WriteUnavailablePeriodUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -130,7 +130,7 @@ val useCaseModule = module {
 
     single {
         ReadStayUseCase(
-            stayQueryRepository = get(),
+            occupiedPeriodQueryRepository = get(),
             propertyQueryRepository = get(),
             tenantQueryRepository = get(),
         )
@@ -138,7 +138,7 @@ val useCaseModule = module {
 
     single {
         ReadUnavailablePeriodUseCase(
-            stayQueryRepository = get(),
+            occupiedPeriodQueryRepository = get(),
             propertyQueryRepository = get(),
         )
     }
@@ -146,11 +146,11 @@ val useCaseModule = module {
     single {
         ReadSelectablePropertiesUseCase(
             propertyQueryRepository = get(),
-            stayQueryRepository = get(),
+            occupiedPeriodQueryRepository = get(),
         )
     }
 
-    single { WriteStayUseCase(stayCommandRepository = get()) }
+    single { WriteStayUseCase(occupiedPeriodCommandRepository = get()) }
 
-    single { WriteUnavailablePeriodUseCase(stayCommandRepository = get()) }
+    single { WriteUnavailablePeriodUseCase(occupiedPeriodCommandRepository = get()) }
 }

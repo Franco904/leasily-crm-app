@@ -30,7 +30,7 @@ import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.settings.SettingsViewModel
 import com.fstengineering.leasilycrm.signin.presentation.SignInViewModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel
-import com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationViewModel
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.OccupiedPeriodRegistrationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -203,7 +203,7 @@ val viewModelModule = module {
 
 
     viewModel {
-        StayRegistrationViewModel(
+        OccupiedPeriodRegistrationViewModel(
             readStay = get(),
             readUnavailablePeriod = get(),
             readSelectableProperties = get(),

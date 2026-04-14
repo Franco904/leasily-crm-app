@@ -4,9 +4,9 @@ import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCalendarOccupiedDateUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.StayFileReadModel
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.TenantReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.OccupiedPeriodDetailsUiState
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.StayFileUiState

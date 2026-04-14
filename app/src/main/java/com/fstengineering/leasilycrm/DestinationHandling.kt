@@ -33,7 +33,7 @@ import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.StayDetailsScreen
-import com.fstengineering.leasilycrm.stayRegistration.presentation.StayRegistrationScreen
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.OccupiedPeriodRegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
@@ -557,7 +557,7 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.StayRegistration>()
         val previousBackStackEntry = navController.previousBackStackEntry
 
-        StayRegistrationScreen(
+        OccupiedPeriodRegistrationScreen(
             stayId = args.stayId,
             propertyId = args.propertyId,
             tenantId = args.leadTenantId,
