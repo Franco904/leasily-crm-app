@@ -51,10 +51,10 @@ class OccupiedPeriodDetailsViewModel(
         viewModelScope.launch {
             watchOccupiedPeriod.invoke(stayId).collect { result ->
                 result
-                    .onError { e -> _uiEvents.send(UiEvents.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
                     .onSuccess { storedPeriod ->
                         if (storedPeriod == null) {
-                            _uiEvents.send(UiEvents.NavigateUp)
+                            _uiEvents.trySend(UiEvents.NavigateUp)
                             return@onSuccess
                         }
 
@@ -78,8 +78,8 @@ class OccupiedPeriodDetailsViewModel(
 
         viewModelScope.launch {
             occupiedPeriodCommandRepository.delete(periodId)
-                .onError { e -> _uiEvents.send(UiEvents.BottomSheetError(e)) }
-                .onSuccess { _uiEvents.send(UiEvents.StayDeleteSuccess) }
+                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                .onSuccess { _uiEvents.trySend(UiEvents.StayDeleteSuccess) }
         }
     }
 
@@ -88,8 +88,8 @@ class OccupiedPeriodDetailsViewModel(
 
         viewModelScope.launch {
             occupiedPeriodCommandRepository.registerCheckIn(periodId)
-                .onError { e -> _uiEvents.send(UiEvents.BottomSheetError(e)) }
-                .onSuccess { _uiEvents.send(UiEvents.RegisterCheckInSuccess) }
+                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                .onSuccess { _uiEvents.trySend(UiEvents.RegisterCheckInSuccess) }
         }
     }
 
@@ -98,7 +98,7 @@ class OccupiedPeriodDetailsViewModel(
 
         viewModelScope.launch {
             occupiedPeriodCommandRepository.undoRegisterCheckIn(periodId)
-                .onError { e -> _uiEvents.send(UiEvents.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
         }
     }
 
@@ -110,15 +110,15 @@ class OccupiedPeriodDetailsViewModel(
                 stayId = loaded.id,
                 tenantId = loaded.tenantId,
             )
-                .onError { e -> _uiEvents.send(UiEvents.BottomSheetError(e)) }
-                .onSuccess { _uiEvents.send(UiEvents.RegisterCheckOutSuccess) }
+                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                .onSuccess { _uiEvents.trySend(UiEvents.RegisterCheckOutSuccess) }
         }
 
         viewModelScope.launch {
             occupiedPeriodCommandRepository.setMustNotShowCheckOutDialogAnymore(
                 mustNotShowCheckOutDialogAnymore,
             )
-                .onError { e -> _uiEvents.send(UiEvents.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
         }
     }
 
@@ -130,8 +130,14 @@ class OccupiedPeriodDetailsViewModel(
                 stayId = loaded.id,
                 tenantId = loaded.tenantId,
             )
-                .onError { e -> _uiEvents.send(UiEvents.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
         }
+    }
+
+    override fun onCleared() {
+        _uiEvents.close()
+
+        super.onCleared()
     }
 
     sealed interface UiEvents {

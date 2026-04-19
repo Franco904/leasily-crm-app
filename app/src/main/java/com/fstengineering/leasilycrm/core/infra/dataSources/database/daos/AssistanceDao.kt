@@ -25,6 +25,10 @@ interface AssistanceDao {
     @Query("UPDATE assistances SET is_finished = 0 WHERE lead_tenant_id = :tenantId AND is_finished = 1 AND is_deleted = 0")
     suspend fun unfinishAssistanceByTenantId(tenantId: Long)
 
+    @Transaction
+    @Query("SELECT * FROM assistances WHERE lead_tenant_id = :leadTenantId AND is_deleted = 0")
+    suspend fun getAllByLeadTenantId(leadTenantId: Long): List<AssistanceCompound>
+
     @Query(
         """
         SELECT DISTINCT(neighborhood) FROM assistance_preferred_neighborhoods apn

@@ -26,6 +26,10 @@ class StayDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getById(id) }
     }
 
+    override suspend fun getAllByTenantId(tenantId: Long): AppResult<List<StayEntity>, InfraError> {
+        return onDatabaseSafe { dao.getAllByTenantId(tenantId) }
+    }
+
     override fun watchById(id: Long): AppResult<Flow<StayCompound?>, InfraError> {
         return onDatabaseSafe { dao.watchById(id) }
     }

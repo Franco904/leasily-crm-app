@@ -33,6 +33,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useC
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadUnavailablePeriodUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.WriteStayUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.WriteUnavailablePeriodUseCase
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.WatchLeadTenantUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -153,4 +154,18 @@ val useCaseModule = module {
     single { WriteStayUseCase(occupiedPeriodCommandRepository = get()) }
 
     single { WriteUnavailablePeriodUseCase(occupiedPeriodCommandRepository = get()) }
+
+    // Lead tenant details
+
+    single {
+        WatchLeadTenantUseCase(
+            leadTenantQueryRepository = get(),
+            assistanceQueryRepository = get(),
+            stayQueryRepository = get(),
+        )
+    }
+
+    single { DeleteLeadTenantUseCase(leadTenantCommandRepository = get()) }
+
+    single { DeleteAssistanceUseCase(assistanceCommandRepository = get()) }
 }

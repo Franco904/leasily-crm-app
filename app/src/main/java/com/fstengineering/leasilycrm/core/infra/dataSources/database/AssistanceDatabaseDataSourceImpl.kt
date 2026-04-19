@@ -20,6 +20,10 @@ class AssistanceDatabaseDataSourceImpl(
         return onDatabaseSafe { dao.getById(id) }
     }
 
+    override suspend fun getAllByLeadTenantId(leadTenantId: Long): AppResult<List<AssistanceCompound>, InfraError> {
+        return onDatabaseSafe { dao.getAllByLeadTenantId(leadTenantId) }
+    }
+
     override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, InfraError> {
         return onDatabaseSafe { dao.getAllNeighborhoodNames() }
     }

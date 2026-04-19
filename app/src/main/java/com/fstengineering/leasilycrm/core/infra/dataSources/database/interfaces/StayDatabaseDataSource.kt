@@ -17,6 +17,8 @@ interface StayDatabaseDataSource {
 
     suspend fun getById(id: Long): AppResult<StayCompound, InfraError>
 
+    suspend fun getAllByTenantId(tenantId: Long): AppResult<List<StayEntity>, InfraError>
+
     fun watchById(id: Long): AppResult<Flow<StayCompound?>, InfraError>
 
     fun watchAll(): AppResult<Flow<List<StayCompound>>, InfraError>

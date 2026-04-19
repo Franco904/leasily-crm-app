@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.home.dashboard.DashboardViewModel
 import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
 import com.fstengineering.leasilycrm.home.stays.StaysViewModel
 import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel
-import com.fstengineering.leasilycrm.leadTenantDetails.LeadTenantDetailsViewModel
+import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.LeadTenantRegistrationViewModel
 import com.fstengineering.leasilycrm.profile.presentation.ProfileViewModel
 import com.fstengineering.leasilycrm.properties.presentation.PropertiesViewModel
@@ -159,8 +159,9 @@ val viewModelModule = module {
 
     viewModel {
         LeadTenantDetailsViewModel(
-            leadTenantSharedCommandRepository = get(),
-            assistanceCommandRepository = get(),
+            watchLeadTenant = get(),
+            deleteLeadTenant = get(),
+            deleteAssistance = get(),
         )
     }
 

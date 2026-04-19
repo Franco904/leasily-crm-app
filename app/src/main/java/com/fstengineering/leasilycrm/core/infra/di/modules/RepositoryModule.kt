@@ -72,6 +72,16 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositori
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories.OccupiedPeriodCommandRepositoryImpl as StayRegistrationStayCommandRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories.OccupiedPeriodQueryRepositoryImpl as StayRegistrationStayQueryRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories.TenantQueryRepositoryImpl as StayRegistrationTenantQueryRepositoryImpl
+import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.LeadTenantQueryRepository as LeadTenantDetailsLeadTenantQueryRepository
+import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.LeadTenantCommandRepository as LeadTenantDetailsLeadTenantCommandRepository
+import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceQueryRepository as LeadTenantDetailsAssistanceQueryRepository
+import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceCommandRepository as LeadTenantDetailsAssistanceCommandRepository
+import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.StayQueryRepository as LeadTenantDetailsStayQueryRepository
+import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.LeadTenantQueryRepositoryImpl as LeadTenantDetailsLeadTenantQueryRepositoryImpl
+import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.LeadTenantCommandRepositoryImpl as LeadTenantDetailsLeadTenantCommandRepositoryImpl
+import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.AssistanceQueryRepositoryImpl as LeadTenantDetailsAssistanceQueryRepositoryImpl
+import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.AssistanceCommandRepositoryImpl as LeadTenantDetailsAssistanceCommandRepositoryImpl
+import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.StayQueryRepositoryImpl as LeadTenantDetailsStayQueryRepositoryImpl
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -336,6 +346,41 @@ val repositoryModule = module {
             databaseAdapter = get(),
             stayDatabaseDataSource = get(),
             stayFileDatabaseDataSource = get(),
+        )
+    }
+
+    // Lead tenant details
+
+    single<LeadTenantDetailsLeadTenantQueryRepository> {
+        LeadTenantDetailsLeadTenantQueryRepositoryImpl(
+            tenantDatabaseDataSource = get(),
+        )
+    }
+
+    single<LeadTenantDetailsLeadTenantCommandRepository> {
+        LeadTenantDetailsLeadTenantCommandRepositoryImpl(
+            databaseAdapter = get(),
+            tenantDatabaseDataSource = get(),
+        )
+    }
+
+    single<LeadTenantDetailsAssistanceQueryRepository> {
+        LeadTenantDetailsAssistanceQueryRepositoryImpl(
+            assistanceDatabaseDataSource = get(),
+            propertyDatabaseDataSource = get(),
+        )
+    }
+
+    single<LeadTenantDetailsAssistanceCommandRepository> {
+        LeadTenantDetailsAssistanceCommandRepositoryImpl(
+            databaseAdapter = get(),
+            assistanceDatabaseDataSource = get(),
+        )
+    }
+
+    single<LeadTenantDetailsStayQueryRepository> {
+        LeadTenantDetailsStayQueryRepositoryImpl(
+            stayDatabaseDataSource = get(),
         )
     }
 }
