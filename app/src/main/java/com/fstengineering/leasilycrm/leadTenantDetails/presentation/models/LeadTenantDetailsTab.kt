@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.leadTenantDetails.models
+package com.fstengineering.leasilycrm.leadTenantDetails.presentation.models
 
 import com.fstengineering.leasilycrm.R
 

@@ -10,9 +10,10 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceInteractionReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceRawReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantRawReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.SentPropertyReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.StayReadModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -30,7 +31,7 @@ fun LeadTenantReadView.toRawReadModel() = LeadTenantRawReadModel(
     status = status,
 )
 
-fun AssistanceCompound.toReadModel(sentProperties: ImmutableList<SentPropertyReadModel>): AssistanceReadModel {
+fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
     val preferredNeighborhoods = preferredNeighborhoods
         .map { it.neighborhood }
         .toPersistentList()
@@ -48,31 +49,29 @@ fun AssistanceCompound.toReadModel(sentProperties: ImmutableList<SentPropertyRea
             .fold(onErrors = { null }, onSuccess = { it })
     }
 
-    return AssistanceReadModel(
+    return AssistanceRawReadModel(
         id = requireNotNull(assistance.id),
-        updateDateTime = assistance.updateDateTime,
-        searchedStartDate = assistance.searchedStartDate,
-        searchedEndDate = assistance.searchedEndDate,
+        preferredStartDate = assistance.searchedStartDate,
+        preferredEndDate = assistance.searchedEndDate,
         hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,
         maxAcceptedNightlyRate = assistance.maxAcceptedNightlyRate,
-        adults = assistance.adults,
-        kids = assistance.kids,
-        babies = assistance.babies,
-        animals = assistance.animals,
-        bedrooms = assistance.bedrooms,
-        enSuites = assistance.enSuites,
-        doubleBeds = assistance.doubleBeds,
-        singleBeds = assistance.singleBeds,
-        bathrooms = assistance.bathrooms,
-        parkingSpots = assistance.parkingSpots,
-        preferredSeaProximityType = seaProximityType,
-        distanceToSea = assistance.distanceToSea,
+        adultsCount = assistance.adults,
+        kidsCount = assistance.kids,
+        babiesCount = assistance.babies,
+        animalsCount = assistance.animals,
+        bedroomsCount = assistance.bedrooms,
+        enSuitesCount = assistance.enSuites,
+        doubleBedsCount = assistance.doubleBeds,
+        singleBedsCount = assistance.singleBeds,
+        bathroomsCount = assistance.bathrooms,
+        parkingSpotsCount = assistance.parkingSpots,
+        preferredSeaProximityTypeId = seaProximityType?.id,
+        preferredDistanceToSea = assistance.distanceToSea,
         observations = assistance.observations,
         isFinished = assistance.isFinished,
         preferredNeighborhoods = preferredNeighborhoods,
         preferredPropertyCharacteristics = preferredCharacteristics,
         interactions = interactionReadModels,
-        sentProperties = sentProperties,
     )
 }
 
@@ -83,7 +82,7 @@ fun AssistanceInteractionEntity.toReadModel() = AssistanceInteractionReadModel(
     description = description,
 )
 
-fun PropertyCompound.toSentPropertyReadModel() = SentPropertyReadModel(
+fun PropertyCompound.toSentPropertyReadModel() = AssistanceSentPropertyReadModel(
     id = requireNotNull(property.id),
     mainPictureUriString = files.find { it.isMainPicture }?.propertyFileUri,
     neighborhood = property.neighborhood,

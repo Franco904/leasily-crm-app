@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiStat
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.SentPropertyReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.StayReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceInteractionUiState
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceUiState
@@ -96,8 +96,8 @@ private fun AssistanceReadModel.toUiState(): AssistanceUiState {
     return AssistanceUiState(
         id = id,
         updateDateTime = updateDateTime,
-        searchingStartDate = searchedStartDate,
-        searchingEndDate = searchedEndDate,
+        searchingStartDate = preferredStartDate,
+        searchingEndDate = preferredEndDate,
         hasFlexibilityForPeriod = hasFlexibilityForPeriod,
         maxAcceptedNightlyRate = maxAcceptedNightlyRate,
         qtAdultGuests = adults,
@@ -110,8 +110,8 @@ private fun AssistanceReadModel.toUiState(): AssistanceUiState {
         qtSingleBeds = singleBeds,
         qtBathrooms = bathrooms,
         qtParkingSpots = parkingSpots,
-        preferredSeaProximityTypeId = preferredSeaProximityType?.id,
-        distanceToSea = distanceToSea,
+        preferredSeaProximityTypeId = preferredSeaProximityTypeId?.id,
+        distanceToSea = preferredDistanceToSea,
         preferredNeighborhoods = preferredNeighborhoods,
         preferredPropertyCharacteristics = preferredPropertyCharacteristics,
         observations = observations,
@@ -130,7 +130,7 @@ private fun AssistanceInteractionReadModel.toUiState() = AssistanceInteractionUi
     description = description,
 )
 
-private fun SentPropertyReadModel.toUiState(): PropertyCardUiState {
+private fun AssistanceSentPropertyReadModel.toUiState(): PropertyCardUiState {
     val streetAddressAndNumber = buildString {
         append(streetAddress)
         if (number != null) append(", $number")
