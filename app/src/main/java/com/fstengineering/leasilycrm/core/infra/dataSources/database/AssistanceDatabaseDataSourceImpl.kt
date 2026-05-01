@@ -33,4 +33,8 @@ class AssistanceDatabaseDataSourceImpl(
 
     override suspend fun unfinishAssistanceByTenantId(tenantId: Long) =
         dao.unfinishAssistanceByTenantId(tenantId)
+
+    override suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): AppResult<Int?, InfraError> {
+        return onDatabaseSafe { dao.getCurrentAssistanceGuestsCountByTenantId(tenantId) }
+    }
 }

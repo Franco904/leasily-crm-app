@@ -13,6 +13,9 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.mappers.to
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.mappers.toUnavailablePeriodRawReadModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 
 class OccupiedPeriodQueryRepositoryImpl(
     private val databaseDataSource: StayDatabaseDataSource,
@@ -38,9 +41,10 @@ class OccupiedPeriodQueryRepositoryImpl(
     override suspend fun getOccupiedPeriodsByPropertyId(
         propertyId: Long,
     ): AppResult<ImmutableList<OccupiedPeriod>, ApplicationError> {
-        return databaseDataSource.watchAllByPropertyId(propertyId = propertyId)
+        return databaseDataSource.watchAllByPropertyId(propertyId)
+            .first()
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { e -> AppResult.Error(error = e.toApplicationError()) },
                 onSuccess = {
                     val dates = it.map { localModel -> localModel.toCheckInCheckOutReadModel() }
                     AppResult.Success(data = dates.toPersistentList())

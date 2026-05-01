@@ -51,4 +51,6 @@ data class LeadTenantReadView(
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
     val status: Int,
+    @ColumnInfo(name = "has_unfinished_assistance") val hasUnfinishedAssistance: Boolean = false,
+    @ColumnInfo(name = "has_upcoming_check_out") val hasUnfinishedStay: Boolean = false,
 )

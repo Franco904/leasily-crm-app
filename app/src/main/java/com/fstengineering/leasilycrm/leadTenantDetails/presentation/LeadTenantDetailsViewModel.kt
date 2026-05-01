@@ -2,11 +2,11 @@ package com.fstengineering.leasilycrm.leadTenantDetails.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceCommandRepository
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteAssistanceUseCase
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteLeadTenantUseCase
 import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.WatchLeadTenantUseCase
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantDetailsUiState
@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 
 class LeadTenantDetailsViewModel(
     private val watchLeadTenant: WatchLeadTenantUseCase,
-    private val leadTenantSharedCommandRepository: LeadTenantSharedCommandRepository,
-    private val assistanceCommandRepository: AssistanceCommandRepository,
+    private val deleteLeadTenant: DeleteLeadTenantUseCase,
+    private val deleteAssistance: DeleteAssistanceUseCase,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -56,13 +56,13 @@ class LeadTenantDetailsViewModel(
         isInitialized = true
     }
 
-    fun deleteLeadTenant() {
+    fun onDeleteLeadTenant() {
         val currentState = _uiState.value as? LeadTenantDetailsUiState.Loaded ?: return
 
         watchJob?.cancel()
 
         viewModelScope.launch {
-            leadTenantSharedCommandRepository.delete(currentState.id)
+            deleteLeadTenant(currentState.id)
                 .onError { e ->
                     _uiEvents.trySend(UiEvents.BottomSheetError(e))
                     return@launch
@@ -74,7 +74,7 @@ class LeadTenantDetailsViewModel(
 
     fun deleteCurrentAssistance(assistanceId: Long) {
         viewModelScope.launch {
-            assistanceCommandRepository.delete(assistanceId)
+            deleteAssistance(assistanceId)
                 .onError { e ->
                     _uiEvents.trySend(UiEvents.BottomSheetError(e))
                     return@launch

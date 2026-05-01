@@ -36,7 +36,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.home.tenants.composables.TenantsEmptySection
+import com.fstengineering.leasilycrm.home.tenants.presentation.composables.TenantsEmptySection
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.OccupiedPeriodPropertySelectionList
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.StayRegistrationFormSection
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.StayRegistrationTopAppBar

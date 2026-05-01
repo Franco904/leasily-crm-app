@@ -29,6 +29,9 @@ interface AssistanceDao {
     @Query("SELECT * FROM assistances WHERE lead_tenant_id = :leadTenantId AND is_deleted = 0")
     suspend fun getAllByLeadTenantId(leadTenantId: Long): List<AssistanceCompound>
 
+    @Query("SELECT guests_count FROM assistances WHERE lead_tenant_id = :tenantId AND is_deleted = 0 AND is_finished = 0 LIMIT 1")
+    suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): Int?
+
     @Query(
         """
         SELECT DISTINCT(neighborhood) FROM assistance_preferred_neighborhoods apn

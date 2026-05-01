@@ -10,20 +10,20 @@ import com.fstengineering.leasilycrm.propertyOccupation.application.mappers.toRe
 import com.fstengineering.leasilycrm.propertyOccupation.application.mappers.toValueObject
 import com.fstengineering.leasilycrm.propertyOccupation.application.models.dtos.PropertyOccupiedPeriodsReadModel
 import com.fstengineering.leasilycrm.propertyOccupation.application.models.queries.PropertyOccupationArgs
-import com.fstengineering.leasilycrm.propertyOccupation.application.repositories.StayQueryRepository
+import com.fstengineering.leasilycrm.propertyOccupation.application.repositories.OccupiedPeriodQueryRepository
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class WatchPropertyOccupationUseCase(
-    private val stayQueryRepository: StayQueryRepository,
+    private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
     private val leadTenantSharedQueryRepository: LeadTenantSharedQueryRepository,
 ) : QueryFlowUseCase<PropertyOccupationArgs, PropertyOccupiedPeriodsReadModel> {
     override suspend fun invoke(
         args: PropertyOccupationArgs,
     ): Flow<AppResult<PropertyOccupiedPeriodsReadModel, ApplicationError>> {
-        return stayQueryRepository.watchAllByPropertyId(propertyId = args.id)
+        return occupiedPeriodQueryRepository.watchAllByPropertyId(propertyId = args.id)
             .map { occupiedPeriodsResult ->
                 val occupiedPeriods = occupiedPeriodsResult
                     .fold(

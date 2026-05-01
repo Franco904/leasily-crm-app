@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 
 data class AppDateTime(val dateTime: () -> LocalDateTime) : Comparable<AppDateTime> {
@@ -41,7 +42,7 @@ data class AppDateTime(val dateTime: () -> LocalDateTime) : Comparable<AppDateTi
 
     fun toEpochMillisLocalZone(): Long {
         return dateTime()
-            .atZone(ZoneOffset.UTC)
+            .atZone(ZoneId.systemDefault())
             .toInstant()
             .toEpochMilli()
     }

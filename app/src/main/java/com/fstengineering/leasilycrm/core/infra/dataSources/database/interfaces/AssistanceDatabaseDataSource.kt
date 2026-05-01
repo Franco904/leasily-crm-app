@@ -19,4 +19,6 @@ interface AssistanceDatabaseDataSource {
     suspend fun finishOpenAssistanceByTenantId(tenantId: Long)
 
     suspend fun unfinishAssistanceByTenantId(tenantId: Long)
+
+    suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): AppResult<Int?, InfraError>
 }

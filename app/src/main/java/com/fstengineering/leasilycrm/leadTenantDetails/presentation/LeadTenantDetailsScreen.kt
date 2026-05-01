@@ -399,7 +399,7 @@ fun LeadTenantDetailsScreen(
             if (loaded.isLead) {
                 ConfirmDeleteLeadDialog(
                     onConfirmDelete = {
-                        viewModel.deleteLeadTenant()
+                        viewModel.onDeleteLeadTenant()
 
                         mustShowConfirmDeleteLeadTenantDialog = false
                         onBack()
@@ -409,7 +409,7 @@ fun LeadTenantDetailsScreen(
             } else {
                 ConfirmDeleteTenantDialog(
                     onConfirmDelete = {
-                        viewModel.deleteLeadTenant()
+                        viewModel.onDeleteLeadTenant()
 
                         mustShowConfirmDeleteLeadTenantDialog = false
                         onBack()

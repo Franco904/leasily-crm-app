@@ -8,10 +8,9 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
 import com.fstengineering.leasilycrm.home.HomeViewModel
-import com.fstengineering.leasilycrm.home.dashboard.DashboardViewModel
-import com.fstengineering.leasilycrm.home.leads.LeadsViewModel
-import com.fstengineering.leasilycrm.home.stays.StaysViewModel
-import com.fstengineering.leasilycrm.home.tenants.TenantsViewModel
+import com.fstengineering.leasilycrm.home.application.repositories.LeadTenantCommandRepository as HomeLeadTenantCommandRepository
+import com.fstengineering.leasilycrm.home.application.repositories.LeadTenantQueryRepository as HomeLeadTenantQueryRepository
+import com.fstengineering.leasilycrm.home.subdomains.tenants.presentation.TenantsViewModel
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.LeadTenantRegistrationViewModel
 import com.fstengineering.leasilycrm.profile.presentation.ProfileViewModel
@@ -67,15 +66,15 @@ val viewModelModule = module {
 
     viewModel {
         HomeViewModel(
-            assistanceCommandRepository = get(),
-            staySharedCommandRepository = get(),
+            assistanceCommandRepository = get<HomeAssistanceCommandRepository>(),
+            occupiedPeriodSharedCommandRepository = get(),
             userQueryRepository = get(),
             now = AppDateTime.lazyNow(),
         )
     }
 
     viewModel {
-        DashboardViewModel(
+        _root_ide_package_.com.fstengineering.leasilycrm.home.subdomains.dashboard.presentation.DashboardViewModel(
             crmMetricsRepository = get(),
         )
     }
@@ -140,14 +139,16 @@ val viewModelModule = module {
     }
 
     viewModel {
-        LeadsViewModel(
-            leadTenantSharedCommandRepository = get(),
+        _root_ide_package_.com.fstengineering.leasilycrm.home.subdomains.leads.presentation.LeadsViewModel(
+            leadTenantQueryRepository = get<HomeLeadTenantQueryRepository>(),
+            leadTenantCommandRepository = get<HomeLeadTenantCommandRepository>(),
         )
     }
 
     viewModel {
         TenantsViewModel(
-            leadTenantSharedCommandRepository = get(),
+            leadTenantQueryRepository = get<HomeLeadTenantQueryRepository>(),
+            leadTenantCommandRepository = get<HomeLeadTenantCommandRepository>(),
         )
     }
 
@@ -194,10 +195,10 @@ val viewModelModule = module {
     }
 
     viewModel {
-        StaysViewModel(
+        _root_ide_package_.com.fstengineering.leasilycrm.home.subdomains.occupiedPeriods.presentation.OccupiedPeriodsViewModel(
             registerStayCheckOutUseCase = get(),
             undoRegisterStayCheckOutUseCase = get(),
-            staySharedCommandRepository = get(),
+            occupiedPeriodCommandRepository = get(),
             now = AppDateTime.lazyNow(),
         )
     }
@@ -219,13 +220,10 @@ val viewModelModule = module {
     viewModel {
         OccupiedPeriodDetailsViewModel(
             watchOccupiedPeriod = get(),
-            deleteStayUseCase = get(),
-            registerStayCheckInUseCase = get(),
-            undoRegisterStayCheckInUseCase = get(),
             registerStayCheckOut = get(),
             undoRegisterStayCheckOut = get(),
-            watchMustNotShowCheckOutDialogAnymoreUseCase = get(),
-            setMustNotShowCheckOutDialogAnymoreUseCase = get(),
+            occupiedPeriodSharedCommandRepository = get(),
+            occupiedPeriodQueryRepository = get(),
         )
     }
 }

@@ -7,13 +7,12 @@ import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.A
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceQueryRepositoryImpl
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceSentPropertyQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.application.gateways.UserSessionSharedGateway
-import com.fstengineering.leasilycrm.core.application.repositories.CrmMetricsRepository
+import com.fstengineering.leasilycrm.home.subdomains.dashboard.application.repositories.CrmMetricsRepository
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.StayFileRepository
-import com.fstengineering.leasilycrm.core.application.repositories.StaySharedCommandRepository
+import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
 import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
@@ -22,13 +21,12 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.plainPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.gateways.UserSessionSharedGatewayImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.CrmMetricsRepositoryImpl
+import com.fstengineering.leasilycrm.home.subdomains.dashboard.infra.repositories.CrmMetricsRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.PropertyOwnerSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.PropertySharedCommandRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.StayFileRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.StaySharedCommandRepositoryImpl
+import com.fstengineering.leasilycrm.core.infra.repositories.OccupiedPeriodSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.proxies.TenantRepositoryProxy
 import com.fstengineering.leasilycrm.core.infra.stores.SettingsSharedStoreImpl
 import com.fstengineering.leasilycrm.core.infra.stores.UserSessionSharedStoreImpl
@@ -50,18 +48,16 @@ import com.fstengineering.leasilycrm.propertyDashboard.infra.repositories.Proper
 import com.fstengineering.leasilycrm.propertyDashboard.infra.repositories.StayQueryRepositoryImpl as PropertyDashboardStayQueryRepositoryImpl
 import com.fstengineering.leasilycrm.propertyDetails.application.repositories.PropertyQueryRepository as PropertyDetailsPropertyQueryRepository
 import com.fstengineering.leasilycrm.propertyDetails.infra.repositories.PropertyQueryRepositoryImpl as PropertyDetailsPropertyQueryRepositoryImpl
-import com.fstengineering.leasilycrm.propertyOccupation.application.repositories.StayQueryRepository as PropertyOccupationStayQueryRepository
-import com.fstengineering.leasilycrm.propertyOccupation.infra.repositories.StayQueryRepositoryImpl as PropertyOccupationStayQueryRepositoryImpl
+import com.fstengineering.leasilycrm.propertyOccupation.application.repositories.OccupiedPeriodQueryRepository as PropertyOccupationStayQueryRepository
+import com.fstengineering.leasilycrm.propertyOccupation.infra.repositories.OccupiedPeriodQueryRepositoryImpl as PropertyOccupationStayQueryRepositoryImpl
 import com.fstengineering.leasilycrm.signin.application.gateways.UserSessionGateway
 import com.fstengineering.leasilycrm.signin.infra.gateways.UserSessionGatewayImpl
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.AssistanceCommandRepository as StayDetailsAssistanceCommandRepository
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.PropertyQueryRepository as StayDetailsPropertyQueryRepository
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodCommandRepository as StayDetailsStayCommandRepository
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodQueryRepository as StayDetailsStayQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.TenantQueryRepository as StayDetailsTenantQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.repositories.AssistanceCommandRepositoryImpl as StayDetailsAssistanceCommandRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.repositories.PropertyQueryRepositoryImpl as StayDetailsPropertyQueryRepositoryImpl
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.repositories.OccupiedPeriodCommandRepositoryImpl as StayDetailsStayCommandRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.repositories.OccupiedPeriodQueryRepositoryImpl as StayDetailsStayQueryRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.repositories.TenantQueryRepositoryImpl as StayDetailsTenantQueryRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.PropertyQueryRepository as StayRegistrationPropertyQueryRepository
@@ -76,11 +72,18 @@ import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.LeadTenantCommandRepository as LeadTenantDetailsLeadTenantCommandRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceQueryRepository as LeadTenantDetailsAssistanceQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceCommandRepository as LeadTenantDetailsAssistanceCommandRepository
+import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceSentPropertyQueryRepository as LeadTenantDetailsAssistanceSentPropertyQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.StayQueryRepository as LeadTenantDetailsStayQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.LeadTenantQueryRepositoryImpl as LeadTenantDetailsLeadTenantQueryRepositoryImpl
+import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.LeadTenantCommandRepositoryImpl as LeadTenantDetailsLeadTenantCommandRepositoryImpl
 import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.AssistanceQueryRepositoryImpl as LeadTenantDetailsAssistanceQueryRepositoryImpl
 import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.AssistanceCommandRepositoryImpl as LeadTenantDetailsAssistanceCommandRepositoryImpl
+import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.AssistanceSentPropertyQueryRepositoryImpl as LeadTenantDetailsAssistanceSentPropertyQueryRepositoryImpl
 import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.StayQueryRepositoryImpl as LeadTenantDetailsStayQueryRepositoryImpl
+import com.fstengineering.leasilycrm.home.application.repositories.LeadTenantQueryRepository as HomeLeadTenantQueryRepository
+import com.fstengineering.leasilycrm.home.application.repositories.LeadTenantCommandRepository as HomeLeadTenantCommandRepository
+import com.fstengineering.leasilycrm.home.infra.repositories.LeadTenantQueryRepositoryImpl as HomeLeadTenantQueryRepositoryImpl
+import com.fstengineering.leasilycrm.home.infra.repositories.LeadTenantCommandRepositoryImpl as HomeLeadTenantCommandRepositoryImpl
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -182,7 +185,7 @@ val repositoryModule = module {
     }
 
     single<CrmMetricsRepository> {
-        CrmMetricsRepositoryImpl(
+        _root_ide_package_.com.fstengineering.leasilycrm.home.subdomains.dashboard.infra.repositories.CrmMetricsRepositoryImpl(
             databaseDataSource = get(),
             now = AppDate.lazyNow(),
         )
@@ -218,10 +221,10 @@ val repositoryModule = module {
         )
     }
 
-    single<StaySharedCommandRepository> {
-        StaySharedCommandRepositoryImpl(
+    single<OccupiedPeriodSharedCommandRepository> {
+        OccupiedPeriodSharedCommandRepositoryImpl(
             databaseAdapter = get(),
-            stayDatabaseDataSource = get(),
+            occupiedPeriodDatabaseDataSource = get(),
             plainPreferencesDataSource = get(plainPreferencesQualifier),
         )
     }
@@ -233,15 +236,12 @@ val repositoryModule = module {
     }
 
     single<LeadTenantSharedCommandRepository> {
-        val realRepository = LeadTenantSharedCommandRepositoryImpl(
-            databaseAdapter = get(),
-            databaseDataSource = get(),
-            plainPreferencesDataSource = get(plainPreferencesQualifier),
-        )
-
         TenantRepositoryProxy(
-            tenantInMemoryDataSource = get(),
-            leadTenantSharedCommandRepository = realRepository,
+            leadTenantSharedCommandRepository = LeadTenantSharedCommandRepositoryImpl(
+                databaseAdapter = get(),
+                databaseDataSource = get(),
+                plainPreferencesDataSource = get(plainPreferencesQualifier),
+            ),
         )
     }
 
@@ -377,9 +377,40 @@ val repositoryModule = module {
         )
     }
 
+    single<LeadTenantDetailsAssistanceSentPropertyQueryRepository> {
+        LeadTenantDetailsAssistanceSentPropertyQueryRepositoryImpl(
+            propertyDatabaseDataSource = get(),
+        )
+    }
+
     single<LeadTenantDetailsStayQueryRepository> {
         LeadTenantDetailsStayQueryRepositoryImpl(
             stayDatabaseDataSource = get(),
+        )
+    }
+
+    // Home
+
+    single<HomeLeadTenantQueryRepository> {
+        HomeLeadTenantQueryRepositoryImpl(
+            tenantDatabaseDataSource = get(),
+            stayDatabaseDataSource = get(),
+            assistanceDatabaseDataSource = get(),
+            plainPreferencesDataSource = get(plainPreferencesQualifier),
+        )
+    }
+
+    single<HomeLeadTenantCommandRepository> {
+        HomeLeadTenantCommandRepositoryImpl(
+            databaseAdapter = get(),
+            tenantDatabaseDataSource = get(),
+        )
+    }
+
+    single<HomeAssistanceCommandRepository> {
+        HomeAssistanceCommandRepositoryImpl(
+            databaseAdapter = get(),
+            assistanceDatabaseDataSource = get(),
         )
     }
 }

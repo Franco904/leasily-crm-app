@@ -34,20 +34,18 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.CurrentAssistanceDeleteSuccess
-import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvents.Error
-import com.fstengineering.leasilycrm.home.composables.HomeBottomNavigationBar
-import com.fstengineering.leasilycrm.home.composables.HomeTopAppBar
-import com.fstengineering.leasilycrm.home.dashboard.DashboardPage
-import com.fstengineering.leasilycrm.home.leads.LeadsPage
-import com.fstengineering.leasilycrm.home.models.BottomNavBarDestination
-import com.fstengineering.leasilycrm.home.stays.StaysScreen
-import com.fstengineering.leasilycrm.home.tenants.TenantsPage
+import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvent.CurrentAssistanceDeleteSuccess
+import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvent.BottomSheetError
+import com.fstengineering.leasilycrm.home.presentation.composables.HomeBottomNavigationBar
+import com.fstengineering.leasilycrm.home.presentation.composables.HomeTopAppBar
+import com.fstengineering.leasilycrm.home.subdomains.dashboard.presentation.DashboardPage
+import com.fstengineering.leasilycrm.home.subdomains.leads.presentation.LeadsPage
+import com.fstengineering.leasilycrm.home.presentation.models.BottomNavBarDestination
+import com.fstengineering.leasilycrm.home.subdomains.occupiedPeriods.presentation.OccupiedPeriodsScreen
+import com.fstengineering.leasilycrm.home.subdomains.tenants.presentation.TenantsPage
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -92,14 +90,12 @@ fun HomeScreen(
     var isSearching by remember { mutableStateOf(false) }
     var searchInput by remember { mutableStateOf<String?>(null) }
 
-    var assistanceToDelete by rememberSaveable { mutableStateOf<Assistance?>(null) }
-
     LaunchedEffect(Unit) {
         viewModel.init()
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is Error -> {
+                is BottomSheetError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy
                     )
@@ -237,7 +233,7 @@ fun HomeScreen(
                     )
                 }
                 composable<Destinations.Home.Stays> {
-                    StaysScreen(
+                    OccupiedPeriodsScreen(
                         viewModel = koinViewModel(),
                         onRegisterStayBlank = { stayId, isUnavailablePeriod ->
                             onRegisterStayBlank(stayId, isUnavailablePeriod)
@@ -247,15 +243,6 @@ fun HomeScreen(
                     )
                 }
             }
-        }
-        if (assistanceToDelete != null) {
-            ConfirmDeleteAssistanceDialog(
-                onConfirmDelete = {
-                    viewModel.deleteCurrentAssistance(currentAssistance = assistanceToDelete!!)
-                    assistanceToDelete = null
-                },
-                onCancel = { assistanceToDelete = null },
-            )
         }
     }
 }

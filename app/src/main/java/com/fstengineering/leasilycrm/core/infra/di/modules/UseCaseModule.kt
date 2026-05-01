@@ -5,9 +5,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.q
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.GetTodayCheckInsCheckOutsToNotifyUseCaseImpl
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.GetTodayCheckInsCheckOutsToNotifyUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
@@ -25,14 +23,16 @@ import com.fstengineering.leasilycrm.propertyDashboard.application.useCases.Watc
 import com.fstengineering.leasilycrm.propertyOccupation.application.useCases.WatchPropertyOccupationUseCase
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.WatchOccupiedPeriodUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadSelectablePropertiesUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadStayUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadUnavailablePeriodUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.WriteStayUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.WriteUnavailablePeriodUseCase
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteAssistanceUseCase
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteLeadTenantUseCase
 import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.WatchLeadTenantUseCase
 import org.koin.dsl.module
 
@@ -73,29 +73,19 @@ val useCaseModule = module {
         )
     }
 
-    single { DeleteStayUseCase(occupiedPeriodCommandRepository = get()) }
-
-    single { RegisterStayCheckInUseCase(occupiedPeriodCommandRepository = get()) }
-
-    single { UndoRegisterStayCheckInUseCase(occupiedPeriodCommandRepository = get()) }
-
     single {
         RegisterStayCheckOutUseCase(
-            occupiedPeriodCommandRepository = get(),
+            occupiedPeriodSharedCommandRepository = get(),
             assistanceCommandRepository = get(),
         )
     }
 
     single {
         UndoRegisterStayCheckOutUseCase(
-            occupiedPeriodCommandRepository = get(),
+            occupiedPeriodSharedCommandRepository = get(),
             assistanceCommandRepository = get(),
         )
     }
-
-    single { WatchMustNotShowCheckOutDialogAnymoreUseCase(occupiedPeriodQueryRepository = get()) }
-
-    single { SetMustNotShowCheckOutDialogAnymoreUseCase(occupiedPeriodCommandRepository = get()) }
 
     // Property dashboard
 
@@ -113,7 +103,7 @@ val useCaseModule = module {
 
     single {
         WatchPropertyOccupationUseCase(
-            stayQueryRepository = get(),
+            occupiedPeriodQueryRepository = get(),
             leadTenantSharedQueryRepository = get(),
         )
     }
@@ -161,6 +151,7 @@ val useCaseModule = module {
         WatchLeadTenantUseCase(
             leadTenantQueryRepository = get(),
             assistanceQueryRepository = get(),
+            assistanceSentPropertyQueryRepository = get(),
             stayQueryRepository = get(),
         )
     }

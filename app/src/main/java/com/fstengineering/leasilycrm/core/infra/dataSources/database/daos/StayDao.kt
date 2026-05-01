@@ -4,10 +4,12 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckStatusCompound
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.OccupiedPeriodListProjection
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.OccupiedPeriodNotificationProjection
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckInCheckOutCountsProjection
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayListCompound
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -31,6 +33,9 @@ interface StayDao {
 
     @Query("SELECT * FROM stays WHERE tenant_id = :tenantId AND is_deleted = 0")
     suspend fun getAllByTenantId(tenantId: Long): List<StayEntity>
+
+    @Query("SELECT id FROM stays WHERE tenant_id = :tenantId AND is_deleted = 0 AND (status = 0 OR status = 1) LIMIT 1")
+    suspend fun getCurrentStayIdByTenantId(tenantId: Long): Long?
 
     @Transaction
     @Query("SELECT * FROM stays WHERE is_deleted = 0")
@@ -65,7 +70,7 @@ interface StayDao {
         WHERE s.is_deleted = 0
     """
     )
-    fun watchAllWithDetails(): Flow<List<StayListCompound>>
+    fun watchAllWithDetails(): Flow<List<OccupiedPeriodListProjection>>
 
     @Query(
         """
@@ -75,15 +80,54 @@ interface StayDao {
             po.name AS property_owner_name,
             s.check_in_date_time,
             s.check_out_date_time,
-            s.status
+            s.status,
+
+            CASE 
+                WHEN date(s.check_in_date_time / 1000, 'unixepoch') = date(:nowTimestamp / 1000, 'unixepoch', 'localtime')
+                THEN 1 ELSE 0
+            END AS is_check_in_today,
+
+            CASE 
+                WHEN date(s.check_out_date_time / 1000, 'unixepoch') = date(:nowTimestamp / 1000, 'unixepoch', 'localtime')
+                THEN 1 ELSE 0
+            END AS is_check_out_today
+
         FROM stays s
         LEFT JOIN lead_tenants_read_view t ON s.tenant_id = t.id AND t.is_deleted = 0
         LEFT JOIN properties p ON s.property_id = p.id AND p.is_deleted = 0
         LEFT JOIN property_owners po ON p.property_owner_id = po.id AND po.is_deleted = 0
         WHERE (s.status = 0 OR s.status = 1)
         AND s.tenant_id IS NOT NULL
+        AND t.name IS NOT NULL
+        AND p.property_type_id IS NOT NULL
+        AND po.name IS NOT NULL
+        AND (
+            date(s.check_in_date_time / 1000, 'unixepoch', 'localtime') = date(:nowTimestamp / 1000, 'unixepoch', 'localtime')
+            OR date(s.check_out_date_time / 1000, 'unixepoch', 'localtime') = date(:nowTimestamp / 1000, 'unixepoch', 'localtime')
+        )
         AND s.is_deleted = 0
     """
     )
-    fun watchAllUpcomingCheckInsAndCheckOuts(): Flow<List<StayCheckStatusCompound>>
+    fun getAllTodayCheckInsAndCheckOutsToNotify(nowTimestamp: Long): List<OccupiedPeriodNotificationProjection>
+
+    @Query(
+        """
+        SELECT
+        COUNT(
+            CASE 
+                WHEN s.status = 0 AND :nowStartOfDay >= s.check_in_date_time 
+                THEN 1
+            END
+        ) AS stays_able_to_check_in_count,
+        COUNT(
+            CASE 
+                WHEN s.status < 2 AND :nowStartOfDay >= s.check_out_date_time 
+                THEN 1
+            END
+        ) AS stays_able_to_check_out_count
+        FROM stays s
+        WHERE is_deleted = 0
+    """
+    )
+    fun watchAllPastCheckInCheckOutNotDoneCounts(nowStartOfDay: AppDateTime): Flow<StayCheckInCheckOutCountsProjection>
 }

@@ -17,11 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.models.StayFilterType
+import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
 
 @Composable
 fun StaysEmptySection(
-    stayFilterType: StayFilterType,
+    occupiedPeriodFilterType: OccupiedPeriodFilterType,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -40,12 +40,12 @@ fun StaysEmptySection(
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = stringResource(
-                when (stayFilterType) {
-                    StayFilterType.UpcomingCheckIn -> R.string.stays_upcoming_check_in_empty_text
-                    StayFilterType.UpcomingCheckOut -> R.string.stays_upcoming_check_out_empty_text
-                    StayFilterType.Finished -> R.string.stays_finished_empty_text
-                    StayFilterType.UnavailablePeriod -> R.string.stays_unavailable_period_empty_text
-                    StayFilterType.All -> R.string.stays_generic_empty_text
+                when (occupiedPeriodFilterType) {
+                    OccupiedPeriodFilterType.UpcomingCheckIn -> R.string.stays_upcoming_check_in_empty_text
+                    OccupiedPeriodFilterType.UpcomingCheckOut -> R.string.stays_upcoming_check_out_empty_text
+                    OccupiedPeriodFilterType.Finished -> R.string.stays_finished_empty_text
+                    OccupiedPeriodFilterType.UnavailablePeriod -> R.string.stays_unavailable_period_empty_text
+                    OccupiedPeriodFilterType.All -> R.string.stays_generic_empty_text
                 },
             ),
             style = MaterialTheme.typography.bodyMedium,
