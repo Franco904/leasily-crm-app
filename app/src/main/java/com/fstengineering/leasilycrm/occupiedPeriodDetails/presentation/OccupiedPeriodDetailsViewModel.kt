@@ -110,7 +110,12 @@ class OccupiedPeriodDetailsViewModel(
         val loaded = _uiState.value as? OccupiedPeriodDetailsUiState.Loaded ?: return
 
         viewModelScope.launch {
-            registerStayCheckOut(RegisterCheckOutCommand(stayId = loaded.id, tenantId = loaded.tenantId))
+            registerStayCheckOut(
+                RegisterCheckOutCommand(
+                    stayId = loaded.id,
+                    tenantId = loaded.tenantId
+                )
+            )
                 .onApplicationError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
                 .onSuccess { _uiEvents.trySend(UiEvents.RegisterCheckOutSuccess) }
         }
@@ -127,7 +132,12 @@ class OccupiedPeriodDetailsViewModel(
         val loaded = _uiState.value as? OccupiedPeriodDetailsUiState.Loaded ?: return
 
         viewModelScope.launch {
-            undoRegisterStayCheckOut(UndoCheckOutCommand(stayId = loaded.id, tenantId = loaded.tenantId))
+            undoRegisterStayCheckOut(
+                UndoCheckOutCommand(
+                    stayId = loaded.id,
+                    tenantId = loaded.tenantId
+                )
+            )
                 .onApplicationError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
         }
     }

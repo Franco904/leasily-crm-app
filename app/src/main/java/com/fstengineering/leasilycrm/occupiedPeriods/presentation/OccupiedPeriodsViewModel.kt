@@ -10,8 +10,8 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.Comman
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
+import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
 import com.fstengineering.leasilycrm.occupiedPeriods.application.repositories.OccupiedPeriodQueryRepository
 import kotlinx.collections.immutable.ImmutableList
@@ -208,7 +208,12 @@ class OccupiedPeriodsViewModel(
         val stay = stayToRegisterCheckOut ?: return
 
         viewModelScope.launch {
-            registerStayCheckOutUseCase(RegisterCheckOutCommand(stayId = stay.id, tenantId = stay.tenantId))
+            registerStayCheckOutUseCase(
+                RegisterCheckOutCommand(
+                    stayId = stay.id,
+                    tenantId = stay.tenantId
+                )
+            )
                 .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess {
                     _uiEvents.trySend(UiEvent.RegisterCheckOutSuccess)
@@ -230,7 +235,12 @@ class OccupiedPeriodsViewModel(
         val stay = stayToRegisterCheckOut ?: return
 
         viewModelScope.launch {
-            undoRegisterStayCheckOutUseCase(UndoCheckOutCommand(stayId = stay.id, tenantId = stay.tenantId))
+            undoRegisterStayCheckOutUseCase(
+                UndoCheckOutCommand(
+                    stayId = stay.id,
+                    tenantId = stay.tenantId
+                )
+            )
                 .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
         }
     }
