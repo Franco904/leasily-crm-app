@@ -12,9 +12,9 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
-import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
 import com.fstengineering.leasilycrm.profile.domain.valueObjects.Creci
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
 import kotlinx.coroutines.channels.Channel
@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val writeUser: WriteUserUseCase,
+    private val writeUser: CommandUseCase<UserCommandModel>,
     private val connectivityService: ConnectivityService,
     private val userSessionService: UserSessionService,
     private val userQueryRepository: UserQueryRepository,

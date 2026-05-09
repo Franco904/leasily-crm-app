@@ -3,10 +3,12 @@ package com.fstengineering.leasilycrm.assistanceRegistration.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.commands.AssistanceCommandModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.queries.AssistanceArgs
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
-import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
@@ -25,8 +27,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AssistanceRegistrationViewModel(
-    private val readAssistance: ReadAssistanceUseCase,
-    private val writeAssistance: WriteAssistanceUseCase,
+    private val readAssistance: QueryUseCase<AssistanceArgs, AssistanceReadModel>,
+    private val writeAssistance: CommandUseCase<AssistanceCommandModel>,
     private val assistanceQueryRepository: AssistanceQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false

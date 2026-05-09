@@ -1,11 +1,13 @@
 package com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases
 
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.services.PropertyOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedPeriod
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.queries.OccupiedPeriodArgs
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.TenantQueryRepository
@@ -17,9 +19,9 @@ class WatchOccupiedPeriodUseCase(
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
     private val propertyQueryRepository: PropertyQueryRepository,
     private val tenantQueryRepository: TenantQueryRepository,
-) {
-    operator fun invoke(periodId: Long): Flow<AppResult<OccupiedPeriodReadModel?, ApplicationError>> {
-        return occupiedPeriodQueryRepository.watchById(periodId).map outer@{ periodResult ->
+) : QueryFlowUseCase<OccupiedPeriodArgs, OccupiedPeriodReadModel?> {
+    override suspend fun invoke(args: OccupiedPeriodArgs): Flow<AppResult<OccupiedPeriodReadModel?, ApplicationError>> {
+        return occupiedPeriodQueryRepository.watchById(args.periodId).map outer@{ periodResult ->
             val raw = periodResult.fold(
                 onError = { e -> return@outer AppResult.Error(error = e) },
                 onSuccess = { it },

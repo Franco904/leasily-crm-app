@@ -5,8 +5,6 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewMod
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
-import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
-import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
 import com.fstengineering.leasilycrm.dashboard.presentation.DashboardViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel
@@ -183,8 +181,8 @@ val viewModelModule = module {
     viewModel {
         AssistanceRegistrationViewModel(
             assistanceQueryRepository = get(),
-            readAssistance = get(readAssistanceQualifier),
-            writeAssistance = get(writeAssistanceQualifier),
+            readAssistance = get(),
+            writeAssistance = get(),
         )
     }
 

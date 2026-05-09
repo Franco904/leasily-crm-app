@@ -13,8 +13,9 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerQueryRepository
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerDraftFormUiState
@@ -32,7 +33,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class PropertyOwnerRegistrationViewModel(
-    private val writePropertyOwner: WritePropertyOwnerUseCase,
+    private val writePropertyOwner: CommandUseCase<PropertyOwnerCommandModel>,
     private val propertyOwnerQueryRepository: PropertyOwnerQueryRepository,
     private val fileStorageService: FileStorageService,
 ) : ViewModel() {

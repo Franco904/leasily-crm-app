@@ -1,12 +1,14 @@
 package com.fstengineering.leasilycrm.leadTenantDetails.application.useCases
 
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceRawReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.queries.LeadTenantArgs
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceSentPropertyQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.LeadTenantQueryRepository
@@ -22,9 +24,9 @@ class WatchLeadTenantUseCase(
     private val assistanceQueryRepository: AssistanceQueryRepository,
     private val assistanceSentPropertyQueryRepository: AssistanceSentPropertyQueryRepository,
     private val stayQueryRepository: StayQueryRepository,
-) {
-    operator fun invoke(tenantId: Long): Flow<AppResult<LeadTenantReadModel?, ApplicationError>> {
-        return leadTenantQueryRepository.watchById(tenantId).map outer@{ tenantResult ->
+) : QueryFlowUseCase<LeadTenantArgs, LeadTenantReadModel?> {
+    override suspend fun invoke(args: LeadTenantArgs): Flow<AppResult<LeadTenantReadModel?, ApplicationError>> {
+        return leadTenantQueryRepository.watchById(args.tenantId).map outer@{ tenantResult ->
             val raw = tenantResult.fold(
                 onError = { e -> return@outer AppResult.Error(error = e) },
                 onSuccess = { it },
