@@ -6,19 +6,19 @@ import com.fstengineering.leasilycrm.core.application.useCases.interfaces.Comman
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.AssistanceCommandRepository
+import com.fstengineering.leasilycrm.core.application.repositories.AssistanceSharedCommandRepository
 import kotlinx.collections.immutable.persistentListOf
 
 class UndoRegisterStayCheckOutUseCase(
     private val occupiedPeriodSharedCommandRepository: OccupiedPeriodSharedCommandRepository,
-    private val assistanceCommandRepository: AssistanceCommandRepository,
+    private val assistanceSharedCommandRepository: AssistanceSharedCommandRepository,
 ) : CommandUseCase<UndoCheckOutCommand> {
     override suspend fun invoke(command: UndoCheckOutCommand): AppResultCompound<Unit, BusinessRuleError> {
         occupiedPeriodSharedCommandRepository.undoRegisterCheckOut(command.stayId)
             .onError { return AppResultCompound.Errors(persistentListOf(it)) }
 
         if (command.tenantId != null) {
-            assistanceCommandRepository.unfinishAssistanceByTenantId(command.tenantId)
+            assistanceSharedCommandRepository.unfinishAssistanceByTenantId(command.tenantId)
                 .onError { return AppResultCompound.Errors(persistentListOf(it)) }
         }
 

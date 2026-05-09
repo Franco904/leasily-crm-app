@@ -133,14 +133,14 @@ val useCaseModule = module {
     authCommandUseCase<CommandUseCase<RegisterCheckOutCommand>>(registerStayCheckOutQualifier) {
         RegisterStayCheckOutUseCase(
             occupiedPeriodSharedCommandRepository = get(),
-            assistanceCommandRepository = get(),
+            assistanceSharedCommandRepository = get(),
         )
     }
 
     authCommandUseCase<CommandUseCase<UndoCheckOutCommand>>(undoRegisterStayCheckOutQualifier) {
         UndoRegisterStayCheckOutUseCase(
             occupiedPeriodSharedCommandRepository = get(),
-            assistanceCommandRepository = get(),
+            assistanceSharedCommandRepository = get(),
         )
     }
 
