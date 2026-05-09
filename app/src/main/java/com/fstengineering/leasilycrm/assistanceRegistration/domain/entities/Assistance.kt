@@ -3,12 +3,12 @@ package com.fstengineering.leasilycrm.assistanceRegistration.domain.entities
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistanceGuestsCount
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistancePreferredFeaturesCount
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistancePreferredPeriod
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import kotlinx.collections.immutable.ImmutableList

@@ -11,5 +11,10 @@ import org.koin.dsl.module
 val applicationServiceModule = module {
     single<ConnectivityService> { ConnectivityServiceImpl(connectivityAdapter = get()) }
     single<FileStorageService> { FileStorageServiceImpl(sharedStorageDataSource = get()) }
-    single<UserSessionService> { UserSessionServiceImpl(userSessionSharedGateway = get()) }
+    single<UserSessionService> {
+        UserSessionServiceImpl(
+            userSessionSharedGateway = get(),
+            userSessionSharedStore = get()
+        )
+    }
 }

@@ -6,8 +6,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.SelectablePropertiesArgs
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.OccupiedPeriodQueryRepository
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.services.PropertyOccupiedDatesService
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -28,7 +28,11 @@ class ReadSelectablePropertiesUseCase(
         val propertyWithOccupiedPeriods = properties
             .map { property ->
                 val occupiedPeriods =
-                    occupiedPeriodQueryRepository.getOccupiedPeriodsByPropertyId(requireNotNull(property.id))
+                    occupiedPeriodQueryRepository.getOccupiedPeriodsByPropertyId(
+                        requireNotNull(
+                            property.id
+                        )
+                    )
                         .fold(
                             onError = { e -> return AppResult.Error(error = e) },
                             onSuccess = { it },

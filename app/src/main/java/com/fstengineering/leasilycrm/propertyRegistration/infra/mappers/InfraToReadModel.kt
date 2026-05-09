@@ -60,7 +60,7 @@ fun PropertyCompound.toRawReadModel(): PropertyRawReadModel {
 }
 
 fun PropertyOwnerEntity.toReadModel() = PropertyOwnerReadModel(
-    id = id,
+    id = requireNotNull(id),
     name = name,
 )
 

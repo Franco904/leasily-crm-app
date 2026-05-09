@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.services
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.OccupiedPeriod
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.OccupiedPeriodReadModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
@@ -10,7 +10,7 @@ import kotlinx.collections.immutable.toPersistentSet
 class PropertyOccupiedDatesService {
     companion object {
         fun getOccupiedDates(
-            occupiedPeriods: ImmutableList<OccupiedPeriod>,
+            occupiedPeriods: ImmutableList<OccupiedPeriodReadModel>,
             stayToEditId: Long?,
         ): ImmutableSet<AppDate> {
             if (occupiedPeriods.isEmpty()) return persistentSetOf()

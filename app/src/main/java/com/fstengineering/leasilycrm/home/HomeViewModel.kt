@@ -2,12 +2,10 @@ package com.fstengineering.leasilycrm.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
+import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
-import com.fstengineering.leasilycrm.home.application.repositories.OccupiedPeriodQueryRepository
 import com.fstengineering.leasilycrm.home.application.repositories.UserQueryRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,14 +15,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val occupiedPeriodSharedCommandRepository: OccupiedPeriodSharedCommandRepository,
-    private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
+    private val occupiedPeriodSharedQueryRepository: OccupiedPeriodSharedQueryRepository,
     private val userQueryRepository: UserQueryRepository,
-    private val now: AppDateTime,
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _userProfilePictureUrl = MutableStateFlow<String?>(null)
@@ -54,7 +50,7 @@ class HomeViewModel(
 
     private fun watchTodayCheckInsAndCheckouts() {
         viewModelScope.launch {
-            occupiedPeriodQueryRepository.watchAllPastCheckInCheckOutNotDoneCounts()
+            occupiedPeriodSharedQueryRepository.watchAllPastCheckInCheckOutNotDoneCounts()
                 .collect { result ->
                     result
                         .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }

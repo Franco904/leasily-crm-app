@@ -57,7 +57,6 @@ fun LeadTenantReadView.toReadModel() = TenantReadModel(
 )
 
 private fun StayFileEntity.toReadModel() = StayFileReadModel(
-    id = id,
     uriString = stayFileUri,
     name = stayFileName,
 )

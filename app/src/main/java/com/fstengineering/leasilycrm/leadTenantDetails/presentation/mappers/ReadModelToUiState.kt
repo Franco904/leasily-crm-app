@@ -5,8 +5,8 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentPropertyReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.StayReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceInteractionUiState
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceUiState
@@ -100,17 +100,17 @@ private fun AssistanceReadModel.toUiState(): AssistanceUiState {
         searchingEndDate = preferredEndDate,
         hasFlexibilityForPeriod = hasFlexibilityForPeriod,
         maxAcceptedNightlyRate = maxAcceptedNightlyRate,
-        qtAdultGuests = adults,
-        qtKidGuests = kids,
-        qtBabyGuests = babies,
-        qtAnimalGuests = animals,
-        qtBedrooms = bedrooms,
-        qtEnSuites = enSuites,
-        qtDoubleBeds = doubleBeds,
-        qtSingleBeds = singleBeds,
-        qtBathrooms = bathrooms,
-        qtParkingSpots = parkingSpots,
-        preferredSeaProximityTypeId = preferredSeaProximityTypeId?.id,
+        qtAdultGuests = adultsCount ?: 0,
+        qtKidGuests = kidsCount ?: 0,
+        qtBabyGuests = babiesCount ?: 0,
+        qtAnimalGuests = animalsCount ?: 0,
+        qtBedrooms = bedroomsCount ?: 0,
+        qtEnSuites = enSuitesCount ?: 0,
+        qtDoubleBeds = doubleBedsCount ?: 0,
+        qtSingleBeds = singleBedsCount ?: 0,
+        qtBathrooms = bathroomsCount ?: 0,
+        qtParkingSpots = parkingSpotsCount ?: 0,
+        preferredSeaProximityTypeId = preferredSeaProximityTypeId,
         distanceToSea = preferredDistanceToSea,
         preferredNeighborhoods = preferredNeighborhoods,
         preferredPropertyCharacteristics = preferredPropertyCharacteristics,

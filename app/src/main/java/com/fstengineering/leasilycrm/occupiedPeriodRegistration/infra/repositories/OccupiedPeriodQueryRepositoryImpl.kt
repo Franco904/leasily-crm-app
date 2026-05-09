@@ -4,18 +4,16 @@ import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.StayRawReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.UnavailablePeriodRawReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.OccupiedPeriodQueryRepository
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.OccupiedPeriod
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.mappers.toCheckInCheckOutReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.mappers.toStayRawReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.mappers.toUnavailablePeriodRawReadModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 
 class OccupiedPeriodQueryRepositoryImpl(
     private val databaseDataSource: StayDatabaseDataSource,
@@ -40,7 +38,7 @@ class OccupiedPeriodQueryRepositoryImpl(
 
     override suspend fun getOccupiedPeriodsByPropertyId(
         propertyId: Long,
-    ): AppResult<ImmutableList<OccupiedPeriod>, ApplicationError> {
+    ): AppResult<ImmutableList<OccupiedPeriodReadModel>, ApplicationError> {
         return databaseDataSource.watchAllByPropertyId(propertyId)
             .first()
             .fold(

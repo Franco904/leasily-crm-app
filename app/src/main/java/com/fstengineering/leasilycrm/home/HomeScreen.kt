@@ -33,25 +33,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.fstengineering.leasilycrm.Destinations
-import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvent.CurrentAssistanceDeleteSuccess
+import com.fstengineering.leasilycrm.dashboard.presentation.DashboardPage
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvent.BottomSheetError
 import com.fstengineering.leasilycrm.home.presentation.composables.HomeBottomNavigationBar
 import com.fstengineering.leasilycrm.home.presentation.composables.HomeTopAppBar
-import com.fstengineering.leasilycrm.home.subdomains.dashboard.presentation.DashboardPage
-import com.fstengineering.leasilycrm.home.subdomains.leads.presentation.LeadsPage
 import com.fstengineering.leasilycrm.home.presentation.models.BottomNavBarDestination
-import com.fstengineering.leasilycrm.home.subdomains.occupiedPeriods.presentation.OccupiedPeriodsScreen
-import com.fstengineering.leasilycrm.home.subdomains.tenants.presentation.TenantsPage
+import com.fstengineering.leasilycrm.leadTenants.presentation.leads.LeadsPage
+import com.fstengineering.leasilycrm.leadTenants.presentation.tenants.TenantsPage
+import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsPage
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    startedFromStayNotificationPopUp: Boolean,
+    startedFromStayCheckInCheckOutNotification: Boolean,
     isStayRegistrationSuccess: Boolean,
     onSettingsSelect: () -> Unit,
     onProfileSelect: () -> Unit,
@@ -75,13 +73,13 @@ fun HomeScreen(
     val surfaceContainerColor = MaterialTheme.colorScheme.surfaceContainer
 
     val userProfilePictureUrl by viewModel.userProfilePictureUrl.collectAsStateWithLifecycle()
-    val todayCheckInsAndCheckoutsCount by viewModel.todayCheckInsAndCheckoutsCount.collectAsStateWithLifecycle()
+    val todayCheckInsAndCheckOutsCount by viewModel.todayCheckInsAndCheckoutsCount.collectAsStateWithLifecycle()
 
     var currentBottomNavDestination: BottomNavBarDestination by rememberSaveable(
-        startedFromStayNotificationPopUp,
+        startedFromStayCheckInCheckOutNotification,
     ) {
         val startNavDestination =
-            if (startedFromStayNotificationPopUp) BottomNavBarDestination.Stays
+            if (startedFromStayCheckInCheckOutNotification) BottomNavBarDestination.Occupation
             else BottomNavBarDestination.Dashboard
 
         mutableStateOf(startNavDestination)
@@ -101,19 +99,15 @@ fun HomeScreen(
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
-
-                is CurrentAssistanceDeleteSuccess -> {
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_assistance_success_message))
-                }
             }
         }
     }
 
     LaunchedEffect(isStayRegistrationSuccess) {
         if (isStayRegistrationSuccess) {
-            currentBottomNavDestination = BottomNavBarDestination.Stays
+            currentBottomNavDestination = BottomNavBarDestination.Occupation
 
-            navController.navigate(BottomNavBarDestination.Stays.navDestination) {
+            navController.navigate(BottomNavBarDestination.Occupation.navDestination) {
                 launchSingleTop = true
                 restoreState = true
                 popUpTo(navController.graph.startDestinationId) { saveState = true }
@@ -178,7 +172,7 @@ fun HomeScreen(
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                         }
                     },
-                    upcomingStaysCount = todayCheckInsAndCheckoutsCount,
+                    todayCheckInsAndCheckOutsCount = todayCheckInsAndCheckOutsCount,
                 )
             }
         },
@@ -190,13 +184,13 @@ fun HomeScreen(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Destinations.Home(startedFromStayNotificationPopUp),
+            startDestination = Destinations.Home(startedFromStayCheckInCheckOutNotification),
             modifier = Modifier
                 .padding(innerPadding)
         ) {
             navigation<Destinations.Home>(
-                startDestination = if (startedFromStayNotificationPopUp) {
-                    Destinations.Home.Stays
+                startDestination = if (startedFromStayCheckInCheckOutNotification) {
+                    Destinations.Home.OccupiedPeriods
                 } else Destinations.Home.Dashboard,
             ) {
                 composable<Destinations.Home.Dashboard> {
@@ -232,13 +226,13 @@ fun HomeScreen(
                         onUiEvent = onUiEvent,
                     )
                 }
-                composable<Destinations.Home.Stays> {
-                    OccupiedPeriodsScreen(
+                composable<Destinations.Home.OccupiedPeriods> {
+                    OccupiedPeriodsPage(
                         viewModel = koinViewModel(),
-                        onRegisterStayBlank = { stayId, isUnavailablePeriod ->
+                        onRegisterOccupiedPeriod = { stayId, isUnavailablePeriod ->
                             onRegisterStayBlank(stayId, isUnavailablePeriod)
                         },
-                        onViewStayDetails = { stayId -> onViewStay(stayId, false) },
+                        onViewOccupiedPeriodDetails = { stayId -> onViewStay(stayId, false) },
                         onUiEvent = onUiEvent,
                     )
                 }

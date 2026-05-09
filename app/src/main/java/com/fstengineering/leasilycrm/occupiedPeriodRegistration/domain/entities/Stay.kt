@@ -6,8 +6,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Amount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.OccupiedPeriodPeriod
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.StayGuestsCount
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.StayPeriod
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -15,7 +15,7 @@ class Stay private constructor(
     val id: Long?,
     val createDateTime: AppDateTime?,
     val propertyId: Long,
-    val period: StayPeriod,
+    val period: OccupiedPeriodPeriod,
     val observations: String?,
     val tenantId: Long,
     val vehicleMake: String?,
@@ -77,7 +77,7 @@ class Stay private constructor(
                 }
 
                 else -> {
-                    StayPeriod.parse(
+                    OccupiedPeriodPeriod.parse(
                         checkInDateTime = checkInDateTime.withHourMinute(
                             hour = checkInTimeHour,
                             minute = checkInTimeMinute,

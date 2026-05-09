@@ -33,9 +33,9 @@ import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvents.BottomSheetError
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvents.NavigateUp
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvents.OccupiedPeriodDeleteSuccess
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvents.RegisterCheckInSuccess
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvents.RegisterCheckOutSuccess
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvents.StayDeleteSuccess
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.StayDetailsFloatingActionButton
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.StayDetailsSection
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.StayDetailsTopAppBar
@@ -43,7 +43,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composab
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.OccupiedPeriodDetailsUiState
 
 @Composable
-fun StayDetailsScreen(
+fun OccupiedPeriodDetailsScreen(
     occupiedPeriodId: Long,
     cameFromProperty: Boolean,
     cameFromTenant: Boolean,
@@ -91,7 +91,7 @@ fun StayDetailsScreen(
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is StayDeleteSuccess -> {
+                is OccupiedPeriodDeleteSuccess -> {
                     val messageId =
                         if (loaded?.isUnavailablePeriod == true) R.string.delete_unavailable_period_success_message
                         else R.string.delete_stay_success_message

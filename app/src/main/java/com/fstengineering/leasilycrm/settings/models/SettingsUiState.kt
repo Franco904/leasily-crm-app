@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.settings.models
 
-import com.fstengineering.leasilycrm.settings.application.models.SettingsReadModel
+import com.fstengineering.leasilycrm.core.application.models.SettingsSharedReadModel
 
 sealed interface SettingsUiState {
     data object Loading : SettingsUiState
@@ -9,7 +9,7 @@ sealed interface SettingsUiState {
         val isTodayCheckInCheckOutNotificationEnabled: Boolean,
     ) : SettingsUiState {
         companion object {
-            fun fromReadModel(readModel: SettingsReadModel) = Loaded(
+            fun fromReadModel(readModel: SettingsSharedReadModel) = Loaded(
                 isTodayCheckInCheckOutNotificationEnabled = readModel.isTodayCheckInCheckOutNotificationEnabled,
             )
         }

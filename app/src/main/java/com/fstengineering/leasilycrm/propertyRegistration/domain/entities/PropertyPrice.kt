@@ -1,11 +1,11 @@
 package com.fstengineering.leasilycrm.propertyRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Amount
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.propertyRegistration.domain.valueObjects.PropertyPricePeriod
 import kotlinx.collections.immutable.toPersistentList
 

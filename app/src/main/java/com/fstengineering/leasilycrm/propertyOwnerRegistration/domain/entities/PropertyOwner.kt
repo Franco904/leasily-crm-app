@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.propertyOwnerRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Email
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Name
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PaymentKey

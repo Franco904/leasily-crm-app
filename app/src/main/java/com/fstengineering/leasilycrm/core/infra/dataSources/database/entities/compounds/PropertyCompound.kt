@@ -50,7 +50,11 @@ data class PropertyCompound(
         }.toPersistentList()
 
         val domainFiles = files.map { file ->
-            PropertyFile(id = file.id, uriString = file.propertyFileUri, isMainPicture = file.isMainPicture)
+            PropertyFile(
+                id = file.id,
+                uriString = file.propertyFileUri,
+                isMainPicture = file.isMainPicture
+            )
         }.toPersistentList()
 
         return Property.parse(

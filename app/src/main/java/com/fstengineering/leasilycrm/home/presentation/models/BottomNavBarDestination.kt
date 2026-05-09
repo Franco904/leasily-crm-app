@@ -37,10 +37,10 @@ enum class BottomNavBarDestination(
         selectedIcon = Icons.Default.Group,
         navDestination = Destinations.Home.Tenants,
     ),
-    Stays(
-        textId = R.string.home_stays_label,
+    Occupation(
+        textId = R.string.home_occupation_label,
         icon = Icons.Outlined.DateRange,
         selectedIcon = Icons.Default.DateRange,
-        navDestination = Destinations.Home.Stays,
+        navDestination = Destinations.Home.OccupiedPeriods,
     ),
 }

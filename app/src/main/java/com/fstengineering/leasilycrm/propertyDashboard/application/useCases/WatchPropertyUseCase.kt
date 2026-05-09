@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.propertyDashboard.application.useCases
 
+import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
@@ -15,9 +16,8 @@ import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.P
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.queries.PropertyArgs
 import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.PropertyOwnerQueryRepository
+import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.StayQueryRepository
-import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
-import com.fstengineering.leasilycrm.propertyDetails.application.repositories.PropertyQueryRepository
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList

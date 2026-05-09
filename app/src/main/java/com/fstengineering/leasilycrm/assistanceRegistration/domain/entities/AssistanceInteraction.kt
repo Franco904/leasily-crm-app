@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import kotlinx.collections.immutable.toPersistentList
 
 class AssistanceInteraction private constructor(

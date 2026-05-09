@@ -14,14 +14,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BathroomsDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BedroomsEnSuitesDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.DoubleSingleBedsDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconValueDetailsItem
 import com.fstengineering.leasilycrm.core.presentation.composables.details.ParkingSpotsDetailsItem
 import com.fstengineering.leasilycrm.propertyDetails.presentation.models.PropertyQuantityCharacteristicsUiState
-import com.fstengineering.leasilycrm.propertyDetails.presentation.models.PropertyUiState
 
 @Composable
 fun PropertyQuantityCharacteristicsDetailsItems(

@@ -21,7 +21,7 @@ sealed interface Destinations {
         data object Tenants
 
         @Serializable
-        data object Stays
+        data object OccupiedPeriods
     }
 
     @Serializable
@@ -55,7 +55,7 @@ sealed interface Destinations {
     data class PropertyDetails(val propertyId: Long)
 
     @Serializable
-    data class PropertyStays(val propertyId: Long)
+    data class PropertyOccupation(val propertyId: Long)
 
     @Serializable
     data object PropertyOwners
@@ -88,8 +88,8 @@ sealed interface Destinations {
     }
 
     @Serializable
-    data class StayRegistration(
-        val stayId: Long?,
+    data class OccupiedPeriodRegistration(
+        val occupiedPeriodId: Long?,
         val propertyId: Long?,
         val leadTenantId: Long?,
         val isUnavailablePeriod: Boolean,

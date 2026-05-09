@@ -23,7 +23,7 @@ import com.fstengineering.leasilycrm.home.presentation.models.BottomNavBarDestin
 fun HomeBottomNavigationBar(
     currentDestination: BottomNavBarDestination,
     onDestinationSelect: (BottomNavBarDestination) -> Unit,
-    upcomingStaysCount: Int,
+    todayCheckInsAndCheckOutsCount: Int,
     modifier: Modifier = Modifier,
 ) {
     NavigationBar(
@@ -68,9 +68,9 @@ fun HomeBottomNavigationBar(
                                 )
                             }
                         }
-                        if (navItem == BottomNavBarDestination.Stays && upcomingStaysCount > 0) {
+                        if (navItem == BottomNavBarDestination.Occupation && todayCheckInsAndCheckOutsCount > 0) {
                             NumberRedBadge(
-                                number = upcomingStaysCount,
+                                number = todayCheckInsAndCheckOutsCount,
                                 modifier = Modifier
                                     .align(Alignment.TopEnd)
                                     .offset(x = 4.dp, y = (-4).dp)
@@ -108,7 +108,7 @@ private fun HomeBottomNavigationBarPreview(
         HomeBottomNavigationBar(
             currentDestination = BottomNavBarDestination.Dashboard,
             onDestinationSelect = {},
-            upcomingStaysCount = 17,
+            todayCheckInsAndCheckOutsCount = 17,
             modifier = modifier
         )
     }

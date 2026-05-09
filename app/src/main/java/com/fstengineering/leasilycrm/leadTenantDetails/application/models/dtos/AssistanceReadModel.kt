@@ -1,12 +1,14 @@
 package com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import kotlinx.collections.immutable.ImmutableList
 
 data class AssistanceReadModel(
     val id: Long,
+    val updateDateTime: AppDateTime,
     val preferredStartDate: AppDate?,
     val preferredEndDate: AppDate?,
     val hasFlexibilityForPeriod: Boolean,
@@ -36,6 +38,7 @@ data class AssistanceReadModel(
             sentProperties: ImmutableList<AssistanceSentPropertyReadModel>,
         ) = AssistanceReadModel(
             id = requireNotNull(assistanceRaw.id),
+            updateDateTime = assistanceRaw.updateDateTime,
             preferredStartDate = assistanceRaw.preferredStartDate,
             preferredEndDate = assistanceRaw.preferredEndDate,
             hasFlexibilityForPeriod = assistanceRaw.hasFlexibilityForPeriod,

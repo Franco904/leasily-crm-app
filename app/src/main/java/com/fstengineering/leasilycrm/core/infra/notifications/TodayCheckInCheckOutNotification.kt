@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.graphics.toColorInt
 import com.fstengineering.leasilycrm.MainActivity
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.models.OccupiedPeriodNotificationReadModel
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
@@ -34,15 +35,15 @@ object TodayCheckInCheckOutNotification {
 
     fun buildNotification(
         context: Context,
-        status: StayCheckNotificationStatusReadModel,
+        status: OccupiedPeriodNotificationReadModel,
     ): Notification {
         val title = when {
-            status.mustNotifyCheckIn -> context.getString(R.string.upcoming_check_in_reminder_notification_title)
+            status.isCheckInToday -> context.getString(R.string.upcoming_check_in_reminder_notification_title)
             else -> context.getString(R.string.upcoming_check_out_reminder_notification_title)
         }
 
         val textId =
-            if (status.mustNotifyCheckIn) R.string.upcoming_check_in_reminder_notification_description
+            if (status.isCheckInToday) R.string.upcoming_check_in_reminder_notification_description
             else R.string.upcoming_check_out_reminder_notification_description
 
         val propertyTypeName = when {

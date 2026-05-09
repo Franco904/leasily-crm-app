@@ -1,13 +1,14 @@
 package com.fstengineering.leasilycrm.core.infra.di.modules
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.commands.AssistanceCommandModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.queries.AssistanceArgs
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.queries.AssistanceArgs
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.ReadAssistanceUseCase
 import com.fstengineering.leasilycrm.assistanceRegistration.application.useCases.WriteAssistanceUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeLeadTenantQualifier
@@ -15,25 +16,26 @@ import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writePropertyOwner
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeUserQualifier
 import com.fstengineering.leasilycrm.core.infra.utils.authCommandUseCase
 import com.fstengineering.leasilycrm.core.infra.utils.authQueryUseCase
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteAssistanceUseCase
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteLeadTenantUseCase
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.WatchLeadTenantUseCase
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.commands.LeadTenantCommandModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.useCases.WriteLeadTenantUseCase
-import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
-import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
-import com.fstengineering.leasilycrm.propertyDashboard.application.useCases.WatchPropertyUseCase
-import com.fstengineering.leasilycrm.propertyOccupation.application.useCases.WatchPropertyOccupationUseCase
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerCommandModel
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.WatchOccupiedPeriodUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadSelectablePropertiesUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadStayUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadUnavailablePeriodUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.WriteStayUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.WriteUnavailablePeriodUseCase
-import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteAssistanceUseCase
-import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteLeadTenantUseCase
-import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.WatchLeadTenantUseCase
+import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
+import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
+import com.fstengineering.leasilycrm.propertyDashboard.application.useCases.WatchPropertyUseCase
+import com.fstengineering.leasilycrm.propertyOccupation.application.useCases.WatchPropertyOccupationUseCase
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerCommandModel
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
+import com.fstengineering.leasilycrm.propertyRegistration.application.useCases.ReadPropertyUseCase
+import com.fstengineering.leasilycrm.propertyRegistration.application.useCases.WritePropertyUseCase
+import com.fstengineering.leasilycrm.signin.application.useCases.SignInUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -41,7 +43,7 @@ val useCaseModule = module {
         readAssistanceQualifier,
     ) {
         ReadAssistanceUseCase(
-            tenantRepository = get(),
+            leadTenantQueryRepository = get(),
             assistanceQueryRepository = get(),
             assistanceSentPropertyQueryRepository = get(),
         )
@@ -108,15 +110,6 @@ val useCaseModule = module {
         )
     }
 
-    single<GetTodayCheckInsCheckOutsToNotifyUseCase> {
-        GetTodayCheckInsCheckOutsToNotifyUseCaseImpl(
-            occupiedPeriodSharedCommandRepository = get(),
-            settingsSharedStore = get(),
-            userSessionSharedStore = get(),
-            now = AppDateTime.lazyNow(),
-        )
-    }
-
     // Stay registration
 
     single {
@@ -159,4 +152,23 @@ val useCaseModule = module {
     single { DeleteLeadTenantUseCase(leadTenantCommandRepository = get()) }
 
     single { DeleteAssistanceUseCase(assistanceCommandRepository = get()) }
+
+    // Sign in
+
+    single { SignInUseCase(userSessionGateway = get(), userSessionStore = get()) }
+
+    // Lead tenant registration
+
+    single { WriteLeadTenantUseCase(leadTenantCommandRepository = get()) }
+
+    // Property registration
+
+    single {
+        ReadPropertyUseCase(
+            propertyQueryRepository = get(),
+            propertyOwnerQueryRepository = get()
+        )
+    }
+
+    single { WritePropertyUseCase(propertyCommandRepository = get()) }
 }

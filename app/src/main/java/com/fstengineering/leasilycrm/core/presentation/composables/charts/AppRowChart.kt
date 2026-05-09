@@ -79,8 +79,6 @@ fun AppRowChart(
         animationSpec = if (showAnimation) tween(500) else snap(),
         modifier = modifier
             .size(width = 360.dp, height = height)
-            .onGloballyPositioned {
-                showAnimation = false
-            }
+            .onGloballyPositioned { showAnimation = false }
     )
 }

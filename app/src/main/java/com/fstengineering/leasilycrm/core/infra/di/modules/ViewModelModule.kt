@@ -4,19 +4,23 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.Assista
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep3ViewModel
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
+import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.readAssistanceQualifier
 import com.fstengineering.leasilycrm.core.infra.di.qualifiers.writeAssistanceQualifier
+import com.fstengineering.leasilycrm.dashboard.presentation.DashboardViewModel
 import com.fstengineering.leasilycrm.home.HomeViewModel
-import com.fstengineering.leasilycrm.home.application.repositories.LeadTenantCommandRepository as HomeLeadTenantCommandRepository
-import com.fstengineering.leasilycrm.home.application.repositories.LeadTenantQueryRepository as HomeLeadTenantQueryRepository
-import com.fstengineering.leasilycrm.home.subdomains.tenants.presentation.TenantsViewModel
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.LeadTenantRegistrationViewModel
+import com.fstengineering.leasilycrm.leadTenants.presentation.leads.LeadsViewModel
+import com.fstengineering.leasilycrm.leadTenants.presentation.tenants.TenantsViewModel
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.OccupiedPeriodRegistrationViewModel
+import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel
 import com.fstengineering.leasilycrm.profile.presentation.ProfileViewModel
 import com.fstengineering.leasilycrm.properties.presentation.PropertiesViewModel
 import com.fstengineering.leasilycrm.propertyDashboard.presentation.PropertyDashboardViewModel
 import com.fstengineering.leasilycrm.propertyDetails.presentation.PropertyDetailsViewModel
+import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOccupationViewModel
 import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.PropertyOwnerDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationViewModel
 import com.fstengineering.leasilycrm.propertyOwners.presentation.PropertyOwnersViewModel
@@ -24,14 +28,14 @@ import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyR
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.viewModels.PropertyRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.viewModels.PropertyRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.viewModels.PropertyRegistrationStep3ViewModel
-import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOccupationViewModel
 import com.fstengineering.leasilycrm.root.RootViewModel
 import com.fstengineering.leasilycrm.settings.SettingsViewModel
 import com.fstengineering.leasilycrm.signin.presentation.SignInViewModel
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.OccupiedPeriodRegistrationViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import com.fstengineering.leasilycrm.leadTenants.application.repositories.LeadTenantCommandRepository as LeadTenantsLeadTenantCommandRepository
+import com.fstengineering.leasilycrm.leadTenants.application.repositories.LeadTenantQueryRepository as LeadTenantsLeadTenantQueryRepository
+import com.fstengineering.leasilycrm.occupiedPeriods.application.repositories.OccupiedPeriodQueryRepository as OccupiedPeriodsQueryRepository
 
 val viewModelModule = module {
     viewModel {
@@ -43,14 +47,13 @@ val viewModelModule = module {
 
     viewModel {
         SignInViewModel(
-            userSessionGateway = get(),
+            signIn = get(),
             connectivityService = get(),
         )
     }
 
     viewModel {
         SettingsViewModel(
-            settingsSharedQueryRepository = get(),
             settingsSharedStore = get(),
         )
     }
@@ -66,29 +69,30 @@ val viewModelModule = module {
 
     viewModel {
         HomeViewModel(
-            assistanceCommandRepository = get<HomeAssistanceCommandRepository>(),
-            occupiedPeriodSharedCommandRepository = get(),
+            occupiedPeriodSharedQueryRepository = get(),
             userQueryRepository = get(),
-            now = AppDateTime.lazyNow(),
         )
     }
 
     viewModel {
-        _root_ide_package_.com.fstengineering.leasilycrm.home.subdomains.dashboard.presentation.DashboardViewModel(
+        DashboardViewModel(
             crmMetricsRepository = get(),
         )
     }
 
     viewModel {
         PropertiesViewModel(
+            propertyQueryRepository = get(),
             propertySharedCommandRepository = get(),
         )
     }
 
     viewModel {
         PropertyRegistrationViewModel(
-            propertyRepository = get(),
-            propertyOwnerSharedCommandRepository = get(),
+            readProperty = get(),
+            writeProperty = get(),
+            propertyQueryRepository = get(),
+            propertyOwnerQueryRepository = get(),
         )
     }
 
@@ -113,7 +117,8 @@ val viewModelModule = module {
 
     viewModel {
         PropertyDetailsViewModel(
-            propertyRepository = get(),
+            propertyQueryRepository = get(),
+            propertySharedCommandRepository = get(),
         )
     }
 
@@ -126,6 +131,7 @@ val viewModelModule = module {
 
     viewModel {
         PropertyOwnersViewModel(
+            propertyOwnerQueryRepository = get(),
             propertyOwnerSharedCommandRepository = get(),
         )
     }
@@ -139,22 +145,23 @@ val viewModelModule = module {
     }
 
     viewModel {
-        _root_ide_package_.com.fstengineering.leasilycrm.home.subdomains.leads.presentation.LeadsViewModel(
-            leadTenantQueryRepository = get<HomeLeadTenantQueryRepository>(),
-            leadTenantCommandRepository = get<HomeLeadTenantCommandRepository>(),
+        LeadsViewModel(
+            leadTenantQueryRepository = get<LeadTenantsLeadTenantQueryRepository>(),
+            leadTenantCommandRepository = get<LeadTenantsLeadTenantCommandRepository>(),
         )
     }
 
     viewModel {
         TenantsViewModel(
-            leadTenantQueryRepository = get<HomeLeadTenantQueryRepository>(),
-            leadTenantCommandRepository = get<HomeLeadTenantCommandRepository>(),
+            leadTenantQueryRepository = get<LeadTenantsLeadTenantQueryRepository>(),
+            leadTenantCommandRepository = get<LeadTenantsLeadTenantCommandRepository>(),
         )
     }
 
     viewModel {
         LeadTenantRegistrationViewModel(
-            tenantRepository = get(),
+            writeLeadTenant = get(),
+            leadTenantQueryRepository = get(),
         )
     }
 
@@ -168,6 +175,7 @@ val viewModelModule = module {
 
     viewModel {
         PropertyOwnerDetailsViewModel(
+            propertyOwnerQueryRepository = get(),
             propertyOwnerSharedCommandRepository = get(),
         )
     }
@@ -195,14 +203,14 @@ val viewModelModule = module {
     }
 
     viewModel {
-        _root_ide_package_.com.fstengineering.leasilycrm.home.subdomains.occupiedPeriods.presentation.OccupiedPeriodsViewModel(
+        OccupiedPeriodsViewModel(
             registerStayCheckOutUseCase = get(),
             undoRegisterStayCheckOutUseCase = get(),
-            occupiedPeriodCommandRepository = get(),
-            now = AppDateTime.lazyNow(),
+            occupiedPeriodSharedCommandRepository = get(),
+            occupiedPeriodQueryRepository = get<OccupiedPeriodsQueryRepository>(),
+            occupiedPeriodSharedQueryRepository = get<OccupiedPeriodSharedQueryRepository>(),
         )
     }
-
 
     viewModel {
         OccupiedPeriodRegistrationViewModel(

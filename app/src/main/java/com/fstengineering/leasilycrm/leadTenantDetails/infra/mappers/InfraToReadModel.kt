@@ -11,11 +11,9 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceRawReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantRawReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentPropertyReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantRawReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.StayReadModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 fun LeadTenantReadView.toRawReadModel() = LeadTenantRawReadModel(
@@ -51,6 +49,7 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
 
     return AssistanceRawReadModel(
         id = requireNotNull(assistance.id),
+        updateDateTime = assistance.updateDateTime,
         preferredStartDate = assistance.searchedStartDate,
         preferredEndDate = assistance.searchedEndDate,
         hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,

@@ -24,8 +24,8 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.mod
 import kotlinx.collections.immutable.PersistentList
 
 fun LazyListScope.stayDocumentsFormField(
-    form: OccupiedPeriodFormUiState.StayOwnedLoaded,
-    onFormChange: (OccupiedPeriodFormUiState.StayOwnedLoaded) -> Unit,
+    form: OccupiedPeriodFormUiState.Loaded.Stay,
+    onFormChange: (OccupiedPeriodFormUiState.Loaded.Stay) -> Unit,
     stayFiles: PersistentList<StayFileUiState>,
     onAddStayFile: () -> Unit,
 ) {

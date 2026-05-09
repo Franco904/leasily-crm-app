@@ -4,14 +4,14 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.StayPeriod
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.OccupiedPeriodPeriod
 import kotlinx.collections.immutable.toPersistentList
 
 class UnavailablePeriod private constructor(
     val id: Long?,
     val createDateTime: AppDateTime?,
     val propertyId: Long,
-    val period: StayPeriod,
+    val period: OccupiedPeriodPeriod,
     val observations: String?,
 ) {
     companion object {
@@ -34,7 +34,7 @@ class UnavailablePeriod private constructor(
                 }
 
                 else -> {
-                    StayPeriod.parse(
+                    OccupiedPeriodPeriod.parse(
                         checkInDateTime = checkInDateTime.withHourMinute(12, 0),
                         checkOutDateTime = checkOutDateTime.withHourMinute(12, 0),
                     )

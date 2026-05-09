@@ -81,7 +81,8 @@ fun PropertyLocationDetailsItem(
             }
         }
         if (hasApartmentSpecificCharacteristics) {
-            val parkingSpotNumber = propertyAddress.parkingSpotNumber.orNotRegistered(notRegisteredString)
+            val parkingSpotNumber =
+                propertyAddress.parkingSpotNumber.orNotRegistered(notRegisteredString)
             val parkingBasementLevelNumber =
                 propertyAddress.parkingBasementLevelNumber.orNotRegistered(notRegisteredString)
             val hobbyBoxNumber = propertyAddress.hobbyBoxNumber.orNotRegistered(notRegisteredString)

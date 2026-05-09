@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.StaysEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsEmptySection
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
 import com.fstengineering.leasilycrm.core.presentation.theme.customColors
 import com.fstengineering.leasilycrm.propertyOccupation.presentation.models.PropertyOccupiedPeriodsUiState
@@ -95,7 +95,7 @@ fun PropertyOccupiedDatesSection(
             }
             Spacer(modifier = Modifier.height(16.dp))
             if (occupiedDates.isEmpty()) {
-                StaysEmptySection(occupiedPeriodFilterType = OccupiedPeriodFilterType.All)
+                OccupiedPeriodsEmptySection(occupiedPeriodFilterType = OccupiedPeriodFilterType.All)
             } else {
                 OccupiedDatesCalendarsSection(
                     occupiedPeriods = occupiedPeriods,

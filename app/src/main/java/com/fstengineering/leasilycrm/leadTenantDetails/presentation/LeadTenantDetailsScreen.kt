@@ -49,7 +49,6 @@ import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantDetailsTab
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel.UiEvents.BottomSheetError
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel.UiEvents.CurrentAssistanceDeleteSuccess
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel.UiEvents.LeadTenantDeleteSuccess
@@ -62,6 +61,7 @@ import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.LeadTenantDetailsTopAppBar
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceInteractionUiState
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceUiState
+import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantDetailsTab
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantDetailsUiState
 
 @OptIn(ExperimentalMaterial3Api::class)

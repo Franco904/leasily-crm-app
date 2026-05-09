@@ -17,10 +17,13 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsScreen
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.LeadTenantRegistrationScreen
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsScreen
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.OccupiedPeriodRegistrationScreen
 import com.fstengineering.leasilycrm.profile.presentation.ProfileScreen
 import com.fstengineering.leasilycrm.properties.presentation.PropertiesScreen
 import com.fstengineering.leasilycrm.propertyDashboard.presentation.PropertyDashboardScreen
 import com.fstengineering.leasilycrm.propertyDetails.presentation.PropertyDetailsScreen
+import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOccupationScreen
 import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.PropertyOwnerDetailsScreen
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationScreen
 import com.fstengineering.leasilycrm.propertyOwners.presentation.PropertyOwnersScreen
@@ -28,12 +31,9 @@ import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyR
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep2Screen
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep3Screen
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep4Screen
-import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOccupationScreen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.StayDetailsScreen
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.OccupiedPeriodRegistrationScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
@@ -100,7 +100,7 @@ fun NavGraphBuilder.destinations(
 
         HomeScreen(
             viewModel = koinViewModel(),
-            startedFromStayNotificationPopUp = args.startedFromStayNotificationPopUp,
+            startedFromStayCheckInCheckOutNotification = args.startedFromStayNotificationPopUp,
             isStayRegistrationSuccess = isStayRegistrationSuccess,
             onSettingsSelect = {
                 navController.navigateAndPopAllTo(Destinations.Settings)
@@ -128,8 +128,8 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(destination)
             },
             onNewStayWithLeadTenant = { leadTenantId ->
-                val destination = Destinations.StayRegistration(
-                    stayId = null,
+                val destination = Destinations.OccupiedPeriodRegistration(
+                    occupiedPeriodId = null,
                     propertyId = null,
                     leadTenantId = leadTenantId,
                     isUnavailablePeriod = false,
@@ -138,8 +138,8 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(destination)
             },
             onRegisterStayBlank = { stayId, isUnavailablePeriod ->
-                val destination = Destinations.StayRegistration(
-                    stayId = stayId,
+                val destination = Destinations.OccupiedPeriodRegistration(
+                    occupiedPeriodId = stayId,
                     propertyId = null,
                     leadTenantId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
@@ -191,8 +191,8 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(Destinations.PropertyDetails(propertyId))
             },
             onNewStay = { propertyId, isUnavailablePeriod ->
-                val destination = Destinations.StayRegistration(
-                    stayId = null,
+                val destination = Destinations.OccupiedPeriodRegistration(
+                    occupiedPeriodId = null,
                     propertyId = propertyId,
                     leadTenantId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
@@ -309,11 +309,11 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
             },
             onViewAllPropertyStays = {
-                navController.navigate(Destinations.PropertyStays(args.propertyId))
+                navController.navigate(Destinations.PropertyOccupation(args.propertyId))
             },
             onNewStay = { isUnavailablePeriod ->
-                val destination = Destinations.StayRegistration(
-                    stayId = null,
+                val destination = Destinations.OccupiedPeriodRegistration(
+                    occupiedPeriodId = null,
                     propertyId = args.propertyId,
                     leadTenantId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
@@ -347,8 +347,8 @@ fun NavGraphBuilder.destinations(
                 )
             },
             onNewStay = { isUnavailablePeriod ->
-                val destination = Destinations.StayRegistration(
-                    stayId = null,
+                val destination = Destinations.OccupiedPeriodRegistration(
+                    occupiedPeriodId = null,
                     propertyId = args.propertyId,
                     leadTenantId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
@@ -360,16 +360,16 @@ fun NavGraphBuilder.destinations(
         )
     }
 
-    composable<Destinations.PropertyStays> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.PropertyStays>()
+    composable<Destinations.PropertyOccupation> { backStackEntry ->
+        val args = backStackEntry.toRoute<Destinations.PropertyOccupation>()
 
         PropertyOccupationScreen(
             propertyId = args.propertyId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onNewStay = { isUnavailablePeriod ->
-                val destination = Destinations.StayRegistration(
-                    stayId = null,
+                val destination = Destinations.OccupiedPeriodRegistration(
+                    occupiedPeriodId = null,
                     propertyId = args.propertyId,
                     leadTenantId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
@@ -459,8 +459,8 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(destination)
             },
             onNewStay = {
-                val destination = Destinations.StayRegistration(
-                    stayId = null,
+                val destination = Destinations.OccupiedPeriodRegistration(
+                    occupiedPeriodId = null,
                     propertyId = null,
                     leadTenantId = args.leadTenantId,
                     isUnavailablePeriod = false,
@@ -553,12 +553,12 @@ fun NavGraphBuilder.destinations(
         }
     }
 
-    composable<Destinations.StayRegistration> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.StayRegistration>()
+    composable<Destinations.OccupiedPeriodRegistration> { backStackEntry ->
+        val args = backStackEntry.toRoute<Destinations.OccupiedPeriodRegistration>()
         val previousBackStackEntry = navController.previousBackStackEntry
 
         OccupiedPeriodRegistrationScreen(
-            stayId = args.stayId,
+            stayId = args.occupiedPeriodId,
             propertyId = args.propertyId,
             tenantId = args.leadTenantId,
             isUnavailablePeriod = args.isUnavailablePeriod,
@@ -577,14 +577,14 @@ fun NavGraphBuilder.destinations(
     composable<Destinations.OccupiedPeriodDetails> { backStackEntry ->
         val args = backStackEntry.toRoute<Destinations.OccupiedPeriodDetails>()
 
-        StayDetailsScreen(
+        OccupiedPeriodDetailsScreen(
             occupiedPeriodId = args.occupiedPeriodId,
             cameFromProperty = args.cameFromProperty,
             cameFromTenant = args.cameFromTenant,
             viewModel = koinViewModel(),
             onEdit = { stayId, propertyId, tenantId, isUnavailablePeriod ->
-                val destination = Destinations.StayRegistration(
-                    stayId = stayId,
+                val destination = Destinations.OccupiedPeriodRegistration(
+                    occupiedPeriodId = stayId,
                     propertyId = propertyId,
                     leadTenantId = tenantId,
                     isUnavailablePeriod = isUnavailablePeriod,

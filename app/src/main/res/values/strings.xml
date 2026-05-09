@@ -14,7 +14,7 @@
     <string name="home_dashboard_label">Painel</string>
     <string name="home_leads_label">Leads</string>
     <string name="home_tenants_label">Inquilinos</string>
-    <string name="home_stays_label">Estadias</string>
+    <string name="home_occupation_label">Ocupação</string>
 
     <!-- Search -->
     <string name="search_property_label">Buscar imóvel</string>

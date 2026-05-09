@@ -3,12 +3,12 @@ package com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
+import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodQueryRepository
-import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.WatchOccupiedPeriodUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.OccupiedPeriodDetailsUiState
@@ -79,7 +79,7 @@ class OccupiedPeriodDetailsViewModel(
         viewModelScope.launch {
             occupiedPeriodSharedCommandRepository.delete(periodId)
                 .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
-                .onSuccess { _uiEvents.trySend(UiEvents.StayDeleteSuccess) }
+                .onSuccess { _uiEvents.trySend(UiEvents.OccupiedPeriodDeleteSuccess) }
         }
     }
 
@@ -143,7 +143,7 @@ class OccupiedPeriodDetailsViewModel(
     sealed interface UiEvents {
         data class BottomSheetError(val error: ApplicationError) : UiEvents
         data object NavigateUp : UiEvents
-        data object StayDeleteSuccess : UiEvents
+        data object OccupiedPeriodDeleteSuccess : UiEvents
         data object RegisterCheckInSuccess : UiEvents
         data object RegisterCheckOutSuccess : UiEvents
     }

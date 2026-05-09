@@ -8,6 +8,7 @@ import org.koin.core.module.Module
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.scope.Scope
 
+@Suppress("UNCHECKED_CAST")
 inline fun <reified C> Module.authCommandUseCase(
     qualifier: Qualifier,
     crossinline factory: Scope.() -> C,
@@ -16,12 +17,13 @@ inline fun <reified C> Module.authCommandUseCase(
 
     factory<C> {
         RequireAuthCommandInterceptor(
-            delegate = get<C>(qualifier),
+            delegate = get<C>(qualifier) as CommandUseCase<CommandUseCase.CommandModel>,
             userSessionService = get(),
         ) as C
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 inline fun <reified Q> Module.authQueryUseCase(
     qualifier: Qualifier,
     crossinline factory: Scope.() -> Q,
@@ -30,7 +32,7 @@ inline fun <reified Q> Module.authQueryUseCase(
 
     factory<Q> {
         RequireAuthQueryInterceptor(
-            delegate = get<Q>(qualifier),
+            delegate = get<Q>(qualifier) as QueryUseCase<QueryUseCase.Args, Any>,
             userSessionService = get(),
         ) as Q
     }
