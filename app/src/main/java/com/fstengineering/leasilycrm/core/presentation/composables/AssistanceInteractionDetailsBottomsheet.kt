@@ -24,14 +24,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.AssistanceInteraction
+import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AssistanceInteractionDetailsBottomsheet(
+fun AssistanceInteractionDetailsBottomSheet(
     sheetState: SheetState,
-    interaction: AssistanceInteraction,
+    interaction: AssistanceInteractionBottomSheetUiState,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -64,9 +64,9 @@ fun AssistanceInteractionDetailsBottomsheet(
                 Text(
                     text = stringResource(
                         R.string.assistance_registration_interaction_registration_interaction_date_value,
-                        interaction.interactionDate!!.dayOfMonth.formatToTwoDigitsDateTime(),
-                        interaction.interactionDate.month.formatToTwoDigitsDateTime(),
-                        interaction.interactionDate.year,
+                        interaction.date.dayOfMonth.formatToTwoDigitsDateTime(),
+                        interaction.date.month.formatToTwoDigitsDateTime(),
+                        interaction.date.year,
                     ),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -76,7 +76,7 @@ fun AssistanceInteractionDetailsBottomsheet(
             HorizontalDivider()
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = interaction.title!!,
+                text = interaction.title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )

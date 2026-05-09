@@ -1,0 +1,133 @@
+package com.fstengineering.leasilycrm.propertyOwnerDetails.presentation
+
+import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyOwnerDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
+import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.composables.PropertyOwnerDetailsSection
+import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.composables.PropertyOwnerDetailsTopAppBar
+import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.models.PropertyOwnerUiState
+
+@Composable
+fun PropertyOwnerDetailsScreen(
+    propertyOwnerId: Long,
+    viewModel: PropertyOwnerDetailsViewModel,
+    onBack: () -> Unit,
+    onEditPropertyOwner: (Long) -> Unit,
+    onUiEvent: (UiEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val activity = LocalActivity.current!!
+
+    val surfaceColor = MaterialTheme.colorScheme.surface
+
+    val propertyOwner by viewModel.propertyOwner.collectAsStateWithLifecycle()
+
+    var mustShowConfirmDeleteDialog by remember { mutableStateOf(false) }
+    var mustShowNoAppToShowFileContentDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.init(propertyOwnerId = propertyOwnerId)
+
+        viewModel.uiEvents.collect { uiEvent ->
+            when (uiEvent) {
+                is PropertyOwnerDetailsViewModel.UiEvent.BottomSheetError -> {
+                    val errorData = uiEvent.error.toBottomSheetData(
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
+                    )
+                    onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
+                }
+
+                is PropertyOwnerDetailsViewModel.UiEvent.PropertyOwnerDeleteSuccess -> {
+                    onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_owner_success_message))
+                }
+            }
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    SideEffect {
+        activity.window.statusBarColor = surfaceColor.toArgb()
+        activity.window.navigationBarColor = surfaceColor.toArgb()
+    }
+
+    Scaffold(
+        topBar = {
+            Column {
+                PropertyOwnerDetailsTopAppBar(
+                    onBack = onBack,
+                    onEditPropertyOwner = { onEditPropertyOwner(propertyOwnerId) },
+                    onDeletePropertyOwner = { mustShowConfirmDeleteDialog = true },
+                )
+                HorizontalDivider()
+            }
+        },
+        modifier = modifier
+    ) { innerPadding ->
+        when (propertyOwner) {
+            is PropertyOwnerUiState.Loading -> {
+                FullScreenLoadingIndicator(innerPadding)
+            }
+
+            is PropertyOwnerUiState.Loaded -> {
+                PropertyOwnerDetailsSection(
+                    propertyOwner = propertyOwner as PropertyOwnerUiState.Loaded,
+                    onOpenPropertyOwnerFile = { file ->
+                        context.openFileWithChooser(
+                            uriString = file.uriString,
+                            onActivityNotFound = { mustShowNoAppToShowFileContentDialog = true }
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(horizontal = 16.dp)
+                )
+            }
+        }
+
+        if (mustShowConfirmDeleteDialog) {
+            ConfirmDeletePropertyOwnerDialog(
+                onConfirmDelete = {
+                    viewModel.deletePropertyOwner(propertyOwnerId)
+
+                    mustShowConfirmDeleteDialog = false
+                    onBack()
+                },
+                onCancel = { mustShowConfirmDeleteDialog = false },
+            )
+        }
+
+        if (mustShowNoAppToShowFileContentDialog) {
+            NoAppToShowFileContentDialog(
+                onOpenPlayStore = { context.openPlayStoreApp() },
+                onClose = { mustShowNoAppToShowFileContentDialog = false }
+            )
+        }
+    }
+}

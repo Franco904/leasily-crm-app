@@ -19,27 +19,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.StayTransfer
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.StayTransfersEmptySection
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.StayTransferUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun StayTransfersCard(
-    stayTransfers: ImmutableList<StayTransfer>,
+    stayTransferUiStates: ImmutableList<StayTransferUiState>,
     modifier: Modifier = Modifier,
     hasMoreOptionsMenu: Boolean = true,
-    onEditTransfer: (StayTransfer) -> Unit = {},
-    onDeleteTransfer: (StayTransfer) -> Unit = {},
+    onEditTransfer: (StayTransferUiState) -> Unit = {},
+    onDeleteTransfer: (StayTransferUiState) -> Unit = {},
 ) {
     AppCard(
         modifier = modifier
     ) {
-        if (stayTransfers.isEmpty()) {
+        if (stayTransferUiStates.isEmpty()) {
             StayTransfersEmptySection(
                 modifier = Modifier
                     .padding(vertical = 64.dp)
@@ -78,19 +78,19 @@ fun StayTransfersCard(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 HorizontalDivider()
-                stayTransfers.forEach { transfer ->
+                stayTransferUiStates.forEach { transfer ->
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = when {
-                                transfer.transferDate != null -> {
+                                transfer.date != null -> {
                                     stringResource(
                                         id = R.string.stay_registration_transfers_date_column_value,
-                                        transfer.transferDate.dayOfMonth.formatToTwoDigitsDateTime(),
-                                        transfer.transferDate.month.formatToTwoDigitsDateTime(),
-                                        transfer.transferDate.year.formatToTwoDigitsDateTime(),
+                                        transfer.date.dayOfMonth.formatToTwoDigitsDateTime(),
+                                        transfer.date.month.formatToTwoDigitsDateTime(),
+                                        transfer.date.year.formatToTwoDigitsDateTime(),
                                     )
                                 }
 

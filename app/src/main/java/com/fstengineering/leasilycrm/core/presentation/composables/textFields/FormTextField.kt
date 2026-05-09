@@ -18,11 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,9 +51,11 @@ fun FormTextField(
     keyboardType: KeyboardType = KeyboardType.Unspecified,
     onDone: KeyboardActionScope.() -> Unit = {},
     fieldFocusRequester: FocusRequester? = null,
+    onFocusLost: (() -> Unit)? = null,
 ) {
     var currentLength by remember(value) { mutableIntStateOf(value.length) }
 
+    var wasFocused by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(interactionSource) {
@@ -151,6 +155,10 @@ fun FormTextField(
         interactionSource = interactionSource,
         modifier = modifier
             .fillMaxWidth()
+            .onFocusChanged { state ->
+                if (wasFocused && !state.isFocused) onFocusLost?.invoke()
+                wasFocused = state.isFocused
+            }
             .then(
                 fieldFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier
             )

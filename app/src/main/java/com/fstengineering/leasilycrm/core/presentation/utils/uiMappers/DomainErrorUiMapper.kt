@@ -3,156 +3,76 @@ package com.fstengineering.leasilycrm.core.presentation.utils.uiMappers
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 
+private val INLINE_REQUIRED = R.string.inline_required
+private val INLINE_GENERIC_INVALID_DATA = R.string.inline_invalid_data
+
 fun DomainError.toInlineMessage() = when (this) {
-    DomainError.AssistanceInteractionDate.IsNull -> {
-        R.string.inline_required
-    }
+    DomainError.Amount.Required -> INLINE_REQUIRED
+    DomainError.Amount.IsNegative -> INLINE_GENERIC_INVALID_DATA
 
-    DomainError.AssistanceInteractionTitle.IsNullOrBlank -> {
-        R.string.inline_required
-    }
+    DomainError.AssistanceInteractionDate.Required -> INLINE_REQUIRED
+    DomainError.AssistanceInteractionTitle.Required -> INLINE_REQUIRED
 
-    DomainError.AssistanceSearchedNeighborhoodName.IsNullOrBlank -> {
-        R.string.inline_required
-    }
+    DomainError.AssistanceOtherFields.TenantRequired -> INLINE_REQUIRED
+    DomainError.AssistanceOtherFields.PreferredPeriodRequired -> INLINE_REQUIRED
+    DomainError.AssistanceOtherFields.PreferredPeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
+    DomainError.AssistanceOtherFields.PreferredPeriodStartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
+    DomainError.AssistanceOtherFields.AdultGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.KidsGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.BabiesGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.AnimalsGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.BedroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.EnSuitesCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.DoubleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.SingleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.BathroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.AssistanceOtherFields.ParkingSpotsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
 
-    DomainError.PropertyPropertyOwner.IsNull -> {
-        R.string.inline_required
-    }
+    DomainError.Creci.LengthIsGreaterThan8Chars -> R.string.inline_too_big_8_chars
 
-    DomainError.PropertyType.IsNull -> {
-        R.string.inline_required
-    }
+    DomainError.Email.Invalid -> R.string.inline_invalid_email
+    DomainError.Email.LengthIsGreaterThan120Chars -> R.string.inline_too_big_120_chars
 
-    DomainError.PropertyNeighborhood.IsBlank -> {
-        R.string.inline_required
-    }
+    DomainError.Name.Required -> INLINE_REQUIRED
+    DomainError.Name.LengthIsGreaterThan100Chars -> R.string.inline_too_big_100_chars
 
-    DomainError.PropertyStreetAddress.IsBlank -> {
-        R.string.inline_required
-    }
+    DomainError.Neighborhood.Required -> INLINE_REQUIRED
 
-    DomainError.PropertyDistanceToSea.IsBlank -> {
-        R.string.inline_required
-    }
+    DomainError.PaymentKey.LengthIsGreaterThan120Chars -> R.string.inline_too_big_120_chars
 
-    DomainError.PropertyPricePeriod.IsNull -> {
-        R.string.inline_required
-    }
+    DomainError.Phone.LengthIsGreaterThan20Chars -> R.string.inline_too_big_20_chars
 
-    DomainError.PropertyPricePeriod.StartAndEndDaysAreTheSame -> {
-        R.string.inline_period_start_end_date_are_same_period
-    }
+    DomainError.PropertyPropertyOwner.Required -> INLINE_REQUIRED
+    DomainError.PropertyType.Required -> INLINE_REQUIRED
+    DomainError.PropertyStreetAddress.Required -> INLINE_REQUIRED
+    DomainError.PropertyPricePeriod.Required -> INLINE_REQUIRED
+    DomainError.PropertyPricePeriod.StartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
+    DomainError.PropertyPricePeriod.StartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
+    DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod -> R.string.inline_period_is_overlapping_other_property_price_period
 
-    DomainError.PropertyPricePeriod.IsOverlappingOtherPropertyPricePeriod -> {
-        R.string.inline_period_is_overlapping_other_property_price_period
-    }
+    DomainError.PropertySeaProximity.PropertySeaProximityInvalid -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertySeaProximityDistanceToSea.Required -> INLINE_REQUIRED
+    DomainError.PropertySeaProximityDistanceToSea.IsNegative -> INLINE_GENERIC_INVALID_DATA
 
-    DomainError.PropertyPriceAmount.IsNull -> {
-        R.string.inline_required
-    }
+    DomainError.PropertyOtherFields.BedroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertyOtherFields.EnSuitesCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertyOtherFields.DoubleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertyOtherFields.SingleBedsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertyOtherFields.BathroomsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertyOtherFields.ParkingSpotsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertyOtherFields.AirConditionersCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertyOtherFields.MaxGuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
+    DomainError.PropertyOtherFields.MoreThanOneMainPictureFile -> INLINE_GENERIC_INVALID_DATA
 
-    DomainError.PropertyOwnerName.IsBlank -> {
-        R.string.inline_required
-    }
+    DomainError.StayProperty.Required -> INLINE_REQUIRED
+    DomainError.StayTenant.Required -> INLINE_REQUIRED
+    DomainError.StayCheckInTime.Required -> INLINE_REQUIRED
+    DomainError.StayCheckOutTime.Required -> INLINE_REQUIRED
+    DomainError.StayPeriod.Required -> INLINE_REQUIRED
+    DomainError.StayPeriod.StartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
+    DomainError.StayPeriod.StartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
+    DomainError.StayPeriod.Overbooking -> R.string.inline_period_is_overlapping_other_property_stay_period
+    DomainError.StayCommission.Required -> INLINE_REQUIRED
 
-    DomainError.PropertyOwnerName.BelongsToOtherPropertyOwner -> {
-        R.string.inline_name_belongs_other_property_owner
-    }
-
-    DomainError.PropertyOwnerName.LengthIsGreaterThan100Chars -> {
-        R.string.inline_too_big_100_chars
-    }
-
-    DomainError.PropertyOwnerPhone.LengthIsGreaterThan20Chars -> {
-        R.string.inline_too_big_20_chars
-    }
-
-    DomainError.PropertyOwnerEmail.InvalidFormat -> {
-        R.string.inline_invalid_email
-    }
-
-    DomainError.PropertyOwnerEmail.LengthIsGreaterThan120Chars -> {
-        R.string.inline_too_big_120_chars
-    }
-
-    DomainError.PropertyOwnerPaymentKey.LengthIsGreaterThan120Chars -> {
-        R.string.inline_too_big_120_chars
-    }
-
-    DomainError.TenantName.IsBlank -> {
-        R.string.inline_required
-    }
-
-    DomainError.TenantName.BelongsToOtherTenant -> {
-        R.string.inline_name_belongs_other_tenant
-    }
-
-    DomainError.TenantName.LengthIsGreaterThan100Chars -> {
-        R.string.inline_too_big_100_chars
-    }
-
-    DomainError.TenantPhone.LengthIsGreaterThan20Chars -> {
-        R.string.inline_too_big_20_chars
-    }
-
-    DomainError.TenantEmail.InvalidFormat -> {
-        R.string.inline_invalid_email
-    }
-
-    DomainError.TenantEmail.LengthIsGreaterThan120Chars -> {
-        R.string.inline_too_big_120_chars
-    }
-
-    DomainError.StayProperty.IsNull -> {
-        R.string.inline_required
-    }
-
-    DomainError.StayTenant.IsNull -> {
-        R.string.inline_required
-    }
-
-    DomainError.StayPeriod.IsNull -> {
-        R.string.inline_required
-    }
-
-    DomainError.StayPeriod.StartAndEndDaysAreTheSame -> {
-        R.string.inline_period_start_end_date_are_same_period
-    }
-
-    DomainError.StayPeriod.IsOverlappingOtherPropertyStayPeriod -> {
-        R.string.inline_period_is_overlapping_other_property_stay_period
-    }
-
-    DomainError.StayCheckInTime.IsNull -> {
-        R.string.inline_required
-    }
-
-    DomainError.StayCheckOutTime.IsNull -> {
-        R.string.inline_required
-    }
-
-    DomainError.StayCommission.IsNull -> {
-        R.string.inline_required
-    }
-
-    DomainError.StayTransferDate.IsNull -> {
-        R.string.inline_required
-    }
-
-    DomainError.StayTransferAmount.IsNull -> {
-        R.string.inline_required
-    }
-
-    DomainError.UserName.IsBlank -> {
-        R.string.inline_required
-    }
-
-    DomainError.UserName.LengthIsGreaterThan75Chars -> {
-        R.string.inline_too_big_75_chars
-    }
-
-    DomainError.CreciNumber.LengthIsGreaterThan8Chars -> {
-        R.string.inline_too_big_75_chars
-    }
+    DomainError.StayOtherFields.GuestsCountIsNegative -> INLINE_GENERIC_INVALID_DATA
 }

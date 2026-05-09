@@ -1,9 +1,0 @@
-package com.fstengineering.leasilycrm.core.data.constants
-
-// User
-const val SIGN_IN_ROUTE = "/users/sign-in"
-const val SIGN_OUT_ROUTE = "/users/sign-out"
-const val UPDATE_USER_ROUTE = "/users/update"
-
-// Domain tables
-const val DOMAIN_TABLES_ROUTE = "/domain-tables"

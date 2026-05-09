@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -28,39 +27,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.constants.APARTMENT_PROPERTY_TYPE_ID
-import com.fstengineering.leasilycrm.core.domain.constants.DISTANCE_TO_SEA_PROXIMITY_TYPE_ID
-import com.fstengineering.leasilycrm.core.domain.constants.NOT_APPLICABLE_PROXIMITY_TYPE_ID
-import com.fstengineering.leasilycrm.core.domain.models.Property
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicReadOnlyChip
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryIconButton
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun PropertyCard(
-    property: Property,
+    property: PropertyCardUiState,
     modifier: Modifier = Modifier,
     onCardClick: (() -> Unit)? = null,
     onViewPropertyDetails: () -> Unit = {},
     onEditProperty: () -> Unit = {},
     onDeleteProperty: () -> Unit = {},
-    onNewStay: () -> Unit = {},
+    onNewOccupiedPeriod: () -> Unit = {},
     hasMoreOptionsMenu: Boolean = true,
     hasCharacteristicsChipsRow: Boolean = true,
     hasViewDetailsButton: Boolean = false,
     isSelected: Boolean = false,
 ) {
-    val mainPropertyPicture = remember(property) {
-        property.files.find { picture -> picture.isMainPicture }
-    }
-    val numberText = if (property.number != null) ", ${property.number}" else ""
-
     AppCard(
         onClick = onCardClick,
         isSelected = isSelected,
@@ -68,7 +61,7 @@ fun PropertyCard(
             .fillMaxWidth()
     ) {
         Column {
-            if (mainPropertyPicture != null) {
+            if (property.mainPictureUri != null) {
                 Card(
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
@@ -76,7 +69,7 @@ fun PropertyCard(
                         .height(180.dp)
                 ) {
                     AsyncImage(
-                        model = mainPropertyPicture.uriString!!.toUri(),
+                        model = property.mainPictureUri,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -94,18 +87,18 @@ fun PropertyCard(
                         .padding(16.dp)
                 ) {
                     Text(
-                        text = property.neighborhood ?: "",
+                        text = property.neighborhood,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                     Text(
-                        text = "${property.streetAddress}$numberText",
+                        text = property.streetAddressAndNumber,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (hasCharacteristicsChipsRow) {
                         Spacer(modifier = Modifier.height(12.dp))
-                        CharacteristicsChipsRow(property = property)
+                        CharacteristicsChipsRow(propertyDetails = property)
                     }
                 }
 
@@ -132,7 +125,7 @@ fun PropertyCard(
                 if (hasCharacteristicsChipsRow) {
                     AppPrimaryIconButton(
                         icon = painterResource(R.drawable.calendar_add_on),
-                        onClick = onNewStay,
+                        onClick = onNewOccupiedPeriod,
                         modifier = Modifier
                             .padding(bottom = 8.dp, end = 8.dp)
                             .align(Alignment.BottomEnd)
@@ -168,48 +161,45 @@ fun PropertyCard(
 
 @Composable
 fun CharacteristicsChipsRow(
-    property: Property,
+    propertyDetails: PropertyCardUiState,
     modifier: Modifier = Modifier,
 ) {
-    val canShowSeaProximityChip = property.seaProximityType != null
-            && property.seaProximityType.id != NOT_APPLICABLE_PROXIMITY_TYPE_ID
-
     Row(
         modifier = modifier
     ) {
         CharacteristicReadOnlyChip(
             prefixIcon = when {
-                property.type?.id == APARTMENT_PROPERTY_TYPE_ID -> Icons.Default.Apartment
+                propertyDetails.type == PropertyType.Apartment -> Icons.Default.Apartment
                 else -> Icons.Default.House
             },
-            characteristicText = when {
-                property.type?.id == APARTMENT_PROPERTY_TYPE_ID -> stringResource(R.string.apartment_chip_text)
-                else -> stringResource(R.string.house_chip_text)
-            },
+            characteristicText = stringResource(propertyDetails.type.presentationLabel()),
         )
-        if (canShowSeaProximityChip) {
+        if (propertyDetails.seaProximityTypeId != null) {
             Spacer(modifier = Modifier.width(4.dp))
             CharacteristicReadOnlyChip(
-                characteristicText = run {
-                    val text = stringResource(
-                        R.string.properties_sea_proximity_distance_to_sea,
-                        property.distanceToSea ?: "",
-                    )
+                characteristicText = when (propertyDetails.seaProximityTypeId) {
+                    PropertySeaProximityType.SEA_ACCESS_ID -> stringResource(R.string.sea_access_property_sea_proximity_type_text)
+                    PropertySeaProximityType.SEA_VIEW_ID -> stringResource(R.string.sea_view_property_sea_proximity_type_text)
+                    PropertySeaProximityType.FAR_FROM_SEA_ID -> stringResource(R.string.far_from_sea_property_sea_proximity_type_text)
 
-                    when {
-                        property.seaProximityType.id == DISTANCE_TO_SEA_PROXIMITY_TYPE_ID -> text
-                        else -> property.seaProximityType.name ?: ""
+                    PropertySeaProximityType.DISTANCE_TO_SEA_ID -> {
+                        stringResource(
+                            R.string.properties_sea_proximity_distance_to_sea,
+                            propertyDetails.distanceToSea ?: "",
+                        )
                     }
+
+                    else -> ""
                 }
             )
         }
-        if (property.qtBedrooms > 0) {
+        if (propertyDetails.bedroomsCount != null && propertyDetails.bedroomsCount > 0) {
             Spacer(modifier = Modifier.width(4.dp))
             CharacteristicReadOnlyChip(
                 characteristicText = pluralStringResource(
                     R.plurals.properties_qt_bedrooms,
-                    property.qtBedrooms,
-                    property.qtBedrooms,
+                    propertyDetails.bedroomsCount,
+                    propertyDetails.bedroomsCount,
                 ),
             )
         }

@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.models.AppDate
-import com.fstengineering.leasilycrm.core.application.models.toDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.toDate
 import kotlinx.collections.immutable.ImmutableSet
 import java.util.Calendar
 
@@ -33,6 +33,8 @@ private val months = mapOf(
     11 to R.string.november_label,
     12 to R.string.december_label,
 )
+
+fun getMonthStringIdByNumber(monthNumber: Int) = months[monthNumber] ?: 1
 
 fun Context.getMonthLabelByNumber(monthNumber: Int): String {
     return getString(months[monthNumber] ?: R.string.january_label)
@@ -69,7 +71,7 @@ fun getSelectableDates(
     initialMonth: Int,
     initialYear: Int,
     forceBelow: Boolean = false,
-    alreadySelectedDates: ImmutableSet<AppDate>,
+    fixedNonSelectableDates: ImmutableSet<AppDate>,
 ): SelectableDates {
     val initialDate = AppDate.of(initialYear, initialMonth, initialDayOfMonth)
 
@@ -81,7 +83,7 @@ fun getSelectableDates(
                 if (forceBelow) date <= initialDate
                 else date >= initialDate
 
-            return minMaxCondition && date !in alreadySelectedDates
+            return minMaxCondition && date !in fixedNonSelectableDates
         }
 
         override fun isSelectableYear(year: Int): Boolean {

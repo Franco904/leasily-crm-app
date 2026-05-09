@@ -45,7 +45,6 @@ fun AppPieChartChunkedColoredLabels(
                         pie.label == null -> stringResource(R.string.unknown_text)
                         else -> "${pie.label} (${pie.data.toString().formatPercent()}%)"
                     },
-                    mustEllipsizeText = false,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -64,7 +63,6 @@ fun AppPieChartChunkedColoredLabels(
                             pie.label == null -> stringResource(R.string.unknown_text)
                             else -> "${pie.label} (${pie.data.toString().formatPercent()}%)"
                         },
-                        mustEllipsizeText = false,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }

@@ -33,7 +33,7 @@
         </activity>
 
         <receiver
-            android:name=".core.application.backgroundWork.broadcastReceivers.TodayCheckInCheckOutNotificationBroadcastReceiver"
+            android:name=".core.infra.backgroundWork.broadcastReceivers.TodayCheckInCheckOutNotificationBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
 

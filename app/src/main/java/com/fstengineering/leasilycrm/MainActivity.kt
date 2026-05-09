@@ -25,22 +25,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
-import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueBootstrappingWorker
-import com.fstengineering.leasilycrm.core.application.backgroundWork.enqueueLazyWritesWorker
-import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.BootstrappingWorker
-import com.fstengineering.leasilycrm.core.application.backgroundWork.workers.LazyWritesWorker
-import com.fstengineering.leasilycrm.core.application.theme.AppTheme
-import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService
-import com.fstengineering.leasilycrm.core.domain.services.interfaces.UserSessionService.UserSessionEvent
+import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
+import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService.UserSessionEvent
+import com.fstengineering.leasilycrm.core.infra.backgroundWork.enqueueBootstrappingWorker
+import com.fstengineering.leasilycrm.core.infra.backgroundWork.enqueueLazyWritesWorker
+import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.BootstrappingWorker
+import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.LazyWritesWorker
 import com.fstengineering.leasilycrm.core.presentation.composables.AppErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.AppSnackbarHost
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
-    val userSessionService: UserSessionService by inject()
+    private val userSessionService: UserSessionService by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

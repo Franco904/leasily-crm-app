@@ -26,12 +26,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Settings
 import com.fstengineering.leasilycrm.core.presentation.utils.hasNotificationPermission
+import com.fstengineering.leasilycrm.settings.models.SettingsUiState
 
 @Composable
 fun SettingsSection(
-    settings: Settings,
+    settings: SettingsUiState.Loaded,
     onIsTodayCheckInCheckOutNotificationEnabledChange: (Boolean) -> Unit,
     onNotificationPermissionDenied: () -> Unit,
     modifier: Modifier = Modifier,

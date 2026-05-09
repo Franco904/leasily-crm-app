@@ -35,8 +35,6 @@ fun AppPieChart(
         style = Pie.Style.Stroke(width = 48.dp),
         modifier = modifier
             .size(240.dp)
-            .onGloballyPositioned {
-                showAnimation = false
-            }
+            .onGloballyPositioned { showAnimation = false }
     )
 }

@@ -39,7 +39,6 @@ fun AppRowChartChunkedColoredLabels(
                 ColoredLabel(
                     color = color,
                     label = label,
-                    mustEllipsizeText = false,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -55,7 +54,6 @@ fun AppRowChartChunkedColoredLabels(
                     ColoredLabel(
                         color = color,
                         label = label,
-                        mustEllipsizeText = false,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }

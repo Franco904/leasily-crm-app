@@ -14,7 +14,7 @@
     <string name="home_dashboard_label">Painel</string>
     <string name="home_leads_label">Leads</string>
     <string name="home_tenants_label">Inquilinos</string>
-    <string name="home_stays_label">Estadias</string>
+    <string name="home_occupation_label">Ocupação</string>
 
     <!-- Search -->
     <string name="search_property_label">Buscar imóvel</string>
@@ -36,6 +36,8 @@
 
     <string name="profile_edit_user_creci_dialog_headline">Editar CRECI</string>
     <string name="profile_edit_user_dialog_creci_field_placeholder">Número CRECI</string>
+
+    <string name="profile_name_blank_body_text">Nome não informado</string>
     <string name="profile_creci_blank_body_text">CRECI não informado</string>
 
     <!-- Dashboard -->
@@ -561,8 +563,10 @@
     <string name="not_registered_info_body_text">Informação não registrada</string>
     <string name="not_registered_info_var_1_body_text">Não informado</string>
     <string name="not_registered_info_var_2_body_text">Não informada</string>
+
     <string name="no_file_registered_body_text">Nenhum arquivo registrado</string>
     <string name="unnamed_file_text">Arquivo sem nome</string>
+
     <string name="unknown_text">Desconhecido</string>
 
     <string name="order_by_name_text">Nome</string>
@@ -575,9 +579,31 @@
     <string name="no_label">no</string>
     <string name="until_label">até</string>
 
-    <!-- Chip texts -->
-    <string name="apartment_chip_text">Apartamento</string>
-    <string name="house_chip_text">Casa</string>
+    <!-- Fixed options texts -->
+    <string name="apartment_property_type_text">Apartamento</string>
+    <string name="house_property_type_text">Casa</string>
+
+    <string name="sea_access_property_sea_proximity_type_text">Saída para o mar</string>
+    <string name="sea_view_property_sea_proximity_type_text">Vista para o mar</string>
+    <string name="far_from_sea_property_sea_proximity_type_text">Longe do mar</string>
+    <string name="distance_to_sea_property_sea_proximity_type_text">Distância até o mar</string>
+
+    <string name="accessibility_property_characteristic_text">Acessibilidade</string>
+    <string name="balcony_property_characteristic_text">Varanda</string>
+    <string name="barbecue_area_property_characteristic_text">Churrasqueira</string>
+    <string name="bath_linen_property_characteristic_text">Roupa de banho</string>
+    <string name="beach_chair_property_characteristic_text">Cadeira de praia</string>
+    <string name="beach_umbrella_property_characteristic_text">Guarda-sol</string>
+    <string name="bed_linen_property_characteristic_text">Roupa de cama</string>
+    <string name="commercial_area_property_characteristic_text">Área comercial</string>
+    <string name="common_area_condominium_property_characteristic_text">Área comum (condomínio)</string>
+    <string name="elevator_property_characteristic_text">Elevador</string>
+    <string name="home_office_property_characteristic_text">Escritório em casa</string>
+    <string name="modern_property_characteristic_text">Moderno</string>
+    <string name="pet_friendly_property_characteristic_text">Aceita animais domésticos</string>
+    <string name="playground_property_characteristic_text">Parquinho infantil</string>
+    <string name="swimming_pool_property_characteristic_text">Piscina</string>
+    <string name="washing_machine_property_characteristic_text">Máquina de lavar</string>
 
     <!-- Common dialogs -->
     <string name="confirm_leave_registration_dialog_headline_create">Sair do cadastro?</string>
@@ -631,10 +657,11 @@
     <string name="view_assistance_action_button_text">Ver atendimento</string>
     <string name="view_details_action_button_text">Ver detalhes</string>
     <string name="view_property_stay_action_button_text">Ver estadia</string>
-    <string name="view_unvailable_period_action_button_text">Ver período</string>
+    <string name="view_unavailable_period_action_button_text">Ver período</string>
 
     <!-- Validation messages -->
     <string name="inline_required">Obrigatório</string>
+    <string name="inline_invalid_data">Dado inválido</string>
 
     <string name="inline_too_big_8_chars">Deve ter no máximo 8 caracteres</string>
     <string name="inline_too_big_20_chars">Deve ter no máximo 20 caracteres</string>
@@ -648,6 +675,7 @@
     <string name="inline_name_belongs_other_tenant">Já existe um lead ou inquilino com este nome</string>
 
     <string name="inline_period_start_end_date_are_same_period">Data de fim não deve ser a mesma da de início</string>
+    <string name="inline_period_start_date_is_after_end_date_period">Data de fim não deve ser anterior à de início</string>
     <string name="inline_period_is_overlapping_other_property_stay_period">Imóvel está ocupado por outra estadia neste período</string>
     <string name="inline_period_is_overlapping_other_property_price_period">Imóvel já possui um preço fixado neste período</string>
 
@@ -714,6 +742,9 @@
 
     <string name="unauthorized_error_title">Sessão expirada</string>
     <string name="unauthorized_error_description">Sua sessão expirou. Faça login novamente.</string>
+
+    <string name="inconsistency_error_title">Inconsistências nas informações fornecidas</string>
+    <string name="inconsistency_error_description">Inconsistências foram encontradas no preenchimento das informações do cadastro, o que impede a sua criação. Tente revisar mas, se isto parecer um erro, contate o suporte.</string>
 
     <string name="unknown_error_title">Houve um problema</string>
     <string name="unknown_error_description_default">Não foi possível realizar a última ação. Tente reiniciar o aplicativo e se o problema persistir contate o suporte.</string>

@@ -2,14 +2,11 @@ package com.fstengineering.leasilycrm.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.models.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.models.Assistance
-import com.fstengineering.leasilycrm.core.domain.repositories.AssistanceRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.StayRepository
-import com.fstengineering.leasilycrm.core.domain.repositories.UserRepository
-import com.fstengineering.leasilycrm.core.domain.utils.DataError
+import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
+import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.home.application.repositories.UserQueryRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,14 +15,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val assistanceRepository: AssistanceRepository,
-    private val stayRepository: StayRepository,
-    private val userRepository: UserRepository,
-    private val now: AppDateTime,
+    private val occupiedPeriodSharedQueryRepository: OccupiedPeriodSharedQueryRepository,
+    private val userQueryRepository: UserQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvents>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _userProfilePictureUrl = MutableStateFlow<String?>(null)
@@ -43,49 +38,39 @@ class HomeViewModel(
         isInitialized = true
     }
 
-    fun watchUserProfilePictureUrl() {
+    private fun watchUserProfilePictureUrl() {
         viewModelScope.launch {
-            userRepository.watchUser().collect { result ->
+            userQueryRepository.watchUserProfilePictureUrl().collect { result ->
                 result
-                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                    .onSuccess { user -> _userProfilePictureUrl.value = user.profilePictureUrl }
+                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onSuccess { picUrl -> _userProfilePictureUrl.value = picUrl }
             }
         }
     }
 
     private fun watchTodayCheckInsAndCheckouts() {
         viewModelScope.launch {
-            stayRepository.watchAllUpcomingCheckInsAndCheckOuts().collect { result ->
-                result
-                    .onError { e -> _uiEvents.send(UiEvents.Error(e)) }
-                    .onSuccess { upcomingCheckInsAndCheckOuts ->
-                        val todayCheckInsAndCheckoutsCount = upcomingCheckInsAndCheckOuts.count {
-                            val canRegisterCheckIn = !it.isCheckInDone
-                                    && now.isAfter(it.checkInDateTime.toStartOfDay())
-                            val canRegisterCheckOut =
-                                now.isAfter(it.checkOutDateTime.toStartOfDay())
+            occupiedPeriodSharedQueryRepository.watchAllPastCheckInCheckOutNotDoneCounts()
+                .collect { result ->
+                    result
+                        .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                        .onSuccess { counts ->
+                            val todayCheckInsAndCheckOutsCount =
+                                counts.staysAbleToCheckInCount + counts.staysAbleToCheckOutCount
 
-                            canRegisterCheckIn || canRegisterCheckOut
+                            _todayCheckInsAndCheckoutsCount.update { todayCheckInsAndCheckOutsCount }
                         }
-
-                        _todayCheckInsAndCheckoutsCount.update { todayCheckInsAndCheckoutsCount }
-                    }
-            }
+                }
         }
     }
 
-    fun deleteCurrentAssistance(currentAssistance: Assistance) {
-        viewModelScope.launch {
-            assistanceRepository.delete(id = currentAssistance.id!!)
-                .onError { e -> return@launch _uiEvents.send(UiEvents.Error(e)) }
+    override fun onCleared() {
+        _uiEvents.close()
 
-            _uiEvents.send(UiEvents.CurrentAssistanceDeleteSuccess)
-        }
+        super.onCleared()
     }
 
-    sealed interface UiEvents {
-        data class Error(val error: DataError) : UiEvents
-
-        data object CurrentAssistanceDeleteSuccess : UiEvents
+    sealed interface UiEvent {
+        data class BottomSheetError(val error: ApplicationError) : UiEvent
     }
 }

@@ -1,122 +1,130 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
-sealed interface DomainError : Error {
+sealed interface DomainError : BusinessRuleError {
+    enum class Amount : DomainError {
+        Required,
+        IsNegative,
+    }
+
     enum class AssistanceInteractionDate : DomainError {
-        IsNull,
+        Required,
     }
 
     enum class AssistanceInteractionTitle : DomainError {
-        IsNullOrBlank,
+        Required,
     }
 
-    enum class AssistanceSearchedNeighborhoodName : DomainError {
-        IsNullOrBlank,
+    enum class AssistanceOtherFields : DomainError {
+        TenantRequired,
+        PreferredPeriodRequired,
+        PreferredPeriodStartAndEndDatesAreTheSame,
+        PreferredPeriodStartDateIsAfterEndDate,
+        AdultGuestsCountIsNegative,
+        KidsGuestsCountIsNegative,
+        BabiesGuestsCountIsNegative,
+        AnimalsGuestsCountIsNegative,
+        BedroomsCountIsNegative,
+        EnSuitesCountIsNegative,
+        DoubleBedsCountIsNegative,
+        SingleBedsCountIsNegative,
+        BathroomsCountIsNegative,
+        ParkingSpotsCountIsNegative,
+    }
+
+    enum class Neighborhood : DomainError {
+        Required,
     }
 
     enum class PropertyPropertyOwner : DomainError {
-        IsNull,
+        Required,
     }
 
     enum class PropertyType : DomainError {
-        IsNull,
-    }
-
-    enum class PropertyNeighborhood : DomainError {
-        IsBlank,
+        Required,
     }
 
     enum class PropertyStreetAddress : DomainError {
-        IsBlank,
-    }
-
-    enum class PropertyDistanceToSea : DomainError {
-        IsBlank,
+        Required,
     }
 
     enum class PropertyPricePeriod : DomainError {
-        IsNull,
-        StartAndEndDaysAreTheSame,
-        IsOverlappingOtherPropertyPricePeriod,
+        Required,
+        StartAndEndDatesAreTheSame,
+        StartDateIsAfterEndDate,
+        IsOverlappingOtherPricePeriod,
     }
 
-    enum class PropertyPriceAmount : DomainError {
-        IsNull,
+    enum class PropertyOtherFields : DomainError {
+        BedroomsCountIsNegative,
+        EnSuitesCountIsNegative,
+        DoubleBedsCountIsNegative,
+        SingleBedsCountIsNegative,
+        BathroomsCountIsNegative,
+        ParkingSpotsCountIsNegative,
+        AirConditionersCountIsNegative,
+        MaxGuestsCountIsNegative,
+        MoreThanOneMainPictureFile,
     }
 
-    enum class PropertyOwnerName : DomainError {
-        IsBlank,
-        BelongsToOtherPropertyOwner,
+    enum class PropertySeaProximity : DomainError {
+        PropertySeaProximityInvalid,
+    }
+
+    enum class PropertySeaProximityDistanceToSea : DomainError {
+        Required,
+        IsNegative,
+    }
+
+    enum class Name : DomainError {
+        Required,
         LengthIsGreaterThan100Chars,
     }
 
-    enum class PropertyOwnerPhone : DomainError {
+    enum class Phone : DomainError {
         LengthIsGreaterThan20Chars,
     }
 
-    enum class PropertyOwnerEmail : DomainError {
-        InvalidFormat,
+    enum class Email : DomainError {
+        Invalid,
         LengthIsGreaterThan120Chars,
     }
 
-    enum class PropertyOwnerPaymentKey : DomainError {
-        LengthIsGreaterThan120Chars,
-    }
-
-    enum class TenantName : DomainError {
-        IsBlank,
-        BelongsToOtherTenant,
-        LengthIsGreaterThan100Chars,
-    }
-
-    enum class TenantPhone : DomainError {
-        LengthIsGreaterThan20Chars,
-    }
-
-    enum class TenantEmail : DomainError {
-        InvalidFormat,
+    enum class PaymentKey : DomainError {
         LengthIsGreaterThan120Chars,
     }
 
     enum class StayProperty : DomainError {
-        IsNull,
+        Required,
     }
 
     enum class StayTenant : DomainError {
-        IsNull,
+        Required,
     }
 
     enum class StayPeriod : DomainError {
-        IsNull,
-        StartAndEndDaysAreTheSame,
-        IsOverlappingOtherPropertyStayPeriod,
+        Required,
+        StartAndEndDatesAreTheSame,
+        StartDateIsAfterEndDate,
+        Overbooking,
     }
 
     enum class StayCheckInTime : DomainError {
-        IsNull,
+        Required,
     }
 
     enum class StayCheckOutTime : DomainError {
-        IsNull,
+        Required,
     }
 
     enum class StayCommission : DomainError {
-        IsNull,
+        Required,
     }
 
-    enum class StayTransferDate : DomainError {
-        IsNull,
+    enum class StayOtherFields : DomainError {
+        GuestsCountIsNegative,
     }
 
-    enum class StayTransferAmount : DomainError {
-        IsNull,
-    }
-
-    enum class UserName : DomainError {
-        IsBlank,
-        LengthIsGreaterThan75Chars,
-    }
-
-    enum class CreciNumber : DomainError {
+    enum class Creci : DomainError {
         LengthIsGreaterThan8Chars,
     }
 }

@@ -12,6 +12,9 @@ interface ErrorBottomSheetDataPropertiesStrategy {
     val unauthorizedErrorTitle: Int get() = R.string.unauthorized_error_title
     val unauthorizedErrorDescription: Int get() = R.string.unauthorized_error_description
 
+    val inconsistencyErrorTitle: Int get() = R.string.inconsistency_error_title
+    val inconsistencyErrorDescription: Int get() = R.string.inconsistency_error_description
+
     val unknownErrorTitle: Int get() = R.string.unknown_error_title
     val unknownErrorDescription: Int get() = R.string.unknown_error_description_default
 }

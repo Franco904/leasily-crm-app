@@ -19,21 +19,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.models.Tenant
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryIconButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppTonalIconButton
+import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun LeadTenantCard(
-    leadTenant: Tenant,
+    leadTenant: LeadTenantUiState,
     modifier: Modifier = Modifier,
     onCardClick: (() -> Unit)? = null,
     onEditLeadTenant: () -> Unit = {},
@@ -41,12 +42,9 @@ fun LeadTenantCard(
     onNewAssistance: () -> Unit = {},
     onNewStay: () -> Unit = {},
     onViewStay: () -> Unit = {},
-    hasUnfinishedAssistance: Boolean = false,
-    hasUnfinishedStay: Boolean = false,
-    mustShowAssistanceText: Boolean = false,
-    mustShowMoreOptionsMenu: Boolean = false,
-    mustShowPrimaryActions: Boolean = false,
-    qtGuestsLabelText: String? = null,
+    hasMoreOptionsMenu: Boolean = true,
+    hasAssistanceText: Boolean = false,
+    hasPrimaryActions: Boolean = false,
 ) {
     AppCard(
         onClick = onCardClick,
@@ -62,10 +60,11 @@ fun LeadTenantCard(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = leadTenant.name ?: "",
+                    text = leadTenant.name,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
+
                 if (!leadTenant.city.isNullOrBlank()) {
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
@@ -74,9 +73,21 @@ fun LeadTenantCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                if (mustShowAssistanceText) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    if (hasUnfinishedAssistance) {
+
+                when {
+                    !leadTenant.hasUnfinishedAssistance -> {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = stringResource(R.string.no_unfinished_assistance_text),
+                            style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
+                            color = MaterialTheme.colorScheme.outline,
+                        )
+                    }
+
+                    leadTenant.guestsCount != null -> {
+                        val hasGuests = leadTenant.guestsCount > 0
+
+                        Spacer(modifier = Modifier.height(8.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -87,24 +98,27 @@ fun LeadTenantCard(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = qtGuestsLabelText
-                                    ?: stringResource(R.string.lead_searching_qt_guests_empty_text),
+                                text = when {
+                                    hasGuests -> {
+                                        pluralStringResource(
+                                            id = R.plurals.lead_searching_qt_guests_label,
+                                            count = leadTenant.guestsCount,
+                                            leadTenant.guestsCount,
+                                        )
+                                    }
+
+                                    else -> stringResource(R.string.lead_searching_qt_guests_empty_text)
+                                },
                                 style = MaterialTheme.typography.bodyMedium
-                                    .copy(fontStyle = if (qtGuestsLabelText != null) null else FontStyle.Italic),
+                                    .copy(fontStyle = if (hasGuests) null else FontStyle.Italic),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
-                    } else {
-                        Text(
-                            text = stringResource(R.string.no_unfinished_assistance_text),
-                            style = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
-                            color = MaterialTheme.colorScheme.outline,
-                        )
                     }
                 }
             }
 
-            if (mustShowMoreOptionsMenu) {
+            if (hasMoreOptionsMenu) {
                 AppMoreOptionsIconDropdownMenu(
                     options = buildList {
                         add(
@@ -128,14 +142,14 @@ fun LeadTenantCard(
                 )
             }
 
-            if (mustShowPrimaryActions) {
+            if (hasPrimaryActions) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(bottom = 8.dp, end = 8.dp)
                         .align(Alignment.BottomEnd)
                 ) {
-                    if (!hasUnfinishedAssistance) {
+                    if (!leadTenant.hasUnfinishedAssistance) {
                         AppTonalIconButton(
                             icon = painterResource(R.drawable.assignment_add),
                             onClick = onNewAssistance
@@ -143,10 +157,11 @@ fun LeadTenantCard(
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                     AppPrimaryIconButton(
-                        icon = if (hasUnfinishedStay) {
-                            painterResource(R.drawable.calendar_view)
-                        } else painterResource(R.drawable.calendar_add_on),
-                        onClick = if (hasUnfinishedStay) onViewStay else onNewStay,
+                        icon = when {
+                            leadTenant.hasUnfinishedStay -> painterResource(R.drawable.calendar_view)
+                            else -> painterResource(R.drawable.calendar_add_on)
+                        },
+                        onClick = if (leadTenant.hasUnfinishedStay) onViewStay else onNewStay,
                         modifier = Modifier
                             .width(52.dp)
                     )
