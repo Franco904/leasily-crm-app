@@ -1,8 +1,10 @@
 package com.fstengineering.leasilycrm.core.infra.utils
 
 import com.fstengineering.leasilycrm.core.application.useCases.interceptors.RequireAuthCommandInterceptor
+import com.fstengineering.leasilycrm.core.application.useCases.interceptors.RequireAuthQueryFlowInterceptor
 import com.fstengineering.leasilycrm.core.application.useCases.interceptors.RequireAuthQueryInterceptor
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import org.koin.core.module.Module
 import org.koin.core.qualifier.Qualifier
@@ -33,6 +35,21 @@ inline fun <reified Q> Module.authQueryUseCase(
     factory<Q> {
         RequireAuthQueryInterceptor(
             delegate = get<Q>(qualifier) as QueryUseCase<QueryUseCase.Args, Any>,
+            userSessionService = get(),
+        ) as Q
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+inline fun <reified Q> Module.authQueryFlowUseCase(
+    qualifier: Qualifier,
+    crossinline factory: Scope.() -> Q,
+) where Q : QueryFlowUseCase<*, *> {
+    factory<Q>(qualifier) { factory() }
+
+    factory<Q> {
+        RequireAuthQueryFlowInterceptor(
+            delegate = get<Q>(qualifier) as QueryFlowUseCase<QueryUseCase.Args, Any>,
             userSessionService = get(),
         ) as Q
     }
