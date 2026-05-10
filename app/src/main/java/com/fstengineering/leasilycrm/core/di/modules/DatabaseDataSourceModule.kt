@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.di.modules
 
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.infra.adapters.DatabaseAdapterImpl
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSourceImpl
@@ -89,7 +89,7 @@ val databaseDataSourceModule = module {
     }
 
     single<StayDatabaseDataSource> {
-        StayDatabaseDataSourceImpl(dao = get(), now = AppDateTime.lazyNow())
+        StayDatabaseDataSourceImpl(dao = get(), dateTimeProvider = get<AppDateTimeProvider>())
     }
 
     single<StayFileDatabaseDataSource> {

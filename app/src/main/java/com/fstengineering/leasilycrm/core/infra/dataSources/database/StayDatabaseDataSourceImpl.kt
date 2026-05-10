@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.OccupiedPeriodListProjection
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 
 class StayDatabaseDataSourceImpl(
     private val dao: StayDao,
-    private val now: AppDateTime,
+    private val dateTimeProvider: AppDateTimeProvider,
 ) : StayDatabaseDataSource {
     override suspend fun insertOrUpdate(stay: StayEntity): Long =
         dao.insertOrUpdate(stay)
@@ -54,11 +54,11 @@ class StayDatabaseDataSourceImpl(
     }
 
     override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<List<OccupiedPeriodNotificationProjection>, InfraError> {
-        return onDatabaseSafe { dao.getAllTodayCheckInsAndCheckOutsToNotify(now.toEpochMillisUTC()) }
+        return onDatabaseSafe { dao.getAllTodayCheckInsAndCheckOutsToNotify(dateTimeProvider.now().toEpochMillisUTC()) }
     }
 
     override fun watchAllPastCheckInCheckOutNotDoneCounts(): Flow<AppResult<StayCheckInCheckOutCountsProjection, InfraError>> {
-        val nowAdjusted = now.withHourMinute(23, 59)
+        val nowAdjusted = dateTimeProvider.now().withHourMinute(23, 59)
         return dao.watchAllPastCheckInCheckOutNotDoneCounts(nowAdjusted).asDatabaseFlowResult()
     }
 }

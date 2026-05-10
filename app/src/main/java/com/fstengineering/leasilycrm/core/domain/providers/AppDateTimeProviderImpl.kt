@@ -4,5 +4,5 @@ import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTim
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 class AppDateTimeProviderImpl : AppDateTimeProvider {
-    override val now: () -> AppDateTime = { AppDateTime.now() }
+    override fun now(): AppDateTime = AppDateTime.now()
 }

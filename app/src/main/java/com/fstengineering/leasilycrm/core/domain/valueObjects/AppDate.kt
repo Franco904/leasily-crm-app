@@ -7,26 +7,24 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 
-data class AppDate(val date: () -> LocalDate) : Comparable<AppDate> {
-    val year get() = date().year
-    val month get() = date().monthValue
-    val dayOfMonth get() = date().dayOfMonth
+data class AppDate(val date: LocalDate) : Comparable<AppDate> {
+    val year get() = date.year
+    val month get() = date.monthValue
+    val dayOfMonth get() = date.dayOfMonth
 
     fun withMonthYear(month: Int, year: Int): AppDate {
-        val updatedDate = date().withMonth(month).withYear(year)
-        return copy(date = { updatedDate })
+        return copy(date = date.withMonth(month).withYear(year))
     }
 
     fun plusDays(daysToAdd: Long): AppDate {
-        val updatedDate = date().plusDays(daysToAdd)
-        return copy(date = { updatedDate })
+        return copy(date = date.plusDays(daysToAdd))
     }
 
     fun getLast12Months(): ImmutableList<CalendarMonthYear> {
         val last12MonthsMap = mutableListOf<CalendarMonthYear>()
 
         repeat(12) { i ->
-            val pastDate = date().minusMonths(i.toLong())
+            val pastDate = date.minusMonths(i.toLong())
 
             val calendarMonthYear = CalendarMonthYear(
                 month = pastDate.monthValue,
@@ -40,55 +38,50 @@ data class AppDate(val date: () -> LocalDate) : Comparable<AppDate> {
     }
 
     fun toEpochMillisUTC(): Long {
-        return date()
+        return date
             .atStartOfDay(ZoneOffset.UTC)
             .toInstant()
             .toEpochMilli()
     }
 
     fun isAfter(other: AppDate?): Boolean {
-        return other == null || date() >= other.date()
+        return other == null || date >= other.date
     }
 
     fun isBefore(other: AppDate?): Boolean {
-        return other == null || date() <= other.date()
+        return other == null || date <= other.date
     }
 
     fun daysBetween(other: AppDate): Int {
         return ChronoUnit.DAYS
-            .between(date(), other.date())
+            .between(date, other.date)
             .toInt()
     }
 
     override fun equals(other: Any?): Boolean {
         if (other !is AppDate) return false
 
-        return date() == other.date()
+        return date == other.date
     }
 
-    override fun hashCode(): Int = date().hashCode()
+    override fun hashCode(): Int = date.hashCode()
 
     override fun compareTo(other: AppDate): Int {
-        return date().compareTo(other.date())
+        return date.compareTo(other.date)
     }
 
     companion object {
         fun now(): AppDate {
-            val now = LocalDate.now()
-            return AppDate { now }
+            return AppDate(date = LocalDate.now())
         }
 
-        fun lazyNow(): AppDate = AppDate { LocalDate.now() }
-
         fun fromMillis(millis: Long): AppDate {
-            val lazyDate = {
-                Instant
-                    .ofEpochMilli(/* epochMilli = */ millis)
+            return AppDate(
+                date = Instant
+                    .ofEpochMilli(millis)
                     .atZone(ZoneOffset.UTC)
                     .toLocalDate()
-            }
-
-            return AppDate(date = lazyDate)
+            )
         }
 
         fun of(
@@ -96,11 +89,7 @@ data class AppDate(val date: () -> LocalDate) : Comparable<AppDate> {
             month: Int,
             dayOfMonth: Int,
         ): AppDate {
-            return AppDate {
-                LocalDate.of(year, month, dayOfMonth)
-                    .atStartOfDay(ZoneOffset.UTC)
-                    .toLocalDate()
-            }
+            return AppDate(date = LocalDate.of(year, month, dayOfMonth))
         }
     }
 }

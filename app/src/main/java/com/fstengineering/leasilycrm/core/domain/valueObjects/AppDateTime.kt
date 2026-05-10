@@ -5,103 +5,92 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 
-data class AppDateTime(val dateTime: () -> LocalDateTime) : Comparable<AppDateTime> {
-    val year get() = dateTime().year
-    val month get() = dateTime().monthValue
-    val dayOfMonth get() = dateTime().dayOfMonth
-    val hour get() = dateTime().hour
-    val minute get() = dateTime().minute
-    val second get() = dateTime().second
+data class AppDateTime(val dateTime: LocalDateTime) : Comparable<AppDateTime> {
+    val year get() = dateTime.year
+    val month get() = dateTime.monthValue
+    val dayOfMonth get() = dateTime.dayOfMonth
+    val hour get() = dateTime.hour
+    val minute get() = dateTime.minute
+    val second get() = dateTime.second
 
     fun withHourMinute(hour: Int, minute: Int): AppDateTime {
-        val updatedDateTime = dateTime().withHour(hour).withMinute(minute)
-        return copy(dateTime = { updatedDateTime })
+        return copy(dateTime = dateTime.withHour(hour).withMinute(minute))
     }
 
     fun toStartOfDay(): AppDateTime {
-        val updatedDateTime = dateTime().withHour(0).withMinute(0)
-        return copy(dateTime = { updatedDateTime })
+        return copy(dateTime = dateTime.withHour(0).withMinute(0))
     }
 
     fun plusDays(daysToAdd: Long): AppDateTime {
-        val updatedDateTime = dateTime().plusDays(daysToAdd)
-        return copy(dateTime = { updatedDateTime })
+        return copy(dateTime = dateTime.plusDays(daysToAdd))
     }
 
     fun minusDays(daysToSubtract: Long): AppDateTime {
-        val updatedDateTime = dateTime().minusDays(daysToSubtract)
-        return copy(dateTime = { updatedDateTime })
+        return copy(dateTime = dateTime.minusDays(daysToSubtract))
     }
 
     fun toEpochMillisUTC(): Long {
-        return dateTime()
+        return dateTime
             .atZone(ZoneOffset.UTC)
             .toInstant()
             .toEpochMilli()
     }
 
     fun toEpochMillisLocalZone(): Long {
-        return dateTime()
+        return dateTime
             .atZone(ZoneId.systemDefault())
             .toInstant()
             .toEpochMilli()
     }
 
     fun toHourMinute(): Pair<Int, Int> {
-        val dateTime = dateTime()
         return dateTime.hour to dateTime.minute
     }
 
     fun toDate(): AppDate {
-        return AppDate { dateTime().toLocalDate() }
+        return AppDate(date = dateTime.toLocalDate())
     }
 
     fun isAfter(other: AppDateTime?): Boolean {
-        return other == null || dateTime() > other.dateTime()
+        return other == null || dateTime > other.dateTime
     }
 
     fun isBefore(other: AppDateTime?): Boolean {
-        return other == null || dateTime() < other.dateTime()
+        return other == null || dateTime < other.dateTime
     }
 
     fun isToday(): Boolean {
-        val dateTime = dateTime()
         val todayDateTime = now()
 
-        return dateTime.dayOfMonth == todayDateTime.dateTime().dayOfMonth
-                && dateTime.month == todayDateTime.dateTime().month
-                && dateTime.year == todayDateTime.dateTime().year
+        return dateTime.dayOfMonth == todayDateTime.dateTime.dayOfMonth
+                && dateTime.month == todayDateTime.dateTime.month
+                && dateTime.year == todayDateTime.dateTime.year
     }
 
     fun isSameDayAs(other: AppDateTime): Boolean {
-        return dateTime().toLocalDate() == other.dateTime().toLocalDate()
+        return dateTime.toLocalDate() == other.dateTime.toLocalDate()
     }
 
     fun isAfterDayOf(other: AppDateTime): Boolean {
-        return dateTime().toLocalDate() > other.dateTime().toLocalDate()
+        return dateTime.toLocalDate() > other.dateTime.toLocalDate()
     }
 
     override fun compareTo(other: AppDateTime): Int {
-        return dateTime().compareTo(other.dateTime())
+        return dateTime.compareTo(other.dateTime)
     }
 
     companion object {
         fun now(): AppDateTime {
-            val now = LocalDateTime.now()
-            return AppDateTime { now }
+            return AppDateTime(dateTime = LocalDateTime.now())
         }
 
-        fun lazyNow(): AppDateTime = AppDateTime { LocalDateTime.now() }
-
         fun fromMillis(millis: Long): AppDateTime {
-            val lazyDateTime = {
-                Instant
-                    .ofEpochMilli(/* epochMilli = */ millis)
+            return AppDateTime(
+                dateTime = Instant
+                    .ofEpochMilli(millis)
                     .atZone(ZoneOffset.UTC)
                     .toLocalDateTime()
-            }
-
-            return AppDateTime(dateTime = lazyDateTime)
+            )
         }
     }
 }

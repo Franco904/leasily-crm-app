@@ -132,9 +132,9 @@ class OccupiedPeriodsViewModel(
         }
 
         val sortedStays = when (filterType) {
-            OccupiedPeriodFilterType.Finished, OccupiedPeriodFilterType.All -> filteredStays.sortedByDescending { it.checkInDateTime.dateTime() }
-            OccupiedPeriodFilterType.UpcomingCheckOut -> filteredStays.sortedBy { it.checkOutDateTime.dateTime() }
-            else -> filteredStays.sortedBy { it.checkInDateTime.dateTime() }
+            OccupiedPeriodFilterType.Finished, OccupiedPeriodFilterType.All -> filteredStays.sortedByDescending { it.checkInDateTime }
+            OccupiedPeriodFilterType.UpcomingCheckOut -> filteredStays.sortedBy { it.checkOutDateTime }
+            else -> filteredStays.sortedBy { it.checkInDateTime }
         }
 
         return sortedStays.toPersistentList()
