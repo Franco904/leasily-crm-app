@@ -2,12 +2,13 @@ package com.fstengineering.leasilycrm.propertyOccupation.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.propertyOccupation.application.models.dtos.PropertyOccupiedPeriodsReadModel
 import com.fstengineering.leasilycrm.propertyOccupation.application.models.queries.PropertyOccupationArgs
-import com.fstengineering.leasilycrm.propertyOccupation.application.useCases.WatchPropertyOccupationUseCase
 import com.fstengineering.leasilycrm.propertyOccupation.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.propertyOccupation.presentation.models.PropertyOccupiedPeriodsUiState
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PropertyOccupationViewModel(
-    private val watchPropertyOccupation: WatchPropertyOccupationUseCase,
+    private val watchPropertyOccupation: QueryFlowUseCase<PropertyOccupationArgs, PropertyOccupiedPeriodsReadModel>,
     dateProvider: AppDateProvider,
 ) : ViewModel() {
     private var isInitialized = false

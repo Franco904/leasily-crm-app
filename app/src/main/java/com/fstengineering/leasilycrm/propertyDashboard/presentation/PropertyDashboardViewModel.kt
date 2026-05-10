@@ -3,11 +3,12 @@ package com.fstengineering.leasilycrm.propertyDashboard.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.repositories.PropertySharedCommandRepository
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.queries.PropertyArgs
-import com.fstengineering.leasilycrm.propertyDashboard.application.useCases.WatchPropertyUseCase
 import com.fstengineering.leasilycrm.propertyDashboard.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.propertyDashboard.presentation.models.PropertyUiState
 import kotlinx.coroutines.channels.Channel
@@ -18,7 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PropertyDashboardViewModel(
-    private val watchProperty: WatchPropertyUseCase,
+    private val watchProperty: QueryFlowUseCase<PropertyArgs, PropertyReadModel>,
     private val propertySharedCommandRepository: PropertySharedCommandRepository,
 ) : ViewModel() {
     private var isInitialized = false

@@ -2,14 +2,16 @@ package com.fstengineering.leasilycrm.occupiedPeriods.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.models.commands.RegisterCheckOutCommand
+import com.fstengineering.leasilycrm.core.application.models.commands.UndoCheckOutCommand
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
-import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
+import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
 import com.fstengineering.leasilycrm.occupiedPeriods.application.repositories.OccupiedPeriodQueryRepository
 import kotlinx.collections.immutable.ImmutableList
@@ -29,8 +31,8 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class OccupiedPeriodsViewModel(
-    private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
-    private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
+    private val registerStayCheckOutUseCase: CommandUseCase<RegisterCheckOutCommand>,
+    private val undoRegisterStayCheckOutUseCase: CommandUseCase<UndoCheckOutCommand>,
     private val occupiedPeriodSharedCommandRepository: OccupiedPeriodSharedCommandRepository,
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
     private val occupiedPeriodSharedQueryRepository: OccupiedPeriodSharedQueryRepository,
@@ -130,9 +132,9 @@ class OccupiedPeriodsViewModel(
         }
 
         val sortedStays = when (filterType) {
-            OccupiedPeriodFilterType.Finished, OccupiedPeriodFilterType.All -> filteredStays.sortedByDescending { it.checkInDateTime.dateTime() }
-            OccupiedPeriodFilterType.UpcomingCheckOut -> filteredStays.sortedBy { it.checkOutDateTime.dateTime() }
-            else -> filteredStays.sortedBy { it.checkInDateTime.dateTime() }
+            OccupiedPeriodFilterType.Finished, OccupiedPeriodFilterType.All -> filteredStays.sortedByDescending { it.checkInDateTime }
+            OccupiedPeriodFilterType.UpcomingCheckOut -> filteredStays.sortedBy { it.checkOutDateTime }
+            else -> filteredStays.sortedBy { it.checkInDateTime }
         }
 
         return sortedStays.toPersistentList()
@@ -206,8 +208,13 @@ class OccupiedPeriodsViewModel(
         val stay = stayToRegisterCheckOut ?: return
 
         viewModelScope.launch {
-            registerStayCheckOutUseCase(stayId = stay.id, tenantId = stay.tenantId)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+            registerStayCheckOutUseCase(
+                RegisterCheckOutCommand(
+                    stayId = stay.id,
+                    tenantId = stay.tenantId
+                )
+            )
+                .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess {
                     _uiEvents.trySend(UiEvent.RegisterCheckOutSuccess)
 
@@ -228,8 +235,13 @@ class OccupiedPeriodsViewModel(
         val stay = stayToRegisterCheckOut ?: return
 
         viewModelScope.launch {
-            undoRegisterStayCheckOutUseCase(stayId = stay.id, tenantId = stay.tenantId)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+            undoRegisterStayCheckOutUseCase(
+                UndoCheckOutCommand(
+                    stayId = stay.id,
+                    tenantId = stay.tenantId
+                )
+            )
+                .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
         }
     }
 

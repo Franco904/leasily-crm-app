@@ -2,12 +2,16 @@ package com.fstengineering.leasilycrm.leadTenantDetails.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteAssistanceUseCase
-import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteLeadTenantUseCase
-import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.WatchLeadTenantUseCase
+import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.commands.DeleteAssistanceCommand
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.commands.DeleteLeadTenantCommand
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.queries.LeadTenantArgs
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantDetailsUiState
 import kotlinx.coroutines.Job
@@ -19,9 +23,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LeadTenantDetailsViewModel(
-    private val watchLeadTenant: WatchLeadTenantUseCase,
-    private val deleteLeadTenant: DeleteLeadTenantUseCase,
-    private val deleteAssistance: DeleteAssistanceUseCase,
+    private val watchLeadTenant: QueryFlowUseCase<LeadTenantArgs, LeadTenantReadModel?>,
+    private val deleteLeadTenant: CommandUseCase<DeleteLeadTenantCommand>,
+    private val deleteAssistance: CommandUseCase<DeleteAssistanceCommand>,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -38,7 +42,7 @@ class LeadTenantDetailsViewModel(
         if (isInitialized) return
 
         watchJob = viewModelScope.launch {
-            watchLeadTenant(leadTenantId).collect { result ->
+            watchLeadTenant(LeadTenantArgs(leadTenantId)).collect { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
                     .onSuccess { readModel ->
@@ -62,8 +66,8 @@ class LeadTenantDetailsViewModel(
         watchJob?.cancel()
 
         viewModelScope.launch {
-            deleteLeadTenant(currentState.id)
-                .onError { e ->
+            deleteLeadTenant(DeleteLeadTenantCommand(currentState.id))
+                .onApplicationError { e ->
                     _uiEvents.trySend(UiEvents.BottomSheetError(e))
                     return@launch
                 }
@@ -74,8 +78,8 @@ class LeadTenantDetailsViewModel(
 
     fun deleteCurrentAssistance(assistanceId: Long) {
         viewModelScope.launch {
-            deleteAssistance(assistanceId)
-                .onError { e ->
+            deleteAssistance(DeleteAssistanceCommand(assistanceId))
+                .onApplicationError { e ->
                     _uiEvents.trySend(UiEvents.BottomSheetError(e))
                     return@launch
                 }

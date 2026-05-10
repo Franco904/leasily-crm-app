@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.dashboard.infra.repositories
 
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimal
@@ -20,7 +20,7 @@ import kotlin.math.roundToInt
 
 class CrmMetricsRepositoryImpl(
     private val databaseDataSource: CrmMetricsDatabaseDataSource,
-    private val now: AppDate,
+    private val dateProvider: AppDateProvider,
 ) : CrmMetricsRepository {
     override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>> =
         flow {
@@ -46,7 +46,7 @@ class CrmMetricsRepositoryImpl(
                         }
                         .toPersistentMap()
 
-                    val generatedLeadsWithMissingMonthsMap = now.getLast12Months()
+                    val generatedLeadsWithMissingMonthsMap = dateProvider.now().getLast12Months()
                         .associateWith { 0 }
                         .toMutableMap()
 
@@ -91,7 +91,7 @@ class CrmMetricsRepositoryImpl(
                             }
                             .toPersistentMap()
 
-                    val generatedLeadsWithMissingMonthsMap = now.getLast12Months()
+                    val generatedLeadsWithMissingMonthsMap = dateProvider.now().getLast12Months()
                         .associateWith { persistentMapOf<String, Int>() }
                         .toMutableMap()
 
@@ -165,7 +165,7 @@ class CrmMetricsRepositoryImpl(
                         }
                         .toPersistentMap()
 
-                    val newStayBookingsWithMissingMonthsMap = now.getLast12Months()
+                    val newStayBookingsWithMissingMonthsMap = dateProvider.now().getLast12Months()
                         .associateWith { 0 }
                         .toMutableMap()
 
@@ -210,7 +210,7 @@ class CrmMetricsRepositoryImpl(
                             }
                             .toPersistentMap()
 
-                    val newStayBookingsWithMissingMonthsMap = now.getLast12Months()
+                    val newStayBookingsWithMissingMonthsMap = dateProvider.now().getLast12Months()
                         .associateWith { persistentMapOf<String, Int>() }
                         .toMutableMap()
 
@@ -259,7 +259,7 @@ class CrmMetricsRepositoryImpl(
                             }
                             .toPersistentMap()
 
-                    val newStayBookingsWithMissingMonthsMap = now.getLast12Months()
+                    val newStayBookingsWithMissingMonthsMap = dateProvider.now().getLast12Months()
                         .associateWith { persistentMapOf<String, Int>() }
                         .toMutableMap()
 
@@ -303,7 +303,7 @@ class CrmMetricsRepositoryImpl(
                         }
                         .toPersistentMap()
 
-                    val commissionInvoiceWithMissingMonthsMap = now.getLast12Months()
+                    val commissionInvoiceWithMissingMonthsMap = dateProvider.now().getLast12Months()
                         .associateWith { 0.toDecimal() }
                         .toMutableMap()
 
@@ -349,7 +349,7 @@ class CrmMetricsRepositoryImpl(
                             }
                             .toPersistentMap()
 
-                    val commissionInvoiceWithMissingMonthsMap = now.getLast12Months()
+                    val commissionInvoiceWithMissingMonthsMap = dateProvider.now().getLast12Months()
                         .associateWith { persistentMapOf<String, AppDecimal>() }
                         .toMutableMap()
 
@@ -398,7 +398,7 @@ class CrmMetricsRepositoryImpl(
                             }
                             .toPersistentMap()
 
-                    val commissionInvoiceWithMissingMonthsMap = now.getLast12Months()
+                    val commissionInvoiceWithMissingMonthsMap = dateProvider.now().getLast12Months()
                         .associateWith { persistentMapOf<String, AppDecimal>() }
                         .toMutableMap()
 
@@ -442,7 +442,7 @@ class CrmMetricsRepositoryImpl(
                         }
                         .toPersistentMap()
 
-                    val averageTicketWithMissingMonthsMap = now.getLast12Months()
+                    val averageTicketWithMissingMonthsMap = dateProvider.now().getLast12Months()
                         .associateWith { 0.toDecimal() }
                         .toMutableMap()
 

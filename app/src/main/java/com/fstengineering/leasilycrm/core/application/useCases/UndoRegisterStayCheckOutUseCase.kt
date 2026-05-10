@@ -1,27 +1,27 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
+import com.fstengineering.leasilycrm.core.application.models.commands.UndoCheckOutCommand
+import com.fstengineering.leasilycrm.core.application.repositories.AssistanceSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
+import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.AssistanceCommandRepository
+import kotlinx.collections.immutable.persistentListOf
 
 class UndoRegisterStayCheckOutUseCase(
     private val occupiedPeriodSharedCommandRepository: OccupiedPeriodSharedCommandRepository,
-    private val assistanceCommandRepository: AssistanceCommandRepository,
-) {
-    suspend operator fun invoke(
-        stayId: Long,
-        tenantId: Long?,
-    ): AppResult<Unit, ApplicationError> {
-        occupiedPeriodSharedCommandRepository.undoRegisterCheckOut(stayId)
-            .onError { return AppResult.Error(error = it) }
+    private val assistanceSharedCommandRepository: AssistanceSharedCommandRepository,
+) : CommandUseCase<UndoCheckOutCommand> {
+    override suspend fun invoke(command: UndoCheckOutCommand): AppResultCompound<Unit, BusinessRuleError> {
+        occupiedPeriodSharedCommandRepository.undoRegisterCheckOut(command.stayId)
+            .onError { return AppResultCompound.Errors(persistentListOf(it)) }
 
-        if (tenantId != null) {
-            assistanceCommandRepository.unfinishAssistanceByTenantId(tenantId)
-                .onError { return AppResult.Error(error = it) }
+        if (command.tenantId != null) {
+            assistanceSharedCommandRepository.unfinishAssistanceByTenantId(command.tenantId)
+                .onError { return AppResultCompound.Errors(persistentListOf(it)) }
         }
 
-        return AppResult.Success(data = Unit)
+        return AppResultCompound.Success(data = Unit)
     }
 }

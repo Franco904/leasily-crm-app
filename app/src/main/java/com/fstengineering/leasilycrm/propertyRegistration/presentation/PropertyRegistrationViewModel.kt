@@ -4,17 +4,19 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyCommandModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.queries.PropertyArgs
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyOwnerQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyQueryRepository
-import com.fstengineering.leasilycrm.propertyRegistration.application.useCases.ReadPropertyUseCase
-import com.fstengineering.leasilycrm.propertyRegistration.application.useCases.WritePropertyUseCase
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.mappers.toCommandModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
@@ -31,8 +33,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PropertyRegistrationViewModel(
-    private val readProperty: ReadPropertyUseCase,
-    private val writeProperty: WritePropertyUseCase,
+    private val readProperty: QueryUseCase<PropertyArgs, PropertyReadModel>,
+    private val writeProperty: CommandUseCase<PropertyCommandModel>,
     private val propertyQueryRepository: PropertyQueryRepository,
     private val propertyOwnerQueryRepository: PropertyOwnerQueryRepository,
 ) : ViewModel() {

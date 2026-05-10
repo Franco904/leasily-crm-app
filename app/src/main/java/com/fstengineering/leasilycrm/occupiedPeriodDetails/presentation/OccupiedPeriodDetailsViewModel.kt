@@ -2,14 +2,18 @@ package com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.application.models.commands.RegisterCheckOutCommand
+import com.fstengineering.leasilycrm.core.application.models.commands.UndoCheckOutCommand
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.queries.OccupiedPeriodArgs
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodQueryRepository
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.WatchOccupiedPeriodUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.OccupiedPeriodDetailsUiState
 import kotlinx.coroutines.channels.Channel
@@ -20,9 +24,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OccupiedPeriodDetailsViewModel(
-    private val watchOccupiedPeriod: WatchOccupiedPeriodUseCase,
-    private val registerStayCheckOut: RegisterStayCheckOutUseCase,
-    private val undoRegisterStayCheckOut: UndoRegisterStayCheckOutUseCase,
+    private val watchOccupiedPeriod: QueryFlowUseCase<OccupiedPeriodArgs, OccupiedPeriodReadModel?>,
+    private val registerStayCheckOut: CommandUseCase<RegisterCheckOutCommand>,
+    private val undoRegisterStayCheckOut: CommandUseCase<UndoCheckOutCommand>,
     private val occupiedPeriodSharedCommandRepository: OccupiedPeriodSharedCommandRepository,
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
 ) : ViewModel() {
@@ -49,7 +53,7 @@ class OccupiedPeriodDetailsViewModel(
 
     private fun watchOccupiedPeriod(stayId: Long) {
         viewModelScope.launch {
-            watchOccupiedPeriod.invoke(stayId).collect { result ->
+            watchOccupiedPeriod.invoke(OccupiedPeriodArgs(stayId)).collect { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
                     .onSuccess { storedPeriod ->
@@ -107,10 +111,12 @@ class OccupiedPeriodDetailsViewModel(
 
         viewModelScope.launch {
             registerStayCheckOut(
-                stayId = loaded.id,
-                tenantId = loaded.tenantId,
+                RegisterCheckOutCommand(
+                    stayId = loaded.id,
+                    tenantId = loaded.tenantId
+                )
             )
-                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                .onApplicationError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
                 .onSuccess { _uiEvents.trySend(UiEvents.RegisterCheckOutSuccess) }
         }
 
@@ -127,10 +133,12 @@ class OccupiedPeriodDetailsViewModel(
 
         viewModelScope.launch {
             undoRegisterStayCheckOut(
-                stayId = loaded.id,
-                tenantId = loaded.tenantId,
+                UndoCheckOutCommand(
+                    stayId = loaded.id,
+                    tenantId = loaded.tenantId
+                )
             )
-                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                .onApplicationError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
         }
     }
 
