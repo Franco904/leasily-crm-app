@@ -1,12 +1,12 @@
 package com.fstengineering.leasilycrm.core.application.useCases
 
 import com.fstengineering.leasilycrm.core.application.models.commands.UndoCheckOutCommand
+import com.fstengineering.leasilycrm.core.application.repositories.AssistanceSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.application.repositories.AssistanceSharedCommandRepository
 import kotlinx.collections.immutable.persistentListOf
 
 class UndoRegisterStayCheckOutUseCase(
