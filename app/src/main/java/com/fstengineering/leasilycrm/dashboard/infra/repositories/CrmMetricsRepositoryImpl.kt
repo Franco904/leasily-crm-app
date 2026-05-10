@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.dashboard.infra.repositories
 
 import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimal

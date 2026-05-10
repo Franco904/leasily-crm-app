@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.OccupiedPeriodListProjection
@@ -54,7 +54,11 @@ class StayDatabaseDataSourceImpl(
     }
 
     override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<List<OccupiedPeriodNotificationProjection>, InfraError> {
-        return onDatabaseSafe { dao.getAllTodayCheckInsAndCheckOutsToNotify(dateTimeProvider.now().toEpochMillisUTC()) }
+        return onDatabaseSafe {
+            dao.getAllTodayCheckInsAndCheckOutsToNotify(
+                dateTimeProvider.now().toEpochMillisUTC()
+            )
+        }
     }
 
     override fun watchAllPastCheckInCheckOutNotDoneCounts(): Flow<AppResult<StayCheckInCheckOutCountsProjection, InfraError>> {
