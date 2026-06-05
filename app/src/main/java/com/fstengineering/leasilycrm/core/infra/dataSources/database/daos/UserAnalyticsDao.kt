@@ -15,7 +15,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface CrmMetricsDao {
+interface UserAnalyticsDao {
     /*
      * Leads
      */

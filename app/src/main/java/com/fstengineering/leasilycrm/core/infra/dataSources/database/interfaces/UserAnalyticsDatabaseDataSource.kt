@@ -14,7 +14,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import kotlinx.coroutines.flow.Flow
 
-interface CrmMetricsDatabaseDataSource {
+interface UserAnalyticsDatabaseDataSource {
     fun watchGeneratedLeadsPerMonth(): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>, InfraError>
 
     fun watchGeneratedLeadsPerTenantTagPerMonth(): AppResult<Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>, InfraError>

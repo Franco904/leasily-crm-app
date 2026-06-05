@@ -16,14 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart
-import com.fstengineering.leasilycrm.core.presentation.theme.teal
+import com.fstengineering.leasilycrm.core.presentation.theme.deepOrange
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelAbbreviationByNumber
 import ir.ehsannarmani.compose_charts.models.Bars
@@ -32,18 +34,18 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun MonthlyCommissionInvoiceMetricCard(
-    commissionInvoicePerMonth: ImmutableMap<CalendarMonthYear, AppDecimal>,
+fun MonthlyNewStayBookingsAnalyticsCard(
+    newStayBookingsPerMonth: ImmutableMap<CalendarMonthYear, Int>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val teal = teal
+    val deepOrange = deepOrange
 
-    val totalLast12Months = commissionInvoicePerMonth.entries.sumOf { it.value.decimal }
+    val totalLast12Months = newStayBookingsPerMonth.entries.sumOf { it.value }
 
-    val rows = remember(commissionInvoicePerMonth) {
-        val rows = commissionInvoicePerMonth.entries
-            .map { (monthYear, commissionInvoice) ->
+    val rows = remember(newStayBookingsPerMonth) {
+        val rows = newStayBookingsPerMonth.entries
+            .map { (monthYear, bookingsCount) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
@@ -51,10 +53,10 @@ fun MonthlyCommissionInvoiceMetricCard(
                         .capitalizeFirst(),
                     values = persistentListOf(
                         Bars.Data(
-                            value = commissionInvoice.doubleValue,
+                            value = bookingsCount.toDouble(),
                             color = Brush.linearGradient(
-                                0.0f to teal,
-                                1.0f to teal,
+                                0.0f to deepOrange,
+                                1.0f to deepOrange,
                             ),
                         ),
                     ),
@@ -74,18 +76,18 @@ fun MonthlyCommissionInvoiceMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_commission_invoice_metric_title),
+                text = stringResource(R.string.dashboard_monthly_new_bookings_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.dashboard_monthly_commission_invoice_metric_description),
+                text = stringResource(R.string.dashboard_monthly_new_bookings_metric_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(modifier = Modifier.height(24.dp))
             if (rows.isEmpty()) {
-                CrmMetricChartEmptySection(
+                UserAnalyticsChartEmptySection(
                     icon = Icons.Outlined.BarChart,
                     labelId = R.string.dashboard_crm_metric_chart_last_12_months_empty_text,
                     modifier = Modifier
@@ -99,15 +101,25 @@ fun MonthlyCommissionInvoiceMetricCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = stringResource(
-                        R.string.dashboard_plus_generic_body_text,
-                        stringResource(
-                            R.string.reais_currency_value,
-                            totalLast12Months
-                                .toString()
-                                .replace(".", ","),
-                        ),
-                    ),
+                    text = buildAnnotatedString {
+                        val firstStyle = SpanStyle(
+                            fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                            color = MaterialTheme.colorScheme.tertiary,
+                        )
+                        val firstText = stringResource(
+                            R.string.dashboard_plus_generic_body_text,
+                            totalLast12Months,
+                        )
+
+                        val secondStyle = SpanStyle(
+                            fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                            color = MaterialTheme.colorScheme.tertiary,
+                        )
+                        val secondText = stringResource(R.string.dashboard_stay_bookings_body_text)
+
+                        withStyle(firstStyle) { append(firstText) }
+                        withStyle(secondStyle) { append("  $secondText") }
+                    },
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.tertiary,
                 )
@@ -120,8 +132,8 @@ fun MonthlyCommissionInvoiceMetricCard(
                 )
                 Spacer(modifier = Modifier.height(32.dp))
                 ColoredLabel(
-                    color = teal,
-                    label = stringResource(R.string.dashboard_commission_invoice_body_text),
+                    color = deepOrange,
+                    label = stringResource(R.string.dashboard_stay_bookings_qtd_body_text),
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                 )

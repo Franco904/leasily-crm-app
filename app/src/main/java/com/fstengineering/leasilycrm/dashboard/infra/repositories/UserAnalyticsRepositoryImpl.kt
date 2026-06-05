@@ -7,8 +7,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimal
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
-import com.fstengineering.leasilycrm.dashboard.application.repositories.CrmMetricsRepository
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.UserAnalyticsDatabaseDataSource
+import com.fstengineering.leasilycrm.dashboard.application.repositories.UserAnalyticsRepository
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentMap
@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlin.math.roundToInt
 
-class CrmMetricsRepositoryImpl(
-    private val databaseDataSource: CrmMetricsDatabaseDataSource,
+class UserAnalyticsRepositoryImpl(
+    private val databaseDataSource: UserAnalyticsDatabaseDataSource,
     private val dateProvider: AppDateProvider,
-) : CrmMetricsRepository {
+) : UserAnalyticsRepository {
     override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>> =
         flow {
             val generatedLeadsPerMonthFlow = databaseDataSource

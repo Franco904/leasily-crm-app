@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceD
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceInteractionDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceSearchedNeighborhoodDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceSentPropertyCrossRefDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.CrmMetricsDatabaseDataSourceImpl
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.UserAnalyticsDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyCharacteristicCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyFileDatabaseDataSourceImpl
@@ -24,7 +24,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceInteractionDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSearchedNeighborhoodDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSentPropertyCrossRefDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.CrmMetricsDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.UserAnalyticsDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyCharacteristicCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyFileDatabaseDataSource
@@ -60,8 +60,8 @@ val databaseDataSourceModule = module {
         AssistanceSentPropertyCrossRefDatabaseDataSourceImpl(dao = get())
     }
 
-    single<CrmMetricsDatabaseDataSource> {
-        CrmMetricsDatabaseDataSourceImpl(dao = get())
+    single<UserAnalyticsDatabaseDataSource> {
+        UserAnalyticsDatabaseDataSourceImpl(dao = get())
     }
 
     single<PropertyCharacteristicCrossRefDatabaseDataSource> {

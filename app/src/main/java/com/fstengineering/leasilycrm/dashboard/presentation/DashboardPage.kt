@@ -25,15 +25,15 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.LeadContactChannelsDistributionPieChartCard
-import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyAverageTicketMetricCard
-import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyCommissionInvoiceMetricCard
-import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyCommissionInvoicePerTenantTagMetricCard
-import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyCommissionInvoicePerTop3NeighborhoodsMetricCard
-import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyLeadGenerationMetricCard
-import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyLeadGenerationPerTenantTagMetricCard
-import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsMetricCard
-import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsPerTenantSegmentMetricCard
-import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard
+import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyAverageTicketAnalyticsCard
+import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyCommissionInvoiceAnalyticsCard
+import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyCommissionInvoicePerTenantTagAnalyticsCard
+import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyCommissionInvoicePerTop3NeighborhoodsAnalyticsCard
+import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyLeadGenerationAnalyticsCard
+import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyLeadGenerationPerTenantTagAnalyticsCard
+import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsAnalyticsCard
+import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsPerTenantSegmentAnalyticsCard
+import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsPerTop3NeighborhoodsAnalyticsCard
 import com.fstengineering.leasilycrm.home.presentation.composables.HomeNavCard
 
 @Composable
@@ -123,10 +123,10 @@ fun DashboardPage(
         }
 
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { MonthlyLeadGenerationMetricCard(generatedLeadsPerMonth) }
+        item { MonthlyLeadGenerationAnalyticsCard(generatedLeadsPerMonth) }
         item { Spacer(modifier = Modifier.height(8.dp)) }
         item {
-            MonthlyLeadGenerationPerTenantTagMetricCard(
+            MonthlyLeadGenerationPerTenantTagAnalyticsCard(
                 generatedLeadsPerTenantTagPerMonth
             )
         }
@@ -147,16 +147,16 @@ fun DashboardPage(
         }
 
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { MonthlyNewStayBookingsMetricCard(newStayBookingsPerMonth) }
+        item { MonthlyNewStayBookingsAnalyticsCard(newStayBookingsPerMonth) }
         item { Spacer(modifier = Modifier.height(8.dp)) }
         item {
-            MonthlyNewStayBookingsPerTenantSegmentMetricCard(
+            MonthlyNewStayBookingsPerTenantSegmentAnalyticsCard(
                 newStayBookingsPerTenantTagPerMonth
             )
         }
         item { Spacer(modifier = Modifier.height(8.dp)) }
         item {
-            MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
+            MonthlyNewStayBookingsPerTop3NeighborhoodsAnalyticsCard(
                 newStayBookingsPerTop3NeighborhoodsPerMonth
             )
         }
@@ -175,21 +175,21 @@ fun DashboardPage(
         }
 
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { MonthlyCommissionInvoiceMetricCard(commissionInvoicePerMonth) }
+        item { MonthlyCommissionInvoiceAnalyticsCard(commissionInvoicePerMonth) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item {
-            MonthlyCommissionInvoicePerTenantTagMetricCard(
+            MonthlyCommissionInvoicePerTenantTagAnalyticsCard(
                 commissionInvoicePerTenantTagPerMonth
             )
         }
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item {
-            MonthlyCommissionInvoicePerTop3NeighborhoodsMetricCard(
+            MonthlyCommissionInvoicePerTop3NeighborhoodsAnalyticsCard(
                 commissionInvoicePerTop3NeighborhoodsPerMonth
             )
         }
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { MonthlyAverageTicketMetricCard(averageTicketPerMonth) }
+        item { MonthlyAverageTicketAnalyticsCard(averageTicketPerMonth) }
 
         item { Spacer(modifier = Modifier.height(8.dp)) }
     }

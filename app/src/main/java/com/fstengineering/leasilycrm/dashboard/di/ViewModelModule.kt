@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val dashboardViewModelModule = module {
     viewModel {
-        DashboardViewModel(crmMetricsRepository = get())
+        DashboardViewModel(userAnalyticsRepository = get())
     }
 }

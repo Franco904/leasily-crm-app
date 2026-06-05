@@ -16,16 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart
-import com.fstengineering.leasilycrm.core.presentation.theme.indigo
+import com.fstengineering.leasilycrm.core.presentation.theme.deepPurple
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelAbbreviationByNumber
 import ir.ehsannarmani.compose_charts.models.Bars
@@ -34,18 +32,16 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
-fun MonthlyLeadGenerationMetricCard(
-    generatedLeadsPerMonth: ImmutableMap<CalendarMonthYear, Int>,
+fun MonthlyAverageTicketAnalyticsCard(
+    averageTicketPerMonth: ImmutableMap<CalendarMonthYear, AppDecimal>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val indigoColor = indigo
+    val deepPurple = deepPurple
 
-    val totalLast12Months = generatedLeadsPerMonth.entries.sumOf { it.value }
-
-    val rows = remember(generatedLeadsPerMonth) {
-        val rows = generatedLeadsPerMonth.entries
-            .map { (monthYear, leadsCount) ->
+    val rows = remember(averageTicketPerMonth) {
+        val rows = averageTicketPerMonth.entries
+            .map { (monthYear, averageTicket) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
@@ -53,10 +49,10 @@ fun MonthlyLeadGenerationMetricCard(
                         .capitalizeFirst(),
                     values = persistentListOf(
                         Bars.Data(
-                            value = leadsCount.toDouble(),
+                            value = averageTicket.doubleValue,
                             color = Brush.linearGradient(
-                                0.0f to indigoColor,
-                                1.0f to indigoColor,
+                                0.0f to deepPurple,
+                                1.0f to deepPurple,
                             ),
                         ),
                     ),
@@ -76,54 +72,24 @@ fun MonthlyLeadGenerationMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_lead_generation_metric_title),
+                text = stringResource(R.string.dashboard_average_monthly_ticket_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.dashboard_monthly_lead_generation_metric_description),
+                text = stringResource(R.string.dashboard_average_monthly_ticket_metric_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(modifier = Modifier.height(24.dp))
             if (rows.isEmpty()) {
-                CrmMetricChartEmptySection(
+                UserAnalyticsChartEmptySection(
                     icon = Icons.Outlined.BarChart,
                     labelId = R.string.dashboard_crm_metric_chart_last_12_months_empty_text,
                     modifier = Modifier
                         .padding(vertical = 64.dp)
                 )
             } else {
-                Text(
-                    text = stringResource(R.string.dashboard_last_12_months_body_text),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = buildAnnotatedString {
-                        val firstStyle = SpanStyle(
-                            fontSize = MaterialTheme.typography.headlineLarge.fontSize,
-                            color = MaterialTheme.colorScheme.tertiary,
-                        )
-                        val firstText = stringResource(
-                            R.string.dashboard_plus_generic_body_text,
-                            totalLast12Months,
-                        )
-
-                        val secondStyle = SpanStyle(
-                            fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                            color = MaterialTheme.colorScheme.tertiary,
-                        )
-                        val secondText = stringResource(R.string.dashboard_leads_body_text)
-
-                        withStyle(firstStyle) { append(firstText) }
-                        withStyle(secondStyle) { append("  $secondText") }
-                    },
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.tertiary,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
                 AppRowChart(
                     rows = rows,
                     height = 520.dp,
@@ -132,8 +98,8 @@ fun MonthlyLeadGenerationMetricCard(
                 )
                 Spacer(modifier = Modifier.height(32.dp))
                 ColoredLabel(
-                    color = indigoColor,
-                    label = stringResource(R.string.dashboard_leads_qtd_body_text),
+                    color = deepPurple,
+                    label = stringResource(R.string.dashboard_average_ticket_body_text),
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                 )

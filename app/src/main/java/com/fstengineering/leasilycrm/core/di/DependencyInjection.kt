@@ -112,7 +112,7 @@ fun Application.configureDependencyInjection() {
             homeRepositoryModule,
             homeViewModelModule,
 
-            // Feature: dashboard
+            // Feature: userAnalytics
             dashboardRepositoryModule,
             dashboardViewModelModule,
 

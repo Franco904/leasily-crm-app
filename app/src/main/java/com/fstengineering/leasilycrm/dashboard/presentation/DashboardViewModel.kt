@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
-import com.fstengineering.leasilycrm.dashboard.application.repositories.CrmMetricsRepository
+import com.fstengineering.leasilycrm.dashboard.application.repositories.UserAnalyticsRepository
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(
-    private val crmMetricsRepository: CrmMetricsRepository,
+    private val userAnalyticsRepository: UserAnalyticsRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -98,7 +98,7 @@ class DashboardViewModel(
 
     private fun watchGeneratedLeadsPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchGeneratedLeadsPerMonth().collect { result ->
+            userAnalyticsRepository.watchGeneratedLeadsPerMonth().collect { result ->
                 result
                     .onSuccess { generatedLeadsPerMonth ->
                         _generatedLeadsPerMonth.update { generatedLeadsPerMonth }
@@ -109,7 +109,7 @@ class DashboardViewModel(
 
     private fun watchGeneratedLeadsPerTenantTagPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchGeneratedLeadsPerTenantTagPerMonth().collect { result ->
+            userAnalyticsRepository.watchGeneratedLeadsPerTenantTagPerMonth().collect { result ->
                 result
                     .onSuccess { generatedLeadsPerTenantSegmentPerMonth ->
                         _generatedLeadsPerTenantTagPerMonth.update {
@@ -122,7 +122,7 @@ class DashboardViewModel(
 
     private fun watchLeadContactChannelDistribution() {
         viewModelScope.launch {
-            crmMetricsRepository.watchLeadContactChannelDistribution().collect { result ->
+            userAnalyticsRepository.watchLeadContactChannelDistribution().collect { result ->
                 result
                     .onSuccess { leadContactChannelDistribution ->
                         _leadContactChannelDistribution.update { leadContactChannelDistribution }
@@ -133,7 +133,7 @@ class DashboardViewModel(
 
     private fun watchNewStayBookingsPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchNewStayBookingsPerMonth().collect { result ->
+            userAnalyticsRepository.watchNewStayBookingsPerMonth().collect { result ->
                 result
                     .onSuccess { newStayBookingsPerMonth ->
                         _newStayBookingsPerMonth.update { newStayBookingsPerMonth }
@@ -144,7 +144,7 @@ class DashboardViewModel(
 
     private fun watchNewStayBookingsPerTenantTagPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchNewStayBookingsPerTenantTagPerMonth().collect { result ->
+            userAnalyticsRepository.watchNewStayBookingsPerTenantTagPerMonth().collect { result ->
                 result
                     .onSuccess { newStayBookingsPerTenantSegmentPerMonth ->
                         _newStayBookingsPerTenantTagPerMonth.update {
@@ -157,7 +157,7 @@ class DashboardViewModel(
 
     private fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
+            userAnalyticsRepository.watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
                 .collect { result ->
                     result
                         .onSuccess { newStayBookingsPerTop3NeighborhoodsPerMonth ->
@@ -171,7 +171,7 @@ class DashboardViewModel(
 
     private fun watchCommissionInvoicePerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchCommissionInvoicePerMonth().collect { result ->
+            userAnalyticsRepository.watchCommissionInvoicePerMonth().collect { result ->
                 result
                     .onSuccess { commissionInvoicePerMonth ->
                         _commissionInvoicePerMonth.update { commissionInvoicePerMonth }
@@ -182,7 +182,7 @@ class DashboardViewModel(
 
     private fun watchCommissionInvoicePerTenantTagPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchCommissionInvoicePerTenantTagPerMonth()
+            userAnalyticsRepository.watchCommissionInvoicePerTenantTagPerMonth()
                 .collect { result ->
                     result
                         .onSuccess { commissionInvoicePerTenantSegmentPerMonth ->
@@ -196,7 +196,7 @@ class DashboardViewModel(
 
     private fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
+            userAnalyticsRepository.watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
                 .collect { result ->
                     result
                         .onSuccess { commissionInvoicePerTop3NeighborhoodsPerMonth ->
@@ -210,7 +210,7 @@ class DashboardViewModel(
 
     private fun watchAverageTicketPerMonth() {
         viewModelScope.launch {
-            crmMetricsRepository.watchAverageTicketPerMonth().collect { result ->
+            userAnalyticsRepository.watchAverageTicketPerMonth().collect { result ->
                 result
                     .onSuccess { averageTicketPerMonth ->
                         _averageTicketPerMonth.update { averageTicketPerMonth }

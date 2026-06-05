@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CrmMetricChartEmptySection(
+fun UserAnalyticsChartEmptySection(
     icon: ImageVector,
     labelId: Int,
     modifier: Modifier = Modifier,

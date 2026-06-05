@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart
@@ -35,16 +36,16 @@ import kotlinx.collections.immutable.toPersistentSet
 import kotlin.math.roundToInt
 
 @Composable
-fun MonthlyLeadGenerationPerTenantTagMetricCard(
-    generatedLeadsPerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
+fun MonthlyCommissionInvoicePerTenantTagAnalyticsCard(
+    commissionInvoicePerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val rowColors = customColorsV2
 
-    val tenantSegments = remember(generatedLeadsPerTenantSegmentPerMonth) {
-        generatedLeadsPerTenantSegmentPerMonth.entries
-            .flatMap { it.value.entries.map { tenantSegmentToCount -> tenantSegmentToCount.key } }
+    val tenantSegments = remember(commissionInvoicePerTenantSegmentPerMonth) {
+        commissionInvoicePerTenantSegmentPerMonth.entries
+            .flatMap { it.value.entries.map { tenantSegmentToInvoice -> tenantSegmentToInvoice.key } }
             .toPersistentSet()
     }
 
@@ -55,16 +56,16 @@ fun MonthlyLeadGenerationPerTenantTagMetricCard(
         }
         .toPersistentMap()
 
-    val rows = remember(generatedLeadsPerTenantSegmentPerMonth) {
-        val rows = generatedLeadsPerTenantSegmentPerMonth.entries
-            .map { (monthYear, tenantSegmentToLeadsCount) ->
+    val rows = remember(commissionInvoicePerTenantSegmentPerMonth) {
+        val rows = commissionInvoicePerTenantSegmentPerMonth.entries
+            .map { (monthYear, tenantSegmentToCommissionInvoice) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
                         .lowercase()
                         .capitalizeFirst(),
-                    values = tenantSegmentToLeadsCount.entries
-                        .mapIndexed { i, (tenantSegmentName, leadsCount) ->
+                    values = tenantSegmentToCommissionInvoice.entries
+                        .mapIndexed { i, (tenantSegmentName, commissionInvoice) ->
                             val rowColor = tenantSegmentsToColors.entries
                                 .find { it.key == tenantSegmentName }
                                 ?.value
@@ -72,7 +73,7 @@ fun MonthlyLeadGenerationPerTenantTagMetricCard(
 
                             Bars.Data(
                                 label = tenantSegmentName,
-                                value = leadsCount.toDouble(),
+                                value = commissionInvoice.doubleValue,
                                 color = Brush.linearGradient(
                                     0.0f to rowColor,
                                     1.0f to rowColor,
@@ -117,18 +118,18 @@ fun MonthlyLeadGenerationPerTenantTagMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_tag_metric_title),
+                text = stringResource(R.string.dashboard_monthly_commission_invoice_per_tenant_tag_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_tag_metric_description),
+                text = stringResource(R.string.dashboard_monthly_commission_invoice_per_tenant_tag_metric_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(modifier = Modifier.height(24.dp))
             if (rows.isEmpty()) {
-                CrmMetricChartEmptySection(
+                UserAnalyticsChartEmptySection(
                     icon = Icons.Outlined.BarChart,
                     labelId = R.string.dashboard_crm_metric_chart_last_12_months_empty_text,
                     modifier = Modifier

@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.coroutines.flow.Flow
 
-interface CrmMetricsRepository {
+interface UserAnalyticsRepository {
     fun watchGeneratedLeadsPerMonth():
             Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>>
 

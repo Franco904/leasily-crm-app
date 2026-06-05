@@ -22,7 +22,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.AppRowChart
 import com.fstengineering.leasilycrm.core.presentation.composables.charts.labels.AppRowChartChunkedColoredLabels
-import com.fstengineering.leasilycrm.core.presentation.theme.customColorsV4
+import com.fstengineering.leasilycrm.core.presentation.theme.customColorsV2
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelAbbreviationByNumber
 import ir.ehsannarmani.compose_charts.models.Bars
@@ -35,44 +35,44 @@ import kotlinx.collections.immutable.toPersistentSet
 import kotlin.math.roundToInt
 
 @Composable
-fun MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
-    newStayBookingsPerTop3NeighborhoodsPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
+fun MonthlyLeadGenerationPerTenantTagAnalyticsCard(
+    generatedLeadsPerTenantSegmentPerMonth: ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val rowColors = customColorsV4
+    val rowColors = customColorsV2
 
-    val neighborhoods = remember(newStayBookingsPerTop3NeighborhoodsPerMonth) {
-        newStayBookingsPerTop3NeighborhoodsPerMonth.entries
-            .flatMap { it.value.entries.map { neighborhoodToInvoice -> neighborhoodToInvoice.key } }
+    val tenantSegments = remember(generatedLeadsPerTenantSegmentPerMonth) {
+        generatedLeadsPerTenantSegmentPerMonth.entries
+            .flatMap { it.value.entries.map { tenantSegmentToCount -> tenantSegmentToCount.key } }
             .toPersistentSet()
     }
 
-    val neighborhoodsToColors = neighborhoods
-        .associateWith { neighborhood ->
-            val i = neighborhoods.indexOf(neighborhood)
+    val tenantSegmentsToColors = tenantSegments
+        .associateWith { tenantSegment ->
+            val i = tenantSegments.indexOf(tenantSegment)
             rowColors[i % rowColors.size]
         }
         .toPersistentMap()
 
-    val rows = remember(newStayBookingsPerTop3NeighborhoodsPerMonth) {
-        val rows = newStayBookingsPerTop3NeighborhoodsPerMonth.entries
-            .map { (monthYear, neighborhoodToBookingsCount) ->
+    val rows = remember(generatedLeadsPerTenantSegmentPerMonth) {
+        val rows = generatedLeadsPerTenantSegmentPerMonth.entries
+            .map { (monthYear, tenantSegmentToLeadsCount) ->
                 Bars(
                     label = context
                         .getMonthLabelAbbreviationByNumber(monthNumber = monthYear.month)
                         .lowercase()
                         .capitalizeFirst(),
-                    values = neighborhoodToBookingsCount.entries
-                        .mapIndexed { i, (neighborhoodName, bookingsCount) ->
-                            val rowColor = neighborhoodsToColors.entries
-                                .find { it.key == neighborhoodName }
+                    values = tenantSegmentToLeadsCount.entries
+                        .mapIndexed { i, (tenantSegmentName, leadsCount) ->
+                            val rowColor = tenantSegmentsToColors.entries
+                                .find { it.key == tenantSegmentName }
                                 ?.value
                                 ?: rowColors[i % rowColors.size]
 
                             Bars.Data(
-                                label = neighborhoodName,
-                                value = bookingsCount.toDouble(),
+                                label = tenantSegmentName,
+                                value = leadsCount.toDouble(),
                                 color = Brush.linearGradient(
                                     0.0f to rowColor,
                                     1.0f to rowColor,
@@ -87,21 +87,21 @@ fun MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
         rows
     }
 
-    val neighborhoodsWithColorsChunked = remember(neighborhoodsToColors) {
+    val tenantSegmentsToColorsChunked = remember(tenantSegmentsToColors) {
         when {
-            neighborhoodsToColors.entries.isEmpty() -> {
+            tenantSegmentsToColors.entries.isEmpty() -> {
                 persistentListOf(persistentListOf(), persistentListOf())
             }
 
-            neighborhoodsToColors.entries.size == 1 -> {
-                val first = neighborhoodsToColors.entries.first()
+            tenantSegmentsToColors.entries.size == 1 -> {
+                val first = tenantSegmentsToColors.entries.first()
                 persistentListOf(persistentListOf(first), persistentListOf())
             }
 
             else -> {
-                neighborhoodsToColors
+                tenantSegmentsToColors
                     .entries
-                    .chunked((neighborhoodsToColors.entries.size.toDouble() / 2).roundToInt())
+                    .chunked((tenantSegmentsToColors.entries.size.toDouble() / 2).roundToInt())
                     .map { it.toImmutableList() }
                     .toImmutableList()
             }
@@ -117,18 +117,18 @@ fun MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.dashboard_monthly_new_bookings_per_top3_neighborhoods_metric_title),
+                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_tag_metric_title),
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.dashboard_monthly_new_bookings_per_top3_neighborhoods_metric_description),
+                text = stringResource(R.string.dashboard_monthly_lead_generation_per_tenant_tag_metric_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(modifier = Modifier.height(24.dp))
             if (rows.isEmpty()) {
-                CrmMetricChartEmptySection(
+                UserAnalyticsChartEmptySection(
                     icon = Icons.Outlined.BarChart,
                     labelId = R.string.dashboard_crm_metric_chart_last_12_months_empty_text,
                     modifier = Modifier
@@ -137,17 +137,17 @@ fun MonthlyNewStayBookingsPerTop3NeighborhoodsMetricCard(
             } else {
                 AppRowChart(
                     rows = rows,
-                    rowThickness = (16.0 / (neighborhoodsToColors.size.toDouble() / 2.5))
+                    rowThickness = (16.0 / (tenantSegmentsToColors.size.toDouble() / 2.5))
                         .coerceIn(16.0..28.0).dp,
-                    height = (520.0 + (12.0 * rows.size.toDouble() * neighborhoodsToColors.size.toDouble()))
+                    height = (520.0 + (12.0 * rows.size.toDouble() * tenantSegmentsToColors.size.toDouble()))
                         .coerceAtLeast(520.0).dp,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                 )
             }
-            if (neighborhoodsWithColorsChunked.isNotEmpty()) {
+            if (tenantSegmentsToColorsChunked.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(32.dp))
-                AppRowChartChunkedColoredLabels(rowsChunked = neighborhoodsWithColorsChunked)
+                AppRowChartChunkedColoredLabels(rowsChunked = tenantSegmentsToColorsChunked)
             }
         }
     }

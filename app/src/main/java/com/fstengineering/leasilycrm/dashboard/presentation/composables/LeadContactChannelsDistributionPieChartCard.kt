@@ -113,7 +113,7 @@ fun LeadContactChannelsDistributionPieChartCard(
             )
             Spacer(modifier = Modifier.height(32.dp))
             if (pies.isEmpty()) {
-                CrmMetricChartEmptySection(
+                UserAnalyticsChartEmptySection(
                     icon = Icons.Outlined.PieChart,
                     labelId = R.string.dashboard_crm_metric_chart_empty_text,
                     modifier = Modifier
