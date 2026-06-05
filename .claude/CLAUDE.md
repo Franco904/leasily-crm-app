@@ -52,8 +52,6 @@ A estrutura de pastas de cada módulo varia conforme o padrão de lógica de neg
 
 ### Orientação ao Domínio
 
-
-
 Em módulos com Modelo de Domínio (subdomínios Core), a dependência flui de fora para dentro: `infra → application → domain ← application ← presentation`.
 
 - **domain**: objetos Kotlin puros. Sem dependência de frameworks ou infraestrutura. Contém as regras de negócio.

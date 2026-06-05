@@ -21,7 +21,7 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
         activityContext: Activity,
         mustEnableAutoSelect: Boolean,
     ): AppResult<String, CredentialsError> {
-        val credentialManager = CredentialManager.Companion.create(activityContext)
+        val credentialManager = CredentialManager.create(activityContext)
 
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setServerClientId(BuildConfig.CLIENT_ID)
@@ -42,7 +42,7 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
 
             val credential = result.credential
             val isSupportedCredentialType = credential is CustomCredential
-                    && credential.type == GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+                    && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 
             if (!isSupportedCredentialType) {
                 if (BuildConfig.DEBUG) Log.e(TAG, "Unsupported credential type: ${credential.type}")
@@ -51,7 +51,7 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
             }
 
             // Extracting the ID token to validate and authenticate on the back-end server.
-            val googleIdTokenCredential = GoogleIdTokenCredential.Companion
+            val googleIdTokenCredential = GoogleIdTokenCredential
                 .createFrom(credential.data)
 
             return AppResult.Success(data = googleIdTokenCredential.idToken)
@@ -66,7 +66,7 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
     override suspend fun clearGoogleCredentialState(
         activityContext: Activity,
     ): AppResult<Unit, CredentialsError> {
-        val credentialManager = CredentialManager.Companion.create(activityContext)
+        val credentialManager = CredentialManager.create(activityContext)
         val clearCredentialStateRequest = ClearCredentialStateRequest()
 
         try {
