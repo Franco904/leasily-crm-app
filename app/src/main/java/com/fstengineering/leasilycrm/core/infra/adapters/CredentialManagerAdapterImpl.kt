@@ -23,10 +23,32 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
     ): AppResult<String, CredentialsError> {
         val credentialManager = CredentialManager.create(activityContext)
 
+        val result = getCredential(
+            credentialManager,
+            activityContext,
+            autoSelect = mustEnableAutoSelect,
+        )
+
+        if (result is AppResult.Error
+            && result.error == CredentialsError.NoCredentialsFound
+            && mustEnableAutoSelect
+        ) {
+            // Auto-select fails when the device has multiple Google accounts; retry with the picker.
+            return getCredential(credentialManager, activityContext, autoSelect = false)
+        }
+
+        return result
+    }
+
+    private suspend fun getCredential(
+        credentialManager: CredentialManager,
+        activityContext: Activity,
+        autoSelect: Boolean,
+    ): AppResult<String, CredentialsError> {
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setServerClientId(BuildConfig.CLIENT_ID)
             .setFilterByAuthorizedAccounts(false)
-            .setAutoSelectEnabled(mustEnableAutoSelect)
+            .setAutoSelectEnabled(autoSelect)
             .setNonce(CryptoUtils.generateNonce())
             .build()
 
@@ -50,7 +72,6 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
                 return AppResult.Error(error = CredentialsError.UnknownError)
             }
 
-            // Extracting the ID token to validate and authenticate on the back-end server.
             val googleIdTokenCredential = GoogleIdTokenCredential
                 .createFrom(credential.data)
 
