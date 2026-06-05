@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 
 class UserQueryRepositoryImpl(
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
@@ -24,7 +25,10 @@ class UserQueryRepositoryImpl(
             .onSuccess { prefsFlow ->
                 emitAll(
                     prefsFlow
-                        .map { AppResult.Success<UserReadModel, ApplicationError>(data = it.toReadModel()) }
+                        .mapNotNull {
+                            val readModel = it.toReadModel() ?: return@mapNotNull null
+                            AppResult.Success<UserReadModel, ApplicationError>(data = readModel)
+                        }
                         .distinctUntilChanged()
                 )
             }

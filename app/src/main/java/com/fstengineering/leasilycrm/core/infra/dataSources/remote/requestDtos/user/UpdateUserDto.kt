@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdateUserDto(
-    val creciNumber: String?,
+    val creciNumber: String? = null,
 )
