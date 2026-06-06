@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.presentation.composables.HasCharacteristicRow
+import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
@@ -32,7 +33,7 @@ fun AssistancePreferredOtherCharacteristicsDetailsItems(
             Spacer(modifier = Modifier.height(16.dp))
             HasCharacteristicRow(
                 hasCharacteristic = true,
-                characteristicLabel = characteristic.name,
+                characteristicLabel = stringResource(characteristic.presentationLabel()),
             )
         }
     }

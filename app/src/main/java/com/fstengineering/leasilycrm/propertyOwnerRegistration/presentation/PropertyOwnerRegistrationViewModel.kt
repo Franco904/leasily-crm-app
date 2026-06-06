@@ -22,6 +22,7 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mode
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerErrorUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerField
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerFileUiState
+import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -54,9 +55,8 @@ class PropertyOwnerRegistrationViewModel(
     fun init(propertyOwnerId: Long?) {
         if (isInitialized) return
 
-        if (propertyOwnerId != null) {
-            getPropertyOwnerToEdit(propertyOwnerId)
-        }
+        if (propertyOwnerId != null) getPropertyOwnerToEdit(propertyOwnerId)
+        else _draftFormUiState.update { PropertyOwnerDraftFormUiState.Loaded.Empty }
 
         isInitialized = true
     }

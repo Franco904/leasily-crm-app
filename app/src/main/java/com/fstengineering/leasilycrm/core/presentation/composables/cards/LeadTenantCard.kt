@@ -42,7 +42,7 @@ fun LeadTenantCard(
     onNewAssistance: () -> Unit = {},
     onNewStay: () -> Unit = {},
     onViewStay: () -> Unit = {},
-    hasMoreOptionsMenu: Boolean = true,
+    hasMoreOptionsMenu: Boolean = false,
     hasAssistanceText: Boolean = false,
     hasPrimaryActions: Boolean = false,
 ) {
@@ -75,7 +75,7 @@ fun LeadTenantCard(
                 }
 
                 when {
-                    !leadTenant.hasUnfinishedAssistance -> {
+                    hasAssistanceText && !leadTenant.hasUnfinishedAssistance -> {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = stringResource(R.string.no_unfinished_assistance_text),

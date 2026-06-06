@@ -12,6 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
+import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyCommandModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.queries.PropertyArgs
@@ -66,6 +67,7 @@ class PropertyRegistrationViewModel(
         this.propertyId = propertyId
 
         if (propertyId != null) getPropertyToEdit(propertyId)
+        else _draftFormUiState.update { PropertyDraftFormUiState.Loaded.Empty }
 
         watchPropertyOwners()
         getPastNeighborhoods()

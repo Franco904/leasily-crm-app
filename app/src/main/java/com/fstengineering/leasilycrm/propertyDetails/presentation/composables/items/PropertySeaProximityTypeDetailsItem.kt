@@ -30,7 +30,9 @@ fun PropertySeaProximityTypeDetailsItem(
                 )
             }
 
-            else -> PropertySeaProximityTypeDetails.fromId(seaProximityTypeId)?.name
+            else -> PropertySeaProximityTypeDetails.fromId(seaProximityTypeId)?.let {
+                stringResource(it.label)
+            }
                 ?: stringResource(R.string.not_registered_info_body_text)
         },
         isEmptyText = seaProximityTypeId == null,
