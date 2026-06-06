@@ -47,14 +47,25 @@ inner class ExecuteTests {
 
 ## 4. Nomenclatura e Idioma
 
-- Descrições de teste em **português**, respeitando a linguagem do negócio.
+**Separação obrigatória de idiomas:**
+
+| Artefato | Idioma |
+|---|---|
+| Descrições de teste (backtick strings) | **Português** |
+| Todo o restante — variáveis, parâmetros, métodos auxiliares, nomes de inner classes | **Inglês** |
+
+Descrições de teste:
 - Template obrigatório: `` `Deve [resultado] quando [ação], dado que [contexto opcional]` ``
-- **Proibido mencionar nomes de tipos ou valores de implementação nas descrições** — não citar enums internos, estados de UI ou nomes de classes. Use o termo de negócio.
+- **Proibido mencionar nomes de tipos ou valores de implementação** — não citar enums internos, estados de UI ou nomes de classes. Use o termo de negócio.
 
   | Errado | Correto |
   |---|---|
   | `` `Deve retornar Desfecho.AUSENTE` `` | `` `Deve registrar desfecho como 'Ausente' quando ninguém atendeu` `` |
   | `` `Deve emitir Loading state` `` | `` `Deve exibir carregamento enquanto busca o histórico de visitas` `` |
+
+Corpo da classe:
+- Variáveis de setup, helpers e parâmetros de teste em inglês: `existingPeriod`, `validAmount`, `result`, `errors`.
+- Nunca misturar: `val resultado`, `val erros`, `val existente` são **errados**.
 
 ---
 

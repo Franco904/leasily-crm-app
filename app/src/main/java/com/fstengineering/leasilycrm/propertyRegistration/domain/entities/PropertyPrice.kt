@@ -20,6 +20,7 @@ class PropertyPrice private constructor(
             startDate: AppDate? = null,
             endDate: AppDate? = null,
             amount: AppDecimal? = null,
+            otherPeriods: List<PropertyPricePeriod> = emptyList(),
         ): AppResultCompound<PropertyPrice, DomainError> {
             val errors = mutableListOf<DomainError>()
 
@@ -31,6 +32,7 @@ class PropertyPrice private constructor(
                 else PropertyPricePeriod.parse(
                     startDate = startDate,
                     endDate = endDate,
+                    otherPeriods = otherPeriods,
                 )
                     .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
 

@@ -42,7 +42,7 @@ CERTO (vertical):
 
 ## Fluxo de Trabalho
 
-> **💡 Se o Planejamento já estiver concluído**, com interface e comportamentos bem definidos (ex.: após uma sessão de planejamento no Claude Code), **pule direto para o Passo 2**.
+> **Se o Planejamento já estiver concluído**, com interface e comportamentos bem definidos (ex.: após uma sessão de planejamento), **pule direto para o Passo 2**.
 
 ### 1. Planejamento
 

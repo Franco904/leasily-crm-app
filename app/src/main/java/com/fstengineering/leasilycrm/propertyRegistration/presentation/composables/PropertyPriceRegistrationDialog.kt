@@ -62,7 +62,7 @@ fun PropertyPriceRegistrationDialog(
     }
 
     var priceAmountInput by rememberSaveable(priceForm.amount) {
-        mutableStateOf(priceForm.amount.toString())
+        mutableStateOf(priceForm.amount?.toString() ?: "")
     }
 
     var mustShowDateRangePickerDialog by rememberSaveable { mutableStateOf(false) }
@@ -181,13 +181,13 @@ private fun ImmutableList<PropertyPriceUiState>.getPropertyPriceAlreadySelectedD
     priceFormStartDate: AppDate?,
 ): ImmutableSet<AppDate> {
     return this.asSequence()
-        .filter { !isEditing && it.startDate != priceFormStartDate }
+        .filter { !isEditing || it.startDate != priceFormStartDate }
         .flatMap { price ->
             val startDate = price.startDate
             val endDate = price.endDate
 
-            generateSequence(startDate) { it.plusDays(1) }
-                .takeWhile { it <= endDate }
+            generateSequence(startDate.plusDays(1)) { it.plusDays(1) }
+                .takeWhile { it < endDate }
         }
         .toPersistentSet()
 }
