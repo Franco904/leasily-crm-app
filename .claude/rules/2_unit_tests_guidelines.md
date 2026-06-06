@@ -58,10 +58,10 @@ Descrições de teste:
 - Template obrigatório: `` `Deve [resultado] quando [ação], dado que [contexto opcional]` ``
 - **Proibido mencionar nomes de tipos ou valores de implementação** — não citar enums internos, estados de UI ou nomes de classes. Use o termo de negócio.
 
-  | Errado | Correto |
-  |---|---|
-  | `` `Deve retornar Desfecho.AUSENTE` `` | `` `Deve registrar desfecho como 'Ausente' quando ninguém atendeu` `` |
-  | `` `Deve emitir Loading state` `` | `` `Deve exibir carregamento enquanto busca o histórico de visitas` `` |
+  | Errado                                    | Correto                                                                      |
+  |-------------------------------------------|------------------------------------------------------------------------------|
+  | `` `Deve retornar status = FINALIZADO` `` | `` `Deve registrar status como 'Finalizado' quando a estadia é encerrada` `` |
+  | `` `Deve emitir Loading state` ``         | `` `Deve exibir carregamento enquanto busca o histórico de estadias` ``      |
 
 Corpo da classe:
 - Variáveis de setup, helpers e parâmetros de teste em inglês: `existingPeriod`, `validAmount`, `result`, `errors`.
