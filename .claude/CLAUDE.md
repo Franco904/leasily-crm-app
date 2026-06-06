@@ -125,13 +125,14 @@ make sign-app
 
 Consulte antes de agir — especialmente os de teste, aplicados **somente quando a tarefa envolver testes**.
 
-| Arquivo | Conteúdo |
-|---|---|
-| `CONTEXT.md` | Glossário da linguagem ubíqua e mapa dos contextos delimitados — base para nomes de classes, métodos, variáveis e testes |
-| `.claude/rules/1_subdomains.md` | Classificação estratégica dos subdomínios e orientação para adoção de padrões táticos de DDD |
-| `.claude/rules/2_unit_tests_guidelines.md` | Padrões de testes unitários |
-| `.claude/rules/3_integration_tests_guidelines.md` | Padrões de testes de integração |
-| `.claude/rules/4_presentation_tests_guidelines.md` | Padrões de testes de ViewModel/UiState/UiModel |
+| Arquivo                                            | Conteúdo                                                                                                                 |
+|----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `CONTEXT.md`                                       | Glossário da linguagem ubíqua e mapa dos contextos delimitados — base para nomes de classes, métodos, variáveis e testes |
+| `docs/adr`                                         | Caminho para os ADRs com decisões de arquitetura do sistema; não questione, apenas siga                                  |
+| `.claude/rules/1_subdomains.md`                    | Classificação estratégica dos subdomínios e orientação para adoção de padrões táticos de DDD                             |
+| `.claude/rules/2_unit_tests_guidelines.md`         | Padrões de testes unitários                                                                                              |
+| `.claude/rules/3_integration_tests_guidelines.md`  | Padrões de testes de integração                                                                                          |
+| `.claude/rules/4_presentation_tests_guidelines.md` | Padrões de testes de ViewModel/UiState/UiModel                                                                           |
 
 ---
 
