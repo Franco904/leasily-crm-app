@@ -18,7 +18,10 @@ class PropertyPricePeriodTest {
     private val d20 = AppDate(LocalDate.of(2025, 1, 20))
 
     private fun period(start: AppDate, end: AppDate): PropertyPricePeriod =
-        (PropertyPricePeriod.parse(startDate = start, endDate = end) as AppResultCompound.Success).data
+        (PropertyPricePeriod.parse(
+            startDate = start,
+            endDate = end,
+        ) as AppResultCompound.Success).data
 
     @Nested
     @DisplayName("parse")

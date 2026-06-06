@@ -21,7 +21,10 @@ class PropertyPriceTest {
     private val validAmount = AppDecimal(BigDecimal("1500.00"))
 
     private fun period(start: AppDate, end: AppDate): PropertyPricePeriod =
-        (PropertyPricePeriod.parse(startDate = start, endDate = end) as AppResultCompound.Success).data
+        (PropertyPricePeriod.parse(
+            startDate = start,
+            endDate = end,
+        ) as AppResultCompound.Success).data
 
     @Nested
     @DisplayName("parse")
