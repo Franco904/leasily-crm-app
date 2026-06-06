@@ -6,4 +6,7 @@ validate") e são mantidos pequenos — sem composição entre agregados distint
 unidade de consistência lógica. Quando uma invariante atravessa mais de um Agregado, um Domain
 Service recebe os dados necessários via Use Case; a alternativa de compor agregados maiores tornaria
 as fronteiras de consistência ambíguas e os testes de domínio acoplados a grafos de objetos
-desnecessariamente complexos.
+desnecessariamente complexos e ineficientes.
+
+O domínio não orquestra casos de uso, nem acessa dados, nem define ou formata mensagens na UI;
+apenas use-a se for necessário proteger invariantes do negócio em lógica complexa dessa natureza.
