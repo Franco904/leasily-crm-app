@@ -27,5 +27,5 @@ Boas interfaces tornam os testes naturais:
    ```
 
 3. **Superfície pequena**
-   - Menos métodos = menos testes necessários
-   - Menos parâmetros = configuração de teste mais simples
+    - Menos métodos = menos testes necessários
+    - Menos parâmetros = configuração de teste mais simples

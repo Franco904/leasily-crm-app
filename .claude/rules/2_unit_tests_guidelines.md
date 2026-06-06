@@ -2,7 +2,8 @@
 
 ## Escopo
 
-Testes em `app/src/test/` — executam na JVM, sem device. Cobrem a lógica de negócio das menores unidades: UseCase impls, ViewModels, utilitários, entidades de domínio.
+Testes em `app/src/test/` — executam na JVM, sem device. Cobrem a lógica de negócio das menores
+unidades: UseCase impls, ViewModels, utilitários, entidades de domínio.
 
 ---
 
@@ -17,7 +18,8 @@ Testes em `app/src/test/` — executam na JVM, sem device. Cobrem a lógica de n
 
 Seguir esta ordem:
 
-1. Variáveis de dependências mockadas (sufixo `Mock`, ex: `readStayMock`, `tenantQueryRepositoryMock`)
+1. Variáveis de dependências mockadas (sufixo `Mock`, ex: `readStayMock`,
+   `tenantQueryRepositoryMock`)
 2. Variável do SUT
 3. Constantes e atributos de configuração
 4. `@BeforeEach setUp()` e `@AfterEach tearDown()` (se necessários)
@@ -31,7 +33,8 @@ Seguir esta ordem:
 - Cada método público do SUT deve ter uma classe `@Nested` própria.
 - Não criar uma `@Nested` englobando toda a classe — apenas por método público.
 - Padrão de nome: `@DisplayName("nomeDoMetodo")` na classe `@Nested`.
-- Cada teste representa um caminho possível no fluxo do método, seguindo a estratégia **"Todos os caminhos"**.
+- Cada teste representa um caminho possível no fluxo do método, seguindo a estratégia **"Todos os
+  caminhos"**.
 - Evitar casos de borda muito improváveis ou sem valor de negócio.
 
 ```kotlin
@@ -49,22 +52,26 @@ inner class ExecuteTests {
 
 **Separação obrigatória de idiomas:**
 
-| Artefato | Idioma |
-|---|---|
-| Descrições de teste (backtick strings) | **Português** |
-| Todo o restante — variáveis, parâmetros, métodos auxiliares, nomes de inner classes | **Inglês** |
+| Artefato                                                                            | Idioma        |
+|-------------------------------------------------------------------------------------|---------------|
+| Descrições de teste (backtick strings)                                              | **Português** |
+| Todo o restante — variáveis, parâmetros, métodos auxiliares, nomes de inner classes | **Inglês**    |
 
 Descrições de teste:
+
 - Template obrigatório: `` `Deve [resultado] quando [ação], dado que [contexto opcional]` ``
-- **Proibido mencionar nomes de tipos ou valores de implementação** — não citar enums internos, estados de UI ou nomes de classes. Use o termo de negócio.
+- **Proibido mencionar nomes de tipos ou valores de implementação** — não citar enums internos,
+  estados de UI ou nomes de classes. Use o termo de negócio.
 
   | Errado                                    | Correto                                                                      |
-  |-------------------------------------------|------------------------------------------------------------------------------|
+    |-------------------------------------------|------------------------------------------------------------------------------|
   | `` `Deve retornar status = FINALIZADO` `` | `` `Deve registrar status como 'Finalizado' quando a estadia é encerrada` `` |
   | `` `Deve emitir Loading state` ``         | `` `Deve exibir carregamento enquanto busca o histórico de estadias` ``      |
 
 Corpo da classe:
-- Variáveis de setup, helpers e parâmetros de teste em inglês: `existingPeriod`, `validAmount`, `result`, `errors`.
+
+- Variáveis de setup, helpers e parâmetros de teste em inglês: `existingPeriod`, `validAmount`,
+  `result`, `errors`.
 - Nunca misturar: `val resultado`, `val erros`, `val existente` são **errados**.
 
 ---
@@ -73,7 +80,8 @@ Corpo da classe:
 
 Sempre que possível, usar valores aleatórios para evitar acoplamento a valores fixos.
 
-- Para valores com semântica de domínio (nomes, UUIDs, endereços): use a instância global `faker` de `testUtils/Faker.kt` (diretório a criar quando os primeiros testes forem escritos):
+- Para valores com semântica de domínio (nomes, UUIDs, endereços): use a instância global `faker` de
+  `testUtils/Faker.kt` (diretório a criar quando os primeiros testes forem escritos):
   ```kotlin
   import com.fstengineering.leasilycrm.testUtils.faker
 
@@ -89,20 +97,27 @@ Sempre que possível, usar valores aleatórios para evitar acoplamento a valores
 
 ### 6.1 Linguagem ubíqua
 
-Nomes de classes de teste, variáveis, métodos e descrições devem usar os termos do domínio (ex: `PeriodoOcupado`, `periodoOcupadoDataSourceMock`). Consulte `CONTEXT.md`.
+Nomes de classes de teste, variáveis, métodos e descrições devem usar os termos do domínio (ex:
+`PeriodoOcupado`, `periodoOcupadoDataSourceMock`). Consulte `CONTEXT.md`.
 
 Evitar: `Business`, `DataService`, `Manager`, `Helper`, `Json`, nomes de libs de infraestrutura.
 
 ### 6.2 Fronteiras lógicas bem definidas
 
-- Testes de **domínio** (entidades, enums): sem dependência de Android ou infraestrutura. Use objetos Kotlin/Java puros.
-- Testes de **UseCase** e **ViewModel**: todas as dependências (DAOs, repositórios) devem ser mockadas. Nunca acesse banco de dados real.
-- Testes de **infraestrutura** (Repository, DataSource, DAO impls): mockar dependências externas; DAOs que tocam SQLite e código abrangido por transação devem ser cobertos por testes de integração instrumentados.
+- Testes de **domínio** (entidades, enums): sem dependência de Android ou infraestrutura. Use
+  objetos Kotlin/Java puros.
+- Testes de **UseCase** e **ViewModel**: todas as dependências (DAOs, repositórios) devem ser
+  mockadas. Nunca acesse banco de dados real.
+- Testes de **infraestrutura** (Repository, DataSource, DAO impls): mockar dependências externas;
+  DAOs que tocam SQLite e código abrangido por transação devem ser cobertos por testes de integração
+  instrumentados.
 - Testes de um pacote não devem importar lógica de negócio interna de outro pacote não relacionado.
 
 ### 6.3 Erros de domínio como contrato
 
-Erros de domínio **não são exceções** — são retornados como `AppResult.Error<T, DomainError>` ou `AppResult.Error<T, BusinessRuleError>`. Em caminhos de falha, verificar o tipo e o valor do erro retornado:
+Erros de domínio **não são exceções** — são retornados como `AppResult.Error<T, DomainError>` ou
+`AppResult.Error<T, BusinessRuleError>`. Em caminhos de falha, verificar o tipo e o valor do erro
+retornado:
 
 ```kotlin
 val result = sut.execute(params)
@@ -118,8 +133,11 @@ assertEquals(DomainError.OverbookingDetected, (result as AppResult.Error).error)
 
 ### 6.5 Separação: CQRS — consulta vs comando
 
-- **Consulta:** verificar que os parâmetros corretos foram passados ao DAO; verificar o mapeamento da projeção; nunca verificar operações de escrita.
-- **Comando:** verificar que as operações de escrita corretas foram chamadas (`coVerify { dao.save(...) }`); verificar argumentos passados após construção do objeto; verificar erros (`AppResult.Error`) em caminhos de falha.
+- **Consulta:** verificar que os parâmetros corretos foram passados ao DAO; verificar o mapeamento
+  da projeção; nunca verificar operações de escrita.
+- **Comando:** verificar que as operações de escrita corretas foram chamadas (
+  `coVerify { dao.save(...) }`); verificar argumentos passados após construção do objeto; verificar
+  erros (`AppResult.Error`) em caminhos de falha.
 
 ---
 
@@ -140,14 +158,16 @@ import org.junit.jupiter.api.extension.ExtendWith
 ```
 
 - Criar mocks: `mockk(relaxed = true)` para mocks que não precisam de stubs explícitos.
-- Coroutines: `runTest { }` para suspending functions; usar `@ExtendWith(MainDispatcherExtension::class)` quando o SUT usa `Dispatchers.Main`.
+- Coroutines: `runTest { }` para suspending functions; usar
+  `@ExtendWith(MainDispatcherExtension::class)` quando o SUT usa `Dispatchers.Main`.
 - ViewModel: usar a anotação `@ViewModelCoroutineTest` de `testUtils/annotations/`.
 
 ---
 
 ## 8. Utilitários de teste
 
-- Consultar `testUtils/fakes/` para fakes e builders existentes antes de criar novos. Quando criado, o caminho será `app/src/test/java/com/fstengineering/leasilycrm/testUtils/fakes/`.
+- Consultar `testUtils/fakes/` para fakes e builders existentes antes de criar novos. Quando criado,
+  o caminho será `app/src/test/java/com/fstengineering/leasilycrm/testUtils/fakes/`.
 - Criar novos métodos auxiliares em `testUtils/` quando a lógica de montagem for reutilizável.
 
 ---

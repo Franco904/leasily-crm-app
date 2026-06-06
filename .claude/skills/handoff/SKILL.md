@@ -9,9 +9,12 @@ Escreva um documento de handoff resumindo a conversa atual para que um agente no
 
 Inclua uma seção "skills sugeridas" no documento, sugerindo skills que o agente deve invocar.
 
-Não duplique conteúdo já capturado em outros artefatos (PRDs, planos, ADRs, issues, commits, diffs). Referencie-os por caminho ou URL.
+Não duplique conteúdo já capturado em outros artefatos (PRDs, planos, ADRs, issues, commits, diffs).
+Referencie-os por caminho ou URL.
 
-Remova qualquer informação sensível, como chaves de API, senhas ou informações de identificação pessoal.
+Remova qualquer informação sensível, como chaves de API, senhas ou informações de identificação
+pessoal.
 
-Se o usuário passou argumentos, trate-os como uma descrição do foco da próxima sessão e adapte o documento de acordo.
+Se o usuário passou argumentos, trate-os como uma descrição do foco da próxima sessão e adapte o
+documento de acordo.
 </what-to-do>

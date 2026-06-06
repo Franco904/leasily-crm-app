@@ -36,7 +36,8 @@ function processPayment(order) {
 
 **2. Prefira interfaces no estilo SDK em vez de fetchers genéricos**
 
-Crie funções específicas para cada operação externa em vez de uma função genérica com lógica condicional:
+Crie funções específicas para cada operação externa em vez de uma função genérica com lógica
+condicional:
 
 ```typescript
 // BOM: Cada função é mockável independentemente
@@ -53,6 +54,7 @@ const api = {
 ```
 
 A abordagem SDK significa:
+
 - Cada mock retorna um formato específico
 - Sem lógica condicional na configuração do teste
 - Mais fácil de ver quais endpoints um teste exercita
