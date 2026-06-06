@@ -5,6 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.constants.SIGN_IN_ROUTE
 import com.fstengineering.leasilycrm.core.infra.constants.SIGN_OUT_ROUTE
 import com.fstengineering.leasilycrm.core.infra.constants.UPDATE_USER_ROUTE
+import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.UpdateUserDto
@@ -16,6 +17,7 @@ import io.ktor.http.HttpMethod
 
 class UserRemoteDataSourceImpl(
     private val client: HttpClient,
+    private val exceptionLogger: ExceptionLogger,
 ) : UserRemoteDataSource {
     override suspend fun signInUser(
         signInRequestDto: SignInRequestDto,
@@ -23,6 +25,7 @@ class UserRemoteDataSourceImpl(
         return client.requestBackend(
             url = SIGN_IN_ROUTE,
             method = HttpMethod.Post,
+            exceptionLogger = exceptionLogger,
             body = signInRequestDto,
         )
             .fold(
@@ -35,6 +38,7 @@ class UserRemoteDataSourceImpl(
         return client.requestBackend(
             url = SIGN_OUT_ROUTE,
             method = HttpMethod.Get,
+            exceptionLogger = exceptionLogger,
         )
             .fold(
                 onError = { AppResult.Error(error = it) },
@@ -48,6 +52,7 @@ class UserRemoteDataSourceImpl(
         return client.requestBackend(
             url = UPDATE_USER_ROUTE,
             method = HttpMethod.Put,
+            exceptionLogger = exceptionLogger,
             body = updateUserDto,
         )
             .fold(

@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.core.di.modules
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.infra.adapters.DatabaseAdapterImpl
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
+import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceInteractionDatabaseDataSourceImpl
@@ -38,14 +39,14 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import org.koin.dsl.module
 
 val databaseDataSourceModule = module {
-    single<DatabaseAdapter> { DatabaseAdapterImpl(db = get()) }
+    single<DatabaseAdapter> { DatabaseAdapterImpl(db = get(), exceptionLogger = get()) }
 
     single<AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource> {
         AssistanceCharacteristicAssistanceCrossRefDatabaseDataSourceImpl(dao = get())
     }
 
     single<AssistanceDatabaseDataSource> {
-        AssistanceDatabaseDataSourceImpl(dao = get())
+        AssistanceDatabaseDataSourceImpl(dao = get(), exceptionLogger = get())
     }
 
     single<AssistanceInteractionDatabaseDataSource> {
@@ -61,7 +62,7 @@ val databaseDataSourceModule = module {
     }
 
     single<UserAnalyticsDatabaseDataSource> {
-        UserAnalyticsDatabaseDataSourceImpl(dao = get())
+        UserAnalyticsDatabaseDataSourceImpl(dao = get(), exceptionLogger = get())
     }
 
     single<PropertyCharacteristicCrossRefDatabaseDataSource> {
@@ -69,7 +70,7 @@ val databaseDataSourceModule = module {
     }
 
     single<PropertyDatabaseDataSource> {
-        PropertyDatabaseDataSourceImpl(dao = get())
+        PropertyDatabaseDataSourceImpl(dao = get(), exceptionLogger = get())
     }
 
     single<PropertyFileDatabaseDataSource> {
@@ -77,7 +78,7 @@ val databaseDataSourceModule = module {
     }
 
     single<PropertyOwnerDatabaseDataSource> {
-        PropertyOwnerDatabaseDataSourceImpl(dao = get())
+        PropertyOwnerDatabaseDataSourceImpl(dao = get(), exceptionLogger = get())
     }
 
     single<PropertyOwnerFileDatabaseDataSource> {
@@ -89,7 +90,7 @@ val databaseDataSourceModule = module {
     }
 
     single<StayDatabaseDataSource> {
-        StayDatabaseDataSourceImpl(dao = get(), dateTimeProvider = get<AppDateTimeProvider>())
+        StayDatabaseDataSourceImpl(dao = get(), dateTimeProvider = get<AppDateTimeProvider>(), exceptionLogger = get())
     }
 
     single<StayFileDatabaseDataSource> {
@@ -101,7 +102,7 @@ val databaseDataSourceModule = module {
     }
 
     single<TenantDatabaseDataSource> {
-        TenantDatabaseDataSourceImpl(dao = get())
+        TenantDatabaseDataSourceImpl(dao = get(), exceptionLogger = get())
     }
 }
 

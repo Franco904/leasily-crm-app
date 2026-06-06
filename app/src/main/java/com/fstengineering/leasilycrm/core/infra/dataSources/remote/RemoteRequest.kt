@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.remote
 
-import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.infra.utils.toRemoteDataSourceError
 import io.ktor.client.HttpClient
@@ -14,6 +14,7 @@ import io.ktor.utils.io.CancellationException
 suspend fun HttpClient.requestBackend(
     url: String,
     method: HttpMethod,
+    exceptionLogger: ExceptionLogger,
     body: Any? = null,
 ): AppResult<HttpResponse, InfraError> {
     try {
@@ -26,13 +27,11 @@ suspend fun HttpClient.requestBackend(
             return AppResult.Success(data = response)
         }
 
-        // Handle backend errors
         return AppResult.Error(error = response.status.toRemoteDataSourceError())
     } catch (e: Exception) {
         if (e is CancellationException) throw e
-        if (BuildConfig.DEBUG) e.printStackTrace()
+        exceptionLogger.log(e)
 
-        // Handle HTTP client errors
         return AppResult.Error(error = e.toRemoteDataSourceError())
     }
 }
