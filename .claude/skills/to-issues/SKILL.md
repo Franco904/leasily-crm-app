@@ -73,8 +73,15 @@ gh api -X POST repos/<owner>/<repo>/issues/<bloqueada>/dependencies/blocked_by \
   -F issue_id=$(gh api repos/<owner>/<repo>/issues/<bloqueadora> --jq .id)
 ```
 
-NÃO feche nem modifique a issue pai (épico). Também não inclua a seção "Épico pai", essa ligação
-será feita manualmente pelo(a) PO no GitHub depois.
+Se houver issue pai (épico), registre cada issue criada como sub-issue nativa dela — não inclua
+seção "Épico pai" no corpo:
+
+```bash
+gh api -X POST repos/<owner>/<repo>/issues/<epico>/sub_issues \
+  -F sub_issue_id=$(gh api repos/<owner>/<repo>/issues/<issue> --jq .id)
+```
+
+Além disso, NÃO feche nem modifique a issue pai (épico).
 
 ---
 
