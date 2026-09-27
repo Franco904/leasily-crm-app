@@ -192,6 +192,7 @@ dependencies {
     testImplementation(libs.kluent)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
+    testImplementation(libs.ktor.mock)
 
     // Other
     debugImplementation(libs.androidx.ui.tooling)
