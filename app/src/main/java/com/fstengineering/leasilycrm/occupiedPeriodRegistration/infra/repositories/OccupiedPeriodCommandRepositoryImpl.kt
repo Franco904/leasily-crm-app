@@ -17,7 +17,7 @@ class OccupiedPeriodCommandRepositoryImpl(
     private val stayFileDatabaseDataSource: StayFileDatabaseDataSource,
 ) : OccupiedPeriodCommandRepository {
     override suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             saveDataInDatabase(stay)
         }
             .fold(
@@ -39,7 +39,7 @@ class OccupiedPeriodCommandRepositoryImpl(
     }
 
     override suspend fun insertOrUpdate(unavailablePeriod: UnavailablePeriod): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             stayDatabaseDataSource.insertOrUpdate(unavailablePeriod.toLocalDataModel())
         }
             .fold(

@@ -17,7 +17,7 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : OccupiedPeriodSharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.delete(id)
         }
             .fold(
@@ -27,7 +27,7 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
     }
 
     override suspend fun registerCheckIn(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.updateStatus(
                 id = id,
                 status = StayStatus.CheckInDone.id,
@@ -40,7 +40,7 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
     }
 
     override suspend fun undoRegisterCheckIn(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.updateStatus(id = id, status = StayStatus.Upcoming.id)
         }
             .fold(
@@ -50,7 +50,7 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
     }
 
     override suspend fun registerCheckOut(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.updateStatus(
                 id = id,
                 status = StayStatus.CheckOutDone.id,
@@ -63,7 +63,7 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
     }
 
     override suspend fun undoRegisterCheckOut(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.updateStatus(
                 id = id,
                 status = StayStatus.CheckInDone.id,

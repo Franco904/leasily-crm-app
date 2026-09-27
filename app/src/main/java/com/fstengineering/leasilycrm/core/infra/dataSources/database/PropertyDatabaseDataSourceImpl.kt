@@ -4,14 +4,14 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
-import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
+import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
+import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import kotlinx.coroutines.flow.Flow
 
 class PropertyDatabaseDataSourceImpl(
     private val dao: PropertyDao,
-    private val exceptionLogger: ExceptionLogger,
 ) : PropertyDatabaseDataSource {
     override suspend fun insertOrUpdate(property: PropertyEntity): Long =
         dao.insertOrUpdate(property)
@@ -20,28 +20,28 @@ class PropertyDatabaseDataSourceImpl(
         dao.delete(id)
 
     override suspend fun getById(id: Long): AppResult<PropertyCompound, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.getById(id) }
+        return onDatabase { dao.getById(id) }
     }
 
     override suspend fun getAll(matching: String?): AppResult<List<PropertyCompound>, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.getAll() }
+        return onDatabase { dao.getAll() }
     }
 
     override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.getAllNeighborhoodNames() }
+        return onDatabase { dao.getAllNeighborhoodNames() }
     }
 
     override suspend fun getAllSentInAssistance(
         assistanceId: Long,
     ): AppResult<List<PropertyCompound>, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.getAllSentInAssistance(assistanceId) }
+        return onDatabase { dao.getAllSentInAssistance(assistanceId) }
     }
 
     override fun watchById(id: Long): Flow<AppResult<PropertyCompound, InfraError>> {
-        return dao.watchById(id).asDatabaseFlowResult(exceptionLogger)
+        return dao.watchById(id).asDatabaseFlowResult()
     }
 
     override fun watchAll(): AppResult<Flow<List<PropertyCompound>>, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.watchAll() }
+        return onDatabase { dao.watchAll() }
     }
 }

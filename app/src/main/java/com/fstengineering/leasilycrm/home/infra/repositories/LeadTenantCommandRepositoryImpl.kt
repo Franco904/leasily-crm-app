@@ -12,7 +12,7 @@ class LeadTenantCommandRepositoryImpl(
     private val tenantDatabaseDataSource: TenantDatabaseDataSource,
 ) : LeadTenantCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             tenantDatabaseDataSource.delete(id)
         }
             .fold(

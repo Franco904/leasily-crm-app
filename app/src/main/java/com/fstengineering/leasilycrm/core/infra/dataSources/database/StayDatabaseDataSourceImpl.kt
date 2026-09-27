@@ -8,15 +8,15 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.OccupiedPeriodNotificationProjection
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckInCheckOutCountsProjection
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
-import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
+import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
+import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import kotlinx.coroutines.flow.Flow
 
 class StayDatabaseDataSourceImpl(
     private val dao: StayDao,
     private val dateTimeProvider: AppDateTimeProvider,
-    private val exceptionLogger: ExceptionLogger,
 ) : StayDatabaseDataSource {
     override suspend fun insertOrUpdate(stay: StayEntity): Long =
         dao.insertOrUpdate(stay)
@@ -28,35 +28,35 @@ class StayDatabaseDataSourceImpl(
         dao.updateStatus(id, status)
 
     override suspend fun getById(id: Long): AppResult<StayCompound, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.getById(id) }
+        return onDatabase { dao.getById(id) }
     }
 
     override suspend fun getAllByTenantId(tenantId: Long): AppResult<List<StayEntity>, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.getAllByTenantId(tenantId) }
+        return onDatabase { dao.getAllByTenantId(tenantId) }
     }
 
     override suspend fun getCurrentStayIdByTenantId(tenantId: Long): AppResult<Long?, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.getCurrentStayIdByTenantId(tenantId) }
+        return onDatabase { dao.getCurrentStayIdByTenantId(tenantId) }
     }
 
     override fun watchById(id: Long): AppResult<Flow<StayCompound?>, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.watchById(id) }
+        return onDatabase { dao.watchById(id) }
     }
 
     override fun watchAll(): AppResult<Flow<List<StayCompound>>, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.watchAll() }
+        return onDatabase { dao.watchAll() }
     }
 
     override fun watchAllWithDetails(): AppResult<Flow<List<OccupiedPeriodListProjection>>, InfraError> {
-        return onDatabaseSafe(exceptionLogger) { dao.watchAllWithDetails() }
+        return onDatabase { dao.watchAllWithDetails() }
     }
 
     override fun watchAllByPropertyId(propertyId: Long): Flow<AppResult<List<StayEntity>, InfraError>> {
-        return dao.watchAllByPropertyId(propertyId).asDatabaseFlowResult(exceptionLogger)
+        return dao.watchAllByPropertyId(propertyId).asDatabaseFlowResult()
     }
 
     override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<List<OccupiedPeriodNotificationProjection>, InfraError> {
-        return onDatabaseSafe(exceptionLogger) {
+        return onDatabase {
             dao.getAllTodayCheckInsAndCheckOutsToNotify(
                 dateTimeProvider.now().toEpochMillisUTC()
             )
@@ -65,6 +65,6 @@ class StayDatabaseDataSourceImpl(
 
     override fun watchAllPastCheckInCheckOutNotDoneCounts(): Flow<AppResult<StayCheckInCheckOutCountsProjection, InfraError>> {
         val nowAdjusted = dateTimeProvider.now().withHourMinute(23, 59)
-        return dao.watchAllPastCheckInCheckOutNotDoneCounts(nowAdjusted).asDatabaseFlowResult(exceptionLogger)
+        return dao.watchAllPastCheckInCheckOutNotDoneCounts(nowAdjusted).asDatabaseFlowResult()
     }
 }

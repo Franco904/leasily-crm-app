@@ -16,7 +16,7 @@ class LeadTenantCommandRepositoryImpl(
     override suspend fun insertOrUpdate(leadTenant: LeadTenant): AppResult<Unit, ApplicationError> {
         val tenantLocalModel = leadTenant.toLocalDataModel()
 
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             databaseDataSource.insertOrUpdate(tenantLocalModel)
         }
             .fold(

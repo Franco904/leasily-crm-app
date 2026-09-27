@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.core.di.modules
 
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.di.qualifiers.encryptedPreferencesQualifier
-import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.UserRemoteDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.cookies.UserSessionCookieStorage
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
@@ -53,5 +52,5 @@ val remoteDataSourceModule = module {
         }
     }
 
-    single<UserRemoteDataSource> { UserRemoteDataSourceImpl(client = get(), exceptionLogger = get()) }
+    single<UserRemoteDataSource> { UserRemoteDataSourceImpl(client = get()) }
 }

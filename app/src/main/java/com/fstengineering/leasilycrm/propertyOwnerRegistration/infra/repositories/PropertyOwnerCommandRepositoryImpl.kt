@@ -18,7 +18,7 @@ class PropertyOwnerCommandRepositoryImpl(
     override suspend fun insertOrUpdate(
         propertyOwner: PropertyOwner,
     ): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             saveDataInDatabase(propertyOwner)
         }
             .fold(

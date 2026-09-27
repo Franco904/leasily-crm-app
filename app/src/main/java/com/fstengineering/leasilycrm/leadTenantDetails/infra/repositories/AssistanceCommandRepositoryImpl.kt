@@ -12,7 +12,7 @@ class AssistanceCommandRepositoryImpl(
     private val assistanceDatabaseDataSource: AssistanceDatabaseDataSource,
 ) : AssistanceCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             assistanceDatabaseDataSource.delete(id)
         }
             .fold(
