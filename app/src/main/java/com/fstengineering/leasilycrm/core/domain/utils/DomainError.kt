@@ -53,7 +53,6 @@ sealed interface DomainError : BaseError {
 
     enum class PropertySeaProximityDistanceToSea : DomainError {
         Required,
-        IsNegative,
     }
 
     enum class Name : DomainError {

@@ -41,7 +41,6 @@ fun DomainError.toInlineMessage() = when (this) {
 
     DomainError.PropertySeaProximity.PropertySeaProximityInvalid -> INLINE_GENERIC_INVALID_DATA
     DomainError.PropertySeaProximityDistanceToSea.Required -> INLINE_REQUIRED
-    DomainError.PropertySeaProximityDistanceToSea.IsNegative -> INLINE_GENERIC_INVALID_DATA
 
     DomainError.PropertyOtherFields.MoreThanOneMainPictureFile -> INLINE_GENERIC_INVALID_DATA
 
