@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.propertyRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.propertyRegistration.domain.valueObjects.PropertyPricePeriod
@@ -24,7 +25,7 @@ class PropertyPriceTest {
         (PropertyPricePeriod.parse(
             startDate = start,
             endDate = end,
-        ) as AppResultCompound.Success).data
+        ) as AppResult.Success).data
 
     @Nested
     @DisplayName("parse")
@@ -37,7 +38,7 @@ class PropertyPriceTest {
                 amount = validAmount,
             )
 
-            result.shouldBeInstanceOf<AppResultCompound.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
         }
 
         @Test
@@ -48,8 +49,9 @@ class PropertyPriceTest {
                 amount = validAmount,
             )
 
-            val errors = result.shouldBeInstanceOf<AppResultCompound.Errors<*, *>>()
-            errors.errors shouldContain DomainError.PropertyPricePeriod.Required
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.PropertyPricePeriod.Required
         }
 
         @Test
@@ -60,8 +62,9 @@ class PropertyPriceTest {
                 amount = validAmount,
             )
 
-            val errors = result.shouldBeInstanceOf<AppResultCompound.Errors<*, *>>()
-            errors.errors shouldContain DomainError.PropertyPricePeriod.Required
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.PropertyPricePeriod.Required
         }
 
         @Test
@@ -72,8 +75,9 @@ class PropertyPriceTest {
                 amount = null,
             )
 
-            val errors = result.shouldBeInstanceOf<AppResultCompound.Errors<*, *>>()
-            errors.errors shouldContain DomainError.Amount.Required
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.Amount.Required
         }
 
         @Test
@@ -84,8 +88,9 @@ class PropertyPriceTest {
                 amount = validAmount,
             )
 
-            val errors = result.shouldBeInstanceOf<AppResultCompound.Errors<*, *>>()
-            errors.errors shouldContain DomainError.PropertyPricePeriod.StartAndEndDatesAreTheSame
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.PropertyPricePeriod.StartAndEndDatesAreTheSame
         }
 
         @Test
@@ -99,8 +104,9 @@ class PropertyPriceTest {
                 otherPeriods = listOf(existing),
             )
 
-            val errors = result.shouldBeInstanceOf<AppResultCompound.Errors<*, *>>()
-            errors.errors shouldContain DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod
         }
     }
 }
