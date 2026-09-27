@@ -4,8 +4,11 @@ description: Compacta a conversa atual em um documento de handoff para outro age
 argument-hint: "Para que será usada a próxima sessão?"
 ---
 
-<what-to-do>
-Escreva um documento de handoff resumindo a conversa atual para que um agente novo possa continuar o trabalho. Salve no diretório temporário do sistema operacional do usuário — não no workspace atual.
+Escreva um documento de handoff resumindo a conversa atual para que um agente novo possa continuar o
+trabalho. Salve dentro do diretório `handoffs/` na raiz do repositório, com um nome específico do
+trabalho em questão da sessão ativa (ex.: `handoffs/HANDOFF_FEATURE_X.md`). `handoffs/` deve estar
+listado no `.gitignore` do repositório; se não estiver, adicione a entrada antes de salvar o
+documento.
 
 Inclua uma seção "skills sugeridas" no documento, sugerindo skills que o agente deve invocar.
 
@@ -17,4 +20,3 @@ pessoal.
 
 Se o usuário passou argumentos, trate-os como uma descrição do foco da próxima sessão e adapte o
 documento de acordo.
-</what-to-do>

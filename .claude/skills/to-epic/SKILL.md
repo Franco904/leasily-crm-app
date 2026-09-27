@@ -13,7 +13,8 @@ description: Transforma o contexto da conversa atual em um épico. NÃO entrevis
    especialista de domínio; **tarefa** para descrever uma ação pontual e específica, complementar às
    histórias, ou atender a uma necessidade técnica identificada, como uma dívida técnica. Use
    histórias de usuário para a maioria dos casos.
-3. Escreva o épico usando o template abaixo e entregue-a como arquivo .md na raiz do repositório.
+3. Escreva o épico usando o template abaixo e crie uma nova issue para ele no issue tracker (
+   GitHub).
 
 ---
 
@@ -31,10 +32,10 @@ A solução para o problema, especificando a motivação e objetivos na perspect
 
 Uma lista LONGA e numerada de histórias de usuário e tarefas. Cada história deve estar no formato:
 
-1. Como <ator>, eu quero <funcionalidade>, para que <benefício>.
+> Como *ator*, eu quero *funcionalidade*, para que *benefício*.
 
 <user-story-example>
-1. Como cliente de banco, eu quero ver o saldo das minhas contas, para que eu possa tomar decisões mais bem informadas sobre meus gastos
+> 1. Como corretor de imóveis, eu quero ver os check-ins e check-outs do dia ao abrir o app, para que eu possa organizar minha agenda de entregas e recebimentos de chaves
 </user-story-example>
 
 Liste as histórias candidatas em alto nível — suficiente para delimitar o escopo, sem antecipar o

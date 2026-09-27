@@ -2,12 +2,11 @@
 
 > **Finalidade:** Classificar os subdomínios do aplicativo segundo o valor de negócio que entregam (
 > principal, suporte ou genérico). Esta classificação orienta decisões táticas de modelagem da lógica
-> de negócio e de arquitetura: onde investir em maior complexidade de design e onde usar soluções mais
+> de negócio: onde investir em maior complexidade de design e onde usar soluções mais
 > simples ou disponíveis no mercado.
 >
 > **Instrução para o Agente de IA:** Antes de sugerir padrões de modelagem (entidades ricas, VOs,
-> casos de uso complexos) ou de arquitetura (Clean Architecture completa, inversão de dependências),
-> verifique a classificação do subdomínio em questão. Aplique o padrão tático correspondente da
+> casos de uso complexos), verifique a classificação do subdomínio em questão. Aplique o padrão tático correspondente da
 > seção "Guia de Padrões Táticos". Trate o mapeamento como heurística, não como regra absoluta — a
 > complexidade real do código deve prevalecer sobre a categoria.
 
@@ -18,7 +17,7 @@
 ### Principal (Core)
 
 > Diferencial competitivo do produto. Contém as regras de negócio mais complexas e exclusivas.
-> Justifica o maior investimento em modelagem e arquitetura.
+> Justifica o maior investimento em modelagem.
 
 | Subdomínio                           | Módulo / Área                                                            | Descrição                                                                                                                                                                                                                                      |
 |--------------------------------------|--------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -58,26 +57,16 @@
 
 ---
 
-## Guia de Padrões Táticos
+## Padrão tático: Lógica de Negócio
 
-A classificação do subdomínio é a principal heurística para escolher entre padrões de lógica de
-negócio e de arquitetura.
+A classificação do subdomínio é a principal heurística para escolher o padrão de lógica de
+negócio.
 
-### Padrão de Lógica de Negócio
-
-| Classificação | Padrão indicado                                   | Como aplicar                                                                                                                                                              |
-|---------------|---------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Principal** | **Modelo de Domínio**                             | Entidades ricas com comportamento, Value Objects com invariantes, erros tipados via `AppResult`/`DomainError`/`BusinessRuleError`, casos de uso que orquestram agregados  |
-| **Suporte**   | **Script de Transação** ou Modelo de Domínio leve | Avalie a complexidade real: se há ramificações de negócio relevantes, prefira Modelo de Domínio; se é recuperação e persistência direta, Script de Transação é suficiente |
-| **Genérico**  | **Nenhum** — delegar à biblioteca                 | Criar um domínio próprio seria reimplementar o que a biblioteca já resolve; use apenas um Adapter para encapsulá-la                                                       |
-
-### Padrão de Arquitetura
-
-| Classificação | Padrão indicado                                   | Como aplicar                                                                                                                             |
-|---------------|---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| **Principal** | **Clean Architecture**                            | Camadas completas: `presentation/application/domain/infra`. Inversão de dependências obrigatória: `domain` não depende de nada externo   |
-| **Suporte**   | **Script de Transação** ou estrutura mais simples | `presentation/application/infra`, `presentation/infra` ou apenas `presentation/` — grau proporcional à complexidade real da orquestração |
-| **Genérico**  | **Adapter simples**                               | Uma classe que encapsula a biblioteca. Sem camadas de domínio, sem repositórios — apenas a interface necessária para o restante do app   |
+| Classificação | Padrão indicado                                   | Como aplicar                                                                                                                                                               |
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Principal** | **Modelo de Domínio**                             | Entidades ricas com comportamento, Value Objects com invariantes, erros tipados via `AppResult` + `DomainError`/`ValidationErrors`, casos de uso que orquestram agregados |
+| **Suporte**   | **Script de Transação** ou Modelo de Domínio leve | Avalie a complexidade real: se há ramificações de negócio relevantes, prefira Modelo de Domínio; se é recuperação e persistência direta, Script de Transação é suficiente  |
+| **Genérico**  | **Nenhum** — delegar à biblioteca                 | Criar um domínio próprio seria reimplementar o que a biblioteca já resolve; use apenas um Adapter para encapsulá-la                                                        |
 
 ---
 
