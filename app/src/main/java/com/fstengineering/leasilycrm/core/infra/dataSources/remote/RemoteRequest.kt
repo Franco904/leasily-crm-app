@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.remote
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.adapters.ExceptionLogger
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.infra.utils.toRemoteDataSourceError
 import io.ktor.client.HttpClient
 import io.ktor.client.request.request
@@ -15,7 +15,7 @@ suspend fun HttpClient.requestBackend(
     url: String,
     method: HttpMethod,
     body: Any? = null,
-): AppResult<HttpResponse, InfraError> {
+): AppResult<HttpResponse, ApplicationError> {
     try {
         val response = request(url) {
             this.method = method

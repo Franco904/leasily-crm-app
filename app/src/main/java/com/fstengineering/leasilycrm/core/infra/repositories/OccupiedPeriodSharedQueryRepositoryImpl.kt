@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.core.infra.repositories
 import com.fstengineering.leasilycrm.core.application.models.OccupiedPeriodNotificationReadModel
 import com.fstengineering.leasilycrm.core.application.models.StayCheckInCheckOutCountsReadModel
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.mappers.toReadModel
@@ -20,7 +20,7 @@ class OccupiedPeriodSharedQueryRepositoryImpl(
         return occupiedPeriodDatabaseDataSource
             .getAllTodayCheckInsAndCheckOutsToNotify()
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { notificationProjections ->
                     val readModels = notificationProjections
                         .map { it.toReadModel() }
@@ -36,7 +36,7 @@ class OccupiedPeriodSharedQueryRepositoryImpl(
             .watchAllPastCheckInCheckOutNotDoneCounts()
             .map { result ->
                 result.fold(
-                    onError = { e -> AppResult.Error(error = e.toApplicationError()) },
+                    onError = { e -> AppResult.Error(error = e) },
                     onSuccess = { counts ->
                         AppResult.Success(
                             data = StayCheckInCheckOutCountsReadModel(

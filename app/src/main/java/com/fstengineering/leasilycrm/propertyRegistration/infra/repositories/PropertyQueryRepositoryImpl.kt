@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.propertyRegistration.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyRawReadModel
@@ -16,7 +16,7 @@ class PropertyQueryRepositoryImpl(
     override suspend fun getById(propertyId: Long): AppResult<PropertyRawReadModel, ApplicationError> {
         return propertyDatabaseDataSource.getById(id = propertyId)
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toRawReadModel()) },
             )
     }
@@ -25,7 +25,7 @@ class PropertyQueryRepositoryImpl(
         val neighborHoodNames =
             propertyDatabaseDataSource.getAllNeighborhoodNames()
                 .fold(
-                    onError = { return AppResult.Error(error = it.toApplicationError()) },
+                    onError = { return AppResult.Error(error = it) },
                     onSuccess = { it },
                 )
                 .toPersistentList()

@@ -1,12 +1,11 @@
 package com.fstengineering.leasilycrm.core.infra.gateways
 
 import com.fstengineering.leasilycrm.core.application.gateways.UserSessionSharedGateway
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ConnectivityAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 
 class UserSessionSharedGatewayImpl(
     private val connectivityAdapter: ConnectivityAdapter,
@@ -19,7 +18,7 @@ class UserSessionSharedGatewayImpl(
 
         remoteDataSource.signOutUser()
             .onError { e ->
-                if (e != InfraError.Unauthorized) return AppResult.Error(error = e.toApplicationError())
+                if (e != ApplicationError.Unauthorized) return AppResult.Error(error = e)
             }
 
         return AppResult.Success(data = Unit)

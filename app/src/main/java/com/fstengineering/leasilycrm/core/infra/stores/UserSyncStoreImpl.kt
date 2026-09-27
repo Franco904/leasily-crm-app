@@ -2,8 +2,8 @@ package com.fstengineering.leasilycrm.core.infra.stores
 
 import com.fstengineering.leasilycrm.core.application.models.UserRetryInfoWriteModel
 import com.fstengineering.leasilycrm.core.application.stores.UserSyncStore
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -21,7 +21,7 @@ class UserSyncStoreImpl(
     override suspend fun retryUpdate(): AppResult<Unit, ApplicationError> {
         val prefs = encryptedPreferencesDataSource.readPreferences()
             .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
+                onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull() },
             )
 
@@ -37,15 +37,15 @@ class UserSyncStoreImpl(
                 encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.PendingSync.id)
                 }
-                    .onError { return AppResult.Error(error = it.toApplicationError()) }
+                    .onError { return AppResult.Error(error = it) }
 
-                return AppResult.Error(error = remoteBackendError.toApplicationError())
+                return AppResult.Error(error = remoteBackendError)
             }
             .onSuccess {
                 encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Synced.id)
                 }
-                    .onError { return AppResult.Error(error = it.toApplicationError()) }
+                    .onError { return AppResult.Error(error = it) }
             }
 
         return AppResult.Success(data = Unit)

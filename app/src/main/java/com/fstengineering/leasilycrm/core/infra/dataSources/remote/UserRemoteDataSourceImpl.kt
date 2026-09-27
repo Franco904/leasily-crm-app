@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.remote
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.constants.SIGN_IN_ROUTE
 import com.fstengineering.leasilycrm.core.infra.constants.SIGN_OUT_ROUTE
@@ -9,7 +10,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.Us
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.responseDtos.user.SignInUserResponseDto
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.http.HttpMethod
@@ -19,7 +19,7 @@ class UserRemoteDataSourceImpl(
 ) : UserRemoteDataSource {
     override suspend fun signInUser(
         signInRequestDto: SignInRequestDto,
-    ): AppResult<SignInUserResponseDto, InfraError> {
+    ): AppResult<SignInUserResponseDto, ApplicationError> {
         return client.requestBackend(
             url = SIGN_IN_ROUTE,
             method = HttpMethod.Post,
@@ -31,7 +31,7 @@ class UserRemoteDataSourceImpl(
             )
     }
 
-    override suspend fun signOutUser(): AppResult<Unit, InfraError> {
+    override suspend fun signOutUser(): AppResult<Unit, ApplicationError> {
         return client.requestBackend(
             url = SIGN_OUT_ROUTE,
             method = HttpMethod.Get,
@@ -44,7 +44,7 @@ class UserRemoteDataSourceImpl(
 
     override suspend fun updateUser(
         updateUserDto: UpdateUserDto,
-    ): AppResult<Unit, InfraError> {
+    ): AppResult<Unit, ApplicationError> {
         return client.requestBackend(
             url = UPDATE_USER_ROUTE,
             method = HttpMethod.Put,

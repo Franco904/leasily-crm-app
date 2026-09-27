@@ -1,9 +1,8 @@
 package com.fstengineering.leasilycrm.home.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.TenantStatus
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
@@ -40,7 +39,7 @@ class LeadTenantQueryRepositoryImpl(
             orderTypeId = orderTypeId,
         )
             .fold(
-                onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                onError = { return@flow emit(AppResult.Error(error = it)) },
                 onSuccess = { it },
             )
             .map { views ->
@@ -61,7 +60,7 @@ class LeadTenantQueryRepositoryImpl(
             order = orderTypeId,
         )
             .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
+                onError = { return AppResult.Error(error = it) },
                 onSuccess = { it },
             )
 
@@ -72,7 +71,7 @@ class LeadTenantQueryRepositoryImpl(
     override suspend fun getPreferredLeadsOrderTypeId(): AppResult<Int, ApplicationError> {
         val orderTypeId = plainPreferencesDataSource.readPreferences()
             .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
+                onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.leadsOrderTypeId ?: 1 },
             )
 
@@ -82,7 +81,7 @@ class LeadTenantQueryRepositoryImpl(
     override suspend fun getPreferredTenantsOrderTypeId(): AppResult<Int, ApplicationError> {
         val orderTypeId = plainPreferencesDataSource.readPreferences()
             .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
+                onError = { return AppResult.Error(error = it) },
                 onSuccess = { prefsFlow -> prefsFlow.firstOrNull()?.tenantsOrderTypeId ?: 1 },
             )
 
@@ -92,23 +91,17 @@ class LeadTenantQueryRepositoryImpl(
     override suspend fun updatePreferredLeadsOrderTypeId(
         orderTypeId: Int,
     ): AppResult<Unit, ApplicationError> {
-        plainPreferencesDataSource.savePreferences { prefs ->
+        return plainPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(leadsOrderTypeId = orderTypeId)
         }
-            .onError { return AppResult.Error(error = it.toApplicationError()) }
-
-        return AppResult.Success(data = Unit)
     }
 
     override suspend fun updatePreferredTenantsOrderTypeId(
         orderTypeId: Int,
     ): AppResult<Unit, ApplicationError> {
-        plainPreferencesDataSource.savePreferences { prefs ->
+        return plainPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(tenantsOrderTypeId = orderTypeId)
         }
-            .onError { return AppResult.Error(error = it.toApplicationError()) }
-
-        return AppResult.Success(data = Unit)
     }
 
     private suspend fun LeadTenantReadView.toReadModel(): LeadTenantListItemReadModel {

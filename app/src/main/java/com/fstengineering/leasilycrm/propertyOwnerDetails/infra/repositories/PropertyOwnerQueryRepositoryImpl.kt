@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.propertyOwnerDetails.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerDatabaseDataSource
 import com.fstengineering.leasilycrm.propertyOwnerDetails.application.models.PropertyOwnerReadModel
@@ -21,7 +21,7 @@ class PropertyOwnerQueryRepositoryImpl(
     ): Flow<AppResult<PropertyOwnerReadModel, ApplicationError>> = flow {
         val propertyOwnerFlow = databaseDataSource.watchById(id = propertyOwnerId)
             .fold(
-                onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                onError = { return@flow emit(AppResult.Error(error = it)) },
                 onSuccess = { it }
             )
             .map { AppResult.Success<PropertyOwnerReadModel, ApplicationError>(data = it.toReadModel()) }

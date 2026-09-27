@@ -1,11 +1,11 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.AssistanceCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 
 class AssistanceDatabaseDataSourceImpl(
@@ -17,15 +17,15 @@ class AssistanceDatabaseDataSourceImpl(
     override suspend fun delete(id: Long) =
         dao.delete(id)
 
-    override suspend fun getById(id: Long): AppResult<AssistanceCompound, InfraError> {
+    override suspend fun getById(id: Long): AppResult<AssistanceCompound, ApplicationError> {
         return onDatabase { dao.getById(id) }
     }
 
-    override suspend fun getAllByLeadTenantId(leadTenantId: Long): AppResult<List<AssistanceCompound>, InfraError> {
+    override suspend fun getAllByLeadTenantId(leadTenantId: Long): AppResult<List<AssistanceCompound>, ApplicationError> {
         return onDatabase { dao.getAllByLeadTenantId(leadTenantId) }
     }
 
-    override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, InfraError> {
+    override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, ApplicationError> {
         return onDatabase { dao.getAllNeighborhoodNames() }
     }
 
@@ -35,7 +35,7 @@ class AssistanceDatabaseDataSourceImpl(
     override suspend fun unfinishAssistanceByTenantId(tenantId: Long) =
         dao.unfinishAssistanceByTenantId(tenantId)
 
-    override suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): AppResult<Int?, InfraError> {
+    override suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): AppResult<Int?, ApplicationError> {
         return onDatabase { dao.getCurrentAssistanceGuestsCountByTenantId(tenantId) }
     }
 }

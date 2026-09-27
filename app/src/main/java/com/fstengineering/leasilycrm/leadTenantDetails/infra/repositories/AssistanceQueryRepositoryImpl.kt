@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceRawReadModel
@@ -18,7 +18,7 @@ class AssistanceQueryRepositoryImpl(
     ): AppResult<ImmutableList<AssistanceRawReadModel>, ApplicationError> {
         return assistanceDatabaseDataSource.getAllByLeadTenantId(leadTenantId)
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { assistances ->
                     val readModels =
                         assistances.map { it.toRawReadModel() }.toPersistentList()

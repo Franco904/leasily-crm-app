@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.OccupiedPeriodReadModel
@@ -21,7 +21,7 @@ class OccupiedPeriodQueryRepositoryImpl(
     override suspend fun getStayById(id: Long): AppResult<StayRawReadModel, ApplicationError> {
         return databaseDataSource.getById(id = id)
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toStayRawReadModel()) },
             )
     }
@@ -31,7 +31,7 @@ class OccupiedPeriodQueryRepositoryImpl(
     ): AppResult<UnavailablePeriodRawReadModel, ApplicationError> {
         return databaseDataSource.getById(id = id)
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toUnavailablePeriodRawReadModel()) },
             )
     }
@@ -42,7 +42,7 @@ class OccupiedPeriodQueryRepositoryImpl(
         return databaseDataSource.watchAllByPropertyId(propertyId)
             .first()
             .fold(
-                onError = { e -> AppResult.Error(error = e.toApplicationError()) },
+                onError = { e -> AppResult.Error(error = e) },
                 onSuccess = {
                     val dates = it.map { localModel -> localModel.toCheckInCheckOutReadModel() }
                     AppResult.Success(data = dates.toPersistentList())

@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.properties.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
 import com.fstengineering.leasilycrm.properties.application.models.dtos.PropertyReadModel
@@ -23,7 +23,7 @@ class PropertyQueryRepositoryImpl(
     ): AppResult<ImmutableList<PropertyReadModel>, ApplicationError> {
         return databaseDataSource.getAll(matching)
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = {
                     val properties =
                         it.map { property -> property.toReadModel() }.toPersistentList()
@@ -36,7 +36,7 @@ class PropertyQueryRepositoryImpl(
         flow {
             val propertiesFlow = databaseDataSource.watchAll()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it },
                 )
                 .map {
