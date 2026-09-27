@@ -6,6 +6,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Pr
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
+import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
+import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import kotlinx.coroutines.flow.Flow
 
 class PropertyDatabaseDataSourceImpl(
@@ -18,21 +20,21 @@ class PropertyDatabaseDataSourceImpl(
         dao.delete(id)
 
     override suspend fun getById(id: Long): AppResult<PropertyCompound, InfraError> {
-        return onDatabaseSafe { dao.getById(id) }
+        return onDatabase { dao.getById(id) }
     }
 
     override suspend fun getAll(matching: String?): AppResult<List<PropertyCompound>, InfraError> {
-        return onDatabaseSafe { dao.getAll() }
+        return onDatabase { dao.getAll() }
     }
 
     override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, InfraError> {
-        return onDatabaseSafe { dao.getAllNeighborhoodNames() }
+        return onDatabase { dao.getAllNeighborhoodNames() }
     }
 
     override suspend fun getAllSentInAssistance(
         assistanceId: Long,
     ): AppResult<List<PropertyCompound>, InfraError> {
-        return onDatabaseSafe { dao.getAllSentInAssistance(assistanceId) }
+        return onDatabase { dao.getAllSentInAssistance(assistanceId) }
     }
 
     override fun watchById(id: Long): Flow<AppResult<PropertyCompound, InfraError>> {
@@ -40,6 +42,6 @@ class PropertyDatabaseDataSourceImpl(
     }
 
     override fun watchAll(): AppResult<Flow<List<PropertyCompound>>, InfraError> {
-        return onDatabaseSafe { dao.watchAll() }
+        return onDatabase { dao.watchAll() }
     }
 }

@@ -5,9 +5,11 @@ import androidx.compose.material.icons.outlined.Apartment
 import androidx.compose.material.icons.outlined.House
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.core.domain.constants.APARTMENT_PROPERTY_TYPE_ID
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconValueDetailsItem
+import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 
 @Composable
 fun PropertyTypeDetailsItem(
@@ -19,7 +21,7 @@ fun PropertyTypeDetailsItem(
             propertyType?.id == APARTMENT_PROPERTY_TYPE_ID -> Icons.Outlined.Apartment
             else -> Icons.Outlined.House
         },
-        value = propertyType?.name ?: "",
+        value = propertyType?.let { stringResource(it.presentationLabel()) } ?: "",
         modifier = modifier
     )
 }

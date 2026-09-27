@@ -8,7 +8,8 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 
 - **Autenticação** — Login do Usuário via conta Google e gerenciamento do token de sessão e perfil profissional.
 - **Imóveis** — Catálogo de imóveis administrados: características físicas, localização e configuração financeira por imóvel.
-- **Clientes** — Gestão de Proprietários, Leads e Inquilinos; ciclo de vida do cliente e visão centralizada (SCV).
+- **Clientes** — Gestão de Leads e Inquilinos; ciclo de vida do Cliente e visão centralizada (SCV).
+- **Proprietários** — Cadastro dos Proprietários que contratam o Usuário para administrar seus Imóveis.
 - **Atendimento** — Registro do episódio de procura de um Lead: preferências de procura, imóveis enviados e interações.
 - **Períodos Ocupados** — Ciclo de vida de um intervalo de indisponibilidade de um Imóvel: Estadias e Períodos indisponíveis; inclui controle de overbooking e financeiro da Estadia.
 - **Relatórios Analíticos** — KPIs e gráficos de desempenho profissional do Usuário.
@@ -19,6 +20,7 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 ### Autenticação
 
 **Usuário**: Ator autenticado do aplicativo — o corretor de imóveis. Identificado por conta Google via OAuth 2.0. Apenas um dispositivo pode ter sessão ativa por vez.
+_Alias de código_: `User`
 
 **Token de sessão**: Credencial de autorização persistida localmente com criptografia AES-GCM. Permite que a sessão persista entre reinicializações do app.
 
@@ -31,6 +33,7 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 ### Imóveis
 
 **Imóvel**: Propriedade imobiliária administrada pelo Usuário, disponível para aluguel por temporada. Possui características físicas (dormitórios, banheiros, camas, eletrodomésticos, estacionamento), dados de condomínio, localização (bairro, proximidade ao mar) e configuração financeira.
+_Alias de código_: `Property`
 
 **Captação**: Processo de obtenção e cadastro de um novo Imóvel para administração.
 
@@ -39,6 +42,7 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 **Taxa de limpeza**: Valor fixo cobrado por estadia para limpeza do Imóvel, em reais.
 
 **Comissão**: Percentual ou valor fixo retido pelo Usuário por cada estadia como remuneração pela intermediação.
+_Alias de código_: `Commission`
 
 **Sinal** (Imóveis): Valor de reserva estabelecido pelo Proprietário para confirmação de uma estadia naquele Imóvel. Pode ser absoluto ou percentual.
 
@@ -51,12 +55,12 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 ### Clientes
 
 **Cliente**: Entidade base que representa um contato na carteira do Usuário. Concentra dados pessoais (nome, telefone, documento), origem e canal de contato. Lead, Inquilino e Inquilino antigo são estados derivados calculados a partir dos agregados Atendimento e Período Ocupado — não são tipos distintos de cadastro.
-
-**Proprietário**: Cliente que contratou o Usuário para administrar seu Imóvel. Possui dados de contato e pode ter múltiplos Imóveis associados.
+_Alias de código_: `LeadTenant`
 
 **Lead**: Cliente com Atendimento em status "Não finalizado" e **sem** Estadia ativa associada.
 
 **Inquilino**: Cliente com Estadia ativa (cadastrada com status diferente de "Finalizada") associada ao seu nome. Pode opcionalmente ter Atendimento em status "Não finalizado".
+_Alias de código_: `Tenant`
 
 **Inquilino antigo**: Cliente com ao menos uma Estadia com status "Finalizada" no histórico e **sem** Atendimento em status "Não finalizado" no momento.
 
@@ -70,9 +74,18 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 
 ---
 
+### Proprietários
+
+**Proprietário**: Pessoa que contratou o Usuário para administrar seus Imóveis. Possui dados de contato e chave de pagamento, e pode ter múltiplos Imóveis associados. Não é um Cliente: uma mesma pessoa que seja Proprietário e também alugue um Imóvel é cadastrada uma vez em cada contexto, sem vínculo entre os cadastros.
+_Alias de código_: `PropertyOwner`
+_Evitar_: Cliente (para Proprietário)
+
+---
+
 ### Atendimento
 
 **Atendimento**: Episódio de procura de um Lead por um Imóvel para estadia de temporada. Contém preferências de procura, Imóveis enviados como opção e registro de interações. Um cliente tem no máximo um Atendimento ativo por vez. Criar um Atendimento move o cliente para o estado Lead; excluí-lo reverte o estado.
+_Alias de código_: `Assistance`
 
 **Status do Atendimento**: Máquina de estados simples com dois estados:
 - **Não finalizado** — procura ativa; o Cliente é tratado como Lead (se sem Estadia ativa).
@@ -83,6 +96,7 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 **Imóveis enviados**: Lista de Imóveis apresentados pelo Usuário ao Lead como opções durante o Atendimento.
 
 **Interação**: Registro de um contato realizado entre o Usuário e o Lead durante o Atendimento (mensagem, ligação etc.).
+_Alias de código_: `Interaction`
 
 **Jornada de negociação**: Estado atual do cliente no funil de negociação — derivado da presença de Atendimento "Não finalizado" e/ou Estadia associada.
 
@@ -91,8 +105,10 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 ### Períodos Ocupados
 
 **Período Ocupado**: Registro de um intervalo de tempo em que um Imóvel está indisponível para novas reservas. Possui dois subtipos: Estadia e Período indisponível.
+_Alias de código_: `OccupiedPeriod`
 
 **Estadia**: Período Ocupado com Inquilino associado. Representa uma locação por temporada. Possui período contratado, configuração financeira, número de hóspedes e status de progresso.
+_Alias de código_: `Stay`
 
 **Status da Estadia**:
 - **Aguardando check-in** — check-in e check-out ainda não realizados.
@@ -100,6 +116,7 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 - **Finalizada** — check-in e check-out realizados.
 
 **Período indisponível**: Período Ocupado sem Inquilino associado. Intervalo em que um Imóvel não está disponível para Estadia por razão não relacionada a uma locação (ex: uso pelo Proprietário, manutenção). Considerado no controle de overbooking.
+_Alias de código_: `UnavailablePeriod`
 
 **Check-in**: Evento de entrada do Inquilino no Imóvel. Registrado pelo Usuário na Estadia; transiciona o status de "Aguardando check-in" para "Em andamento".
 
@@ -108,6 +125,7 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 **Sinal** (Estadias): Valor transferido pelo Inquilino como confirmação da reserva antes do check-in, conforme definido na configuração do Imóvel.
 
 **Movimentação financeira**: Registro de uma transferência monetária dentro de uma Estadia — data, valor, descrição, forma de pagamento (ex: Pix), titular e chave de pagamento.
+_Alias de código_: `StayTransfer`
 
 **Valor total da estadia**: Somatório das diárias do período contratado mais a taxa de limpeza.
 
@@ -124,6 +142,7 @@ Este glossário define os termos canônicos do domínio e os contextos delimitad
 **KPI**: Indicador-chave de desempenho calculado com base nos dados de Leads, Estadias e faturamento do Usuário.
 
 **Faturamento**: Somatório das comissões totais das Estadias em um período.
+_Alias de código_: `Invoice`
 
 **Ticket médio**: Faturamento médio por Estadia em um período.
 

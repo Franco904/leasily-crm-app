@@ -62,28 +62,14 @@ class LeadTenantRegistrationViewModel(
     fun init(leadTenantId: Long?) {
         if (isInitialized) return
 
-        if (leadTenantId != null) {
-            getLeadTenantToEdit(leadTenantId)
-        }
-
         getPastTags()
         getPastCities()
         getPastContactOrigins()
 
+        if (leadTenantId != null) getLeadTenantToEdit(leadTenantId)
+        else _draftFormUiState.update { LeadTenantDraftFormUiState.Loaded.Empty }
+
         isInitialized = true
-    }
-
-    private fun getLeadTenantToEdit(leadTenantId: Long) {
-        viewModelScope.launch {
-            leadTenantQueryRepository.getById(leadTenantId)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                .onSuccess { storedLeadTenant ->
-                    val form = storedLeadTenant.toUiState()
-
-                    _draftFormUiState.update { form }
-                    formToEdit = form
-                }
-        }
     }
 
     private fun getPastTags() {
@@ -107,6 +93,19 @@ class LeadTenantRegistrationViewModel(
             leadTenantQueryRepository.getAllContactOrigins()
                 .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { contactOriginTypes -> _pastContactOrigins.update { contactOriginTypes } }
+        }
+    }
+
+    private fun getLeadTenantToEdit(leadTenantId: Long) {
+        viewModelScope.launch {
+            leadTenantQueryRepository.getById(leadTenantId)
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onSuccess { storedLeadTenant ->
+                    val form = storedLeadTenant.toUiState()
+
+                    _draftFormUiState.update { form }
+                    formToEdit = form
+                }
         }
     }
 

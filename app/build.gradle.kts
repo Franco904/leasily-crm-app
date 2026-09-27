@@ -184,6 +184,7 @@ dependencies {
     androidTestImplementation(libs.kluent.android)
 
     testImplementation(libs.junit5.engine)
+    testRuntimeOnly(libs.junit5.launcher)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kluent)
     testImplementation(libs.mockk)

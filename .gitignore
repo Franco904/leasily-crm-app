@@ -15,3 +15,8 @@
 .cxx
 local.properties
 gradle.properties
+
+# Artefatos locais de agentes de IA
+/handoffs/
+/teachings/
+/pr-*.md

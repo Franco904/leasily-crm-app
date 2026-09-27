@@ -2,11 +2,14 @@ package com.fstengineering.leasilycrm.propertyRegistration.presentation.viewMode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyRegistration.domain.entities.PropertyPrice
+import com.fstengineering.leasilycrm.propertyRegistration.domain.valueObjects.PropertyPricePeriod
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyPriceDraftFormUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyPriceErrorUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.fields.PropertyPriceField
@@ -63,14 +66,21 @@ class PropertyRegistrationStep3ViewModel : ViewModel() {
     fun validatePropertyPrice(allPrices: List<PropertyPriceUiState>) {
         val form = propertyPriceForm.value ?: return
 
+        val otherPeriods = allPrices
+            .filter { it.startDate != propertyPriceToEdit?.startDate }
+            .mapNotNull {
+                val result = PropertyPricePeriod.parse(it.startDate, it.endDate)
+                (result as? AppResultCompound.Success)?.data
+            }
+
         viewModelScope.launch {
             PropertyPrice.parse(
                 startDate = form.startDate,
                 endDate = form.endDate,
                 amount = form.amount,
-//                propertyPriceBeforeEdit = propertyPriceToEdit,
-//                otherPropertyPrices = otherPropertyPrices,
+                otherPeriods = otherPeriods,
             )
+                .onSuccess { _uiEvents.trySend(UiEvent.PropertyPriceValidateSuccess) }
                 .onErrors { errors -> setFieldErrors(errors) }
         }
     }

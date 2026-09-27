@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class SignInUserResponseDto(
     val id: Long,
     val name: String,
-    val creciNumber: String?,
+    val creciNumber: String? = null,
     val profilePictureUrl: String,
 )

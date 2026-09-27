@@ -12,7 +12,7 @@ class PropertyOwnerSharedCommandRepositoryImpl(
     private val propertyOwnerDatabaseDataSource: PropertyOwnerDatabaseDataSource,
 ) : PropertyOwnerSharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             propertyOwnerDatabaseDataSource.delete(id)
         }
             .fold(

@@ -12,11 +12,13 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.settings.models.SettingsUiState
 
@@ -33,10 +35,14 @@ fun SettingsScreen(
 
     val settings by viewModel.settingsUiState.collectAsStateWithLifecycle()
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
     LaunchedEffect(Unit) {
         viewModel.init()
+    }
 
-        viewModel.uiEvents.collect { uiEvent ->
+    LaunchedEffect(viewModel, lifecycle) {
+        viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
                 is SettingsViewModel.UiEvent.Error -> {
                     val errorData = uiEvent.error.toBottomSheetData(

@@ -12,7 +12,7 @@ class PropertySharedCommandRepositoryImpl(
     private val propertyDatabaseDataSource: PropertyDatabaseDataSource,
 ) : PropertySharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             propertyDatabaseDataSource.delete(id)
         }
             .fold(

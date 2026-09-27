@@ -21,7 +21,7 @@ class PropertyCommandRepositoryImpl(
     private val propertyFileDatabaseDataSource: PropertyFileDatabaseDataSource,
 ) : PropertyCommandRepository {
     override suspend fun insertOrUpdate(property: Property): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             saveDataInDatabase(property)
         }
             .fold(

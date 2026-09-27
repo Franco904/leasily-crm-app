@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Le
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 import com.fstengineering.leasilycrm.core.infra.utils.InfraError
+import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import kotlinx.coroutines.flow.Flow
 
 class TenantDatabaseDataSourceImpl(
@@ -18,32 +19,32 @@ class TenantDatabaseDataSourceImpl(
         dao.delete(id)
 
     override suspend fun getById(id: Long): AppResult<LeadTenantReadView, InfraError> {
-        return onDatabaseSafe { dao.getById(id) }
+        return onDatabase { dao.getById(id) }
     }
 
     override suspend fun getNameById(id: Long): AppResult<String, InfraError> {
-        return onDatabaseSafe { dao.getNameById(id) }
+        return onDatabase { dao.getNameById(id) }
     }
 
     override suspend fun getAllLeads(
         matching: String?,
         order: Int,
     ): AppResult<List<LeadTenantReadView>, InfraError> {
-        return onDatabaseSafe { dao.getAllLeads(matching, order) }
+        return onDatabase { dao.getAllLeads(matching, order) }
     }
 
     override suspend fun getAllTenants(
         matching: String?,
         order: Int,
     ): AppResult<List<LeadTenantReadView>, InfraError> {
-        return onDatabaseSafe { dao.getAllTenants(matching, order) }
+        return onDatabase { dao.getAllTenants(matching, order) }
     }
 
     override suspend fun getAllWithoutUpcomingStays(
         matching: String?,
         currentTenantId: Long?,
     ): AppResult<List<LeadTenantReadView>, InfraError> {
-        return onDatabaseSafe {
+        return onDatabase {
             dao.getAllWithoutUpcomingStays(
                 matching = matching,
                 currentTenantId = currentTenantId,
@@ -52,19 +53,19 @@ class TenantDatabaseDataSourceImpl(
     }
 
     override suspend fun getAllTagNames(): AppResult<List<String>, InfraError> {
-        return onDatabaseSafe { dao.getAllTagNames() }
+        return onDatabase { dao.getAllTagNames() }
     }
 
     override suspend fun getAllCityNames(): AppResult<List<String>, InfraError> {
-        return onDatabaseSafe { dao.getAllCityNames() }
+        return onDatabase { dao.getAllCityNames() }
     }
 
     override suspend fun getAllContactOrigins(): AppResult<List<String>, InfraError> {
-        return onDatabaseSafe { dao.getAllContactOrigins() }
+        return onDatabase { dao.getAllContactOrigins() }
     }
 
     override fun watchById(id: Long): AppResult<Flow<LeadTenantReadView?>, InfraError> {
-        return onDatabaseSafe { dao.watchById(id) }
+        return onDatabase { dao.watchById(id) }
     }
 
     override fun watchAll(
@@ -72,7 +73,7 @@ class TenantDatabaseDataSourceImpl(
         matching: String?,
         orderTypeId: Int?,
     ): AppResult<Flow<List<LeadTenantReadView>>, InfraError> {
-        return onDatabaseSafe {
+        return onDatabase {
             dao.watchAll(
                 tenantStatusIdFilter = tenantStatusIdFilter,
                 matching = matching,

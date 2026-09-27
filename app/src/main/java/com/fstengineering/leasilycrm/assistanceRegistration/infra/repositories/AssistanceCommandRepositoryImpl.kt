@@ -25,7 +25,7 @@ class AssistanceCommandRepositoryImpl(
     private val assistanceSentPropertyCrossRefDatabaseDataSource: AssistanceSentPropertyCrossRefDatabaseDataSource,
 ) : AssistanceCommandRepository {
     override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             saveDataInDatabase(assistance)
         }
             .fold(
@@ -74,7 +74,7 @@ class AssistanceCommandRepositoryImpl(
     }
 
     override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             assistanceDatabaseDataSource.delete(id)
         }
             .fold(

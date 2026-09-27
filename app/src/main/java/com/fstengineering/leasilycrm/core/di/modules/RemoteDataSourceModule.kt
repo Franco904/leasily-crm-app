@@ -24,13 +24,6 @@ import java.util.concurrent.TimeUnit
 val remoteDataSourceModule = module {
     single<HttpClient> {
         HttpClient(OkHttp) {
-            engine {
-                config {
-                    readTimeout(30, TimeUnit.SECONDS)
-                    connectTimeout(30, TimeUnit.SECONDS)
-                }
-            }
-
             defaultRequest {
                 url(BuildConfig.REMOTE_API_URL)
                 contentType(ContentType.Application.Json)

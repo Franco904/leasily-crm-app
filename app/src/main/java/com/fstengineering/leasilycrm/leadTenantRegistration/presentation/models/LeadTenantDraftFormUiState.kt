@@ -6,20 +6,24 @@ sealed interface LeadTenantDraftFormUiState {
     data object Loading : LeadTenantDraftFormUiState
 
     data class Loaded(
-        val id: Long?,
-        val createDateTime: AppDateTime?,
-        val tag: String?,
-        val name: String?,
-        val city: String?,
-        val identityDocument: String?,
-        val phone: String?,
-        val email: String?,
-        val contactOrigin: String?,
-        val observations: String?,
+        val id: Long? = null,
+        val createDateTime: AppDateTime? = null,
+        val tag: String? = null,
+        val name: String? = null,
+        val city: String? = null,
+        val identityDocument: String? = null,
+        val phone: String? = null,
+        val email: String? = null,
+        val contactOrigin: String? = null,
+        val observations: String? = null,
         val isLead: Boolean,
     ) : LeadTenantDraftFormUiState {
         val isAnyFormFieldInitialized: Boolean
             get() =
                 tag != null || name != null || city != null || identityDocument != null || phone != null || email != null || contactOrigin != null || observations != null
+
+        companion object {
+            val Empty = Loaded(isLead = true)
+        }
     }
 }

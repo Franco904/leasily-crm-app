@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyRegistration.domain.entities.Property
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
@@ -58,6 +59,7 @@ class PropertyRegistrationStep1ViewModel : ViewModel() {
             neighborhood = form.neighborhood,
             streetAddress = form.streetAddress,
         )
+            .onSuccess { _uiEvents.trySend(UiEvent.ValidateSuccess) }
             .onErrors { errors -> setFieldErrors(errors) }
     }
 

@@ -3,28 +3,13 @@ package com.fstengineering.leasilycrm.propertyRegistration.domain.valueObjects
 import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 class PropertyPricePeriod private constructor(
     val startDate: AppDate,
     val endDate: AppDate,
 ) {
-    /*
-        val newPeriod = PropertyPricePeriod.parse(...)
-
-        val existingPeriods = stayRepository
-            .findByPropertyId(propertyId)
-            .map { it.period }
-
-        val hasOverbooking =
-            existingPeriods
-                .filter { it != periodBeforeEdit }
-                .any { it.overlaps(newPeriod) }
-
-        if (hasOverbooking) {
-            return AppResult.Error(DomainError.Stay.Overbooking)
-        }
-    */
     fun overlaps(other: PropertyPricePeriod): Boolean {
         return startDate < other.endDate && endDate > other.startDate
     }
@@ -33,6 +18,7 @@ class PropertyPricePeriod private constructor(
         fun parse(
             startDate: AppDate,
             endDate: AppDate,
+            otherPeriods: List<PropertyPricePeriod> = emptyList(),
         ): AppResultCompound<PropertyPricePeriod, DomainError.PropertyPricePeriod> {
             val errors = mutableListOf<DomainError.PropertyPricePeriod>()
 
@@ -41,12 +27,13 @@ class PropertyPricePeriod private constructor(
 
             if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
 
-            val parsed = PropertyPricePeriod(
-                startDate = startDate,
-                endDate = endDate,
-            )
+            val period = PropertyPricePeriod(startDate = startDate, endDate = endDate)
 
-            return AppResultCompound.Success(data = parsed)
+            if (otherPeriods.any { it.overlaps(period) }) {
+                return AppResultCompound.Errors(persistentListOf(DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod))
+            }
+
+            return AppResultCompound.Success(data = period)
         }
     }
 }

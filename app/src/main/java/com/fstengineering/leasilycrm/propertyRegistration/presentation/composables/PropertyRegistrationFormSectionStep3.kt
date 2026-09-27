@@ -141,7 +141,7 @@ fun PropertyRegistrationFormSectionStep3(
             } else {
                 itemsIndexed(
                     items = form.pricesByMonthYear,
-                    key = { _, entry -> entry.key },
+                    key = { _, entry -> "${entry.key.month}-${entry.key.year}" },
                     contentType = { _, entryType -> entryType },
                 ) { i, (monthYear, prices) ->
                     val isCurrentYear = monthYear.year == calendar.get(Calendar.YEAR)

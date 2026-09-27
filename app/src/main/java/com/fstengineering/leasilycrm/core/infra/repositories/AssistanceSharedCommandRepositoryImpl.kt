@@ -12,7 +12,7 @@ class AssistanceSharedCommandRepositoryImpl(
     private val assistanceDatabaseDataSource: AssistanceDatabaseDataSource,
 ) : AssistanceSharedCommandRepository {
     override suspend fun finishOpenAssistanceByTenantId(tenantId: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             assistanceDatabaseDataSource.finishOpenAssistanceByTenantId(tenantId)
         }
             .fold(
@@ -22,7 +22,7 @@ class AssistanceSharedCommandRepositoryImpl(
     }
 
     override suspend fun unfinishAssistanceByTenantId(tenantId: Long): AppResult<Unit, ApplicationError> {
-        return databaseAdapter.withTransaction {
+        return databaseAdapter.transaction {
             assistanceDatabaseDataSource.unfinishAssistanceByTenantId(tenantId)
         }
             .fold(

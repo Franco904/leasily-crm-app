@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.dashboard.presentation.DashboardPage
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvent.BottomSheetError
@@ -88,10 +90,14 @@ fun HomeScreen(
     var isSearching by remember { mutableStateOf(false) }
     var searchInput by remember { mutableStateOf<String?>(null) }
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
     LaunchedEffect(Unit) {
         viewModel.init()
+    }
 
-        viewModel.uiEvents.collect { uiEvent ->
+    LaunchedEffect(viewModel, lifecycle) {
+        viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
                 is BottomSheetError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
