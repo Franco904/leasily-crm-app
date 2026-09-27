@@ -7,8 +7,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Amount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Quantidade
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.OccupiedPeriodPeriod
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.StayGuestsCount
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -22,7 +22,7 @@ class Stay private constructor(
     val vehicleMake: String?,
     val vehicleColor: String?,
     val vehicleLicensePlate: String?,
-    val guestsCount: StayGuestsCount,
+    val guestsCount: Quantidade,
     val isAutoCheckIn: Boolean,
     val isAutoCheckOut: Boolean,
     val totalPrice: Amount?,
@@ -54,9 +54,6 @@ class Stay private constructor(
 
             if (propertyId == null) errors.add(DomainError.StayProperty.Required)
             if (tenantId == null) errors.add(DomainError.StayTenant.Required)
-
-            val guestsCount = StayGuestsCount.parse(guests)
-                .fold(onError = { errors.add(it); null }, onSuccess = { it })
 
             val (checkInTimeHour, checkInTimeMinute) = checkInTime
             val (checkOutTimeHour, checkOutTimeMinute) = checkOutTime
@@ -104,7 +101,7 @@ class Stay private constructor(
                 vehicleMake = vehicleMake,
                 vehicleColor = vehicleColor,
                 vehicleLicensePlate = vehicleLicensePlate,
-                guestsCount = requireNotNull(guestsCount),
+                guestsCount = Quantidade.of(guests),
                 period = requireNotNull(period),
                 isAutoCheckIn = isAutoCheckIn,
                 isAutoCheckOut = isAutoCheckOut,

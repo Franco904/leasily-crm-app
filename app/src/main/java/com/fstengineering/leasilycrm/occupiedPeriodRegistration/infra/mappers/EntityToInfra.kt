@@ -16,7 +16,7 @@ fun Stay.toLocalDataModel(): StayEntity {
         vehicleMake = vehicleMake,
         vehicleColor = vehicleColor,
         vehicleLicensePlate = vehicleLicensePlate,
-        guests = guestsCount.count,
+        guests = guestsCount.value,
         checkInDateTime = period.checkInDateTime,
         checkOutDateTime = period.checkOutDateTime,
         isAutoCheckIn = isAutoCheckIn,

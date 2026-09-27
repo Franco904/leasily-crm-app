@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
-import com.fstengineering.leasilycrm.propertyRegistration.domain.valueObjects.PropertyFeaturesCount
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Quantidade
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -27,7 +27,14 @@ class Property private constructor(
     val parkingSpotNumber: String?,
     val parkingBasementLevelNumber: String?,
     val hobbyBoxNumber: String?,
-    val featuresCount: PropertyFeaturesCount,
+    val bedroomsCount: Quantidade,
+    val enSuitesCount: Quantidade,
+    val doubleBedsCount: Quantidade,
+    val singleBedsCount: Quantidade,
+    val bathroomsCount: Quantidade,
+    val parkingSpotsCount: Quantidade,
+    val airConditionersCount: Quantidade,
+    val maxGuestsCount: Quantidade,
     val seaProximityType: PropertySeaProximityType?,
     val includedItems: String?,
     val hasIncludedItems: Boolean,
@@ -79,18 +86,6 @@ class Property private constructor(
             if (neighborhood.isNullOrBlank()) errors.add(DomainError.Neighborhood.Required)
             if (streetAddress.isNullOrBlank()) errors.add(DomainError.PropertyStreetAddress.Required)
 
-            val featuresCount = PropertyFeaturesCount.parse(
-                bedroomsCount = bedroomsCount,
-                enSuitesCount = enSuitesCount,
-                doubleBedsCount = doubleBedsCount,
-                singleBedsCount = singleBedsCount,
-                bathroomsCount = bathroomsCount,
-                parkingSpotsCount = parkingSpotsCount,
-                airConditionersCount = airConditionersCount,
-                maxGuestsCount = maxGuestsCount,
-            )
-                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
-
             val seaProximityType = seaProximityTypeId?.let { typeId ->
                 PropertySeaProximityType.parse(typeId, distanceToSea = distanceToSea)
                     .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
@@ -115,7 +110,14 @@ class Property private constructor(
                 parkingSpotNumber = parkingSpotNumber,
                 parkingBasementLevelNumber = parkingBasementLevelNumber,
                 hobbyBoxNumber = hobbyBoxNumber,
-                featuresCount = requireNotNull(featuresCount),
+                bedroomsCount = Quantidade.of(bedroomsCount),
+                enSuitesCount = Quantidade.of(enSuitesCount),
+                doubleBedsCount = Quantidade.of(doubleBedsCount),
+                singleBedsCount = Quantidade.of(singleBedsCount),
+                bathroomsCount = Quantidade.of(bathroomsCount),
+                parkingSpotsCount = Quantidade.of(parkingSpotsCount),
+                airConditionersCount = Quantidade.of(airConditionersCount),
+                maxGuestsCount = Quantidade.of(maxGuestsCount),
                 seaProximityType = seaProximityType,
                 includedItems = includedItems,
                 hasIncludedItems = hasIncludedItems,

@@ -1,7 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistanceGuestsCount
-import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistancePreferredFeaturesCount
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistancePreferredPeriod
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
@@ -12,6 +10,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Quantidade
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -22,8 +21,16 @@ class Assistance private constructor(
     val preferredPeriod: AssistancePreferredPeriod?,
     val hasFlexibilityForPeriod: Boolean,
     val maxAcceptedNightlyRate: AppDecimal?,
-    val guestsCount: AssistanceGuestsCount,
-    val preferredFeaturesCount: AssistancePreferredFeaturesCount,
+    val adultsCount: Quantidade,
+    val kidsCount: Quantidade,
+    val babiesCount: Quantidade,
+    val animalsCount: Quantidade,
+    val bedroomsCount: Quantidade,
+    val enSuitesCount: Quantidade,
+    val doubleBedsCount: Quantidade,
+    val singleBedsCount: Quantidade,
+    val bathroomsCount: Quantidade,
+    val parkingSpotsCount: Quantidade,
     val preferredSeaProximityType: PropertySeaProximityType?,
     val preferredNeighborhoods: ImmutableList<String>,
     val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
@@ -72,24 +79,6 @@ class Assistance private constructor(
                 )
                     .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
-            val guestsCount = AssistanceGuestsCount.parse(
-                adultsCount = adultsCount,
-                kidsCount = kidsCount,
-                babiesCount = babiesCount,
-                animalsCount = animalsCount,
-            )
-                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
-
-            val preferredFeaturesCount = AssistancePreferredFeaturesCount.parse(
-                bedroomsCount = bedroomsCount,
-                enSuitesCount = enSuitesCount,
-                doubleBedsCount = doubleBedsCount,
-                singleBedsCount = singleBedsCount,
-                bathroomsCount = bathroomsCount,
-                parkingSpotsCount = parkingSpotsCount,
-            )
-                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
-
             val preferredSeaProximityType = preferredSeaProximityTypeId?.let { typeId ->
                 PropertySeaProximityType.parse(typeId, distanceToSea = preferredDistanceToSea)
                     .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
@@ -106,8 +95,16 @@ class Assistance private constructor(
                 preferredPeriod = preferredPeriod,
                 hasFlexibilityForPeriod = hasFlexibilityForPeriod,
                 maxAcceptedNightlyRate = maxAcceptedNightlyRate,
-                guestsCount = requireNotNull(guestsCount),
-                preferredFeaturesCount = requireNotNull(preferredFeaturesCount),
+                adultsCount = Quantidade.of(adultsCount),
+                kidsCount = Quantidade.of(kidsCount),
+                babiesCount = Quantidade.of(babiesCount),
+                animalsCount = Quantidade.of(animalsCount),
+                bedroomsCount = Quantidade.of(bedroomsCount),
+                enSuitesCount = Quantidade.of(enSuitesCount),
+                doubleBedsCount = Quantidade.of(doubleBedsCount),
+                singleBedsCount = Quantidade.of(singleBedsCount),
+                bathroomsCount = Quantidade.of(bathroomsCount),
+                parkingSpotsCount = Quantidade.of(parkingSpotsCount),
                 preferredSeaProximityType = preferredSeaProximityType,
                 isFinished = isFinished,
                 preferredNeighborhoods = preferredNeighborhoods,
