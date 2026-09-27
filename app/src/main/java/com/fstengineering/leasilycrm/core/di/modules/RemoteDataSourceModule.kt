@@ -1,10 +1,12 @@
 package com.fstengineering.leasilycrm.core.di.modules
 
 import com.fstengineering.leasilycrm.BuildConfig
+import com.fstengineering.leasilycrm.core.application.services.UserSessionService
 import com.fstengineering.leasilycrm.core.di.qualifiers.encryptedPreferencesQualifier
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.UserRemoteDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.cookies.UserSessionCookieStorage
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.remote.validateSession
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -42,6 +44,9 @@ val remoteDataSourceModule = module {
                     encryptedPreferencesStorage = get(encryptedPreferencesQualifier),
                 )
             }
+
+            // Resolvido sob demanda: UserSessionService depende do HttpClient (sign-out remoto).
+            validateSession(onSessionExpired = { get<UserSessionService>().onSessionExpired() })
 
             if (BuildConfig.DEBUG) {
                 install(Logging) {
