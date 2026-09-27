@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.propertyDashboard.application.useCases
 
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.services.PropertyOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -31,8 +30,8 @@ class WatchPropertyUseCase(
     private val stayQueryRepository: StayQueryRepository,
     private val leadTenantSharedQueryRepository: LeadTenantSharedQueryRepository,
     private val dateProvider: AppDateProvider,
-) : QueryFlowUseCase<PropertyArgs, PropertyReadModel> {
-    override suspend fun invoke(
+) {
+    suspend operator fun invoke(
         args: PropertyArgs,
     ): Flow<AppResult<PropertyReadModel, ApplicationError>> {
         val propertyFlow = propertyQueryRepository.watchById(propertyId = args.id)

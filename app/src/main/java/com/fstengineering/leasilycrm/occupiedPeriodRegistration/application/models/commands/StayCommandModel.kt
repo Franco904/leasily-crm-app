@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.commands
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import kotlinx.collections.immutable.ImmutableList
@@ -24,4 +23,4 @@ data class StayCommandModel(
     val commission: AppDecimal?,
     val files: ImmutableList<StayFileCommandModel>,
     val observations: String?,
-) : CommandUseCase.CommandModel
+)

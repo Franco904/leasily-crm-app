@@ -6,7 +6,8 @@ import com.fstengineering.leasilycrm.core.application.models.commands.RegisterCh
 import com.fstengineering.leasilycrm.core.application.models.commands.UndoCheckOutCommand
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
@@ -15,6 +16,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
 import com.fstengineering.leasilycrm.occupiedPeriods.application.repositories.OccupiedPeriodQueryRepository
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -29,11 +31,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 class OccupiedPeriodsViewModel(
-    private val registerStayCheckOutUseCase: CommandUseCase<RegisterCheckOutCommand>,
-    private val undoRegisterStayCheckOutUseCase: CommandUseCase<UndoCheckOutCommand>,
+    private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
+    private val undoRegisterStayCheckOutUseCase: UndoRegisterStayCheckOutUseCase,
     private val occupiedPeriodSharedCommandRepository: OccupiedPeriodSharedCommandRepository,
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
     private val occupiedPeriodSharedQueryRepository: OccupiedPeriodSharedQueryRepository,

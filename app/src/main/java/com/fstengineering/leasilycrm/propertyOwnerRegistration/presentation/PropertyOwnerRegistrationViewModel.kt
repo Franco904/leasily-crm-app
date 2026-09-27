@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.services.interfaces.FileStorageService
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
@@ -13,8 +12,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerQueryRepository
+import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerDraftFormUiState
@@ -22,6 +21,7 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mode
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerField
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerFileUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -30,10 +30,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 class PropertyOwnerRegistrationViewModel(
-    private val writePropertyOwner: CommandUseCase<PropertyOwnerCommandModel>,
+    private val writePropertyOwner: WritePropertyOwnerUseCase,
     private val propertyOwnerQueryRepository: PropertyOwnerQueryRepository,
     private val fileStorageService: FileStorageService,
 ) : ViewModel() {

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.propertyRegistration.application.models.commands
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
@@ -38,4 +37,4 @@ data class PropertyCommandModel(
     val prices: ImmutableList<PropertyPriceCommandModel>,
     val files: ImmutableList<PropertyFileCommandModel>,
     val observations: String?,
-) : CommandUseCase.CommandModel
+)

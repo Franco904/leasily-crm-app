@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -10,8 +9,8 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repo
 
 class WriteUnavailablePeriodUseCase(
     private val occupiedPeriodCommandRepository: OccupiedPeriodCommandRepository,
-) : CommandUseCase<UnavailablePeriodCommandModel> {
-    override suspend fun invoke(
+) {
+    suspend operator fun invoke(
         command: UnavailablePeriodCommandModel,
     ): AppResult<Unit, BaseError> {
         val unavailablePeriod = command.toEntity()

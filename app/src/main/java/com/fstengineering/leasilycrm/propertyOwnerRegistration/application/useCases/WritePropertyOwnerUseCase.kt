@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -10,8 +9,8 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repos
 
 class WritePropertyOwnerUseCase(
     private val propertyOwnerCommandRepository: PropertyOwnerCommandRepository,
-) : CommandUseCase<PropertyOwnerCommandModel> {
-    override suspend fun invoke(
+) {
+    suspend operator fun invoke(
         command: PropertyOwnerCommandModel,
     ): AppResult<Unit, BaseError> {
         val propertyOwner = command.toEntity()

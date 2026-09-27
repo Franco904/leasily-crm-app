@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.application.useCases
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -10,8 +9,8 @@ import com.fstengineering.leasilycrm.leadTenantRegistration.application.reposito
 
 class WriteLeadTenantUseCase(
     private val leadTenantCommandRepository: LeadTenantCommandRepository,
-) : CommandUseCase<LeadTenantCommandModel> {
-    override suspend fun invoke(
+) {
+    suspend operator fun invoke(
         command: LeadTenantCommandModel,
     ): AppResult<Unit, BaseError> {
         val leadTenant = command.toEntity()

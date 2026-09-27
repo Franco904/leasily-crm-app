@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.commands
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 data class UnavailablePeriodCommandModel(
@@ -10,4 +9,4 @@ data class UnavailablePeriodCommandModel(
     val checkInDateTime: AppDateTime?,
     val checkOutDateTime: AppDateTime?,
     val observations: String?,
-) : CommandUseCase.CommandModel
+)

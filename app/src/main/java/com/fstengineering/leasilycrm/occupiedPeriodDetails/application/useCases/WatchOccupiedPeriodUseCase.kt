@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.domain.services.PropertyOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
@@ -19,8 +18,8 @@ class WatchOccupiedPeriodUseCase(
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
     private val propertyQueryRepository: PropertyQueryRepository,
     private val tenantQueryRepository: TenantQueryRepository,
-) : QueryFlowUseCase<OccupiedPeriodArgs, OccupiedPeriodReadModel?> {
-    override suspend fun invoke(args: OccupiedPeriodArgs): Flow<AppResult<OccupiedPeriodReadModel?, ApplicationError>> {
+) {
+    suspend operator fun invoke(args: OccupiedPeriodArgs): Flow<AppResult<OccupiedPeriodReadModel?, ApplicationError>> {
         return occupiedPeriodQueryRepository.watchById(args.periodId).map outer@{ periodResult ->
             val raw = periodResult.fold(
                 onError = { e -> return@outer AppResult.Error(error = e) },

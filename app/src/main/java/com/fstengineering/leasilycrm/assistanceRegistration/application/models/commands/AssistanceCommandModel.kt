@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.models.commands
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
@@ -32,4 +31,4 @@ data class AssistanceCommandModel(
     val sentPropertiesIds: ImmutableList<Long>,
     val interactions: ImmutableList<AssistanceInteractionCommandModel>,
     val leadTenantId: Long?,
-) : CommandUseCase.CommandModel
+)

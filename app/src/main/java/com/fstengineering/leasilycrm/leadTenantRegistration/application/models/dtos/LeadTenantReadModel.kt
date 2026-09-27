@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.application.models.dtos
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 data class LeadTenantReadModel(
@@ -15,4 +14,4 @@ data class LeadTenantReadModel(
     val contactOrigin: String?,
     val observations: String?,
     val isLead: Boolean,
-) : QueryUseCase.ReadModel
+)

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
@@ -38,4 +37,4 @@ data class PropertyRawReadModel(
     val prices: ImmutableList<PropertyPriceReadModel>,
     val files: ImmutableList<PropertyFileReadModel>,
     val observations: String?,
-) : QueryUseCase.ReadModel
+)
