@@ -64,8 +64,14 @@ Itere até o usuário aprovar a decomposição.
 ### 5. Entrega
 
 Para cada fatia aprovada, crie uma nova issue no issue tracker (GitHub). Use o
-template de issue abaixo. Organize as issues em ordem de dependência (bloqueadoras primeiro), para
-que você possa referenciar identificadores reais no campo "Dependências".
+template de issue abaixo e aplique a label do tipo (`História` ou `Tarefa`). Crie as issues em
+ordem de dependência (bloqueadoras primeiro) e registre cada bloqueio com o recurso nativo
+"blocked by" do GitHub — nunca no corpo da issue:
+
+```bash
+gh api -X POST repos/<owner>/<repo>/issues/<bloqueada>/dependencies/blocked_by \
+  -F issue_id=$(gh api repos/<owner>/<repo>/issues/<bloqueadora> --jq .id)
+```
 
 NÃO feche nem modifique a issue pai (épico). Também não inclua a seção "Épico pai", essa ligação
 será feita manualmente pelo(a) PO no GitHub depois.
@@ -146,11 +152,5 @@ Uma lista de decisões de teste que foram tomadas. Inclua:
 ### Referência
 
 [Inserir link da referência]
-
-### Dependências
-
-- Referência à issue bloqueadora ou dependências externas (se houver)
-
-Ou "Nenhuma — pode iniciar imediatamente" se não houver bloqueadores.
 
 </issue-template>
