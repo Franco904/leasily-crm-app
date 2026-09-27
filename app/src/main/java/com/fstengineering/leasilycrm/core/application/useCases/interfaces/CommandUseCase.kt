@@ -1,10 +1,10 @@
 package com.fstengineering.leasilycrm.core.application.useCases.interfaces
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 
 interface CommandUseCase<C> {
-    suspend operator fun invoke(command: C): AppResultCompound<Unit, BusinessRuleError>
+    suspend operator fun invoke(command: C): AppResult<Unit, BaseError>
 
     interface CommandModel
 }

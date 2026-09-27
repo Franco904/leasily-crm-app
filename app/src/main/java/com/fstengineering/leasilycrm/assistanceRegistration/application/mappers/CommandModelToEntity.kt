@@ -4,12 +4,13 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.c
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.commands.AssistanceInteractionCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.AssistanceInteraction
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.toPersistentList
 
-fun AssistanceCommandModel.toEntity(): AppResultCompound<Assistance, DomainError> {
+fun AssistanceCommandModel.toEntity(): AppResult<Assistance, ValidationErrors> {
     val errors = mutableListOf<DomainError>()
 
     val isAnyNeighborhoodEmpty = preferredNeighborhoods.any { it.isBlank() }
@@ -18,7 +19,7 @@ fun AssistanceCommandModel.toEntity(): AppResultCompound<Assistance, DomainError
     val interactions = interactions
         .mapNotNull { interaction ->
             interaction.toEntity()
-                .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
         }
         .toPersistentList()
 
@@ -49,11 +50,11 @@ fun AssistanceCommandModel.toEntity(): AppResultCompound<Assistance, DomainError
         leadTenantId = leadTenantId,
         isFinished = false,
     )
-        .fold(onErrors = { errors.addAll(0, it); null }, onSuccess = { it })
+        .fold(onError = { errors.addAll(0, it.errors); null }, onSuccess = { it })
 
-    if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+    if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
-    return AppResultCompound.Success(data = requireNotNull(parsed))
+    return AppResult.Success(data = requireNotNull(parsed))
 }
 
 private fun AssistanceInteractionCommandModel.toEntity() = AssistanceInteraction.parse(

@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.application.services
 
 import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ConnectivityAdapter
 
 class ConnectivityServiceImpl(
