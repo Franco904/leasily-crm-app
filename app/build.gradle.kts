@@ -181,6 +181,9 @@ dependencies {
 
     // Testing
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(project.dependencies.platform(libs.koin.bom))
+    androidTestImplementation(libs.koin.test.junit4)
     androidTestImplementation(libs.kluent.android)
 
     testImplementation(libs.junit5.engine)
