@@ -1,6 +1,6 @@
 ---
 name: to-pr
-description: Gera o corpo de um PR seguindo `.github/pull_request_template.md`, com ênfase em plano de QA ponta-a-ponta derivado do tracer bullet da issue. Salva como `pr-<branch>.md` na raiz do repositório. Use quando o usuário quiser abrir um PR, gerar o corpo de um PR ou criar o plano de QA de uma entrega.
+description: Abre um PR no GitHub com corpo seguindo `.github/pull_request_template.md`, com ênfase em plano de QA ponta-a-ponta derivado do tracer bullet da issue. Use quando o usuário quiser abrir um PR, gerar o corpo de um PR ou criar o plano de QA de uma entrega.
 argument-hint: "Qual o número da issue e a branch de destino? (ex: 42 main)"
 ---
 
@@ -78,12 +78,13 @@ mencionar) as que não se aplicam:
 | Edge cases de dados   | Campos opcionais ausentes, valores limítrofes, strings longas     |
 | Impactos laterais     | Outros fluxos afetados pelas mudanças da Seção 1 (se aplicável)   |
 
-### 5. Gerar arquivo
+### 5. Abrir PR
 
-Salvar como `pr-<branch-name>.md` na raiz do repositório, usando a estrutura exata do template
-`.github/pull_request_template.md`.
+Montar o corpo com a estrutura exata do template `.github/pull_request_template.md`. Cabeçalho: use
+"closes" para features; "fixes" para bugs. Substituir `#xyz` pelo número real da issue.
 
-Cabeçalho: use "closes" para features; "fixes" para bugs. Substituir `#xyz` pelo número real da
-issue.
+Título: #<issue-number> – <issue-title>
 
-Apresentar o caminho do arquivo gerado ao usuário.
+Publicar a branch e abrir o PR passando o corpo via heredoc, sem arquivo intermediário.
+
+Concluído quando o PR existe no GitHub; apresentar a URL ao usuário.
