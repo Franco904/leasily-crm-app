@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyOwnerDetails.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.repositories.PropertyOwnerSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.propertyOwnerDetails.application.repositories.PropertyOwnerQueryRepository

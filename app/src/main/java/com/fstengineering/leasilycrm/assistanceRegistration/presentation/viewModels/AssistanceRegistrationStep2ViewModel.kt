@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectablePropertyQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toUiState
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
-import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -48,7 +48,7 @@ class AssistanceRegistrationStep2ViewModel(
     private fun getProperties() {
         viewModelScope.launch {
             assistanceSelectablePropertyQueryRepository.getAll()
-                .onApplicationError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                 .onSuccess { properties ->
                     val uiStates = properties
                         .map { it.toUiState() }
@@ -66,7 +66,7 @@ class AssistanceRegistrationStep2ViewModel(
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
                     assistanceSelectablePropertyQueryRepository.getAll(matching = searchInput)
-                        .onApplicationError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
+                        .onError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
                         .onSuccess { matchingProperties ->
                             val uiStates = matchingProperties
                                 .map { it.toUiState() }

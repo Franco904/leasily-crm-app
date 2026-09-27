@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceStep1ErrorUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceStep1Field
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -66,9 +66,9 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
 
             parsingResults
                 .onSuccess { _uiEvents.send(UiEvent.ValidateSuccess) }
-                .onErrors { errors ->
+                .onError { error ->
                     val distanceToSeaError =
-                        errors.firstOrNull { it is DomainError.PropertySeaProximity }
+                        error.errors.firstOrNull { it is DomainError.PropertySeaProximity }
 
                     _formErrors.update {
                         val newErrors = it.errors.mutate { map ->

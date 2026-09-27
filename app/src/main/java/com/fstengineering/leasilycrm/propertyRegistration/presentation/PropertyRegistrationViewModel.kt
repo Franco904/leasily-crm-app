@@ -6,12 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
-import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
-import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyCommandModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyReadModel
@@ -136,14 +136,16 @@ class PropertyRegistrationViewModel(
             }
 
             writeProperty(form.toCommandModel())
-                .onApplicationError {
-                    _uiEvents.trySend(UiEvent.BottomSheetError(it))
-                    return@launch
-                }
-                .onDomainErrors { errors ->
-                    // TODO: Show something in the UI with the Domain errors
-                    errors.firstOrNull()
-                        ?.let { _uiEvents.trySend(UiEvent.BottomSheetError(ApplicationError.Unknown)) }
+                .onError { error ->
+                    when (error) {
+                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
+
+                        // TODO: Show something in the UI with the Domain errors
+                        is ValidationErrors, is DomainError -> {
+                            _uiEvents.trySend(UiEvent.BottomSheetError(ApplicationError.Unknown))
+                        }
+                    }
+
                     return@launch
                 }
 

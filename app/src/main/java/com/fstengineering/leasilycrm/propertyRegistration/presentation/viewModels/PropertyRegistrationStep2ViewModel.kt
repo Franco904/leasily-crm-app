@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyRegistration.presentation.viewMode
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyRegistration.domain.entities.Property
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
@@ -46,7 +46,7 @@ class PropertyRegistrationStep2ViewModel : ViewModel() {
             seaProximityTypeId = form.seaProximityTypeId,
             distanceToSea = form.distanceToSea,
         )
-            .onErrors { errors -> setFieldErrors(errors) }
+            .onError { error -> setFieldErrors(error.errors) }
     }
 
     private fun setFieldErrors(errors: List<DomainError>) {

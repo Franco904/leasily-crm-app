@@ -4,10 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.commands.DeleteAssistanceCommand
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.commands.DeleteLeadTenantCommand
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantReadModel
@@ -67,8 +68,12 @@ class LeadTenantDetailsViewModel(
 
         viewModelScope.launch {
             deleteLeadTenant(DeleteLeadTenantCommand(currentState.id))
-                .onApplicationError { e ->
-                    _uiEvents.trySend(UiEvents.BottomSheetError(e))
+                .onError { error ->
+                    when (error) {
+                        is ApplicationError -> _uiEvents.trySend(UiEvents.BottomSheetError(error))
+                        is ValidationErrors, is DomainError -> Unit
+                    }
+
                     return@launch
                 }
 
@@ -79,8 +84,12 @@ class LeadTenantDetailsViewModel(
     fun deleteCurrentAssistance(assistanceId: Long) {
         viewModelScope.launch {
             deleteAssistance(DeleteAssistanceCommand(assistanceId))
-                .onApplicationError { e ->
-                    _uiEvents.trySend(UiEvents.BottomSheetError(e))
+                .onError { error ->
+                    when (error) {
+                        is ApplicationError -> _uiEvents.trySend(UiEvents.BottomSheetError(error))
+                        is ValidationErrors, is DomainError -> Unit
+                    }
+
                     return@launch
                 }
 

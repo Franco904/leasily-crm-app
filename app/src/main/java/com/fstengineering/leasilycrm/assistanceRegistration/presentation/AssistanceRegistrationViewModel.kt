@@ -12,11 +12,11 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
-import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
@@ -107,14 +107,16 @@ class AssistanceRegistrationViewModel(
             }
 
             writeAssistance(command = form.toCommandModel())
-                .onApplicationError {
-                    _uiEvents.trySend(UiEvent.BottomSheetError(it))
-                    return@launch
-                }
-                .onDomainErrors { errors ->
-                    // TODO: Show something in the UI with the Domain errors
-                    errors.firstOrNull()
-                        ?.let { _uiEvents.trySend(UiEvent.BottomSheetError(ApplicationError.Unknown)) }
+                .onError { error ->
+                    when (error) {
+                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
+
+                        // TODO: Show something in the UI with the Domain errors
+                        is ValidationErrors, is DomainError -> {
+                            _uiEvents.trySend(UiEvent.BottomSheetError(ApplicationError.Unknown))
+                        }
+                    }
+
                     return@launch
                 }
 

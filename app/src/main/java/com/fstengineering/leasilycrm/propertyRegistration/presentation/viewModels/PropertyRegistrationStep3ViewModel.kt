@@ -2,9 +2,9 @@ package com.fstengineering.leasilycrm.propertyRegistration.presentation.viewMode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -70,7 +70,7 @@ class PropertyRegistrationStep3ViewModel : ViewModel() {
             .filter { it.startDate != propertyPriceToEdit?.startDate }
             .mapNotNull {
                 val result = PropertyPricePeriod.parse(it.startDate, it.endDate)
-                (result as? AppResultCompound.Success)?.data
+                (result as? AppResult.Success)?.data
             }
 
         viewModelScope.launch {
@@ -81,7 +81,7 @@ class PropertyRegistrationStep3ViewModel : ViewModel() {
                 otherPeriods = otherPeriods,
             )
                 .onSuccess { _uiEvents.trySend(UiEvent.PropertyPriceValidateSuccess) }
-                .onErrors { errors -> setFieldErrors(errors) }
+                .onError { error -> setFieldErrors(error.errors) }
         }
     }
 

@@ -3,10 +3,12 @@ package com.fstengineering.leasilycrm.signin.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.signin.application.models.commands.IdToken
 import com.fstengineering.leasilycrm.signin.application.useCases.SignInUseCase
 import kotlinx.coroutines.channels.Channel
@@ -35,7 +37,12 @@ class SignInViewModel(
     fun signInUser(idToken: String) {
         viewModelScope.launch {
             signIn(command = IdToken(idToken))
-                .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onError { error ->
+                    when (error) {
+                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                        is ValidationErrors, is DomainError -> Unit
+                    }
+                }
                 .onSuccess { _uiEvents.trySend(UiEvent.SignInSuccess) }
         }
     }
