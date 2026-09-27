@@ -31,7 +31,7 @@ possível.
 Use este guia de decisão para determinar o tipo da issue:
 
 - **História de usuário**: descreve uma solução de um problema do ponto de vista do especialista de
-  domínio; Formato:
+  domínio;
 - **Tarefa**: descreve uma ação pontual e específica, complementar às histórias, ou atende a uma
   necessidade técnica identificada (ex: dívida técnica, configuração de infraestrutura).
 
