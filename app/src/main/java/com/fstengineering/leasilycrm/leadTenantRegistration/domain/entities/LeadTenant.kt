@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Email
@@ -33,7 +34,7 @@ class LeadTenant private constructor(
             email: String?,
             contactOrigin: String?,
             observations: String?,
-        ): AppResultCompound<LeadTenant, DomainError> {
+        ): AppResult<LeadTenant, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             if (name == null) errors.add(DomainError.Name.Required)
@@ -45,9 +46,9 @@ class LeadTenant private constructor(
                 ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
 
             val parsedEmail = email?.let { Email.parse(it) }
-                ?.fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = LeadTenant(
                 id = id,
@@ -62,7 +63,7 @@ class LeadTenant private constructor(
                 observations = observations,
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

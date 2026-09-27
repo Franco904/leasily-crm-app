@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import kotlinx.collections.immutable.toPersistentList
 
@@ -17,13 +18,13 @@ class AssistanceInteraction private constructor(
             date: AppDate?,
             title: String?,
             description: String?,
-        ): AppResultCompound<AssistanceInteraction, DomainError> {
+        ): AppResult<AssistanceInteraction, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             if (date == null) errors.add(DomainError.AssistanceInteractionDate.Required)
             if (title.isNullOrBlank()) errors.add(DomainError.AssistanceInteractionTitle.Required)
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = AssistanceInteraction(
                 id = id,
@@ -32,7 +33,7 @@ class AssistanceInteraction private constructor(
                 description = description,
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

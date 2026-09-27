@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.propertyRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Amount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
@@ -21,7 +22,7 @@ class PropertyPrice private constructor(
             endDate: AppDate? = null,
             amount: AppDecimal? = null,
             otherPeriods: List<PropertyPricePeriod> = emptyList(),
-        ): AppResultCompound<PropertyPrice, DomainError> {
+        ): AppResult<PropertyPrice, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             if (startDate == null || endDate == null) errors.add(DomainError.PropertyPricePeriod.Required)
@@ -34,14 +35,14 @@ class PropertyPrice private constructor(
                     endDate = endDate,
                     otherPeriods = otherPeriods,
                 )
-                    .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                    .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
             val amount =
                 if (amount == null) null
                 else Amount.parse(amount)
                     .fold(onError = { errors.add(it); null }, onSuccess = { it })
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = PropertyPrice(
                 id = id,
@@ -49,7 +50,7 @@ class PropertyPrice private constructor(
                 amount = requireNotNull(amount),
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

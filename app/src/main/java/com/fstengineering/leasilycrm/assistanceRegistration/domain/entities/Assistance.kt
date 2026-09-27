@@ -3,8 +3,9 @@ package com.fstengineering.leasilycrm.assistanceRegistration.domain.entities
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistanceGuestsCount
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistancePreferredFeaturesCount
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistancePreferredPeriod
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
@@ -58,7 +59,7 @@ class Assistance private constructor(
             sentPropertiesIds: ImmutableList<Long>,
             interactions: ImmutableList<AssistanceInteraction>,
             isFinished: Boolean,
-        ): AppResultCompound<Assistance, DomainError> {
+        ): AppResult<Assistance, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             if (leadTenantId == null) errors.add(DomainError.AssistanceOtherFields.TenantRequired)
@@ -69,7 +70,7 @@ class Assistance private constructor(
                     startDate = preferredStartDate,
                     endDate = preferredEndDate,
                 )
-                    .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                    .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
             val guestsCount = AssistanceGuestsCount.parse(
                 adultsCount = adultsCount,
@@ -77,7 +78,7 @@ class Assistance private constructor(
                 babiesCount = babiesCount,
                 animalsCount = animalsCount,
             )
-                .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
             val preferredFeaturesCount = AssistancePreferredFeaturesCount.parse(
                 bedroomsCount = bedroomsCount,
@@ -87,17 +88,17 @@ class Assistance private constructor(
                 bathroomsCount = bathroomsCount,
                 parkingSpotsCount = parkingSpotsCount,
             )
-                .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
             val preferredSeaProximityType = preferredSeaProximityTypeId?.let { typeId ->
                 PropertySeaProximityType.parse(typeId, distanceToSea = preferredDistanceToSea)
-                    .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                    .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
             }
 
             val isAnyNeighborhoodEmpty = preferredNeighborhoods.any { it.isBlank() }
             if (isAnyNeighborhoodEmpty) errors.add(DomainError.Neighborhood.Required)
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = Assistance(
                 id = id,
@@ -117,7 +118,7 @@ class Assistance private constructor(
                 leadTenantId = requireNotNull(leadTenantId),
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

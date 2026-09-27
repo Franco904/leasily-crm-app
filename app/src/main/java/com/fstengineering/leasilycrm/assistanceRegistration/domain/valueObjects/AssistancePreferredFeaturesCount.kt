@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import kotlinx.collections.immutable.toPersistentList
 
 data class AssistancePreferredFeaturesCount(
@@ -20,7 +21,7 @@ data class AssistancePreferredFeaturesCount(
             singleBedsCount: Int,
             bathroomsCount: Int,
             parkingSpotsCount: Int,
-        ): AppResultCompound<AssistancePreferredFeaturesCount, DomainError> {
+        ): AppResult<AssistancePreferredFeaturesCount, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             if (bedroomsCount < 0) errors.add(DomainError.AssistanceOtherFields.BedroomsCountIsNegative)
@@ -30,7 +31,7 @@ data class AssistancePreferredFeaturesCount(
             if (bathroomsCount < 0) errors.add(DomainError.AssistanceOtherFields.BathroomsCountIsNegative)
             if (parkingSpotsCount < 0) errors.add(DomainError.AssistanceOtherFields.ParkingSpotsCountIsNegative)
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = AssistancePreferredFeaturesCount(
                 bedroomsCount = bedroomsCount,
@@ -41,7 +42,7 @@ data class AssistancePreferredFeaturesCount(
                 parkingSpotsCount = parkingSpotsCount,
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

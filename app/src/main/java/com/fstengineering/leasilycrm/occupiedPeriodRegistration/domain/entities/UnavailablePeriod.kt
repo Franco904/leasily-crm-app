@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.OccupiedPeriodPeriod
@@ -22,7 +23,7 @@ class UnavailablePeriod private constructor(
             checkInDateTime: AppDateTime?,
             checkOutDateTime: AppDateTime?,
             observations: String?,
-        ): AppResultCompound<UnavailablePeriod, DomainError> {
+        ): AppResult<UnavailablePeriod, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             if (propertyId == null) errors.add(DomainError.StayProperty.Required)
@@ -40,9 +41,9 @@ class UnavailablePeriod private constructor(
                     )
                 }
             }
-                ?.fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = UnavailablePeriod(
                 id = id,
@@ -52,7 +53,7 @@ class UnavailablePeriod private constructor(
                 observations = observations,
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

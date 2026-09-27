@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
-sealed interface DomainError : BusinessRuleError {
+sealed interface DomainError : BaseError {
     enum class Amount : DomainError {
         Required,
         IsNegative,
