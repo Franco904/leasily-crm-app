@@ -21,7 +21,7 @@ android {
         versionCode = 1
         versionName = "0.0.1"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.fstengineering.leasilycrm.testUtils.IntegrationTestRunner"
         testInstrumentationRunnerArguments.putAll(
             mapOf(
                 "clearPackageData" to "true" // Revoke permissions and clear app state after each instrumented test
