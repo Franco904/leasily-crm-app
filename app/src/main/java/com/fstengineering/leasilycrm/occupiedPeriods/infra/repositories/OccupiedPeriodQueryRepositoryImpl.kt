@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.occupiedPeriods.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
@@ -25,7 +25,7 @@ class OccupiedPeriodQueryRepositoryImpl(
         flow {
             val staysFlow = occupiedPeriodDatabaseDataSource.watchAllWithDetails()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it },
                 )
                 .map {
@@ -44,7 +44,7 @@ class OccupiedPeriodQueryRepositoryImpl(
         flow {
             plainPreferencesDataSource.readPreferences()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { prefsFlow ->
                         emitAll(
                             prefsFlow.map {

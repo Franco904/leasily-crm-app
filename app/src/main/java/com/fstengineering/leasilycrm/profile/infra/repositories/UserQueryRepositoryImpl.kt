@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.profile.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
@@ -21,7 +21,7 @@ class UserQueryRepositoryImpl(
 ) : UserQueryRepository {
     override fun watch(): Flow<AppResult<UserReadModel, ApplicationError>> = flow {
         encryptedPreferencesDataSource.readPreferences()
-            .onError { emit(AppResult.Error(error = it.toApplicationError())) }
+            .onError { emit(AppResult.Error(error = it)) }
             .onSuccess { prefsFlow ->
                 emitAll(
                     prefsFlow

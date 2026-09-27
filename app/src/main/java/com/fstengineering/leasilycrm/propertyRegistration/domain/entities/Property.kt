@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.propertyRegistration.domain.entities
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
@@ -69,7 +70,7 @@ class Property private constructor(
             prices: ImmutableList<PropertyPrice> = persistentListOf(),
             files: ImmutableList<PropertyFile> = persistentListOf(),
             observations: String? = null,
-        ): AppResultCompound<Property, DomainError> {
+        ): AppResult<Property, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             if (ownerId == null) errors.add(DomainError.PropertyPropertyOwner.Required)
@@ -88,18 +89,18 @@ class Property private constructor(
                 airConditionersCount = airConditionersCount,
                 maxGuestsCount = maxGuestsCount,
             )
-                .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
             val seaProximityType = seaProximityTypeId?.let { typeId ->
                 PropertySeaProximityType.parse(typeId, distanceToSea = distanceToSea)
-                    .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                    .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
             }
 
             if (files.count { it.isMainPicture } > 1) {
                 errors.add(DomainError.PropertyOtherFields.MoreThanOneMainPictureFile)
             }
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = Property(
                 id = id,
@@ -126,7 +127,7 @@ class Property private constructor(
                 observations = observations,
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

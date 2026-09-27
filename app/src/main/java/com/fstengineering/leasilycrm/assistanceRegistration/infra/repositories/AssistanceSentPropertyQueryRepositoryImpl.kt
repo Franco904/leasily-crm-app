@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentPropertyQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers.toSentPropertyReadModel
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
 import kotlinx.collections.immutable.ImmutableList
@@ -18,7 +18,7 @@ class AssistanceSentPropertyQueryRepositoryImpl(
     ): AppResult<ImmutableList<AssistanceSentPropertyReadModel>, ApplicationError> {
         val sentProperties = propertyDatabaseDataSource.getAllSentInAssistance(assistanceId)
             .fold(
-                onError = { return AppResult.Error(error = it.toApplicationError()) },
+                onError = { return AppResult.Error(error = it) },
                 onSuccess = { it.map { property -> property.toSentPropertyReadModel() } },
             )
             .toPersistentList()

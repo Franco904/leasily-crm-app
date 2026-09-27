@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases
 
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.SelectablePropertiesArgs

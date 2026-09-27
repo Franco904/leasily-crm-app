@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.dashboard.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
@@ -27,7 +27,7 @@ class UserAnalyticsRepositoryImpl(
             val generatedLeadsPerMonthFlow = databaseDataSource
                 .watchGeneratedLeadsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 
@@ -68,7 +68,7 @@ class UserAnalyticsRepositoryImpl(
             val generatedLeadsPerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchGeneratedLeadsPerTenantTagPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 
@@ -116,7 +116,7 @@ class UserAnalyticsRepositoryImpl(
             val leadContactChannelDistributionFlow = databaseDataSource
                 .watchCountLeadsByContactChannelType()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 
@@ -146,7 +146,7 @@ class UserAnalyticsRepositoryImpl(
             val newStayBookingsPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 
@@ -187,7 +187,7 @@ class UserAnalyticsRepositoryImpl(
             val newStayBookingsPerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerTenantTagPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 
@@ -235,7 +235,7 @@ class UserAnalyticsRepositoryImpl(
             val newStayBookingsPerTop3NeighborhoodsPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 
@@ -284,7 +284,7 @@ class UserAnalyticsRepositoryImpl(
             val commissionInvoicePerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 
@@ -326,7 +326,7 @@ class UserAnalyticsRepositoryImpl(
             val commissionInvoicePerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerTenantTagPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 
@@ -374,7 +374,7 @@ class UserAnalyticsRepositoryImpl(
             val commissionInvoicePerTop3NeighborhoodsPerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 
@@ -423,7 +423,7 @@ class UserAnalyticsRepositoryImpl(
             val averageTicketPerMonthFlow = databaseDataSource
                 .watchAverageTicketPerMonth()
                 .fold(
-                    onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                    onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { it }
                 )
 

@@ -6,12 +6,12 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
 import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
-import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
@@ -53,7 +53,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             userQueryRepository.watch().collect { result ->
                 result
-                    .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { user -> _uiState.update { ProfileUiState.Loaded.fromReadModel(user) } }
             }
         }
@@ -71,9 +71,15 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             writeUser(command)
-                .onApplicationError { _uiEvents.send(UiEvent.BottomSheetError(it)) }
-                .onDomainErrors { errors ->
-                    _creciFieldError.update { errors.firstOrNull()?.toInlineMessage() }
+                .onError { error ->
+                    when (error) {
+                        is ApplicationError -> _uiEvents.send(UiEvent.BottomSheetError(error))
+                        is ValidationErrors -> {
+                            _creciFieldError.update { error.errors.firstOrNull()?.toInlineMessage() }
+                        }
+
+                        is DomainError -> _creciFieldError.update { error.toInlineMessage() }
+                    }
                 }
                 .onSuccess {
                     val event =

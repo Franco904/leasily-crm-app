@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.mappers
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.commands.StayCommandModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.commands.StayFileCommandModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.commands.UnavailablePeriodCommandModel
@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.entities.
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.entities.UnavailablePeriod
 import kotlinx.collections.immutable.toPersistentList
 
-fun StayCommandModel.toEntity(): AppResultCompound<Stay, DomainError> {
+fun StayCommandModel.toEntity(): AppResult<Stay, ValidationErrors> {
     val files = files
         .map { file -> file.toEntity() }
         .toPersistentList()

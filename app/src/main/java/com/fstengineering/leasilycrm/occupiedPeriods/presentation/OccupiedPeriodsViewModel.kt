@@ -7,11 +7,12 @@ import com.fstengineering.leasilycrm.core.application.models.commands.UndoCheckO
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
-import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
 import com.fstengineering.leasilycrm.occupiedPeriods.application.repositories.OccupiedPeriodQueryRepository
 import kotlinx.collections.immutable.ImmutableList
@@ -214,7 +215,12 @@ class OccupiedPeriodsViewModel(
                     tenantId = stay.tenantId
                 )
             )
-                .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onError { error ->
+                    when (error) {
+                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                        is ValidationErrors, is DomainError -> Unit
+                    }
+                }
                 .onSuccess {
                     _uiEvents.trySend(UiEvent.RegisterCheckOutSuccess)
 
@@ -241,7 +247,12 @@ class OccupiedPeriodsViewModel(
                     tenantId = stay.tenantId
                 )
             )
-                .onApplicationError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onError { error ->
+                    when (error) {
+                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                        is ValidationErrors, is DomainError -> Unit
+                    }
+                }
         }
     }
 

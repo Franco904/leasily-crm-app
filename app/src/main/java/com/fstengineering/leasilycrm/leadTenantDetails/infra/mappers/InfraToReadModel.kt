@@ -44,7 +44,7 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
 
     val seaProximityType = assistance.propertySeaProximityTypeId?.let { typeId ->
         PropertySeaProximityType.parse(typeId, assistance.distanceToSea)
-            .fold(onErrors = { null }, onSuccess = { it })
+            .fold(onError = { null }, onSuccess = { it })
     }
 
     return AssistanceRawReadModel(

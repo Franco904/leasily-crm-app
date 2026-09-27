@@ -6,13 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.services.interfaces.FileStorageService
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.utils.onApplicationError
-import com.fstengineering.leasilycrm.core.presentation.utils.onDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.commands.PropertyOwnerCommandModel
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerQueryRepository
@@ -126,12 +125,13 @@ class PropertyOwnerRegistrationViewModel(
 
         viewModelScope.launch {
             writePropertyOwner(form.toCommandModel())
-                .onApplicationError {
-                    _uiEvents.trySend(UiEvent.BottomSheetError(it))
-                    return@launch
-                }
-                .onDomainErrors { errors ->
-                    setFieldErrors(errors)
+                .onError { error ->
+                    when (error) {
+                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                        is ValidationErrors -> setFieldErrors(error.errors)
+                        is DomainError -> setFieldErrors(listOf(error))
+                    }
+
                     return@launch
                 }
 

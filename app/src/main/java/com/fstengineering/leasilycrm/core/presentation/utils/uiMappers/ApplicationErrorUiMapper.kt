@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.presentation.utils.uiMappers
 
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.ErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChannel

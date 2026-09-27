@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.propertyRegistration.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import kotlinx.collections.immutable.toPersistentList
 
 data class PropertyFeaturesCount(
@@ -24,7 +25,7 @@ data class PropertyFeaturesCount(
             parkingSpotsCount: Int,
             airConditionersCount: Int,
             maxGuestsCount: Int,
-        ): AppResultCompound<PropertyFeaturesCount, DomainError> {
+        ): AppResult<PropertyFeaturesCount, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             if (bedroomsCount < 0) errors.add(DomainError.PropertyOtherFields.BedroomsCountIsNegative)
@@ -36,7 +37,7 @@ data class PropertyFeaturesCount(
             if (airConditionersCount < 0) errors.add(DomainError.PropertyOtherFields.AirConditionersCountIsNegative)
             if (maxGuestsCount < 0) errors.add(DomainError.PropertyOtherFields.MaxGuestsCountIsNegative)
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = PropertyFeaturesCount(
                 bedroomsCount = bedroomsCount,
@@ -49,7 +50,7 @@ data class PropertyFeaturesCount(
                 maxGuestsCount = maxGuestsCount,
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

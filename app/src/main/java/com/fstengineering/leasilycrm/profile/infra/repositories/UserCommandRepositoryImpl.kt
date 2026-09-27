@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.profile.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
@@ -22,7 +22,7 @@ class UserCommandRepositoryImpl(
         encryptedPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(creciNumber = creciNumber)
         }
-            .onError { return AppResult.Error(error = it.toApplicationError()) }
+            .onError { return AppResult.Error(error = it) }
 
         val dto = UpdateUserDto(creciNumber = creciNumber)
 
@@ -32,13 +32,13 @@ class UserCommandRepositoryImpl(
                     prefs.copy(userSyncStateId = SyncState.PendingSync.id)
                 }
 
-                return AppResult.Error(error = e.toApplicationError())
+                return AppResult.Error(error = e)
             }
             .onSuccess {
                 encryptedPreferencesDataSource.savePreferences { prefs ->
                     prefs.copy(userSyncStateId = SyncState.Synced.id)
                 }
-                    .onError { return AppResult.Error(error = it.toApplicationError()) }
+                    .onError { return AppResult.Error(error = it) }
             }
 
         return AppResult.Success(data = Unit)

@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import kotlinx.collections.immutable.toPersistentList
 
@@ -33,7 +34,7 @@ class OccupiedPeriodPeriod private constructor(
         fun parse(
             checkInDateTime: AppDateTime,
             checkOutDateTime: AppDateTime,
-        ): AppResultCompound<OccupiedPeriodPeriod, DomainError.StayPeriod> {
+        ): AppResult<OccupiedPeriodPeriod, ValidationErrors> {
             val errors = mutableListOf<DomainError.StayPeriod>()
 
             if (checkInDateTime.isSameDayAs(checkOutDateTime)) {
@@ -44,14 +45,14 @@ class OccupiedPeriodPeriod private constructor(
                 errors.add(DomainError.StayPeriod.StartDateIsAfterEndDate)
             }
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = OccupiedPeriodPeriod(
                 checkInDateTime = checkInDateTime,
                 checkOutDateTime = checkOutDateTime,
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

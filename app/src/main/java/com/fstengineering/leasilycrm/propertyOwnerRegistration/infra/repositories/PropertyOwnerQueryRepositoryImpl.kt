@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.propertyOwnerRegistration.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerDatabaseDataSource
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.models.dtos.PropertyOwnerReadModel
@@ -16,7 +16,7 @@ class PropertyOwnerQueryRepositoryImpl(
     ): AppResult<PropertyOwnerReadModel, ApplicationError> {
         return databaseDataSource.getByIdCompound(id = propertyOwnerId)
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toReadModel()) }
             )
     }

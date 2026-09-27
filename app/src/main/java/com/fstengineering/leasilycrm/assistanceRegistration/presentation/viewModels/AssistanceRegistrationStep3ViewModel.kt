@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionErrorUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.fields.AssistanceInteractionField
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.onErrors
+import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
@@ -92,11 +92,11 @@ class AssistanceRegistrationStep3ViewModel : ViewModel() {
             )
 
             parsingResults
-                .onErrors { errors ->
+                .onError { error ->
                     val dateError =
-                        errors.firstOrNull { it is DomainError.AssistanceInteractionDate }
+                        error.errors.firstOrNull { it is DomainError.AssistanceInteractionDate }
                     val titleError =
-                        errors.firstOrNull { it is DomainError.AssistanceInteractionTitle }
+                        error.errors.firstOrNull { it is DomainError.AssistanceInteractionTitle }
 
                     _formErrors.update {
                         val newErrors = it.errors.mutate { map ->

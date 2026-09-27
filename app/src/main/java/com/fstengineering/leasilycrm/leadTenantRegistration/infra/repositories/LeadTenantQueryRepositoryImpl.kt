@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.dtos.LeadTenantReadModel
@@ -18,7 +18,7 @@ class LeadTenantQueryRepositoryImpl(
     ): AppResult<LeadTenantReadModel, ApplicationError> {
         return databaseDataSource.getById(id = leadTenantId)
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toReadModel()) }
             )
     }
@@ -26,7 +26,7 @@ class LeadTenantQueryRepositoryImpl(
     override suspend fun getAllTagNames(): AppResult<ImmutableList<String>, ApplicationError> {
         return databaseDataSource.getAllTagNames()
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toPersistentList()) },
             )
     }
@@ -34,7 +34,7 @@ class LeadTenantQueryRepositoryImpl(
     override suspend fun getAllCityNames(): AppResult<ImmutableList<String>, ApplicationError> {
         return databaseDataSource.getAllCityNames()
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toPersistentList()) },
             )
     }
@@ -42,7 +42,7 @@ class LeadTenantQueryRepositoryImpl(
     override suspend fun getAllContactOrigins(): AppResult<ImmutableList<String>, ApplicationError> {
         return databaseDataSource.getAllContactOrigins()
             .fold(
-                onError = { AppResult.Error(error = it.toApplicationError()) },
+                onError = { AppResult.Error(error = it) },
                 onSuccess = { AppResult.Success(data = it.toPersistentList()) },
             )
     }

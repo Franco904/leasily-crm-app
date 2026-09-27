@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.propertyRegistration.application.mappers
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyCommandModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.commands.PropertyFileCommandModel
@@ -11,13 +12,13 @@ import com.fstengineering.leasilycrm.propertyRegistration.domain.entities.Proper
 import com.fstengineering.leasilycrm.propertyRegistration.domain.entities.PropertyPrice
 import kotlinx.collections.immutable.toPersistentList
 
-fun PropertyCommandModel.toEntity(): AppResultCompound<Property, DomainError> {
+fun PropertyCommandModel.toEntity(): AppResult<Property, ValidationErrors> {
     val errors = mutableListOf<DomainError>()
 
     val prices = prices
         .mapNotNull { price ->
             price.toEntity()
-                .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
         }
         .toPersistentList()
 
@@ -57,11 +58,11 @@ fun PropertyCommandModel.toEntity(): AppResultCompound<Property, DomainError> {
         files = files,
         observations = observations,
     )
-        .fold(onErrors = { errors.addAll(0, it); null }, onSuccess = { it })
+        .fold(onError = { errors.addAll(0, it.errors); null }, onSuccess = { it })
 
-    if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+    if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
-    return AppResultCompound.Success(data = requireNotNull(parsed))
+    return AppResult.Success(data = requireNotNull(parsed))
 }
 
 private fun PropertyPriceCommandModel.toEntity() = PropertyPrice.parse(

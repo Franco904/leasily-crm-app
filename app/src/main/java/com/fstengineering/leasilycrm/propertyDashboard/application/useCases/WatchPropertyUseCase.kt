@@ -2,10 +2,10 @@ package com.fstengineering.leasilycrm.propertyDashboard.application.useCases
 
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.services.PropertyOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.propertyDashboard.application.mappers.toReadModel

@@ -4,24 +4,23 @@ import com.fstengineering.leasilycrm.core.application.models.commands.UndoCheckO
 import com.fstengineering.leasilycrm.core.application.repositories.AssistanceSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
-import com.fstengineering.leasilycrm.core.domain.utils.BusinessRuleError
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
-import kotlinx.collections.immutable.persistentListOf
 
 class UndoRegisterStayCheckOutUseCase(
     private val occupiedPeriodSharedCommandRepository: OccupiedPeriodSharedCommandRepository,
     private val assistanceSharedCommandRepository: AssistanceSharedCommandRepository,
 ) : CommandUseCase<UndoCheckOutCommand> {
-    override suspend fun invoke(command: UndoCheckOutCommand): AppResultCompound<Unit, BusinessRuleError> {
+    override suspend fun invoke(command: UndoCheckOutCommand): AppResult<Unit, BaseError> {
         occupiedPeriodSharedCommandRepository.undoRegisterCheckOut(command.stayId)
-            .onError { return AppResultCompound.Errors(persistentListOf(it)) }
+            .onError { return AppResult.Error(error = it) }
 
         if (command.tenantId != null) {
             assistanceSharedCommandRepository.unfinishAssistanceByTenantId(command.tenantId)
-                .onError { return AppResultCompound.Errors(persistentListOf(it)) }
+                .onError { return AppResult.Error(error = it) }
         }
 
-        return AppResultCompound.Success(data = Unit)
+        return AppResult.Success(data = Unit)
     }
 }

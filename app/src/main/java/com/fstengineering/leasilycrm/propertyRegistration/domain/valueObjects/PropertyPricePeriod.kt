@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.propertyRegistration.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -19,21 +20,21 @@ class PropertyPricePeriod private constructor(
             startDate: AppDate,
             endDate: AppDate,
             otherPeriods: List<PropertyPricePeriod> = emptyList(),
-        ): AppResultCompound<PropertyPricePeriod, DomainError.PropertyPricePeriod> {
+        ): AppResult<PropertyPricePeriod, ValidationErrors> {
             val errors = mutableListOf<DomainError.PropertyPricePeriod>()
 
             if (startDate == endDate) errors.add(DomainError.PropertyPricePeriod.StartAndEndDatesAreTheSame)
             if (startDate > endDate) errors.add(DomainError.PropertyPricePeriod.StartDateIsAfterEndDate)
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val period = PropertyPricePeriod(startDate = startDate, endDate = endDate)
 
             if (otherPeriods.any { it.overlaps(period) }) {
-                return AppResultCompound.Errors(persistentListOf(DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod))
+                return AppResult.Error(ValidationErrors(persistentListOf(DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod)))
             }
 
-            return AppResultCompound.Success(data = period)
+            return AppResult.Success(data = period)
         }
     }
 }

@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.propertyRegistration.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldContain
@@ -21,7 +22,7 @@ class PropertyPricePeriodTest {
         (PropertyPricePeriod.parse(
             startDate = start,
             endDate = end,
-        ) as AppResultCompound.Success).data
+        ) as AppResult.Success).data
 
     @Nested
     @DisplayName("parse")
@@ -30,23 +31,25 @@ class PropertyPricePeriodTest {
         fun `Deve criar período com sucesso quando não há outros períodos`() {
             val result = PropertyPricePeriod.parse(startDate = d1, endDate = d10)
 
-            result.shouldBeInstanceOf<AppResultCompound.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
         }
 
         @Test
         fun `Deve retornar erro quando data de início e data de fim são iguais`() {
             val result = PropertyPricePeriod.parse(startDate = d10, endDate = d10)
 
-            val errors = result.shouldBeInstanceOf<AppResultCompound.Errors<*, *>>()
-            errors.errors shouldContain DomainError.PropertyPricePeriod.StartAndEndDatesAreTheSame
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.PropertyPricePeriod.StartAndEndDatesAreTheSame
         }
 
         @Test
         fun `Deve retornar erro quando data de início é posterior à data de fim`() {
             val result = PropertyPricePeriod.parse(startDate = d15, endDate = d5)
 
-            val errors = result.shouldBeInstanceOf<AppResultCompound.Errors<*, *>>()
-            errors.errors shouldContain DomainError.PropertyPricePeriod.StartDateIsAfterEndDate
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.PropertyPricePeriod.StartDateIsAfterEndDate
         }
 
         @Test
@@ -59,8 +62,9 @@ class PropertyPricePeriodTest {
                 otherPeriods = listOf(existing),
             )
 
-            val errors = result.shouldBeInstanceOf<AppResultCompound.Errors<*, *>>()
-            errors.errors shouldContain DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod
         }
 
         @Test
@@ -73,8 +77,9 @@ class PropertyPricePeriodTest {
                 otherPeriods = listOf(existing),
             )
 
-            val errors = result.shouldBeInstanceOf<AppResultCompound.Errors<*, *>>()
-            errors.errors shouldContain DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod
         }
 
         @Test
@@ -87,7 +92,7 @@ class PropertyPricePeriodTest {
                 otherPeriods = listOf(existing),
             )
 
-            result.shouldBeInstanceOf<AppResultCompound.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
         }
 
         @Test
@@ -101,7 +106,7 @@ class PropertyPricePeriodTest {
                 otherPeriods = listOf(adjacentBefore, adjacentAfter),
             )
 
-            result.shouldBeInstanceOf<AppResultCompound.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
         }
     }
 }

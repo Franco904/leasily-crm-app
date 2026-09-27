@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.propertyDashboard.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOccupiedPeriodRawReadModel
@@ -21,7 +21,7 @@ class StayQueryRepositoryImpl(
         return databaseDataSource.watchAllByPropertyId(propertyId)
             .map { result ->
                 result.fold(
-                    onError = { e -> AppResult.Error(error = e.toApplicationError()) },
+                    onError = { e -> AppResult.Error(error = e) },
                     onSuccess = { occupiedPeriods ->
                         val readModels = occupiedPeriods
                             .map { it.toRawReadModel() }

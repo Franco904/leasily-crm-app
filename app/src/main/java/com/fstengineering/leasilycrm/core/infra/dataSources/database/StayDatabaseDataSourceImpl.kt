@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database
 
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.OccupiedPeriodListProjection
@@ -9,7 +10,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckInCheckOutCountsProjection
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.utils.InfraError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import kotlinx.coroutines.flow.Flow
@@ -27,35 +27,35 @@ class StayDatabaseDataSourceImpl(
     override suspend fun updateStatus(id: Long, status: Int) =
         dao.updateStatus(id, status)
 
-    override suspend fun getById(id: Long): AppResult<StayCompound, InfraError> {
+    override suspend fun getById(id: Long): AppResult<StayCompound, ApplicationError> {
         return onDatabase { dao.getById(id) }
     }
 
-    override suspend fun getAllByTenantId(tenantId: Long): AppResult<List<StayEntity>, InfraError> {
+    override suspend fun getAllByTenantId(tenantId: Long): AppResult<List<StayEntity>, ApplicationError> {
         return onDatabase { dao.getAllByTenantId(tenantId) }
     }
 
-    override suspend fun getCurrentStayIdByTenantId(tenantId: Long): AppResult<Long?, InfraError> {
+    override suspend fun getCurrentStayIdByTenantId(tenantId: Long): AppResult<Long?, ApplicationError> {
         return onDatabase { dao.getCurrentStayIdByTenantId(tenantId) }
     }
 
-    override fun watchById(id: Long): AppResult<Flow<StayCompound?>, InfraError> {
+    override fun watchById(id: Long): AppResult<Flow<StayCompound?>, ApplicationError> {
         return onDatabase { dao.watchById(id) }
     }
 
-    override fun watchAll(): AppResult<Flow<List<StayCompound>>, InfraError> {
+    override fun watchAll(): AppResult<Flow<List<StayCompound>>, ApplicationError> {
         return onDatabase { dao.watchAll() }
     }
 
-    override fun watchAllWithDetails(): AppResult<Flow<List<OccupiedPeriodListProjection>>, InfraError> {
+    override fun watchAllWithDetails(): AppResult<Flow<List<OccupiedPeriodListProjection>>, ApplicationError> {
         return onDatabase { dao.watchAllWithDetails() }
     }
 
-    override fun watchAllByPropertyId(propertyId: Long): Flow<AppResult<List<StayEntity>, InfraError>> {
+    override fun watchAllByPropertyId(propertyId: Long): Flow<AppResult<List<StayEntity>, ApplicationError>> {
         return dao.watchAllByPropertyId(propertyId).asDatabaseFlowResult()
     }
 
-    override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<List<OccupiedPeriodNotificationProjection>, InfraError> {
+    override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<List<OccupiedPeriodNotificationProjection>, ApplicationError> {
         return onDatabase {
             dao.getAllTodayCheckInsAndCheckOutsToNotify(
                 dateTimeProvider.now().toEpochMillisUTC()
@@ -63,7 +63,7 @@ class StayDatabaseDataSourceImpl(
         }
     }
 
-    override fun watchAllPastCheckInCheckOutNotDoneCounts(): Flow<AppResult<StayCheckInCheckOutCountsProjection, InfraError>> {
+    override fun watchAllPastCheckInCheckOutNotDoneCounts(): Flow<AppResult<StayCheckInCheckOutCountsProjection, ApplicationError>> {
         val nowAdjusted = dateTimeProvider.now().withHourMinute(23, 59)
         return dao.watchAllPastCheckInCheckOutNotDoneCounts(nowAdjusted).asDatabaseFlowResult()
     }

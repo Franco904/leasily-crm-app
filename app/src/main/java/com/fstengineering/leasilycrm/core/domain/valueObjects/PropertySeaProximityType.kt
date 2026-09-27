@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.toPersistentList
 
@@ -18,15 +19,15 @@ sealed class PropertySeaProximityType(val id: Long) {
         companion object {
             fun parse(
                 distance: AppDecimal?,
-            ): AppResultCompound<DistanceToSea, DomainError> {
+            ): AppResult<DistanceToSea, ValidationErrors> {
                 val errors = mutableListOf<DomainError>()
 
                 if (distance == null) errors.add(DomainError.PropertySeaProximityDistanceToSea.Required)
                 if (distance?.isNegative == true) errors.add(DomainError.PropertySeaProximityDistanceToSea.IsNegative)
 
-                if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+                if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
-                return AppResultCompound.Success(data = DistanceToSea(requireNotNull(distance)))
+                return AppResult.Success(data = DistanceToSea(requireNotNull(distance)))
             }
         }
     }
@@ -40,7 +41,7 @@ sealed class PropertySeaProximityType(val id: Long) {
         fun parse(
             id: Long,
             distanceToSea: AppDecimal?,
-        ): AppResultCompound<PropertySeaProximityType, DomainError> {
+        ): AppResult<PropertySeaProximityType, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             val parsed = when (id) {
@@ -50,7 +51,7 @@ sealed class PropertySeaProximityType(val id: Long) {
 
                 DISTANCE_TO_SEA_ID -> {
                     DistanceToSea.parse(distanceToSea)
-                        .fold(onErrors = { errors.addAll(it); null }, onSuccess = { it })
+                        .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
                 }
 
                 else -> {
@@ -59,9 +60,9 @@ sealed class PropertySeaProximityType(val id: Long) {
                 }
             }
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
-            return AppResultCompound.Success(data = requireNotNull(parsed))
+            return AppResult.Success(data = requireNotNull(parsed))
         }
     }
 }

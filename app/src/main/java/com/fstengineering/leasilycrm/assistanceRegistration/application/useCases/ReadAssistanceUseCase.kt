@@ -8,8 +8,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.reposito
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentPropertyQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.LeadTenantQueryRepository
 import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf

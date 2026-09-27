@@ -1,7 +1,8 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects
 
-import com.fstengineering.leasilycrm.core.domain.utils.AppResultCompound
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import kotlinx.collections.immutable.toPersistentList
 
 class AssistanceGuestsCount private constructor(
@@ -16,7 +17,7 @@ class AssistanceGuestsCount private constructor(
             kidsCount: Int,
             babiesCount: Int,
             animalsCount: Int,
-        ): AppResultCompound<AssistanceGuestsCount, DomainError> {
+        ): AppResult<AssistanceGuestsCount, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
             if (adultsCount < 0) errors.add(DomainError.AssistanceOtherFields.AdultGuestsCountIsNegative)
@@ -24,7 +25,7 @@ class AssistanceGuestsCount private constructor(
             if (babiesCount < 0) errors.add(DomainError.AssistanceOtherFields.BabiesGuestsCountIsNegative)
             if (animalsCount < 0) errors.add(DomainError.AssistanceOtherFields.AnimalsGuestsCountIsNegative)
 
-            if (errors.isNotEmpty()) return AppResultCompound.Errors(errors.toPersistentList())
+            if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = AssistanceGuestsCount(
                 adultsCount = adultsCount,
@@ -33,7 +34,7 @@ class AssistanceGuestsCount private constructor(
                 animalsCount = animalsCount,
             )
 
-            return AppResultCompound.Success(data = parsed)
+            return AppResult.Success(data = parsed)
         }
     }
 }

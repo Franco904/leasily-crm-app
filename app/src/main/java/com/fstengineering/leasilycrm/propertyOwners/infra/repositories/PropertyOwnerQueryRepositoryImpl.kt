@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.propertyOwners.infra.repositories
 
-import com.fstengineering.leasilycrm.core.application.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyOwnerDatabaseDataSource
 import com.fstengineering.leasilycrm.propertyOwners.application.models.dtos.PropertyOwnerReadModel
@@ -23,7 +23,7 @@ class PropertyOwnerQueryRepositoryImpl(
             emitAll(
                 databaseDataSource.watchAllCompound()
                     .fold(
-                        onError = { return@flow emit(AppResult.Error(error = it.toApplicationError())) },
+                        onError = { return@flow emit(AppResult.Error(error = it)) },
                         onSuccess = { it }
                     )
                     .map {
