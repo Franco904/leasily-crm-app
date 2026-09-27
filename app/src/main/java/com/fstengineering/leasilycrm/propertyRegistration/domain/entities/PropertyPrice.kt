@@ -37,17 +37,12 @@ class PropertyPrice private constructor(
                 )
                     .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
-            val amount =
-                if (amount == null) null
-                else Amount.parse(amount)
-                    .fold(onError = { errors.add(it); null }, onSuccess = { it })
-
             if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
             val parsed = PropertyPrice(
                 id = id,
                 period = requireNotNull(period),
-                amount = requireNotNull(amount),
+                amount = Amount.of(requireNotNull(amount)),
             )
 
             return AppResult.Success(data = parsed)

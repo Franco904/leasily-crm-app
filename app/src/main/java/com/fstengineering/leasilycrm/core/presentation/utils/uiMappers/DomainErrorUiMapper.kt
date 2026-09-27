@@ -8,7 +8,6 @@ private val INLINE_GENERIC_INVALID_DATA = R.string.inline_invalid_data
 
 fun DomainError.toInlineMessage() = when (this) {
     DomainError.Amount.Required -> INLINE_REQUIRED
-    DomainError.Amount.IsNegative -> INLINE_GENERIC_INVALID_DATA
 
     DomainError.AssistanceInteractionDate.Required -> INLINE_REQUIRED
     DomainError.AssistanceInteractionTitle.Required -> INLINE_REQUIRED

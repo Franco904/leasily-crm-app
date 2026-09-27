@@ -92,12 +92,7 @@ class Stay private constructor(
             }
                 ?.fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
-            val totalPriceParsed = totalPrice?.let { Amount.parse(totalPrice) }
-                ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
-
             if (commission == null) errors.add(DomainError.StayCommission.Required)
-            val commissionParsed = commission?.let { Amount.parse(commission) }
-                ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
 
             if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
@@ -113,8 +108,8 @@ class Stay private constructor(
                 period = requireNotNull(period),
                 isAutoCheckIn = isAutoCheckIn,
                 isAutoCheckOut = isAutoCheckOut,
-                totalPrice = totalPriceParsed,
-                commission = requireNotNull(commissionParsed),
+                totalPrice = totalPrice?.let { Amount.of(it) },
+                commission = Amount.of(requireNotNull(commission)),
                 files = files,
                 observations = observations,
             )
