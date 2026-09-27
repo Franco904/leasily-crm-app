@@ -28,19 +28,6 @@ Um resumo do problema de negócio que o usuário está enfrentando.
 
 A solução para o problema, especificando a motivação e objetivos na perspectiva do usuário.
 
-### Histórias de Usuário e Tarefas
-
-Uma lista LONGA e numerada de histórias de usuário e tarefas. Cada história deve estar no formato:
-
-> Como *ator*, eu quero *funcionalidade*, para que *benefício*.
-
-<user-story-example>
-> 1. Como corretor de imóveis, eu quero ver os check-ins e check-outs do dia ao abrir o app, para que eu possa organizar minha agenda de entregas e recebimentos de chaves
-</user-story-example>
-
-Liste as histórias candidatas em alto nível — suficiente para delimitar o escopo, sem antecipar o
-detalhamento que virá na derivação.
-
 ### Não Escopo
 
 Uma descrição das coisas que estão fora do escopo deste épico.

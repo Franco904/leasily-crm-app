@@ -31,7 +31,7 @@ possível.
 Use este guia de decisão para determinar o tipo da issue:
 
 - **História de usuário**: descreve uma solução de um problema do ponto de vista do especialista de
-  domínio;
+  domínio; Formato:
 - **Tarefa**: descreve uma ação pontual e específica, complementar às histórias, ou atende a uma
   necessidade técnica identificada (ex: dívida técnica, configuração de infraestrutura).
 
@@ -64,24 +64,12 @@ Itere até o usuário aprovar a decomposição.
 ### 5. Entrega
 
 Para cada fatia aprovada, crie uma nova issue no issue tracker (GitHub). Use o
-template de issue abaixo e aplique a label do tipo (`História` ou `Tarefa`). Crie as issues em
-ordem de dependência (bloqueadoras primeiro) e registre cada bloqueio com o recurso nativo
-"blocked by" do GitHub — nunca no corpo da issue:
+template de issue abaixo e aplique a label do tipo (`História` ou `Tarefa`).
 
-```bash
-gh api -X POST repos/<owner>/<repo>/issues/<bloqueada>/dependencies/blocked_by \
-  -F issue_id=$(gh api repos/<owner>/<repo>/issues/<bloqueadora> --jq .id)
-```
-
-Se houver issue pai (épico), registre cada issue criada como sub-issue nativa dela — não inclua
-seção "Épico pai" no corpo:
-
-```bash
-gh api -X POST repos/<owner>/<repo>/issues/<epico>/sub_issues \
-  -F sub_issue_id=$(gh api repos/<owner>/<repo>/issues/<issue> --jq .id)
-```
-
-Além disso, NÃO feche nem modifique a issue pai (épico).
+Crie as issues em ordem de dependência (bloqueadoras primeiro) e registre cada bloqueio com o
+recurso nativo "blocked by" do GitHub — nunca no corpo da issue. Se houver issue pai (épico),
+registre cada issue criada como sub-issue nativa dela — não inclua seção "Épico pai" no corpo. NÃO
+feche nem modifique a issue pai (épico).
 
 ---
 
