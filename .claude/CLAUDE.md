@@ -58,7 +58,7 @@ Vale também para nomes de módulo, feature, tela e ViewModel, sem exceção (ex
 
 ---
 
-## Commits
+## Commits e PRs
 
 - **Idioma:** sempre em português.
 - **Coautoria proibida:** nunca incluir `Co-Authored-By` (nem qualquer atribuição de autoria a IA)
