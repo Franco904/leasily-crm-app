@@ -21,7 +21,7 @@ android {
         versionCode = 1
         versionName = "0.0.1"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.fstengineering.leasilycrm.testUtils.IntegrationTestRunner"
         testInstrumentationRunnerArguments.putAll(
             mapOf(
                 "clearPackageData" to "true" // Revoke permissions and clear app state after each instrumented test
@@ -181,6 +181,9 @@ dependencies {
 
     // Testing
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(project.dependencies.platform(libs.koin.bom))
+    androidTestImplementation(libs.koin.test.junit4)
     androidTestImplementation(libs.kluent.android)
 
     testImplementation(libs.junit5.engine)
