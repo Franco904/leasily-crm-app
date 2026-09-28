@@ -4,6 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 sealed class PropertySeaProximityType(val id: Long) {
@@ -20,14 +21,13 @@ sealed class PropertySeaProximityType(val id: Long) {
             fun parse(
                 distance: AppDecimal?,
             ): AppResult<DistanceToSea, ValidationErrors> {
-                val errors = mutableListOf<DomainError>()
+                if (distance == null) {
+                    return AppResult.Error(
+                        ValidationErrors(persistentListOf(DomainError.PropertySeaProximityDistanceToSea.Required))
+                    )
+                }
 
-                if (distance == null) errors.add(DomainError.PropertySeaProximityDistanceToSea.Required)
-                if (distance?.isNegative == true) errors.add(DomainError.PropertySeaProximityDistanceToSea.IsNegative)
-
-                if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
-
-                return AppResult.Success(data = DistanceToSea(requireNotNull(distance)))
+                return AppResult.Success(data = DistanceToSea(AppDecimal(distance.decimal.abs())))
             }
         }
     }

@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.core.domain.utils
 sealed interface DomainError : BaseError {
     enum class Amount : DomainError {
         Required,
-        IsNegative,
     }
 
     enum class AssistanceInteractionDate : DomainError {
@@ -19,16 +18,6 @@ sealed interface DomainError : BaseError {
         PreferredPeriodRequired,
         PreferredPeriodStartAndEndDatesAreTheSame,
         PreferredPeriodStartDateIsAfterEndDate,
-        AdultGuestsCountIsNegative,
-        KidsGuestsCountIsNegative,
-        BabiesGuestsCountIsNegative,
-        AnimalsGuestsCountIsNegative,
-        BedroomsCountIsNegative,
-        EnSuitesCountIsNegative,
-        DoubleBedsCountIsNegative,
-        SingleBedsCountIsNegative,
-        BathroomsCountIsNegative,
-        ParkingSpotsCountIsNegative,
     }
 
     enum class Neighborhood : DomainError {
@@ -55,14 +44,6 @@ sealed interface DomainError : BaseError {
     }
 
     enum class PropertyOtherFields : DomainError {
-        BedroomsCountIsNegative,
-        EnSuitesCountIsNegative,
-        DoubleBedsCountIsNegative,
-        SingleBedsCountIsNegative,
-        BathroomsCountIsNegative,
-        ParkingSpotsCountIsNegative,
-        AirConditionersCountIsNegative,
-        MaxGuestsCountIsNegative,
         MoreThanOneMainPictureFile,
     }
 
@@ -72,7 +53,6 @@ sealed interface DomainError : BaseError {
 
     enum class PropertySeaProximityDistanceToSea : DomainError {
         Required,
-        IsNegative,
     }
 
     enum class Name : DomainError {
@@ -118,10 +98,6 @@ sealed interface DomainError : BaseError {
 
     enum class StayCommission : DomainError {
         Required,
-    }
-
-    enum class StayOtherFields : DomainError {
-        GuestsCountIsNegative,
     }
 
     enum class Creci : DomainError {

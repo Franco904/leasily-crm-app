@@ -7,8 +7,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Amount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
+import com.fstengineering.leasilycrm.core.domain.valueObjects.Quantidade
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.OccupiedPeriodPeriod
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.StayGuestsCount
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -22,7 +22,7 @@ class Stay private constructor(
     val vehicleMake: String?,
     val vehicleColor: String?,
     val vehicleLicensePlate: String?,
-    val guestsCount: StayGuestsCount,
+    val guestsCount: Quantidade,
     val isAutoCheckIn: Boolean,
     val isAutoCheckOut: Boolean,
     val totalPrice: Amount?,
@@ -54,9 +54,6 @@ class Stay private constructor(
 
             if (propertyId == null) errors.add(DomainError.StayProperty.Required)
             if (tenantId == null) errors.add(DomainError.StayTenant.Required)
-
-            val guestsCount = StayGuestsCount.parse(guests)
-                .fold(onError = { errors.add(it); null }, onSuccess = { it })
 
             val (checkInTimeHour, checkInTimeMinute) = checkInTime
             val (checkOutTimeHour, checkOutTimeMinute) = checkOutTime
@@ -92,12 +89,7 @@ class Stay private constructor(
             }
                 ?.fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
-            val totalPriceParsed = totalPrice?.let { Amount.parse(totalPrice) }
-                ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
-
             if (commission == null) errors.add(DomainError.StayCommission.Required)
-            val commissionParsed = commission?.let { Amount.parse(commission) }
-                ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
 
             if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
@@ -109,12 +101,12 @@ class Stay private constructor(
                 vehicleMake = vehicleMake,
                 vehicleColor = vehicleColor,
                 vehicleLicensePlate = vehicleLicensePlate,
-                guestsCount = requireNotNull(guestsCount),
+                guestsCount = Quantidade.of(guests),
                 period = requireNotNull(period),
                 isAutoCheckIn = isAutoCheckIn,
                 isAutoCheckOut = isAutoCheckOut,
-                totalPrice = totalPriceParsed,
-                commission = requireNotNull(commissionParsed),
+                totalPrice = totalPrice?.let { Amount.of(it) },
+                commission = Amount.of(requireNotNull(commission)),
                 files = files,
                 observations = observations,
             )

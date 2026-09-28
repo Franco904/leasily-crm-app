@@ -4,7 +4,6 @@ import java.math.BigDecimal
 
 data class AppDecimal(val decimal: BigDecimal) {
     val doubleValue = decimal.toDouble()
-    val isNegative = decimal.signum() == -1
 
     override fun toString() = decimal.toString()
 }
