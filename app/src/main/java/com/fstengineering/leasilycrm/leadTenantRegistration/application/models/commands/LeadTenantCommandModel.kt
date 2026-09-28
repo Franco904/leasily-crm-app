@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.leadTenantRegistration.application.models.commands
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 data class LeadTenantCommandModel(
@@ -14,4 +13,4 @@ data class LeadTenantCommandModel(
     val email: String?,
     val contactOrigin: String?,
     val observations: String?,
-) : CommandUseCase.CommandModel
+)

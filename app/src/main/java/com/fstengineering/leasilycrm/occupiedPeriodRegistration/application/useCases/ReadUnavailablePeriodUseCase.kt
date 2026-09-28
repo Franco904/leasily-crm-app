@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -12,8 +11,8 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repo
 class ReadUnavailablePeriodUseCase(
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
     private val propertyQueryRepository: PropertyQueryRepository,
-) : QueryUseCase<UnavailablePeriodArgs, UnavailablePeriodReadModel> {
-    override suspend fun invoke(
+) {
+    suspend operator fun invoke(
         args: UnavailablePeriodArgs,
     ): AppResult<UnavailablePeriodReadModel, ApplicationError> {
         val unavailablePeriodRaw = args.id?.let {

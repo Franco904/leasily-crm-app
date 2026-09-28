@@ -1,7 +1,5 @@
 package com.fstengineering.leasilycrm.propertyRegistration.di
 
-import com.fstengineering.leasilycrm.core.di.qualifiers.readPropertyQualifier
-import com.fstengineering.leasilycrm.core.di.qualifiers.writePropertyQualifier
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.viewModels.PropertyRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.viewModels.PropertyRegistrationStep2ViewModel
@@ -12,8 +10,8 @@ import org.koin.dsl.module
 val propertyRegistrationViewModelModule = module {
     viewModel {
         PropertyRegistrationViewModel(
-            readProperty = get(readPropertyQualifier),
-            writeProperty = get(writePropertyQualifier),
+            readProperty = get(),
+            writeProperty = get(),
             propertyQueryRepository = get(),
             propertyOwnerQueryRepository = get(),
         )

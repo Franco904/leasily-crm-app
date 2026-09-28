@@ -25,8 +25,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
-import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
-import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService.UserSessionEvent
+import com.fstengineering.leasilycrm.core.application.services.UserSessionService
+import com.fstengineering.leasilycrm.core.application.services.UserSessionService.UserSessionEvent
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.enqueueBootstrappingWorker
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.enqueueLazyWritesWorker
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.BootstrappingWorker

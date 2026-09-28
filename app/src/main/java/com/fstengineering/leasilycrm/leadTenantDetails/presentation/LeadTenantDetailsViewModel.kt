@@ -2,8 +2,6 @@ package com.fstengineering.leasilycrm.leadTenantDetails.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
@@ -11,8 +9,10 @@ import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.commands.DeleteAssistanceCommand
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.commands.DeleteLeadTenantCommand
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.queries.LeadTenantArgs
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteAssistanceUseCase
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.DeleteLeadTenantUseCase
+import com.fstengineering.leasilycrm.leadTenantDetails.application.useCases.WatchLeadTenantUseCase
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantDetailsUiState
 import kotlinx.coroutines.Job
@@ -24,9 +24,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LeadTenantDetailsViewModel(
-    private val watchLeadTenant: QueryFlowUseCase<LeadTenantArgs, LeadTenantReadModel?>,
-    private val deleteLeadTenant: CommandUseCase<DeleteLeadTenantCommand>,
-    private val deleteAssistance: CommandUseCase<DeleteAssistanceCommand>,
+    private val watchLeadTenant: WatchLeadTenantUseCase,
+    private val deleteLeadTenant: DeleteLeadTenantUseCase,
+    private val deleteAssistance: DeleteAssistanceUseCase,
 ) : ViewModel() {
     private var isInitialized = false
 

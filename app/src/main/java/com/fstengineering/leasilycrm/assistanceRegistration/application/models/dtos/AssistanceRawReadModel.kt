@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
@@ -31,4 +30,4 @@ data class AssistanceRawReadModel(
     val observations: String?,
     val interactions: ImmutableList<AssistanceInteractionReadModel>,
     val isFinished: Boolean,
-) : QueryUseCase.ReadModel
+)

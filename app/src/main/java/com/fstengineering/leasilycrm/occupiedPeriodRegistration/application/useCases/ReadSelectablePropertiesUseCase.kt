@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -15,8 +14,8 @@ import kotlinx.collections.immutable.toPersistentList
 class ReadSelectablePropertiesUseCase(
     private val propertyQueryRepository: PropertyQueryRepository,
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
-) : QueryUseCase<SelectablePropertiesArgs, ImmutableList<PropertyReadModel>> {
-    override suspend fun invoke(
+) {
+    suspend operator fun invoke(
         args: SelectablePropertiesArgs,
     ): AppResult<ImmutableList<PropertyReadModel>, ApplicationError> {
         val properties = propertyQueryRepository.getAll(args.matching)

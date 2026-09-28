@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.core.di.modules
 
-import com.fstengineering.leasilycrm.core.application.gateways.UserSessionSharedGateway
 import com.fstengineering.leasilycrm.core.application.repositories.AssistanceSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
@@ -16,7 +15,6 @@ import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
 import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
-import com.fstengineering.leasilycrm.core.infra.gateways.UserSessionSharedGatewayImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.AssistanceSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedQueryRepositoryImpl
@@ -29,13 +27,6 @@ import com.fstengineering.leasilycrm.core.infra.stores.UserSessionSharedStoreImp
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<UserSessionSharedGateway> {
-        UserSessionSharedGatewayImpl(
-            connectivityAdapter = get(),
-            remoteDataSource = get(),
-        )
-    }
-
     single<OccupiedPeriodSharedCommandRepository> {
         OccupiedPeriodSharedCommandRepositoryImpl(
             databaseAdapter = get(),

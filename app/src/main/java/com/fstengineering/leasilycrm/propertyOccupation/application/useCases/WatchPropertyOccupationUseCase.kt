@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.propertyOccupation.application.useCases
 
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
 import com.fstengineering.leasilycrm.core.domain.services.PropertyOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
@@ -19,8 +18,8 @@ import kotlinx.coroutines.flow.map
 class WatchPropertyOccupationUseCase(
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
     private val leadTenantSharedQueryRepository: LeadTenantSharedQueryRepository,
-) : QueryFlowUseCase<PropertyOccupationArgs, PropertyOccupiedPeriodsReadModel> {
-    override suspend fun invoke(
+) {
+    suspend operator fun invoke(
         args: PropertyOccupationArgs,
     ): Flow<AppResult<PropertyOccupiedPeriodsReadModel, ApplicationError>> {
         return occupiedPeriodQueryRepository.watchAllByPropertyId(propertyId = args.id)

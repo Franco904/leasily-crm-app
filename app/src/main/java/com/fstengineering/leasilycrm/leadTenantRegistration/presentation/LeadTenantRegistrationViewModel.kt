@@ -3,20 +3,20 @@ package com.fstengineering.leasilycrm.leadTenantRegistration.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
-import com.fstengineering.leasilycrm.leadTenantRegistration.application.models.commands.LeadTenantCommandModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.application.repositories.LeadTenantQueryRepository
+import com.fstengineering.leasilycrm.leadTenantRegistration.application.useCases.WriteLeadTenantUseCase
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.mappers.toCommandModel
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantErrorUiState
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantField
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
@@ -27,10 +27,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 class LeadTenantRegistrationViewModel(
-    private val writeLeadTenant: CommandUseCase<LeadTenantCommandModel>,
+    private val writeLeadTenant: WriteLeadTenantUseCase,
     private val leadTenantQueryRepository: LeadTenantQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false

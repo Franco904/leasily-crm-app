@@ -5,16 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.models.commands.RegisterCheckOutCommand
 import com.fstengineering.leasilycrm.core.application.models.commands.UndoCheckOutCommand
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryFlowUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
+import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.queries.OccupiedPeriodArgs
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodQueryRepository
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases.WatchOccupiedPeriodUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.OccupiedPeriodDetailsUiState
 import kotlinx.coroutines.channels.Channel
@@ -25,9 +25,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OccupiedPeriodDetailsViewModel(
-    private val watchOccupiedPeriod: QueryFlowUseCase<OccupiedPeriodArgs, OccupiedPeriodReadModel?>,
-    private val registerStayCheckOut: CommandUseCase<RegisterCheckOutCommand>,
-    private val undoRegisterStayCheckOut: CommandUseCase<UndoCheckOutCommand>,
+    private val watchOccupiedPeriod: WatchOccupiedPeriodUseCase,
+    private val registerStayCheckOut: RegisterStayCheckOutUseCase,
+    private val undoRegisterStayCheckOut: UndoRegisterStayCheckOutUseCase,
     private val occupiedPeriodSharedCommandRepository: OccupiedPeriodSharedCommandRepository,
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
 ) : ViewModel() {

@@ -7,7 +7,6 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.q
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentPropertyQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.LeadTenantQueryRepository
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -18,8 +17,8 @@ class ReadAssistanceUseCase(
     private val leadTenantQueryRepository: LeadTenantQueryRepository,
     private val assistanceQueryRepository: AssistanceQueryRepository,
     private val assistanceSentPropertyQueryRepository: AssistanceSentPropertyQueryRepository,
-) : QueryUseCase<AssistanceArgs, AssistanceReadModel> {
-    override suspend fun invoke(
+) {
+    suspend operator fun invoke(
         args: AssistanceArgs,
     ): AppResult<AssistanceReadModel, ApplicationError> {
         val leadTenantName = leadTenantQueryRepository.getNameById(tenantId = args.leadTenantId)

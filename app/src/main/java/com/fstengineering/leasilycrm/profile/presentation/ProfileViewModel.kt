@@ -3,9 +3,8 @@ package com.fstengineering.leasilycrm.profile.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.application.services.UserSessionService
 import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
-import com.fstengineering.leasilycrm.core.application.services.interfaces.UserSessionService
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.CommandUseCase
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
@@ -15,6 +14,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
+import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
 import com.fstengineering.leasilycrm.profile.domain.valueObjects.Creci
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
 import kotlinx.coroutines.channels.Channel
@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val writeUser: CommandUseCase<UserCommandModel>,
+    private val writeUser: WriteUserUseCase,
     private val connectivityService: ConnectivityService,
     private val userSessionService: UserSessionService,
     private val userQueryRepository: UserQueryRepository,

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 data class UnavailablePeriodRawReadModel(
@@ -10,4 +9,4 @@ data class UnavailablePeriodRawReadModel(
     val checkInDateTime: AppDateTime?,
     val checkOutDateTime: AppDateTime?,
     val observations: String?,
-) : QueryUseCase.ReadModel
+)

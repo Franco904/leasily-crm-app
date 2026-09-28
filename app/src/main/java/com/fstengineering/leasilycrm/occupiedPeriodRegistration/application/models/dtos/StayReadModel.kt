@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos
 
-import com.fstengineering.leasilycrm.core.application.useCases.interfaces.QueryUseCase
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import kotlinx.collections.immutable.ImmutableList
@@ -24,7 +23,7 @@ data class StayReadModel(
     val commission: AppDecimal?,
     val files: ImmutableList<StayFileReadModel>?,
     val observations: String?,
-) : QueryUseCase.ReadModel {
+) {
     companion object {
         fun create(
             stayRaw: StayRawReadModel?,
