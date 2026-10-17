@@ -14,6 +14,22 @@ argument-hint: "Qual o número da issue e a branch de destino? (ex: 42 main)"
 
 ---
 
+## Concisão (obrigatório)
+
+O PR é lido por revisor e QA com pouco tempo. Seja **extremamente conciso** em todas as seções
+(Descrição, Análise de impactos, Orientações para revisão, Plano de QA); priorize concisão em detrimento de gramática.
+
+- **Descrição:** causa (se bug) em 1–3 frases + correção em até 5 bullets. Sem listar exaustivamente
+  cada método/arquivo modificado ou removido.
+- **Orientações para revisão:** só o que o revisor não inferiria do diff (arquivo-chave, mudança de comportamento).
+  Tipicamente 1–5 bullets.
+- **Plano de QA:** um bullet de uma linha por cenário, agrupando cenários parecidos (ex.: "sem rede / sessão
+  expirada"). Tipicamente 3–6 bullets. Pré-condição comum vai numa linha antes da lista, não
+  repetida em cada cenário.
+- Não justifique ausência de testes, nem detalhe nomes internos, nem repita o que já está no diff.
+
+---
+
 ## Processo
 
 ### 1. Coletar contexto
