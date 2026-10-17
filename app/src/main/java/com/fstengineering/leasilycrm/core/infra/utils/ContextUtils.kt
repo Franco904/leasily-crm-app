@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.presentation.utils
+package com.fstengineering.leasilycrm.core.infra.utils
 
 import android.Manifest
 import android.content.Context

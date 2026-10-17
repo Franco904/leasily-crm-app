@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.utils.hasNotificationPermission
+import com.fstengineering.leasilycrm.core.infra.utils.hasNotificationPermission
 import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.SignInState
 import kotlinx.coroutines.launch
 
