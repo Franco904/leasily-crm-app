@@ -80,8 +80,9 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
 - Todo `try`/`catch` de exceção de biblioteca externa (SQLite, DataStore,
   I/O de arquivo, Ktor, …) mora **no DataSource** — nunca no `Repository`,
   UseCase ou ViewModel.
-- Captura **só `Exception`** — `Error` da plataforma e `CancellationException`
-  continuam se propagando. Em `Flow`, use `asDatabaseFlowResult()`
+- Captura **só `Exception`** — `Error` da plataforma, `CancellationException` e exceções fatais
+  (`SecurityException`, `GeneralSecurityException`) continuam se propagando
+  (`0011-error-handling.md`, passos 3–4). Em `Flow`, use `asDatabaseFlowResult()`
   (`core/infra/utils/BoundaryUtils.kt`), que já garante isso; não use `catch {}` cru.
 - O DataSource **traduz** a falha para o vocabulário da camada de cima: devolve
   vazio/`null` quando "não encontrado" é um caso normal, ou `AppResult.Error` com
@@ -98,7 +99,8 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
 - **Mensagem e causa técnica** vão para o monitoramento no `catch`, via
   `ExceptionLogger` (`core/infra/adapters/`, `object` sem estado e sem interface — Adapter do
   subdomínio Genérico) chamado diretamente (`ExceptionLogger.log(e)`) — nunca
-  embutidas no erro. Caso de falha esperada não precisa ser logado.
+  embutidas no erro. Caso de falha esperada retornada como erro não precisa ser logado; falha
+  mascarada precisa (`0011-error-handling.md`, passo 2).
 - **Use os wrappers de `core/infra/utils/BoundaryUtils.kt`** (`onDatabase {}`,
   `asDatabaseFlowResult()`, …) em vez de reimplementar o boilerplate acima na mão. Cada um
   já encapsula tais funções. O nome do wrapper é por tecnologia (legibilidade no chamador:

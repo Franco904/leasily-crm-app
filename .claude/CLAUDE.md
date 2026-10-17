@@ -45,7 +45,7 @@ Vale também para nomes de módulo, feature, tela e ViewModel, sem exceção (ex
 | Modelo de UI (genérico de presentation) | `<Contexto>UiModel`                                                                                                                          |
 | Composable (tela)                       | `<Contexto>Screen`                                                                                                                           |
 | Composable (componente)                 | `<Contexto>` ou nome descritivo sem sufixo                                                                                                   |
-| Arquivo de teste | `<ArquivoProducao>Test.kt` (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`) |
+| Arquivo de teste                        | `<ArquivoProducao>Test.kt` (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`)                                                                |
 
 ---
 
@@ -82,12 +82,12 @@ Vale também para nomes de módulo, feature, tela e ViewModel, sem exceção (ex
 Antes de agir, **sempre** consulte as rules do projeto e balize suas decisões por elas. Diretrizes
 de camada e de teste ficam em `docs/guidelines/` — consulte a da camada/nível que a tarefa toca.
 
-| Arquivo                             | Conteúdo                                                                                                                 |
-|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| @GLOSSARY.md                         | Glossário da linguagem ubíqua e mapa dos contextos delimitados — base para nomes de classes, métodos, variáveis e testes |
-| @docs/guidelines/0001-subdomains.md | Classificação estratégica dos subdomínios e orientação para padrões táticos de DDD                                       |
-| `docs/adr/`                         | ADRs com decisões de arquitetura do sistema; não questione, apenas siga                                                  |
-| `docs/guidelines/`                  | Testes (0002–0005), design de interface (0010) e camadas presentation/application/domain/infra (0006–0009)               |
+| Arquivo                             | Conteúdo                                                                                                                                                   |
+|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| @GLOSSARY.md                        | Glossário da linguagem ubíqua e mapa dos contextos delimitados — base para nomes de classes, métodos, variáveis e testes                                   |
+| @docs/guidelines/0001-subdomains.md | Classificação estratégica dos subdomínios e orientação para padrões táticos de DDD                                                                         |
+| `docs/adr/`                         | ADRs com decisões de arquitetura do sistema; não questione, apenas siga                                                                                    |
+| `docs/guidelines/`                  | Testes (0002–0005), camadas presentation/application/domain/infra (0006–0009), design de interface (0010), erros (0011), comentários (0012) e nomes (0013) |
 
 ---
 

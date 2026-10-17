@@ -62,7 +62,10 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
   formulário) e `AppResult<T, DomainError>` no comportamento do agregado. `DomainError`,
   `ValidationErrors` e `ApplicationError` herdam de `BaseError` (`sealed interface`,
   `core/domain/utils/`) — a UI faz `when` exaustivo sobre o erro.
-- Antes de criar um caso de erro, tente defini-lo fora da existência — um tipo que não admite
+- Invariante violado (bug: estado que a factory nunca deveria ter construído) não é erro de domínio:
+  `check`/`require` e crash (`0011-error-handling.md`, passo 4).
+- Antes de criar um caso de erro, tente defini-lo fora da existência (`0011-error-handling.md`,
+  passo 1) — um tipo que não admite
   o valor inválido elimina o erro e o teste dele. Ex.: `Quantidade.of(n)` trunca em 0; `Amount` descarta o sinal com
   `abs()` — nenhum dos dois devolve erro.
 - Carregam dado estruturado suficiente para a apresentação traduzir em mensagem.

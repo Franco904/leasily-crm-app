@@ -98,8 +98,8 @@ atualizado evita desvios durante a codificação.
 - **[`docs/adr/`](docs/adr/)**: decisões arquiteturais já tomadas e o porquê de cada uma — evita
   reabrir discussões já fechadas.
 - **[`docs/guidelines/`](docs/guidelines/)**: diretrizes e padrões táticos — classificação de
-  subdomínios, convenções de teste (comuns, unitário, integração, apresentação), design de interface
-  e convenções de cada camada.
+  subdomínios, convenções de teste (comuns, unitário, integração, apresentação), convenções de cada
+  camada, design de interface, tratamento de erros, comentários e nomes.
 
 ---
 

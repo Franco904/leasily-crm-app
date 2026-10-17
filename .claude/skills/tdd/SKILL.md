@@ -25,7 +25,9 @@ Antes de escrever qualquer código:
 - [ ] Confirme com o usuário quais comportamentos testar (priorizar)
 - [ ] [Projete interfaces](../../../docs/guidelines/0010-interface-design.md) visando legibilidade,
   manutenibilidade e testabilidade — para interfaces não-triviais (novo ponto de injeção,
-  dependência cross-seam, módulo novo), aplique **Design It Twice** antes do primeiro teste
+  dependência cross-seam, módulo novo), aplique **Design It Twice**, e escreva o
+  [comentário de interface](../../../docs/guidelines/0012-comments.md#comentário-primeiro) antes do
+  primeiro teste
 - [ ] Liste os comportamentos a testar (não etapas de implementação)
 - [ ] Obtenha aprovação do usuário sobre o plano
 
@@ -96,6 +98,7 @@ Após todos os testes passarem, delegue a refatoração a um subagente com:
     - **Métodos longos** → Dividir em auxiliares privados (manter testes na interface pública)
     - **Módulos rasos** → Combinar ou aprofundar
     - **Obsessão por primitivos** → Introduzir objetos de valor
+    - **Nome vago, sinônimo ou ambíguo** → Renomear ([0013](../../../docs/guidelines/0013-naming.md))
     - **Código existente** que o novo código revela como problemático; aplique princípios SOLID onde
       fizer sentido
 - Carregue /review-code para guiar o ciclo de feedback desta etapa
@@ -116,4 +119,5 @@ refatoração estiver concluída e todos os testes passando.
 [ ] Código é mínimo para este teste
 [ ] Nenhuma funcionalidade especulativa adicionada
 [ ] Teste mata os mutantes plausíveis do trecho (teste de mutação manual no GREEN)
+[ ] Diff passa no Teste da exclusão da 0012 (interface e implementação)
 ```
