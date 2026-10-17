@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.core.infra.utils
 
 import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
-import com.fstengineering.leasilycrm.core.infra.exceptions.CryptoException
 import java.security.KeyStore
 import java.security.SecureRandom
 import java.util.Base64
@@ -11,6 +11,10 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
+/**
+ * Criptografia AES-GCM com chave do Android Keystore. Exceções da plataforma propagam com o tipo
+ * original, para que a borda distinga as fatais (`isFatal`).
+ */
 object CryptoUtils {
     private const val KEY_STORE_TYPE = "AndroidKeyStore"
     private const val KEY_ALIAS = "secret"
@@ -31,41 +35,50 @@ object CryptoUtils {
             load(null)
         }
 
+    /**
+     * @throws KeyPermanentlyInvalidatedException quando a plataforma invalidou a chave; ela é
+     * descartada e a próxima chamada usa uma chave nova.
+     */
     fun encrypt(plainTextBytes: ByteArray): ByteArray {
-        return try {
-            val cipherTextBytes = cipher
-                .apply { init(Cipher.ENCRYPT_MODE, getSecretKey()) }
+        val cipherTextBytes = withValidSecretKey { secretKey ->
+            cipher
+                .apply { init(Cipher.ENCRYPT_MODE, secretKey) }
                 .doFinal(plainTextBytes)
-
-            // IV here is always 12 bytes for GCM
-            val cipherTextAndIvBytes = cipher.iv + cipherTextBytes
-            val cipherTextAndIvEncodedBytes = Base64.getEncoder().encode(cipherTextAndIvBytes)
-
-            cipherTextAndIvEncodedBytes
-        } catch (e: Exception) {
-            throw CryptoException(message = "${e.cause}: ${e.message}")
         }
+
+        // IV here is always 12 bytes for GCM
+        val cipherTextAndIvBytes = cipher.iv + cipherTextBytes
+        return Base64.getEncoder().encode(cipherTextAndIvBytes)
     }
 
+    /**
+     * @throws KeyPermanentlyInvalidatedException quando a plataforma invalidou a chave; ela é
+     * descartada e o dado cifrado com ela fica irrecuperável.
+     */
     fun decrypt(cipherTextAndIvEncodedBytes: ByteArray): ByteArray {
-        return try {
-            val cipherTextAndIvBytes = Base64.getDecoder().decode(cipherTextAndIvEncodedBytes)
-            val iv = cipherTextAndIvBytes.copyOfRange(0, 12)
-            val cipherTextBytes = cipherTextAndIvBytes.copyOfRange(12, cipherTextAndIvBytes.size)
+        val cipherTextAndIvBytes = Base64.getDecoder().decode(cipherTextAndIvEncodedBytes)
+        val iv = cipherTextAndIvBytes.copyOfRange(0, 12)
+        val cipherTextBytes = cipherTextAndIvBytes.copyOfRange(12, cipherTextAndIvBytes.size)
 
-            val plainTextBytes = cipher
+        return withValidSecretKey { secretKey ->
+            cipher
                 .apply {
                     init(
                         Cipher.DECRYPT_MODE,
-                        getSecretKey(),
+                        secretKey,
                         GCMParameterSpec(AUTH_TAG_LENGTH_BITS, iv)
                     )
                 }
                 .doFinal(cipherTextBytes)
+        }
+    }
 
-            plainTextBytes
-        } catch (e: Exception) {
-            throw CryptoException(message = "${e.cause}: ${e.message}")
+    private fun <T> withValidSecretKey(block: (SecretKey) -> T): T {
+        try {
+            return block(getSecretKey())
+        } catch (e: KeyPermanentlyInvalidatedException) {
+            keyStore.deleteEntry(KEY_ALIAS)
+            throw e
         }
     }
 
@@ -96,15 +109,10 @@ object CryptoUtils {
     }
 
     fun generateNonce(): String {
-        return try {
-            val nonceBytes = ByteArray(16).apply {
-                SecureRandom().nextBytes(this)
-            }
-
-            val encodedNonce = Base64.getUrlEncoder().withoutPadding().encodeToString(nonceBytes)
-            encodedNonce
-        } catch (e: Exception) {
-            throw CryptoException(message = "${e.cause}: ${e.message}")
+        val nonceBytes = ByteArray(16).apply {
+            SecureRandom().nextBytes(this)
         }
+
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(nonceBytes)
     }
 }
