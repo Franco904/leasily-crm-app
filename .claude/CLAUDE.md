@@ -18,7 +18,7 @@ Exemplos corretos:
   `Atendimento`, `PeriodoOcupado`, `Estadia`, `PeriodoIndisponivel`
 - Eventos: `CheckIn`, `CheckOut`
 - Use cases: `RegisterCheckInUseCase`, `RegisterCheckOutUseCase`, `UndoRegisterStayCheckOutUseCase`
-- Erros: `AppResult.Error(DomainError.OverbookingDetected)`, nunca `throw DomainException(...)`
+- Erros: `AppResult.Error(DomainError.StayPeriod.Overbooking)`, nunca `throw DomainException(...)`
 
 **Inglês por padrão fora do domínio:** nomes de variável, método, parâmetro e classe/interface usam
 **inglês**, exceto quando o nome é (ou incorpora) um termo definido em `GLOSSARY.md` — esse termo

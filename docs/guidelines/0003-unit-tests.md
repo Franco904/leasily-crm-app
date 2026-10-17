@@ -52,7 +52,7 @@ erro retornado, não apenas que houve erro:
 ```kotlin
 val result = sut(command)
 assertTrue(result is AppResult.Error)
-assertEquals(DomainError.OverbookingDetected, (result as AppResult.Error).error)
+assertEquals(DomainError.StayPeriod.Overbooking, (result as AppResult.Error).error)
 ```
 
 ---
