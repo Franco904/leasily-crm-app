@@ -26,9 +26,9 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
 - **Fronteira de consistência**: 1 agregado = 1 fronteira transacional. Referência
   a outro agregado é por identidade, não por objeto aninhado.
 - Agregado vs. Entidade não tem marcador no código — a distinção é pacote +
-  termo do `CONTEXT.md`. O agregado é a raiz que o resto da app referencia e que o
+  termo do `GLOSSARY.md`. O agregado é a raiz que o resto da app referencia e que o
   `Repository` persiste (`0010-infra-repositories-data-sources.md`).
-- **Nome = termo do `CONTEXT.md`, sem sufixo de tipo.** O agregado é o **único**
+- **Nome = termo do `GLOSSARY.md`, sem sufixo de tipo.** O agregado é o **único**
   model sem sufixo — `ReadModel`/`CommandModel`/`QueryModel`/`Orm`/`UiState`
   todos carregam o seu (`0008-application-use-cases.md`, "Sufixo de tipo no nome
   do model"). A ausência de sufixo é o que marca "isto é o modelo do domínio, não

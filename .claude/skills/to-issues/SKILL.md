@@ -15,7 +15,7 @@ comentários.
 
 Se você ainda não explorou a base de código, faça isso para entender o estado atual do código.
 Títulos e descrições de issues devem usar o vocabulário do glossário de domínio do projeto (
-`CONTEXT.md`) e respeitar quaisquer ADRs na área que você está tocando.
+`GLOSSARY.md`) e respeitar quaisquer ADRs na área que você está tocando.
 
 ### 3. Rascunhar as fatias verticais
 

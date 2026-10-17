@@ -8,7 +8,7 @@ trabalhar neste repositório.
 
 ## Linguagem Ubíqua
 
-**Obrigatório:** use os termos definidos em `CONTEXT.md` para nomear classes, métodos, variáveis,
+**Obrigatório:** use os termos definidos em `GLOSSARY.md` para nomear classes, métodos, variáveis,
 módulos e descrições de teste. Nunca invente sinônimos, abreviações não listadas ou termos técnicos
 da indústria (ex.: `Manager`, `Helper`, `DataService`).
 
@@ -21,12 +21,12 @@ Exemplos corretos:
 - Erros: `AppResult.Error(DomainError.OverbookingDetected)`, nunca `throw DomainException(...)`
 
 **Inglês por padrão fora do domínio:** nomes de variável, método, parâmetro e classe/interface usam
-**inglês**, exceto quando o nome é (ou incorpora) um termo definido em `CONTEXT.md` — esse termo
+**inglês**, exceto quando o nome é (ou incorpora) um termo definido em `GLOSSARY.md` — esse termo
 permanece em português, verbatim, sem acento (ex.: `EstadiaDao`, `getEstadia`,
 `WriteEstadiaUseCase`;
 não `StayDao`/`getStay`). Descrições de teste (`@Test fun`) continuam em português
 (`docs/guidelines/0002-all-tests.md`). O código legado ainda usa os termos traduzidos (`Stay`,
-`Property`, `LeadTenant`) — o alias de cada termo está no `CONTEXT.md`; código novo segue a regra.
+`Property`, `LeadTenant`) — o alias de cada termo está no `GLOSSARY.md`; código novo segue a regra.
 Vale também para nomes de módulo, feature, tela e ViewModel, sem exceção (ex.:
 `periodoOcupadoRegistration/`, `PeriodoOcupadoRegistrationViewModel`, `clienteDetails/`).
 
@@ -45,7 +45,7 @@ Vale também para nomes de módulo, feature, tela e ViewModel, sem exceção (ex
 | Modelo de UI (genérico de presentation) | `<Contexto>UiModel`                                                                                                                          |
 | Composable (tela)                       | `<Contexto>Screen`                                                                                                                           |
 | Composable (componente)                 | `<Contexto>` ou nome descritivo sem sufixo                                                                                                   |
-| Arquivo de teste                        | `<ArquivoProducao>Test.kt` (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`)                                                                |
+| Arquivo de teste | `<ArquivoProducao>Test.kt` (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`) |
 
 ---
 
@@ -84,7 +84,7 @@ de camada e de teste ficam em `docs/guidelines/` — consulte a da camada/nível
 
 | Arquivo                             | Conteúdo                                                                                                                 |
 |-------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| @CONTEXT.md                         | Glossário da linguagem ubíqua e mapa dos contextos delimitados — base para nomes de classes, métodos, variáveis e testes |
+| @GLOSSARY.md                         | Glossário da linguagem ubíqua e mapa dos contextos delimitados — base para nomes de classes, métodos, variáveis e testes |
 | @docs/guidelines/0001-subdomains.md | Classificação estratégica dos subdomínios e orientação para padrões táticos de DDD                                       |
 | `docs/adr/`                         | ADRs com decisões de arquitetura do sistema; não questione, apenas siga                                                  |
 | `docs/guidelines/`                  | Testes (0002–0005), design de interface (0006) e camadas presentation/application/domain/infra (0007–0010)               |
@@ -93,14 +93,14 @@ de camada e de teste ficam em `docs/guidelines/` — consulte a da camada/nível
 
 ## Skills
 
-| Comando               | Descrição                                                                                                                                                     |
-|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `/grill-me`           | Confronta um plano de discovery ou delivery com o modelo de domínio, aprimora terminologia e atualiza `CONTEXT.md` e ADRs conforme as decisões se cristalizam |
-| `/to-epic`            | Transforma o contexto da conversa atual em um épico — sintetiza requisitos sem entrevistar o usuário. Invoque diretamente após `/grill-me`                    |
-| `/to-issues`          | Deriva um épico em issues independentes no GitHub usando fatias verticais (tracer bullets). Invoque diretamente após `/to-epic`                               |
-| `/tdd`                | Desenvolvimento orientado a testes (red-green-refactor) — use na fase de implementação (funcionalidades ou correção de bugs) com TDD, após a fase de plano    |
-| `/to-pr`              | Gera o corpo do PR seguindo o template do projeto, com plano de QA ponta-a-ponta derivado do tracer bullet da issue                                           |
-| `/review-code`        | Revisa código como arquiteto sênior seguindo os padrões e diretrizes do projeto                                                                               |
-| `/handoff`            | Compacta a conversa atual em documento de handoff para outro agente continuar                                                                                 |
-| `/teach`              | Ensina o usuário sobre um tópico dentro do workspace, ao longo de múltiplas sessões                                                                           |
-| `/writing-for-agents` | Referência para escrever skills, `CLAUDE.md` e outros documentos consumidos por agentes — consulte antes de editar este arquivo                               |
+| Comando               | Descrição                                                                                                                                                      |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `/grill-me`           | Confronta um plano de discovery ou delivery com o modelo de domínio, aprimora terminologia e atualiza `GLOSSARY.md` e ADRs conforme as decisões se cristalizam |
+| `/to-epic`            | Transforma o contexto da conversa atual em um épico — sintetiza requisitos sem entrevistar o usuário. Invoque diretamente após `/grill-me`                     |
+| `/to-issues`          | Deriva um épico em issues independentes no GitHub usando fatias verticais (tracer bullets). Invoque diretamente após `/to-epic`                                |
+| `/tdd`                | Desenvolvimento orientado a testes (red-green-refactor) — use na fase de implementação (funcionalidades ou correção de bugs) com TDD, após a fase de plano     |
+| `/to-pr`              | Gera o corpo do PR seguindo o template do projeto, com plano de QA ponta-a-ponta derivado do tracer bullet da issue                                            |
+| `/review-code`        | Revisa código como arquiteto sênior seguindo os padrões e diretrizes do projeto                                                                                |
+| `/handoff`            | Compacta a conversa atual em documento de handoff para outro agente continuar                                                                                  |
+| `/teach`              | Ensina o usuário sobre um tópico dentro do workspace, ao longo de múltiplas sessões                                                                            |
+| `/writing-for-agents` | Referência para escrever skills, `CLAUDE.md` e outros documentos consumidos por agentes — consulte antes de editar este arquivo                                |

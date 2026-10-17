@@ -29,7 +29,7 @@ Convenções para a camada `application/`: orquestração da intenção de negó
   inline no UseCase (e.g. derivação trivial de parâmetro antes de passar adiante — coalescing,
   default, normalização de nulo — `comissao = comissaoEstadia ?: comissaoPadraoImovel`).
 - **Nomenclatura**: `<VerboInglês><TermoDeDomínio>UseCase` — verbo em inglês,
-  substantivo palavra por palavra do `CONTEXT.md`. Ex.: `RegisterCheckInUseCase`,
+  substantivo palavra por palavra do `GLOSSARY.md`. Ex.: `RegisterCheckInUseCase`,
   `WriteEstadiaUseCase`. Não `RegistrarCheckIn…`, não `…StayUseCase`.
 
 ## Application Service

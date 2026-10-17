@@ -4,7 +4,7 @@ Leasily CRM
 Aplicativo mobile Android para automação de processos de CRM especializado na intermediação de
 locações de imóveis residenciais por temporada, no domínio de Administração Imobiliária.
 Público-alvo: corretores de imóveis autônomos. Funciona no modelo offline-first, sincronizando
-oportunisticamente com o back-end. Ver [`CONTEXT.md`](CONTEXT.md) para o glossário da linguagem
+oportunisticamente com o back-end. Ver [`GLOSSARY.md`](GLOSSARY.md) para o glossário da linguagem
 ubíqua e o mapa dos contextos delimitados do domínio.
 
 - **Linguagem:** Kotlin
@@ -32,7 +32,7 @@ ubíqua e o mapa dos contextos delimitados do domínio.
 ## Estrutura do Projeto
 
 Módulos são packages dentro de `app/src/main/java/com/fstengineering/leasilycrm/`. Os nomes em
-inglês são legado: a migração para os termos do [`CONTEXT.md`](CONTEXT.md) em português está
+inglês são legado: a migração para os termos do [`GLOSSARY.md`](GLOSSARY.md) em português está
 planejada (ex.: `occupiedPeriodRegistration` → `periodoOcupadoRegistration`).
 
 | Módulo                       | Contexto delimitado   | Responsabilidade                                                                                                                                        |
@@ -88,11 +88,11 @@ Quais camadas um módulo precisa depende da classificação do seu subdomínio
 
 ## Documentação do Projeto (`docs/`)
 
-A leitura de [`CONTEXT.md`](CONTEXT.md) e de `docs/` é **obrigatória e recorrente** — antes de
+A leitura de [`GLOSSARY.md`](GLOSSARY.md) e de `docs/` é **obrigatória e recorrente** — antes de
 implementar uma tarefa e antes de revisar um PR, não apenas no onboarding. Ela evolui; manter-se
 atualizado evita desvios durante a codificação.
 
-- **[`CONTEXT.md`](CONTEXT.md)**: glossário da linguagem ubíqua e mapa dos contextos delimitados
+- **[`GLOSSARY.md`](GLOSSARY.md)**: glossário da linguagem ubíqua e mapa dos contextos delimitados
   (Autenticação, Imóveis, Clientes, Proprietários, Atendimento, Períodos Ocupados, Relatórios
   Analíticos, Sincronização).
 - **[`docs/adr/`](docs/adr/)**: decisões arquiteturais já tomadas e o porquê de cada uma — evita

@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Sessão de interrogação (grilling) que testa um plano de discovery ou delivery sob pressão — confronta a proposta com o modelo de domínio existente, aprimora a terminologia e atualiza a documentação (CONTEXT.md; ADRs apenas em delivery) conforme as decisões se cristalizam. Use sempre que o usuário pedir para validar ou desafiar um épico, plano de pesquisa, síntese de discovery ou proposta de solução/implementação — mesmo sem usar essas palavras exatas.
+description: Sessão de interrogação (grilling) que testa um plano de discovery ou delivery sob pressão — confronta a proposta com o modelo de domínio existente, aprimora a terminologia e atualiza a documentação (GLOSSARY.md; ADRs apenas em delivery) conforme as decisões se cristalizam. Use sempre que o usuário pedir para validar ou desafiar um épico, plano de pesquisa, síntese de discovery ou proposta de solução/implementação — mesmo sem usar essas palavras exatas.
 ---
 
 <what-to-do>
@@ -21,15 +21,16 @@ Mapeamento de contexto(s) e ADRs:
 
 ```
 /
-├── CONTEXT.md
+├── GLOSSARY.md
 ├── docs/
 │   └── adr/
-│       └── 0001-core-shared-kernel.md
+│       ├── 0001-core-shared-kernel.md
+│       └── 0002-parcelize-em-presentation-models.md
 └── app/
 ```
 
 Crie arquivos de forma preguiçosa — somente quando tiver algo a escrever. Se não existir um
-`CONTEXT.md`, crie um quando o primeiro termo for resolvido. Se não existir `docs/adr/`, crie quando
+`GLOSSARY.md`, crie um quando o primeiro termo for resolvido. Se não existir `docs/adr/`, crie quando
 o primeiro ADR for necessário.
 
 ## Contexto do plano
@@ -42,7 +43,7 @@ decisões de delimitação de MVP):
 
 - Questione o enquadramento do problema: o problema está sendo descrito no vocabulário do domínio ou
   em jargão externo?
-- Confronte personas e dores com o que já está documentado no `CONTEXT.md`
+- Confronte personas e dores com o que já está documentado no `GLOSSARY.md`
 - Explore os limites do que entra e não entra no MVP proposto
 - Desafie suposições não validadas
 
@@ -57,7 +58,7 @@ decisões de delimitação de MVP):
 
 ### Confronte com o glossário
 
-Quando o usuário usar um termo que conflite com a linguagem ubíqua existente no `CONTEXT.md`, aponte
+Quando o usuário usar um termo que conflite com a linguagem ubíqua existente no `GLOSSARY.md`, aponte
 imediatamente. "Seu glossário define 'Inquilino' como X, mas você parece querer dizer Y — qual é o
 correto?"
 
@@ -90,12 +91,12 @@ Quando o usuário afirmar como algo funciona, verifique se o código concorda. S
 contradição, traga à tona. "Seu código finaliza todas as Estadias de um Cliente no check-out, mas
 você acabou de dizer que só a Estadia do check-out é finalizada — qual está certo?"
 
-### Atualize o CONTEXT.md de forma inline
+### Atualize o GLOSSARY.md de forma inline
 
-Quando um termo for resolvido, atualize o `CONTEXT.md` na hora. Não acumule essas atualizações —
-registre-as conforme acontecem. Use o formato em [CONTEXT-FORMAT.md](CONTEXT-FORMAT.md).
+Quando um termo for resolvido, atualize o `GLOSSARY.md` na hora. Não acumule essas atualizações —
+registre-as conforme acontecem. Use o formato em [GLOSSARY-FORMAT.md](GLOSSARY-FORMAT.md).
 
-O `CONTEXT.md` deve ser totalmente desprovido de detalhes de implementação. Não trate o `CONTEXT.md`
+O `GLOSSARY.md` deve ser totalmente desprovido de detalhes de implementação. Não trate o `GLOSSARY.md`
 como uma especificação, um rascunho ou um repositório para decisões de implementação. Ele é um
 glossário e nada mais.
 

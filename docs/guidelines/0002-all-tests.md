@@ -23,7 +23,7 @@ Aplica-se a todos os níveis de teste neste projeto: unitário (`app/src/test/`)
 | `` `Deve retornar OverbookingDetected` ``        | `` `Deve rejeitar Estadia quando o período conflita com outra ocupação` ``   |
 
 - **Corpo do teste** (variáveis, parâmetros, helpers, nomes de `inner class`) segue a regra de
-  idioma do código de produção (`.claude/CLAUDE.md`): inglês, exceto termo do `CONTEXT.md`, que fica
+  idioma do código de produção (`.claude/CLAUDE.md`): inglês, exceto termo do `GLOSSARY.md`, que fica
   em português (`existingEstadia`, `validAmount`, `result`). Nunca traduzir o que é genérico:
   `val resultado`, `val erros` são **errados**.
 - Nomes de mocks, fakes e classes de teste usam os termos do domínio (`estadiaRepositoryMock`,
