@@ -49,7 +49,8 @@ Essa anotação combina:
 
 ## 2. O que verificar
 
-- **Estados emitidos:** `uiState.value`, ou coletar o `StateFlow`/`uiEvents` com `turbine`.
+- **Estados emitidos:** sempre via Turbine — `uiState.test { awaitItem() }`, idem para `uiEvents`.
+  Nunca leia `.value` direto.
 - **Chamadas às dependências:** `coVerify { useCaseMock(...) }` — confirmar que o ViewModel delegou
   corretamente.
 - **Argumentos:** verificar os dados passados às dependências quando envolvem regras de negócio.
