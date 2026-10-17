@@ -87,7 +87,7 @@ de camada e de teste ficam em `docs/guidelines/` — consulte a da camada/nível
 | @GLOSSARY.md                         | Glossário da linguagem ubíqua e mapa dos contextos delimitados — base para nomes de classes, métodos, variáveis e testes |
 | @docs/guidelines/0001-subdomains.md | Classificação estratégica dos subdomínios e orientação para padrões táticos de DDD                                       |
 | `docs/adr/`                         | ADRs com decisões de arquitetura do sistema; não questione, apenas siga                                                  |
-| `docs/guidelines/`                  | Testes (0002–0005), design de interface (0006) e camadas presentation/application/domain/infra (0007–0010)               |
+| `docs/guidelines/`                  | Testes (0002–0005), design de interface (0010) e camadas presentation/application/domain/infra (0006–0009)               |
 
 ---
 

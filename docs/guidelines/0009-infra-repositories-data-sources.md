@@ -8,7 +8,7 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
   em `domain/` para assegurar invariantes de negócio antes de executar operações de escrita.
 - **Classes concretas, sem interface por padrão.** Interface só quando há
   polimorfismo real de runtime escolhido por DI (e.g. estratégia Online/Offline)
-  — ver `0006-interface-design.md`.
+  — ver `0010-interface-design.md`.
 - Biblioteca/toolkit externo (subdomínio Genérico) fica atrás de um Adapter fino (ver
   `0001-subdomains.md`).
 - **Um DataSource acessa uma única tecnologia de persistência/infra** — SQL *xor*
@@ -117,12 +117,12 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
 ### Write-side
 
 - **Padrão: o `<Agregado>WriteDataSource` recebe o Agregado** já validado (a factory já garantiu a
-  invariante — `0009-domain-aggregates-services.md`) em `save(...)`, faz o mapeamento
+  invariante — `0008-domain-aggregates-services.md`) em `save(...)`, faz o mapeamento
   Agregado → Orm (`infra/mappers/`) e persiste.
 - **Transação dentro de um agregado** (ex.: Imóvel + Preços do Imóvel; excluir o pai, inserir o
   pai, obter o id gerado, inserir os filhos) mora no próprio `WriteDataSource`, num
   `@Transaction protected open suspend fun` — o Room envolve o método em transação. Um
-  Repository por cima seria repasse puro (módulo raso, `0006-interface-design.md`): não crie.
+  Repository por cima seria repasse puro (módulo raso, `0010-interface-design.md`): não crie.
 
   ```kotlin
   @Dao
@@ -151,7 +151,7 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
        caminho no Storage = id da outbox). Se o processo morrer entre o envio e a marcação
        `Consumed`, o reenvio sobrescreve o mesmo objeto — o erro "enviado duas vezes" deixa de
        existir.
-- Atomicidade **cross-agregado** é do **UseCase** (`0008-application-use-cases.md`), orquestrando
+- Atomicidade **cross-agregado** é do **UseCase** (`0007-application-use-cases.md`), orquestrando
   `WriteDataSource`s de agregados distintos numa transação (`DatabaseAdapter.withTransaction`) —
   nunca de um DataSource ou Repository amplo cobrindo vários agregados.
 
@@ -168,7 +168,7 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
 - **Não valida invariante de negócio.** A leitura não passa pela factory do agregado — o dado
   persistido já foi validado na escrita. Revalidar na leitura cria um modo de falha
   (`throw`/erro) que não pode ocorrer: defina o erro fora da existência.
-- Retorna o `ReadModel` (`0008-application-use-cases.md`) já montado. A projeção
+- Retorna o `ReadModel` (`0007-application-use-cases.md`) já montado. A projeção
   crua do banco não escapa do DataSource. Essa leveza é o CQRS a favor da leitura, não uma exceção a
   ser "corrigida".
 - **SQL statement correlacionado repetido em 2+ `ReadDataSource`s**: extraia para
@@ -179,10 +179,10 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
 - **Quando um `ReadModel` precisa de dado de 2+ `ReadDataSource`s de tecnologias
   distintas**: se é só "leia A, use o resultado como parâmetro de B" sem
   ramificação/retry/fallback, o próprio ViewModel chama as duas e combina — glue
-  trivial, não é regra de negócio (`0007-presentation-jetpack-compose-mvvm.md`).
+  trivial, não é regra de negócio (`0006-presentation-jetpack-compose-mvvm.md`).
   Se há complexidade real de coordenação com regra de negócio pra esconder (mesmo teste da
   exclusão do write-side, acima), delega pra um **Use Case** ou **Application Service**
-  (`0008-application-use-cases.md`) — nunca um "Repository" de leitura, nome reservado ao
+  (`0007-application-use-cases.md`) — nunca um "Repository" de leitura, nome reservado ao
   write-side.
 
 ## Mappers de `infra/`
@@ -191,20 +191,20 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
 
 - Agregado → Orm (+ metadado técnico: `dirty`, `serverId`)
 - CommandModel → Orm — update parcial, sem reconstituir o agregado. Mesmo
-  `CommandModel` de `application/` (`0008-application-use-cases.md`); não existe
+  `CommandModel` de `application/` (`0007-application-use-cases.md`); não existe
   um tipo `WriteModel` dedicado — duplicaria o `CommandModel` sem ganho.
 - Orm → ReadModel — reshape de projeção
 
 Não faz CommandModel → Agregado (é `application/`,
-`0008-application-use-cases.md`) nem toca `UiState` (é `presentation/`,
-`0007-presentation-jetpack-compose-mvvm.md`).
+`0007-application-use-cases.md`) nem toca `UiState` (é `presentation/`,
+`0006-presentation-jetpack-compose-mvvm.md`).
 
 ### Nomes
 
 - Extension function top-level; nome com o sufixo do model:
   `fun ImovelOrm.toImovelResumoReadModel()`,
   `fun Estadia.toEstadiaOrm()`. Regra de sufixo completa em
-  `0008-application-use-cases.md` ("Sufixo de tipo no nome do model").
+  `0007-application-use-cases.md` ("Sufixo de tipo no nome do model").
 - **Orm** = `@Entity` (Room) que espelha a tabela. É o
   **único** model de dado bruto no código; `application/` e `presentation/` nunca
   importam Orm. Model Orm novo carrega o sufixo `Orm`; model legado

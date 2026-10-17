@@ -23,7 +23,7 @@ Antes de escrever qualquer código:
 
 - [ ] Confirme com o usuário quais mudanças de interface são necessárias
 - [ ] Confirme com o usuário quais comportamentos testar (priorizar)
-- [ ] [Projete interfaces](../../../docs/guidelines/0006-interface-design.md) visando legibilidade,
+- [ ] [Projete interfaces](../../../docs/guidelines/0010-interface-design.md) visando legibilidade,
   manutenibilidade e testabilidade — para interfaces não-triviais (novo ponto de injeção,
   dependência cross-seam, módulo novo), aplique **Design It Twice** antes do primeiro teste
 - [ ] Liste os comportamentos a testar (não etapas de implementação)

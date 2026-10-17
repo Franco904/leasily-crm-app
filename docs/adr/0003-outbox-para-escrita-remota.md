@@ -18,5 +18,5 @@ entre o envio e a marcação sobrescreve o mesmo objeto em vez de duplicá-lo.
 ## Consequências
 
 - O Repository só existe no lado do worker, onde coordena de fato duas tecnologias
-  (`0010-infra-repositories-data-sources.md`).
+  (`0009-infra-repositories-data-sources.md`).
 - O fluxo do usuário conclui com a escrita local; o dado remoto fica eventualmente consistente.

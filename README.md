@@ -76,10 +76,10 @@ As convenções de cada camada — responsabilidades, dependências permitidas, 
 
 | Camada          | Guideline                                                                                                |
 |-----------------|----------------------------------------------------------------------------------------------------------|
-| `presentation/` | [`0007-presentation-jetpack-compose-mvvm.md`](docs/guidelines/0007-presentation-jetpack-compose-mvvm.md) |
-| `application/`  | [`0008-application-use-cases.md`](docs/guidelines/0008-application-use-cases.md)                         |
-| `domain/`       | [`0009-domain-aggregates-services.md`](docs/guidelines/0009-domain-aggregates-services.md)               |
-| `infra/`        | [`0010-infra-repositories-data-sources.md`](docs/guidelines/0010-infra-repositories-data-sources.md)     |
+| `presentation/` | [`0006-presentation-jetpack-compose-mvvm.md`](docs/guidelines/0006-presentation-jetpack-compose-mvvm.md) |
+| `application/`  | [`0007-application-use-cases.md`](docs/guidelines/0007-application-use-cases.md)                         |
+| `domain/`       | [`0008-domain-aggregates-services.md`](docs/guidelines/0008-domain-aggregates-services.md)               |
+| `infra/`        | [`0009-infra-repositories-data-sources.md`](docs/guidelines/0009-infra-repositories-data-sources.md)     |
 
 Quais camadas um módulo precisa depende da classificação do seu subdomínio
 ([`0001-subdomains.md`](docs/guidelines/0001-subdomains.md)).

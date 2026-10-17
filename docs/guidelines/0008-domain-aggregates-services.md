@@ -27,10 +27,10 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
   a outro agregado é por identidade, não por objeto aninhado.
 - Agregado vs. Entidade não tem marcador no código — a distinção é pacote +
   termo do `GLOSSARY.md`. O agregado é a raiz que o resto da app referencia e que o
-  `Repository` persiste (`0010-infra-repositories-data-sources.md`).
+  `Repository` persiste (`0009-infra-repositories-data-sources.md`).
 - **Nome = termo do `GLOSSARY.md`, sem sufixo de tipo.** O agregado é o **único**
   model sem sufixo — `ReadModel`/`CommandModel`/`QueryModel`/`Orm`/`UiState`
-  todos carregam o seu (`0008-application-use-cases.md`, "Sufixo de tipo no nome
+  todos carregam o seu (`0007-application-use-cases.md`, "Sufixo de tipo no nome
   do model"). A ausência de sufixo é o que marca "isto é o modelo do domínio, não
   um DTO de fronteira".
 
@@ -50,9 +50,9 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
 - Serve tanto o write-side quanto o **read-side**: quando uma transformação
   complexa do `ReadModel` é lógica de domínio genuína (não formatação de tela,
   não responsabilidade do SQL), um Domain Service a executa — acionado por um
-  UseCase de leitura (`0008-application-use-cases.md`).
+  UseCase de leitura (`0007-application-use-cases.md`).
 - Se envolve I/O, autorização de acesso, permissão de conectividade ou orquestração de persistência → não é
-  serviço de domínio, é UseCase ou Application Service (`0008-application-use-cases.md`).
+  serviço de domínio, é UseCase ou Application Service (`0007-application-use-cases.md`).
 - Também é puro e isolado — mesmas restrições do agregado.
 
 ## Erros de domínio
@@ -71,5 +71,5 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
 ## Sem porta de saída no domínio
 
 O domínio **não declara interface de Repository/DataSource**. A persistência do agregado
-é responsabilidade de `infra/` (Repository concreto, `0010-infra-repositories-data-sources.md`),
+é responsabilidade de `infra/` (Repository concreto, `0009-infra-repositories-data-sources.md`),
 acionada a partir de `application/`.

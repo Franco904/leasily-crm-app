@@ -6,7 +6,7 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
 
 - `presentation/` **depende de** `application/` (UseCases / Application Services) e,
   no read-side sem regra de negócio, de `infra/` direto (`ReadDataSource` — ver
-  `0008-application-use-cases.md`).
+  `0007-application-use-cases.md`).
 - Pode tocar em `domain/` para validação parcial de campo (perda
   de foco, edição de form field, formulário em etapas).
 - ViewModel expõe estado via `StateFlow`; o Composable observa. MVP não entra em
@@ -39,9 +39,9 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
 - **Sufixo `UiState` no nome de todo model de apresentação**, não só o container
   de estado da tela: o container (`<Contexto>UiState`, `sealed interface`) e cada
   sub-model que ele expõe (`EstadiaCardUiState`, `ImovelCardUiState`). Distingue
-  do `ReadModel` (`0008-application-use-cases.md`) e do `Orm`
-  (`0010-infra-repositories-data-sources.md`) do mesmo conceito de domínio. Regra de sufixo
-  completa em `0008-application-use-cases.md` ("Sufixo de tipo no nome do model").
+  do `ReadModel` (`0007-application-use-cases.md`) e do `Orm`
+  (`0009-infra-repositories-data-sources.md`) do mesmo conceito de domínio. Regra de sufixo
+  completa em `0007-application-use-cases.md` ("Sufixo de tipo no nome do model").
 - **O `UiState` nunca expõe um `ReadModel` ou `Orm` direto** — cada atributo é
   transformado para a forma que a tela renderiza (formatação, `@DrawableRes` /
   `@StringRes`, derivação de flag). `ReadModel` vazando no `UiState` ⇒ a fronteira
@@ -280,8 +280,8 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   `UiState` campo a campo inline quando há transformação.
 - Mapper que devolve coleção devolve o tipo imutável de
   `kotlinx.collections.immutable` (ver bullet de coleção em "ViewModel"), não `List`.
-- Não faz Orm → ReadModel (é `infra/`, `0010-infra-repositories-data-sources.md`) nem
-  CommandModel → Agregado (é `application/`, `0008-application-use-cases.md`).
+- Não faz Orm → ReadModel (é `infra/`, `0009-infra-repositories-data-sources.md`) nem
+  CommandModel → Agregado (é `application/`, `0007-application-use-cases.md`).
 
 ## Composable
 

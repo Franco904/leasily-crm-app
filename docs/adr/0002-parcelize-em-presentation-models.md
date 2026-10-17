@@ -10,7 +10,7 @@ container `UiState` e seus sub-models. O plugin já está aplicado em `app/build
 descasar ordem de escrita/leitura, suporte nativo a enums, `data class`, `object`, coleções e
 aninhamento. É o formato que `SavedStateHandle.getStateFlow(KEY, valorInicial)` aceita
 diretamente, permitindo usar o próprio `SavedStateHandle` como fonte do `uiState` público
-(`0007-presentation-jetpack-compose-mvvm.md`).
+(`0006-presentation-jetpack-compose-mvvm.md`).
 
 ## Alternativas Consideradas
 
