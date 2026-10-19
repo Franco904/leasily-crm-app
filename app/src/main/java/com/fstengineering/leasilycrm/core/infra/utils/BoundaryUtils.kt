@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.core.infra.adapters.ExceptionLogger
 import java.security.GeneralSecurityException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -26,12 +27,24 @@ inline fun <T> onDatabase(block: () -> T): AppResult<T, ApplicationError> {
 fun <T> Flow<T>.asDatabaseFlowResult(): Flow<AppResult<T, ApplicationError>> {
     return distinctUntilChanged()
         .map<T, AppResult<T, ApplicationError>> { value -> AppResult.Success(value) }
-        .catch { cause ->
-            if (cause !is Exception || cause is CancellationException || cause.isFatal()) throw cause
-            ExceptionLogger.log(cause)
+        .catchException { emit(AppResult.Error(ApplicationError.Unknown)) }
+}
 
-            emit(AppResult.Error(ApplicationError.Unknown))
-        }
+/**
+ * Como [catch], mas entrega a [action] **apenas** [Exception] recuperável, já registrada no
+ * [ExceptionLogger].
+ *
+ * [Error] da plataforma (OOM, `StackOverflowError`, …), [CancellationException] (cooperação com o
+ * cancelamento estruturado de coroutine) e exceções fatais ([isFatal]) são relançados e nunca
+ * chegam em [action].
+ */
+fun <T> Flow<T>.catchException(
+    action: suspend FlowCollector<T>.(exception: Exception) -> Unit,
+): Flow<T> = catch { cause ->
+    if (cause !is Exception || cause is CancellationException || cause.isFatal()) throw cause
+    ExceptionLogger.log(cause)
+
+    action(cause)
 }
 
 /**
@@ -42,4 +55,4 @@ fun <T> Flow<T>.asDatabaseFlowResult(): Flow<AppResult<T, ApplicationError>> {
  */
 fun Exception.isFatal(): Boolean =
     this is SecurityException ||
-        (this is GeneralSecurityException && this !is KeyPermanentlyInvalidatedException)
+            (this is GeneralSecurityException && this !is KeyPermanentlyInvalidatedException)
