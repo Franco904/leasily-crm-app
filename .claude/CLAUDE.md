@@ -4,6 +4,8 @@ Ver [README.md](../README.md) para visão geral do app, stack, arquitetura, estr
 comandos essenciais. Este arquivo cobre apenas o que é específico de como um agente de IA deve
 trabalhar neste repositório.
 
+Repositório do backend: `leasily-crm-server/`
+
 ---
 
 ## Linguagem Ubíqua
