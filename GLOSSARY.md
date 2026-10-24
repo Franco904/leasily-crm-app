@@ -13,27 +13,25 @@ Atributos autoexplicativos ficam de fora, e as definições não enumeram as op�
 
 ## Contextos Delimitados
 
-- **Autenticação** — Login do Usuário via conta Google e gerenciamento do token de sessão e perfil profissional.
+- **Autenticação** — Login do Usuário via conta Google, manutenção da sessão e perfil profissional.
 - **Imóveis** — Catálogo de imóveis administrados: características físicas, localização e configuração financeira por imóvel.
 - **Clientes** — Gestão de Leads e Inquilinos; ciclo de vida do Cliente e visão centralizada (SCV).
 - **Proprietários** — Cadastro dos Proprietários que contratam o Usuário para administrar seus Imóveis.
 - **Atendimento** — Registro do episódio de procura de um Lead: preferências de procura, imóveis enviados e interações.
 - **Períodos Ocupados** — Ciclo de vida de um intervalo de indisponibilidade de um Imóvel: Estadias e Períodos indisponíveis; inclui controle de overbooking e financeiro da Estadia.
 - **Relatórios Analíticos** — KPIs e gráficos de desempenho profissional do Usuário.
-- **Sincronização** — Propagação oportunística de dados do banco local para o back-end remoto.
+- **Sincronização** — Propagação oportunística dos dados registrados no aparelho para o servidor.
 
 ## Linguagem
 
 ### Autenticação
 
-**Usuário**: Ator autenticado do aplicativo — o corretor de imóveis. Identificado por conta Google via OAuth 2.0. Apenas um dispositivo pode ter sessão ativa por vez.
+**Usuário**: Ator autenticado do aplicativo — o corretor de imóveis. Identificado por conta Google. Apenas um dispositivo pode ter sessão ativa por vez.
 _Alias de código_: `User`
 
-**Token de sessão**: Credencial de autorização persistida localmente com criptografia AES-GCM. Permite que a sessão persista entre reinicializações do app.
+**Creci**: Número de registro profissional do corretor no Conselho Regional de Corretores de Imóveis (CRECI). Informado pelo Usuário separadamente após o login, como parte da configuração de perfil profissional.
 
-**Creci**: Número de registro profissional do corretor no Conselho Regional de Corretores de Imóveis (CRECI). Informado pelo Usuário separadamente após o login federado via Google, como parte da configuração de perfil profissional.
-
-> A autenticação ocorre em dois momentos: (1) login via Google → geração do token de sessão; (2) configuração de perfil → Creci e demais dados profissionais do Usuário.
+> A autenticação ocorre em dois momentos: (1) login via Google → início da sessão; (2) configuração de perfil → Creci e demais dados profissionais do Usuário.
 
 ---
 
@@ -61,7 +59,7 @@ _Alias de código_: `Commission`
 
 ### Clientes
 
-**Cliente**: Entidade base que representa um contato na carteira do Usuário. Concentra dados pessoais (nome, telefone, documento, cidade). Lead, Inquilino e Inquilino antigo são estados derivados calculados a partir dos agregados Atendimento e Período Ocupado — não são tipos distintos de cadastro.
+**Cliente**: Contato na carteira do Usuário. Concentra dados pessoais (nome, telefone, documento, cidade). Lead, Inquilino e Inquilino antigo são estados derivados derivados dos seus Atendimentos e Estadias — não são tipos distintos de cadastro.
 _Alias de código_: `LeadTenant`
 
 **Lead**: Cliente com Atendimento em status "Não finalizado" e **sem** Estadia ativa associada.
@@ -70,8 +68,6 @@ _Alias de código_: `LeadTenant`
 _Alias de código_: `Tenant`
 
 **Inquilino antigo**: Cliente com ao menos uma Estadia com status "Finalizada" no histórico e **sem** Atendimento em status "Não finalizado" no momento.
-
-> Estado derivado — Lead, Inquilino e Inquilino antigo não são armazenados diretamente; são calculados a partir da presença de Atendimento "Não finalizado" e do status das Estadias associadas.
 
 **SCV (Single Customer View)**: Visão centralizada do cliente que concentra dados de contato, Atendimento atual, histórico de Atendimentos e Estadias passadas em um único lugar.
 
@@ -90,7 +86,7 @@ _Evitar_: Cliente (para Proprietário)
 **Atendimento**: Episódio de procura de um Lead por um Imóvel para estadia de temporada. Contém preferências de procura, Imóveis enviados como opção e registro de interações. Um cliente tem no máximo um Atendimento ativo por vez. Criar um Atendimento move o cliente para o estado Lead; excluí-lo reverte o estado.
 _Alias de código_: `Assistance`
 
-**Status do Atendimento**: Máquina de estados simples com dois estados:
+**Status do Atendimento**:
 - **Não finalizado** — procura ativa; o Cliente é tratado como Lead (se sem Estadia ativa).
 - **Finalizado** — encerrado pela conversão em Estadia. Transição irreversível; não é possível reabrir um Atendimento Finalizado.
 
@@ -159,13 +155,7 @@ _Alias de código_: `Invoice`
 
 ### Sincronização
 
-**Sincronização**: Processo de propagação das escritas locais (SQLite) para o back-end remoto (MySQL), executado oportunisticamente quando há conexão com a Internet.
-
-**Offline-first**: Modelo arquitetural em que o app lê exclusivamente da fonte local e escreve primeiro localmente, propagando para o remoto de forma assíncrona.
-
-**Lazy Writes**: Estratégia de sincronização em que escritas ocorrem primeiro no banco local e são propagadas ao remoto periodicamente (a cada 30 minutos) ou quando a conexão é restabelecida. Em caso de falha, aplica espera exponencial.
-
-**Fonte da verdade**: O banco de dados local (SQLite). Por restrição de sessão única por usuário, não há conflitos entre fontes.
+**Sincronização**: Envio dos dados registrados pelo Usuário no aparelho para o servidor, feito quando há conexão com a Internet. O Usuário trabalha sem depender de conexão.
 
 ---
 
