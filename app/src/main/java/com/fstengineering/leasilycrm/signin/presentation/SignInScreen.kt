@@ -17,6 +17,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -47,6 +48,7 @@ fun SignInScreen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     var isSigningIn by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.uiEvents.collect { uiEvent ->
@@ -58,25 +60,6 @@ fun SignInScreen(
                         SignInErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
-                }
-
-                is SignInViewModel.UiEvent.ContinueSignIn -> {
-                    launch {
-                        credentialManager.chooseGoogleAccount(
-                            activityContext = activity,
-                            mustEnableAutoSelect = !hasSessionExpired,
-                        )
-                            .onError { e ->
-                                isSigningIn = false
-
-                                if (e == CredentialsError.UserCancellation) return@onError
-
-                                onUiEvent(UiEvent.ShowErrorBottomSheet(e.toBottomSheetData()))
-                            }
-                            .onSuccess { idToken ->
-                                viewModel.signInUser(idToken)
-                            }
-                    }
                 }
 
                 is SignInViewModel.UiEvent.SignInSuccess -> {
@@ -124,7 +107,23 @@ fun SignInScreen(
                 onSignIn = {
                     if (!isSigningIn) {
                         isSigningIn = true
-                        viewModel.onSignIn()
+
+                        coroutineScope.launch {
+                            credentialManager.chooseGoogleAccount(
+                                activityContext = activity,
+                                mustEnableAutoSelect = !hasSessionExpired,
+                            )
+                                .onError { e ->
+                                    isSigningIn = false
+
+                                    if (e == CredentialsError.UserCancellation) return@onError
+
+                                    onUiEvent(UiEvent.ShowErrorBottomSheet(e.toBottomSheetData()))
+                                }
+                                .onSuccess { idToken ->
+                                    viewModel.signInUser(idToken)
+                                }
+                        }
                     }
                 },
                 modifier = Modifier

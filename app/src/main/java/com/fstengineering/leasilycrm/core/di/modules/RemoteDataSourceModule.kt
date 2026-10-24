@@ -1,8 +1,11 @@
 package com.fstengineering.leasilycrm.core.di.modules
 
+import android.content.Context
+import android.net.ConnectivityManager
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.application.services.UserSessionService
 import com.fstengineering.leasilycrm.core.di.qualifiers.encryptedPreferencesQualifier
+import com.fstengineering.leasilycrm.core.infra.adapters.ConnectivityAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.UserRemoteDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.classifyNetworkFailures
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.cookies.UserSessionCookieStorage
@@ -25,6 +28,13 @@ import org.koin.dsl.module
 import java.util.concurrent.TimeUnit
 
 val remoteDataSourceModule = module {
+    single {
+        val connectivityManager =
+            get<Context>().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        ConnectivityAdapter(connectivityManager = connectivityManager)
+    }
+
     single<HttpClient> {
         HttpClient(OkHttp) {
             defaultRequest {

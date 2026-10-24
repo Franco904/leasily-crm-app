@@ -8,7 +8,6 @@ val signinViewModelModule = module {
     viewModel {
         SignInViewModel(
             signIn = get(),
-            connectivityService = get(),
         )
     }
 }

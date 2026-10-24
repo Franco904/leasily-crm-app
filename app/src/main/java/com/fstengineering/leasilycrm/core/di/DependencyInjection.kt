@@ -5,7 +5,6 @@ import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistr
 import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationUseCaseModule
 import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationViewModelModule
 import com.fstengineering.leasilycrm.core.di.modules.applicationServiceModule
-import com.fstengineering.leasilycrm.core.di.modules.connectivityModule
 import com.fstengineering.leasilycrm.core.di.modules.coroutineModule
 import com.fstengineering.leasilycrm.core.di.modules.daoModule
 import com.fstengineering.leasilycrm.core.di.modules.databaseDataSourceModule
@@ -87,7 +86,6 @@ fun Application.configureDependencyInjection() {
             preferencesDataSourceModule,
             remoteDataSourceModule,
             sharedStorageDataSourceModule,
-            connectivityModule,
             daoModule,
             coroutineModule,
             workerModule,
