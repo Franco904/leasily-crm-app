@@ -19,6 +19,7 @@ gradle.properties
 # Artefatos locais de agentes de IA
 /handoffs/
 /teachings/
+/.claude/worktrees/
 
 # Saída dos targets de QA do Makefile
 /qa/
