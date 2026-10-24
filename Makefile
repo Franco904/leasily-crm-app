@@ -98,14 +98,22 @@ dark-mode:
 	$(QA_ADB) shell cmd uimode night $$state > /dev/null; \
 	echo "Dark mode $$label em $(QA_SERIAL)"
 
+# Tags de framework/lib silenciadas no logcat-app.txt: ruído sem relação com bugs do app
+LOGCAT_APP_SILENCED_TAGS := '[Koin]:S' FrameTracker:S ImeTracker:S InsetsController:S WindowOnBackDispatcher:S \
+	HWUI:S CompatChangeReporter:S GraphicsEnvironment:S
+
 # Gera $(QA_DIR)/bug-report-<timestamp>.zip com logcat, crashes, dumpsys package (versão, permissões...),
 # configuração do aparelho (tela, fonte, idioma, tema, teclado) e banco do app, sem parar o app. Ex.: make bug-report DEVICE=2
+# logcat-app.txt traz só o log do app (por UID, sobrevive a restart pós-crash), sem o ruído do resto do aparelho
 bug-report:
 	@set -e; $(REQUIRE_DEVICE); \
 	ts=$$(date +%Y%m%d-%H%M%S); tmp=$$(mktemp -d); mkdir -p $(QA_DIR); \
-	$(QA_ADB) logcat -d > $$tmp/logcat.txt; \
 	$(QA_ADB) logcat -b crash -d > $$tmp/crash.txt; \
 	$(QA_ADB) shell dumpsys package $(QA_PACKAGE) > $$tmp/dumpsys-package.txt; \
+	uid=$$(sed -n 's/.*appId=\([0-9]*\).*/\1/p' $$tmp/dumpsys-package.txt | head -1); \
+	if [ -n "$$uid" ]; then \
+		$(QA_ADB) logcat -d --uid=$$uid $(LOGCAT_APP_SILENCED_TAGS) > $$tmp/logcat-app.txt; \
+	else echo "aviso: logcat-app.txt não gerado ($(QA_PACKAGE) não instalado)"; fi; \
 	{ \
 		echo "# Aparelho (versão do app: versionName em dumpsys-package.txt)"; \
 		echo "Android $$($(QA_ADB) shell getprop ro.build.version.release) (API $$($(QA_ADB) shell getprop ro.build.version.sdk)), $$($(QA_ADB) shell getprop ro.product.model)"; \
