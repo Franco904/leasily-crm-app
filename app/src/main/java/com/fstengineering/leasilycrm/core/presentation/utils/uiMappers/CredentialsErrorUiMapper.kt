@@ -33,6 +33,14 @@ fun CredentialsError.toBottomSheetData() = when (this) {
             },
         )
 
+    CredentialsError.NoInternet ->
+        ErrorBottomSheetData(
+            title = R.string.no_internet_error_title,
+            description = R.string.no_internet_error_description_sign_in,
+            secondaryActionLabel = null,
+            onSecondaryAction = null,
+        )
+
     CredentialsError.UnknownError ->
         ErrorBottomSheetData(
             title = R.string.unknown_error_title,

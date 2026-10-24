@@ -4,11 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.services.UserSessionService
-import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -26,7 +24,6 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val writeUser: WriteUserUseCase,
-    private val connectivityService: ConnectivityService,
     private val userSessionService: UserSessionService,
     private val userQueryRepository: UserQueryRepository,
 ) : ViewModel() {
@@ -104,16 +101,6 @@ class ProfileViewModel(
         _creciFieldError.update { null }
     }
 
-    fun onSignOut() {
-        val event = connectivityService.checkDeviceIsConnectedToInternet()
-            .fold(
-                onError = { e -> UiEvent.BottomSheetError(e) },
-                onSuccess = { UiEvent.ContinueSignOut }
-            )
-
-        _uiEvents.trySend(event)
-    }
-
     fun signOutUser() {
         viewModelScope.launch {
             userSessionService.onUserInitiatedSignOut()
@@ -131,7 +118,6 @@ class ProfileViewModel(
     sealed interface UiEvent {
         data class BottomSheetError(val error: ApplicationError) : UiEvent
         data class EditUserSuccess(val messageId: Int) : UiEvent
-        data object ContinueSignOut : UiEvent
         data object SignOutSuccess : UiEvent
     }
 }

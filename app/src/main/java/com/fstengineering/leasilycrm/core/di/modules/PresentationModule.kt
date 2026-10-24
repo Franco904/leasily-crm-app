@@ -5,5 +5,5 @@ import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialMa
 import org.koin.dsl.module
 
 val presentationModule = module {
-    single<CredentialManagerAdapter> { CredentialManagerAdapterImpl() }
+    single<CredentialManagerAdapter> { CredentialManagerAdapterImpl(connectivityAdapter = get()) }
 }

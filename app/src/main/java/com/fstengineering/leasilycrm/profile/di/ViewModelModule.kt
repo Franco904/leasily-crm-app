@@ -8,7 +8,6 @@ val profileViewModelModule = module {
     viewModel {
         ProfileViewModel(
             writeUser = get(),
-            connectivityService = get(),
             userSessionService = get(),
             userQueryRepository = get(),
         )

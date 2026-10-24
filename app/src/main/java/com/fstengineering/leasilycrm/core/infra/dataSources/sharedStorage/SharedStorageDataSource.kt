@@ -4,15 +4,14 @@ import android.content.Context
 import android.provider.OpenableColumns
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.BuildConfig
-import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.interfaces.SharedStorageDataSource
 import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class SharedStorageDataSourceImpl(
+class SharedStorageDataSource(
     private val appContext: Context,
-) : SharedStorageDataSource {
-    override suspend fun getFileName(
+) {
+    suspend fun getFileName(
         contentUriString: String,
     ): String? = withContext(Dispatchers.IO) {
         try {

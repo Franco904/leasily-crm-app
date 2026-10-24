@@ -2,11 +2,9 @@ package com.fstengineering.leasilycrm.signin.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.services.interfaces.ConnectivityService
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.signin.application.models.commands.IdToken
@@ -17,22 +15,9 @@ import kotlinx.coroutines.launch
 
 class SignInViewModel(
     private val signIn: SignInUseCase,
-    private val connectivityService: ConnectivityService,
 ) : ViewModel() {
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
-
-    fun onSignIn() {
-        viewModelScope.launch {
-            val event = connectivityService.checkDeviceIsConnectedToInternet()
-                .fold(
-                    onError = { e -> UiEvent.BottomSheetError(e) },
-                    onSuccess = { UiEvent.ContinueSignIn }
-                )
-
-            _uiEvents.send(event)
-        }
-    }
 
     fun signInUser(idToken: String) {
         viewModelScope.launch {
@@ -55,7 +40,6 @@ class SignInViewModel(
 
     sealed interface UiEvent {
         data class BottomSheetError(val error: ApplicationError) : UiEvent
-        data object ContinueSignIn : UiEvent
         data object SignInSuccess : UiEvent
     }
 }

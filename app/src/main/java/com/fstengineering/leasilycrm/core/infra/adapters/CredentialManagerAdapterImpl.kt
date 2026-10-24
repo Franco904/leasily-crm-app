@@ -16,7 +16,9 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import io.ktor.utils.io.CancellationException
 
-class CredentialManagerAdapterImpl : CredentialManagerAdapter {
+class CredentialManagerAdapterImpl(
+    private val connectivityAdapter: ConnectivityAdapter,
+) : CredentialManagerAdapter {
     override suspend fun chooseGoogleAccount(
         activityContext: Activity,
         mustEnableAutoSelect: Boolean,
@@ -80,8 +82,17 @@ class CredentialManagerAdapterImpl : CredentialManagerAdapter {
             if (e is CancellationException) throw e
             if (BuildConfig.DEBUG) e.printStackTrace()
 
-            return AppResult.Error(error = e.toCredentialsError())
+            return AppResult.Error(error = classifyGetCredentialFailure(e))
         }
+    }
+
+    // O Credential Manager não sinaliza falta de internet com exceção própria: sem conexão, qualquer
+    // falha que não seja cancelamento pelo Corretor é atribuída a ela.
+    private fun classifyGetCredentialFailure(exception: Exception): CredentialsError {
+        val error = exception.toCredentialsError()
+        if (error == CredentialsError.UserCancellation) return error
+
+        return if (connectivityAdapter.isDeviceConnectedToInternet()) error else CredentialsError.NoInternet
     }
 
     override suspend fun clearGoogleCredentialState(
