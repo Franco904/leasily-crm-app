@@ -13,10 +13,6 @@ Este PR altera alguma área compartilhada (núcleo, schema do banco, sincroniza�
 - [ ] 2. Quais alterações foram necessárias?
 - [ ] 3. Por que foi necessário realizar essa alteração?
 
-## Orientações para revisão
-
-Informe aqui qualquer ponto que mereça atenção extra durante a revisão.
-
 ## Plano de QA
 
 Informe aqui os cenários a testar ponta a ponta.
