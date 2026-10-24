@@ -7,7 +7,9 @@ import com.fstengineering.leasilycrm.core.infra.adapters.ExceptionLogger
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
@@ -68,7 +70,24 @@ class RemoteRequestTest {
                 result.shouldBeInstanceOf<AppResult.Error<*, *>>()
                 (result as AppResult.Error).error shouldBeEqualTo ApplicationError.Timeout
             }
+
+        @Test
+        fun `Deve retornar erro de timeout quando o servidor informa que excedeu o tempo de resposta`() =
+            runTest {
+                every { connectivityAdapterMock.isDeviceConnectedToInternet() } returns true
+                val sut = createHttpClientRespondingWith(status = HttpStatusCode.GatewayTimeout)
+
+                val result = sut.requestBackend(url = randomUrl(), method = HttpMethod.Get)
+
+                result.shouldBeInstanceOf<AppResult.Error<*, *>>()
+                (result as AppResult.Error).error shouldBeEqualTo ApplicationError.Timeout
+            }
     }
 
     private fun randomUrl() = "https://leasily.test/${faker.random.nextUUID()}"
+
+    private fun createHttpClientRespondingWith(status: HttpStatusCode) =
+        HttpClient(MockEngine { respond(content = "", status = status) }) {
+            classifyNetworkFailures(connectivityAdapter = connectivityAdapterMock)
+        }
 }

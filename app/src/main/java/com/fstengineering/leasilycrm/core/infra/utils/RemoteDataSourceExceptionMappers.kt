@@ -9,7 +9,7 @@ import kotlinx.io.IOException
 
 fun HttpStatusCode.toRemoteDataSourceError() = when (this) {
     HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden -> ApplicationError.Unauthorized
-    HttpStatusCode.RequestTimeout -> ApplicationError.Timeout
+    HttpStatusCode.RequestTimeout, HttpStatusCode.GatewayTimeout -> ApplicationError.Timeout
     else -> ApplicationError.Unknown
 }
 
