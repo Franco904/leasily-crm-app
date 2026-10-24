@@ -82,8 +82,9 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
   UseCase ou ViewModel.
 - Captura **só `Exception`** — `Error` da plataforma, `CancellationException` e exceções fatais
   (`SecurityException`, `GeneralSecurityException`) continuam se propagando
-  (`0011-error-handling.md`, passos 3–4). Em `Flow`, use `asDatabaseFlowResult()`
-  (`core/infra/utils/BoundaryUtils.kt`), que já garante isso; não use `catch {}` cru.
+  (`0011-error-handling.md`, passos 3–4). Em `Flow`, use `asDatabaseFlowResult()` ou, fora
+  dele, `catchException {}` (ambos em `core/infra/utils/BoundaryUtils.kt`), que já garantem isso e
+  registram a falha; não use `catch {}` cru.
 - O DataSource **traduz** a falha para o vocabulário da camada de cima: devolve
   vazio/`null` quando "não encontrado" é um caso normal, ou `AppResult.Error` com
   um erro do módulo da feature. Se uma camada acima está capturando `SQLiteException`,
