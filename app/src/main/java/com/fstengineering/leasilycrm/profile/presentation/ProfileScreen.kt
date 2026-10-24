@@ -29,6 +29,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
@@ -38,7 +39,6 @@ import com.fstengineering.leasilycrm.profile.presentation.composables.EditCreciN
 import com.fstengineering.leasilycrm.profile.presentation.composables.ProfileDataSection
 import com.fstengineering.leasilycrm.profile.presentation.composables.ProfileScreenTopBar
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
-import com.fstengineering.leasilycrm.profile.presentation.models.strategies.SignOutErrorBottomSheetDataPropertiesStrategy
 import kotlinx.coroutines.launch
 
 @Composable
@@ -70,7 +70,7 @@ fun ProfileScreen(
                     isSigningOut = false
 
                     val errorData = uiEvent.error.toBottomSheetData(
-                        SignOutErrorBottomSheetDataPropertiesStrategy,
+                        DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(ShowErrorBottomSheet(errorData))
                 }
