@@ -59,7 +59,7 @@ _Alias de código_: `Commission`
 
 ### Clientes
 
-**Cliente**: Contato na carteira do Usuário. Concentra dados pessoais (nome, telefone, documento, cidade). Lead, Inquilino e Inquilino antigo são estados derivados derivados dos seus Atendimentos e Estadias — não são tipos distintos de cadastro.
+**Cliente**: Contato na carteira do Usuário. Concentra dados pessoais (nome, telefone, documento, cidade). Lead, Inquilino e Inquilino antigo são estados derivados dos seus Atendimentos e Estadias — não são tipos distintos de cadastro.
 _Alias de código_: `LeadTenant`
 
 **Lead**: Cliente com Atendimento em status "Não finalizado" e **sem** Estadia ativa associada.
