@@ -19,7 +19,6 @@ import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.mode
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerErrorUiState
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerField
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.models.PropertyOwnerFileUiState
-import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel

@@ -25,7 +25,6 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
-import java.util.concurrent.TimeUnit
 
 val remoteDataSourceModule = module {
     single {
