@@ -57,6 +57,17 @@ class RemoteRequestTest {
                 result.shouldBeInstanceOf<AppResult.Error<*, *>>()
                 (result as AppResult.Error).error shouldBeEqualTo ApplicationError.NoInternet
             }
+
+        @Test
+        fun `Deve retornar erro de timeout quando a requisição falha por rede, dado que o aparelho está conectado`() =
+            runTest {
+                every { connectivityAdapterMock.isDeviceConnectedToInternet() } returns true
+
+                val result = sut.requestBackend(url = randomUrl(), method = HttpMethod.Get)
+
+                result.shouldBeInstanceOf<AppResult.Error<*, *>>()
+                (result as AppResult.Error).error shouldBeEqualTo ApplicationError.Timeout
+            }
     }
 
     private fun randomUrl() = "https://leasily.test/${faker.random.nextUUID()}"
