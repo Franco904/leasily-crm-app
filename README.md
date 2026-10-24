@@ -105,11 +105,43 @@ atualizado evita desvios durante a codificação.
 
 ## Comandos Essenciais
 
+### Desenvolvimento
+
 ```bash
-./gradlew :app:assembleDevDebug && ./gradlew :app:installDevDebug   # build APK debug (flavor dev) + instala no device/emulador conectado
-./gradlew :app:testDevDebugUnitTest                                 # testes unitários (JUnit 5, sem device)
-./gradlew :app:testDevDebugUnitTest --tests "*.NomeTest"            # teste unitário específico
-./gradlew :app:connectedDevDebugAndroidTest                         # testes instrumentados (requer device)
-make sign-app                                                       # build + bundle release assinados
-./gradlew signingReport                                             # verifica a assinatura
+make run                                                  # build + instala o APK debug (flavor dev) e abre o app
+make test                                                 # testes unitários (JUnit 5, sem device)
+./gradlew :app:testDevDebugUnitTest --tests "*.NomeTest"  # teste unitário específico
+make test-instrumented                                    # testes instrumentados (requer device)
+make apk-release                                          # build + bundle release assinados
+./gradlew signingReport                                   # verifica a assinatura
 ```
+
+### QA
+
+Rodam no aparelho conectado via `adb` (com mais de um, escolha pela posição em `adb devices`, ex.:
+`make wifi DEVICE=2`). Arquivos gerados vão para a pasta `qa/`. `pull-db`/`push-db` exigem `sqlite3`
+no host.
+
+```bash
+# Cenário
+make pull-db DB=qa/cenario.db   # salva o banco do app para snapshot de cenário [sem param DB = qa/leasily_app_db.db]
+make push-db DB=qa/cenario.db   # restaura um banco salvo com pull-db (mesmo schema) [sem param DB = qa/leasily_app_db.db]
+make clear-data                 # limpa o storage dos apps dev e prod
+
+# Aparelho
+make wifi                       # alterna o Wi-Fi
+make mobile-data                # alterna os dados móveis
+make dark-mode                  # alterna o tema escuro
+make grant-perms                # concede as permissões do app (notificações)
+make revoke-perms               # revoga as permissões do app (o Android mata o processo junto)
+make dont-keep-activities       # alterna "Não manter atividades" nas Dev Options
+make kill                       # mata o app em background (simula morte do processo pelo SO)
+
+# Evidência para issues
+make bug-report                 # .zip com logcat, crashes, dumpsys, configuração do aparelho e banco do app
+make screenshot                 # captura de tela (.png)
+make video                      # grava a tela até Enter (.mp4, máx. 3 min)
+```
+
+Nota: `pull-db`, `push-db` e o banco do `bug-report` só funcionam no app dev
+(`com.fstengineering.leasilycrm.dev`): o Android não permite ler o banco de um app release.
