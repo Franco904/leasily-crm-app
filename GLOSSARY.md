@@ -4,6 +4,13 @@ Aplicativo mobile Android para automação de processos de CRM especializado na 
 
 Este glossário define os termos canônicos do domínio e os contextos delimitados que estruturam o sistema.
 
+Atributos dos cadastros de Imóvel, Cliente, Proprietário, Atendimento e Período Ocupado entram no glossário apenas quando:
+- (a) o seu significado deriva da prática de intermediação de locação por temporada (e não do senso comum);
+- (b) o nome no código diverge do domínio ou induz a erro de interpretação; ou
+- (c) alteram o comportamento de algum desses cadastros ou dos KPIs.
+
+Atributos autoexplicativos ficam de fora, e as definições não enumeram as opções do atributo, exceto quando as opções constituem o próprio conceito.
+
 ## Contextos Delimitados
 
 - **Autenticação** — Login do Usuário via conta Google e gerenciamento do token de sessão e perfil profissional.
@@ -54,7 +61,7 @@ _Alias de código_: `Commission`
 
 ### Clientes
 
-**Cliente**: Entidade base que representa um contato na carteira do Usuário. Concentra dados pessoais (nome, telefone, documento), origem e canal de contato. Lead, Inquilino e Inquilino antigo são estados derivados calculados a partir dos agregados Atendimento e Período Ocupado — não são tipos distintos de cadastro.
+**Cliente**: Entidade base que representa um contato na carteira do Usuário. Concentra dados pessoais (nome, telefone, documento, cidade). Lead, Inquilino e Inquilino antigo são estados derivados calculados a partir dos agregados Atendimento e Período Ocupado — não são tipos distintos de cadastro.
 _Alias de código_: `LeadTenant`
 
 **Lead**: Cliente com Atendimento em status "Não finalizado" e **sem** Estadia ativa associada.
@@ -67,10 +74,6 @@ _Alias de código_: `Tenant`
 > Estado derivado — Lead, Inquilino e Inquilino antigo não são armazenados diretamente; são calculados a partir da presença de Atendimento "Não finalizado" e do status das Estadias associadas.
 
 **SCV (Single Customer View)**: Visão centralizada do cliente que concentra dados de contato, Atendimento atual, histórico de Atendimentos e Estadias passadas em um único lugar.
-
-**Canal de contato**: Meio pelo qual o Lead estabeleceu o primeiro contato com o Usuário (ex: WhatsApp, Instagram, indicação). Registrado no Atendimento; usado como KPI analítico.
-
-**Origem**: Cidade ou país de origem do cliente. Campo informativo do cadastro.
 
 ---
 
@@ -97,6 +100,10 @@ _Alias de código_: `Assistance`
 
 **Interação**: Registro de um contato realizado entre o Usuário e o Lead durante o Atendimento (mensagem, ligação etc.).
 _Alias de código_: `Interaction`
+
+**Origem do contato**: Meio pelo qual o Lead chegou ao Usuário em um Atendimento. Sua distribuição sobre todos os Atendimentos, finalizados ou não, é um KPI.
+_Evitar_: Canal de contato, Origem
+_Alias de código_: `contactOrigin`, `ContactChannel`
 
 **Jornada de negociação**: Estado atual do cliente no funil de negociação — derivado da presença de Atendimento "Não finalizado" e/ou Estadia associada.
 
