@@ -9,7 +9,7 @@ val propertyOwnerRegistrationViewModelModule = module {
         PropertyOwnerRegistrationViewModel(
             writePropertyOwner = get(),
             propertyOwnerQueryRepository = get(),
-            fileStorageService = get(),
+            sharedStorageDataSource = get(),
         )
     }
 }

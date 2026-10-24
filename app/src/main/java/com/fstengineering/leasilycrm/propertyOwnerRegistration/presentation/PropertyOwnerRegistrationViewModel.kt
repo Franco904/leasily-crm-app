@@ -4,13 +4,12 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.services.interfaces.FileStorageService
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.repositories.PropertyOwnerQueryRepository
 import com.fstengineering.leasilycrm.propertyOwnerRegistration.application.useCases.WritePropertyOwnerUseCase
@@ -34,7 +33,7 @@ import kotlinx.coroutines.launch
 class PropertyOwnerRegistrationViewModel(
     private val writePropertyOwner: WritePropertyOwnerUseCase,
     private val propertyOwnerQueryRepository: PropertyOwnerQueryRepository,
-    private val fileStorageService: FileStorageService,
+    private val sharedStorageDataSource: SharedStorageDataSource,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -96,14 +95,7 @@ class PropertyOwnerRegistrationViewModel(
         val form = (draftFormUiState.value as? PropertyOwnerDraftFormUiState.Loaded) ?: return
 
         viewModelScope.launch {
-            val fileName = fileStorageService.getFileName(contentUriString)
-                .fold(
-                    onError = { e ->
-                        _uiEvents.trySend(UiEvent.BottomSheetError(e))
-                        return@launch
-                    },
-                    onSuccess = { fileName -> fileName },
-                )
+            val fileName = sharedStorageDataSource.getFileName(contentUriString)
 
             val fileDraft = PropertyOwnerFileUiState(
                 uri = contentUriString.toUri(),

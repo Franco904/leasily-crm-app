@@ -4,13 +4,12 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.application.services.interfaces.FileStorageService
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -55,7 +54,7 @@ class OccupiedPeriodRegistrationViewModel(
     private val writeUnavailablePeriod: WriteUnavailablePeriodUseCase,
     private val propertyQueryRepository: PropertyQueryRepository,
     private val tenantQueryRepository: TenantQueryRepository,
-    private val fileStorageService: FileStorageService,
+    private val sharedStorageDataSource: SharedStorageDataSource,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -275,14 +274,7 @@ class OccupiedPeriodRegistrationViewModel(
         val form = (draftFormUiState.value as? OccupiedPeriodFormUiState.Loaded.Stay) ?: return
 
         viewModelScope.launch {
-            val fileName = fileStorageService.getFileName(contentUriString)
-                .fold(
-                    onError = { e ->
-                        _uiEvents.trySend(UiEvent.BottomSheetError(e))
-                        return@launch
-                    },
-                    onSuccess = { fileName -> fileName },
-                )
+            val fileName = sharedStorageDataSource.getFileName(contentUriString)
 
             val fileDraft = StayFileUiState(
                 uri = contentUriString.toUri(),
