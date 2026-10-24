@@ -13,31 +13,32 @@ Atributos autoexplicativos ficam de fora, e as definições não enumeram as op�
 
 ## Contextos Delimitados
 
-- **Autenticação** — Login do Usuário via conta Google, manutenção da sessão e perfil profissional.
+- **Autenticação** — Login do Corretor via conta Google, manutenção da sessão e perfil profissional.
 - **Imóveis** — Catálogo de imóveis administrados: características físicas, localização e configuração financeira por imóvel.
 - **Clientes** — Gestão de Leads e Inquilinos; ciclo de vida do Cliente e visão centralizada (SCV).
-- **Proprietários** — Cadastro dos Proprietários que contratam o Usuário para administrar seus Imóveis.
+- **Proprietários** — Cadastro dos Proprietários que contratam o Corretor para administrar seus Imóveis.
 - **Atendimento** — Registro do episódio de procura de um Lead: preferências de procura, imóveis enviados e interações.
 - **Períodos Ocupados** — Ciclo de vida de um intervalo de indisponibilidade de um Imóvel: Estadias e Períodos indisponíveis; inclui controle de overbooking e financeiro da Estadia.
-- **Relatórios Analíticos** — KPIs e gráficos de desempenho profissional do Usuário.
+- **Relatórios Analíticos** — KPIs e gráficos de desempenho profissional do Corretor.
 - **Sincronização** — Propagação oportunística dos dados registrados no aparelho para o servidor.
 
 ## Linguagem
 
 ### Autenticação
 
-**Usuário**: Ator autenticado do aplicativo — o corretor de imóveis. Identificado por conta Google. Apenas um dispositivo pode ter sessão ativa por vez.
+**Corretor**: Ator autenticado do aplicativo — o corretor de imóveis que intermedeia as locações. Identificado por conta Google. Apenas um dispositivo pode ter sessão ativa por vez.
+_Evitar_: Usuário
 _Alias de código_: `User`
 
-**Creci**: Número de registro profissional do corretor no Conselho Regional de Corretores de Imóveis (CRECI). Informado pelo Usuário separadamente após o login, como parte da configuração de perfil profissional.
+**Creci**: Número de registro profissional do corretor no Conselho Regional de Corretores de Imóveis (CRECI). Informado pelo Corretor separadamente após o login, como parte da configuração de perfil profissional.
 
-> A autenticação ocorre em dois momentos: (1) login via Google → início da sessão; (2) configuração de perfil → Creci e demais dados profissionais do Usuário.
+> A autenticação ocorre em dois momentos: (1) login via Google → início da sessão; (2) configuração de perfil → Creci e demais dados profissionais do Corretor.
 
 ---
 
 ### Imóveis
 
-**Imóvel**: Propriedade imobiliária administrada pelo Usuário, disponível para aluguel por temporada. Possui características físicas (dormitórios, banheiros, camas, eletrodomésticos, estacionamento), dados de condomínio, localização (bairro, proximidade ao mar) e configuração financeira.
+**Imóvel**: Propriedade imobiliária administrada pelo Corretor, disponível para aluguel por temporada. Possui características físicas (dormitórios, banheiros, camas, eletrodomésticos, estacionamento), dados de condomínio, localização (bairro, proximidade ao mar) e configuração financeira.
 _Alias de código_: `Property`
 
 **Captação**: Processo de obtenção e cadastro de um novo Imóvel para administração.
@@ -46,7 +47,7 @@ _Alias de código_: `Property`
 
 **Taxa de limpeza**: Valor fixo cobrado por estadia para limpeza do Imóvel, em reais.
 
-**Comissão**: Percentual ou valor fixo retido pelo Usuário por cada estadia como remuneração pela intermediação.
+**Comissão**: Percentual ou valor fixo retido pelo Corretor por cada estadia como remuneração pela intermediação.
 _Alias de código_: `Commission`
 
 **Sinal** (Imóveis): Valor de reserva estabelecido pelo Proprietário para confirmação de uma estadia naquele Imóvel. Pode ser absoluto ou percentual.
@@ -59,7 +60,7 @@ _Alias de código_: `Commission`
 
 ### Clientes
 
-**Cliente**: Contato na carteira do Usuário. Concentra dados pessoais (nome, telefone, documento, cidade). Lead, Inquilino e Inquilino antigo são estados derivados dos seus Atendimentos e Estadias — não são tipos distintos de cadastro.
+**Cliente**: Contato na carteira do Corretor. Concentra dados pessoais (nome, telefone, documento, cidade). Lead, Inquilino e Inquilino antigo são estados derivados dos seus Atendimentos e Estadias — não são tipos distintos de cadastro.
 _Alias de código_: `LeadTenant`
 
 **Lead**: Cliente com Atendimento em status "Não finalizado" e **sem** Estadia ativa associada.
@@ -75,7 +76,7 @@ _Alias de código_: `Tenant`
 
 ### Proprietários
 
-**Proprietário**: Pessoa que contratou o Usuário para administrar seus Imóveis. Possui dados de contato e chave de pagamento, e pode ter múltiplos Imóveis associados. Não é um Cliente: uma mesma pessoa que seja Proprietário e também alugue um Imóvel é cadastrada uma vez em cada contexto, sem vínculo entre os cadastros.
+**Proprietário**: Pessoa que contratou o Corretor para administrar seus Imóveis. Possui dados de contato e chave de pagamento, e pode ter múltiplos Imóveis associados. Não é um Cliente: uma mesma pessoa que seja Proprietário e também alugue um Imóvel é cadastrada uma vez em cada contexto, sem vínculo entre os cadastros.
 _Alias de código_: `PropertyOwner`
 _Evitar_: Cliente (para Proprietário)
 
@@ -92,12 +93,12 @@ _Alias de código_: `Assistance`
 
 **Preferências de procura**: Critérios coletados do Lead durante o Atendimento — número de hóspedes (adultos, crianças, bebês, animais de estimação), bairro desejado, período projetado de estadia, diária máxima aceita, distância ao mar, número de dormitórios e vagas de estacionamento.
 
-**Imóveis enviados**: Lista de Imóveis apresentados pelo Usuário ao Lead como opções durante o Atendimento.
+**Imóveis enviados**: Lista de Imóveis apresentados pelo Corretor ao Lead como opções durante o Atendimento.
 
-**Interação**: Registro de um contato realizado entre o Usuário e o Lead durante o Atendimento (mensagem, ligação etc.).
+**Interação**: Registro de um contato realizado entre o Corretor e o Lead durante o Atendimento (mensagem, ligação etc.).
 _Alias de código_: `Interaction`
 
-**Origem do contato**: Meio pelo qual o Lead chegou ao Usuário em um Atendimento. Sua distribuição sobre todos os Atendimentos, finalizados ou não, é um KPI.
+**Origem do contato**: Meio pelo qual o Lead chegou ao Corretor em um Atendimento. Sua distribuição sobre todos os Atendimentos, finalizados ou não, é um KPI.
 _Evitar_: Canal de contato, Origem
 _Alias de código_: `contactOrigin`, `ContactChannel`
 
@@ -121,9 +122,9 @@ _Alias de código_: `Stay`
 **Período indisponível**: Período Ocupado sem Inquilino associado. Intervalo em que um Imóvel não está disponível para Estadia por razão não relacionada a uma locação (ex: uso pelo Proprietário, manutenção). Considerado no controle de overbooking.
 _Alias de código_: `UnavailablePeriod`
 
-**Check-in**: Evento de entrada do Inquilino no Imóvel. Registrado pelo Usuário na Estadia; transiciona o status de "Aguardando check-in" para "Em andamento".
+**Check-in**: Evento de entrada do Inquilino no Imóvel. Registrado pelo Corretor na Estadia; transiciona o status de "Aguardando check-in" para "Em andamento".
 
-**Check-out**: Evento de saída do Inquilino do Imóvel. Registrado pelo Usuário na Estadia; transiciona o status para "Finalizada" e move o Cliente de Inquilino para Inquilino antigo (se não houver Atendimento "Não finalizado").
+**Check-out**: Evento de saída do Inquilino do Imóvel. Registrado pelo Corretor na Estadia; transiciona o status para "Finalizada" e move o Cliente de Inquilino para Inquilino antigo (se não houver Atendimento "Não finalizado").
 
 **Sinal** (Estadias): Valor transferido pelo Inquilino como confirmação da reserva antes do check-in, conforme definido na configuração do Imóvel.
 
@@ -132,17 +133,17 @@ _Alias de código_: `StayTransfer`
 
 **Valor total da estadia**: Somatório das diárias do período contratado mais a taxa de limpeza.
 
-**Comissão total da estadia**: Valor retido pelo Usuário como remuneração pela intermediação da Estadia.
+**Comissão total da estadia**: Valor retido pelo Corretor como remuneração pela intermediação da Estadia.
 
 **Valor pendente no check-in**: Parcela do aluguel não paga como sinal, devida pelo Inquilino no momento do check-in.
 
-**Notificação de check-in/check-out**: Alerta enviado ao Usuário no início de cada manhã em que há check-ins ou check-outs de Estadias agendados para o mesmo dia.
+**Notificação de check-in/check-out**: Alerta enviado ao Corretor no início de cada manhã em que há check-ins ou check-outs de Estadias agendados para o mesmo dia.
 
 ---
 
 ### Relatórios Analíticos
 
-**KPI**: Indicador-chave de desempenho calculado com base nos dados de Leads, Estadias e faturamento do Usuário.
+**KPI**: Indicador-chave de desempenho calculado com base nos dados de Leads, Estadias e faturamento do Corretor.
 
 **Faturamento**: Somatório das comissões totais das Estadias em um período.
 _Alias de código_: `Invoice`
@@ -155,16 +156,16 @@ _Alias de código_: `Invoice`
 
 ### Sincronização
 
-**Sincronização**: Envio dos dados registrados pelo Usuário no aparelho para o servidor, feito quando há conexão com a Internet. O Usuário trabalha sem depender de conexão.
+**Sincronização**: Envio dos dados registrados pelo Corretor no aparelho para o servidor, feito quando há conexão com a Internet. O Corretor trabalha sem depender de conexão.
 
 ---
 
 ## Diálogo de Exemplo
 
-> **Dev**: Quando o Usuário cadastra um Atendimento para um Inquilino antigo, o que acontece?
+> **Dev**: Quando o Corretor cadastra um Atendimento para um Inquilino antigo, o que acontece?
 >
 > **Especialista**: O cliente passa a ser tratado como Lead — ele voltou a ter uma procura ativa. Se o Atendimento for excluído antes de gerar uma Estadia, ele volta para Inquilino antigo, porque ainda tem estadias passadas.
 >
-> **Dev**: E se o Usuário cadastrar uma Estadia para esse Lead?
+> **Dev**: E se o Corretor cadastrar uma Estadia para esse Lead?
 >
 > **Especialista**: Aí ele vira Inquilino. Quando o check-out for registrado nessa Estadia, o Atendimento fica como Finalizado. Se o cliente não tiver outro Atendimento "Não finalizado" aberto, volta para Inquilino antigo.
