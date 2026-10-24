@@ -41,6 +41,7 @@ interface UserAnalyticsDao {
         FROM lead_tenants_read_view t
         WHERE t.is_deleted = 0
             AND datetime(t.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
+            AND t.tag IS NOT NULL
         GROUP BY month_year, t.tag
     """
     )
@@ -89,6 +90,7 @@ interface UserAnalyticsDao {
             AND t.is_deleted = 0
         WHERE s.is_deleted = 0
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
+            AND t.tag IS NOT NULL
         GROUP BY month_year, t.tag
     """
     )
@@ -146,6 +148,7 @@ interface UserAnalyticsDao {
         WHERE s.is_deleted = 0
             AND datetime(s.create_date_time / 1000, 'unixepoch') >= datetime('now', '-12 months')
             AND commission IS NOT NULL
+            AND t.tag IS NOT NULL
         GROUP BY month_year, t.tag
     """
     )
