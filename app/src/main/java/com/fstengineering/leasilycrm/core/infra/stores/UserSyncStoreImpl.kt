@@ -11,7 +11,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypte
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.UpdateUserDto
-import com.fstengineering.leasilycrm.core.infra.models.SyncState
+import com.fstengineering.leasilycrm.core.infra.projections.SyncState
 import kotlinx.coroutines.flow.firstOrNull
 
 class UserSyncStoreImpl(

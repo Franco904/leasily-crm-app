@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.propertyRegistration.infra.models.ProprietarioNameProjection
+import com.fstengineering.leasilycrm.propertyRegistration.infra.projections.ProprietarioNameProjection
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.ProprietarioReadModel

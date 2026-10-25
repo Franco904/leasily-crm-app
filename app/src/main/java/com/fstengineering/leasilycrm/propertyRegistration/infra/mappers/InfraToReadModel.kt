@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.propertyRegistration.infra.mappers
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
-import com.fstengineering.leasilycrm.propertyRegistration.infra.models.ProprietarioNameProjection
+import com.fstengineering.leasilycrm.propertyRegistration.infra.projections.ProprietarioNameProjection
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyFileReadModel

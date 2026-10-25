@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypte
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.UpdateUserDto
-import com.fstengineering.leasilycrm.core.infra.models.SyncState
+import com.fstengineering.leasilycrm.core.infra.projections.SyncState
 import com.fstengineering.leasilycrm.profile.application.repositories.UserCommandRepository
 import com.fstengineering.leasilycrm.profile.domain.entities.User
 

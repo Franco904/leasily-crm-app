@@ -1,12 +1,14 @@
-package com.fstengineering.leasilycrm.proprietarioDetails.infra.models
+package com.fstengineering.leasilycrm.proprietarioRegistration.infra.projections
 
 import androidx.room.ColumnInfo
 import androidx.room.Relation
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioFileOrm
 
-/** O `id` só existe porque o Room exige a coluna-pai da `@Relation` como campo. */
-data class ProprietarioDetailsProjection(
+data class ProprietarioRegistrationProjection(
     val id: Long,
+    @ColumnInfo(name = "create_date_time") val createDateTime: AppDateTime,
+    @ColumnInfo(name = "update_date_time") val updateDateTime: AppDateTime,
     val name: String,
     val phone: String?,
     val email: String?,
@@ -15,12 +17,13 @@ data class ProprietarioDetailsProjection(
         parentColumn = "id",
         entityColumn = "property_owner_id",
         entity = ProprietarioFileOrm::class,
-        projection = ["property_owner_file_uri", "property_owner_file_name"],
+        projection = ["id", "property_owner_file_uri", "property_owner_file_name"],
     )
-    val files: List<ProprietarioFileDetailsProjection>,
+    val files: List<ProprietarioFileRegistrationProjection>,
 )
 
-data class ProprietarioFileDetailsProjection(
+data class ProprietarioFileRegistrationProjection(
+    val id: Long,
     @ColumnInfo(name = "property_owner_file_uri") val uriString: String,
     @ColumnInfo(name = "property_owner_file_name") val name: String,
 )

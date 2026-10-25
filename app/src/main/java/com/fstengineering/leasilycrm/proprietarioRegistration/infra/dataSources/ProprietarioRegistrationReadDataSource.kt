@@ -5,7 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.proprietarioRegistration.infra.models.ProprietarioRegistrationProjection
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.projections.ProprietarioRegistrationProjection
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toProprietarioReadModel

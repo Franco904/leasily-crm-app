@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.proprietarios.infra.models
+package com.fstengineering.leasilycrm.propertyRegistration.infra.projections
 
 data class ProprietarioNameProjection(
     val id: Long,
