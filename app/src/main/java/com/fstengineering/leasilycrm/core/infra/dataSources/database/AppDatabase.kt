@@ -41,6 +41,10 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.St
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
+import com.fstengineering.leasilycrm.proprietarioDetails.infra.dataSources.ProprietarioDetailsReadDataSource
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
+import com.fstengineering.leasilycrm.proprietarios.infra.dataSources.ProprietariosReadDataSource
 
 @Database(
     entities = [
@@ -97,6 +101,14 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun proprietarioDao(): ProprietarioDao
 
     abstract fun proprietarioFileDao(): ProprietarioFileDao
+
+    abstract fun proprietarioWriteDataSource(): ProprietarioWriteDataSource
+
+    abstract fun proprietarioRegistrationReadDataSource(): ProprietarioRegistrationReadDataSource
+
+    abstract fun proprietarioDetailsReadDataSource(): ProprietarioDetailsReadDataSource
+
+    abstract fun proprietariosReadDataSource(): ProprietariosReadDataSource
 
     abstract fun propertyPriceDao(): PropertyPriceDao
 
