@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ProprietarioCard
 import com.fstengineering.leasilycrm.proprietarios.presentation.composables.ConfirmDeleteProprietarioDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
@@ -36,6 +37,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.proprietarios.presentation.composables.ProprietariosEmptySection
 import com.fstengineering.leasilycrm.proprietarios.presentation.composables.ProprietariosTopAppBar
+import com.fstengineering.leasilycrm.proprietarios.presentation.models.ProprietariosUiState
 
 @Composable
 fun ProprietariosScreen(
@@ -52,7 +54,7 @@ fun ProprietariosScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val proprietarios by viewModel.proprietarios.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val proprietarioToDelete by viewModel.proprietarioToDelete.collectAsStateWithLifecycle()
 
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -105,12 +107,16 @@ fun ProprietariosScreen(
         },
         modifier = modifier
     ) { innerPadding ->
-        when {
-            proprietarios.isEmpty() -> {
+        when (val state = uiState) {
+            ProprietariosUiState.Loading -> {
+                FullScreenLoadingIndicator(innerPadding)
+            }
+
+            is ProprietariosUiState.Loaded if state.proprietarios.isEmpty() -> {
                 ProprietariosEmptySection()
             }
 
-            else -> {
+            is ProprietariosUiState.Loaded -> {
                 LazyColumn(
                     state = lazyListState,
                     modifier = Modifier
@@ -120,7 +126,7 @@ fun ProprietariosScreen(
                 ) {
                     item { Spacer(modifier = Modifier.height(16.dp)) }
                     itemsIndexed(
-                        items = proprietarios.groupBy {
+                        items = state.proprietarios.groupBy {
                             it.name.firstOrNull()?.uppercaseChar().toString()
                         },
                         key = { _, (nameFirstChar, _) -> nameFirstChar },

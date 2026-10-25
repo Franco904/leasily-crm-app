@@ -9,11 +9,11 @@ import com.fstengineering.leasilycrm.core.presentation.models.ProprietarioUiStat
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import com.fstengineering.leasilycrm.proprietarios.infra.dataSources.ProprietariosReadDataSource
 import com.fstengineering.leasilycrm.proprietarios.presentation.mappers.toProprietarioUiState
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import com.fstengineering.leasilycrm.proprietarios.presentation.models.ProprietariosUiState
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
@@ -28,9 +28,8 @@ class ProprietariosViewModel(
     private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _proprietarios =
-        MutableStateFlow<ImmutableList<ProprietarioUiState>>(persistentListOf())
-    val proprietarios = _proprietarios.asStateFlow()
+    private val _uiState = MutableStateFlow<ProprietariosUiState>(ProprietariosUiState.Loading)
+    val uiState: StateFlow<ProprietariosUiState> = _uiState.asStateFlow()
 
     private val _proprietarioToDelete = MutableStateFlow<ProprietarioUiState?>(null)
     val proprietarioToDelete = _proprietarioToDelete.asStateFlow()
@@ -46,7 +45,7 @@ class ProprietariosViewModel(
                     .onSuccess { readModels ->
                         val proprietarios =
                             readModels.map { it.toProprietarioUiState() }.toPersistentList()
-                        _proprietarios.update { proprietarios }
+                        _uiState.update { ProprietariosUiState.Loaded(proprietarios = proprietarios) }
                     }
             }
         }
