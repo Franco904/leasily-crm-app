@@ -11,7 +11,13 @@ semântica (ou razão para mudar) de apenas um deles permanece no contexto de or
 
 ## Exceção: `AppDatabase`
 
-O `AppDatabase` do Room permanece em `core/` mesmo declarando `@Entity` e `@Dao` (DataSources)
-que pertencem a módulos específicos — o Room exige que todo DAO seja método abstrato do
-`@Database` e toda entidade esteja em `entities = [...]`. É a única dependência de `core/` para
-os módulos; nenhum outro artefato de `core/` pode importá-los.
+O `AppDatabase` do Room permanece em `core/` mesmo declarando os `@Dao` (DataSources) que
+pertencem a módulos específicos — o Room exige que todo DAO seja método abstrato do `@Database`. É a
+única dependência de `core/` para os módulos; nenhum outro artefato de `core/` pode importá-los.
+
+## Exceção: schema do banco
+
+As `@Entity` (Orm) ficam em `core/infra/dataSources/database/entities/`, sem dono: a tabela é
+compartilhada por todos os módulos, e cada um lê ou escreve nela pelo seu próprio DataSource `@Dao`.
+Mover o Orm para o módulo que escreve obrigaria `core/` (FKs entre Orms, `entities = [...]`) a
+importar módulos, e tabelas escritas por mais de um módulo não teriam dono único.

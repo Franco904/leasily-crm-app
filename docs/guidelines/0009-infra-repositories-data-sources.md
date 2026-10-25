@@ -224,5 +224,6 @@ e.g. Caso `imovelOccupation/` × `periodoOcupadoRegistration/` sobre `PeriodoOcu
 
 - Query ou regra específica de um módulo mora **dentro do módulo** — inclui
   o `ReadDataSource` dele.
-- O **schema** (`@Entity` / DDL) de um agregado tem **dono único**: o módulo que
-  possui o caminho de escrita. Quem só lê não redefine schema.
+- O **schema** (`@Entity` / Orm) mora em `core/infra/dataSources/database/entities/`, **sem dono**:
+  qualquer módulo lê ou escreve na tabela pelo seu próprio DataSource `@Dao`. Nenhum módulo redefine
+  o Orm de uma tabela.
