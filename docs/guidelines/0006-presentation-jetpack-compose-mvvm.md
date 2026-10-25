@@ -102,12 +102,24 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   a corrotina que `viewModelScope` existe justamente para manter fora do alcance dela. Use block
   body com retorno implícito `Unit`.
 
-- **Argumentos de navegação entram pelo construtor, via `SavedStateHandle`.** O app é
+- **Argumentos de navegação entram pelo construtor, como a rota tipada.** O app é
   single-Activity com Navigation Compose; o `ViewModel` é criado por `koinViewModel()` no
-  `NavHost`, com escopo da entrada da back stack — o Koin injeta o `SavedStateHandle`, que já
-  carrega os argumentos da rota. Leia-os com `savedStateHandle.toRoute<Destinations.X>()` no
-  construtor. **Nunca** repasse argumentos da rota pela `Screen` até um método do ViewModel
-  (pass-through), nem crie `ViewModelProvider.Factory` própria.
+  `NavHost`, com escopo da entrada da back stack — o Koin tem o `SavedStateHandle`, que já
+  carrega os argumentos da rota. O módulo de DI converte com `get<SavedStateHandle>().toRoute()` e
+  o ViewModel recebe `route: Destinations.X` no construtor. `toRoute()` depende de `Bundle` e não
+  roda em teste JVM; recebendo a rota pronta, o teste só instancia `Destinations.X(...)`. **Nunca**
+  repasse argumentos da rota pela `Screen` até um método do ViewModel (pass-through), nem crie
+  `ViewModelProvider.Factory` própria.
+
+  ```kotlin
+  // di/ViewModelModule.kt
+  viewModel {
+      PeriodoOcupadoRegistrationViewModel(
+          route = get<SavedStateHandle>().toRoute(),
+          readImovelDataSource = get(),
+      )
+  }
+  ```
 
 - **Carga assíncrona inicial em `init()` público e idempotente.** A carga que dispara
   `viewModelScope.launch` (ler do banco, observar um `Flow`) fica num `fun init()` público —
@@ -128,10 +140,9 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
 
   ```kotlin
   class PeriodoOcupadoRegistrationViewModel(
-      savedStateHandle: SavedStateHandle,
+      private val route: Destinations.PeriodoOcupadoRegistration,
       private val readImovelDataSource: ImovelReadDataSource,
   ) : ViewModel() {
-      private val args = savedStateHandle.toRoute<Destinations.PeriodoOcupadoRegistration>()
 
       private val _uiState = MutableStateFlow<PeriodoOcupadoRegistrationUiState>(PeriodoOcupadoRegistrationUiState.Loading)
       val uiState: StateFlow<PeriodoOcupadoRegistrationUiState> = _uiState.asStateFlow()
@@ -142,7 +153,7 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
           if (isLoaded) return
           isLoaded = true
 
-          viewModelScope.launch { loadImovel(args.imovelId) }
+          viewModelScope.launch { loadImovel(route.imovelId) }
       }
   }
 
