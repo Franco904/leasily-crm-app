@@ -58,6 +58,11 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   `kotlinx.collections.immutable` são reconhecidos como estáveis. O ViewModel monta
   a coleção com `.toImmutableList()` / `persistentListOf(...)` ao produzir o `UiState`.
 
+- **URI de arquivo é `String` em todo model** (`UiState`, `ReadModel`, `CommandModel`). A conversão
+  para `android.net.Uri` acontece só nas fronteiras que precisam do tipo: o Composable (abrir o
+  arquivo, receber o resultado do seletor) e o DataSource de arquivo. `Uri.parse` não roda em teste
+  JVM; carregar `Uri` no model obriga o teste a mockar estático.
+
 - **Model de apresentação é imutável de fato: `data class` / `data object`, todo
   campo `val`, nenhum atributo `var` nem tipo mutável** (`ArrayList`,
   `mutableStateOf` embutido no state, objeto com `var`). Tipo com `var` é instável

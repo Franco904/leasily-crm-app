@@ -133,6 +133,11 @@ Não use mock em:
 - Classes e colaboradores internos da mesma camada
 - Qualquer coisa que você controla integralmente dentro do mesmo módulo
 
+**Nunca use `mockkStatic`**: instrumenta o bytecode da classe e degrada o desempenho da suíte
+inteira. Se o teste precisa deles, o SUT chama uma API estática de
+plataforma fora da fronteira — mova a chamada para a borda (ex.: `Uri` só no Composable e no
+DataSource de arquivo, `0006`).
+
 ---
 
 ## 5. Projetando para Mockabilidade
