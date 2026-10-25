@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckInCheckOutCountsProjection
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
@@ -88,8 +88,8 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
     // endregion
 
     private suspend fun insertImovel(): Long {
-        val proprietarioId = db.propertyOwnerDao().insertOrUpdate(
-            PropertyOwnerEntity(
+        val proprietarioId = db.proprietarioDao().insertOrUpdate(
+            ProprietarioOrm(
                 id = null,
                 createDateTime = today,
                 updateDateTime = today,

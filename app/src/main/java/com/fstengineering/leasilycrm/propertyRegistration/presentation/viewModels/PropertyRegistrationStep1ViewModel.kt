@@ -35,7 +35,7 @@ class PropertyRegistrationStep1ViewModel : ViewModel() {
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
                 if (newForm.owner != currentForm.owner) {
-                    map[PropertyStep1Field.PropertyOwner] = null
+                    map[PropertyStep1Field.Proprietario] = null
                 }
                 if (newForm.type != currentForm.type) {
                     map[PropertyStep1Field.PropertyType] = null
@@ -69,7 +69,7 @@ class PropertyRegistrationStep1ViewModel : ViewModel() {
         viewModelScope.launch {
             delay(150.milliseconds)
 
-            val propertyOwnerError = errors.firstOrNull { it is DomainError.PropertyPropertyOwner }
+            val proprietarioError = errors.firstOrNull { it is DomainError.PropertyPropertyOwner }
             val propertyTypeError = errors.firstOrNull { it is DomainError.PropertyType }
             val propertyNeighborhoodError =
                 errors.firstOrNull { it is DomainError.Neighborhood }
@@ -78,8 +78,8 @@ class PropertyRegistrationStep1ViewModel : ViewModel() {
 
             _formErrors.update {
                 val newErrors = it.errors.mutate { map ->
-                    map[PropertyStep1Field.PropertyOwner] =
-                        propertyOwnerError?.toInlineMessage()
+                    map[PropertyStep1Field.Proprietario] =
+                        proprietarioError?.toInlineMessage()
                     map[PropertyStep1Field.PropertyType] =
                         propertyTypeError?.toInlineMessage()
                     map[PropertyStep1Field.Neighborhood] =

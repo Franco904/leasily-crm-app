@@ -56,7 +56,7 @@ fun HomeScreen(
     onSettingsSelect: () -> Unit,
     onProfileSelect: () -> Unit,
     onPropertiesSelect: () -> Unit,
-    onPropertyOwnersSelect: () -> Unit,
+    onProprietariosSelect: () -> Unit,
     onRegisterLeadTenant: (Long?) -> Unit,
     onViewLeadTenantDetails: (Long) -> Unit,
     onNewAssistance: (Long) -> Unit,
@@ -203,7 +203,7 @@ fun HomeScreen(
                     DashboardPage(
                         viewModel = koinViewModel(),
                         onPropertiesSelect = onPropertiesSelect,
-                        onPropertyOwnersSelect = onPropertyOwnersSelect,
+                        onProprietariosSelect = onProprietariosSelect,
                     )
                 }
                 composable<Destinations.Home.Leads> {

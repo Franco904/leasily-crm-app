@@ -40,7 +40,7 @@ import com.fstengineering.leasilycrm.home.presentation.composables.HomeNavCard
 fun DashboardPage(
     viewModel: DashboardViewModel,
     onPropertiesSelect: () -> Unit,
-    onPropertyOwnersSelect: () -> Unit,
+    onProprietariosSelect: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -93,7 +93,7 @@ fun DashboardPage(
                 HomeNavCard(
                     icon = Icons.Outlined.Person,
                     title = stringResource(R.string.home_property_owners_label),
-                    onSelect = onPropertyOwnersSelect,
+                    onSelect = onProprietariosSelect,
                     modifier = Modifier.weight(1f)
                 )
             }

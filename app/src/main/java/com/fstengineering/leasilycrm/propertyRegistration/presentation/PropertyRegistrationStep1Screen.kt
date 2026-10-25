@@ -55,7 +55,7 @@ fun PropertyRegistrationStep1Screen(
     propertyId: Long?,
     parentViewModel: PropertyRegistrationViewModel,
     stepViewModel: PropertyRegistrationStep1ViewModel,
-    onRegisterNewPropertyOwner: () -> Unit,
+    onRegisterNewProprietario: () -> Unit,
     onLeaveRegistration: () -> Unit,
     onNext: () -> Unit,
     onUiEvent: (UiEvent) -> Unit,
@@ -72,14 +72,14 @@ fun PropertyRegistrationStep1Screen(
     val loadedForm = draftForm as? PropertyDraftFormUiState.Loaded
     val formErrors by stepViewModel.formErrors.collectAsStateWithLifecycle()
 
-    val propertyOwners by parentViewModel.propertyOwners.collectAsStateWithLifecycle()
+    val proprietarios by parentViewModel.proprietarios.collectAsStateWithLifecycle()
     val pastNeighborhoods by parentViewModel.pastNeighborhoods.collectAsStateWithLifecycle()
 
     val scrollToFieldChannel = remember { Channel<PropertyStep1Field>() }
     val scrollToFieldFlow = remember(scrollToFieldChannel) { scrollToFieldChannel.receiveAsFlow() }
 
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
-    var mustShowPropertyOwnersComboBottomsheet by remember { mutableStateOf(false) }
+    var mustShowProprietariosComboBottomsheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         parentViewModel.init(propertyId = propertyId)
@@ -163,7 +163,7 @@ fun PropertyRegistrationStep1Screen(
                     },
                     pastNeighborhoods = pastNeighborhoods,
                     formErrors = formErrors.errors,
-                    onSelectPropertyOwner = { mustShowPropertyOwnersComboBottomsheet = true },
+                    onSelectProprietario = { mustShowProprietariosComboBottomsheet = true },
                     onLastTextFieldDone = { focusManager.clearFocus() },
                     scrollToFieldFlow = scrollToFieldFlow,
                     onNext = {
@@ -176,16 +176,16 @@ fun PropertyRegistrationStep1Screen(
             }
         }
 
-        if (mustShowPropertyOwnersComboBottomsheet) {
+        if (mustShowProprietariosComboBottomsheet) {
             AppComboBottomSheet(
                 sheetState = sheetState,
-                options = propertyOwners.map { it.name }.toPersistentList(),
-                onOptionSelect = { propertyOwnerName ->
+                options = proprietarios.map { it.name }.toPersistentList(),
+                onOptionSelect = { proprietarioName ->
                     loadedForm ?: return@AppComboBottomSheet
 
-                    val selectedPropertyOwner =
-                        propertyOwners.find { it.name == propertyOwnerName }
-                    val newForm = loadedForm.copy(owner = selectedPropertyOwner)
+                    val selectedProprietario =
+                        proprietarios.find { it.name == proprietarioName }
+                    val newForm = loadedForm.copy(owner = selectedProprietario)
 
                     parentViewModel.onPropertyFormChange(form = newForm)
                     stepViewModel.onPropertyFormChange(loadedForm, newForm)
@@ -193,13 +193,13 @@ fun PropertyRegistrationStep1Screen(
                     focusManager.clearFocus()
                 },
                 onDismissRequest = {
-                    mustShowPropertyOwnersComboBottomsheet = false
+                    mustShowProprietariosComboBottomsheet = false
                     focusManager.clearFocus()
                 },
                 emptyOptionsIcon = Icons.Outlined.Person,
                 emptyOptionsText = stringResource(R.string.property_registration_property_owner_empty_text),
                 emptyAction = {
-                    TextButton(onRegisterNewPropertyOwner) {
+                    TextButton(onRegisterNewProprietario) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = null,

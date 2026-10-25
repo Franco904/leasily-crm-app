@@ -58,13 +58,13 @@ sealed interface Destinations {
     data class PropertyOccupation(val propertyId: Long)
 
     @Serializable
-    data object PropertyOwners
+    data object Proprietarios
 
     @Serializable
-    data class PropertyOwnerRegistration(val propertyOwnerId: Long?)
+    data class ProprietarioRegistration(val proprietarioId: Long?)
 
     @Serializable
-    data class PropertyOwnerDetails(val propertyOwnerId: Long)
+    data class ProprietarioDetails(val proprietarioId: Long)
 
     @Serializable
     data class LeadTenantRegistration(val leadTenantId: Long?)

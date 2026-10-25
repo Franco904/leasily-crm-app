@@ -19,8 +19,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTe
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyCharacteristicPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyFileDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyOwnerDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyOwnerFileDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ProprietarioDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ProprietarioFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyPriceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
@@ -34,8 +34,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Le
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerFileEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
@@ -53,8 +53,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadT
         PropertyEntity::class,
         PropertyCharacteristicCrossRefEntity::class,
         PropertyFileEntity::class,
-        PropertyOwnerEntity::class,
-        PropertyOwnerFileEntity::class,
+        ProprietarioOrm::class,
+        ProprietarioFileOrm::class,
         PropertyPriceEntity::class,
         StayEntity::class,
         StayFileEntity::class,
@@ -94,9 +94,9 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun propertyFileDao(): PropertyFileDao
 
-    abstract fun propertyOwnerDao(): PropertyOwnerDao
+    abstract fun proprietarioDao(): ProprietarioDao
 
-    abstract fun propertyOwnerFileDao(): PropertyOwnerFileDao
+    abstract fun proprietarioFileDao(): ProprietarioFileDao
 
     abstract fun propertyPriceDao(): PropertyPriceDao
 

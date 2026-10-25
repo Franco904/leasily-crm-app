@@ -11,10 +11,10 @@ import com.fstengineering.leasilycrm.propertyDashboard.application.mappers.toRea
 import com.fstengineering.leasilycrm.propertyDashboard.application.mappers.toValueObject
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOccupiedDateReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOccupiedPeriodRawReadModel
-import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOwnerReadModel
+import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.queries.PropertyArgs
-import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.PropertyOwnerQueryRepository
+import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.ProprietarioQueryRepository
 import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.StayQueryRepository
 import kotlinx.collections.immutable.ImmutableList
@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.map
 
 class WatchPropertyUseCase(
     private val propertyQueryRepository: PropertyQueryRepository,
-    private val propertyOwnerQueryRepository: PropertyOwnerQueryRepository,
+    private val proprietarioQueryRepository: ProprietarioQueryRepository,
     private val stayQueryRepository: StayQueryRepository,
     private val leadTenantSharedQueryRepository: LeadTenantSharedQueryRepository,
     private val dateProvider: AppDateProvider,
@@ -47,12 +47,12 @@ class WatchPropertyUseCase(
                         onSuccess = { it },
                     )
 
-                val owner = propertyOwnerQueryRepository.getNameById(
-                    propertyOwnerId = propertyRaw.ownerId,
+                val owner = proprietarioQueryRepository.getNameById(
+                    proprietarioId = propertyRaw.ownerId,
                 )
                     .fold(
                         onError = { e -> return@outer AppResult.Error(error = e) },
-                        onSuccess = { name -> PropertyOwnerReadModel(propertyRaw.ownerId, name) },
+                        onSuccess = { name -> ProprietarioReadModel(propertyRaw.ownerId, name) },
                     )
 
                 val currentMonthOccupiedPeriods =

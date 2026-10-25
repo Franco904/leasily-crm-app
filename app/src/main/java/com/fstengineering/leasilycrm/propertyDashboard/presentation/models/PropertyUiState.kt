@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyOwnerUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ProprietarioUiState
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface PropertyUiState {
@@ -15,7 +15,7 @@ sealed interface PropertyUiState {
         val mainPicture: PropertyFileUiState?,
         val type: PropertyType,
         val address: PropertyAddressUiState,
-        val owner: PropertyOwnerUiState,
+        val owner: ProprietarioUiState,
         val currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<PropertyOccupiedDateUiState>>,
     ) : PropertyUiState {
         fun toCardDetails(): PropertyCardUiState {

@@ -49,13 +49,13 @@ import com.fstengineering.leasilycrm.propertyDetails.di.propertyDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationRepositoryModule
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationUseCaseModule
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationViewModelModule
-import com.fstengineering.leasilycrm.propertyOwnerDetails.di.propertyOwnerDetailsRepositoryModule
-import com.fstengineering.leasilycrm.propertyOwnerDetails.di.propertyOwnerDetailsViewModelModule
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.di.propertyOwnerRegistrationRepositoryModule
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.di.propertyOwnerRegistrationUseCaseModule
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.di.propertyOwnerRegistrationViewModelModule
-import com.fstengineering.leasilycrm.propertyOwners.di.propertyOwnersRepositoryModule
-import com.fstengineering.leasilycrm.propertyOwners.di.propertyOwnersViewModelModule
+import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsRepositoryModule
+import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsViewModelModule
+import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationRepositoryModule
+import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationUseCaseModule
+import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationViewModelModule
+import com.fstengineering.leasilycrm.proprietarios.di.proprietariosRepositoryModule
+import com.fstengineering.leasilycrm.proprietarios.di.proprietariosViewModelModule
 import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationRepositoryModule
 import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationUseCaseModule
 import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationViewModelModule
@@ -137,18 +137,18 @@ fun Application.configureDependencyInjection() {
             propertyOccupationUseCaseModule,
             propertyOccupationViewModelModule,
 
-            // Feature: propertyOwners
-            propertyOwnersRepositoryModule,
-            propertyOwnersViewModelModule,
+            // Feature: proprietarios
+            proprietariosRepositoryModule,
+            proprietariosViewModelModule,
 
-            // Feature: propertyOwnerRegistration
-            propertyOwnerRegistrationRepositoryModule,
-            propertyOwnerRegistrationUseCaseModule,
-            propertyOwnerRegistrationViewModelModule,
+            // Feature: proprietarioRegistration
+            proprietarioRegistrationRepositoryModule,
+            proprietarioRegistrationUseCaseModule,
+            proprietarioRegistrationViewModelModule,
 
-            // Feature: propertyOwnerDetails
-            propertyOwnerDetailsRepositoryModule,
-            propertyOwnerDetailsViewModelModule,
+            // Feature: proprietarioDetails
+            proprietarioDetailsRepositoryModule,
+            proprietarioDetailsViewModelModule,
 
             // Feature: leadTenants
             leadTenantsRepositoryModule,

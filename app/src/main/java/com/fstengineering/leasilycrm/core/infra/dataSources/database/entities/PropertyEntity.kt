@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
     tableName = "properties",
     foreignKeys = [
         ForeignKey(
-            entity = PropertyOwnerEntity::class,
+            entity = ProprietarioOrm::class,
             parentColumns = ["id"],
             childColumns = ["property_owner_id"],
         ),

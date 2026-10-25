@@ -12,14 +12,14 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.queries.PropertyArgs
-import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyOwnerQueryRepository
+import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.ProprietarioQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.useCases.ReadPropertyUseCase
 import com.fstengineering.leasilycrm.propertyRegistration.application.useCases.WritePropertyUseCase
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.mappers.toCommandModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
-import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyOwnerUiState
+import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.ProprietarioUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -35,7 +35,7 @@ class PropertyRegistrationViewModel(
     private val readProperty: ReadPropertyUseCase,
     private val writeProperty: WritePropertyUseCase,
     private val propertyQueryRepository: PropertyQueryRepository,
-    private val propertyOwnerQueryRepository: PropertyOwnerQueryRepository,
+    private val proprietarioQueryRepository: ProprietarioQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -45,9 +45,9 @@ class PropertyRegistrationViewModel(
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _propertyOwners =
-        MutableStateFlow<ImmutableList<PropertyOwnerUiState>>(persistentListOf())
-    val propertyOwners = _propertyOwners.asStateFlow()
+    private val _proprietarios =
+        MutableStateFlow<ImmutableList<ProprietarioUiState>>(persistentListOf())
+    val proprietarios = _proprietarios.asStateFlow()
 
     private val _pastNeighborhoods =
         MutableStateFlow<ImmutableList<String>>(persistentListOf())
@@ -67,7 +67,7 @@ class PropertyRegistrationViewModel(
         if (propertyId != null) getPropertyToEdit(propertyId)
         else _draftFormUiState.update { PropertyDraftFormUiState.Loaded.Empty }
 
-        watchPropertyOwners()
+        watchProprietarios()
         getPastNeighborhoods()
 
         isInitialized = true
@@ -88,14 +88,14 @@ class PropertyRegistrationViewModel(
         }
     }
 
-    private fun watchPropertyOwners() {
+    private fun watchProprietarios() {
         viewModelScope.launch {
-            propertyOwnerQueryRepository.watchAll().collectLatest { result ->
+            proprietarioQueryRepository.watchAll().collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { storedOwners ->
                         val states = storedOwners.map { it.toUiState() }.toPersistentList()
-                        _propertyOwners.update { states }
+                        _proprietarios.update { states }
                     }
             }
         }

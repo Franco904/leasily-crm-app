@@ -9,7 +9,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class PropertyReadModel(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val owner: PropertyOwnerReadModel?,
+    val owner: ProprietarioReadModel?,
     val type: PropertyType?,
     val neighborhood: String?,
     val streetAddress: String?,
@@ -41,7 +41,7 @@ data class PropertyReadModel(
     companion object {
         fun create(
             propertyRaw: PropertyRawReadModel?,
-            owner: PropertyOwnerReadModel?,
+            owner: ProprietarioReadModel?,
         ) = PropertyReadModel(
             id = propertyRaw?.id,
             createDateTime = propertyRaw?.createDateTime,
