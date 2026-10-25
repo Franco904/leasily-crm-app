@@ -32,7 +32,9 @@ abstract class ProprietarioWriteDataSource {
         val proprietarioId = upsert(proprietario.toProprietarioOrm())
             .let { generatedId -> proprietario.id ?: generatedId }
 
-        proprietario.files.forEach { upsert(it.toProprietarioFileOrm(proprietarioId)) }
+        proprietario.files.forEach {
+            upsert(it.toProprietarioFileOrm(proprietarioId))
+        }
     }
 
     @Query(
