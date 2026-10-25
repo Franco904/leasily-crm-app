@@ -2,13 +2,14 @@ package com.fstengineering.leasilycrm.proprietarioDetails.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.ProprietarioSharedCommandRepository
+import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.proprietarioDetails.application.repositories.ProprietarioQueryRepository
+import com.fstengineering.leasilycrm.proprietarioDetails.infra.dataSources.ProprietarioDetailsReadDataSource
 import com.fstengineering.leasilycrm.proprietarioDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.proprietarioDetails.presentation.models.ProprietarioUiState
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,47 +19,45 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProprietarioDetailsViewModel(
-    private val proprietarioQueryRepository: ProprietarioQueryRepository,
-    private val proprietarioSharedCommandRepository: ProprietarioSharedCommandRepository,
+    route: Destinations.ProprietarioDetails,
+    private val proprietarioDetailsReadDataSource: ProprietarioDetailsReadDataSource,
+    private val proprietarioWriteDataSource: ProprietarioWriteDataSource,
 ) : ViewModel() {
-    private var isInitialized = false
+    private val proprietarioId = route.proprietarioId
 
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _proprietario =
+    private val _uiState =
         MutableStateFlow<ProprietarioUiState>(ProprietarioUiState.Loading)
-    val proprietario = _proprietario.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
     private var watchProprietarioJob: Job? = null
+    private var isLoaded = false
 
-    fun init(proprietarioId: Long) {
-        if (isInitialized) return
+    fun init() {
+        if (isLoaded) return
+        isLoaded = true
 
-        watchProprietario(proprietarioId = proprietarioId)
-
-        isInitialized = true
-    }
-
-    private fun watchProprietario(proprietarioId: Long) {
         watchProprietarioJob = viewModelScope.launch {
-            proprietarioQueryRepository.watchById(proprietarioId).collect { result ->
+            proprietarioDetailsReadDataSource.watchProprietario(proprietarioId).collect { result ->
                 result
-                    .onError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
-                    .onSuccess { proprietario ->
-                        _proprietario.update { proprietario.toUiState() }
+                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onSuccess { readModel ->
+                        readModel ?: return@onSuccess
+                        _uiState.update { readModel.toUiState() }
                     }
             }
         }
     }
 
-    fun deleteProprietario(proprietarioId: Long) {
+    fun deleteProprietario() {
         watchProprietarioJob?.cancel()
 
         viewModelScope.launch {
-            proprietarioSharedCommandRepository.delete(id = proprietarioId)
-                .onError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
-                .onSuccess { _uiEvents.send(UiEvent.ProprietarioDeleteSuccess) }
+            proprietarioWriteDataSource.delete(proprietarioId = proprietarioId)
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onSuccess { _uiEvents.trySend(UiEvent.ProprietarioDeleteSuccess) }
         }
     }
 

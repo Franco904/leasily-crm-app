@@ -34,10 +34,9 @@ import com.fstengineering.leasilycrm.proprietarioDetails.presentation.models.Pro
 
 @Composable
 fun ProprietarioDetailsScreen(
-    proprietarioId: Long,
     viewModel: ProprietarioDetailsViewModel,
     onBack: () -> Unit,
-    onEditProprietario: (Long) -> Unit,
+    onEditProprietario: () -> Unit,
     onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -46,13 +45,13 @@ fun ProprietarioDetailsScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val proprietario by viewModel.proprietario.collectAsStateWithLifecycle()
+    val proprietario by viewModel.uiState.collectAsStateWithLifecycle()
 
     var mustShowConfirmDeleteDialog by remember { mutableStateOf(false) }
     var mustShowNoAppToShowFileContentDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.init(proprietarioId = proprietarioId)
+        viewModel.init()
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
@@ -81,7 +80,7 @@ fun ProprietarioDetailsScreen(
             Column {
                 ProprietarioDetailsTopAppBar(
                     onBack = onBack,
-                    onEditProprietario = { onEditProprietario(proprietarioId) },
+                    onEditProprietario = onEditProprietario,
                     onDeleteProprietario = { mustShowConfirmDeleteDialog = true },
                 )
                 HorizontalDivider()
@@ -114,7 +113,7 @@ fun ProprietarioDetailsScreen(
         if (mustShowConfirmDeleteDialog) {
             ConfirmDeleteProprietarioDialog(
                 onConfirmDelete = {
-                    viewModel.deleteProprietario(proprietarioId)
+                    viewModel.deleteProprietario()
 
                     mustShowConfirmDeleteDialog = false
                     onBack()

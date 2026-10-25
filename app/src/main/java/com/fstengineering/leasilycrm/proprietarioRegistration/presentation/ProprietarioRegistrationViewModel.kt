@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.proprietarioRegistration.presentation
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
@@ -11,8 +12,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.repositories.ProprietarioQueryRepository
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.useCases.WriteProprietarioUseCase
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers.toCommandModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioDraftFormUiState
@@ -30,13 +31,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProprietarioRegistrationViewModel(
+    private val route: Destinations.ProprietarioRegistration,
     private val writeProprietario: WriteProprietarioUseCase,
-    private val proprietarioQueryRepository: ProprietarioQueryRepository,
+    private val proprietarioRegistrationReadDataSource: ProprietarioRegistrationReadDataSource,
     private val sharedStorageDataSource: SharedStorageDataSource,
 ) : ViewModel() {
-    private var isInitialized = false
+    val isEditing: Boolean = route.proprietarioId != null
 
-    private val _uiEvents = Channel<UiEvent>()
+    private var isLoaded = false
+
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _draftFormUiState =
@@ -48,21 +52,21 @@ class ProprietarioRegistrationViewModel(
 
     private var formToEdit: ProprietarioDraftFormUiState? = null
 
-    fun init(proprietarioId: Long?) {
-        if (isInitialized) return
+    fun init() {
+        if (isLoaded) return
+        isLoaded = true
 
-        if (proprietarioId != null) getProprietarioToEdit(proprietarioId)
-        else _draftFormUiState.update { ProprietarioDraftFormUiState.Loaded.Empty }
+        val proprietarioId = route.proprietarioId
+        if (proprietarioId == null) {
+            _draftFormUiState.update { ProprietarioDraftFormUiState.Loaded.Empty }
+            return
+        }
 
-        isInitialized = true
-    }
-
-    private fun getProprietarioToEdit(proprietarioId: Long) {
         viewModelScope.launch {
-            proprietarioQueryRepository.getById(proprietarioId)
+            proprietarioRegistrationReadDataSource.getProprietario(proprietarioId)
                 .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                .onSuccess { storedOwner ->
-                    val draftForm = storedOwner.toUiState()
+                .onSuccess { readModel ->
+                    val draftForm = readModel.toUiState()
 
                     _draftFormUiState.update { draftForm }
                     formToEdit = draftForm

@@ -47,7 +47,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProprietarioRegistrationScreen(
-    proprietarioId: Long?,
     viewModel: ProprietarioRegistrationViewModel,
     onBack: () -> Unit,
     onUiEvent: (UiEvent) -> Unit,
@@ -85,7 +84,7 @@ fun ProprietarioRegistrationScreen(
     )
 
     LaunchedEffect(Unit) {
-        viewModel.init(proprietarioId = proprietarioId)
+        viewModel.init()
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
@@ -137,7 +136,7 @@ fun ProprietarioRegistrationScreen(
         topBar = {
             Column {
                 ProprietarioRegistrationTopAppBar(
-                    isEditing = proprietarioId != null,
+                    isEditing = viewModel.isEditing,
                     onBack = viewModel::onExit,
                     onSaveProprietario = viewModel::saveProprietario,
                 )
@@ -174,7 +173,7 @@ fun ProprietarioRegistrationScreen(
 
         if (mustShowConfirmLeaveRegistrationDialog) {
             ConfirmLeaveRegistrationDialog(
-                isEditing = proprietarioId != null,
+                isEditing = viewModel.isEditing,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
                     onBack()

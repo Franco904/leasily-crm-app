@@ -404,11 +404,8 @@ fun NavGraphBuilder.destinations(
         )
     }
 
-    composable<Destinations.ProprietarioRegistration> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.ProprietarioRegistration>()
-
+    composable<Destinations.ProprietarioRegistration> {
         ProprietarioRegistrationScreen(
-            proprietarioId = args.proprietarioId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onUiEvent = onUiEvent,
@@ -419,11 +416,10 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.ProprietarioDetails>()
 
         ProprietarioDetailsScreen(
-            proprietarioId = args.proprietarioId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
-            onEditProprietario = { proprietarioId ->
-                navController.navigate(Destinations.ProprietarioRegistration(proprietarioId))
+            onEditProprietario = {
+                navController.navigate(Destinations.ProprietarioRegistration(args.proprietarioId))
             },
             onUiEvent = onUiEvent,
         )

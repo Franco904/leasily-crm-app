@@ -49,8 +49,10 @@ import com.fstengineering.leasilycrm.propertyDetails.di.propertyDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationRepositoryModule
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationUseCaseModule
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationViewModelModule
+import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsDataSourceModule
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsRepositoryModule
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsViewModelModule
+import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationDataSourceModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationRepositoryModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationUseCaseModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationViewModelModule
@@ -142,11 +144,13 @@ fun Application.configureDependencyInjection() {
             proprietariosViewModelModule,
 
             // Feature: proprietarioRegistration
+            proprietarioRegistrationDataSourceModule,
             proprietarioRegistrationRepositoryModule,
             proprietarioRegistrationUseCaseModule,
             proprietarioRegistrationViewModelModule,
 
             // Feature: proprietarioDetails
+            proprietarioDetailsDataSourceModule,
             proprietarioDetailsRepositoryModule,
             proprietarioDetailsViewModelModule,
 
