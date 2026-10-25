@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers
 
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ProprietarioFileRegistrationProjection
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ProprietarioRegistrationProjection
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.models.ProprietarioFileRegistrationProjection
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.models.ProprietarioRegistrationProjection
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioFileReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import kotlinx.collections.immutable.toPersistentList

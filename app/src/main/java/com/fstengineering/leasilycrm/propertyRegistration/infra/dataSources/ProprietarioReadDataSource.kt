@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ProprietarioNameProjection
+import com.fstengineering.leasilycrm.propertyRegistration.infra.models.ProprietarioNameProjection
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.ProprietarioReadModel
@@ -28,9 +28,22 @@ abstract class ProprietarioReadDataSource {
         ProprietarioReadModel(id = proprietarioId, name = findProprietarioName(proprietarioId))
     }
 
-    @Query("SELECT id, name FROM property_owners WHERE is_deleted = 0 ORDER BY name")
+    @Query(
+        """
+        SELECT id, name
+        FROM property_owners
+        WHERE is_deleted = 0
+        ORDER BY name
+        """
+    )
     protected abstract fun observeProprietarios(): Flow<List<ProprietarioNameProjection>>
 
-    @Query("SELECT name FROM property_owners WHERE id = :proprietarioId AND is_deleted = 0")
+    @Query(
+        """
+        SELECT name
+        FROM property_owners
+        WHERE id = :proprietarioId AND is_deleted = 0
+        """
+    )
     protected abstract suspend fun findProprietarioName(proprietarioId: Long): String
 }

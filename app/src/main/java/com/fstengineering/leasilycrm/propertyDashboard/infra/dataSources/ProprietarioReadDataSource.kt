@@ -17,6 +17,12 @@ abstract class ProprietarioReadDataSource {
         ProprietarioReadModel(id = proprietarioId, name = findProprietarioName(proprietarioId))
     }
 
-    @Query("SELECT name FROM property_owners WHERE id = :proprietarioId AND is_deleted = 0")
+    @Query(
+        """
+        SELECT name
+        FROM property_owners
+        WHERE id = :proprietarioId AND is_deleted = 0
+        """
+    )
     protected abstract suspend fun findProprietarioName(proprietarioId: Long): String
 }

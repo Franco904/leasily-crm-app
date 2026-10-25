@@ -35,7 +35,13 @@ abstract class ProprietarioWriteDataSource {
         proprietario.files.forEach { upsert(it.toProprietarioFileOrm(proprietarioId)) }
     }
 
-    @Query("UPDATE property_owners SET is_deleted = 1 WHERE id = :proprietarioId")
+    @Query(
+        """
+        UPDATE property_owners
+        SET is_deleted = 1
+        WHERE id = :proprietarioId
+        """
+    )
     protected abstract suspend fun markAsDeleted(proprietarioId: Long)
 
     @Upsert

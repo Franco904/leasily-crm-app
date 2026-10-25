@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.proprietarios.infra.mappers
 
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ProprietarioNameProjection
+import com.fstengineering.leasilycrm.proprietarios.infra.models.ProprietarioNameProjection
 import com.fstengineering.leasilycrm.proprietarios.application.models.ProprietarioReadModel
 
 fun ProprietarioNameProjection.toProprietarioReadModel(): ProprietarioReadModel =

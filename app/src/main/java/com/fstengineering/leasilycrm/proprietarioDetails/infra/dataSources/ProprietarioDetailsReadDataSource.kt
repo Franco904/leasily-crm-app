@@ -5,7 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ProprietarioDetailsProjection
+import com.fstengineering.leasilycrm.proprietarioDetails.infra.models.ProprietarioDetailsProjection
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.proprietarioDetails.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioDetails.infra.mappers.toProprietarioReadModel
@@ -24,6 +24,12 @@ abstract class ProprietarioDetailsReadDataSource {
             .asDatabaseFlowResult()
 
     @Transaction
-    @Query("SELECT id, name, phone, email, payment_key FROM property_owners WHERE id = :proprietarioId AND is_deleted = 0")
+    @Query(
+        """
+        SELECT id, name, phone, email, payment_key
+        FROM property_owners
+        WHERE id = :proprietarioId AND is_deleted = 0
+        """
+    )
     protected abstract fun observeProprietario(proprietarioId: Long): Flow<ProprietarioDetailsProjection?>
 }
