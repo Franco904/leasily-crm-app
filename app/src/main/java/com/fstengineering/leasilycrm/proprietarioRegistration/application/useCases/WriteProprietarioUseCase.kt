@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.mappers.toProprietario
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.commands.ProprietarioCommandModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioCommandModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 
 class WriteProprietarioUseCase(

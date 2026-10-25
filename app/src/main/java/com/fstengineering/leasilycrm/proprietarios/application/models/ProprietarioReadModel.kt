@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.proprietarios.application.models.dtos
+package com.fstengineering.leasilycrm.proprietarios.application.models
 
 data class ProprietarioReadModel(
     val id: Long,

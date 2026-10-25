@@ -42,7 +42,7 @@ class ProprietariosViewModel(
         viewModelScope.launch {
             proprietariosReadDataSource.watchProprietarios().collect { result ->
                 result
-                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                     .onSuccess { readModels ->
                         val proprietarios =
                             readModels.map { it.toProprietarioUiState() }.toPersistentList()
@@ -61,9 +61,9 @@ class ProprietariosViewModel(
 
         viewModelScope.launch {
             proprietarioWriteDataSource.delete(proprietarioId = proprietarioId)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                 .onSuccess {
-                    _uiEvents.trySend(UiEvent.ProprietarioDeleteSuccess)
+                    _uiEvents.trySend(UiEvent.ShowDeleteSuccessSnackbar)
 
                     onDeleteProprietario(proprietario = null)
                 }
@@ -77,7 +77,7 @@ class ProprietariosViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError) : UiEvent
-        data object ProprietarioDeleteSuccess : UiEvent
+        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
+        data object ShowDeleteSuccessSnackbar : UiEvent
     }
 }

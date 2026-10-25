@@ -1,12 +1,11 @@
 package com.fstengineering.leasilycrm.proprietarioRegistration.presentation
 
-import android.net.Uri
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.dtos.ProprietarioFileReadModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.dtos.ProprietarioReadModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioFileReadModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.useCases.WriteProprietarioUseCase
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioDraftFormUiState
@@ -16,15 +15,10 @@ import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -36,16 +30,6 @@ class ProprietarioRegistrationViewModelTest {
     private val proprietarioRegistrationReadDataSourceMock: ProprietarioRegistrationReadDataSource =
         mockk(relaxed = true)
     private val sharedStorageDataSourceMock: SharedStorageDataSource = mockk(relaxed = true)
-
-    @BeforeAll
-    fun setUpAll() {
-        mockkStatic(Uri::class)
-    }
-
-    @AfterAll
-    fun tearDownAll() {
-        unmockkStatic(Uri::class)
-    }
 
     @BeforeEach
     fun setUp() {
@@ -61,8 +45,6 @@ class ProprietarioRegistrationViewModelTest {
                 val proprietarioId = faker.random.nextLong(bound = 9999)
                 val proprietario = createProprietarioReadModel(id = proprietarioId)
                 val file = proprietario.files.single()
-                val fileUri: Uri = mockk()
-                every { Uri.parse(file.uriString) } returns fileUri
                 coEvery { proprietarioRegistrationReadDataSourceMock.getProprietario(proprietarioId) } returns
                     AppResult.Success(proprietario)
                 val sut = createSut(route = Destinations.ProprietarioRegistration(proprietarioId))
@@ -80,7 +62,7 @@ class ProprietarioRegistrationViewModelTest {
                         email = proprietario.email,
                         paymentKey = proprietario.paymentKey,
                         files = persistentListOf(
-                            ProprietarioFileUiState(id = file.id, uri = fileUri, name = file.name),
+                            ProprietarioFileUiState(id = file.id, uriString = file.uriString, name = file.name),
                         ),
                     )
                 }

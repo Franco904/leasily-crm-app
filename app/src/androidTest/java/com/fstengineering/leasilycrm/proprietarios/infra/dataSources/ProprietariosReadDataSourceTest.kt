@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
-import com.fstengineering.leasilycrm.proprietarios.application.models.dtos.ProprietarioReadModel
+import com.fstengineering.leasilycrm.proprietarios.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import kotlinx.collections.immutable.persistentListOf

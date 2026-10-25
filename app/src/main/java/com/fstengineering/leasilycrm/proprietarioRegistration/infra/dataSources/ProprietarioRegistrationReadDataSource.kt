@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ProprietarioCompound
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.dtos.ProprietarioReadModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toProprietarioReadModel
 
 /** Leitura do Proprietário a editar no cadastro. */

@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers
 
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.commands.ProprietarioCommandModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.commands.ProprietarioFileCommandModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioCommandModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioFileCommandModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioDraftFormUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioFileUiState
 import kotlinx.collections.immutable.toPersistentList
@@ -21,7 +21,7 @@ fun ProprietarioDraftFormUiState.Loaded.toProprietarioCommandModel(): Proprietar
 private fun ProprietarioFileUiState.toProprietarioFileCommandModel(): ProprietarioFileCommandModel {
     return ProprietarioFileCommandModel(
         id = id,
-        uriString = uri.toString(),
+        uriString = uriString,
         name = name,
     )
 }

@@ -1,8 +1,7 @@
 package com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers
 
-import androidx.core.net.toUri
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.dtos.ProprietarioFileReadModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.dtos.ProprietarioReadModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioFileReadModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioDraftFormUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioFileUiState
 import kotlinx.collections.immutable.toPersistentList
@@ -20,7 +19,7 @@ fun ProprietarioReadModel.toProprietarioDraftFormUiState() = ProprietarioDraftFo
 private fun ProprietarioFileReadModel.toProprietarioFileUiState(): ProprietarioFileUiState {
     return ProprietarioFileUiState(
         id = id,
-        uri = uriString.toUri(),
+        uriString = uriString,
         name = name,
     )
 }

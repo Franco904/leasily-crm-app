@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.proprietarioRegistration.presentation
 
-import androidx.core.net.toUri
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.Destinations
@@ -64,7 +64,7 @@ class ProprietarioRegistrationViewModel(
 
         viewModelScope.launch {
             proprietarioRegistrationReadDataSource.getProprietario(proprietarioId)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                 .onSuccess { readModel ->
                     val draftForm = readModel.toProprietarioDraftFormUiState()
 
@@ -101,7 +101,7 @@ class ProprietarioRegistrationViewModel(
             val fileName = sharedStorageDataSource.getFileName(contentUriString)
 
             val fileDraft = ProprietarioFileUiState(
-                uri = contentUriString.toUri(),
+                uriString = contentUriString,
                 name = fileName ?: defaultFileName,
             )
 
@@ -113,7 +113,7 @@ class ProprietarioRegistrationViewModel(
         val form = (draftFormUiState.value as? ProprietarioDraftFormUiState.Loaded) ?: return
 
         if (formToEdit != null && form == formToEdit) {
-            _uiEvents.trySend(UiEvent.ProprietarioEditSuccess(messageId = R.string.no_data_changed_success_message))
+            _uiEvents.trySend(UiEvent.CloseScreenWithSnackbar(messageId = R.string.no_data_changed_success_message))
             return
         }
 
@@ -121,7 +121,7 @@ class ProprietarioRegistrationViewModel(
             writeProprietario(form.toProprietarioCommandModel())
                 .onError { error ->
                     when (error) {
-                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                        is ApplicationError -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(error))
                         is ValidationErrors -> setFieldErrors(error.errors)
                         is DomainError -> setFieldErrors(listOf(error))
                     }
@@ -130,8 +130,8 @@ class ProprietarioRegistrationViewModel(
                 }
 
             val saveEvent =
-                if (formToEdit != null) UiEvent.ProprietarioEditSuccess(messageId = R.string.edit_property_owner_success_message)
-                else UiEvent.ProprietarioCreateSuccess
+                if (formToEdit != null) UiEvent.CloseScreenWithSnackbar(messageId = R.string.edit_property_owner_success_message)
+                else UiEvent.CloseScreenWithSnackbar(messageId = R.string.create_property_owner_success_message)
 
             _uiEvents.trySend(saveEvent)
         }
@@ -169,7 +169,7 @@ class ProprietarioRegistrationViewModel(
             else -> form.isAnyFormFieldInitialized
         }
 
-        _uiEvents.trySend(UiEvent.Exit(needConfirmation))
+        _uiEvents.trySend(if (needConfirmation) UiEvent.ShowConfirmLeaveDialog else UiEvent.CloseScreen)
     }
 
     override fun onCleared() {
@@ -179,14 +179,14 @@ class ProprietarioRegistrationViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError) : UiEvent
+        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
 
         data class ScrollToField(val field: ProprietarioField) : UiEvent
 
-        data object ProprietarioCreateSuccess : UiEvent
+        data class CloseScreenWithSnackbar(@StringRes val messageId: Int) : UiEvent
 
-        data class ProprietarioEditSuccess(val messageId: Int) : UiEvent
+        data object ShowConfirmLeaveDialog : UiEvent
 
-        data class Exit(val needConfirmation: Boolean) : UiEvent
+        data object CloseScreen : UiEvent
     }
 }

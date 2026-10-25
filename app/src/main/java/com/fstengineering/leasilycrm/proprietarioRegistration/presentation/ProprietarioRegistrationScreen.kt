@@ -34,11 +34,11 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationViewModel.UiEvent.BottomSheetError
-import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationViewModel.UiEvent.Exit
-import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationViewModel.UiEvent.ProprietarioCreateSuccess
-import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationViewModel.UiEvent.ProprietarioEditSuccess
+import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationViewModel.UiEvent.CloseScreen
+import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationViewModel.UiEvent.CloseScreenWithSnackbar
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationViewModel.UiEvent.ScrollToField
+import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationViewModel.UiEvent.ShowConfirmLeaveDialog
+import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationViewModel.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.composables.ProprietarioRegistrationFormSection
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.composables.ProprietarioRegistrationTopAppBar
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioDraftFormUiState
@@ -94,7 +94,7 @@ fun ProprietarioRegistrationScreen(
     LaunchedEffect(viewModel, lifecycle) {
         viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
-                is BottomSheetError -> {
+                is ShowErrorBottomSheet -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
@@ -105,24 +105,19 @@ fun ProprietarioRegistrationScreen(
                     scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
-                is ProprietarioCreateSuccess -> {
-                    onBack()
-
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_property_owner_success_message))
-                }
-
-                is ProprietarioEditSuccess -> {
+                is CloseScreenWithSnackbar -> {
                     onBack()
 
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
 
-                is Exit -> {
-                    if (uiEvent.needConfirmation) mustShowConfirmLeaveRegistrationDialog = true
-                    else {
-                        mustShowConfirmLeaveRegistrationDialog = false
-                        onBack()
-                    }
+                is ShowConfirmLeaveDialog -> {
+                    mustShowConfirmLeaveRegistrationDialog = true
+                }
+
+                is CloseScreen -> {
+                    mustShowConfirmLeaveRegistrationDialog = false
+                    onBack()
                 }
             }
         }

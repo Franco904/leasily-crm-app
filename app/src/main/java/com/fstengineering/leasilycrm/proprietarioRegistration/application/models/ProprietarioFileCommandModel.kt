@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.proprietarioRegistration.application.models.commands
+package com.fstengineering.leasilycrm.proprietarioRegistration.application.models
 
 data class ProprietarioFileCommandModel(
     val id: Long?,

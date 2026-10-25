@@ -83,7 +83,7 @@ class ProprietarioDetailsViewModelTest {
                 sut.deleteProprietario()
 
                 awaitItem() shouldBeEqualTo
-                    ProprietarioDetailsViewModel.UiEvent.ProprietarioDeleteSuccess
+                    ProprietarioDetailsViewModel.UiEvent.ShowDeleteSuccessSnackbar
             }
             coVerify { proprietarioWriteDataSourceMock.delete(proprietarioId) }
         }
@@ -100,7 +100,7 @@ class ProprietarioDetailsViewModelTest {
                     sut.deleteProprietario()
 
                     awaitItem() shouldBeEqualTo
-                        ProprietarioDetailsViewModel.UiEvent.BottomSheetError(ApplicationError.Unknown)
+                        ProprietarioDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
             }
     }

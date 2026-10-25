@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.proprietarioRegistration.application.models.dtos
+package com.fstengineering.leasilycrm.proprietarioRegistration.application.models
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import kotlinx.collections.immutable.ImmutableList

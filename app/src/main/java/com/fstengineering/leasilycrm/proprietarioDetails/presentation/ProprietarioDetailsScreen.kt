@@ -61,14 +61,14 @@ fun ProprietarioDetailsScreen(
     LaunchedEffect(viewModel, lifecycle) {
         viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
-                is ProprietarioDetailsViewModel.UiEvent.BottomSheetError -> {
+                is ProprietarioDetailsViewModel.UiEvent.ShowErrorBottomSheet -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is ProprietarioDetailsViewModel.UiEvent.ProprietarioDeleteSuccess -> {
+                is ProprietarioDetailsViewModel.UiEvent.ShowDeleteSuccessSnackbar -> {
                     onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_owner_success_message))
                 }
             }

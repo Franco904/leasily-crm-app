@@ -4,8 +4,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.commands.ProprietarioCommandModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.commands.ProprietarioFileCommandModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioCommandModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioFileCommandModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
 import kotlinx.collections.immutable.toPersistentList

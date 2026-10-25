@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.dtos.ProprietarioFileReadModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.dtos.ProprietarioReadModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioFileReadModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
