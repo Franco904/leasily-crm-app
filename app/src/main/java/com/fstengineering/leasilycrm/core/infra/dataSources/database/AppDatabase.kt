@@ -19,8 +19,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTe
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyCharacteristicPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyFileDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ProprietarioDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ProprietarioFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyPriceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
@@ -41,6 +39,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.St
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
+import com.fstengineering.leasilycrm.propertyDashboard.infra.dataSources.ProprietarioReadDataSource as PropertyDashboardProprietarioReadDataSource
+import com.fstengineering.leasilycrm.propertyRegistration.infra.dataSources.ProprietarioReadDataSource as PropertyRegistrationProprietarioReadDataSource
 import com.fstengineering.leasilycrm.proprietarioDetails.infra.dataSources.ProprietarioDetailsReadDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
@@ -98,10 +98,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun propertyFileDao(): PropertyFileDao
 
-    abstract fun proprietarioDao(): ProprietarioDao
-
-    abstract fun proprietarioFileDao(): ProprietarioFileDao
-
     abstract fun proprietarioWriteDataSource(): ProprietarioWriteDataSource
 
     abstract fun proprietarioRegistrationReadDataSource(): ProprietarioRegistrationReadDataSource
@@ -109,6 +105,10 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun proprietarioDetailsReadDataSource(): ProprietarioDetailsReadDataSource
 
     abstract fun proprietariosReadDataSource(): ProprietariosReadDataSource
+
+    abstract fun propertyRegistrationProprietarioReadDataSource(): PropertyRegistrationProprietarioReadDataSource
+
+    abstract fun propertyDashboardProprietarioReadDataSource(): PropertyDashboardProprietarioReadDataSource
 
     abstract fun propertyPriceDao(): PropertyPriceDao
 

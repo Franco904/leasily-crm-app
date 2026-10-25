@@ -7,17 +7,17 @@ import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.model
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioFileUiState
 import kotlinx.collections.immutable.toPersistentList
 
-fun ProprietarioReadModel.toUiState() = ProprietarioDraftFormUiState.Loaded(
+fun ProprietarioReadModel.toProprietarioDraftFormUiState() = ProprietarioDraftFormUiState.Loaded(
     id = id,
     createDateTime = createDateTime,
     name = name,
     phone = phone,
     email = email,
     paymentKey = paymentKey,
-    files = files.map { it.toUiState() }.toPersistentList(),
+    files = files.map { it.toProprietarioFileUiState() }.toPersistentList(),
 )
 
-fun ProprietarioFileReadModel.toUiState(): ProprietarioFileUiState {
+private fun ProprietarioFileReadModel.toProprietarioFileUiState(): ProprietarioFileUiState {
     return ProprietarioFileUiState(
         id = id,
         uri = uriString.toUri(),

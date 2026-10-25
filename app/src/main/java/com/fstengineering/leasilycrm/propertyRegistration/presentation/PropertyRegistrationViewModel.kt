@@ -12,10 +12,10 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.queries.PropertyArgs
-import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.ProprietarioQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.useCases.ReadPropertyUseCase
 import com.fstengineering.leasilycrm.propertyRegistration.application.useCases.WritePropertyUseCase
+import com.fstengineering.leasilycrm.propertyRegistration.infra.dataSources.ProprietarioReadDataSource
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.mappers.toCommandModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
@@ -35,7 +35,7 @@ class PropertyRegistrationViewModel(
     private val readProperty: ReadPropertyUseCase,
     private val writeProperty: WritePropertyUseCase,
     private val propertyQueryRepository: PropertyQueryRepository,
-    private val proprietarioQueryRepository: ProprietarioQueryRepository,
+    private val proprietarioReadDataSource: ProprietarioReadDataSource,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -90,7 +90,7 @@ class PropertyRegistrationViewModel(
 
     private fun watchProprietarios() {
         viewModelScope.launch {
-            proprietarioQueryRepository.watchAll().collectLatest { result ->
+            proprietarioReadDataSource.watchProprietarios().collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { storedOwners ->

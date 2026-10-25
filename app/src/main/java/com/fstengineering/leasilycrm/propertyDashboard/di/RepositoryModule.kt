@@ -1,9 +1,7 @@
 package com.fstengineering.leasilycrm.propertyDashboard.di
 
-import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.ProprietarioQueryRepository
 import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.PropertyQueryRepository
 import com.fstengineering.leasilycrm.propertyDashboard.application.repositories.StayQueryRepository
-import com.fstengineering.leasilycrm.propertyDashboard.infra.repositories.ProprietarioQueryRepositoryImpl
 import com.fstengineering.leasilycrm.propertyDashboard.infra.repositories.PropertyQueryRepositoryImpl
 import com.fstengineering.leasilycrm.propertyDashboard.infra.repositories.StayQueryRepositoryImpl
 import org.koin.dsl.module
@@ -11,10 +9,6 @@ import org.koin.dsl.module
 val propertyDashboardRepositoryModule = module {
     single<StayQueryRepository> {
         StayQueryRepositoryImpl(databaseDataSource = get())
-    }
-
-    single<ProprietarioQueryRepository> {
-        ProprietarioQueryRepositoryImpl(databaseDataSource = get())
     }
 
     single<PropertyQueryRepository> {

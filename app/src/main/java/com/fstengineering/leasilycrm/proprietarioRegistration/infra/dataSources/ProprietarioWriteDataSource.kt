@@ -10,7 +10,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Pr
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioOrm
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
-import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toLocalDataModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toProprietarioFileOrm
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toProprietarioOrm
 
 /** Escrita do cadastro de Proprietário. */
 @Dao
@@ -28,10 +29,10 @@ abstract class ProprietarioWriteDataSource {
 
     @Transaction
     protected open suspend fun saveInTransaction(proprietario: Proprietario) {
-        val proprietarioId = upsert(proprietario.toLocalDataModel())
+        val proprietarioId = upsert(proprietario.toProprietarioOrm())
             .let { generatedId -> proprietario.id ?: generatedId }
 
-        proprietario.files.forEach { upsert(it.toLocalDataModel(proprietarioId)) }
+        proprietario.files.forEach { upsert(it.toProprietarioFileOrm(proprietarioId)) }
     }
 
     @Query("UPDATE property_owners SET is_deleted = 1 WHERE id = :proprietarioId")

@@ -7,7 +7,7 @@ val propertyDashboardUseCaseModule = module {
     factory {
         WatchPropertyUseCase(
             propertyQueryRepository = get(),
-            proprietarioQueryRepository = get(),
+            proprietarioReadDataSource = get(),
             stayQueryRepository = get(),
             leadTenantSharedQueryRepository = get(),
             dateProvider = get(),

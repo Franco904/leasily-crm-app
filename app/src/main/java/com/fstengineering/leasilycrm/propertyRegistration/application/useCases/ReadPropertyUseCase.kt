@@ -5,12 +5,12 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.queries.PropertyArgs
-import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.ProprietarioQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyQueryRepository
+import com.fstengineering.leasilycrm.propertyRegistration.infra.dataSources.ProprietarioReadDataSource
 
 class ReadPropertyUseCase(
     private val propertyQueryRepository: PropertyQueryRepository,
-    private val proprietarioQueryRepository: ProprietarioQueryRepository,
+    private val proprietarioReadDataSource: ProprietarioReadDataSource,
 ) {
     suspend operator fun invoke(
         args: PropertyArgs,
@@ -21,7 +21,7 @@ class ReadPropertyUseCase(
                 onSuccess = { storedProperty -> storedProperty },
             )
 
-        val proprietario = proprietarioQueryRepository.getById(propertyRaw.ownerId)
+        val proprietario = proprietarioReadDataSource.getProprietario(propertyRaw.ownerId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
                 onSuccess = { storedProprietario -> storedProprietario },

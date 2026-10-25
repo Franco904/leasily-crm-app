@@ -7,8 +7,8 @@ import org.koin.dsl.module
 val proprietariosViewModelModule = module {
     viewModel {
         ProprietariosViewModel(
-            proprietarioQueryRepository = get(),
-            proprietarioSharedCommandRepository = get(),
+            proprietariosReadDataSource = get(),
+            proprietarioWriteDataSource = get(),
         )
     }
 }

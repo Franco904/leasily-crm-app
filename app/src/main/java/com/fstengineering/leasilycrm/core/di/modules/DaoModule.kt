@@ -11,8 +11,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTe
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyCharacteristicPropertyCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyFileDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ProprietarioDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ProprietarioFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyPriceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
@@ -37,8 +35,6 @@ val daoModule = module {
         get<AppDatabase>().propertyCharacteristicPropertyCrossRefDao()
     }
     single<PropertyFileDao> { get<AppDatabase>().propertyFileDao() }
-    single<ProprietarioDao> { get<AppDatabase>().proprietarioDao() }
-    single<ProprietarioFileDao> { get<AppDatabase>().proprietarioFileDao() }
     single<PropertyPriceDao> { get<AppDatabase>().propertyPriceDao() }
     single<StayDao> { get<AppDatabase>().stayDao() }
     single<StayFileDao> { get<AppDatabase>().stayFileDao() }

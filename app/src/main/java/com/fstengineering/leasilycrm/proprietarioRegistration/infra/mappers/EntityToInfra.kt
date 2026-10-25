@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
 
-fun Proprietario.toLocalDataModel(): ProprietarioOrm {
+fun Proprietario.toProprietarioOrm(): ProprietarioOrm {
     return ProprietarioOrm(
         id = id,
         createDateTime = createDateTime ?: AppDateTime.now(),
@@ -22,7 +22,7 @@ fun Proprietario.toLocalDataModel(): ProprietarioOrm {
     )
 }
 
-fun ProprietarioFile.toLocalDataModel(
+fun ProprietarioFile.toProprietarioFileOrm(
     proprietarioId: Long,
 ): ProprietarioFileOrm {
     return ProprietarioFileOrm(

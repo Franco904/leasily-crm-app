@@ -13,7 +13,7 @@ val propertyRegistrationViewModelModule = module {
             readProperty = get(),
             writeProperty = get(),
             propertyQueryRepository = get(),
-            proprietarioQueryRepository = get(),
+            proprietarioReadDataSource = get(),
         )
     }
 

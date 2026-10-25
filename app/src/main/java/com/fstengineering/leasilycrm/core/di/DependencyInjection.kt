@@ -41,6 +41,7 @@ import com.fstengineering.leasilycrm.profile.di.profileUseCaseModule
 import com.fstengineering.leasilycrm.profile.di.profileViewModelModule
 import com.fstengineering.leasilycrm.properties.di.propertiesRepositoryModule
 import com.fstengineering.leasilycrm.properties.di.propertiesViewModelModule
+import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardDataSourceModule
 import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardRepositoryModule
 import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardUseCaseModule
 import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardViewModelModule
@@ -50,14 +51,13 @@ import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationRep
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationUseCaseModule
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationViewModelModule
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsDataSourceModule
-import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsRepositoryModule
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsViewModelModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationDataSourceModule
-import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationRepositoryModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationUseCaseModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationViewModelModule
-import com.fstengineering.leasilycrm.proprietarios.di.proprietariosRepositoryModule
+import com.fstengineering.leasilycrm.proprietarios.di.proprietariosDataSourceModule
 import com.fstengineering.leasilycrm.proprietarios.di.proprietariosViewModelModule
+import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationDataSourceModule
 import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationRepositoryModule
 import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationUseCaseModule
 import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationViewModelModule
@@ -121,11 +121,13 @@ fun Application.configureDependencyInjection() {
             propertiesViewModelModule,
 
             // Feature: propertyRegistration
+            propertyRegistrationDataSourceModule,
             propertyRegistrationRepositoryModule,
             propertyRegistrationUseCaseModule,
             propertyRegistrationViewModelModule,
 
             // Feature: propertyDashboard
+            propertyDashboardDataSourceModule,
             propertyDashboardRepositoryModule,
             propertyDashboardUseCaseModule,
             propertyDashboardViewModelModule,
@@ -140,18 +142,16 @@ fun Application.configureDependencyInjection() {
             propertyOccupationViewModelModule,
 
             // Feature: proprietarios
-            proprietariosRepositoryModule,
+            proprietariosDataSourceModule,
             proprietariosViewModelModule,
 
             // Feature: proprietarioRegistration
             proprietarioRegistrationDataSourceModule,
-            proprietarioRegistrationRepositoryModule,
             proprietarioRegistrationUseCaseModule,
             proprietarioRegistrationViewModelModule,
 
             // Feature: proprietarioDetails
             proprietarioDetailsDataSourceModule,
-            proprietarioDetailsRepositoryModule,
             proprietarioDetailsViewModelModule,
 
             // Feature: leadTenants

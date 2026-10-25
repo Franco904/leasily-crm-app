@@ -59,7 +59,7 @@ fun PropertyCompound.toRawReadModel(): PropertyRawReadModel {
     )
 }
 
-fun ProprietarioOrm.toReadModel() = ProprietarioReadModel(
+fun ProprietarioOrm.toProprietarioReadModel() = ProprietarioReadModel(
     id = requireNotNull(id),
     name = name,
 )

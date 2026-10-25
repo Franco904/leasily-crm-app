@@ -5,6 +5,6 @@ import org.koin.dsl.module
 
 val proprietarioRegistrationUseCaseModule = module {
     factory {
-        WriteProprietarioUseCase(proprietarioCommandRepository = get())
+        WriteProprietarioUseCase(proprietarioWriteDataSource = get())
     }
 }

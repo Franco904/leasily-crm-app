@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Pr
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
 import kotlinx.collections.immutable.toPersistentList
 
-fun ProprietarioCommandModel.toEntity(): AppResult<Proprietario, ValidationErrors> {
+fun ProprietarioCommandModel.toProprietario(): AppResult<Proprietario, ValidationErrors> {
     val errors = mutableListOf<DomainError>()
 
     val parsed = Proprietario.parse(
@@ -20,7 +20,7 @@ fun ProprietarioCommandModel.toEntity(): AppResult<Proprietario, ValidationError
         phone = phone,
         email = email,
         paymentKey = paymentKey,
-        files = files.map { it.toEntity() }.toPersistentList(),
+        files = files.map { it.toProprietarioFile() }.toPersistentList(),
     )
         .fold(onError = { errors.addAll(0, it.errors); null }, onSuccess = { it })
 
@@ -29,7 +29,7 @@ fun ProprietarioCommandModel.toEntity(): AppResult<Proprietario, ValidationError
     return AppResult.Success(data = requireNotNull(parsed))
 }
 
-private fun ProprietarioFileCommandModel.toEntity() = ProprietarioFile(
+private fun ProprietarioFileCommandModel.toProprietarioFile() = ProprietarioFile(
     id = id,
     uriString = uriString,
     name = name,

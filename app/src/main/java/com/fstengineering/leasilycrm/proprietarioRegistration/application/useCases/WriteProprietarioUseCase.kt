@@ -3,19 +3,19 @@ package com.fstengineering.leasilycrm.proprietarioRegistration.application.useCa
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.mappers.toEntity
+import com.fstengineering.leasilycrm.proprietarioRegistration.application.mappers.toProprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.commands.ProprietarioCommandModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.repositories.ProprietarioCommandRepository
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 
 class WriteProprietarioUseCase(
-    private val proprietarioCommandRepository: ProprietarioCommandRepository,
+    private val proprietarioWriteDataSource: ProprietarioWriteDataSource,
 ) {
     suspend operator fun invoke(
         command: ProprietarioCommandModel,
     ): AppResult<Unit, BaseError> {
-        val proprietario = command.toEntity()
+        val proprietario = command.toProprietario()
             .fold(onError = { return AppResult.Error(error = it) }, onSuccess = { it })
 
-        return proprietarioCommandRepository.insertOrUpdate(proprietario)
+        return proprietarioWriteDataSource.save(proprietario)
     }
 }

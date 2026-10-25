@@ -1,11 +1,11 @@
 package com.fstengineering.leasilycrm.proprietarios.presentation
 
 import app.cash.turbine.test
-import com.fstengineering.leasilycrm.core.application.repositories.ProprietarioSharedCommandRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.presentation.models.ProprietarioUiState
-import com.fstengineering.leasilycrm.proprietarios.application.repositories.ProprietarioQueryRepository
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
+import com.fstengineering.leasilycrm.proprietarios.infra.dataSources.ProprietariosReadDataSource
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.clearAllMocks
@@ -22,13 +22,13 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ProprietariosViewModelTest {
-    private val proprietarioQueryRepositoryMock: ProprietarioQueryRepository = mockk(relaxed = true)
-    private val proprietarioSharedCommandRepositoryMock: ProprietarioSharedCommandRepository =
+    private val proprietariosReadDataSourceMock: ProprietariosReadDataSource = mockk(relaxed = true)
+    private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource =
         mockk(relaxed = true)
 
     private val sut = ProprietariosViewModel(
-        proprietarioQueryRepository = proprietarioQueryRepositoryMock,
-        proprietarioSharedCommandRepository = proprietarioSharedCommandRepositoryMock,
+        proprietariosReadDataSource = proprietariosReadDataSourceMock,
+        proprietarioWriteDataSource = proprietarioWriteDataSourceMock,
     )
 
     @BeforeEach
@@ -44,7 +44,7 @@ class ProprietariosViewModelTest {
             runTest {
                 val proprietario = createProprietarioUiState()
                 sut.onDeleteProprietario(proprietario)
-                coEvery { proprietarioSharedCommandRepositoryMock.delete(any()) } returns
+                coEvery { proprietarioWriteDataSourceMock.delete(any()) } returns
                     AppResult.Success(Unit)
 
                 sut.uiEvents.test {
@@ -53,7 +53,7 @@ class ProprietariosViewModelTest {
                     awaitItem() shouldBeEqualTo ProprietariosViewModel.UiEvent.ProprietarioDeleteSuccess
                 }
                 sut.proprietarioToDelete.value.shouldBeNull()
-                coVerify { proprietarioSharedCommandRepositoryMock.delete(proprietario.id) }
+                coVerify { proprietarioWriteDataSourceMock.delete(proprietario.id) }
             }
 
         @Test
@@ -61,7 +61,7 @@ class ProprietariosViewModelTest {
             runTest {
                 val proprietario = createProprietarioUiState()
                 sut.onDeleteProprietario(proprietario)
-                coEvery { proprietarioSharedCommandRepositoryMock.delete(any()) } returns
+                coEvery { proprietarioWriteDataSourceMock.delete(any()) } returns
                     AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
@@ -80,7 +80,7 @@ class ProprietariosViewModelTest {
 
                 sut.deleteProprietario()
 
-                coVerify(exactly = 0) { proprietarioSharedCommandRepositoryMock.delete(any()) }
+                coVerify(exactly = 0) { proprietarioWriteDataSourceMock.delete(any()) }
             }
     }
 

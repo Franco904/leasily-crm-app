@@ -12,8 +12,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.UserAnalyti
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyCharacteristicCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyFileDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.ProprietarioDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.ProprietarioFileDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyPriceDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayFileDatabaseDataSourceImpl
@@ -28,8 +26,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyCharacteristicCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyFileDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ProprietarioDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ProprietarioFileDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyPriceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayFileDatabaseDataSource
@@ -74,14 +70,6 @@ val databaseDataSourceModule = module {
 
     single<PropertyFileDatabaseDataSource> {
         PropertyFileDatabaseDataSourceImpl(dao = get())
-    }
-
-    single<ProprietarioDatabaseDataSource> {
-        ProprietarioDatabaseDataSourceImpl(dao = get())
-    }
-
-    single<ProprietarioFileDatabaseDataSource> {
-        ProprietarioFileDatabaseDataSourceImpl(dao = get())
     }
 
     single<PropertyPriceDatabaseDataSource> {

@@ -14,8 +14,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.Shared
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.useCases.WriteProprietarioUseCase
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
-import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers.toCommandModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers.toUiState
+import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers.toProprietarioCommandModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers.toProprietarioDraftFormUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioDraftFormUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioErrorUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioField
@@ -66,7 +66,7 @@ class ProprietarioRegistrationViewModel(
             proprietarioRegistrationReadDataSource.getProprietario(proprietarioId)
                 .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                 .onSuccess { readModel ->
-                    val draftForm = readModel.toUiState()
+                    val draftForm = readModel.toProprietarioDraftFormUiState()
 
                     _draftFormUiState.update { draftForm }
                     formToEdit = draftForm
@@ -118,7 +118,7 @@ class ProprietarioRegistrationViewModel(
         }
 
         viewModelScope.launch {
-            writeProprietario(form.toCommandModel())
+            writeProprietario(form.toProprietarioCommandModel())
                 .onError { error ->
                     when (error) {
                         is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))

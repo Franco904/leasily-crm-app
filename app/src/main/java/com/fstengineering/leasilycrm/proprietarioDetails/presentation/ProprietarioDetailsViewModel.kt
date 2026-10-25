@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.proprietarioDetails.infra.dataSources.ProprietarioDetailsReadDataSource
-import com.fstengineering.leasilycrm.proprietarioDetails.presentation.mappers.toUiState
+import com.fstengineering.leasilycrm.proprietarioDetails.presentation.mappers.toProprietarioUiState
 import com.fstengineering.leasilycrm.proprietarioDetails.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import kotlinx.coroutines.Job
@@ -45,7 +45,7 @@ class ProprietarioDetailsViewModel(
                     .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { readModel ->
                         readModel ?: return@onSuccess
-                        _uiState.update { readModel.toUiState() }
+                        _uiState.update { readModel.toProprietarioUiState() }
                     }
             }
         }

@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.commands.ProprietarioCommandModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.repositories.ProprietarioCommandRepository
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -22,11 +22,11 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class WriteProprietarioUseCaseTest {
-    private val proprietarioCommandRepositoryMock: ProprietarioCommandRepository =
+    private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource =
         mockk(relaxed = true)
 
     private val sut = WriteProprietarioUseCase(
-        proprietarioCommandRepository = proprietarioCommandRepositoryMock,
+        proprietarioWriteDataSource = proprietarioWriteDataSourceMock,
     )
 
     @BeforeEach
@@ -48,14 +48,14 @@ class WriteProprietarioUseCaseTest {
                 error.shouldBeInstanceOf<ValidationErrors>().errors shouldContainSame listOf(
                     DomainError.Name.Required,
                 )
-                coVerify(exactly = 0) { proprietarioCommandRepositoryMock.insertOrUpdate(any()) }
+                coVerify(exactly = 0) { proprietarioWriteDataSourceMock.save(any()) }
             }
 
         @Test
         fun `Deve informar falha de persistência quando cadastrado, dado que o armazenamento local falha`() =
             runTest {
                 val command = createValidCommand()
-                coEvery { proprietarioCommandRepositoryMock.insertOrUpdate(any()) } returns
+                coEvery { proprietarioWriteDataSourceMock.save(any()) } returns
                     AppResult.Error(ApplicationError.Unknown)
 
                 val result = sut(command)
@@ -68,14 +68,14 @@ class WriteProprietarioUseCaseTest {
         fun `Deve persistir Proprietário quando cadastrado, dado que os dados são válidos`() =
             runTest {
                 val command = createValidCommand()
-                coEvery { proprietarioCommandRepositoryMock.insertOrUpdate(any()) } returns
+                coEvery { proprietarioWriteDataSourceMock.save(any()) } returns
                     AppResult.Success(Unit)
 
                 val result = sut(command)
 
                 result.shouldBeInstanceOf<AppResult.Success<*, *>>()
                 coVerify {
-                    proprietarioCommandRepositoryMock.insertOrUpdate(
+                    proprietarioWriteDataSourceMock.save(
                         match { it.name.value == command.name && it.email?.value == command.email },
                     )
                 }

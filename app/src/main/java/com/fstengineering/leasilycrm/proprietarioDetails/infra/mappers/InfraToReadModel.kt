@@ -6,17 +6,17 @@ import com.fstengineering.leasilycrm.proprietarioDetails.application.models.Prop
 import com.fstengineering.leasilycrm.proprietarioDetails.application.models.ProprietarioReadModel
 import kotlinx.collections.immutable.toPersistentList
 
-fun ProprietarioCompound.toReadModel(): ProprietarioReadModel {
+fun ProprietarioCompound.toProprietarioReadModel(): ProprietarioReadModel {
     return ProprietarioReadModel(
         name = proprietario.name,
         phone = proprietario.phone,
         email = proprietario.email,
         paymentKey = proprietario.paymentKey,
-        files = files.map { it.toReadModel() }.toPersistentList(),
+        files = files.map { it.toProprietarioFileReadModel() }.toPersistentList(),
     )
 }
 
-fun ProprietarioFileOrm.toReadModel(): ProprietarioFileReadModel {
+private fun ProprietarioFileOrm.toProprietarioFileReadModel(): ProprietarioFileReadModel {
     return ProprietarioFileReadModel(
         uriString = proprietarioFileUri,
         name = proprietarioFileName,
