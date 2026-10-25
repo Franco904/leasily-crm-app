@@ -5,7 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ProprietarioCompound
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ProprietarioRegistrationProjection
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toProprietarioReadModel
@@ -18,6 +18,6 @@ abstract class ProprietarioRegistrationReadDataSource {
         onDatabase { findProprietario(proprietarioId).toProprietarioReadModel() }
 
     @Transaction
-    @Query("SELECT * FROM property_owners WHERE id = :proprietarioId AND is_deleted = 0")
-    protected abstract suspend fun findProprietario(proprietarioId: Long): ProprietarioCompound
+    @Query("SELECT id, create_date_time, update_date_time, name, phone, email, payment_key FROM property_owners WHERE id = :proprietarioId AND is_deleted = 0")
+    protected abstract suspend fun findProprietario(proprietarioId: Long): ProprietarioRegistrationProjection
 }
