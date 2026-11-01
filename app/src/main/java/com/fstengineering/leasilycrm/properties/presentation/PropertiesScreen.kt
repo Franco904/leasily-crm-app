@@ -25,13 +25,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.pluralStringResource
@@ -39,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.SystemBarsEffect
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeletePropertyDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.OccupiedPeriodTypeDialog
@@ -65,8 +64,6 @@ fun PropertiesScreen(
     val focusManager = LocalFocusManager.current
 
     val lazyListState = rememberLazyListState()
-
-    val surfaceColor = MaterialTheme.colorScheme.surface
 
     val properties by viewModel.properties.collectAsStateWithLifecycle()
     val propertyToDelete by viewModel.propertyToDelete.collectAsStateWithLifecycle()
@@ -104,11 +101,10 @@ fun PropertiesScreen(
         }
     }
 
-    @Suppress("DEPRECATION")
-    SideEffect {
-        activity.window.statusBarColor = surfaceColor.toArgb()
-        activity.window.navigationBarColor = surfaceColor.toArgb()
-    }
+    SystemBarsEffect(
+        statusBarColor = MaterialTheme.colorScheme.surface,
+        navigationBarColor = MaterialTheme.colorScheme.surface,
+    )
 
     BackHandler {
         if (isSearchingProperty) isSearchingProperty = false

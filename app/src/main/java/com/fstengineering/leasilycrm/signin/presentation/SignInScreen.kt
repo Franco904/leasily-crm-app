@@ -27,7 +27,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +47,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.infra.utils.CredentialsError
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.SystemBarsEffect
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.signin.presentation.models.strategies.SignInErrorBottomSheetDataPropertiesStrategy
@@ -66,7 +65,6 @@ fun SignInScreen(
     val activity = LocalActivity.current!!
 
     val primaryColor = MaterialTheme.colorScheme.primary
-    val surfaceColor = MaterialTheme.colorScheme.surface
 
     var isSigningIn by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -92,11 +90,10 @@ fun SignInScreen(
         }
     }
 
-    @Suppress("DEPRECATION")
-    SideEffect {
-        activity.window.statusBarColor = primaryColor.toArgb()
-        activity.window.navigationBarColor = surfaceColor.toArgb()
-    }
+    SystemBarsEffect(
+        statusBarColor = MaterialTheme.colorScheme.primary,
+        navigationBarColor = MaterialTheme.colorScheme.surface,
+    )
 
     Scaffold(
         modifier = modifier

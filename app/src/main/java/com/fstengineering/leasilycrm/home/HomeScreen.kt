@@ -17,14 +17,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -34,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.fstengineering.leasilycrm.Destinations
+import com.fstengineering.leasilycrm.core.presentation.composables.SystemBarsEffect
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
@@ -70,9 +69,6 @@ fun HomeScreen(
     val focusManager = LocalFocusManager.current
 
     val navController = rememberNavController()
-
-    val surfaceColor = MaterialTheme.colorScheme.surface
-    val surfaceContainerColor = MaterialTheme.colorScheme.surfaceContainer
 
     val userProfilePictureUrl by viewModel.userProfilePictureUrl.collectAsStateWithLifecycle()
     val todayCheckInsAndCheckOutsCount by viewModel.todayCheckInsAndCheckoutsCount.collectAsStateWithLifecycle()
@@ -121,11 +117,10 @@ fun HomeScreen(
         }
     }
 
-    @Suppress("DEPRECATION")
-    SideEffect {
-        activity.window.statusBarColor = surfaceColor.toArgb()
-        activity.window.navigationBarColor = surfaceContainerColor.toArgb()
-    }
+    SystemBarsEffect(
+        statusBarColor = MaterialTheme.colorScheme.surface,
+        navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
+    )
 
     BackHandler(enabled = isSearching) {
         isSearching = false

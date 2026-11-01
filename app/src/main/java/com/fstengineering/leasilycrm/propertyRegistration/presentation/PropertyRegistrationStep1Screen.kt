@@ -20,13 +20,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -35,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.SystemBarsEffect
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
@@ -65,8 +64,6 @@ fun PropertyRegistrationStep1Screen(
     val focusManager = LocalFocusManager.current
 
     val sheetState = rememberModalBottomSheetState()
-
-    val surfaceColor = MaterialTheme.colorScheme.surface
 
     val draftForm by parentViewModel.draftFormUiState.collectAsStateWithLifecycle()
     val loadedForm = draftForm as? PropertyDraftFormUiState.Loaded
@@ -122,11 +119,10 @@ fun PropertyRegistrationStep1Screen(
         }
     }
 
-    @Suppress("DEPRECATION")
-    SideEffect {
-        activity.window.statusBarColor = surfaceColor.toArgb()
-        activity.window.navigationBarColor = surfaceColor.toArgb()
-    }
+    SystemBarsEffect(
+        statusBarColor = MaterialTheme.colorScheme.surface,
+        navigationBarColor = MaterialTheme.colorScheme.surface,
+    )
 
     BackHandler {
         parentViewModel.onExit()

@@ -18,16 +18,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.SystemBarsEffect
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ProprietarioCard
 import com.fstengineering.leasilycrm.proprietarios.presentation.composables.ConfirmDeleteProprietarioDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
@@ -51,8 +50,6 @@ fun ProprietariosScreen(
     val activity = LocalActivity.current!!
 
     val lazyListState = rememberLazyListState()
-
-    val surfaceColor = MaterialTheme.colorScheme.surface
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val proprietarioToDelete by viewModel.proprietarioToDelete.collectAsStateWithLifecycle()
@@ -80,11 +77,10 @@ fun ProprietariosScreen(
         }
     }
 
-    @Suppress("DEPRECATION")
-    SideEffect {
-        activity.window.statusBarColor = surfaceColor.toArgb()
-        activity.window.navigationBarColor = surfaceColor.toArgb()
-    }
+    SystemBarsEffect(
+        statusBarColor = MaterialTheme.colorScheme.surface,
+        navigationBarColor = MaterialTheme.colorScheme.surface,
+    )
 
     Scaffold(
         topBar = {

@@ -13,13 +13,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,6 +31,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewModels.AssistanceRegistrationStep3ViewModel
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.SystemBarsEffect
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
@@ -55,8 +54,6 @@ fun AssistanceRegistrationStep3Screen(
     val focusManager = LocalFocusManager.current
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    val surfaceColor = MaterialTheme.colorScheme.surface
 
     val draftForm by parentViewModel.draftFormUiState.collectAsStateWithLifecycle()
     val loadedDraftForm = draftForm as? AssistanceDraftFormUiState.Loaded
@@ -149,11 +146,10 @@ fun AssistanceRegistrationStep3Screen(
         }
     }
 
-    @Suppress("DEPRECATION")
-    SideEffect {
-        activity.window.statusBarColor = surfaceColor.toArgb()
-        activity.window.navigationBarColor = surfaceColor.toArgb()
-    }
+    SystemBarsEffect(
+        statusBarColor = MaterialTheme.colorScheme.surface,
+        navigationBarColor = MaterialTheme.colorScheme.surface,
+    )
 
     BackHandler {
         parentViewModel.onExit()

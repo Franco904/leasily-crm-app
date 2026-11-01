@@ -9,16 +9,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.infra.utils.hasNotificationPermission
+import com.fstengineering.leasilycrm.core.presentation.composables.SystemBarsEffect
 import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.SignInState
 import kotlinx.coroutines.launch
 
@@ -31,8 +30,6 @@ fun RootScreen(
 ) {
     val context = LocalContext.current
     val activity = LocalActivity.current!!
-
-    val surfaceColor = MaterialTheme.colorScheme.surface
 
     LaunchedEffect(Unit) {
         viewModel.init()
@@ -60,11 +57,10 @@ fun RootScreen(
         }
     }
 
-    @Suppress("DEPRECATION")
-    SideEffect {
-        activity.window.statusBarColor = surfaceColor.toArgb()
-        activity.window.navigationBarColor = surfaceColor.toArgb()
-    }
+    SystemBarsEffect(
+        statusBarColor = MaterialTheme.colorScheme.surface,
+        navigationBarColor = MaterialTheme.colorScheme.surface,
+    )
 
     Scaffold(
         modifier = modifier
