@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -75,6 +77,8 @@ import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.signin.presentation.models.strategies.SignInErrorBottomSheetDataPropertiesStrategy
 import kotlinx.coroutines.launch
+
+private val SIGN_IN_CONTENT_MAX_WIDTH = 684.dp
 
 @Composable
 fun SignInScreen(
@@ -155,6 +159,7 @@ private fun SignInContent(
 
     BoxWithConstraints(
         modifier = modifier
+            .fillMaxSize()
             .background(
                 Brush.verticalGradient(
                     listOf(
@@ -170,19 +175,27 @@ private fun SignInContent(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
+                .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
                 .heightIn(min = screenHeight)
                 .windowInsetsPadding(WindowInsets.safeDrawing)
                 .padding(horizontal = 20.dp, vertical = 24.dp)
         ) {
-            if (hasSessionExpired) {
-                SessionExpiredAlert(modifier = Modifier.fillMaxWidth())
-                Spacer(Modifier.height(16.dp))
+            // widthIn antes de fillMaxWidth: a ordem inversa anula o limite.
+            Column(
+                modifier = Modifier
+                    .widthIn(max = SIGN_IN_CONTENT_MAX_WIDTH)
+                    .fillMaxWidth()
+            ) {
+                if (hasSessionExpired) {
+                    SessionExpiredAlert(modifier = Modifier.fillMaxWidth())
+                    Spacer(Modifier.height(16.dp))
+                }
+                SignInCard(
+                    isSigningIn = isSigningIn,
+                    onSignIn = onSignIn,
+                )
             }
-            SignInCard(
-                isSigningIn = isSigningIn,
-                onSignIn = onSignIn,
-            )
         }
     }
 }
