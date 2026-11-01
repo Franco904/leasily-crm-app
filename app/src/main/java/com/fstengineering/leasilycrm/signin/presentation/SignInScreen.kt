@@ -27,8 +27,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Handshake
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
@@ -50,6 +50,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -62,8 +63,10 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -79,6 +82,10 @@ import com.fstengineering.leasilycrm.signin.presentation.models.strategies.SignI
 import kotlinx.coroutines.launch
 
 private val SIGN_IN_CONTENT_MAX_WIDTH = 684.dp
+
+private val ALERT_PADDING = 12.dp
+private val ALERT_ICON_SIZE = 24.dp
+private val ALERT_ICON_SPACING = 8.dp
 
 @Composable
 fun SignInScreen(
@@ -201,6 +208,57 @@ private fun SignInContent(
 }
 
 @Composable
+private fun SessionExpiredAlert(modifier: Modifier = Modifier) {
+    val text = stringResource(R.string.sign_in_session_expired)
+    val textStyle = MaterialTheme.typography.bodyLarge
+    val textMeasurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error),
+        color = MaterialTheme.colorScheme.errorContainer,
+        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+        modifier = modifier.semantics { liveRegion = LiveRegionMode.Polite }
+    ) {
+        BoxWithConstraints {
+            val maxWidth = this.maxWidth
+            val availableTextWidthPx = with(density) {
+                (maxWidth - (ALERT_PADDING * 2) - ALERT_ICON_SIZE - ALERT_ICON_SPACING)
+                    .roundToPx()
+                    .coerceAtLeast(0)
+            }
+
+            // Layout virtual invisível para checar se o texto excede 1 linha.
+            val exceedsOneLine = remember(text, textStyle, density, availableTextWidthPx) {
+                textMeasurer.measure(
+                    text = text,
+                    style = textStyle,
+                    maxLines = 1,
+                    constraints = Constraints(maxWidth = availableTextWidthPx),
+                ).hasVisualOverflow
+            }
+
+            Row(
+                verticalAlignment = if (exceedsOneLine) Alignment.Top else Alignment.CenterVertically,
+                modifier = Modifier.padding(ALERT_PADDING)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Error,
+                    contentDescription = null,
+                    modifier = Modifier.size(ALERT_ICON_SIZE)
+                )
+                Spacer(Modifier.width(ALERT_ICON_SPACING))
+                Text(
+                    text = text,
+                    style = textStyle,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun SignInCard(
     isSigningIn: Boolean,
     onSignIn: () -> Unit,
@@ -286,33 +344,6 @@ private fun BenefitRow(
             text = text,
             style = MaterialTheme.typography.bodyLarge,
         )
-    }
-}
-
-@Composable
-private fun SessionExpiredAlert(modifier: Modifier = Modifier) {
-    Surface(
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error),
-        color = MaterialTheme.colorScheme.errorContainer,
-        contentColor = MaterialTheme.colorScheme.onErrorContainer,
-        modifier = modifier.semantics { liveRegion = LiveRegionMode.Polite }
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Warning,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                text = stringResource(R.string.sign_in_session_expired),
-                style = MaterialTheme.typography.bodyLarge,
-            )
-        }
     }
 }
 
