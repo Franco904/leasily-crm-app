@@ -3,7 +3,13 @@
 
     <!-- Sign in -->
     <string name="sign_in_welcome_text">Boas-vindas ao Leasily CRM.</string>
-    <string name="sign_in_welcome_description">Cadastre-se com sua conta Google pelo botão abaixo.</string>
+    <string name="sign_in_session_expired">Sua sessão expirou. Entre novamente para continuar.</string>
+    <string name="sign_in_signing_in">Entrando, aguarde</string>
+    <string name="sign_in_benefit_imoveis_proprietarios">Imóveis e proprietários em um só lugar</string>
+    <string name="sign_in_benefit_periodos_ocupados">Períodos ocupados, check-in e check-out</string>
+    <string name="sign_in_benefit_leads_inquilinos_atendimentos">Seus leads, inquilinos e atendimentos organizados</string>
+    <string name="sign_in_benefit_opportunities">Descubra as melhores oportunidades de negócio</string>
+    <string name="sign_in_benefit_offline">Use fora do escritório, sem precisar de Internet</string>
     <string name="sign_in_sign_in_with_google">Entrar com Google</string>
 
     <!-- Home -->
