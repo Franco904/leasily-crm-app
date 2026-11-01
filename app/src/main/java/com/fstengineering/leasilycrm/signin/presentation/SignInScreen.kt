@@ -52,11 +52,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -317,10 +319,18 @@ private fun GoogleSignInButton(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 56.dp)
-            .semantics {
-                role = Role.Button
-                if (isSigningIn) stateDescription = signingInDescription
-            }
+            .then(
+                if (isSigningIn) {
+                    // O rótulo do botão continua na árvore (alpha 0 não o remove): substitui tudo.
+                    Modifier.clearAndSetSemantics {
+                        role = Role.Button
+                        contentDescription = signingInDescription
+                        disabled()
+                    }
+                } else {
+                    Modifier.semantics { role = Role.Button }
+                }
+            )
     ) {
         Box(
             contentAlignment = Alignment.Center,
