@@ -1,4 +1,4 @@
-Leasily CRM
+Leasy CRM
 ===========
 
 Aplicativo mobile Android para automação de processos de CRM especializado na intermediação de
@@ -14,6 +14,17 @@ ubíqua e o mapa dos contextos delimitados do domínio.
 - **Autenticação:** federada via Google (OAuth 2.0)
 - **Injeção de dependência:** Koin
 - **Build:** Gradle (Android Studio), flavors `dev` e `prod`
+
+</br>
+
+<img width="270" height="600" alt="screenshot-20261101-184826" src="https://github.com/user-attachments/assets/bd707916-dfac-4ef5-a713-b28ca0482f71" />
+<img width="270" height="600" alt="screenshot-20261101-114138" src="https://github.com/user-attachments/assets/83d93cb7-e9ff-4a4c-971f-c091e148cb0e" />
+<img width="270" height="600" alt="screenshot-20261101-115416" src="https://github.com/user-attachments/assets/313f8063-e368-4605-8c6b-660d67bbeade" />
+<img width="270" height="600" alt="screenshot-20261101-190752" src="https://github.com/user-attachments/assets/0cc98b67-b1ca-47a2-b08d-ecd89795eb49" />
+<img width="270" height="600" alt="screenshot-20261101-191237" src="https://github.com/user-attachments/assets/b5eb9d3e-5245-466c-810c-4f9dfe594b83" />
+<img width="270" height="600" alt="screenshot-20261101-114743" src="https://github.com/user-attachments/assets/b11def02-8e68-45d2-9957-7cf952fadb27" />
+
+</br></br>
 
 ---
 
