@@ -129,14 +129,14 @@ class MainActivity : ComponentActivity() {
                         builder = {
                             destinations(
                                 navController = navController,
+                                screenModifier = Modifier
+                                    .padding(innerPadding)
+                                    .consumeWindowInsets(innerPadding),
                                 startedFromStayNotificationPopUp = startedFromStayNotificationPopUp,
                                 onSignIn = { enqueueAppWorkers() },
                                 onUiEvent = { uiEvent -> onUiEvent(uiEvent) }
                             )
-                        },
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .consumeWindowInsets(innerPadding)
+                        }
                     )
 
                     if (errorBottomSheetData != null) {

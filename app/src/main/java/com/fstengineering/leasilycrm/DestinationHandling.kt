@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -41,12 +42,14 @@ private const val STAY_REGISTRATION_SUCCESS_KEY = "stay_registration_success"
 
 fun NavGraphBuilder.destinations(
     navController: NavController,
+    screenModifier: Modifier,
     startedFromStayNotificationPopUp: Boolean,
     onSignIn: () -> Unit,
     onUiEvent: (UiEvent) -> Unit,
 ) {
     composable<Destinations.Root> {
         RootScreen(
+            modifier = screenModifier,
             viewModel = koinViewModel(),
             startedFromStayNotificationPopUp = startedFromStayNotificationPopUp,
             onNavigateToFirstDestination = { firstDestination ->
@@ -99,6 +102,7 @@ fun NavGraphBuilder.destinations(
         }
 
         HomeScreen(
+            modifier = screenModifier,
             viewModel = koinViewModel(),
             startedFromStayCheckInCheckOutNotification = args.startedFromStayNotificationPopUp,
             isStayRegistrationSuccess = isStayRegistrationSuccess,
@@ -162,6 +166,7 @@ fun NavGraphBuilder.destinations(
 
     composable<Destinations.Settings> {
         SettingsScreen(
+            modifier = screenModifier,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onUiEvent = onUiEvent,
@@ -170,6 +175,7 @@ fun NavGraphBuilder.destinations(
 
     composable<Destinations.Profile> {
         ProfileScreen(
+            modifier = screenModifier,
             viewModel = koinViewModel(),
             credentialManager = koinInject(),
             onBack = { navController.navigateUp() },
@@ -179,6 +185,7 @@ fun NavGraphBuilder.destinations(
 
     composable<Destinations.Properties> {
         PropertiesScreen(
+            modifier = screenModifier,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onRegisterProperty = { propertyId ->
@@ -215,6 +222,7 @@ fun NavGraphBuilder.destinations(
             val args = parentEntry.toRoute<Destinations.PropertyRegistration>()
 
             PropertyRegistrationStep1Screen(
+                modifier = screenModifier,
                 propertyId = args.propertyId,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
@@ -239,6 +247,7 @@ fun NavGraphBuilder.destinations(
             }
 
             PropertyRegistrationStep2Screen(
+                modifier = screenModifier,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
                 onLeaveRegistration = {
@@ -260,6 +269,7 @@ fun NavGraphBuilder.destinations(
             }
 
             PropertyRegistrationStep3Screen(
+                modifier = screenModifier,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
                 onLeaveRegistration = {
@@ -281,6 +291,7 @@ fun NavGraphBuilder.destinations(
             }
 
             PropertyRegistrationStep4Screen(
+                modifier = screenModifier,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 onLeaveRegistration = {
                     navController
@@ -296,6 +307,7 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.PropertyDashboard>()
 
         PropertyDashboardScreen(
+            modifier = screenModifier,
             propertyId = args.propertyId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
@@ -338,6 +350,7 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.PropertyDashboard>()
 
         PropertyDetailsScreen(
+            modifier = screenModifier,
             propertyId = args.propertyId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
@@ -364,6 +377,7 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.PropertyOccupation>()
 
         PropertyOccupationScreen(
+            modifier = screenModifier,
             propertyId = args.propertyId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
@@ -392,6 +406,7 @@ fun NavGraphBuilder.destinations(
 
     composable<Destinations.Proprietarios> {
         ProprietariosScreen(
+            modifier = screenModifier,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onRegisterProprietario = { proprietarioId ->
@@ -406,6 +421,7 @@ fun NavGraphBuilder.destinations(
 
     composable<Destinations.ProprietarioRegistration> {
         ProprietarioRegistrationScreen(
+            modifier = screenModifier,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onUiEvent = onUiEvent,
@@ -416,6 +432,7 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.ProprietarioDetails>()
 
         ProprietarioDetailsScreen(
+            modifier = screenModifier,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onEditProprietario = {
@@ -429,6 +446,7 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.LeadTenantRegistration>()
 
         LeadTenantRegistrationScreen(
+            modifier = screenModifier,
             leadTenantId = args.leadTenantId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
@@ -440,6 +458,7 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.LeadTenantDetails>()
 
         LeadTenantDetailsScreen(
+            modifier = screenModifier,
             leadTenantId = args.leadTenantId,
             viewModel = koinViewModel(),
             onEditLeadTenant = {
@@ -492,6 +511,7 @@ fun NavGraphBuilder.destinations(
             val args = parentEntry.toRoute<Destinations.AssistanceRegistration>()
 
             AssistanceRegistrationStep1Screen(
+                modifier = screenModifier,
                 assistanceId = args.assistanceId,
                 leadTenantId = args.leadTenantId,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
@@ -515,6 +535,7 @@ fun NavGraphBuilder.destinations(
             }
 
             AssistanceRegistrationStep2Screen(
+                modifier = screenModifier,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
                 onLeaveRegistration = {
@@ -537,6 +558,7 @@ fun NavGraphBuilder.destinations(
             }
 
             AssistanceRegistrationStep3Screen(
+                modifier = screenModifier,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
                 onLeaveRegistration = {
@@ -554,6 +576,7 @@ fun NavGraphBuilder.destinations(
         val previousBackStackEntry = navController.previousBackStackEntry
 
         OccupiedPeriodRegistrationScreen(
+            modifier = screenModifier,
             stayId = args.occupiedPeriodId,
             propertyId = args.propertyId,
             tenantId = args.leadTenantId,
@@ -574,6 +597,7 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.OccupiedPeriodDetails>()
 
         OccupiedPeriodDetailsScreen(
+            modifier = screenModifier,
             occupiedPeriodId = args.occupiedPeriodId,
             cameFromProperty = args.cameFromProperty,
             cameFromTenant = args.cameFromTenant,
