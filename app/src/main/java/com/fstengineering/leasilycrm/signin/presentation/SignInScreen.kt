@@ -64,6 +64,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
@@ -81,6 +82,14 @@ import com.fstengineering.leasilycrm.signin.presentation.models.strategies.SignI
 import kotlinx.coroutines.launch
 
 private val SIGN_IN_CONTENT_MAX_WIDTH = 684.dp
+
+private val SIGN_IN_BENEFITS = listOf(
+    SignInBenefit(Icons.Outlined.Home, R.string.sign_in_benefit_imoveis_proprietarios),
+    SignInBenefit(Icons.Outlined.Handshake, R.string.sign_in_benefit_opportunities),
+    SignInBenefit(Icons.Outlined.DateRange, R.string.sign_in_benefit_periodos_ocupados),
+    SignInBenefit(Icons.Outlined.Person, R.string.sign_in_benefit_leads_inquilinos_atendimentos),
+    SignInBenefit(Icons.Outlined.WifiOff, R.string.sign_in_benefit_offline),
+)
 
 private val ALERT_PADDING = 12.dp
 private val ALERT_ICON_SIZE = 24.dp
@@ -150,7 +159,6 @@ fun SignInScreen(
     )
 }
 
-
 @Composable
 private fun SignInContent(
     isSigningIn: Boolean,
@@ -175,7 +183,7 @@ private fun SignInContent(
                 )
             )
     ) {
-        val screenHeight = maxHeight
+        val screenHeight = this.maxHeight
 
         Column(
             verticalArrangement = Arrangement.Center,
@@ -187,7 +195,6 @@ private fun SignInContent(
                 .windowInsetsPadding(WindowInsets.safeDrawing)
                 .padding(horizontal = 20.dp, vertical = 24.dp)
         ) {
-            // widthIn antes de fillMaxWidth: a ordem inversa anula o limite.
             Column(
                 modifier = Modifier
                     .widthIn(max = SIGN_IN_CONTENT_MAX_WIDTH)
@@ -284,6 +291,13 @@ private fun SignInCard(
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                 modifier = Modifier.semantics { heading() }
             )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.sign_in_welcome_subtext),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleSmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                modifier = Modifier.semantics { heading() }
+            )
             Spacer(Modifier.height(20.dp))
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 SIGN_IN_BENEFITS.forEach { benefit ->
@@ -301,19 +315,6 @@ private fun SignInCard(
         }
     }
 }
-
-private data class SignInBenefit(
-    val icon: ImageVector,
-    @StringRes val text: Int,
-)
-
-private val SIGN_IN_BENEFITS = listOf(
-    SignInBenefit(Icons.Outlined.Home, R.string.sign_in_benefit_imoveis_proprietarios),
-    SignInBenefit(Icons.Outlined.DateRange, R.string.sign_in_benefit_periodos_ocupados),
-    SignInBenefit(Icons.Outlined.Person, R.string.sign_in_benefit_leads_inquilinos_atendimentos),
-    SignInBenefit(Icons.Outlined.Handshake, R.string.sign_in_benefit_opportunities),
-    SignInBenefit(Icons.Outlined.WifiOff, R.string.sign_in_benefit_offline),
-)
 
 @Composable
 private fun BenefitRow(
@@ -345,6 +346,11 @@ private fun BenefitRow(
         )
     }
 }
+
+private data class SignInBenefit(
+    val icon: ImageVector,
+    @param:StringRes val text: Int,
+)
 
 @Composable
 private fun GoogleSignInButton(
@@ -444,7 +450,11 @@ private fun SignInContentDarkPreview() {
     }
 }
 
-@Preview(showSystemUi = true, fontScale = 2f, widthDp = 640, heightDp = 360)
+@Preview(
+    showSystemUi = true,
+    fontScale = 2f,
+    device = Devices.TABLET,
+)
 @Composable
 private fun SignInContentLandscapeLargeFontPreview() {
     AppTheme {
