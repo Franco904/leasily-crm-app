@@ -80,7 +80,7 @@ class Imovel private constructor(
         ): AppResult<Imovel, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
-            if (ownerId == null) errors.add(DomainError.PropertyPropertyOwner.Required)
+            if (ownerId == null) errors.add(DomainError.ImovelProprietario.Required)
             if (type == null) errors.add(DomainError.ImovelType.Required)
 
             if (neighborhood.isNullOrBlank()) errors.add(DomainError.Neighborhood.Required)

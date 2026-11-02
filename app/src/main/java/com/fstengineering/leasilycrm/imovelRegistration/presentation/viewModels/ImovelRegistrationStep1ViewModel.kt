@@ -69,7 +69,7 @@ class ImovelRegistrationStep1ViewModel : ViewModel() {
         viewModelScope.launch {
             delay(150.milliseconds)
 
-            val proprietarioError = errors.firstOrNull { it is DomainError.PropertyPropertyOwner }
+            val proprietarioError = errors.firstOrNull { it is DomainError.ImovelProprietario }
             val imovelTypeError = errors.firstOrNull { it is DomainError.ImovelType }
             val imovelNeighborhoodError =
                 errors.firstOrNull { it is DomainError.Neighborhood }

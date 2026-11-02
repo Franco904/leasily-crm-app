@@ -31,7 +31,7 @@ fun DomainError.toInlineMessage() = when (this) {
 
     DomainError.Phone.LengthIsGreaterThan20Chars -> R.string.inline_too_big_20_chars
 
-    DomainError.PropertyPropertyOwner.Required -> INLINE_REQUIRED
+    DomainError.ImovelProprietario.Required -> INLINE_REQUIRED
     DomainError.ImovelType.Required -> INLINE_REQUIRED
     DomainError.ImovelStreetAddress.Required -> INLINE_REQUIRED
     DomainError.ImovelPricePeriod.Required -> INLINE_REQUIRED

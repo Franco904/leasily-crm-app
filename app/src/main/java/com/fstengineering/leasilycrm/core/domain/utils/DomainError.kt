@@ -24,7 +24,7 @@ sealed interface DomainError : BaseError {
         Required,
     }
 
-    enum class PropertyPropertyOwner : DomainError {
+    enum class ImovelProprietario : DomainError {
         Required,
     }
 
