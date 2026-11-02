@@ -43,6 +43,7 @@ import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.Proprieta
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ProprietarioReadDataSource as ImovelRegistrationProprietarioReadDataSource
 import com.fstengineering.leasilycrm.proprietarioDetails.infra.dataSources.ProprietarioDetailsReadDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
+import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import com.fstengineering.leasilycrm.proprietarios.infra.dataSources.ProprietariosReadDataSource
 
@@ -99,6 +100,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun imovelFileDao(): ImovelFileDao
 
     abstract fun proprietarioWriteDataSource(): ProprietarioWriteDataSource
+
+    abstract fun imovelWriteDataSource(): ImovelWriteDataSource
 
     abstract fun proprietarioRegistrationReadDataSource(): ProprietarioRegistrationReadDataSource
 
