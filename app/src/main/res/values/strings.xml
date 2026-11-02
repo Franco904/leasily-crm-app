@@ -472,7 +472,7 @@
 
     <string name="stay_registration_property_title">Imóvel</string>
 
-    <string name="stay_registration_tenant_title">Hóspede responsável</string>
+    <string name="stay_registration_tenant_title">Hóspede titular</string>
     <string name="stay_registration_tenant_vehicle_make_label">Marca do automóvel</string>
     <string name="stay_registration_tenant_vehicle_color_label">Cor do automóvel</string>
     <string name="stay_registration_tenant_vehicle_license_plate_label">Placa do automóvel</string>
