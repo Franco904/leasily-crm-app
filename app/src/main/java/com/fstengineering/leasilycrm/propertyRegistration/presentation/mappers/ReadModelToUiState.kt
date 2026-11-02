@@ -5,11 +5,11 @@ import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiSt
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyPriceUiState
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyFileReadModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyOwnerReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyPriceReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyDraftFormUiState
-import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyOwnerUiState
+import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyPricesUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -83,7 +83,7 @@ private fun PropertyFileReadModel.toUiState() = PropertyFileUiState(
     isMainPicture = isMainPicture,
 )
 
-fun PropertyOwnerReadModel.toUiState() = PropertyOwnerUiState(
+fun ProprietarioReadModel.toUiState() = ProprietarioUiState(
     id = id,
     name = name,
 )

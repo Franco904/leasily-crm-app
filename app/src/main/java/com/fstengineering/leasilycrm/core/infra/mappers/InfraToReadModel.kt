@@ -8,7 +8,7 @@ fun OccupiedPeriodNotificationProjection.toReadModel() =
     OccupiedPeriodNotificationReadModel(
         tenantName = tenantName,
         propertyType = PropertyType.fromId(propertyTypeId) ?: PropertyType.Apartment,
-        propertyOwnerName = propertyOwnerName,
+        proprietarioName = proprietarioName,
         hourMinute = if (isCheckInToday) checkInDateTime.toHourMinute() else checkOutDateTime.toHourMinute(),
         isCheckInToday = isCheckInToday,
         isCheckOutToday = isCheckOutToday,

@@ -23,7 +23,7 @@ import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_IN
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsCalendar
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyOwnerCard
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ProprietarioCard
 import com.fstengineering.leasilycrm.core.presentation.theme.customColors
 import com.fstengineering.leasilycrm.propertyDashboard.presentation.models.PropertyUiState
 import kotlinx.collections.immutable.persistentListOf
@@ -35,7 +35,7 @@ import kotlin.math.roundToInt
 fun PropertyDashboardSection(
     property: PropertyUiState.Loaded,
     onViewPropertyDetails: () -> Unit,
-    onViewPropertyOwnerDetails: () -> Unit,
+    onViewProprietarioDetails: () -> Unit,
     onViewAllPropertyStays: () -> Unit,
     onNewStay: () -> Unit,
     onViewStay: (Long) -> Unit,
@@ -109,9 +109,9 @@ fun PropertyDashboardSection(
             color = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        PropertyOwnerCard(
-            propertyOwner = property.owner,
-            onViewPropertyOwnerDetails = onViewPropertyOwnerDetails,
+        ProprietarioCard(
+            proprietario = property.owner,
+            onViewProprietarioDetails = onViewProprietarioDetails,
             hasMoreOptionsMenu = false,
         )
         Spacer(modifier = Modifier.height(24.dp))

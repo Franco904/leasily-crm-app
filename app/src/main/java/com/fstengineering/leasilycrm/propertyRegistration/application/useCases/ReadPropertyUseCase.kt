@@ -5,12 +5,12 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.queries.PropertyArgs
-import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyOwnerQueryRepository
 import com.fstengineering.leasilycrm.propertyRegistration.application.repositories.PropertyQueryRepository
+import com.fstengineering.leasilycrm.propertyRegistration.infra.dataSources.ProprietarioReadDataSource
 
 class ReadPropertyUseCase(
     private val propertyQueryRepository: PropertyQueryRepository,
-    private val propertyOwnerQueryRepository: PropertyOwnerQueryRepository,
+    private val proprietarioReadDataSource: ProprietarioReadDataSource,
 ) {
     suspend operator fun invoke(
         args: PropertyArgs,
@@ -21,14 +21,14 @@ class ReadPropertyUseCase(
                 onSuccess = { storedProperty -> storedProperty },
             )
 
-        val propertyOwner = propertyOwnerQueryRepository.getById(propertyRaw.ownerId)
+        val proprietario = proprietarioReadDataSource.getProprietario(propertyRaw.ownerId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
-                onSuccess = { storedPropertyOwner -> storedPropertyOwner },
+                onSuccess = { storedProprietario -> storedProprietario },
             )
 
         val updatedReadModel = PropertyReadModel.create(
-            owner = propertyOwner,
+            owner = proprietario,
             propertyRaw = propertyRaw,
         )
 

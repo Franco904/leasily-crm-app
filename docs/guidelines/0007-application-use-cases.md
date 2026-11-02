@@ -8,9 +8,11 @@ Convenções para a camada `application/`: orquestração da intenção de negó
 - Traduz uma intenção de negócio (um ator querendo um resultado) em passo-a-passo:
   carrega agregados via `infra/`, aciona o comportamento do agregado, persiste,
   coordena transação.
-- Nem todo subdomínio precisa desta camada. Os de Suporte com leitura ou
-  persistência direta dispensam UseCase — o ViewModel fala direto com `infra/`
-  (ver `0001-subdomains.md` e a seção read-side abaixo).
+- Nem toda operação precisa desta camada. Dispensa UseCase a **leitura sem regra de negócio**
+  e a **escrita sem leitura prévia, sem coordenação entre agregados e sem transação
+  orquestrada** (Unit of Work) — o ViewModel fala direto com `infra/` e, na escrita, chama a
+  factory do agregado. O critério é a **forma da operação**, não a classificação do subdomínio
+  (`0001-subdomains.md`; ver seções write-side e read-side abaixo).
 
 ## UseCase
 
@@ -56,7 +58,7 @@ A assimetria existe para **reduzir** o custo do lado de leitura, não para enriq
 
 |                       | Write-side                                                          | Read-side                             |
 |-----------------------|---------------------------------------------------------------------|---------------------------------------|
-| UseCase               | sempre                                                              | opcional                              |
+| UseCase               | só com leitura prévia, coordenação entre agregados ou transação orquestrada | só com regra de negócio real  |
 | Entrada               | CommandModel ou args diretos                                        | QueryModel, filtro/id ou args diretos |
 | Fala com              | `WriteDataSource` (+ `Repository` quando há coordenação a esconder) | `ReadDataSource`                      |
 | Invariante de negócio | factory do agregado valida                                          | não há — é projeção                   |
@@ -68,6 +70,13 @@ A assimetria existe para **reduzir** o custo do lado de leitura, não para enriq
   `WriteDataSource`s (ou Repositories, onde existirem) de agregados distintos
   numa única transação, via o adapter de transação do banco. Nunca um Repository
   "amplo". É o padrão Unit of Work posto em prática.
+- **Write-side sem UseCase**: um UseCase que só chama a factory do agregado e repassa ao
+  `WriteDataSource` é pass-through e é proibido, como o de leitura (teste da exclusão em
+  `0010-interface-design.md`). Nesse caso o ViewModel chama a factory e o `WriteDataSource`
+  direto, e **não existe `CommandModel`**: o mapper de `presentation/` converte o `UiState` no
+  agregado. Transação **dentro de um único agregado** (`@Transaction` no `WriteDataSource`) não é
+  transação orquestrada. O UseCase passa a existir quando surgir leitura prévia (ex.:
+  overbooking), coordenação entre agregados ou atomicidade cross-agregado.
 - **Read-side**: só crie UseCase se houver **regra de negócio real** sobre o
   ReadModel — autorização, transformação condicional (uma transformação complexa
   que seja lógica de domínio genuína deve ser delegada a um Domain Service,
@@ -78,8 +87,9 @@ A assimetria existe para **reduzir** o custo do lado de leitura, não para enriq
 
 ## CommandModel
 
-- **Criar quando** a operação write-side tem 4+ parâmetros primitivos, ou grupos de
-  parâmetros que variam juntos. Abaixo disso: argumentos diretos no `invoke()`.
+- **Só existe com UseCase** — é a entrada dele; sem UseCase, o mapper de `presentation/` vai
+  direto do `UiState` ao agregado. **Criar quando** a operação write-side (com UseCase) tem 4+
+  parâmetros primitivos, ou grupos de parâmetros que variam juntos. Abaixo disso: argumentos diretos no `invoke()`.
 - **Não eliminar** um CommandModel só porque hoje é idêntico ao `UiState` — a
   pergunta é se há razão de divergência futura (o `UiState` acumula estado de
   apresentação, e.g. `isSubmitting`, erro por campo).

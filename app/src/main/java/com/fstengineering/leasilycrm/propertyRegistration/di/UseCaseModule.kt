@@ -8,7 +8,7 @@ val propertyRegistrationUseCaseModule = module {
     factory {
         ReadPropertyUseCase(
             propertyQueryRepository = get(),
-            propertyOwnerQueryRepository = get(),
+            proprietarioReadDataSource = get(),
         )
     }
 

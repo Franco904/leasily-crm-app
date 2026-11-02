@@ -16,7 +16,7 @@ sealed interface PropertyDraftFormUiState {
     data class Loaded(
         val id: Long? = null,
         val createDateTime: AppDateTime? = null,
-        val owner: PropertyOwnerUiState? = null,
+        val owner: ProprietarioUiState? = null,
         val type: PropertyType? = null,
         val neighborhood: String? = null,
         val streetAddress: String? = null,

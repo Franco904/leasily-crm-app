@@ -41,6 +41,7 @@ import com.fstengineering.leasilycrm.profile.di.profileUseCaseModule
 import com.fstengineering.leasilycrm.profile.di.profileViewModelModule
 import com.fstengineering.leasilycrm.properties.di.propertiesRepositoryModule
 import com.fstengineering.leasilycrm.properties.di.propertiesViewModelModule
+import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardDataSourceModule
 import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardRepositoryModule
 import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardUseCaseModule
 import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardViewModelModule
@@ -49,13 +50,13 @@ import com.fstengineering.leasilycrm.propertyDetails.di.propertyDetailsViewModel
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationRepositoryModule
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationUseCaseModule
 import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationViewModelModule
-import com.fstengineering.leasilycrm.propertyOwnerDetails.di.propertyOwnerDetailsRepositoryModule
-import com.fstengineering.leasilycrm.propertyOwnerDetails.di.propertyOwnerDetailsViewModelModule
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.di.propertyOwnerRegistrationRepositoryModule
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.di.propertyOwnerRegistrationUseCaseModule
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.di.propertyOwnerRegistrationViewModelModule
-import com.fstengineering.leasilycrm.propertyOwners.di.propertyOwnersRepositoryModule
-import com.fstengineering.leasilycrm.propertyOwners.di.propertyOwnersViewModelModule
+import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsDataSourceModule
+import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsViewModelModule
+import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationDataSourceModule
+import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationViewModelModule
+import com.fstengineering.leasilycrm.proprietarios.di.proprietariosDataSourceModule
+import com.fstengineering.leasilycrm.proprietarios.di.proprietariosViewModelModule
+import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationDataSourceModule
 import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationRepositoryModule
 import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationUseCaseModule
 import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationViewModelModule
@@ -119,11 +120,13 @@ fun Application.configureDependencyInjection() {
             propertiesViewModelModule,
 
             // Feature: propertyRegistration
+            propertyRegistrationDataSourceModule,
             propertyRegistrationRepositoryModule,
             propertyRegistrationUseCaseModule,
             propertyRegistrationViewModelModule,
 
             // Feature: propertyDashboard
+            propertyDashboardDataSourceModule,
             propertyDashboardRepositoryModule,
             propertyDashboardUseCaseModule,
             propertyDashboardViewModelModule,
@@ -137,18 +140,17 @@ fun Application.configureDependencyInjection() {
             propertyOccupationUseCaseModule,
             propertyOccupationViewModelModule,
 
-            // Feature: propertyOwners
-            propertyOwnersRepositoryModule,
-            propertyOwnersViewModelModule,
+            // Feature: proprietarios
+            proprietariosDataSourceModule,
+            proprietariosViewModelModule,
 
-            // Feature: propertyOwnerRegistration
-            propertyOwnerRegistrationRepositoryModule,
-            propertyOwnerRegistrationUseCaseModule,
-            propertyOwnerRegistrationViewModelModule,
+            // Feature: proprietarioRegistration
+            proprietarioRegistrationDataSourceModule,
+            proprietarioRegistrationViewModelModule,
 
-            // Feature: propertyOwnerDetails
-            propertyOwnerDetailsRepositoryModule,
-            propertyOwnerDetailsViewModelModule,
+            // Feature: proprietarioDetails
+            proprietarioDetailsDataSourceModule,
+            proprietarioDetailsViewModelModule,
 
             // Feature: leadTenants
             leadTenantsRepositoryModule,

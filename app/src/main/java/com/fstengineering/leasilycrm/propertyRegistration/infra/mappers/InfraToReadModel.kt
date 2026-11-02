@@ -3,11 +3,11 @@ package com.fstengineering.leasilycrm.propertyRegistration.infra.mappers
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
+import com.fstengineering.leasilycrm.propertyRegistration.infra.projections.ProprietarioNameProjection
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyFileReadModel
-import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyOwnerReadModel
+import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyPriceReadModel
 import com.fstengineering.leasilycrm.propertyRegistration.application.models.dtos.PropertyRawReadModel
 import kotlinx.collections.immutable.toPersistentList
@@ -59,8 +59,8 @@ fun PropertyCompound.toRawReadModel(): PropertyRawReadModel {
     )
 }
 
-fun PropertyOwnerEntity.toReadModel() = PropertyOwnerReadModel(
-    id = requireNotNull(id),
+fun ProprietarioNameProjection.toProprietarioReadModel() = ProprietarioReadModel(
+    id = id,
     name = name,
 )
 

@@ -24,9 +24,9 @@ import com.fstengineering.leasilycrm.properties.presentation.PropertiesScreen
 import com.fstengineering.leasilycrm.propertyDashboard.presentation.PropertyDashboardScreen
 import com.fstengineering.leasilycrm.propertyDetails.presentation.PropertyDetailsScreen
 import com.fstengineering.leasilycrm.propertyOccupation.presentation.PropertyOccupationScreen
-import com.fstengineering.leasilycrm.propertyOwnerDetails.presentation.PropertyOwnerDetailsScreen
-import com.fstengineering.leasilycrm.propertyOwnerRegistration.presentation.PropertyOwnerRegistrationScreen
-import com.fstengineering.leasilycrm.propertyOwners.presentation.PropertyOwnersScreen
+import com.fstengineering.leasilycrm.proprietarioDetails.presentation.ProprietarioDetailsScreen
+import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationScreen
+import com.fstengineering.leasilycrm.proprietarios.presentation.ProprietariosScreen
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep1Screen
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep2Screen
 import com.fstengineering.leasilycrm.propertyRegistration.presentation.PropertyRegistrationStep3Screen
@@ -111,8 +111,8 @@ fun NavGraphBuilder.destinations(
             onPropertiesSelect = {
                 navController.navigate(Destinations.Properties)
             },
-            onPropertyOwnersSelect = {
-                navController.navigate(Destinations.PropertyOwners)
+            onProprietariosSelect = {
+                navController.navigate(Destinations.Proprietarios)
             },
             onRegisterLeadTenant = { leadTenantId ->
                 navController.navigate(Destinations.LeadTenantRegistration(leadTenantId))
@@ -218,8 +218,8 @@ fun NavGraphBuilder.destinations(
                 propertyId = args.propertyId,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
-                onRegisterNewPropertyOwner = {
-                    navController.navigate(Destinations.PropertyOwnerRegistration(null))
+                onRegisterNewProprietario = {
+                    navController.navigate(Destinations.ProprietarioRegistration(null))
                 },
                 onLeaveRegistration = {
                     navController
@@ -305,8 +305,8 @@ fun NavGraphBuilder.destinations(
             onViewPropertyDetails = {
                 navController.navigate(Destinations.PropertyDetails(args.propertyId))
             },
-            onViewPropertyOwnerDetails = { propertyOwnerId ->
-                navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
+            onViewProprietarioDetails = { proprietarioId ->
+                navController.navigate(Destinations.ProprietarioDetails(proprietarioId))
             },
             onViewAllPropertyStays = {
                 navController.navigate(Destinations.PropertyOccupation(args.propertyId))
@@ -390,40 +390,36 @@ fun NavGraphBuilder.destinations(
         )
     }
 
-    composable<Destinations.PropertyOwners> {
-        PropertyOwnersScreen(
+    composable<Destinations.Proprietarios> {
+        ProprietariosScreen(
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
-            onRegisterPropertyOwner = { propertyOwnerId ->
-                navController.navigate(Destinations.PropertyOwnerRegistration(propertyOwnerId))
+            onRegisterProprietario = { proprietarioId ->
+                navController.navigate(Destinations.ProprietarioRegistration(proprietarioId))
             },
-            onViewPropertyOwnerDetails = { propertyOwnerId ->
-                navController.navigate(Destinations.PropertyOwnerDetails(propertyOwnerId))
+            onViewProprietarioDetails = { proprietarioId ->
+                navController.navigate(Destinations.ProprietarioDetails(proprietarioId))
             },
             onUiEvent = onUiEvent,
         )
     }
 
-    composable<Destinations.PropertyOwnerRegistration> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.PropertyOwnerRegistration>()
-
-        PropertyOwnerRegistrationScreen(
-            propertyOwnerId = args.propertyOwnerId,
+    composable<Destinations.ProprietarioRegistration> {
+        ProprietarioRegistrationScreen(
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onUiEvent = onUiEvent,
         )
     }
 
-    composable<Destinations.PropertyOwnerDetails> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.PropertyOwnerDetails>()
+    composable<Destinations.ProprietarioDetails> { backStackEntry ->
+        val args = backStackEntry.toRoute<Destinations.ProprietarioDetails>()
 
-        PropertyOwnerDetailsScreen(
-            propertyOwnerId = args.propertyOwnerId,
+        ProprietarioDetailsScreen(
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
-            onEditPropertyOwner = { propertyOwnerId ->
-                navController.navigate(Destinations.PropertyOwnerRegistration(propertyOwnerId))
+            onEditProprietario = {
+                navController.navigate(Destinations.ProprietarioRegistration(args.proprietarioId))
             },
             onUiEvent = onUiEvent,
         )

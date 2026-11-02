@@ -4,11 +4,13 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
 
 ## Posição da camada
 
-- `presentation/` **depende de** `application/` (UseCases / Application Services) e,
-  no read-side sem regra de negócio, de `infra/` direto (`ReadDataSource` — ver
-  `0007-application-use-cases.md`).
+- `presentation/` **depende de** `application/` (UseCases / Application Services) e de
+  `infra/` direto quando a operação dispensa UseCase (ver `0007-application-use-cases.md`):
+  no read-side sem regra de negócio (`ReadDataSource`) e no write-side sem leitura prévia,
+  sem coordenação entre agregados e sem transação orquestrada (`WriteDataSource`).
 - Pode tocar em `domain/` para validação parcial de campo (perda
-  de foco, edição de form field, formulário em etapas).
+  de foco, edição de form field, formulário em etapas) e, no write-side sem UseCase, para
+  construir o agregado pela factory (`Agregado.parse`) a partir do `UiState`.
 - ViewModel expõe estado via `StateFlow`; o Composable observa. MVP não entra em
   código novo.
 - **Toolkit Compose + Material Design 3**: componentes de `androidx.compose.material3`
@@ -58,6 +60,11 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   `kotlinx.collections.immutable` são reconhecidos como estáveis. O ViewModel monta
   a coleção com `.toImmutableList()` / `persistentListOf(...)` ao produzir o `UiState`.
 
+- **URI de arquivo é `String` em todo model** (`UiState`, `ReadModel`, `CommandModel`). A conversão
+  para `android.net.Uri` acontece só nas fronteiras que precisam do tipo: o Composable (abrir o
+  arquivo, receber o resultado do seletor) e o DataSource de arquivo. `Uri.parse` não roda em teste
+  JVM; carregar `Uri` no model obriga o teste a mockar estático.
+
 - **Model de apresentação é imutável de fato: `data class` / `data object`, todo
   campo `val`, nenhum atributo `var` nem tipo mutável** (`ArrayList`,
   `mutableStateOf` embutido no state, objeto com `var`). Tipo com `var` é instável
@@ -102,12 +109,24 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   a corrotina que `viewModelScope` existe justamente para manter fora do alcance dela. Use block
   body com retorno implícito `Unit`.
 
-- **Argumentos de navegação entram pelo construtor, via `SavedStateHandle`.** O app é
+- **Argumentos de navegação entram pelo construtor, como a rota tipada.** O app é
   single-Activity com Navigation Compose; o `ViewModel` é criado por `koinViewModel()` no
-  `NavHost`, com escopo da entrada da back stack — o Koin injeta o `SavedStateHandle`, que já
-  carrega os argumentos da rota. Leia-os com `savedStateHandle.toRoute<Destinations.X>()` no
-  construtor. **Nunca** repasse argumentos da rota pela `Screen` até um método do ViewModel
-  (pass-through), nem crie `ViewModelProvider.Factory` própria.
+  `NavHost`, com escopo da entrada da back stack — o Koin tem o `SavedStateHandle`, que já
+  carrega os argumentos da rota. O módulo de DI converte com `get<SavedStateHandle>().toRoute()` e
+  o ViewModel recebe `route: Destinations.X` no construtor. `toRoute()` depende de `Bundle` e não
+  roda em teste JVM; recebendo a rota pronta, o teste só instancia `Destinations.X(...)`. **Nunca**
+  repasse argumentos da rota pela `Screen` até um método do ViewModel (pass-through), nem crie
+  `ViewModelProvider.Factory` própria.
+
+  ```kotlin
+  // di/ViewModelModule.kt
+  viewModel {
+      PeriodoOcupadoRegistrationViewModel(
+          route = get<SavedStateHandle>().toRoute(),
+          readImovelDataSource = get(),
+      )
+  }
+  ```
 
 - **Carga assíncrona inicial em `init()` público e idempotente.** A carga que dispara
   `viewModelScope.launch` (ler do banco, observar um `Flow`) fica num `fun init()` público —
@@ -128,10 +147,9 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
 
   ```kotlin
   class PeriodoOcupadoRegistrationViewModel(
-      savedStateHandle: SavedStateHandle,
+      private val route: Destinations.PeriodoOcupadoRegistration,
       private val readImovelDataSource: ImovelReadDataSource,
   ) : ViewModel() {
-      private val args = savedStateHandle.toRoute<Destinations.PeriodoOcupadoRegistration>()
 
       private val _uiState = MutableStateFlow<PeriodoOcupadoRegistrationUiState>(PeriodoOcupadoRegistrationUiState.Loading)
       val uiState: StateFlow<PeriodoOcupadoRegistrationUiState> = _uiState.asStateFlow()
@@ -142,7 +160,7 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
           if (isLoaded) return
           isLoaded = true
 
-          viewModelScope.launch { loadImovel(args.imovelId) }
+          viewModelScope.launch { loadImovel(route.imovelId) }
       }
   }
 
@@ -280,6 +298,9 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   `UiState` campo a campo inline quando há transformação.
 - Mapper que devolve coleção devolve o tipo imutável de
   `kotlinx.collections.immutable` (ver bullet de coleção em "ViewModel"), não `List`.
+- Write-side sem UseCase: **UiState → Agregado**, chamando a factory do agregado e devolvendo
+  `AppResult<Agregado, ValidationErrors>` (`fun ProprietarioDraftFormUiState.Loaded.toProprietario()`).
+  Só reshape — a validação é da factory. Não há `CommandModel` nesse caso.
 - Não faz Orm → ReadModel (é `infra/`, `0009-infra-repositories-data-sources.md`) nem
   CommandModel → Agregado (é `application/`, `0007-application-use-cases.md`).
 

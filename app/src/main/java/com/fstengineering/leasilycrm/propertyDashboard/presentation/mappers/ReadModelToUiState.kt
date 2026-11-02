@@ -2,9 +2,9 @@ package com.fstengineering.leasilycrm.propertyDashboard.presentation.mappers
 
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.PropertyFileUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyOwnerUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOccupiedDateReadModel
-import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyOwnerReadModel
+import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.application.models.dtos.PropertyReadModel
 import com.fstengineering.leasilycrm.propertyDashboard.presentation.models.PropertyAddressUiState
 import com.fstengineering.leasilycrm.propertyDashboard.presentation.models.PropertyOccupiedDateUiState
@@ -40,7 +40,7 @@ private fun PropertyOccupiedDateReadModel.toUiState() = PropertyOccupiedDateUiSt
     tenantName = tenantName,
 )
 
-private fun PropertyOwnerReadModel.toUiState() = PropertyOwnerUiState(
+private fun ProprietarioReadModel.toUiState() = ProprietarioUiState(
     id = id,
     name = name,
 )

@@ -6,11 +6,13 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyOwnerEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckInCheckOutCountsProjection
+import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
+import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -88,19 +90,18 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
     // endregion
 
     private suspend fun insertImovel(): Long {
-        val proprietarioId = db.propertyOwnerDao().insertOrUpdate(
-            PropertyOwnerEntity(
-                id = null,
-                createDateTime = today,
-                updateDateTime = today,
-                name = faker.random.nextUUID(),
-                phone = null,
-                email = null,
-                paymentKey = null,
-                isDeleted = false,
-                contractVersion = 1,
-            )
-        )
+        val proprietarioId = 1L
+        val proprietario = Proprietario.parse(
+            id = proprietarioId,
+            createDateTime = today,
+            name = faker.random.nextUUID(),
+            phone = null,
+            email = null,
+            paymentKey = null,
+            files = persistentListOf<ProprietarioFile>(),
+        ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Proprietario>()
+        db.proprietarioWriteDataSource().save(proprietario)
+            .shouldBeInstanceOf<AppResult.Success<*, *>>()
 
         return db.propertyDao().insertOrUpdate(
             PropertyEntity(

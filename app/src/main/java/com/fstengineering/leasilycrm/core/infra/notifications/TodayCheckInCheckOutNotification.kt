@@ -56,7 +56,7 @@ object TodayCheckInCheckOutNotification {
             status.tenantName,
             propertyTypeName,
             context.getString(status.propertyType.presentationLabel()).lowercase(),
-            status.propertyOwnerName,
+            status.proprietarioName,
             status.hourMinute.first.formatToTwoDigitsDateTime(),
             status.hourMinute.second.formatToTwoDigitsDateTime(),
         )

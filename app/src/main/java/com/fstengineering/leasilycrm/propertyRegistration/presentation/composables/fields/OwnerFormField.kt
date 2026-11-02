@@ -20,13 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.propertyRegistration.presentation.composables.PropertyOwnerSelectCard
-import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.PropertyOwnerUiState
+import com.fstengineering.leasilycrm.propertyRegistration.presentation.composables.ProprietarioSelectCard
+import com.fstengineering.leasilycrm.propertyRegistration.presentation.models.ProprietarioUiState
 
 @Composable
 fun OwnerFormField(
-    propertyOwner: PropertyOwnerUiState?,
-    onSelectPropertyOwner: () -> Unit,
+    proprietario: ProprietarioUiState?,
+    onSelectProprietario: () -> Unit,
     error: Int?,
     modifier: Modifier = Modifier,
 ) {
@@ -45,7 +45,7 @@ fun OwnerFormField(
             )
             OutlinedButton(
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                onClick = onSelectPropertyOwner,
+                onClick = onSelectProprietario,
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Search,
@@ -58,7 +58,7 @@ fun OwnerFormField(
                 Text(
                     text = stringResource(
                         when {
-                            propertyOwner == null -> R.string.select_action_button_text
+                            proprietario == null -> R.string.select_action_button_text
                             else -> R.string.edit_action_button_text
                         }
                     ),
@@ -67,10 +67,10 @@ fun OwnerFormField(
                 )
             }
         }
-        AnimatedVisibility(propertyOwner != null) {
+        AnimatedVisibility(proprietario != null) {
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
-                PropertyOwnerSelectCard(propertyOwner = propertyOwner!!)
+                ProprietarioSelectCard(proprietario = proprietario!!)
             }
         }
         Spacer(modifier = Modifier.height(12.dp))

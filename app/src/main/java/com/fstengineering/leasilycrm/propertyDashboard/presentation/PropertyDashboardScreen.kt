@@ -38,7 +38,7 @@ fun PropertyDashboardScreen(
     onBack: () -> Unit,
     onEditProperty: () -> Unit,
     onViewPropertyDetails: () -> Unit,
-    onViewPropertyOwnerDetails: (Long) -> Unit,
+    onViewProprietarioDetails: (Long) -> Unit,
     onViewAllPropertyStays: () -> Unit,
     onNewStay: (Boolean) -> Unit,
     onViewStay: (Long) -> Unit,
@@ -107,8 +107,8 @@ fun PropertyDashboardScreen(
                 PropertyDashboardSection(
                     property = loadedProperty,
                     onViewPropertyDetails = onViewPropertyDetails,
-                    onViewPropertyOwnerDetails = {
-                        onViewPropertyOwnerDetails(loadedProperty.owner.id)
+                    onViewProprietarioDetails = {
+                        onViewProprietarioDetails(loadedProperty.owner.id)
                     },
                     onViewAllPropertyStays = onViewAllPropertyStays,
                     onNewStay = { mustShowStayTypeDialog = true },

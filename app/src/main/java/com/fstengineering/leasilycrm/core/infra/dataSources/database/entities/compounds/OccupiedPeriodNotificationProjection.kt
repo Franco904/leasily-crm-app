@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 data class OccupiedPeriodNotificationProjection(
     @ColumnInfo(name = "tenant_name") val tenantName: String,
     @ColumnInfo(name = "property_type_id") val propertyTypeId: Long,
-    @ColumnInfo(name = "property_owner_name") val propertyOwnerName: String,
+    @ColumnInfo(name = "property_owner_name") val proprietarioName: String,
     @ColumnInfo(name = "check_in_date_time") val checkInDateTime: AppDateTime,
     @ColumnInfo(name = "check_out_date_time") val checkOutDateTime: AppDateTime,
     @ColumnInfo(name = "is_check_in_today") val isCheckInToday: Boolean,

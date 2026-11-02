@@ -58,7 +58,7 @@ fun PropertyRegistrationFormSectionStep1(
     onFormChange: (PropertyDraftFormUiState.Loaded) -> Unit,
     pastNeighborhoods: ImmutableList<String>,
     formErrors: ImmutableMap<PropertyStep1Field, Int?>,
-    onSelectPropertyOwner: () -> Unit,
+    onSelectProprietario: () -> Unit,
     onLastTextFieldDone: () -> Unit,
     scrollToFieldFlow: Flow<PropertyStep1Field>,
     onNext: () -> Unit,
@@ -112,13 +112,13 @@ fun PropertyRegistrationFormSectionStep1(
             )
             Spacer(modifier = Modifier.height(24.dp))
             OwnerFormField(
-                propertyOwner = form.owner,
-                onSelectPropertyOwner = onSelectPropertyOwner,
-                error = formErrors[PropertyStep1Field.PropertyOwner],
+                proprietario = form.owner,
+                onSelectProprietario = onSelectProprietario,
+                error = formErrors[PropertyStep1Field.Proprietario],
                 modifier = Modifier
                     .onGloballyPositioned { coords ->
                         fieldsCoords = fieldsCoords.mutate { map ->
-                            map[PropertyStep1Field.PropertyOwner] = coords
+                            map[PropertyStep1Field.Proprietario] = coords
                         }
                     }
             )
