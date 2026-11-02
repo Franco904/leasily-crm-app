@@ -48,7 +48,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -386,17 +385,11 @@ private fun GoogleSignInButton(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.alpha(if (isSigningIn) 0f else 1f)
             ) {
-                Surface(
-                    shape = CircleShape,
-                    color = Color.White,
+                Image(
+                    painter = painterResource(R.drawable.ic_google_logo),
+                    contentDescription = null,
                     modifier = Modifier.size(32.dp)
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_google_logo),
-                        contentDescription = null,
-                        modifier = Modifier.padding(2.dp)
-                    )
-                }
+                )
                 Spacer(Modifier.width(12.dp))
                 Text(
                     text = stringResource(R.string.sign_in_sign_in_with_google),
