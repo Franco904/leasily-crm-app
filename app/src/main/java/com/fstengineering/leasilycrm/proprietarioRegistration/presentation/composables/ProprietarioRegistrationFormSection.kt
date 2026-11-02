@@ -92,7 +92,7 @@ fun ProprietarioRegistrationFormSection(
                     value = proprietarioForm.name ?: "",
                     onValueChange = { nameInput ->
                         onProprietarioFormChange(
-                            proprietarioForm.copy(name = nameInput.capitalizeFirst()),
+                            proprietarioForm.copy(name = nameInput.ifBlank { null }?.capitalizeFirst()),
                         )
                     },
                     isInvalid = formErrors[ProprietarioField.Name] != null,
@@ -116,7 +116,7 @@ fun ProprietarioRegistrationFormSection(
                     value = proprietarioForm.phone ?: "",
                     onValueChange = { phoneInput ->
                         onProprietarioFormChange(
-                            proprietarioForm.copy(phone = phoneInput),
+                            proprietarioForm.copy(phone = phoneInput.ifBlank { null }),
                         )
                     },
                     isInvalid = formErrors[ProprietarioField.Phone] != null,
@@ -142,7 +142,7 @@ fun ProprietarioRegistrationFormSection(
                     value = proprietarioForm.email ?: "",
                     onValueChange = { emailInput ->
                         onProprietarioFormChange(
-                            proprietarioForm.copy(email = emailInput),
+                            proprietarioForm.copy(email = emailInput.ifBlank { null }),
                         )
                     },
                     isInvalid = formErrors[ProprietarioField.Email] != null,
@@ -168,7 +168,7 @@ fun ProprietarioRegistrationFormSection(
                     value = proprietarioForm.paymentKey ?: "",
                     onValueChange = { paymentKeyInput ->
                         onProprietarioFormChange(
-                            proprietarioForm.copy(paymentKey = paymentKeyInput),
+                            proprietarioForm.copy(paymentKey = paymentKeyInput.ifBlank { null }),
                         )
                     },
                     isInvalid = formErrors[ProprietarioField.PaymentKey] != null,
