@@ -41,6 +41,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOption
 import com.fstengineering.leasilycrm.core.presentation.composables.CheckInCheckOutChipLabel
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
+import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
 import kotlinx.collections.immutable.toPersistentList
@@ -154,7 +155,7 @@ fun OccupiedPeriodCard(
             Text(
                 text = stringResource(
                     id = R.string.stay_card_subtitle_text,
-                    occupiedPeriod.propertyType?.name ?: "",
+                    occupiedPeriod.propertyType?.let { stringResource(it.presentationLabel()) } ?: "",
                     occupiedPeriod.propertyNeighborhood ?: "",
                 ),
                 style = MaterialTheme.typography.bodyMedium,
