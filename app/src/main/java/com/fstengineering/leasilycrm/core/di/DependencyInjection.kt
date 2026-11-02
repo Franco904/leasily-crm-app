@@ -53,7 +53,6 @@ import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationVie
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsDataSourceModule
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsViewModelModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationDataSourceModule
-import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationUseCaseModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationViewModelModule
 import com.fstengineering.leasilycrm.proprietarios.di.proprietariosDataSourceModule
 import com.fstengineering.leasilycrm.proprietarios.di.proprietariosViewModelModule
@@ -147,7 +146,6 @@ fun Application.configureDependencyInjection() {
 
             // Feature: proprietarioRegistration
             proprietarioRegistrationDataSourceModule,
-            proprietarioRegistrationUseCaseModule,
             proprietarioRegistrationViewModelModule,
 
             // Feature: proprietarioDetails

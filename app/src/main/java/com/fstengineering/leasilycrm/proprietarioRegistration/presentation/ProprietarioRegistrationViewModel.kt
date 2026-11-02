@@ -7,14 +7,14 @@ import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
-import com.fstengineering.leasilycrm.proprietarioRegistration.application.useCases.WriteProprietarioUseCase
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
-import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers.toProprietarioCommandModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
+import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers.toProprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers.toProprietarioDraftFormUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioDraftFormUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioErrorUiState
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 
 class ProprietarioRegistrationViewModel(
     private val route: Destinations.ProprietarioRegistration,
-    private val writeProprietario: WriteProprietarioUseCase,
+    private val proprietarioWriteDataSource: ProprietarioWriteDataSource,
     private val proprietarioRegistrationReadDataSource: ProprietarioRegistrationReadDataSource,
     private val sharedStorageDataSource: SharedStorageDataSource,
 ) : ViewModel() {
@@ -118,13 +118,12 @@ class ProprietarioRegistrationViewModel(
         }
 
         viewModelScope.launch {
-            writeProprietario(form.toProprietarioCommandModel())
+            val proprietario = form.toProprietario()
+                .fold(onError = { setFieldErrors(it.errors); return@launch }, onSuccess = { it })
+
+            proprietarioWriteDataSource.save(proprietario)
                 .onError { error ->
-                    when (error) {
-                        is ApplicationError -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(error))
-                        is ValidationErrors -> setFieldErrors(error.errors)
-                        is DomainError -> setFieldErrors(listOf(error))
-                    }
+                    _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(error))
 
                     return@launch
                 }

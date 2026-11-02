@@ -10,7 +10,7 @@ val proprietarioRegistrationViewModelModule = module {
     viewModel {
         ProprietarioRegistrationViewModel(
             route = get<SavedStateHandle>().toRoute(),
-            writeProprietario = get(),
+            proprietarioWriteDataSource = get(),
             proprietarioRegistrationReadDataSource = get(),
             sharedStorageDataSource = get(),
         )
