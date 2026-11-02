@@ -30,13 +30,13 @@ são **sinônimos**, e isso inclui um termo diferente do usado no `GLOSSARY.md`.
 dois conceitos é **ambíguo**.
 
 ```kotlin
-// RUIM: sinônimo, Locatário e Inquilino para o mesmo conceito
-suspend fun saveInquilino(inquilino: Cliente)
+// RUIM: sinônimo, Locatário e Hóspede para o mesmo conceito
+suspend fun saveHospede(hospede: Cliente)
 suspend fun getLocatarioEstadias(locatarioId: String): List<Estadia>
 
 // BOM
-suspend fun saveInquilino(inquilino: Cliente)
-suspend fun getInquilinoEstadias(inquilinoId: String): List<Estadia>
+suspend fun saveHospede(hospede: Cliente)
+suspend fun getHospedeEstadias(hospedeId: String): List<Estadia>
 ```
 
 ## Palavras extras

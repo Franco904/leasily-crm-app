@@ -62,7 +62,7 @@ planejada (ex.: `occupiedPeriodRegistration` → `periodoOcupadoRegistration`).
 | `proprietarios`              | Proprietários         | Listagem de Proprietários                                                                                                                               |
 | `proprietarioRegistration`   | Proprietários         | Cadastro e edição de Proprietários                                                                                                                      |
 | `proprietarioDetails`        | Proprietários         | Detalhes de um Proprietário                                                                                                                             |
-| `leadTenants`                | Clientes              | Listagem de Clientes segmentada por estado (Leads e Inquilinos)                                                                                         |
+| `leadTenants`                | Clientes              | Listagem de Clientes segmentada por estado (Leads e Hóspedes)                                                                                         |
 | `leadTenantRegistration`     | Clientes              | Cadastro e edição de Clientes                                                                                                                           |
 | `leadTenantDetails`          | Clientes              | SCV: visão centralizada do Cliente; exclusão de Atendimento e Cliente                                                                                   |
 | `assistanceRegistration`     | Atendimento           | Cadastro e gestão de Atendimentos                                                                                                                       |

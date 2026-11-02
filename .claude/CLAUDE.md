@@ -16,7 +16,7 @@ da indústria (ex.: `Manager`, `Helper`, `DataService`).
 
 Exemplos corretos:
 
-- Entidades/estados: `Imovel`, `Proprietario`, `Lead`, `Inquilino`, `InquilinoAntigo`,
+- Entidades/estados: `Imovel`, `Proprietario`, `Lead`, `Hospede`, `HospedeAntigo`,
   `Atendimento`, `PeriodoOcupado`, `Estadia`, `PeriodoIndisponivel`
 - Eventos: `CheckIn`, `CheckOut`
 - Use cases: `RegisterCheckInUseCase`, `RegisterCheckOutUseCase`, `UndoRegisterStayCheckOutUseCase`

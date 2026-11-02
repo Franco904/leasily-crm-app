@@ -59,13 +59,13 @@ decisões de delimitação de MVP):
 ### Confronte com o glossário
 
 Quando o usuário usar um termo que conflite com a linguagem ubíqua existente no `GLOSSARY.md`, aponte
-imediatamente. "Seu glossário define 'Inquilino' como X, mas você parece querer dizer Y — qual é o
+imediatamente. "Seu glossário define 'Hóspede' como X, mas você parece querer dizer Y — qual é o
 correto?"
 
 ### Afine a linguagem imprecisa
 
 Quando o usuário usar termos vagos, sinônimos ou ambíguos, proponha um termo canônico preciso. "Você
-está dizendo 'cliente' — você quer dizer o Lead ou o Inquilino? São coisas diferentes."
+está dizendo 'cliente' — você quer dizer o Lead ou o Hóspede? São coisas diferentes."
 
 ### Respeite os limites de contexto
 

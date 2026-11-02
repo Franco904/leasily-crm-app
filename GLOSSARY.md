@@ -15,7 +15,7 @@ Atributos autoexplicativos ficam de fora, e as definições não enumeram as op�
 
 - **Autenticação** — Login do Corretor via conta Google, manutenção da sessão e perfil profissional.
 - **Imóveis** — Catálogo de imóveis administrados: características físicas, localização e configuração financeira por imóvel.
-- **Clientes** — Gestão de Leads e Inquilinos; ciclo de vida do Cliente e visão centralizada (SCV).
+- **Clientes** — Gestão de Leads e Hóspedes; ciclo de vida do Cliente e visão centralizada (SCV).
 - **Proprietários** — Cadastro dos Proprietários que contratam o Corretor para administrar seus Imóveis.
 - **Atendimento** — Registro do episódio de procura de um Lead: preferências de procura, imóveis enviados e interações.
 - **Períodos Ocupados** — Ciclo de vida de um intervalo de indisponibilidade de um Imóvel: Estadias e Períodos indisponíveis; inclui controle de overbooking e financeiro da Estadia.
@@ -60,15 +60,16 @@ _Alias de código_: `Commission`
 
 ### Clientes
 
-**Cliente**: Contato na carteira do Corretor. Concentra dados pessoais (nome, telefone, documento, cidade). Lead, Inquilino e Inquilino antigo são estados derivados dos seus Atendimentos e Estadias — não são tipos distintos de cadastro.
+**Cliente**: Contato na carteira do Corretor. Concentra dados pessoais (nome, telefone, documento, cidade). Lead, Hóspede e Hóspede antigo são estados derivados dos seus Atendimentos e Estadias — não são tipos distintos de cadastro.
 _Alias de código_: `LeadTenant`
 
 **Lead**: Cliente com Atendimento em status "Não finalizado" e **sem** Estadia ativa associada.
 
-**Inquilino**: Cliente com Estadia ativa (cadastrada com status diferente de "Finalizada") associada ao seu nome. Pode opcionalmente ter Atendimento em status "Não finalizado".
+**Hóspede**: Cliente com Estadia ativa (cadastrada com status diferente de "Finalizada") associada ao seu nome — o titular da reserva e do contrato de locação. Pode opcionalmente ter Atendimento em status "Não finalizado".
 _Alias de código_: `Tenant`
+_Evitar_: Inquilino, Locatário (vocabulário de locação de longa duração)
 
-**Inquilino antigo**: Cliente com ao menos uma Estadia com status "Finalizada" no histórico e **sem** Atendimento em status "Não finalizado" no momento.
+**Hóspede antigo**: Cliente com ao menos uma Estadia com status "Finalizada" no histórico e **sem** Atendimento em status "Não finalizado" no momento.
 
 **SCV (Single Customer View)**: Visão centralizada do cliente que concentra dados de contato, Atendimento atual, histórico de Atendimentos e Estadias passadas em um único lugar.
 
@@ -91,7 +92,7 @@ _Alias de código_: `Assistance`
 - **Não finalizado** — procura ativa; o Cliente é tratado como Lead (se sem Estadia ativa).
 - **Finalizado** — encerrado pela conversão em Estadia. Transição irreversível; não é possível reabrir um Atendimento Finalizado.
 
-**Preferências de procura**: Critérios coletados do Lead durante o Atendimento — número de hóspedes (adultos, crianças, bebês, animais de estimação), bairro desejado, período projetado de estadia, diária máxima aceita, distância ao mar, número de dormitórios e vagas de estacionamento.
+**Preferências de procura**: Critérios coletados do Lead durante o Atendimento — número de pessoas (adultos, crianças, bebês, animais de estimação), bairro desejado, período projetado de estadia, diária máxima aceita, distância ao mar, número de dormitórios e vagas de estacionamento.
 
 **Imóveis enviados**: Lista de Imóveis apresentados pelo Corretor ao Lead como opções durante o Atendimento.
 
@@ -111,7 +112,7 @@ _Alias de código_: `contactOrigin`, `ContactChannel`
 **Período Ocupado**: Registro de um intervalo de tempo em que um Imóvel está indisponível para novas reservas. Possui dois subtipos: Estadia e Período indisponível.
 _Alias de código_: `OccupiedPeriod`
 
-**Estadia**: Período Ocupado com Inquilino associado. Representa uma locação por temporada. Possui período contratado, configuração financeira, número de hóspedes e status de progresso.
+**Estadia**: Período Ocupado com Hóspede associado. Representa uma locação por temporada. Possui período contratado, configuração financeira, número de pessoas e status de progresso.
 _Alias de código_: `Stay`
 
 **Status da Estadia**:
@@ -119,14 +120,14 @@ _Alias de código_: `Stay`
 - **Em andamento** — check-in realizado; check-out ainda não realizado.
 - **Finalizada** — check-in e check-out realizados.
 
-**Período indisponível**: Período Ocupado sem Inquilino associado. Intervalo em que um Imóvel não está disponível para Estadia por razão não relacionada a uma locação (ex: uso pelo Proprietário, manutenção). Considerado no controle de overbooking.
+**Período indisponível**: Período Ocupado sem Hóspede associado. Intervalo em que um Imóvel não está disponível para Estadia por razão não relacionada a uma locação (ex: uso pelo Proprietário, manutenção). Considerado no controle de overbooking.
 _Alias de código_: `UnavailablePeriod`
 
-**Check-in**: Evento de entrada do Inquilino no Imóvel. Registrado pelo Corretor na Estadia; transiciona o status de "Aguardando check-in" para "Em andamento".
+**Check-in**: Evento de entrada do Hóspede no Imóvel. Registrado pelo Corretor na Estadia; transiciona o status de "Aguardando check-in" para "Em andamento".
 
-**Check-out**: Evento de saída do Inquilino do Imóvel. Registrado pelo Corretor na Estadia; transiciona o status para "Finalizada" e move o Cliente de Inquilino para Inquilino antigo (se não houver Atendimento "Não finalizado").
+**Check-out**: Evento de saída do Hóspede do Imóvel. Registrado pelo Corretor na Estadia; transiciona o status para "Finalizada" e move o Cliente de Hóspede para Hóspede antigo (se não houver Atendimento "Não finalizado").
 
-**Sinal** (Estadias): Valor transferido pelo Inquilino como confirmação da reserva antes do check-in, conforme definido na configuração do Imóvel.
+**Sinal** (Estadias): Valor transferido pelo Hóspede como confirmação da reserva antes do check-in, conforme definido na configuração do Imóvel.
 
 **Movimentação financeira**: Registro de uma transferência monetária dentro de uma Estadia — data, valor, descrição, forma de pagamento (ex: Pix), titular e chave de pagamento.
 _Alias de código_: `StayTransfer`
@@ -135,7 +136,7 @@ _Alias de código_: `StayTransfer`
 
 **Comissão total da estadia**: Valor retido pelo Corretor como remuneração pela intermediação da Estadia.
 
-**Valor pendente no check-in**: Parcela do aluguel não paga como sinal, devida pelo Inquilino no momento do check-in.
+**Valor pendente no check-in**: Parcela do aluguel não paga como sinal, devida pelo Hóspede no momento do check-in.
 
 **Notificação de check-in/check-out**: Alerta enviado ao Corretor no início de cada manhã em que há check-ins ou check-outs de Estadias agendados para o mesmo dia.
 
@@ -162,10 +163,10 @@ _Alias de código_: `Invoice`
 
 ## Diálogo de Exemplo
 
-> **Dev**: Quando o Corretor cadastra um Atendimento para um Inquilino antigo, o que acontece?
+> **Dev**: Quando o Corretor cadastra um Atendimento para um Hóspede antigo, o que acontece?
 >
-> **Especialista**: O cliente passa a ser tratado como Lead — ele voltou a ter uma procura ativa. Se o Atendimento for excluído antes de gerar uma Estadia, ele volta para Inquilino antigo, porque ainda tem estadias passadas.
+> **Especialista**: O cliente passa a ser tratado como Lead — ele voltou a ter uma procura ativa. Se o Atendimento for excluído antes de gerar uma Estadia, ele volta para Hóspede antigo, porque ainda tem estadias passadas.
 >
 > **Dev**: E se o Corretor cadastrar uma Estadia para esse Lead?
 >
-> **Especialista**: Aí ele vira Inquilino. Quando o check-out for registrado nessa Estadia, o Atendimento fica como Finalizado. Se o cliente não tiver outro Atendimento "Não finalizado" aberto, volta para Inquilino antigo.
+> **Especialista**: Aí ele vira Hóspede. Quando o check-out for registrado nessa Estadia, o Atendimento fica como Finalizado. Se o cliente não tiver outro Atendimento "Não finalizado" aberto, volta para Hóspede antigo.
