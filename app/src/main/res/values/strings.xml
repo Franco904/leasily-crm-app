@@ -448,7 +448,7 @@
     <string name="stay_type_dialog_title">Escolha uma opção</string>
 
     <string name="stay_type_stay_title">Estadia de cliente</string>
-    <string name="stay_type_stay_description">Registre uma estadia para um de seus leads</string>
+    <string name="stay_type_stay_description">Registre uma estadia para um de seus clientes</string>
 
     <string name="stay_type_unavailable_period_title">Período indisponível</string>
     <string name="stay_type_unavailable_period_description">Registre a indisponibilidade de um imóvel por motivos externos</string>
@@ -472,7 +472,7 @@
 
     <string name="stay_registration_property_title">Imóvel</string>
 
-    <string name="stay_registration_tenant_title">Inquilino</string>
+    <string name="stay_registration_tenant_title">Hóspede responsável</string>
     <string name="stay_registration_tenant_vehicle_make_label">Marca do automóvel</string>
     <string name="stay_registration_tenant_vehicle_color_label">Cor do automóvel</string>
     <string name="stay_registration_tenant_vehicle_license_plate_label">Placa do automóvel</string>
