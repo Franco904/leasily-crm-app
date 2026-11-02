@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 
 data class ImovelRawReadModel(
     val id: Long,
-    val ownerId: Long,
+    val proprietarioId: Long,
     val type: ImovelType,
     val neighborhood: String,
     val streetAddress: String,

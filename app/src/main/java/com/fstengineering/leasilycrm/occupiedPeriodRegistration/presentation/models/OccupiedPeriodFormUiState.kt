@@ -13,7 +13,7 @@ sealed interface OccupiedPeriodFormUiState {
     sealed interface Loaded : OccupiedPeriodFormUiState {
         val id: Long?
         val createDateTime: AppDateTime?
-        val property: ImovelCardUiState?
+        val imovel: ImovelCardUiState?
         val checkInDateTime: AppDateTime?
         val checkOutDateTime: AppDateTime?
         val observations: String?
@@ -23,7 +23,7 @@ sealed interface OccupiedPeriodFormUiState {
         data class Stay(
             override val id: Long?,
             override val createDateTime: AppDateTime?,
-            override val property: ImovelCardUiState?,
+            override val imovel: ImovelCardUiState?,
             val tenant: LeadTenantUiState?,
             val vehicleMake: String?,
             val vehicleColor: String?,
@@ -40,7 +40,7 @@ sealed interface OccupiedPeriodFormUiState {
             val files: ImmutableList<StayFileUiState>,
             override val observations: String?,
         ) : Loaded {
-            override val isAnyFormFieldInitialized = property != null ||
+            override val isAnyFormFieldInitialized = imovel != null ||
                     tenant != null ||
                     vehicleMake != null ||
                     vehicleColor != null ||
@@ -66,12 +66,12 @@ sealed interface OccupiedPeriodFormUiState {
         data class UnavailablePeriod(
             override val id: Long?,
             override val createDateTime: AppDateTime?,
-            override val property: ImovelCardUiState?,
+            override val imovel: ImovelCardUiState?,
             override val checkInDateTime: AppDateTime?,
             override val checkOutDateTime: AppDateTime?,
             override val observations: String?,
         ) : Loaded {
-            override val isAnyFormFieldInitialized = property != null ||
+            override val isAnyFormFieldInitialized = imovel != null ||
                     checkInDateTime != null ||
                     checkOutDateTime != null ||
                     observations != null

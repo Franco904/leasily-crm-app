@@ -17,7 +17,7 @@ import kotlinx.collections.immutable.toPersistentList
 class Imovel private constructor(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val ownerId: Long,
+    val proprietarioId: Long,
     val type: ImovelType,
     val neighborhood: String,
     val streetAddress: String,
@@ -49,7 +49,7 @@ class Imovel private constructor(
         fun parse(
             id: Long? = null,
             createDateTime: AppDateTime? = null,
-            ownerId: Long? = null,
+            proprietarioId: Long? = null,
             type: ImovelType? = null,
             neighborhood: String? = null,
             streetAddress: String? = null,
@@ -80,7 +80,7 @@ class Imovel private constructor(
         ): AppResult<Imovel, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
-            if (ownerId == null) errors.add(DomainError.ImovelProprietario.Required)
+            if (proprietarioId == null) errors.add(DomainError.ImovelProprietario.Required)
             if (type == null) errors.add(DomainError.ImovelType.Required)
 
             if (neighborhood.isNullOrBlank()) errors.add(DomainError.Neighborhood.Required)
@@ -100,7 +100,7 @@ class Imovel private constructor(
             val parsed = Imovel(
                 id = id,
                 createDateTime = createDateTime,
-                ownerId = requireNotNull(ownerId),
+                proprietarioId = requireNotNull(proprietarioId),
                 type = requireNotNull(type),
                 neighborhood = requireNotNull(neighborhood),
                 streetAddress = requireNotNull(streetAddress),

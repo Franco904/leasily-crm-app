@@ -15,7 +15,7 @@ sealed interface ImovelUiState {
         val mainPicture: ImovelFileUiState?,
         val type: ImovelType,
         val address: ImovelAddressUiState,
-        val owner: ProprietarioUiState,
+        val proprietario: ProprietarioUiState,
         val currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<ImovelOccupiedDateUiState>>,
     ) : ImovelUiState {
         fun toCardDetails(): ImovelCardUiState {

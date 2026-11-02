@@ -35,7 +35,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayCheckInTimeFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayCheckOutTimeFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayPeriodFormField
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayPropertyFormField
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayImovelFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StaysObservationsFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodFormUiState
@@ -51,8 +51,8 @@ fun UnavailablePeriodRegistrationFormSection(
     form: OccupiedPeriodFormUiState.Loaded.UnavailablePeriod,
     onFormChange: (OccupiedPeriodFormUiState.Loaded.UnavailablePeriod) -> Unit,
     stayFormErrors: ImmutableMap<OccupiedPeriodField, Int?>,
-    onSelectProperty: () -> Unit,
-    onPeriodDisabledByPropertyUnselected: () -> Unit,
+    onSelectImovel: () -> Unit,
+    onPeriodDisabledByImovelUnselected: () -> Unit,
     scrollToFieldFlow: Flow<OccupiedPeriodField>,
     modifier: Modifier = Modifier,
 ) {
@@ -100,9 +100,9 @@ fun UnavailablePeriodRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(OccupiedPeriodField.Imovel))
             ) {
-                StayPropertyFormField(
-                    stayProperty = form.property,
-                    onSelectStayProperty = onSelectProperty,
+                StayImovelFormField(
+                    stayImovel = form.imovel,
+                    onSelectStayImovel = onSelectImovel,
                     isEnabled = true,
                     error = stayFormErrors[OccupiedPeriodField.Imovel],
                 )
@@ -124,7 +124,7 @@ fun UnavailablePeriodRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(OccupiedPeriodField.Period))
             ) {
-                val isEnabled = form.property != null
+                val isEnabled = form.imovel != null
 
                 StayPeriodFormField(
                     checkInDateTime = form.checkInDateTime,
@@ -144,7 +144,7 @@ fun UnavailablePeriodRegistrationFormSection(
                                 fallbackIndex = OccupiedPeriodField.Imovel.scrollIndex,
                             )
 
-                            onPeriodDisabledByPropertyUnselected()
+                            onPeriodDisabledByImovelUnselected()
                         }
                     },
                 )
@@ -207,7 +207,7 @@ fun UnavailablePeriodRegistrationFormSection(
                 initialDayOfMonth = initialDayOfMonth,
                 initialMonth = initialMonth,
                 initialYear = initialYear,
-                fixedNonSelectableDates = form.property?.occupiedDates ?: persistentSetOf(),
+                fixedNonSelectableDates = form.imovel?.occupiedDates ?: persistentSetOf(),
             ),
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onFormChange(

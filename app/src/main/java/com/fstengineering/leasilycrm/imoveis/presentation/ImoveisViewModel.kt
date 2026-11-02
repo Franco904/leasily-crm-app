@@ -31,9 +31,9 @@ class ImoveisViewModel(
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _properties =
+    private val _imoveis =
         MutableStateFlow<ImmutableList<ImovelCardUiState>>(persistentListOf())
-    val imoveis = _properties.asStateFlow()
+    val imoveis = _imoveis.asStateFlow()
 
     private val _imovelToDelete = MutableStateFlow<ImovelCardUiState?>(null)
     val imovelToDelete = _imovelToDelete.asStateFlow()
@@ -57,7 +57,7 @@ class ImoveisViewModel(
                     .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { storedImoveis ->
                         val imoveis = storedImoveis.map { it.toUiState() }.toPersistentList()
-                        _properties.update { imoveis }
+                        _imoveis.update { imoveis }
                     }
             }
         }
@@ -74,7 +74,7 @@ class ImoveisViewModel(
                         .onSuccess { matchingImoveis ->
                             val imoveis =
                                 matchingImoveis.map { it.toUiState() }.toPersistentList()
-                            _properties.update { imoveis }
+                            _imoveis.update { imoveis }
                         }
                 }
         }

@@ -9,7 +9,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class ImovelCommandModel(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val ownerId: Long?,
+    val proprietarioId: Long?,
     val type: ImovelType?,
     val neighborhood: String?,
     val streetAddress: String?,

@@ -34,17 +34,17 @@ fun AssistanceRegistrationTopAppBar(
     leadTenantName: String,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    isAddingSentProperty: Boolean = false,
+    isAddingSentImovel: Boolean = false,
     mustShowSearchImovelAction: Boolean = false,
-    isSearchingPropertyToSend: Boolean = false,
-    onSearchPropertyToSend: () -> Unit = {},
+    isSearchingImovelToSend: Boolean = false,
+    onSearchImovelToSend: () -> Unit = {},
     searchInput: String? = null,
     onSearchInputChange: (String) -> Unit = {},
 ) {
     val searchFieldFocusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(isSearchingPropertyToSend) {
-        if (isSearchingPropertyToSend) searchFieldFocusRequester.requestFocus()
+    LaunchedEffect(isSearchingImovelToSend) {
+        if (isSearchingImovelToSend) searchFieldFocusRequester.requestFocus()
     }
 
     BackHandler {
@@ -63,12 +63,12 @@ fun AssistanceRegistrationTopAppBar(
         },
         title = {
             when {
-                isAddingSentProperty -> {
+                isAddingSentImovel -> {
                     AnimatedContent(
-                        targetState = isSearchingPropertyToSend,
+                        targetState = isSearchingImovelToSend,
                         label = "AssistanceRegistrationTopAppBarTitle",
-                    ) { isSearchingPropertyToSend ->
-                        if (isSearchingPropertyToSend) {
+                    ) { isSearchingImovelToSend ->
+                        if (isSearchingImovelToSend) {
                             SearchTextField(
                                 searchInput = searchInput ?: "",
                                 onSearchInputChange = onSearchInputChange,
@@ -113,7 +113,7 @@ fun AssistanceRegistrationTopAppBar(
         actions = {
             if (mustShowSearchImovelAction) {
                 IconButton(
-                    onClick = onSearchPropertyToSend,
+                    onClick = onSearchImovelToSend,
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Search,

@@ -13,9 +13,9 @@ import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun OccupiedPeriodPropertySelectionList(
-    properties: ImmutableList<ImovelCardUiState>,
-    onPropertySelect: (ImovelCardUiState) -> Unit,
+fun OccupiedPeriodImovelSelectionList(
+    imoveis: ImmutableList<ImovelCardUiState>,
+    onImovelSelect: (ImovelCardUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -26,13 +26,13 @@ fun OccupiedPeriodPropertySelectionList(
     ) {
         item { Spacer(modifier = Modifier.height(16.dp)) }
         itemsIndexed(
-            items = properties,
-            key = { _, property -> property.id },
+            items = imoveis,
+            key = { _, imovel -> imovel.id },
             contentType = { _, entryType -> entryType },
-        ) { _, property ->
+        ) { _, imovel ->
             ImovelCard(
-                imovel = property,
-                onCardClick = { onPropertySelect(property) },
+                imovel = imovel,
+                onCardClick = { onImovelSelect(imovel) },
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,
             )

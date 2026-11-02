@@ -2,10 +2,10 @@ package com.fstengineering.leasilycrm.assistanceRegistration.application.useCase
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceRawReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceReadModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentPropertyReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentImovelReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.queries.AssistanceArgs
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentPropertyQueryRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentImovelQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.LeadTenantQueryRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
@@ -16,7 +16,7 @@ import kotlinx.collections.immutable.persistentListOf
 class ReadAssistanceUseCase(
     private val leadTenantQueryRepository: LeadTenantQueryRepository,
     private val assistanceQueryRepository: AssistanceQueryRepository,
-    private val assistanceSentPropertyQueryRepository: AssistanceSentPropertyQueryRepository,
+    private val assistanceSentImovelQueryRepository: AssistanceSentImovelQueryRepository,
 ) {
     suspend operator fun invoke(
         args: AssistanceArgs,
@@ -33,17 +33,17 @@ class ReadAssistanceUseCase(
                 onSuccess = { storedAssistance -> storedAssistance },
             )
 
-        val sentProperties = loadSentProperties(args.assistanceId)
+        val sentImoveis = loadSentImoveis(args.assistanceId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
-                onSuccess = { storedSentProperties -> storedSentProperties },
+                onSuccess = { storedSentImoveis -> storedSentImoveis },
             )
 
         val updatedReadModel = AssistanceReadModel.create(
             leadTenantId = args.leadTenantId,
             leadTenantName = leadTenantName,
             assistanceRaw = assistanceRaw,
-            sentProperties = sentProperties,
+            sentImoveis = sentImoveis,
         )
 
         return AppResult.Success(data = updatedReadModel)
@@ -59,13 +59,13 @@ class ReadAssistanceUseCase(
         return assistanceQueryRepository.getById(assistanceId)
     }
 
-    private suspend fun loadSentProperties(
+    private suspend fun loadSentImoveis(
         assistanceId: Long?,
-    ): AppResult<ImmutableList<AssistanceSentPropertyReadModel>, ApplicationError> {
+    ): AppResult<ImmutableList<AssistanceSentImovelReadModel>, ApplicationError> {
         if (assistanceId == null) {
             return AppResult.Success(persistentListOf())
         }
 
-        return assistanceSentPropertyQueryRepository.getAllSentInAssistance(assistanceId)
+        return assistanceSentImovelQueryRepository.getAllSentInAssistance(assistanceId)
     }
 }

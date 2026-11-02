@@ -15,7 +15,7 @@ fun Imovel.toLocalDataModel(): ImovelOrm {
         id = id,
         createDateTime = createDateTime ?: AppDateTime.now(),
         updateDateTime = AppDateTime.now(),
-        ownerId = ownerId,
+        proprietarioId = proprietarioId,
         typeId = type.id,
         neighborhood = neighborhood,
         streetAddress = streetAddress,

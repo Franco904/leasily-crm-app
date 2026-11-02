@@ -9,7 +9,7 @@ val occupiedPeriodRegistrationViewModelModule = module {
         OccupiedPeriodRegistrationViewModel(
             readStay = get(),
             readUnavailablePeriod = get(),
-            readSelectableProperties = get(),
+            readSelectableImoveis = get(),
             writeStay = get(),
             writeUnavailablePeriod = get(),
             imovelQueryRepository = get(),

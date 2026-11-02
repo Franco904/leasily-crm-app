@@ -48,7 +48,7 @@ data class ImovelOrm(
     @ColumnInfo(name = "has_cleaning_service_included") val hasCleaningServiceIncluded: Boolean,
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
-    @ColumnInfo(name = "property_owner_id") val ownerId: Long,
+    @ColumnInfo(name = "property_owner_id") val proprietarioId: Long,
     @ColumnInfo(name = "property_type_id") val typeId: Long,
     @ColumnInfo(name = "property_sea_proximity_type_id") val seaProximityTypeId: Long?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,

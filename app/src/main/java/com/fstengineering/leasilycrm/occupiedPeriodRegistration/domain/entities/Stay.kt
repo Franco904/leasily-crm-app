@@ -52,7 +52,7 @@ class Stay private constructor(
         ): AppResult<Stay, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
-            if (imovelId == null) errors.add(DomainError.StayProperty.Required)
+            if (imovelId == null) errors.add(DomainError.StayImovel.Required)
             if (tenantId == null) errors.add(DomainError.StayTenant.Required)
 
             val (checkInTimeHour, checkInTimeMinute) = checkInTime

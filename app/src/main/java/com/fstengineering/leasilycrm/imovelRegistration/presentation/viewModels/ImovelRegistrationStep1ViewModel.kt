@@ -34,7 +34,7 @@ class ImovelRegistrationStep1ViewModel : ViewModel() {
     ) {
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                if (newForm.owner != currentForm.owner) {
+                if (newForm.proprietario != currentForm.proprietario) {
                     map[ImovelStep1Field.Proprietario] = null
                 }
                 if (newForm.type != currentForm.type) {
@@ -54,7 +54,7 @@ class ImovelRegistrationStep1ViewModel : ViewModel() {
 
     fun validateImovelStep1(form: ImovelDraftFormUiState.Loaded) {
         Imovel.parse(
-            ownerId = form.owner?.id,
+            proprietarioId = form.proprietario?.id,
             type = form.type,
             neighborhood = form.neighborhood,
             streetAddress = form.streetAddress,

@@ -24,13 +24,13 @@ class ImovelQueryRepositoryImpl(
     override suspend fun getAll(
         matching: String?,
     ): AppResult<ImmutableList<ImovelReadModel>, ApplicationError> {
-        val properties = databaseDataSource.getAll(matching)
+        val imoveis = databaseDataSource.getAll(matching)
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { it },
             )
-            .map { property -> property.toReadModel() }.toPersistentList()
+            .map { imovel -> imovel.toReadModel() }.toPersistentList()
 
-        return AppResult.Success(data = properties)
+        return AppResult.Success(data = imoveis)
     }
 }

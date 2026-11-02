@@ -25,7 +25,7 @@ fun ImovelReadModel.toUiState(): ImovelUiState.Loaded {
             streetAddress = streetAddress,
             number = number,
         ),
-        owner = owner.toUiState(),
+        proprietario = proprietario.toUiState(),
         currentMonthOccupiedPeriods = currentYearMonth to occupiedPeriods
             .map { it.toUiState() }
             .toPersistentList(),

@@ -21,14 +21,14 @@ class ReadImovelUseCase(
                 onSuccess = { storedImovel -> storedImovel },
             )
 
-        val proprietario = proprietarioReadDataSource.getProprietario(imovelRaw.ownerId)
+        val proprietario = proprietarioReadDataSource.getProprietario(imovelRaw.proprietarioId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
                 onSuccess = { storedProprietario -> storedProprietario },
             )
 
         val updatedReadModel = ImovelReadModel.create(
-            owner = proprietario,
+            proprietario = proprietario,
             imovelRaw = imovelRaw,
         )
 

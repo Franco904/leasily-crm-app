@@ -9,7 +9,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class ImovelReadModel(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val owner: ProprietarioReadModel?,
+    val proprietario: ProprietarioReadModel?,
     val type: ImovelType?,
     val neighborhood: String?,
     val streetAddress: String?,
@@ -41,11 +41,11 @@ data class ImovelReadModel(
     companion object {
         fun create(
             imovelRaw: ImovelRawReadModel?,
-            owner: ProprietarioReadModel?,
+            proprietario: ProprietarioReadModel?,
         ) = ImovelReadModel(
             id = imovelRaw?.id,
             createDateTime = imovelRaw?.createDateTime,
-            owner = owner,
+            proprietario = proprietario,
             type = imovelRaw?.type,
             neighborhood = imovelRaw?.neighborhood,
             streetAddress = imovelRaw?.streetAddress,

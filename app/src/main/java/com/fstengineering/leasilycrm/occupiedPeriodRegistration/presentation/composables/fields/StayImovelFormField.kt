@@ -21,9 +21,9 @@ import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelC
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 
 @Composable
-fun StayPropertyFormField(
-    stayProperty: ImovelCardUiState?,
-    onSelectStayProperty: () -> Unit,
+fun StayImovelFormField(
+    stayImovel: ImovelCardUiState?,
+    onSelectStayImovel: () -> Unit,
     isEnabled: Boolean,
     error: Int?,
     modifier: Modifier = Modifier,
@@ -43,24 +43,24 @@ fun StayPropertyFormField(
             )
             AppOutlinedButton(
                 icon = when {
-                    stayProperty == null -> Icons.Outlined.Search
+                    stayImovel == null -> Icons.Outlined.Search
                     else -> Icons.Outlined.Edit
                 },
                 label = stringResource(
                     when {
-                        stayProperty == null -> R.string.select_action_button_text
+                        stayImovel == null -> R.string.select_action_button_text
                         else -> R.string.edit_action_button_text
                     }
                 ),
                 isEnabled = isEnabled,
-                onClick = onSelectStayProperty,
+                onClick = onSelectStayImovel,
             )
         }
-        AnimatedVisibility(stayProperty != null) {
+        AnimatedVisibility(stayImovel != null) {
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
                 ImovelCard(
-                    imovel = stayProperty!!,
+                    imovel = stayImovel!!,
                     hasMoreOptionsMenu = false,
                     hasCharacteristicsChipsRow = false,
                 )

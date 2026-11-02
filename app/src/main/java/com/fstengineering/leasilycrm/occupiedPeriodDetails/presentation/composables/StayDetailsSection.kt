@@ -15,7 +15,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composab
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayCommissionDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayObservationsDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayPeriodDetailsItem
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayPropertyDetailsItem
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayImovelDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayQtGuestsDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayTenantDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayTenantVehicleDataDetailsItem
@@ -29,7 +29,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.S
 fun StayDetailsSection(
     stay: OccupiedPeriodDetailsUiState.Loaded,
     onOpenStayFile: (StayFileUiState) -> Unit,
-    cameFromProperty: Boolean,
+    cameFromImovel: Boolean,
     cameFromTenant: Boolean,
     onViewImovelDashboard: () -> Unit,
     onViewTenantDetails: () -> Unit,
@@ -44,9 +44,9 @@ fun StayDetailsSection(
     ) {
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item {
-            StayPropertyDetailsItem(
-                property = stay.property,
-                cameFromProperty = cameFromProperty,
+            StayImovelDetailsItem(
+                imovel = stay.imovel,
+                cameFromImovel = cameFromImovel,
                 onViewImovelDashboard = onViewImovelDashboard,
             )
         }

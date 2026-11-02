@@ -17,7 +17,7 @@ import kotlinx.collections.immutable.toPersistentMap
 fun OccupiedPeriodReadModel.toUiState() = OccupiedPeriodDetailsUiState.Loaded(
     id = id,
     tenantId = tenantId,
-    property = property.toUiState(),
+    imovel = imovel.toUiState(),
     tenant = tenant?.toUiState(),
     vehicleMake = vehicleMake,
     vehicleColor = vehicleColor,

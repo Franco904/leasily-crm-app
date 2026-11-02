@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.Imo
 
 fun ImovelCompound.toRawReadModel() = ImovelRawReadModel(
     id = requireNotNull(imovel.id),
-    ownerId = imovel.ownerId,
+    proprietarioId = imovel.proprietarioId,
     type = requireNotNull(ImovelType.fromId(imovel.typeId)),
     neighborhood = imovel.neighborhood,
     streetAddress = imovel.streetAddress,

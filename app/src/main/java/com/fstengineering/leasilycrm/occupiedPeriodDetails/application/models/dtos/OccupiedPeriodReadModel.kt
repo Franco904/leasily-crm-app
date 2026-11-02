@@ -10,7 +10,7 @@ import kotlinx.collections.immutable.ImmutableMap
 data class OccupiedPeriodReadModel(
     val id: Long,
     val tenantId: Long?,
-    val property: ImovelReadModel,
+    val imovel: ImovelReadModel,
     val tenant: TenantReadModel?,
     val vehicleMake: String?,
     val vehicleColor: String?,
@@ -35,13 +35,13 @@ data class OccupiedPeriodReadModel(
     companion object {
         fun create(
             raw: OccupiedPeriodRawReadModel,
-            property: ImovelReadModel,
+            imovel: ImovelReadModel,
             tenant: TenantReadModel?,
             occupiedDatesGrouped: ImmutableMap<AppYearMonth, ImmutableList<ImovelOccupiedDate>>,
         ) = OccupiedPeriodReadModel(
             id = raw.id,
             tenantId = raw.tenantId,
-            property = property,
+            imovel = imovel,
             tenant = tenant,
             vehicleMake = raw.vehicleMake,
             vehicleColor = raw.vehicleColor,

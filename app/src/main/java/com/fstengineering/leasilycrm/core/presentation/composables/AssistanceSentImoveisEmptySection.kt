@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 
 @Composable
-fun AssistanceSentPropertiesEmptySection(
+fun AssistanceSentImoveisEmptySection(
     modifier: Modifier = Modifier,
 ) {
     Column(

@@ -20,24 +20,24 @@ class ImovelOccupiedDatesService {
                 .filter { (stayId, _, _) -> stayToEditId == null || stayId != stayToEditId }
 
             return relevantPeriods
-                .flatMap { (_, propertyCheckInDateTime, propertyCheckOutDateTime) ->
+                .flatMap { (_, imovelCheckInDateTime, imovelCheckOutDateTime) ->
                     val isCheckInAlsoACheckOut =
                         relevantPeriods.any { (_, _, otherCheckOutDateTime) ->
-                            propertyCheckInDateTime.toDate() == otherCheckOutDateTime.toDate()
+                            imovelCheckInDateTime.toDate() == otherCheckOutDateTime.toDate()
                         }
 
                     val isCheckOutAlsoACheckIn =
                         relevantPeriods.any { (_, otherCheckInDateTime, _) ->
-                            propertyCheckOutDateTime.toDate() == otherCheckInDateTime.toDate()
+                            imovelCheckOutDateTime.toDate() == otherCheckInDateTime.toDate()
                         }
 
                     val startDateTime =
-                        if (isCheckInAlsoACheckOut) propertyCheckInDateTime
-                        else propertyCheckInDateTime.plusDays(1)
+                        if (isCheckInAlsoACheckOut) imovelCheckInDateTime
+                        else imovelCheckInDateTime.plusDays(1)
 
                     val endDateTime =
-                        if (isCheckOutAlsoACheckIn) propertyCheckOutDateTime
-                        else propertyCheckOutDateTime.minusDays(1)
+                        if (isCheckOutAlsoACheckIn) imovelCheckOutDateTime
+                        else imovelCheckOutDateTime.minusDays(1)
 
                     generateSequence(startDateTime) { it.plusDays(1) }
                         .takeWhile { it <= endDateTime }

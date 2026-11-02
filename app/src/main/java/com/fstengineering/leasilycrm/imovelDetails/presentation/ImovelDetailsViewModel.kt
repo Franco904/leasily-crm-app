@@ -27,8 +27,8 @@ class ImovelDetailsViewModel(
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _property = MutableStateFlow<ImovelUiState>(ImovelUiState.Loading)
-    val imovel = _property.asStateFlow()
+    private val _imovel = MutableStateFlow<ImovelUiState>(ImovelUiState.Loading)
+    val imovel = _imovel.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -52,7 +52,7 @@ class ImovelDetailsViewModel(
                     result
                         .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                         .onSuccess { storedImovel ->
-                            _property.update { storedImovel.toUiState() }
+                            _imovel.update { storedImovel.toUiState() }
                         }
                 }
         }

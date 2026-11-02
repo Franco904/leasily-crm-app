@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.assistanceRegistration.application.models.
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 
-data class AssistanceSelectablePropertyReadModel(
+data class AssistanceSelectableImovelReadModel(
     val id: Long?,
     val type: ImovelType,
     val neighborhood: String,

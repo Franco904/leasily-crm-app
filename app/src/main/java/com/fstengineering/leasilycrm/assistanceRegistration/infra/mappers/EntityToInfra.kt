@@ -27,7 +27,7 @@ fun Assistance.toLocalDataModel(): AssistanceEntity {
         singleBeds = singleBedsCount.value,
         bathrooms = bathroomsCount.value,
         parkingSpots = parkingSpotsCount.value,
-        propertySeaProximityTypeId = preferredSeaProximityType?.id,
+        imovelSeaProximityTypeId = preferredSeaProximityType?.id,
         distanceToSea = (preferredSeaProximityType as? ImovelSeaProximityType.DistanceToSea)?.distance,
         observations = observations,
         isFinished = isFinished,

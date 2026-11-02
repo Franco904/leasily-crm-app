@@ -11,7 +11,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceRawReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentPropertyReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentImovelReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantRawReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.StayReadModel
 import kotlinx.collections.immutable.toPersistentList
@@ -34,7 +34,7 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
         .map { it.neighborhood }
         .toPersistentList()
 
-    val preferredCharacteristics = preferredPropertyCharacteristics
+    val preferredCharacteristics = preferredImovelCharacteristics
         .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
         .toPersistentList()
 
@@ -42,7 +42,7 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
         .map { it.toReadModel() }
         .toPersistentList()
 
-    val seaProximityType = assistance.propertySeaProximityTypeId?.let { typeId ->
+    val seaProximityType = assistance.imovelSeaProximityTypeId?.let { typeId ->
         ImovelSeaProximityType.parse(typeId, assistance.distanceToSea)
             .fold(onError = { null }, onSuccess = { it })
     }
@@ -69,7 +69,7 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
         observations = assistance.observations,
         isFinished = assistance.isFinished,
         preferredNeighborhoods = preferredNeighborhoods,
-        preferredPropertyCharacteristics = preferredCharacteristics,
+        preferredImovelCharacteristics = preferredCharacteristics,
         interactions = interactionReadModels,
     )
 }
@@ -81,7 +81,7 @@ fun AssistanceInteractionEntity.toReadModel() = AssistanceInteractionReadModel(
     description = description,
 )
 
-fun ImovelCompound.toSentPropertyReadModel() = AssistanceSentPropertyReadModel(
+fun ImovelCompound.toSentImovelReadModel() = AssistanceSentImovelReadModel(
     id = requireNotNull(imovel.id),
     mainPictureUriString = files.find { it.isMainPicture }?.imovelFileUri,
     neighborhood = imovel.neighborhood,

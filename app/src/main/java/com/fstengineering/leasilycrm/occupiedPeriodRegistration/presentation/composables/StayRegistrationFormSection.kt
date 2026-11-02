@@ -42,7 +42,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.com
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayCheckOutTimeFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayCommissionFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayPeriodFormField
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayPropertyFormField
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayImovelFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayTenantFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayTenantVehicleColorFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayTenantVehicleLicensePlateFormField
@@ -69,9 +69,9 @@ fun StayRegistrationFormSection(
     commissionInput: String,
     onCommissionChange: (String) -> Unit,
     stayFormErrors: ImmutableMap<OccupiedPeriodField, Int?>,
-    onSelectProperty: (isEnabled: Boolean) -> Unit,
+    onSelectImovel: (isEnabled: Boolean) -> Unit,
     onSelectTenant: (isEnabled: Boolean) -> Unit,
-    onPeriodDisabledByPropertyUnselected: () -> Unit,
+    onPeriodDisabledByImovelUnselected: () -> Unit,
     onPeriodDisabledByCheckInDone: () -> Unit,
     onLastTextFieldDone: () -> Unit,
     onAddStayFile: () -> Unit,
@@ -128,9 +128,9 @@ fun StayRegistrationFormSection(
             ) {
                 val isEnabled = form.checkInDateTime?.toDate()?.isBefore(AppDate.now()) ?: true
 
-                StayPropertyFormField(
-                    stayProperty = form.property,
-                    onSelectStayProperty = { onSelectProperty(isEnabled) },
+                StayImovelFormField(
+                    stayImovel = form.imovel,
+                    onSelectStayImovel = { onSelectImovel(isEnabled) },
                     isEnabled = isEnabled,
                     error = stayFormErrors[OccupiedPeriodField.Imovel],
                 )
@@ -211,7 +211,7 @@ fun StayRegistrationFormSection(
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(OccupiedPeriodField.Period))
             ) {
                 val isPastCheckIn = form.checkInDateTime?.toDate()?.isBefore(AppDate.now()) ?: true
-                val isEnabled = form.property != null && !isPastCheckIn
+                val isEnabled = form.imovel != null && !isPastCheckIn
 
                 StayPeriodFormField(
                     checkInDateTime = form.checkInDateTime,
@@ -221,7 +221,7 @@ fun StayRegistrationFormSection(
                     onTap = {
                         when {
                             isEnabled -> mustShowStayDateRangePickerDialog = true
-                            form.property == null -> {
+                            form.imovel == null -> {
                                 coroutineScope.launch {
                                     centerVisibleLazyItemByKey(
                                         lazyListState = lazyListState,
@@ -229,7 +229,7 @@ fun StayRegistrationFormSection(
                                         fallbackIndex = OccupiedPeriodField.Imovel.scrollIndex,
                                     )
 
-                                    onPeriodDisabledByPropertyUnselected()
+                                    onPeriodDisabledByImovelUnselected()
                                 }
                             }
 
@@ -361,7 +361,7 @@ fun StayRegistrationFormSection(
                 initialDayOfMonth = initialDayOfMonth,
                 initialMonth = initialMonth,
                 initialYear = initialYear,
-                fixedNonSelectableDates = form.property?.occupiedDates ?: persistentSetOf(),
+                fixedNonSelectableDates = form.imovel?.occupiedDates ?: persistentSetOf(),
             ),
             onDateRangeSelected = { (startDateTimestamp, endDateTimestamp) ->
                 onFormChange(

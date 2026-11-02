@@ -24,10 +24,10 @@ import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelC
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 
 @Composable
-fun AssistanceLastSentPropertyDetailsItem(
-    lastSentProperty: ImovelCardUiState?,
+fun AssistanceLastSentImovelDetailsItem(
+    lastSentImovel: ImovelCardUiState?,
     onViewAll: () -> Unit,
-    onViewSentPropertyDetails: () -> Unit,
+    onViewSentImovelDetails: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -43,7 +43,7 @@ fun AssistanceLastSentPropertyDetailsItem(
                 modifier = Modifier
                     .weight(1f)
             )
-            if (lastSentProperty != null) {
+            if (lastSentImovel != null) {
                 TextButton(onClick = onViewAll) {
                     Text(
                         text = stringResource(R.string.view_all_o_action_button_text),
@@ -62,7 +62,7 @@ fun AssistanceLastSentPropertyDetailsItem(
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        if (lastSentProperty == null) {
+        if (lastSentImovel == null) {
             ImoveisEmptySection(
                 isSearchingImovel = false,
                 modifier = Modifier
@@ -70,8 +70,8 @@ fun AssistanceLastSentPropertyDetailsItem(
             )
         } else {
             ImovelCard(
-                imovel = lastSentProperty,
-                onCardClick = onViewSentPropertyDetails,
+                imovel = lastSentImovel,
+                onCardClick = onViewSentImovelDetails,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,
             )

@@ -26,9 +26,9 @@ data class AssistanceCommandModel(
     val preferredNeighborhoods: ImmutableList<String>,
     val preferredSeaProximityTypeId: Long?,
     val preferredDistanceToSea: AppDecimal?,
-    val preferredPropertyCharacteristics: ImmutableList<ImovelCharacteristic>,
+    val preferredImovelCharacteristics: ImmutableList<ImovelCharacteristic>,
     val observations: String?,
-    val sentPropertiesIds: ImmutableList<Long>,
+    val sentImoveisIds: ImmutableList<Long>,
     val interactions: ImmutableList<AssistanceInteractionCommandModel>,
     val leadTenantId: Long?,
 )

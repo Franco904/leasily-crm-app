@@ -14,13 +14,13 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayCheckInCheckOutDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayObservationsDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayPeriodDetailsItem
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayPropertyDetailsItem
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayImovelDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.OccupiedPeriodDetailsUiState
 
 @Composable
 fun UnavailablePeriodDetailsSection(
     unavailablePeriod: OccupiedPeriodDetailsUiState.Loaded,
-    cameFromProperty: Boolean,
+    cameFromImovel: Boolean,
     onViewImovelDashboard: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -29,9 +29,9 @@ fun UnavailablePeriodDetailsSection(
     ) {
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item {
-            StayPropertyDetailsItem(
-                property = unavailablePeriod.property,
-                cameFromProperty = cameFromProperty,
+            StayImovelDetailsItem(
+                imovel = unavailablePeriod.imovel,
+                cameFromImovel = cameFromImovel,
                 onViewImovelDashboard = onViewImovelDashboard,
             )
         }

@@ -5,6 +5,6 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 
 data class CommissionInvoicePerTop3NeighborhoodsPerMonthCompound(
     @ColumnInfo(name = "month_year") val monthYear: String,
-    @ColumnInfo(name = "property_neighborhood") val propertyNeighborhood: String,
+    @ColumnInfo(name = "property_neighborhood") val imovelNeighborhood: String,
     @ColumnInfo(name = "commission_invoice") val commissionInvoice: AppDecimal,
 )

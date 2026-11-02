@@ -36,7 +36,7 @@ class OccupiedPeriodQueryRepositoryImpl(
             )
     }
 
-    override suspend fun getOccupiedPeriodsByPropertyId(
+    override suspend fun getOccupiedPeriodsByImovelId(
         imovelId: Long,
     ): AppResult<ImmutableList<OccupiedPeriodReadModel>, ApplicationError> {
         return databaseDataSource.watchAllByImovelId(imovelId)

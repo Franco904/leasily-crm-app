@@ -26,7 +26,7 @@ class UnavailablePeriod private constructor(
         ): AppResult<UnavailablePeriod, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
-            if (imovelId == null) errors.add(DomainError.StayProperty.Required)
+            if (imovelId == null) errors.add(DomainError.StayImovel.Required)
 
             val period = when {
                 checkInDateTime == null || checkOutDateTime == null -> {

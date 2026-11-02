@@ -55,20 +55,20 @@ fun AssistanceRegistrationStep2Screen(
     val loadedDraftForm = draftForm as? AssistanceDraftFormUiState.Loaded
 
     val searchInput by stepViewModel.searchInput.collectAsStateWithLifecycle()
-    val selectableProperties by stepViewModel.properties.collectAsStateWithLifecycle()
+    val selectableImoveis by stepViewModel.imoveis.collectAsStateWithLifecycle()
 
-    var isAddingSentProperty by rememberSaveable { mutableStateOf(false) }
-    var isSearchingPropertyToSend by rememberSaveable { mutableStateOf(false) }
+    var isAddingSentImovel by rememberSaveable { mutableStateOf(false) }
+    var isSearchingImovelToSend by rememberSaveable { mutableStateOf(false) }
     var mustShowConfirmLeaveRegistrationDialog by rememberSaveable { mutableStateOf(false) }
 
     val listStatus = remember(
-        isAddingSentProperty,
-        selectableProperties,
+        isAddingSentImovel,
+        selectableImoveis,
     ) {
         when {
-            !isAddingSentProperty -> AssistanceRegistrationStep2ListState.ShowingSelectedSentProperties
-            selectableProperties.isEmpty() -> AssistanceRegistrationStep2ListState.Empty
-            else -> AssistanceRegistrationStep2ListState.AddingSentProperties
+            !isAddingSentImovel -> AssistanceRegistrationStep2ListState.ShowingSelectedSentImoveis
+            selectableImoveis.isEmpty() -> AssistanceRegistrationStep2ListState.Empty
+            else -> AssistanceRegistrationStep2ListState.AddingSentImoveis
         }
     }
 
@@ -112,8 +112,8 @@ fun AssistanceRegistrationStep2Screen(
 
     BackHandler {
         when {
-            isSearchingPropertyToSend -> isSearchingPropertyToSend = false
-            isAddingSentProperty -> isAddingSentProperty = false
+            isSearchingImovelToSend -> isSearchingImovelToSend = false
+            isAddingSentImovel -> isAddingSentImovel = false
             else -> mustShowConfirmLeaveRegistrationDialog = true
         }
     }
@@ -125,22 +125,22 @@ fun AssistanceRegistrationStep2Screen(
 
                 AssistanceRegistrationTopAppBar(
                     leadTenantName = loadedDraftForm.leadTenantName,
-                    isAddingSentProperty = isAddingSentProperty,
-                    mustShowSearchImovelAction = isAddingSentProperty
-                            && selectableProperties.isNotEmpty()
-                            && !isSearchingPropertyToSend,
-                    isSearchingPropertyToSend = isSearchingPropertyToSend,
-                    onSearchPropertyToSend = { isSearchingPropertyToSend = true },
+                    isAddingSentImovel = isAddingSentImovel,
+                    mustShowSearchImovelAction = isAddingSentImovel
+                            && selectableImoveis.isNotEmpty()
+                            && !isSearchingImovelToSend,
+                    isSearchingImovelToSend = isSearchingImovelToSend,
+                    onSearchImovelToSend = { isSearchingImovelToSend = true },
                     searchInput = searchInput,
                     onSearchInputChange = stepViewModel::onSearchInputChange,
                     onBack = {
                         when {
-                            isSearchingPropertyToSend -> {
-                                isSearchingPropertyToSend = false
+                            isSearchingImovelToSend -> {
+                                isSearchingImovelToSend = false
                                 stepViewModel.onSearchInputChange(searchInput = null)
                             }
 
-                            isAddingSentProperty -> isAddingSentProperty = false
+                            isAddingSentImovel -> isAddingSentImovel = false
                             else -> mustShowConfirmLeaveRegistrationDialog = true
                         }
                     },
@@ -163,20 +163,20 @@ fun AssistanceRegistrationStep2Screen(
                     AssistanceRegistrationFormSectionStep2(
                         listStatus = listStatus,
                         assistanceForm = form,
-                        selectableProperties = selectableProperties,
-                        onAddSentProperty = { isAddingSentProperty = true },
-                        isSearchingPropertyToSend = isSearchingPropertyToSend,
+                        selectableImoveis = selectableImoveis,
+                        onAddSentImovel = { isAddingSentImovel = true },
+                        isSearchingImovelToSend = isSearchingImovelToSend,
                         onBack = onBack,
-                        onCancelPropertySelection = { isAddingSentProperty = false },
+                        onCancelImovelSelection = { isAddingSentImovel = false },
                         onNext = {
                             focusManager.clearFocus()
                             onNext()
                         },
-                        onSelectProperties = { selectedSentProperties ->
-                            val newForm = form.copy(sentProperties = selectedSentProperties)
+                        onSelectImoveis = { selectedSentImoveis ->
+                            val newForm = form.copy(sentImoveis = selectedSentImoveis)
                             parentViewModel.onAssistanceFormChange(newForm)
 
-                            isAddingSentProperty = false
+                            isAddingSentImovel = false
                         },
                         modifier = Modifier
                             .padding(innerPadding)

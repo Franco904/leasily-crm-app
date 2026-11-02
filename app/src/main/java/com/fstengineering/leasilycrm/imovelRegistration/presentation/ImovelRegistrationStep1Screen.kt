@@ -185,7 +185,7 @@ fun ImovelRegistrationStep1Screen(
 
                     val selectedProprietario =
                         proprietarios.find { it.name == proprietarioName }
-                    val newForm = loadedForm.copy(owner = selectedProprietario)
+                    val newForm = loadedForm.copy(proprietario = selectedProprietario)
 
                     parentViewModel.onImovelFormChange(form = newForm)
                     stepViewModel.onImovelFormChange(loadedForm, newForm)

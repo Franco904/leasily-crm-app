@@ -23,7 +23,7 @@ class ReadUnavailablePeriodUseCase(
                 )
         }
 
-        val property = unavailablePeriodRaw?.let {
+        val imovel = unavailablePeriodRaw?.let {
             imovelQueryRepository.getById(it.imovelId)
                 .fold(
                     onError = { e -> return AppResult.Error(error = e) },
@@ -33,7 +33,7 @@ class ReadUnavailablePeriodUseCase(
 
         val updatedReadModel = UnavailablePeriodReadModel.create(
             unavailablePeriodRaw = unavailablePeriodRaw,
-            property = property,
+            imovel = imovel,
         )
 
         return AppResult.Success(data = updatedReadModel)

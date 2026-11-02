@@ -39,7 +39,7 @@ import com.fstengineering.leasilycrm.home.presentation.composables.HomeNavCard
 @Composable
 fun DashboardPage(
     viewModel: DashboardViewModel,
-    onPropertiesSelect: () -> Unit,
+    onImoveisSelect: () -> Unit,
     onProprietariosSelect: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -87,7 +87,7 @@ fun DashboardPage(
                 HomeNavCard(
                     icon = Icons.Default.Apartment,
                     title = stringResource(R.string.home_properties_label),
-                    onSelect = onPropertiesSelect,
+                    onSelect = onImoveisSelect,
                     modifier = Modifier.weight(1f)
                 )
                 HomeNavCard(

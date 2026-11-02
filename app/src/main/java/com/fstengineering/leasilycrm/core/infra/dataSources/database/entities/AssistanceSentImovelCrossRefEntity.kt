@@ -24,7 +24,7 @@ import androidx.room.Index
         Index("property_id"),
     ],
 )
-data class AssistanceSentPropertyCrossRefEntity(
+data class AssistanceSentImovelCrossRefEntity(
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
     @ColumnInfo(name = "property_id") val imovelId: Long,
 )

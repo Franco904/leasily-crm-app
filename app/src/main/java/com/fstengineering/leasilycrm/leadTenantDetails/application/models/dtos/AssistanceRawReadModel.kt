@@ -26,7 +26,7 @@ data class AssistanceRawReadModel(
     val preferredSeaProximityTypeId: Long?,
     val preferredDistanceToSea: AppDecimal?,
     val preferredNeighborhoods: ImmutableList<String>,
-    val preferredPropertyCharacteristics: ImmutableList<ImovelCharacteristic>,
+    val preferredImovelCharacteristics: ImmutableList<ImovelCharacteristic>,
     val observations: String?,
     val interactions: ImmutableList<AssistanceInteractionReadModel>,
     val isFinished: Boolean,

@@ -16,7 +16,7 @@ import kotlinx.collections.immutable.toPersistentList
 fun StayReadModel.toUiState() = OccupiedPeriodFormUiState.Loaded.Stay(
     id = id,
     createDateTime = createDateTime,
-    property = property?.toUiState(),
+    imovel = imovel?.toUiState(),
     tenant = tenant?.toUiState(),
     vehicleMake = vehicleMake,
     vehicleColor = vehicleColor,
@@ -37,7 +37,7 @@ fun StayReadModel.toUiState() = OccupiedPeriodFormUiState.Loaded.Stay(
 fun UnavailablePeriodReadModel.toUiState() = OccupiedPeriodFormUiState.Loaded.UnavailablePeriod(
     id = id,
     createDateTime = createDateTime,
-    property = property?.toUiState(),
+    imovel = imovel?.toUiState(),
     checkInDateTime = checkInDateTime,
     checkOutDateTime = checkOutDateTime,
     observations = observations,

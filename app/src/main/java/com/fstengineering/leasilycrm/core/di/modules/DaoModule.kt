@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.Assist
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentPropertyCrossRefDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentImovelCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTenantDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelCharacteristicImovelCrossRefDao
@@ -28,14 +28,14 @@ val daoModule = module {
     single<AssistancePreferredNeighborhoodDao> {
         get<AppDatabase>().assistanceSearchedNeighborhoodDao()
     }
-    single<AssistanceSentPropertyCrossRefDao> { get<AppDatabase>().assistanceSentPropertyCrossRefDao() }
+    single<AssistanceSentImovelCrossRefDao> { get<AppDatabase>().assistanceSentImovelCrossRefDao() }
     single<UserAnalyticsDao> { get<AppDatabase>().userAnalyticsDao() }
-    single<ImovelDao> { get<AppDatabase>().propertyDao() }
+    single<ImovelDao> { get<AppDatabase>().imovelDao() }
     single<ImovelCharacteristicImovelCrossRefDao> {
-        get<AppDatabase>().propertyCharacteristicPropertyCrossRefDao()
+        get<AppDatabase>().imovelCharacteristicImovelCrossRefDao()
     }
-    single<ImovelFileDao> { get<AppDatabase>().propertyFileDao() }
-    single<ImovelPriceDao> { get<AppDatabase>().propertyPriceDao() }
+    single<ImovelFileDao> { get<AppDatabase>().imovelFileDao() }
+    single<ImovelPriceDao> { get<AppDatabase>().imovelPriceDao() }
     single<StayDao> { get<AppDatabase>().stayDao() }
     single<StayFileDao> { get<AppDatabase>().stayFileDao() }
     single<StayTransferDao> { get<AppDatabase>().stayTransferDao() }

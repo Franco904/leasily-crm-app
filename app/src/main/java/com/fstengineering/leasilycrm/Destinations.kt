@@ -31,31 +31,31 @@ sealed interface Destinations {
     data object Profile
 
     @Serializable
-    data object Properties
+    data object Imoveis
 
     @Serializable
-    data class PropertyRegistration(val imovelId: Long?) {
+    data class ImovelRegistration(val imovelId: Long?) {
         @Serializable
-        data object PropertyRegistrationStep1
+        data object ImovelRegistrationStep1
 
         @Serializable
-        data object PropertyRegistrationStep2
+        data object ImovelRegistrationStep2
 
         @Serializable
-        data object PropertyRegistrationStep3
+        data object ImovelRegistrationStep3
 
         @Serializable
-        data object PropertyRegistrationStep4
+        data object ImovelRegistrationStep4
     }
 
     @Serializable
-    data class PropertyDashboard(val imovelId: Long)
+    data class ImovelDashboard(val imovelId: Long)
 
     @Serializable
-    data class PropertyDetails(val imovelId: Long)
+    data class ImovelDetails(val imovelId: Long)
 
     @Serializable
-    data class PropertyOccupation(val imovelId: Long)
+    data class ImovelOccupation(val imovelId: Long)
 
     @Serializable
     data object Proprietarios
@@ -98,7 +98,7 @@ sealed interface Destinations {
     @Serializable
     data class OccupiedPeriodDetails(
         val occupiedPeriodId: Long,
-        val cameFromProperty: Boolean,
+        val cameFromImovel: Boolean,
         val cameFromTenant: Boolean,
     )
 }

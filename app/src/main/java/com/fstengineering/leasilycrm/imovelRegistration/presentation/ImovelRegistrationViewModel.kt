@@ -93,8 +93,8 @@ class ImovelRegistrationViewModel(
             proprietarioReadDataSource.watchProprietarios().collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                    .onSuccess { storedOwners ->
-                        val states = storedOwners.map { it.toUiState() }.toPersistentList()
+                    .onSuccess { storedProprietarios ->
+                        val states = storedProprietarios.map { it.toUiState() }.toPersistentList()
                         _proprietarios.update { states }
                     }
             }

@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.co
 fun OccupiedPeriodNotificationProjection.toReadModel() =
     OccupiedPeriodNotificationReadModel(
         tenantName = tenantName,
-        imovelType = ImovelType.fromId(propertyTypeId) ?: ImovelType.Apartment,
+        imovelType = ImovelType.fromId(imovelTypeId) ?: ImovelType.Apartment,
         proprietarioName = proprietarioName,
         hourMinute = if (isCheckInToday) checkInDateTime.toHourMinute() else checkOutDateTime.toHourMinute(),
         isCheckInToday = isCheckInToday,

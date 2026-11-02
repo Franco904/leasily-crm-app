@@ -73,7 +73,7 @@ sealed interface DomainError : BaseError {
         LengthIsGreaterThan120Chars,
     }
 
-    enum class StayProperty : DomainError {
+    enum class StayImovel : DomainError {
         Required,
     }
 

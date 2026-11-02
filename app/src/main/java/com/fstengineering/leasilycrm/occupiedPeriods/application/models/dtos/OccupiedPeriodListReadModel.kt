@@ -8,7 +8,7 @@ data class OccupiedPeriodListReadModel(
     val tenantId: Long?,
     val tenantName: String?,
     val imovelType: ImovelType?,
-    val propertyNeighborhood: String?,
+    val imovelNeighborhood: String?,
     val checkInDateTime: AppDateTime,
     val checkInHourMinute: Pair<Int, Int>,
     val checkOutDateTime: AppDateTime,

@@ -12,7 +12,7 @@ fun ImovelDraftFormUiState.Loaded.toCommandModel(): ImovelCommandModel {
     return ImovelCommandModel(
         id = id,
         createDateTime = createDateTime,
-        ownerId = owner?.id,
+        proprietarioId = proprietario?.id,
         type = type,
         neighborhood = neighborhood,
         streetAddress = streetAddress,

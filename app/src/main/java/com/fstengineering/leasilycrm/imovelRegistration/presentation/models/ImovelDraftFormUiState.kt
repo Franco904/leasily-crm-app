@@ -16,7 +16,7 @@ sealed interface ImovelDraftFormUiState {
     data class Loaded(
         val id: Long? = null,
         val createDateTime: AppDateTime? = null,
-        val owner: ProprietarioUiState? = null,
+        val proprietario: ProprietarioUiState? = null,
         val type: ImovelType? = null,
         val neighborhood: String? = null,
         val streetAddress: String? = null,

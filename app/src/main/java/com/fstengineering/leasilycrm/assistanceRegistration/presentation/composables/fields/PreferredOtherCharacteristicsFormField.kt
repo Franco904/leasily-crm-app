@@ -30,7 +30,7 @@ fun PreferredOtherCharacteristicsFormField(
         otherCharacteristics.forEach { characteristic ->
             val onSelect = remember(characteristic, form, onFormChange) {
                 {
-                    onAssistancePropertyCharacteristicSelect(
+                    onAssistanceImovelCharacteristicSelect(
                         characteristic = characteristic,
                         form = form,
                         onFormChange = onFormChange,
@@ -40,7 +40,7 @@ fun PreferredOtherCharacteristicsFormField(
 
             CharacteristicSelectableChip(
                 label = stringResource(characteristic.presentationLabel()),
-                isSelected = characteristic in form.preferredPropertyCharacteristics,
+                isSelected = characteristic in form.preferredImovelCharacteristics,
                 onSelect = onSelect,
             )
             Spacer(modifier = Modifier.width(4.dp))
@@ -48,16 +48,16 @@ fun PreferredOtherCharacteristicsFormField(
     }
 }
 
-private fun onAssistancePropertyCharacteristicSelect(
+private fun onAssistanceImovelCharacteristicSelect(
     characteristic: ImovelCharacteristic,
     form: AssistanceDraftFormUiState.Loaded,
     onFormChange: (AssistanceDraftFormUiState.Loaded) -> Unit,
 ) {
-    val selectedCharacteristics = form.preferredPropertyCharacteristics
+    val selectedCharacteristics = form.preferredImovelCharacteristics
         .toPersistentList()
 
     val newForm = form.copy(
-        preferredPropertyCharacteristics = selectedCharacteristics.mutate { selectedOnes ->
+        preferredImovelCharacteristics = selectedCharacteristics.mutate { selectedOnes ->
             if (characteristic in selectedOnes) {
                 selectedOnes.remove(characteristic)
             } else {

@@ -46,7 +46,7 @@ class WatchImovelUseCase(
                         onSuccess = { it },
                     )
 
-                val owner = proprietarioReadDataSource.getProprietario(imovelRaw.ownerId)
+                val proprietario = proprietarioReadDataSource.getProprietario(imovelRaw.proprietarioId)
                     .fold(
                         onError = { e -> return@outer AppResult.Error(error = e) },
                         onSuccess = { it },
@@ -61,7 +61,7 @@ class WatchImovelUseCase(
 
                 val updatedImovel = ImovelReadModel.create(
                     imovelRaw = imovelRaw,
-                    owner = owner,
+                    proprietario = proprietario,
                     currentMonthOccupiedPeriods = currentMonthOccupiedPeriods,
                 )
 

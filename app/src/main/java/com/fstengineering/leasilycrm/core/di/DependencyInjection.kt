@@ -115,7 +115,7 @@ fun Application.configureDependencyInjection() {
             dashboardRepositoryModule,
             dashboardViewModelModule,
 
-            // Feature: properties
+            // Feature: imoveis
             imoveisRepositoryModule,
             imoveisViewModelModule,
 

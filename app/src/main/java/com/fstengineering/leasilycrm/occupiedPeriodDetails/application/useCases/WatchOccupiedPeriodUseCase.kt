@@ -26,7 +26,7 @@ class WatchOccupiedPeriodUseCase(
                 onSuccess = { it },
             ) ?: return@outer AppResult.Success(data = null)
 
-            val property = imovelQueryRepository.getById(raw.imovelId)
+            val imovel = imovelQueryRepository.getById(raw.imovelId)
                 .fold(
                     onError = { e -> return@outer AppResult.Error(error = e) },
                     onSuccess = { it },
@@ -54,7 +54,7 @@ class WatchOccupiedPeriodUseCase(
 
             val readModel = OccupiedPeriodReadModel.create(
                 raw = raw,
-                property = property,
+                imovel = imovel,
                 tenant = tenant,
                 occupiedDatesGrouped = occupiedDatesGrouped,
             )

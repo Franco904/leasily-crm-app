@@ -103,7 +103,7 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
         db.proprietarioWriteDataSource().save(proprietario)
             .shouldBeInstanceOf<AppResult.Success<*, *>>()
 
-        return db.propertyDao().insertOrUpdate(
+        return db.imovelDao().insertOrUpdate(
             ImovelOrm(
                 id = null,
                 createDateTime = today,
@@ -131,7 +131,7 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
                 hasCleaningServiceIncluded = false,
                 observations = null,
                 isDeleted = false,
-                ownerId = proprietarioId,
+                proprietarioId = proprietarioId,
                 typeId = 1,
                 seaProximityTypeId = null,
                 contractVersion = 1,

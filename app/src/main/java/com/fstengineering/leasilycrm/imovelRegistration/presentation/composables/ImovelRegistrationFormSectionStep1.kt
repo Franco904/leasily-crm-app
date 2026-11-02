@@ -38,7 +38,7 @@ import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.CepPostalCodeFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.HobbyBoxNumberFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.NumberFormField
-import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.OwnerFormField
+import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.ProprietarioFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.ParkingBasementLevelNumberFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.ParkingSpotNumberFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.StreetAddressFormField
@@ -111,8 +111,8 @@ fun ImovelRegistrationFormSectionStep1(
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(24.dp))
-            OwnerFormField(
-                proprietario = form.owner,
+            ProprietarioFormField(
+                proprietario = form.proprietario,
                 onSelectProprietario = onSelectProprietario,
                 error = formErrors[ImovelStep1Field.Proprietario],
                 modifier = Modifier

@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 data class UnavailablePeriodReadModel(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val property: ImovelReadModel?,
+    val imovel: ImovelReadModel?,
     val checkInDateTime: AppDateTime?,
     val checkOutDateTime: AppDateTime?,
     val observations: String?,
@@ -13,11 +13,11 @@ data class UnavailablePeriodReadModel(
     companion object {
         fun create(
             unavailablePeriodRaw: UnavailablePeriodRawReadModel?,
-            property: ImovelReadModel?,
+            imovel: ImovelReadModel?,
         ) = UnavailablePeriodReadModel(
             id = unavailablePeriodRaw?.id,
             createDateTime = unavailablePeriodRaw?.createDateTime,
-            property = property,
+            imovel = imovel,
             checkInDateTime = unavailablePeriodRaw?.checkInDateTime,
             checkOutDateTime = unavailablePeriodRaw?.checkOutDateTime,
             observations = unavailablePeriodRaw?.observations,

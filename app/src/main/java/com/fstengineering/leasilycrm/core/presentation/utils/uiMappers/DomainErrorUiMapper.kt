@@ -44,7 +44,7 @@ fun DomainError.toInlineMessage() = when (this) {
 
     DomainError.ImovelOtherFields.MoreThanOneMainPictureFile -> INLINE_GENERIC_INVALID_DATA
 
-    DomainError.StayProperty.Required -> INLINE_REQUIRED
+    DomainError.StayImovel.Required -> INLINE_REQUIRED
     DomainError.StayTenant.Required -> INLINE_REQUIRED
     DomainError.StayCheckInTime.Required -> INLINE_REQUIRED
     DomainError.StayCheckOutTime.Required -> INLINE_REQUIRED

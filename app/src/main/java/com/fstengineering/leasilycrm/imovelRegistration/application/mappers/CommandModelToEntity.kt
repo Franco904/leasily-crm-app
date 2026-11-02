@@ -29,7 +29,7 @@ fun ImovelCommandModel.toEntity(): AppResult<Imovel, ValidationErrors> {
     val parsed = Imovel.parse(
         id = id,
         createDateTime = createDateTime,
-        ownerId = ownerId,
+        proprietarioId = proprietarioId,
         type = type,
         neighborhood = neighborhood,
         streetAddress = streetAddress,

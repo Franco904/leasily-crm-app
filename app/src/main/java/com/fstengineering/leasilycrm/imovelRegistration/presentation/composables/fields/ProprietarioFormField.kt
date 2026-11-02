@@ -24,7 +24,7 @@ import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ProprietarioUiState
 
 @Composable
-fun OwnerFormField(
+fun ProprietarioFormField(
     proprietario: ProprietarioUiState?,
     onSelectProprietario: () -> Unit,
     error: Int?,

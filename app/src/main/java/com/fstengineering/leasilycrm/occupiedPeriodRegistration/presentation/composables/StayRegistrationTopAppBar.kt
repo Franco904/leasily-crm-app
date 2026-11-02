@@ -36,7 +36,7 @@ fun StayRegistrationTopAppBar(
     onBack: () -> Unit,
     onSaveStay: () -> Unit,
     isUnavailablePeriod: Boolean,
-    isSelectingProperty: Boolean,
+    isSelectingImovel: Boolean,
     isSelectingTenant: Boolean,
     mustShowSearchAction: Boolean,
     isSearching: Boolean,
@@ -69,7 +69,7 @@ fun StayRegistrationTopAppBar(
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = when {
-                            isSelectingProperty || isSelectingTenant -> {
+                            isSelectingImovel || isSelectingTenant -> {
                                 Icons.AutoMirrored.Default.ArrowBack
                             }
 
@@ -80,7 +80,7 @@ fun StayRegistrationTopAppBar(
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                if (isSelectingProperty || isSelectingTenant) {
+                if (isSelectingImovel || isSelectingTenant) {
                     AnimatedContent(
                         targetState = isSearching,
                         label = "StayRegistrationTopAppBarTitle",
@@ -91,7 +91,7 @@ fun StayRegistrationTopAppBar(
                                 onSearchInputChange = onSearchInputChange,
                                 label = stringResource(
                                     when {
-                                        isSelectingProperty -> R.string.search_property_label
+                                        isSelectingImovel -> R.string.search_property_label
                                         else -> R.string.search_tenant_label
                                     },
                                 ),
@@ -101,7 +101,7 @@ fun StayRegistrationTopAppBar(
                             Text(
                                 text = stringResource(
                                     when {
-                                        isSelectingProperty -> R.string.stay_registration_top_app_bar_select_property_title
+                                        isSelectingImovel -> R.string.stay_registration_top_app_bar_select_property_title
                                         else -> R.string.stay_registration_top_app_bar_select_tenant_title
                                     }
                                 ),
@@ -150,7 +150,7 @@ fun StayRegistrationTopAppBar(
                     }
                 }
 
-                !isSearching && !isSelectingProperty && !isSelectingTenant -> {
+                !isSearching && !isSelectingImovel && !isSelectingTenant -> {
                     OutlinedButton(
                         border = BorderStroke(
                             1.dp,

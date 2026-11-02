@@ -20,7 +20,7 @@ val assistanceRegistrationViewModelModule = module {
 
     viewModel {
         AssistanceRegistrationStep2ViewModel(
-            assistanceSelectablePropertyQueryRepository = get(),
+            assistanceSelectableImovelQueryRepository = get(),
         )
     }
 

@@ -11,13 +11,13 @@ data class ImovelReadModel(
     val neighborhood: String,
     val streetAddress: String,
     val number: Int?,
-    val owner: ProprietarioReadModel,
+    val proprietario: ProprietarioReadModel,
     val currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<ImovelOccupiedDateReadModel>>,
 ) {
     companion object {
         fun create(
             imovelRaw: ImovelRawReadModel,
-            owner: ProprietarioReadModel,
+            proprietario: ProprietarioReadModel,
             currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<ImovelOccupiedDateReadModel>>,
         ) = ImovelReadModel(
             id = imovelRaw.id,
@@ -26,7 +26,7 @@ data class ImovelReadModel(
             neighborhood = imovelRaw.neighborhood,
             streetAddress = imovelRaw.streetAddress,
             number = imovelRaw.number,
-            owner = owner,
+            proprietario = proprietario,
             currentMonthOccupiedPeriods = currentMonthOccupiedPeriods,
         )
     }

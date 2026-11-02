@@ -14,9 +14,9 @@ import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelC
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 
 @Composable
-fun StayPropertyDetailsItem(
-    property: ImovelCardUiState?,
-    cameFromProperty: Boolean,
+fun StayImovelDetailsItem(
+    imovel: ImovelCardUiState?,
+    cameFromImovel: Boolean,
     onViewImovelDashboard: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -29,10 +29,10 @@ fun StayPropertyDetailsItem(
             color = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        if (property != null) {
+        if (imovel != null) {
             ImovelCard(
-                imovel = property,
-                onCardClick = if (cameFromProperty) null else onViewImovelDashboard,
+                imovel = imovel,
+                onCardClick = if (cameFromImovel) null else onViewImovelDashboard,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,
             )

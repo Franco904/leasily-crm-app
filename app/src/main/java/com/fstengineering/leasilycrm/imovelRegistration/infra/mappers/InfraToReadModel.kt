@@ -28,7 +28,7 @@ fun ImovelCompound.toRawReadModel(): ImovelRawReadModel {
     return ImovelRawReadModel(
         id = imovel.id,
         createDateTime = imovel.createDateTime,
-        ownerId = imovel.ownerId,
+        proprietarioId = imovel.proprietarioId,
         type = requireNotNull(ImovelType.fromId(imovel.typeId)),
         neighborhood = imovel.neighborhood,
         streetAddress = imovel.streetAddress,

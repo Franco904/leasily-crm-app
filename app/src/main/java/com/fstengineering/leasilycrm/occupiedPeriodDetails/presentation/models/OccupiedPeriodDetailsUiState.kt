@@ -16,7 +16,7 @@ sealed interface OccupiedPeriodDetailsUiState {
     data class Loaded(
         val id: Long,
         val tenantId: Long?,
-        val property: ImovelCardUiState,
+        val imovel: ImovelCardUiState,
         val tenant: LeadTenantUiState?,
         val vehicleMake: String?,
         val vehicleColor: String?,

@@ -5,7 +5,7 @@ import androidx.room.Relation
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceImovelCharacteristicCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.LeadTenantEntity
 
 data class AssistanceCompound(
@@ -25,9 +25,9 @@ data class AssistanceCompound(
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",
-        entity = AssistancePropertyCharacteristicCrossRefEntity::class
+        entity = AssistanceImovelCharacteristicCrossRefEntity::class
     )
-    val preferredPropertyCharacteristics: List<AssistancePropertyCharacteristicCrossRefEntity>,
+    val preferredImovelCharacteristics: List<AssistanceImovelCharacteristicCrossRefEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",

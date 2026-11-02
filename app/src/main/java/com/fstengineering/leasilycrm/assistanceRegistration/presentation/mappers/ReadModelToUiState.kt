@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.assistanceRegistration.presentation.mapper
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceReadModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSelectablePropertyReadModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentPropertyReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSelectableImovelReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentImovelReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
@@ -33,9 +33,9 @@ fun AssistanceReadModel.toUiState() = AssistanceDraftFormUiState.Loaded(
     preferredNeighborhoods = preferredNeighborhoods?.toPersistentList() ?: persistentListOf(),
     preferredSeaProximityTypeId = preferredSeaProximityTypeId,
     preferredDistanceToSea = preferredDistanceToSea,
-    preferredPropertyCharacteristics = preferredPropertyCharacteristics ?: persistentListOf(),
+    preferredImovelCharacteristics = preferredImovelCharacteristics ?: persistentListOf(),
     observations = observations,
-    sentProperties = sentProperties
+    sentImoveis = sentImoveis
         ?.map { it.toUiState() }
         ?.toPersistentList() ?: persistentListOf(),
     interactions = interactions
@@ -43,7 +43,7 @@ fun AssistanceReadModel.toUiState() = AssistanceDraftFormUiState.Loaded(
         ?.toPersistentList() ?: persistentListOf(),
 )
 
-fun AssistanceSentPropertyReadModel.toUiState(): ImovelCardUiState {
+fun AssistanceSentImovelReadModel.toUiState(): ImovelCardUiState {
     val numberText = if (number != null) ", $number" else ""
     val streetAddressAndNumber = "${streetAddress}$numberText"
 
@@ -59,7 +59,7 @@ fun AssistanceSentPropertyReadModel.toUiState(): ImovelCardUiState {
     )
 }
 
-fun AssistanceSelectablePropertyReadModel.toUiState(): ImovelCardUiState {
+fun AssistanceSelectableImovelReadModel.toUiState(): ImovelCardUiState {
     val numberText = if (number != null) ", $number" else ""
     val streetAddressAndNumber = "${streetAddress}$numberText"
 

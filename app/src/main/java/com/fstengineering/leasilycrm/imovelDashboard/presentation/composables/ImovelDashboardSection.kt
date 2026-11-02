@@ -110,7 +110,7 @@ fun ImovelDashboardSection(
         )
         Spacer(modifier = Modifier.height(16.dp))
         ProprietarioCard(
-            proprietario = imovel.owner,
+            proprietario = imovel.proprietario,
             onViewProprietarioDetails = onViewProprietarioDetails,
             hasMoreOptionsMenu = false,
         )

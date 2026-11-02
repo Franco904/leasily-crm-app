@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceC
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceInteractionDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceSearchedNeighborhoodDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceSentPropertyCrossRefDatabaseDataSourceImpl
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceSentImovelCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.UserAnalyticsDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelCharacteristicCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelDatabaseDataSourceImpl
@@ -21,7 +21,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceInteractionDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSearchedNeighborhoodDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSentPropertyCrossRefDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSentImovelCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.UserAnalyticsDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelCharacteristicCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelDatabaseDataSource
@@ -52,8 +52,8 @@ val databaseDataSourceModule = module {
         AssistanceSearchedNeighborhoodDatabaseDataSourceImpl(dao = get())
     }
 
-    single<AssistanceSentPropertyCrossRefDatabaseDataSource> {
-        AssistanceSentPropertyCrossRefDatabaseDataSourceImpl(dao = get())
+    single<AssistanceSentImovelCrossRefDatabaseDataSource> {
+        AssistanceSentImovelCrossRefDatabaseDataSourceImpl(dao = get())
     }
 
     single<UserAnalyticsDatabaseDataSource> {

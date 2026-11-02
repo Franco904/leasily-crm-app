@@ -2,8 +2,8 @@ package com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceRawReadModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSelectablePropertyReadModel
-import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentPropertyReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSelectableImovelReadModel
+import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentImovelReadModel
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
@@ -16,7 +16,7 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
         .map { it.neighborhood }
         .toPersistentList()
 
-    val preferredCharacteristics = preferredPropertyCharacteristics
+    val preferredCharacteristics = preferredImovelCharacteristics
         .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
         .toPersistentList()
 
@@ -41,12 +41,12 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
         singleBedsCount = assistance.singleBeds,
         bathroomsCount = assistance.bathrooms,
         parkingSpotsCount = assistance.parkingSpots,
-        preferredSeaProximityTypeId = assistance.propertySeaProximityTypeId,
+        preferredSeaProximityTypeId = assistance.imovelSeaProximityTypeId,
         preferredDistanceToSea = assistance.distanceToSea,
         observations = assistance.observations,
         isFinished = assistance.isFinished,
         preferredNeighborhoods = preferredNeighborhoodsNames,
-        preferredPropertyCharacteristics = preferredCharacteristics,
+        preferredImovelCharacteristics = preferredCharacteristics,
         interactions = interactions,
     )
 }
@@ -58,8 +58,8 @@ private fun AssistanceInteractionEntity.toReadModel() = AssistanceInteractionRea
     description = description,
 )
 
-fun ImovelCompound.toSentPropertyReadModel(): AssistanceSentPropertyReadModel {
-    return AssistanceSentPropertyReadModel(
+fun ImovelCompound.toSentImovelReadModel(): AssistanceSentImovelReadModel {
+    return AssistanceSentImovelReadModel(
         id = imovel.id,
         type = requireNotNull(ImovelType.fromId(imovel.typeId)),
         neighborhood = imovel.neighborhood,
@@ -74,8 +74,8 @@ fun ImovelCompound.toSentPropertyReadModel(): AssistanceSentPropertyReadModel {
     )
 }
 
-fun ImovelCompound.toSelectablePropertyReadModel(): AssistanceSelectablePropertyReadModel {
-    return AssistanceSelectablePropertyReadModel(
+fun ImovelCompound.toSelectableImovelReadModel(): AssistanceSelectableImovelReadModel {
+    return AssistanceSelectableImovelReadModel(
         id = imovel.id,
         type = requireNotNull(ImovelType.fromId(imovel.typeId)),
         neighborhood = imovel.neighborhood,

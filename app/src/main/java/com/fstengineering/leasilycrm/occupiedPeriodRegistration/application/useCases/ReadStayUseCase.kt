@@ -27,7 +27,7 @@ class ReadStayUseCase(
                 )
         }
 
-        val property = stayRaw?.imovelId?.let {
+        val imovel = stayRaw?.imovelId?.let {
             imovelQueryRepository.getById(stayRaw.imovelId)
                 .fold(
                     onError = { e -> return AppResult.Error(error = e) },
@@ -35,16 +35,16 @@ class ReadStayUseCase(
                 )
         }
 
-        val propertyOccupiedPeriods = property?.id?.let { imovelId ->
-            occupiedPeriodQueryRepository.getOccupiedPeriodsByPropertyId(imovelId)
+        val imovelOccupiedPeriods = imovel?.id?.let { imovelId ->
+            occupiedPeriodQueryRepository.getOccupiedPeriodsByImovelId(imovelId)
                 .fold(
                     onError = { e -> return AppResult.Error(error = e) },
                     onSuccess = { it },
                 )
         } ?: persistentListOf()
 
-        val propertyOccupiedDates = ImovelOccupiedDatesService.getOccupiedDates(
-            occupiedPeriods = propertyOccupiedPeriods,
+        val imovelOccupiedDates = ImovelOccupiedDatesService.getOccupiedDates(
+            occupiedPeriods = imovelOccupiedPeriods,
             stayToEditId = args.id,
         )
 
@@ -58,7 +58,7 @@ class ReadStayUseCase(
 
         val updatedReadModel = StayReadModel.create(
             stayRaw = stayRaw,
-            property = property?.copy(occupiedDates = propertyOccupiedDates),
+            imovel = imovel?.copy(occupiedDates = imovelOccupiedDates),
             tenant = tenant,
         )
 

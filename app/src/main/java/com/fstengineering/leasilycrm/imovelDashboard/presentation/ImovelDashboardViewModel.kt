@@ -26,8 +26,8 @@ class ImovelDashboardViewModel(
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _property = MutableStateFlow<ImovelUiState>(ImovelUiState.Loading)
-    val imovel = _property.asStateFlow()
+    private val _imovel = MutableStateFlow<ImovelUiState>(ImovelUiState.Loading)
+    val imovel = _imovel.asStateFlow()
 
     fun init(imovelId: Long) {
         if (isInitialized) return
@@ -43,7 +43,7 @@ class ImovelDashboardViewModel(
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { storedImovel ->
-                        _property.update { storedImovel.toUiState() }
+                        _imovel.update { storedImovel.toUiState() }
                     }
             }
         }
