@@ -31,7 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.ImoveisEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
@@ -52,7 +52,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Composable
 fun OccupiedPeriodRegistrationScreen(
     stayId: Long?,
-    propertyId: Long?,
+    imovelId: Long?,
     tenantId: Long?,
     isUnavailablePeriod: Boolean,
     viewModel: OccupiedPeriodRegistrationViewModel,
@@ -114,7 +114,7 @@ fun OccupiedPeriodRegistrationScreen(
     LaunchedEffect(Unit) {
         viewModel.init(
             occupiedPeriodId = stayId,
-            propertyId = propertyId,
+            imovelId = imovelId,
             tenantId = tenantId,
             isUnavailablePeriod = isUnavailablePeriod,
         )
@@ -333,7 +333,7 @@ fun OccupiedPeriodRegistrationScreen(
 
                         OccupiedPeriodRegistrationListState.SelectingProperty -> {
                             if (properties.isEmpty()) {
-                                PropertiesEmptySection(isSearchingProperty = isSearching)
+                                ImoveisEmptySection(isSearchingImovel = isSearching)
                             } else {
                                 OccupiedPeriodPropertySelectionList(
                                     properties = properties,

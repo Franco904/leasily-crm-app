@@ -18,7 +18,7 @@ fun StayCommandModel.toEntity(): AppResult<Stay, ValidationErrors> {
     return Stay.parse(
         id = id,
         createDateTime = createDateTime,
-        propertyId = propertyId,
+        imovelId = imovelId,
         tenantId = tenantId,
         vehicleMake = vehicleMake,
         vehicleColor = vehicleColor,
@@ -46,7 +46,7 @@ private fun StayFileCommandModel.toEntity() = StayFile(
 fun UnavailablePeriodCommandModel.toEntity() = UnavailablePeriod.parse(
     id = id,
     createDateTime = createDateTime,
-    propertyId = propertyId,
+    imovelId = imovelId,
     checkInDateTime = checkInDateTime,
     checkOutDateTime = checkOutDateTime,
     observations = observations,

@@ -38,7 +38,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.AssistanceInteractionCard
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteTenantDialog
@@ -230,8 +230,8 @@ fun LeadTenantDetailsScreen(
                                 contentType = { _, entryType -> entryType },
                             ) { i, selectedProperty ->
                                 if (i > 0) Spacer(modifier = Modifier.height(8.dp))
-                                PropertyCard(
-                                    property = selectedProperty,
+                                ImovelCard(
+                                    imovel = selectedProperty,
                                     onCardClick = { onViewSentPropertyDetails(selectedProperty.id) },
                                     hasMoreOptionsMenu = false,
                                     hasCharacteristicsChipsRow = false,
@@ -289,8 +289,8 @@ fun LeadTenantDetailsScreen(
                     onDeleteAssistance = { mustShowConfirmDeleteAssistanceDialog = true },
                     onViewAllSentProperties = { isViewingAllSentProperties = true },
                     onViewAllInteractions = { isViewingAllInterations = true },
-                    onViewSentPropertyDetails = { propertyId ->
-                        onViewSentPropertyDetails(propertyId)
+                    onViewSentPropertyDetails = { imovelId ->
+                        onViewSentPropertyDetails(imovelId)
                     },
                     onViewInteractionDetails = { interaction ->
                         interactionToView = interaction
@@ -348,8 +348,8 @@ fun LeadTenantDetailsScreen(
                                     },
                                     onViewAllSentProperties = { isViewingAllSentProperties = true },
                                     onViewAllInteractions = { isViewingAllInterations = true },
-                                    onViewSentPropertyDetails = { propertyId ->
-                                        onViewSentPropertyDetails(propertyId)
+                                    onViewSentPropertyDetails = { imovelId ->
+                                        onViewSentPropertyDetails(imovelId)
                                     },
                                     onViewInteractionDetails = { interaction ->
                                         interactionToView = interaction

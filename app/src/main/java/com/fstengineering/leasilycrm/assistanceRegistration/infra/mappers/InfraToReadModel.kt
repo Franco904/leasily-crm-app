@@ -4,11 +4,11 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.d
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceRawReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSelectablePropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentPropertyReadModel
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.AssistanceCompound
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import kotlinx.collections.immutable.toPersistentList
 
 fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
@@ -17,7 +17,7 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
         .toPersistentList()
 
     val preferredCharacteristics = preferredPropertyCharacteristics
-        .mapNotNull { PropertyCharacteristic.fromId(it.propertyCharacteristicId) }
+        .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
         .toPersistentList()
 
     val interactions = interactions
@@ -58,34 +58,34 @@ private fun AssistanceInteractionEntity.toReadModel() = AssistanceInteractionRea
     description = description,
 )
 
-fun PropertyCompound.toSentPropertyReadModel(): AssistanceSentPropertyReadModel {
+fun ImovelCompound.toSentPropertyReadModel(): AssistanceSentPropertyReadModel {
     return AssistanceSentPropertyReadModel(
-        id = property.id,
-        type = requireNotNull(PropertyType.fromId(property.typeId)),
-        neighborhood = property.neighborhood,
-        streetAddress = property.streetAddress,
-        number = property.number,
-        seaProximityTypeId = property.seaProximityTypeId,
-        distanceToSea = property.distanceToSea?.toString(),
-        bedroomsCount = property.bedrooms,
+        id = imovel.id,
+        type = requireNotNull(ImovelType.fromId(imovel.typeId)),
+        neighborhood = imovel.neighborhood,
+        streetAddress = imovel.streetAddress,
+        number = imovel.number,
+        seaProximityTypeId = imovel.seaProximityTypeId,
+        distanceToSea = imovel.distanceToSea?.toString(),
+        bedroomsCount = imovel.bedrooms,
         mainPictureUriString = files
             .find { picture -> picture.isMainPicture }
-            ?.propertyFileUri
+            ?.imovelFileUri
     )
 }
 
-fun PropertyCompound.toSelectablePropertyReadModel(): AssistanceSelectablePropertyReadModel {
+fun ImovelCompound.toSelectablePropertyReadModel(): AssistanceSelectablePropertyReadModel {
     return AssistanceSelectablePropertyReadModel(
-        id = property.id,
-        type = requireNotNull(PropertyType.fromId(property.typeId)),
-        neighborhood = property.neighborhood,
-        streetAddress = property.streetAddress,
-        number = property.number,
-        seaProximityTypeId = property.seaProximityTypeId,
-        distanceToSea = property.distanceToSea?.toString(),
-        bedroomsCount = property.bedrooms,
+        id = imovel.id,
+        type = requireNotNull(ImovelType.fromId(imovel.typeId)),
+        neighborhood = imovel.neighborhood,
+        streetAddress = imovel.streetAddress,
+        number = imovel.number,
+        seaProximityTypeId = imovel.seaProximityTypeId,
+        distanceToSea = imovel.distanceToSea?.toString(),
+        bedroomsCount = imovel.bedrooms,
         mainPictureUriString = files
             .find { picture -> picture.isMainPicture }
-            ?.propertyFileUri
+            ?.imovelFileUri
     )
 }

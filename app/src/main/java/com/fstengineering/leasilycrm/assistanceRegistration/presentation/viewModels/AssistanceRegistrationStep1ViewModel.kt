@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
@@ -59,7 +59,7 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
 
             if (assistanceForm.preferredSeaProximityTypeId == null) return@launch
 
-            val parsingResults = PropertySeaProximityType.parse(
+            val parsingResults = ImovelSeaProximityType.parse(
                 id = assistanceForm.preferredSeaProximityTypeId,
                 distanceToSea = assistanceForm.preferredDistanceToSea,
             )
@@ -68,7 +68,7 @@ class AssistanceRegistrationStep1ViewModel : ViewModel() {
                 .onSuccess { _uiEvents.send(UiEvent.ValidateSuccess) }
                 .onError { error ->
                     val distanceToSeaError =
-                        error.errors.firstOrNull { it is DomainError.PropertySeaProximity }
+                        error.errors.firstOrNull { it is DomainError.ImovelSeaProximity }
 
                     _formErrors.update {
                         val newErrors = it.errors.mutate { map ->

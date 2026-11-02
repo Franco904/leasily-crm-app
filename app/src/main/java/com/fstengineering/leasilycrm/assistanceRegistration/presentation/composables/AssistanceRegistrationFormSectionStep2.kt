@@ -38,12 +38,12 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceRegistrationStep2ListState
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceSentPropertiesEmptySection
-import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.ImoveisEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.CancelOutlinedButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -53,13 +53,13 @@ import kotlinx.collections.immutable.toPersistentList
 fun AssistanceRegistrationFormSectionStep2(
     listStatus: AssistanceRegistrationStep2ListState,
     assistanceForm: AssistanceDraftFormUiState.Loaded,
-    selectableProperties: ImmutableList<PropertyCardUiState>,
+    selectableProperties: ImmutableList<ImovelCardUiState>,
     onAddSentProperty: () -> Unit,
     isSearchingPropertyToSend: Boolean,
     onBack: () -> Unit,
     onCancelPropertySelection: () -> Unit,
     onNext: () -> Unit,
-    onSelectProperties: (ImmutableList<PropertyCardUiState>) -> Unit,
+    onSelectProperties: (ImmutableList<ImovelCardUiState>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val outlineColor = MaterialTheme.colorScheme.outline
@@ -87,7 +87,7 @@ fun AssistanceRegistrationFormSectionStep2(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    PropertiesEmptySection(isSearchingProperty = isSearchingPropertyToSend)
+                    ImoveisEmptySection(isSearchingImovel = isSearchingPropertyToSend)
                 }
             } else {
                 LazyColumn(
@@ -165,9 +165,9 @@ fun AssistanceRegistrationFormSectionStep2(
 }
 
 private fun LazyListScope.addingSentPropertiesList(
-    selectableProperties: ImmutableList<PropertyCardUiState>,
+    selectableProperties: ImmutableList<ImovelCardUiState>,
     alreadySelectedPropertiesIds: ImmutableList<Long>,
-    onSentPropertySelect: (PropertyCardUiState) -> Unit,
+    onSentPropertySelect: (ImovelCardUiState) -> Unit,
 ) {
     val selectedPropertiesCount = alreadySelectedPropertiesIds.size
 
@@ -197,8 +197,8 @@ private fun LazyListScope.addingSentPropertiesList(
         key = { _, property -> property.id },
         contentType = { _, entryType -> entryType },
     ) { _, property ->
-        PropertyCard(
-            property = property,
+        ImovelCard(
+            imovel = property,
             isSelected = property.id in alreadySelectedPropertiesIds,
             onCardClick = { onSentPropertySelect(property) },
             hasMoreOptionsMenu = false,
@@ -209,7 +209,7 @@ private fun LazyListScope.addingSentPropertiesList(
 }
 
 private fun LazyListScope.showingSelectedSentPropertiesList(
-    alreadySelectedProperties: ImmutableList<PropertyCardUiState>,
+    alreadySelectedProperties: ImmutableList<ImovelCardUiState>,
     onAddSentProperty: () -> Unit,
 ) {
     item { Spacer(modifier = Modifier.height(16.dp)) }
@@ -255,8 +255,8 @@ private fun LazyListScope.showingSelectedSentPropertiesList(
             contentType = { _, entryType -> entryType },
         ) { i, selectedProperty ->
             if (i > 0) Spacer(modifier = Modifier.height(8.dp))
-            PropertyCard(
-                property = selectedProperty,
+            ImovelCard(
+                imovel = selectedProperty,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,
             )
@@ -265,9 +265,9 @@ private fun LazyListScope.showingSelectedSentPropertiesList(
 }
 
 private fun onSentPropertySelect(
-    selectedProperty: PropertyCardUiState,
-    assistanceSentProperties: PersistentList<PropertyCardUiState>,
-    onNewSelectedProperties: (PersistentList<PropertyCardUiState>) -> Unit,
+    selectedProperty: ImovelCardUiState,
+    assistanceSentProperties: PersistentList<ImovelCardUiState>,
+    onNewSelectedProperties: (PersistentList<ImovelCardUiState>) -> Unit,
 ) {
     val assistanceSentPropertiesIds = assistanceSentProperties.map { it.id }
 

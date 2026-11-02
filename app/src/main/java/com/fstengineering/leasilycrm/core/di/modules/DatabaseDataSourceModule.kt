@@ -9,10 +9,10 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceI
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceSearchedNeighborhoodDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceSentPropertyCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.UserAnalyticsDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyCharacteristicCrossRefDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyFileDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.PropertyPriceDatabaseDataSourceImpl
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelCharacteristicCrossRefDatabaseDataSourceImpl
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelDatabaseDataSourceImpl
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelFileDatabaseDataSourceImpl
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelPriceDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayFileDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayTransferDatabaseDataSourceImpl
@@ -23,10 +23,10 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSearchedNeighborhoodDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSentPropertyCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.UserAnalyticsDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyCharacteristicCrossRefDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyFileDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyPriceDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelCharacteristicCrossRefDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelFileDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelPriceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayFileDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayTransferDatabaseDataSource
@@ -60,20 +60,20 @@ val databaseDataSourceModule = module {
         UserAnalyticsDatabaseDataSourceImpl(dao = get())
     }
 
-    single<PropertyCharacteristicCrossRefDatabaseDataSource> {
-        PropertyCharacteristicCrossRefDatabaseDataSourceImpl(dao = get())
+    single<ImovelCharacteristicCrossRefDatabaseDataSource> {
+        ImovelCharacteristicCrossRefDatabaseDataSourceImpl(dao = get())
     }
 
-    single<PropertyDatabaseDataSource> {
-        PropertyDatabaseDataSourceImpl(dao = get())
+    single<ImovelDatabaseDataSource> {
+        ImovelDatabaseDataSourceImpl(dao = get())
     }
 
-    single<PropertyFileDatabaseDataSource> {
-        PropertyFileDatabaseDataSourceImpl(dao = get())
+    single<ImovelFileDatabaseDataSource> {
+        ImovelFileDatabaseDataSourceImpl(dao = get())
     }
 
-    single<PropertyPriceDatabaseDataSource> {
-        PropertyPriceDatabaseDataSourceImpl(dao = get())
+    single<ImovelPriceDatabaseDataSource> {
+        ImovelPriceDatabaseDataSourceImpl(dao = get())
     }
 
     single<StayDatabaseDataSource> {

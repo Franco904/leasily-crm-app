@@ -32,12 +32,12 @@ val assistanceRegistrationRepositoryModule = module {
 
     single<AssistanceSentPropertyQueryRepository> {
         AssistanceSentPropertyQueryRepositoryImpl(
-            propertyDatabaseDataSource = get(),
+            imovelDatabaseDataSource = get(),
         )
     }
 
     single<AssistanceSelectablePropertyQueryRepository> {
-        AssistanceSelectablePropertyQueryRepositoryImpl(propertyDatabaseDataSource = get())
+        AssistanceSelectablePropertyQueryRepositoryImpl(imovelDatabaseDataSource = get())
     }
 
     single<LeadTenantQueryRepository> {

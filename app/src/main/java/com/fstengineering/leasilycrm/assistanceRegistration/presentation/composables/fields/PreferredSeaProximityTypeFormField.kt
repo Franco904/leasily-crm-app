@@ -13,11 +13,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioGroup
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioOption
-import com.fstengineering.leasilycrm.propertyRegistration.presentation.composables.fields.DistanceToSeaFormField
+import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.DistanceToSeaFormField
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -33,23 +33,23 @@ fun PreferredSeaProximityTypeFormField(
     AppRadioGroup(
         radioOptions = persistentListOf(
             AppRadioOption(
-                type = PropertySeaProximityType.SEA_ACCESS_ID,
+                type = ImovelSeaProximityType.SEA_ACCESS_ID,
                 label = stringResource(R.string.sea_access_property_sea_proximity_type_text),
             ),
             AppRadioOption(
-                type = PropertySeaProximityType.SEA_VIEW_ID,
+                type = ImovelSeaProximityType.SEA_VIEW_ID,
                 label = stringResource(R.string.sea_view_property_sea_proximity_type_text),
             ),
             AppRadioOption(
-                type = PropertySeaProximityType.FAR_FROM_SEA_ID,
+                type = ImovelSeaProximityType.FAR_FROM_SEA_ID,
                 label = stringResource(R.string.far_from_sea_property_sea_proximity_type_text),
             ),
             AppRadioOption(
-                type = PropertySeaProximityType.DISTANCE_TO_SEA_ID,
+                type = ImovelSeaProximityType.DISTANCE_TO_SEA_ID,
                 label = stringResource(R.string.distance_to_sea_property_sea_proximity_type_text),
                 contentOnCheck = {
                     AnimatedVisibility(
-                        visible = selectedSeaProximityTypeId == PropertySeaProximityType.DISTANCE_TO_SEA_ID,
+                        visible = selectedSeaProximityTypeId == ImovelSeaProximityType.DISTANCE_TO_SEA_ID,
                         enter = slideInVertically() + fadeIn(),
                         exit = ExitTransition.None,
                     ) {

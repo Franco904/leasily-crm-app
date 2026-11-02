@@ -37,7 +37,7 @@ class AssistanceCommandRepositoryImpl(
 
         assistance.preferredPropertyCharacteristics.forEach {
             val characteristic = AssistancePropertyCharacteristicCrossRefEntity(
-                propertyCharacteristicId = it.id,
+                imovelCharacteristicId = it.id,
                 assistanceId = assistanceId,
             )
 
@@ -61,7 +61,7 @@ class AssistanceCommandRepositoryImpl(
         assistance.sentPropertiesIds.forEach {
             val sentProperty = AssistanceSentPropertyCrossRefEntity(
                 assistanceId = assistanceId,
-                propertyId = it,
+                imovelId = it,
             )
 
             assistanceSentPropertyCrossRefDatabaseDataSource.insertOrUpdate(sentProperty)

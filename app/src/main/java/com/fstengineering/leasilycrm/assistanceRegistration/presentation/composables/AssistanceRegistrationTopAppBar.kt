@@ -35,7 +35,7 @@ fun AssistanceRegistrationTopAppBar(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     isAddingSentProperty: Boolean = false,
-    mustShowSearchPropertyAction: Boolean = false,
+    mustShowSearchImovelAction: Boolean = false,
     isSearchingPropertyToSend: Boolean = false,
     onSearchPropertyToSend: () -> Unit = {},
     searchInput: String? = null,
@@ -111,7 +111,7 @@ fun AssistanceRegistrationTopAppBar(
             }
         },
         actions = {
-            if (mustShowSearchPropertyAction) {
+            if (mustShowSearchImovelAction) {
                 IconButton(
                     onClick = onSearchPropertyToSend,
                 ) {

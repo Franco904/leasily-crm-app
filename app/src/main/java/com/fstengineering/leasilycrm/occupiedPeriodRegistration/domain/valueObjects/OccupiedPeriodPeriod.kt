@@ -14,7 +14,7 @@ class OccupiedPeriodPeriod private constructor(
         val newPeriod = StayPeriod.parse(...)
 
         val existingPeriods = stayRepository
-            .findByPropertyId(propertyId)
+            .findByPropertyId(imovelId)
             .map { it.period }
 
         val hasOverbooking =

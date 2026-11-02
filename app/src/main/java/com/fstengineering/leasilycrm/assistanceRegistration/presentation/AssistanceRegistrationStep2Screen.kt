@@ -126,7 +126,7 @@ fun AssistanceRegistrationStep2Screen(
                 AssistanceRegistrationTopAppBar(
                     leadTenantName = loadedDraftForm.leadTenantName,
                     isAddingSentProperty = isAddingSentProperty,
-                    mustShowSearchPropertyAction = isAddingSentProperty
+                    mustShowSearchImovelAction = isAddingSentProperty
                             && selectableProperties.isNotEmpty()
                             && !isSearchingPropertyToSend,
                     isSearchingPropertyToSend = isSearchingPropertyToSend,

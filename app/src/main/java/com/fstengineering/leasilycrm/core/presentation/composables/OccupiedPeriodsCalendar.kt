@@ -59,7 +59,7 @@ import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_IN
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCalendarOccupiedDateUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
 import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.theme.customColors
 import com.fstengineering.leasilycrm.core.presentation.utils.daysOfWeek
@@ -77,7 +77,7 @@ fun OccupiedPeriodsCalendar(
     year: Int,
     modifier: Modifier = Modifier,
     periodDailiesCount: Int? = null,
-    occupiedPeriods: Pair<AppYearMonth, ImmutableList<PropertyCalendarOccupiedDateUiState>>? = null,
+    occupiedPeriods: Pair<AppYearMonth, ImmutableList<ImovelCalendarOccupiedDateUiState>>? = null,
     singlePeriodColor: Color? = null,
     onViewPeriod: ((Long) -> Unit)? = null,
     actions: (@Composable RowScope.() -> Unit)? = null,
@@ -217,7 +217,7 @@ fun OccupiedDatesSection(
     daysOfWeekLabels: ImmutableList<String>,
     firstDayOfWeek: Int,
     daysOfMonth: ImmutableList<String>,
-    occupiedPeriods: Pair<AppYearMonth, ImmutableList<PropertyCalendarOccupiedDateUiState>>?,
+    occupiedPeriods: Pair<AppYearMonth, ImmutableList<ImovelCalendarOccupiedDateUiState>>?,
     singlePeriodColor: Color?,
     now: AppDate,
     month: Int,
@@ -313,7 +313,7 @@ fun UnselectedCalendarDate(
 
 @Composable
 fun SelectedCalendarDate(
-    selectedDate: PropertyCalendarOccupiedDateUiState?,
+    selectedDate: ImovelCalendarOccupiedDateUiState?,
     day: String,
     daysOfMonth: ImmutableList<String>,
     isToday: Boolean,
@@ -409,7 +409,7 @@ fun CalendarDate(
     isToday: Boolean = false,
     mustHideText: Boolean = false,
     isWeekDayLabel: Boolean = false,
-    selectedDate: PropertyCalendarOccupiedDateUiState? = null,
+    selectedDate: ImovelCalendarOccupiedDateUiState? = null,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -623,163 +623,163 @@ fun OccupiedPeriodsCalendarPreview(
             occupiedPeriods = Pair(
                 AppYearMonth.of(2025, 1),
                 persistentListOf(
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "4",
                         firstHalfPeriodIndex = null,
                         secondHalfPeriodIndex = -1,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "5",
                         firstHalfPeriodIndex = -1,
                         secondHalfPeriodIndex = -1,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "6",
                         firstHalfPeriodIndex = -1,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "7",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "8",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "9",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "10",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "11",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "12",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "13",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "14",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "15",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "16",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "17",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "18",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "19",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "20",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "21",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "22",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "23",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "24",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "25",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "26",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "27",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "28",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "29",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = 0,
                         periodId = 0,
                     ),
-                    PropertyCalendarOccupiedDateUiState(
+                    ImovelCalendarOccupiedDateUiState(
                         dayOfMonth = "30",
                         firstHalfPeriodIndex = 0,
                         secondHalfPeriodIndex = null,

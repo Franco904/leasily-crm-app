@@ -32,17 +32,17 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.Phone.LengthIsGreaterThan20Chars -> R.string.inline_too_big_20_chars
 
     DomainError.PropertyPropertyOwner.Required -> INLINE_REQUIRED
-    DomainError.PropertyType.Required -> INLINE_REQUIRED
-    DomainError.PropertyStreetAddress.Required -> INLINE_REQUIRED
-    DomainError.PropertyPricePeriod.Required -> INLINE_REQUIRED
-    DomainError.PropertyPricePeriod.StartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
-    DomainError.PropertyPricePeriod.StartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
-    DomainError.PropertyPricePeriod.IsOverlappingOtherPricePeriod -> R.string.inline_period_is_overlapping_other_property_price_period
+    DomainError.ImovelType.Required -> INLINE_REQUIRED
+    DomainError.ImovelStreetAddress.Required -> INLINE_REQUIRED
+    DomainError.ImovelPricePeriod.Required -> INLINE_REQUIRED
+    DomainError.ImovelPricePeriod.StartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
+    DomainError.ImovelPricePeriod.StartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
+    DomainError.ImovelPricePeriod.IsOverlappingOtherPricePeriod -> R.string.inline_period_is_overlapping_other_property_price_period
 
-    DomainError.PropertySeaProximity.PropertySeaProximityInvalid -> INLINE_GENERIC_INVALID_DATA
-    DomainError.PropertySeaProximityDistanceToSea.Required -> INLINE_REQUIRED
+    DomainError.ImovelSeaProximity.ImovelSeaProximityInvalid -> INLINE_GENERIC_INVALID_DATA
+    DomainError.ImovelSeaProximityDistanceToSea.Required -> INLINE_REQUIRED
 
-    DomainError.PropertyOtherFields.MoreThanOneMainPictureFile -> INLINE_GENERIC_INVALID_DATA
+    DomainError.ImovelOtherFields.MoreThanOneMainPictureFile -> INLINE_GENERIC_INVALID_DATA
 
     DomainError.StayProperty.Required -> INLINE_REQUIRED
     DomainError.StayTenant.Required -> INLINE_REQUIRED

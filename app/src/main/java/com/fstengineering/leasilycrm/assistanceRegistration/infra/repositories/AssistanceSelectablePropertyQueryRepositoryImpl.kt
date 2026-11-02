@@ -6,17 +6,17 @@ import com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers.toSele
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.PropertyDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelDatabaseDataSource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 class AssistanceSelectablePropertyQueryRepositoryImpl(
-    private val propertyDatabaseDataSource: PropertyDatabaseDataSource,
+    private val imovelDatabaseDataSource: ImovelDatabaseDataSource,
 ) : AssistanceSelectablePropertyQueryRepository {
     override suspend fun getAll(
         matching: String?,
     ): AppResult<ImmutableList<AssistanceSelectablePropertyReadModel>, ApplicationError> {
-        val selectableProperties = propertyDatabaseDataSource.getAll(matching)
+        val selectableProperties = imovelDatabaseDataSource.getAll(matching)
             .fold(
                 onError = { return AppResult.Error(error = it) },
                 onSuccess = { it.map { property -> property.toSelectablePropertyReadModel() } },

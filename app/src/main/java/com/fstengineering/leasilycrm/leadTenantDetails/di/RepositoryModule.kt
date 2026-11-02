@@ -43,7 +43,7 @@ val leadTenantDetailsRepositoryModule = module {
 
     single<AssistanceSentPropertyQueryRepository> {
         AssistanceSentPropertyQueryRepositoryImpl(
-            propertyDatabaseDataSource = get(),
+            imovelDatabaseDataSource = get(),
         )
     }
 

@@ -11,7 +11,7 @@ fun OccupiedPeriodFormUiState.Loaded.Stay.toCommandModel(): StayCommandModel {
     return StayCommandModel(
         id = id,
         createDateTime = createDateTime,
-        propertyId = property?.id,
+        imovelId = property?.id,
         tenantId = tenant?.id,
         vehicleMake = vehicleMake,
         vehicleColor = vehicleColor,
@@ -34,7 +34,7 @@ fun OccupiedPeriodFormUiState.Loaded.UnavailablePeriod.toCommandModel() =
     UnavailablePeriodCommandModel(
         id = id,
         createDateTime = createDateTime,
-        propertyId = property?.id,
+        imovelId = property?.id,
         checkInDateTime = checkInDateTime,
         checkOutDateTime = checkOutDateTime,
         observations = observations,

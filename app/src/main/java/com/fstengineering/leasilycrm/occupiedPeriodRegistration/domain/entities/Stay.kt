@@ -15,7 +15,7 @@ import kotlinx.collections.immutable.toPersistentList
 class Stay private constructor(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val propertyId: Long,
+    val imovelId: Long,
     val period: OccupiedPeriodPeriod,
     val observations: String?,
     val tenantId: Long,
@@ -33,7 +33,7 @@ class Stay private constructor(
         fun parse(
             id: Long?,
             createDateTime: AppDateTime?,
-            propertyId: Long?,
+            imovelId: Long?,
             tenantId: Long?,
             vehicleMake: String?,
             vehicleColor: String?,
@@ -52,7 +52,7 @@ class Stay private constructor(
         ): AppResult<Stay, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
-            if (propertyId == null) errors.add(DomainError.StayProperty.Required)
+            if (imovelId == null) errors.add(DomainError.StayProperty.Required)
             if (tenantId == null) errors.add(DomainError.StayTenant.Required)
 
             val (checkInTimeHour, checkInTimeMinute) = checkInTime
@@ -96,7 +96,7 @@ class Stay private constructor(
             val parsed = Stay(
                 id = id,
                 createDateTime = createDateTime,
-                propertyId = requireNotNull(propertyId),
+                imovelId = requireNotNull(imovelId),
                 tenantId = requireNotNull(tenantId),
                 vehicleMake = vehicleMake,
                 vehicleColor = vehicleColor,

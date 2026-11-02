@@ -5,7 +5,7 @@ import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckInCheckOutCountsProjection
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
@@ -104,7 +104,7 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
             .shouldBeInstanceOf<AppResult.Success<*, *>>()
 
         return db.propertyDao().insertOrUpdate(
-            PropertyEntity(
+            ImovelOrm(
                 id = null,
                 createDateTime = today,
                 updateDateTime = today,
@@ -163,7 +163,7 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
                 observations = null,
                 isDeleted = false,
                 status = status.id,
-                propertyId = imovelId,
+                imovelId = imovelId,
                 tenantId = null,
                 contractVersion = 1,
             )

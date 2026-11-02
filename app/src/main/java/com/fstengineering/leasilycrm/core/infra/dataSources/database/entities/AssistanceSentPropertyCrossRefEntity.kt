@@ -15,7 +15,7 @@ import androidx.room.Index
             childColumns = ["assistance_id"],
         ),
         ForeignKey(
-            entity = PropertyEntity::class,
+            entity = ImovelOrm::class,
             parentColumns = ["id"],
             childColumns = ["property_id"],
         ),
@@ -26,5 +26,5 @@ import androidx.room.Index
 )
 data class AssistanceSentPropertyCrossRefEntity(
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
-    @ColumnInfo(name = "property_id") val propertyId: Long,
+    @ColumnInfo(name = "property_id") val imovelId: Long,
 )

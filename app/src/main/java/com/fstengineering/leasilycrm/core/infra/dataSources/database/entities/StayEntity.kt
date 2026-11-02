@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
     tableName = "stays",
     foreignKeys = [
         ForeignKey(
-            entity = PropertyEntity::class,
+            entity = ImovelOrm::class,
             parentColumns = ["id"],
             childColumns = ["property_id"],
         ),
@@ -44,7 +44,7 @@ data class StayEntity(
     val observations: String?,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "status") val status: Int?,
-    @ColumnInfo(name = "property_id") val propertyId: Long,
+    @ColumnInfo(name = "property_id") val imovelId: Long,
     @ColumnInfo(name = "tenant_id") val tenantId: Long?,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
 )

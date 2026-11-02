@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicSelectableChip
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.mutate
@@ -22,7 +22,7 @@ fun PreferredOtherCharacteristicsFormField(
     onFormChange: (AssistanceDraftFormUiState.Loaded) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val otherCharacteristics = remember { PropertyCharacteristic.entries.toImmutableList() }
+    val otherCharacteristics = remember { ImovelCharacteristic.entries.toImmutableList() }
 
     FlowRow(
         modifier = modifier
@@ -49,7 +49,7 @@ fun PreferredOtherCharacteristicsFormField(
 }
 
 private fun onAssistancePropertyCharacteristicSelect(
-    characteristic: PropertyCharacteristic,
+    characteristic: ImovelCharacteristic,
     form: AssistanceDraftFormUiState.Loaded,
     onFormChange: (AssistanceDraftFormUiState.Loaded) -> Unit,
 ) {

@@ -28,7 +28,7 @@ interface StayDatabaseDataSource {
 
     fun watchAllWithDetails(): AppResult<Flow<List<OccupiedPeriodListProjection>>, ApplicationError>
 
-    fun watchAllByPropertyId(propertyId: Long): Flow<AppResult<List<StayEntity>, ApplicationError>>
+    fun watchAllByImovelId(imovelId: Long): Flow<AppResult<List<StayEntity>, ApplicationError>>
 
     fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<List<OccupiedPeriodNotificationProjection>, ApplicationError>
 

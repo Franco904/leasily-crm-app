@@ -8,14 +8,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun OccupiedPeriodPropertySelectionList(
-    properties: ImmutableList<PropertyCardUiState>,
-    onPropertySelect: (PropertyCardUiState) -> Unit,
+    properties: ImmutableList<ImovelCardUiState>,
+    onPropertySelect: (ImovelCardUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -30,8 +30,8 @@ fun OccupiedPeriodPropertySelectionList(
             key = { _, property -> property.id },
             contentType = { _, entryType -> entryType },
         ) { _, property ->
-            PropertyCard(
-                property = property,
+            ImovelCard(
+                imovel = property,
                 onCardClick = { onPropertySelect(property) },
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,

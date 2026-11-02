@@ -3,14 +3,14 @@ package com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.d
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelOccupiedDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 
 data class OccupiedPeriodReadModel(
     val id: Long,
     val tenantId: Long?,
-    val property: PropertyReadModel,
+    val property: ImovelReadModel,
     val tenant: TenantReadModel?,
     val vehicleMake: String?,
     val vehicleColor: String?,
@@ -28,16 +28,16 @@ data class OccupiedPeriodReadModel(
     val isCheckInDone: Boolean,
     val isCheckOutDone: Boolean,
     val files: ImmutableList<StayFileReadModel>,
-    val occupiedDatesGrouped: ImmutableMap<AppYearMonth, ImmutableList<PropertyOccupiedDate>>,
+    val occupiedDatesGrouped: ImmutableMap<AppYearMonth, ImmutableList<ImovelOccupiedDate>>,
 ) {
     val isUnavailablePeriod get() = tenantId == null
 
     companion object {
         fun create(
             raw: OccupiedPeriodRawReadModel,
-            property: PropertyReadModel,
+            property: ImovelReadModel,
             tenant: TenantReadModel?,
-            occupiedDatesGrouped: ImmutableMap<AppYearMonth, ImmutableList<PropertyOccupiedDate>>,
+            occupiedDatesGrouped: ImmutableMap<AppYearMonth, ImmutableList<ImovelOccupiedDate>>,
         ) = OccupiedPeriodReadModel(
             id = raw.id,
             tenantId = raw.tenantId,

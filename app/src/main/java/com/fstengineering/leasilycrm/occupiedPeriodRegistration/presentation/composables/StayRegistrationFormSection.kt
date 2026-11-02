@@ -121,10 +121,10 @@ fun StayRegistrationFormSection(
         modifier = modifier
     ) {
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item(key = OccupiedPeriodField.Property) {
+        item(key = OccupiedPeriodField.Imovel) {
             Box(
                 modifier = Modifier
-                    .bringIntoViewRequester(bringIntoViewRequesters.getValue(OccupiedPeriodField.Property))
+                    .bringIntoViewRequester(bringIntoViewRequesters.getValue(OccupiedPeriodField.Imovel))
             ) {
                 val isEnabled = form.checkInDateTime?.toDate()?.isBefore(AppDate.now()) ?: true
 
@@ -132,7 +132,7 @@ fun StayRegistrationFormSection(
                     stayProperty = form.property,
                     onSelectStayProperty = { onSelectProperty(isEnabled) },
                     isEnabled = isEnabled,
-                    error = stayFormErrors[OccupiedPeriodField.Property],
+                    error = stayFormErrors[OccupiedPeriodField.Imovel],
                 )
             }
         }
@@ -225,8 +225,8 @@ fun StayRegistrationFormSection(
                                 coroutineScope.launch {
                                     centerVisibleLazyItemByKey(
                                         lazyListState = lazyListState,
-                                        key = OccupiedPeriodField.Property,
-                                        fallbackIndex = OccupiedPeriodField.Property.scrollIndex,
+                                        key = OccupiedPeriodField.Imovel,
+                                        fallbackIndex = OccupiedPeriodField.Imovel.scrollIndex,
                                     )
 
                                     onPeriodDisabledByPropertyUnselected()

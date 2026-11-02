@@ -21,7 +21,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.O
 fun UnavailablePeriodDetailsSection(
     unavailablePeriod: OccupiedPeriodDetailsUiState.Loaded,
     cameFromProperty: Boolean,
-    onViewPropertyDashboard: () -> Unit,
+    onViewImovelDashboard: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -32,7 +32,7 @@ fun UnavailablePeriodDetailsSection(
             StayPropertyDetailsItem(
                 property = unavailablePeriod.property,
                 cameFromProperty = cameFromProperty,
-                onViewPropertyDashboard = onViewPropertyDashboard,
+                onViewImovelDashboard = onViewImovelDashboard,
             )
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }

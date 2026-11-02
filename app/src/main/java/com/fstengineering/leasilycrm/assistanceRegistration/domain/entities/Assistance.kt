@@ -8,8 +8,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Quantidade
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -31,9 +31,9 @@ class Assistance private constructor(
     val singleBedsCount: Quantidade,
     val bathroomsCount: Quantidade,
     val parkingSpotsCount: Quantidade,
-    val preferredSeaProximityType: PropertySeaProximityType?,
+    val preferredSeaProximityType: ImovelSeaProximityType?,
     val preferredNeighborhoods: ImmutableList<String>,
-    val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
+    val preferredPropertyCharacteristics: ImmutableList<ImovelCharacteristic>,
     val observations: String?,
     val sentPropertiesIds: ImmutableList<Long>,
     val interactions: ImmutableList<AssistanceInteraction>,
@@ -61,7 +61,7 @@ class Assistance private constructor(
             preferredSeaProximityTypeId: Long?,
             preferredDistanceToSea: AppDecimal?,
             preferredNeighborhoods: ImmutableList<String>,
-            preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
+            preferredPropertyCharacteristics: ImmutableList<ImovelCharacteristic>,
             observations: String?,
             sentPropertiesIds: ImmutableList<Long>,
             interactions: ImmutableList<AssistanceInteraction>,
@@ -80,7 +80,7 @@ class Assistance private constructor(
                     .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
 
             val preferredSeaProximityType = preferredSeaProximityTypeId?.let { typeId ->
-                PropertySeaProximityType.parse(typeId, distanceToSea = preferredDistanceToSea)
+                ImovelSeaProximityType.parse(typeId, distanceToSea = preferredDistanceToSea)
                     .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
             }
 

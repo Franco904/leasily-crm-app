@@ -19,13 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.ImoveisEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 
 @Composable
 fun AssistanceLastSentPropertyDetailsItem(
-    lastSentProperty: PropertyCardUiState?,
+    lastSentProperty: ImovelCardUiState?,
     onViewAll: () -> Unit,
     onViewSentPropertyDetails: () -> Unit,
     modifier: Modifier = Modifier,
@@ -63,14 +63,14 @@ fun AssistanceLastSentPropertyDetailsItem(
         }
         Spacer(modifier = Modifier.height(16.dp))
         if (lastSentProperty == null) {
-            PropertiesEmptySection(
-                isSearchingProperty = false,
+            ImoveisEmptySection(
+                isSearchingImovel = false,
                 modifier = Modifier
                     .padding(8.dp)
             )
         } else {
-            PropertyCard(
-                property = lastSentProperty,
+            ImovelCard(
+                imovel = lastSentProperty,
                 onCardClick = onViewSentPropertyDetails,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,

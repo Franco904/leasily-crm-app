@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class StayReadModel(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val property: PropertyReadModel?,
+    val property: ImovelReadModel?,
     val tenant: TenantReadModel?,
     val vehicleMake: String?,
     val vehicleColor: String?,
@@ -27,7 +27,7 @@ data class StayReadModel(
     companion object {
         fun create(
             stayRaw: StayRawReadModel?,
-            property: PropertyReadModel?,
+            property: ImovelReadModel?,
             tenant: TenantReadModel?,
         ) = StayReadModel(
             id = stayRaw?.id,

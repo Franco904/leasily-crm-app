@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 
 data class OccupiedPeriodListReadModel(
     val id: Long,
     val tenantId: Long?,
     val tenantName: String?,
-    val propertyType: PropertyType?,
+    val imovelType: ImovelType?,
     val propertyNeighborhood: String?,
     val checkInDateTime: AppDateTime,
     val checkInHourMinute: Pair<Int, Int>,

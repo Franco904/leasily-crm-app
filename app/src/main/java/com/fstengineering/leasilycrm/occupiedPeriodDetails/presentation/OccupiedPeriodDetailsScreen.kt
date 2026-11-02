@@ -49,7 +49,7 @@ fun OccupiedPeriodDetailsScreen(
     cameFromTenant: Boolean,
     viewModel: OccupiedPeriodDetailsViewModel,
     onEdit: (Long, Long?, Long?, Boolean) -> Unit,
-    onViewPropertyDashboard: (Long) -> Unit,
+    onViewImovelDashboard: (Long) -> Unit,
     onViewTenantDetails: (Long) -> Unit,
     onBack: () -> Unit,
     onUiEvent: (UiEvent) -> Unit,
@@ -182,7 +182,7 @@ fun OccupiedPeriodDetailsScreen(
                     UnavailablePeriodDetailsSection(
                         unavailablePeriod = loaded,
                         cameFromProperty = cameFromProperty,
-                        onViewPropertyDashboard = { onViewPropertyDashboard(loaded.property.id) },
+                        onViewImovelDashboard = { onViewImovelDashboard(loaded.property.id) },
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)
@@ -199,7 +199,7 @@ fun OccupiedPeriodDetailsScreen(
                         },
                         cameFromProperty = cameFromProperty,
                         cameFromTenant = cameFromTenant,
-                        onViewPropertyDashboard = { onViewPropertyDashboard(loaded.property.id) },
+                        onViewImovelDashboard = { onViewImovelDashboard(loaded.property.id) },
                         onViewTenantDetails = { onViewTenantDetails(loaded.tenantId!!) },
                         modifier = Modifier
                             .fillMaxSize()

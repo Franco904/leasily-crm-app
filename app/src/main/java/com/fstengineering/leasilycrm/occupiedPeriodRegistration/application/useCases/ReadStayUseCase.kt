@@ -6,14 +6,14 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.StayReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.StayArgs
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.OccupiedPeriodQueryRepository
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.PropertyQueryRepository
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.ImovelQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.TenantQueryRepository
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.services.PropertyOccupiedDatesService
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.services.ImovelOccupiedDatesService
 import kotlinx.collections.immutable.persistentListOf
 
 class ReadStayUseCase(
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
-    private val propertyQueryRepository: PropertyQueryRepository,
+    private val imovelQueryRepository: ImovelQueryRepository,
     private val tenantQueryRepository: TenantQueryRepository,
 ) {
     suspend operator fun invoke(
@@ -27,23 +27,23 @@ class ReadStayUseCase(
                 )
         }
 
-        val property = stayRaw?.propertyId?.let {
-            propertyQueryRepository.getById(stayRaw.propertyId)
+        val property = stayRaw?.imovelId?.let {
+            imovelQueryRepository.getById(stayRaw.imovelId)
                 .fold(
                     onError = { e -> return AppResult.Error(error = e) },
-                    onSuccess = { storedProperty -> storedProperty },
+                    onSuccess = { storedImovel -> storedImovel },
                 )
         }
 
-        val propertyOccupiedPeriods = property?.id?.let { propertyId ->
-            occupiedPeriodQueryRepository.getOccupiedPeriodsByPropertyId(propertyId)
+        val propertyOccupiedPeriods = property?.id?.let { imovelId ->
+            occupiedPeriodQueryRepository.getOccupiedPeriodsByPropertyId(imovelId)
                 .fold(
                     onError = { e -> return AppResult.Error(error = e) },
                     onSuccess = { it },
                 )
         } ?: persistentListOf()
 
-        val propertyOccupiedDates = PropertyOccupiedDatesService.getOccupiedDates(
+        val propertyOccupiedDates = ImovelOccupiedDatesService.getOccupiedDates(
             occupiedPeriods = propertyOccupiedPeriods,
             stayToEditId = args.id,
         )

@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 
@@ -28,7 +28,7 @@ fun Assistance.toLocalDataModel(): AssistanceEntity {
         bathrooms = bathroomsCount.value,
         parkingSpots = parkingSpotsCount.value,
         propertySeaProximityTypeId = preferredSeaProximityType?.id,
-        distanceToSea = (preferredSeaProximityType as? PropertySeaProximityType.DistanceToSea)?.distance,
+        distanceToSea = (preferredSeaProximityType as? ImovelSeaProximityType.DistanceToSea)?.distance,
         observations = observations,
         isFinished = isFinished,
         isDeleted = false,

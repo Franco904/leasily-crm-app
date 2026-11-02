@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.assistanceRegistration.presentation.models
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface AssistanceDraftFormUiState {
@@ -30,9 +30,9 @@ sealed interface AssistanceDraftFormUiState {
         val preferredNeighborhoods: ImmutableList<String>,
         val preferredSeaProximityTypeId: Long?,
         val preferredDistanceToSea: AppDecimal?,
-        val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
+        val preferredPropertyCharacteristics: ImmutableList<ImovelCharacteristic>,
         val observations: String?,
-        val sentProperties: ImmutableList<PropertyCardUiState>,
+        val sentProperties: ImmutableList<ImovelCardUiState>,
         val interactions: ImmutableList<AssistanceInteractionDraftFormUiState.Loaded>,
         val leadTenantId: Long,
         val leadTenantName: String,

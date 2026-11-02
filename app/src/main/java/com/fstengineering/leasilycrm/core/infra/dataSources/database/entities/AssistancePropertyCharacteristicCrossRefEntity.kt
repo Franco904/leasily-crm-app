@@ -17,5 +17,5 @@ import androidx.room.ForeignKey
 )
 data class AssistancePropertyCharacteristicCrossRefEntity(
     @ColumnInfo(name = "assistance_id") val assistanceId: Long,
-    @ColumnInfo(name = "property_characteristic_id") val propertyCharacteristicId: Long,
+    @ColumnInfo(name = "property_characteristic_id") val imovelCharacteristicId: Long,
 )

@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.occupiedPeriods.infra.mappers
 
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.OccupiedPeriodListProjection
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
 
@@ -8,7 +8,7 @@ fun OccupiedPeriodListProjection.toReadModel() = OccupiedPeriodListReadModel(
     id = id,
     tenantId = tenantId,
     tenantName = tenantName,
-    propertyType = propertyTypeId?.let { PropertyType.fromId(it) },
+    imovelType = propertyTypeId?.let { ImovelType.fromId(it) },
     propertyNeighborhood = neighborhood,
     checkInDateTime = checkInDateTime,
     checkInHourMinute = checkInDateTime.hour to checkInDateTime.minute,

@@ -13,6 +13,6 @@ interface OccupiedPeriodQueryRepository {
     suspend fun getUnavailablePeriodById(id: Long): AppResult<UnavailablePeriodRawReadModel, ApplicationError>
 
     suspend fun getOccupiedPeriodsByPropertyId(
-        propertyId: Long,
+        imovelId: Long,
     ): AppResult<ImmutableList<OccupiedPeriodReadModel>, ApplicationError>
 }

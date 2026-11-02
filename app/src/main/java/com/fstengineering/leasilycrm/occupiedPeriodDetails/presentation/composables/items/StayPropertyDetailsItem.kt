@@ -10,14 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 
 @Composable
 fun StayPropertyDetailsItem(
-    property: PropertyCardUiState?,
+    property: ImovelCardUiState?,
     cameFromProperty: Boolean,
-    onViewPropertyDashboard: () -> Unit,
+    onViewImovelDashboard: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -30,9 +30,9 @@ fun StayPropertyDetailsItem(
         )
         Spacer(modifier = Modifier.height(16.dp))
         if (property != null) {
-            PropertyCard(
-                property = property,
-                onCardClick = if (cameFromProperty) null else onViewPropertyDashboard,
+            ImovelCard(
+                imovel = property,
+                onCardClick = if (cameFromProperty) null else onViewImovelDashboard,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,
             )

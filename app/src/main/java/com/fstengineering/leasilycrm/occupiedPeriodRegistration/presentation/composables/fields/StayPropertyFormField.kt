@@ -17,12 +17,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppOutlinedButton
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 
 @Composable
 fun StayPropertyFormField(
-    stayProperty: PropertyCardUiState?,
+    stayProperty: ImovelCardUiState?,
     onSelectStayProperty: () -> Unit,
     isEnabled: Boolean,
     error: Int?,
@@ -59,8 +59,8 @@ fun StayPropertyFormField(
         AnimatedVisibility(stayProperty != null) {
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
-                PropertyCard(
-                    property = stayProperty!!,
+                ImovelCard(
+                    imovel = stayProperty!!,
                     hasMoreOptionsMenu = false,
                     hasCharacteristicsChipsRow = false,
                 )

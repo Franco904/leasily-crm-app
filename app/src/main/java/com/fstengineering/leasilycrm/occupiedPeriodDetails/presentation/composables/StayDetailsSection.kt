@@ -31,7 +31,7 @@ fun StayDetailsSection(
     onOpenStayFile: (StayFileUiState) -> Unit,
     cameFromProperty: Boolean,
     cameFromTenant: Boolean,
-    onViewPropertyDashboard: () -> Unit,
+    onViewImovelDashboard: () -> Unit,
     onViewTenantDetails: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -47,7 +47,7 @@ fun StayDetailsSection(
             StayPropertyDetailsItem(
                 property = stay.property,
                 cameFromProperty = cameFromProperty,
-                onViewPropertyDashboard = onViewPropertyDashboard,
+                onViewImovelDashboard = onViewImovelDashboard,
             )
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }

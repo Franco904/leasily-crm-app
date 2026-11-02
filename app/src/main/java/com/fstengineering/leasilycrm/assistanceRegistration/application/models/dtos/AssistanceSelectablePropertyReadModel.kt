@@ -1,10 +1,10 @@
 package com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos
 
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 
 data class AssistanceSelectablePropertyReadModel(
     val id: Long?,
-    val type: PropertyType,
+    val type: ImovelType,
     val neighborhood: String,
     val streetAddress: String,
     val number: Int?,

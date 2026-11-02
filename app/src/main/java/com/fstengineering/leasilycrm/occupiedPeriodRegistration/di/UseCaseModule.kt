@@ -11,7 +11,7 @@ val occupiedPeriodRegistrationUseCaseModule = module {
     factory {
         ReadStayUseCase(
             occupiedPeriodQueryRepository = get(),
-            propertyQueryRepository = get(),
+            imovelQueryRepository = get(),
             tenantQueryRepository = get(),
         )
     }
@@ -19,13 +19,13 @@ val occupiedPeriodRegistrationUseCaseModule = module {
     factory {
         ReadUnavailablePeriodUseCase(
             occupiedPeriodQueryRepository = get(),
-            propertyQueryRepository = get(),
+            imovelQueryRepository = get(),
         )
     }
 
     factory {
         ReadSelectablePropertiesUseCase(
-            propertyQueryRepository = get(),
+            imovelQueryRepository = get(),
             occupiedPeriodQueryRepository = get(),
         )
     }

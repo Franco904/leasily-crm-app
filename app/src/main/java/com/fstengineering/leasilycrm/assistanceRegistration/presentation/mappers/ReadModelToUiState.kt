@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.d
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.dtos.AssistanceSentPropertyReadModel
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceInteractionDraftFormUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
@@ -43,11 +43,11 @@ fun AssistanceReadModel.toUiState() = AssistanceDraftFormUiState.Loaded(
         ?.toPersistentList() ?: persistentListOf(),
 )
 
-fun AssistanceSentPropertyReadModel.toUiState(): PropertyCardUiState {
+fun AssistanceSentPropertyReadModel.toUiState(): ImovelCardUiState {
     val numberText = if (number != null) ", $number" else ""
     val streetAddressAndNumber = "${streetAddress}$numberText"
 
-    return PropertyCardUiState(
+    return ImovelCardUiState(
         id = requireNotNull(id),
         mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,
@@ -59,11 +59,11 @@ fun AssistanceSentPropertyReadModel.toUiState(): PropertyCardUiState {
     )
 }
 
-fun AssistanceSelectablePropertyReadModel.toUiState(): PropertyCardUiState {
+fun AssistanceSelectablePropertyReadModel.toUiState(): ImovelCardUiState {
     val numberText = if (number != null) ", $number" else ""
     val streetAddressAndNumber = "${streetAddress}$numberText"
 
-    return PropertyCardUiState(
+    return ImovelCardUiState(
         id = requireNotNull(id),
         mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,

@@ -28,30 +28,30 @@ sealed interface DomainError : BaseError {
         Required,
     }
 
-    enum class PropertyType : DomainError {
+    enum class ImovelType : DomainError {
         Required,
     }
 
-    enum class PropertyStreetAddress : DomainError {
+    enum class ImovelStreetAddress : DomainError {
         Required,
     }
 
-    enum class PropertyPricePeriod : DomainError {
+    enum class ImovelPricePeriod : DomainError {
         Required,
         StartAndEndDatesAreTheSame,
         StartDateIsAfterEndDate,
         IsOverlappingOtherPricePeriod,
     }
 
-    enum class PropertyOtherFields : DomainError {
+    enum class ImovelOtherFields : DomainError {
         MoreThanOneMainPictureFile,
     }
 
-    enum class PropertySeaProximity : DomainError {
-        PropertySeaProximityInvalid,
+    enum class ImovelSeaProximity : DomainError {
+        ImovelSeaProximityInvalid,
     }
 
-    enum class PropertySeaProximityDistanceToSea : DomainError {
+    enum class ImovelSeaProximityDistanceToSea : DomainError {
         Required,
     }
 

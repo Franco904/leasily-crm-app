@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.leadTenantDetails.presentation.mappers
 
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentPropertyReadModel
@@ -130,13 +130,13 @@ private fun AssistanceInteractionReadModel.toUiState() = AssistanceInteractionUi
     description = description,
 )
 
-private fun AssistanceSentPropertyReadModel.toUiState(): PropertyCardUiState {
+private fun AssistanceSentPropertyReadModel.toUiState(): ImovelCardUiState {
     val streetAddressAndNumber = buildString {
         append(streetAddress)
         if (number != null) append(", $number")
     }
 
-    return PropertyCardUiState(
+    return ImovelCardUiState(
         id = id,
         mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,

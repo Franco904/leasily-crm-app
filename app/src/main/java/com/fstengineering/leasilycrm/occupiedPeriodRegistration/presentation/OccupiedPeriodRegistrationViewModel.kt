@@ -11,14 +11,14 @@ import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.commands.StayCommandModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.commands.UnavailablePeriodCommandModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.SelectablePropertiesArgs
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.StayArgs
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.UnavailablePeriodArgs
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.PropertyQueryRepository
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.ImovelQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.TenantQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadSelectablePropertiesUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadStayUseCase
@@ -52,7 +52,7 @@ class OccupiedPeriodRegistrationViewModel(
     private val readSelectableProperties: ReadSelectablePropertiesUseCase,
     private val writeStay: WriteStayUseCase,
     private val writeUnavailablePeriod: WriteUnavailablePeriodUseCase,
-    private val propertyQueryRepository: PropertyQueryRepository,
+    private val imovelQueryRepository: ImovelQueryRepository,
     private val tenantQueryRepository: TenantQueryRepository,
     private val sharedStorageDataSource: SharedStorageDataSource,
 ) : ViewModel() {
@@ -62,7 +62,7 @@ class OccupiedPeriodRegistrationViewModel(
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _properties =
-        MutableStateFlow<ImmutableList<PropertyCardUiState>>(persistentListOf())
+        MutableStateFlow<ImmutableList<ImovelCardUiState>>(persistentListOf())
     val properties = _properties.asStateFlow()
 
     private val _tenants = MutableStateFlow<ImmutableList<LeadTenantUiState>>(persistentListOf())
@@ -85,20 +85,20 @@ class OccupiedPeriodRegistrationViewModel(
 
     fun init(
         occupiedPeriodId: Long?,
-        propertyId: Long?,
+        imovelId: Long?,
         tenantId: Long?,
         isUnavailablePeriod: Boolean,
     ) {
         if (isInitialized) return
 
-        loadData(occupiedPeriodId, propertyId, tenantId, isUnavailablePeriod)
+        loadData(occupiedPeriodId, imovelId, tenantId, isUnavailablePeriod)
 
         isInitialized = true
     }
 
     private fun loadData(
         occupiedPeriodId: Long?,
-        propertyId: Long?,
+        imovelId: Long?,
         tenantId: Long?,
         isUnavailablePeriod: Boolean,
     ) {
@@ -124,7 +124,7 @@ class OccupiedPeriodRegistrationViewModel(
             }
 
             if (occupiedPeriodId == null) {
-                if (propertyId != null) getPropertyToAutofill(propertyId)
+                if (imovelId != null) getPropertyToAutofill(imovelId)
                 if (tenantId != null) getTenantToAutofill(tenantId)
             }
 
@@ -133,16 +133,16 @@ class OccupiedPeriodRegistrationViewModel(
         }
     }
 
-    private fun getPropertyToAutofill(propertyId: Long) {
+    private fun getPropertyToAutofill(imovelId: Long) {
         viewModelScope.launch {
-            propertyQueryRepository.getById(propertyId)
+            imovelQueryRepository.getById(imovelId)
                 .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                .onSuccess { storedProperty ->
+                .onSuccess { storedImovel ->
                     _draftFormUiState.update {
                         when (it) {
-                            is OccupiedPeriodFormUiState.Loaded.Stay -> it.copy(property = storedProperty.toUiState())
+                            is OccupiedPeriodFormUiState.Loaded.Stay -> it.copy(property = storedImovel.toUiState())
                             is OccupiedPeriodFormUiState.Loaded.UnavailablePeriod -> it.copy(
-                                property = storedProperty.toUiState()
+                                property = storedImovel.toUiState()
                             )
 
                             else -> it
@@ -180,9 +180,9 @@ class OccupiedPeriodRegistrationViewModel(
 
                     readSelectableProperties(args)
                         .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                        .onSuccess { matchingProperties ->
+                        .onSuccess { matchingImoveis ->
                             val properties =
-                                matchingProperties.map { it.toUiState() }.toPersistentList()
+                                matchingImoveis.map { it.toUiState() }.toPersistentList()
                             _properties.update { properties }
                         }
                 }
@@ -224,7 +224,7 @@ class OccupiedPeriodRegistrationViewModel(
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                if (form.property != newForm.property) map[OccupiedPeriodField.Property] = null
+                if (form.property != newForm.property) map[OccupiedPeriodField.Imovel] = null
                 if (form.tenant != newForm.tenant) map[OccupiedPeriodField.Tenant] = null
                 if (form.checkInDateTime != newForm.checkInDateTime) map[OccupiedPeriodField.Period] =
                     null
@@ -249,7 +249,7 @@ class OccupiedPeriodRegistrationViewModel(
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                if (form.property != newForm.property) map[OccupiedPeriodField.Property] = null
+                if (form.property != newForm.property) map[OccupiedPeriodField.Imovel] = null
                 if (form.checkInDateTime != newForm.checkInDateTime) map[OccupiedPeriodField.Period] =
                     null
             }
@@ -353,7 +353,7 @@ class OccupiedPeriodRegistrationViewModel(
 
         _formErrors.update {
             val newErrors = it.errors.mutate { map ->
-                map[OccupiedPeriodField.Property] = stayPropertyError?.toInlineMessage()
+                map[OccupiedPeriodField.Imovel] = stayPropertyError?.toInlineMessage()
                 map[OccupiedPeriodField.Tenant] = stayTenantError?.toInlineMessage()
                 map[OccupiedPeriodField.Period] = periodError?.toInlineMessage()
                 map[OccupiedPeriodField.CheckInTime] = checkInTimeError?.toInlineMessage()

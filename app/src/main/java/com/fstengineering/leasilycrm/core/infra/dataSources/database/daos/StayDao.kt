@@ -44,12 +44,12 @@ interface StayDao {
     @Query(
         """
         SELECT * FROM stays
-        WHERE property_id = :propertyId
+        WHERE property_id = :imovelId
         AND is_deleted = 0
         ORDER BY check_in_date_time
         """
     )
-    fun watchAllByPropertyId(propertyId: Long): Flow<List<StayEntity>>
+    fun watchAllByImovelId(imovelId: Long): Flow<List<StayEntity>>
 
     @Query(
         """
