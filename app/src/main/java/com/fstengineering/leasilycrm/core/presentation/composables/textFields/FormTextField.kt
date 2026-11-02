@@ -93,13 +93,8 @@ fun FormTextField(
         BasicTextField(
             value = value,
             onValueChange = { newValue ->
-                if (maxLength == null) {
-                    onValueChange(newValue)
-                    return@BasicTextField
-                }
-                if (newValue.length <= maxLength) {
-                    onValueChange(newValue)
-                }
+                val truncated = if (maxLength == null) newValue else newValue.take(maxLength)
+                onValueChange(truncated)
             },
             enabled = isEnabled,
             readOnly = isReadOnly,
