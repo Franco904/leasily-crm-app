@@ -186,6 +186,26 @@ revoke-perms:
 	for perm in $$($(RUNTIME_PERMS)); do $(QA_ADB) shell pm revoke $(QA_PACKAGE) $$perm; done; \
 	echo "Permissões revogadas de $(QA_PACKAGE) em $(QA_SERIAL)"
 
+# Alterna o TalkBack no aparelho, preservando outros serviços de acessibilidade ativos, ex.: make talkback DEVICE=2
+TALKBACK_SERVICE := com.google.android.marvin.talkback/com.google.android.marvin.talkback.TalkBackService
+talkback:
+	@set -e; test -n "$(QA_SERIAL)" || { echo "nenhum aparelho na posição $(DEVICE) de 'adb devices'"; exit 1; }; \
+	services=$$($(QA_ADB) shell settings get secure enabled_accessibility_services | tr -d '\r'); \
+	[ "$$services" = "null" ] && services=""; \
+	if echo "$$services" | grep -q "$(TALKBACK_SERVICE)"; then \
+		services=$$(echo "$$services" | tr ':' '\n' | grep -v "$(TALKBACK_SERVICE)" | paste -sd ':' -); label=desativado; \
+	else \
+		services=$${services:+$$services:}$(TALKBACK_SERVICE); label=ativado; \
+	fi; \
+	if [ -n "$$services" ]; then \
+		$(QA_ADB) shell settings put secure enabled_accessibility_services "$$services"; \
+		$(QA_ADB) shell settings put secure accessibility_enabled 1; \
+	else \
+		$(QA_ADB) shell settings delete secure enabled_accessibility_services > /dev/null; \
+		$(QA_ADB) shell settings put secure accessibility_enabled 0; \
+	fi; \
+	echo "TalkBack $$label em $(QA_SERIAL)"
+
 # Simula a morte do processo pelo SO para liberar memória: manda o app para background e o mata;
 # reabra pelos recentes para testar a restauração de estado. Ex.: make kill DEVICE=2
 kill:
