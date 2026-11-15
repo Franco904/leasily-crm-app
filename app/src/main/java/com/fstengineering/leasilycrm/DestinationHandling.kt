@@ -23,7 +23,7 @@ import com.fstengineering.leasilycrm.profile.presentation.ProfileScreen
 import com.fstengineering.leasilycrm.imoveis.presentation.ImoveisScreen
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.ImovelDashboardScreen
 import com.fstengineering.leasilycrm.imovelDetails.presentation.ImovelDetailsScreen
-import com.fstengineering.leasilycrm.imovelOccupation.presentation.ImovelOccupationScreen
+import com.fstengineering.leasilycrm.imovelOcupacao.presentation.ImovelOcupacaoScreen
 import com.fstengineering.leasilycrm.proprietarioDetails.presentation.ProprietarioDetailsScreen
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationScreen
 import com.fstengineering.leasilycrm.proprietarios.presentation.ProprietariosScreen
@@ -308,7 +308,7 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(Destinations.ProprietarioDetails(proprietarioId))
             },
             onViewAllImovelStays = {
-                navController.navigate(Destinations.ImovelOccupation(args.imovelId))
+                navController.navigate(Destinations.ImovelOcupacao(args.imovelId))
             },
             onNewStay = { isUnavailablePeriod ->
                 val destination = Destinations.OccupiedPeriodRegistration(
@@ -358,11 +358,10 @@ fun NavGraphBuilder.destinations(
         )
     }
 
-    composable<Destinations.ImovelOccupation> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.ImovelOccupation>()
+    composable<Destinations.ImovelOcupacao> { backStackEntry ->
+        val args = backStackEntry.toRoute<Destinations.ImovelOcupacao>()
 
-        ImovelOccupationScreen(
-            imovelId = args.imovelId,
+        ImovelOcupacaoScreen(
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onNewStay = { isUnavailablePeriod ->

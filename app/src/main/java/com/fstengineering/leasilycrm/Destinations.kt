@@ -55,7 +55,7 @@ sealed interface Destinations {
     data class ImovelDetails(val imovelId: Long)
 
     @Serializable
-    data class ImovelOccupation(val imovelId: Long)
+    data class ImovelOcupacao(val imovelId: Long)
 
     @Serializable
     data object Proprietarios

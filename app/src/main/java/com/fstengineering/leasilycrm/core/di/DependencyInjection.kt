@@ -46,9 +46,9 @@ import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardUseCaseMo
 import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardViewModelModule
 import com.fstengineering.leasilycrm.imovelDetails.di.imovelDetailsDataSourceModule
 import com.fstengineering.leasilycrm.imovelDetails.di.imovelDetailsViewModelModule
-import com.fstengineering.leasilycrm.imovelOccupation.di.imovelOccupationRepositoryModule
-import com.fstengineering.leasilycrm.imovelOccupation.di.imovelOccupationUseCaseModule
-import com.fstengineering.leasilycrm.imovelOccupation.di.imovelOccupationViewModelModule
+import com.fstengineering.leasilycrm.imovelOcupacao.di.imovelOcupacaoDataSourceModule
+import com.fstengineering.leasilycrm.imovelOcupacao.di.imovelOcupacaoUseCaseModule
+import com.fstengineering.leasilycrm.imovelOcupacao.di.imovelOcupacaoViewModelModule
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsDataSourceModule
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsViewModelModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationDataSourceModule
@@ -133,10 +133,10 @@ fun Application.configureDependencyInjection() {
             imovelDetailsDataSourceModule,
             imovelDetailsViewModelModule,
 
-            // Feature: imovelOccupation
-            imovelOccupationRepositoryModule,
-            imovelOccupationUseCaseModule,
-            imovelOccupationViewModelModule,
+            // Feature: imovelOcupacao
+            imovelOcupacaoDataSourceModule,
+            imovelOcupacaoUseCaseModule,
+            imovelOcupacaoViewModelModule,
 
             // Feature: proprietarios
             proprietariosDataSourceModule,
