@@ -5,14 +5,12 @@ import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCheckInCheckOutCountsProjection
-import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
-import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import kotlinx.collections.immutable.persistentListOf
+import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeProprietario
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -49,10 +47,10 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
             val result = sut.watchAllPastCheckInCheckOutNotDoneCounts().first()
 
             result.shouldBeInstanceOf<AppResult.Success<*, *>>().data shouldBeEqualTo
-                StayCheckInCheckOutCountsProjection(
-                    staysAbleToCheckInCount = 2,
-                    staysAbleToCheckOutCount = 0,
-                )
+                    StayCheckInCheckOutCountsProjection(
+                        staysAbleToCheckInCount = 2,
+                        staysAbleToCheckOutCount = 0,
+                    )
         }
 
     @Test
@@ -81,62 +79,20 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
             val result = sut.watchAllPastCheckInCheckOutNotDoneCounts().first()
 
             result.shouldBeInstanceOf<AppResult.Success<*, *>>().data shouldBeEqualTo
-                StayCheckInCheckOutCountsProjection(
-                    staysAbleToCheckInCount = 0,
-                    staysAbleToCheckOutCount = 1,
-                )
+                    StayCheckInCheckOutCountsProjection(
+                        staysAbleToCheckInCount = 0,
+                        staysAbleToCheckOutCount = 1,
+                    )
         }
 
     // endregion
 
     private suspend fun insertImovel(): Long {
-        val proprietarioId = 1L
-        val proprietario = Proprietario.parse(
-            id = proprietarioId,
-            createDateTime = today,
-            name = faker.random.nextUUID(),
-            phone = null,
-            email = null,
-            paymentKey = null,
-            files = persistentListOf<ProprietarioFile>(),
-        ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Proprietario>()
-        db.proprietarioWriteDataSource().save(proprietario)
-            .shouldBeInstanceOf<AppResult.Success<*, *>>()
+        val imovelId = faker.random.nextInt(bound = 9999).toLong() + 1
+        val imovel = createFakeImovel(proprietarioId = db.saveFakeProprietario(), id = imovelId)
+        db.imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*, *>>()
 
-        return db.imovelDao().insertOrUpdate(
-            ImovelOrm(
-                id = null,
-                createDateTime = today,
-                updateDateTime = today,
-                neighborhood = faker.random.nextUUID(),
-                streetAddress = faker.random.nextUUID(),
-                cepPostalCode = null,
-                number = null,
-                addressLine2 = null,
-                parkingSpotNumber = null,
-                parkingBasementLevelNumber = null,
-                hobbyBoxNumber = null,
-                bedrooms = 1,
-                enSuites = 0,
-                doubleBeds = 1,
-                singleBeds = 0,
-                bathrooms = 1,
-                parkingSpots = 0,
-                airConditioners = 0,
-                maxGuests = 2,
-                distanceToSea = null,
-                includedItems = null,
-                hasIncludedItems = false,
-                cleaningServiceTax = null,
-                hasCleaningServiceIncluded = false,
-                observations = null,
-                isDeleted = false,
-                proprietarioId = proprietarioId,
-                typeId = 1,
-                seaProximityTypeId = null,
-                contractVersion = 1,
-            )
-        )
+        return imovelId
     }
 
     private suspend fun insertEstadia(
