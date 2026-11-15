@@ -212,10 +212,7 @@ fun NavGraphBuilder.destinations(
                 navController.getBackStackEntry<Destinations.ImovelRegistration>()
             }
 
-            val args = parentEntry.toRoute<Destinations.ImovelRegistration>()
-
             ImovelRegistrationStep1Screen(
-                imovelId = args.imovelId,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
                 onRegisterNewProprietario = {

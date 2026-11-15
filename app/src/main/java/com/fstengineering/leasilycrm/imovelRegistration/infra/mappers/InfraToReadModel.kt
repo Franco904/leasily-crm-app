@@ -3,13 +3,13 @@ package com.fstengineering.leasilycrm.imovelRegistration.infra.mappers
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
-import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelPriceOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelFileReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelPriceReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelRawReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import kotlinx.collections.immutable.toPersistentList
 
 fun ImovelCompound.toRawReadModel(): ImovelRawReadModel {

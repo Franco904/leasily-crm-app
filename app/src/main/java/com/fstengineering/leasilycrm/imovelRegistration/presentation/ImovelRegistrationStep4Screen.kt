@@ -26,12 +26,13 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.ImovelRegistrationFormSectionStep4
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.ImovelRegistrationTopAppBar
@@ -70,22 +71,19 @@ fun ImovelRegistrationStep4Screen(
         }
     )
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
     LaunchedEffect(Unit) {
-        parentViewModel.uiEvents.collect { uiEvent ->
+        parentViewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
-                is ImovelRegistrationViewModel.UiEvent.BottomSheetError -> {
+                is ImovelRegistrationViewModel.UiEvent.ShowErrorBottomSheet -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is ImovelRegistrationViewModel.UiEvent.ImovelCreateSuccess -> {
-                    onLeaveRegistration()
-                    onUiEvent(UiEvent.ShowSnackBar(R.string.create_property_success_message))
-                }
-
-                is ImovelRegistrationViewModel.UiEvent.ImovelEditSuccess -> {
+                is ImovelRegistrationViewModel.UiEvent.CloseScreenWithSnackbar -> {
                     onLeaveRegistration()
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
                 }
@@ -115,7 +113,7 @@ fun ImovelRegistrationStep4Screen(
         topBar = {
             Column {
                 ImovelRegistrationTopAppBar(
-                    isEditing = parentViewModel.imovelId != null,
+                    isEditing = parentViewModel.isEditing,
                     onBack = parentViewModel::onExit,
                 )
                 HorizontalDivider()
@@ -153,7 +151,7 @@ fun ImovelRegistrationStep4Screen(
 
         if (mustShowConfirmLeaveRegistrationDialog) {
             ConfirmLeaveRegistrationDialog(
-                isEditing = parentViewModel.imovelId != null,
+                isEditing = parentViewModel.isEditing,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
                     onLeaveRegistration()

@@ -31,6 +31,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBottomSheet
@@ -38,6 +39,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoa
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.ImovelRegistrationFormSectionStep1
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.ImovelRegistrationTopAppBar
@@ -52,7 +54,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImovelRegistrationStep1Screen(
-    imovelId: Long?,
     parentViewModel: ImovelRegistrationViewModel,
     stepViewModel: ImovelRegistrationStep1ViewModel,
     onRegisterNewProprietario: () -> Unit,
@@ -81,13 +82,15 @@ fun ImovelRegistrationStep1Screen(
     var mustShowConfirmLeaveRegistrationDialog by remember { mutableStateOf(false) }
     var mustShowProprietariosComboBottomsheet by remember { mutableStateOf(false) }
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
     LaunchedEffect(Unit) {
-        parentViewModel.init(imovelId = imovelId)
+        parentViewModel.init()
 
         launch {
-            parentViewModel.uiEvents.collect { uiEvent ->
+            parentViewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
                 when (uiEvent) {
-                    is ImovelRegistrationViewModel.UiEvent.BottomSheetError -> {
+                    is ImovelRegistrationViewModel.UiEvent.ShowErrorBottomSheet -> {
                         val errorData = uiEvent.error.toBottomSheetData(
                             DefaultErrorBottomSheetDataPropertiesStrategy,
                         )
@@ -136,7 +139,7 @@ fun ImovelRegistrationStep1Screen(
         topBar = {
             Column {
                 ImovelRegistrationTopAppBar(
-                    isEditing = imovelId != null,
+                    isEditing = parentViewModel.isEditing,
                     onBack = parentViewModel::onExit,
                 )
                 HorizontalDivider()
@@ -218,7 +221,7 @@ fun ImovelRegistrationStep1Screen(
 
         if (mustShowConfirmLeaveRegistrationDialog) {
             ConfirmLeaveRegistrationDialog(
-                isEditing = imovelId != null,
+                isEditing = parentViewModel.isEditing,
                 onConfirmLeave = {
                     mustShowConfirmLeaveRegistrationDialog = false
                     onLeaveRegistration()

@@ -56,8 +56,6 @@ import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioReg
 import com.fstengineering.leasilycrm.proprietarios.di.proprietariosDataSourceModule
 import com.fstengineering.leasilycrm.proprietarios.di.proprietariosViewModelModule
 import com.fstengineering.leasilycrm.imovelRegistration.di.imovelRegistrationDataSourceModule
-import com.fstengineering.leasilycrm.imovelRegistration.di.imovelRegistrationRepositoryModule
-import com.fstengineering.leasilycrm.imovelRegistration.di.imovelRegistrationUseCaseModule
 import com.fstengineering.leasilycrm.imovelRegistration.di.imovelRegistrationViewModelModule
 import com.fstengineering.leasilycrm.root.di.rootViewModelModule
 import com.fstengineering.leasilycrm.settings.di.settingsViewModelModule
@@ -120,8 +118,6 @@ fun Application.configureDependencyInjection() {
 
             // Feature: imovelRegistration
             imovelRegistrationDataSourceModule,
-            imovelRegistrationRepositoryModule,
-            imovelRegistrationUseCaseModule,
             imovelRegistrationViewModelModule,
 
             // Feature: imovelDashboard

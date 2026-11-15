@@ -1,14 +1,14 @@
 package com.fstengineering.leasilycrm.imovelRegistration.presentation
 
 import app.cash.turbine.test
+import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.application.repositories.ImovelQueryRepository
-import com.fstengineering.leasilycrm.imovelRegistration.application.useCases.ReadImovelUseCase
+import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelRegistrationReadDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ProprietarioReadDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelDraftFormUiState
@@ -20,7 +20,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -31,9 +30,9 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ImovelRegistrationViewModelTest {
-    private val readImovelMock: ReadImovelUseCase = mockk(relaxed = true)
+    private val imovelRegistrationReadDataSourceMock: ImovelRegistrationReadDataSource =
+        mockk(relaxed = true)
     private val imovelWriteDataSourceMock: ImovelWriteDataSource = mockk(relaxed = true)
-    private val imovelQueryRepositoryMock: ImovelQueryRepository = mockk(relaxed = true)
     private val proprietarioReadDataSourceMock: ProprietarioReadDataSource = mockk(relaxed = true)
 
     @BeforeEach
@@ -53,7 +52,9 @@ class ImovelRegistrationViewModelTest {
                     sut.saveImovel()
 
                     awaitItem() shouldBeEqualTo
-                        ImovelRegistrationViewModel.UiEvent.BottomSheetError(ApplicationError.Unknown)
+                            ImovelRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                                ApplicationError.Unknown
+                            )
                 }
                 coVerify(exactly = 0) { imovelWriteDataSourceMock.save(any()) }
             }
@@ -63,13 +64,15 @@ class ImovelRegistrationViewModelTest {
             runTest {
                 val sut = createSutWithNewForm(createValidForm())
                 coEvery { imovelWriteDataSourceMock.save(any()) } returns
-                    AppResult.Error(ApplicationError.NoInternet)
+                        AppResult.Error(ApplicationError.NoInternet)
 
                 sut.uiEvents.test {
                     sut.saveImovel()
 
                     awaitItem() shouldBeEqualTo
-                        ImovelRegistrationViewModel.UiEvent.BottomSheetError(ApplicationError.NoInternet)
+                            ImovelRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                                ApplicationError.NoInternet
+                            )
                 }
             }
 
@@ -82,14 +85,16 @@ class ImovelRegistrationViewModelTest {
             sut.uiEvents.test {
                 sut.saveImovel()
 
-                awaitItem() shouldBeEqualTo ImovelRegistrationViewModel.UiEvent.ImovelCreateSuccess
+                awaitItem() shouldBeEqualTo ImovelRegistrationViewModel.UiEvent.CloseScreenWithSnackbar(
+                    messageId = R.string.create_property_success_message,
+                )
             }
             coVerify {
                 imovelWriteDataSourceMock.save(
                     match {
                         it.proprietarioId == form.proprietario?.id &&
-                            it.neighborhood == form.neighborhood &&
-                            it.streetAddress == form.streetAddress
+                                it.neighborhood == form.neighborhood &&
+                                it.streetAddress == form.streetAddress
                     },
                 )
             }
@@ -99,10 +104,11 @@ class ImovelRegistrationViewModelTest {
         fun `Deve persistir Imóvel quando editado, dado que os dados são válidos`() = runTest {
             val imovelId = faker.random.nextLong(bound = 9999)
             val storedImovel = createImovelReadModel(id = imovelId)
-            coEvery { readImovelMock(any()) } returns AppResult.Success(storedImovel)
+            coEvery { imovelRegistrationReadDataSourceMock.getImovel(imovelId) } returns
+                    AppResult.Success(storedImovel)
             coEvery { imovelWriteDataSourceMock.save(any()) } returns AppResult.Success(Unit)
-            val sut = createSut()
-            sut.init(imovelId)
+            val sut = createSut(imovelId = imovelId)
+            sut.init()
             val editedNeighborhood = faker.random.nextUUID()
             sut.onImovelFormChange(
                 (sut.draftFormUiState.value as ImovelDraftFormUiState.Loaded)
@@ -112,7 +118,7 @@ class ImovelRegistrationViewModelTest {
             sut.uiEvents.test {
                 sut.saveImovel()
 
-                awaitItem() shouldBeEqualTo ImovelRegistrationViewModel.UiEvent.ImovelEditSuccess(
+                awaitItem() shouldBeEqualTo ImovelRegistrationViewModel.UiEvent.CloseScreenWithSnackbar(
                     messageId = R.string.edit_property_success_message,
                 )
             }
@@ -127,15 +133,15 @@ class ImovelRegistrationViewModelTest {
     private fun createSutWithNewForm(form: ImovelDraftFormUiState.Loaded) =
         createSut().also { it.onImovelFormChange(form) }
 
-    private fun createSut(): ImovelRegistrationViewModel {
+    private fun createSut(imovelId: Long? = null): ImovelRegistrationViewModel {
         every { proprietarioReadDataSourceMock.watchProprietarios() } returns emptyFlow()
-        coEvery { imovelQueryRepositoryMock.getAllNeighborhoodNames() } returns
-            AppResult.Success(persistentListOf())
+        coEvery { imovelRegistrationReadDataSourceMock.getNeighborhoodNames() } returns
+                AppResult.Success(emptyList())
 
         return ImovelRegistrationViewModel(
-            readImovel = readImovelMock,
+            route = Destinations.ImovelRegistration(imovelId = imovelId),
+            imovelRegistrationReadDataSource = imovelRegistrationReadDataSourceMock,
             imovelWriteDataSource = imovelWriteDataSourceMock,
-            imovelQueryRepository = imovelQueryRepositoryMock,
             proprietarioReadDataSource = proprietarioReadDataSourceMock,
         )
     }

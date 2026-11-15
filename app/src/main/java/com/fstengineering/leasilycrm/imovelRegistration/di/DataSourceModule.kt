@@ -5,5 +5,6 @@ import org.koin.dsl.module
 
 val imovelRegistrationDataSourceModule = module {
     single { get<AppDatabase>().imovelWriteDataSource() }
+    single { get<AppDatabase>().imovelRegistrationReadDataSource() }
     single { get<AppDatabase>().imovelRegistrationProprietarioReadDataSource() }
 }

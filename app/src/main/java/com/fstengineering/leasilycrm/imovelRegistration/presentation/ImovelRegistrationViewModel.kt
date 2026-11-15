@@ -1,20 +1,17 @@
 package com.fstengineering.leasilycrm.imovelRegistration.presentation
 
+import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelFileUiState
-import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.LeadTenantDraftFormUiState
-import com.fstengineering.leasilycrm.imovelRegistration.application.models.queries.ImovelArgs
-import com.fstengineering.leasilycrm.imovelRegistration.application.repositories.ImovelQueryRepository
-import com.fstengineering.leasilycrm.imovelRegistration.application.useCases.ReadImovelUseCase
+import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelRegistrationReadDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ProprietarioReadDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.mappers.toImovel
@@ -33,17 +30,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ImovelRegistrationViewModel(
-    private val readImovel: ReadImovelUseCase,
+    private val route: Destinations.ImovelRegistration,
+    private val imovelRegistrationReadDataSource: ImovelRegistrationReadDataSource,
     private val imovelWriteDataSource: ImovelWriteDataSource,
-    private val imovelQueryRepository: ImovelQueryRepository,
     private val proprietarioReadDataSource: ProprietarioReadDataSource,
 ) : ViewModel() {
-    private var isInitialized = false
+    private var isLoaded = false
 
-    var imovelId: Long? = null
-        private set
+    val isEditing: Boolean = route.imovelId != null
 
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _proprietarios =
@@ -60,26 +56,22 @@ class ImovelRegistrationViewModel(
 
     private var formToEdit: ImovelDraftFormUiState? = null
 
-    fun init(imovelId: Long?) {
-        if (isInitialized) return
+    fun init() {
+        if (isLoaded) return
+        isLoaded = true
 
-        this.imovelId = imovelId
-
+        val imovelId = route.imovelId
         if (imovelId != null) getImovelToEdit(imovelId)
         else _draftFormUiState.update { ImovelDraftFormUiState.Loaded.Empty }
 
         watchProprietarios()
         getPastNeighborhoods()
-
-        isInitialized = true
     }
 
     private fun getImovelToEdit(imovelId: Long) {
-        val query = ImovelArgs(id = imovelId)
-
         viewModelScope.launch {
-            readImovel(query)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+            imovelRegistrationReadDataSource.getImovel(imovelId)
+                .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                 .onSuccess { storedImovel ->
                     val draftForm = storedImovel.toUiState()
 
@@ -93,7 +85,7 @@ class ImovelRegistrationViewModel(
         viewModelScope.launch {
             proprietarioReadDataSource.watchProprietarios().collectLatest { result ->
                 result
-                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                     .onSuccess { storedProprietarios ->
                         val states = storedProprietarios.map { it.toUiState() }.toPersistentList()
                         _proprietarios.update { states }
@@ -104,9 +96,9 @@ class ImovelRegistrationViewModel(
 
     private fun getPastNeighborhoods() {
         viewModelScope.launch {
-            imovelQueryRepository.getAllNeighborhoodNames()
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                .onSuccess { neighborhoodNames -> _pastNeighborhoods.update { neighborhoodNames } }
+            imovelRegistrationReadDataSource.getNeighborhoodNames()
+                .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
+                .onSuccess { neighborhoodNames -> _pastNeighborhoods.update { neighborhoodNames.toPersistentList() } }
         }
     }
 
@@ -130,7 +122,7 @@ class ImovelRegistrationViewModel(
 
         viewModelScope.launch {
             if (formToEdit != null && form == formToEdit) {
-                _uiEvents.trySend(UiEvent.ImovelEditSuccess(messageId = R.string.no_data_changed_success_message))
+                _uiEvents.trySend(UiEvent.CloseScreenWithSnackbar(messageId = R.string.no_data_changed_success_message))
                 return@launch
             }
 
@@ -138,7 +130,7 @@ class ImovelRegistrationViewModel(
                 .fold(
                     onError = {
                         // TODO: Show something in the UI with the Domain errors
-                        _uiEvents.trySend(UiEvent.BottomSheetError(ApplicationError.Unknown))
+                        _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown))
 
                         return@launch
                     },
@@ -147,14 +139,14 @@ class ImovelRegistrationViewModel(
 
             imovelWriteDataSource.save(imovel)
                 .onError { error ->
-                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                    _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(error))
 
                     return@launch
                 }
 
             val saveEvent =
-                if (formToEdit != null) UiEvent.ImovelEditSuccess(messageId = R.string.edit_property_success_message)
-                else UiEvent.ImovelCreateSuccess
+                if (formToEdit != null) UiEvent.CloseScreenWithSnackbar(messageId = R.string.edit_property_success_message)
+                else UiEvent.CloseScreenWithSnackbar(messageId = R.string.create_property_success_message)
 
             _uiEvents.trySend(saveEvent)
         }
@@ -173,11 +165,9 @@ class ImovelRegistrationViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError) : UiEvent
+        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
 
-        data object ImovelCreateSuccess : UiEvent
-
-        data class ImovelEditSuccess(val messageId: Int) : UiEvent
+        data class CloseScreenWithSnackbar(@StringRes val messageId: Int) : UiEvent
 
         data class Exit(val needConfirmation: Boolean) : UiEvent
     }

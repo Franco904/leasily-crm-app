@@ -13,6 +13,7 @@ import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSo
 import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ImovelDashboardReadDataSource
 import com.fstengineering.leasilycrm.imovelDetails.infra.dataSources.ImovelDetailsReadDataSource
 import com.fstengineering.leasilycrm.imovelOcupacao.infra.dataSources.ImovelOcupacaoReadDataSource
+import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelRegistrationReadDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
@@ -112,6 +113,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun imovelDashboardReadDataSource(): ImovelDashboardReadDataSource
     abstract fun imovelOcupacaoReadDataSource(): ImovelOcupacaoReadDataSource
+    abstract fun imovelRegistrationReadDataSource(): ImovelRegistrationReadDataSource
 
 
 
