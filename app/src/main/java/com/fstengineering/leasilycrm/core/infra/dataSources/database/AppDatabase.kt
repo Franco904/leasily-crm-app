@@ -103,6 +103,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun imovelWriteDataSource(): ImovelWriteDataSource
 
+    abstract fun imovelSharedWriteDataSource(): ImovelSharedWriteDataSource
+
     abstract fun proprietarioRegistrationReadDataSource(): ProprietarioRegistrationReadDataSource
 
     abstract fun proprietarioDetailsReadDataSource(): ProprietarioDetailsReadDataSource
