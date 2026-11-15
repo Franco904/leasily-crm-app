@@ -155,6 +155,14 @@ a regra. Vale também para nomes de módulo, classes, métodos e funções, sem 
 
 ---
 
+## Skills de IA
+
+Fornecidas pelo plugin `fst` (marketplace `skills`, repo [Franco904/skills](https://github.com/Franco904/skills)).
+Comandos com prefixo `/fst:` (ex.: `/fst:grill-me`, `/fst:tdd`, `/fst:pr`). Instalação e contrato com o
+projeto: README do repo.
+
+---
+
 ## Comandos Essenciais
 
 ### Desenvolvimento

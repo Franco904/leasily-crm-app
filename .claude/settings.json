@@ -1,7 +1,14 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(fvm dart run build_runner *)"
-    ]
+  "enabledPlugins": {
+    "fst@skills": true
+  },
+  "extraKnownMarketplaces": {
+    "skills": {
+      "source": {
+        "source": "github",
+        "repo": "Franco904/skills"
+      },
+      "autoUpdate": true
+    }
   }
 }
