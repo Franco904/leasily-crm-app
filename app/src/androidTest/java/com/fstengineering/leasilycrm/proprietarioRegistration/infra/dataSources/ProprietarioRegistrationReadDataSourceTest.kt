@@ -68,7 +68,13 @@ class ProprietarioRegistrationReadDataSourceTest : IntegrationTest() {
                 files = persistentListOf(),
             )
             proprietarioReadModel.files.toSet() shouldBeEqualTo files
-                .map { ProprietarioFileReadModel(id = it.id, uriString = it.uriString, name = it.name) }
+                .map {
+                    ProprietarioFileReadModel(
+                        id = it.id,
+                        uriString = it.uriString,
+                        name = it.name
+                    )
+                }
                 .toSet()
         }
 

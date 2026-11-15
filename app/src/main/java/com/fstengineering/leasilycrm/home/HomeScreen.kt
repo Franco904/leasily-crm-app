@@ -55,7 +55,7 @@ fun HomeScreen(
     isStayRegistrationSuccess: Boolean,
     onSettingsSelect: () -> Unit,
     onProfileSelect: () -> Unit,
-    onPropertiesSelect: () -> Unit,
+    onImoveisSelect: () -> Unit,
     onProprietariosSelect: () -> Unit,
     onRegisterLeadTenant: (Long?) -> Unit,
     onViewLeadTenantDetails: (Long) -> Unit,
@@ -202,7 +202,7 @@ fun HomeScreen(
                 composable<Destinations.Home.Dashboard> {
                     DashboardPage(
                         viewModel = koinViewModel(),
-                        onPropertiesSelect = onPropertiesSelect,
+                        onImoveisSelect = onImoveisSelect,
                         onProprietariosSelect = onProprietariosSelect,
                     )
                 }

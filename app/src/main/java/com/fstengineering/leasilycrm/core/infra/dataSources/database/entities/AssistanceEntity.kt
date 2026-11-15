@@ -44,7 +44,7 @@ data class AssistanceEntity(
     val observations: String?,
     @ColumnInfo(name = "is_finished") val isFinished: Boolean,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
-    @ColumnInfo(name = "property_sea_proximity_type_id") val propertySeaProximityTypeId: Long?,
+    @ColumnInfo(name = "property_sea_proximity_type_id") val imovelSeaProximityTypeId: Long?,
     @ColumnInfo(name = "lead_tenant_id") val leadTenantId: Long,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
 )

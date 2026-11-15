@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import kotlinx.collections.immutable.ImmutableList
 
 data class AssistanceReadModel(
@@ -28,14 +28,14 @@ data class AssistanceReadModel(
     val observations: String?,
     val isFinished: Boolean,
     val preferredNeighborhoods: ImmutableList<String>,
-    val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
+    val preferredImovelCharacteristics: ImmutableList<ImovelCharacteristic>,
     val interactions: ImmutableList<AssistanceInteractionReadModel>,
-    val sentProperties: ImmutableList<AssistanceSentPropertyReadModel>,
+    val sentImoveis: ImmutableList<AssistanceSentImovelReadModel>,
 ) {
     companion object {
         fun create(
             assistanceRaw: AssistanceRawReadModel,
-            sentProperties: ImmutableList<AssistanceSentPropertyReadModel>,
+            sentImoveis: ImmutableList<AssistanceSentImovelReadModel>,
         ) = AssistanceReadModel(
             id = requireNotNull(assistanceRaw.id),
             updateDateTime = assistanceRaw.updateDateTime,
@@ -56,9 +56,9 @@ data class AssistanceReadModel(
             preferredSeaProximityTypeId = assistanceRaw.preferredSeaProximityTypeId,
             preferredDistanceToSea = assistanceRaw.preferredDistanceToSea,
             preferredNeighborhoods = assistanceRaw.preferredNeighborhoods,
-            preferredPropertyCharacteristics = assistanceRaw.preferredPropertyCharacteristics,
+            preferredImovelCharacteristics = assistanceRaw.preferredImovelCharacteristics,
             observations = assistanceRaw.observations,
-            sentProperties = sentProperties,
+            sentImoveis = sentImoveis,
             interactions = assistanceRaw.interactions,
             isFinished = assistanceRaw.isFinished,
         )

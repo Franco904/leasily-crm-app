@@ -4,8 +4,8 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCalendarOccupiedDateUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.core.presentation.models.StayTransferUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -16,7 +16,7 @@ sealed interface OccupiedPeriodDetailsUiState {
     data class Loaded(
         val id: Long,
         val tenantId: Long?,
-        val property: PropertyCardUiState,
+        val imovel: ImovelCardUiState,
         val tenant: LeadTenantUiState?,
         val vehicleMake: String?,
         val vehicleColor: String?,
@@ -35,7 +35,7 @@ sealed interface OccupiedPeriodDetailsUiState {
         val isCheckOutDone: Boolean,
         val files: ImmutableList<StayFileUiState>,
         val transfers: ImmutableList<StayTransferUiState>,
-        val occupiedDatesGrouped: ImmutableMap<AppYearMonth, ImmutableList<PropertyCalendarOccupiedDateUiState>>,
+        val occupiedDatesGrouped: ImmutableMap<AppYearMonth, ImmutableList<ImovelCalendarOccupiedDateUiState>>,
     ) : OccupiedPeriodDetailsUiState {
         val isUnavailablePeriod get() = tenantId == null
     }

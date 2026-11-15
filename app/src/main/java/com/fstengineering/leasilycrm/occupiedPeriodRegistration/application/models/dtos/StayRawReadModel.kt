@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class StayRawReadModel(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val propertyId: Long,
+    val imovelId: Long,
     val tenantId: Long,
     val vehicleMake: String?,
     val vehicleColor: String?,

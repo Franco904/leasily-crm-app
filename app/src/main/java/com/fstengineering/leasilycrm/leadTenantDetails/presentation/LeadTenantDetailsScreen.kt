@@ -38,7 +38,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.AssistanceInteractionCard
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteTenantDialog
@@ -73,7 +73,7 @@ fun LeadTenantDetailsScreen(
     onRegisterAssistance: (Long?) -> Unit,
     onNewStay: () -> Unit,
     onViewStay: (Long) -> Unit,
-    onViewSentPropertyDetails: (Long) -> Unit,
+    onViewSentImovelDetails: (Long) -> Unit,
     onBack: () -> Unit,
     onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
@@ -98,7 +98,7 @@ fun LeadTenantDetailsScreen(
     var interactionToView by remember { mutableStateOf<AssistanceInteractionUiState?>(null) }
     var pastAssistanceToView by remember { mutableStateOf<AssistanceUiState?>(null) }
 
-    var isViewingAllSentProperties by rememberSaveable { mutableStateOf(false) }
+    var isViewingAllSentImoveis by rememberSaveable { mutableStateOf(false) }
     var isViewingAllInterations by rememberSaveable { mutableStateOf(false) }
 
     var mustShowConfirmDeleteLeadTenantDialog by rememberSaveable { mutableStateOf(false) }
@@ -147,8 +147,8 @@ fun LeadTenantDetailsScreen(
     BackHandler {
         when {
             pastAssistanceToView != null -> pastAssistanceToView = null
-            isViewingAllSentProperties || isViewingAllInterations -> {
-                isViewingAllSentProperties = false
+            isViewingAllSentImoveis || isViewingAllInterations -> {
+                isViewingAllSentImoveis = false
                 isViewingAllInterations = false
                 pastAssistanceToView = null
 
@@ -163,21 +163,21 @@ fun LeadTenantDetailsScreen(
         topBar = {
             LeadTenantDetailsTopAppBar(
                 titleText = when {
-                    isViewingAllSentProperties -> stringResource(R.string.lead_tenant_details_top_app_bar_title_all_sent_properties)
+                    isViewingAllSentImoveis -> stringResource(R.string.lead_tenant_details_top_app_bar_title_all_sent_properties)
                     isViewingAllInterations -> stringResource(R.string.lead_tenant_details_top_app_bar_title_all_interations)
                     pastAssistanceToView != null -> stringResource(R.string.lead_tenant_details_top_app_bar_title_past_assistance)
                     loaded?.isLead == true -> stringResource(R.string.lead_tenant_details_top_app_bar_title_lead)
                     else -> stringResource(R.string.lead_tenant_details_top_app_bar_title_tenant)
                 },
-                hasMoreOptions = !(isViewingAllSentProperties || isViewingAllInterations || pastAssistanceToView != null),
+                hasMoreOptions = !(isViewingAllSentImoveis || isViewingAllInterations || pastAssistanceToView != null),
                 onBack = when {
                     pastAssistanceToView != null -> {
                         { pastAssistanceToView = null }
                     }
 
-                    isViewingAllSentProperties || isViewingAllInterations -> {
+                    isViewingAllSentImoveis || isViewingAllInterations -> {
                         {
-                            isViewingAllSentProperties = false
+                            isViewingAllSentImoveis = false
                             isViewingAllInterations = false
 
                             isBringIntoViewEnabled = true
@@ -208,7 +208,7 @@ fun LeadTenantDetailsScreen(
                 FullScreenLoadingIndicator(innerPadding)
             }
 
-            loaded != null && (isViewingAllSentProperties || isViewingAllInterations) -> {
+            loaded != null && (isViewingAllSentImoveis || isViewingAllInterations) -> {
                 val currentAssistance = loaded.currentAssistance
 
                 LazyColumn(
@@ -220,19 +220,19 @@ fun LeadTenantDetailsScreen(
                 ) {
                     item { Spacer(modifier = Modifier.height(16.dp)) }
                     when {
-                        isViewingAllSentProperties -> {
-                            val sortedSentProperties = currentAssistance?.sentProperties
+                        isViewingAllSentImoveis -> {
+                            val sortedSentImoveis = currentAssistance?.sentImoveis
                                 ?: emptyList()
 
                             itemsIndexed(
-                                items = sortedSentProperties,
+                                items = sortedSentImoveis,
                                 key = { _, entry -> entry.id },
                                 contentType = { _, entryType -> entryType },
-                            ) { i, selectedProperty ->
+                            ) { i, selectedImovel ->
                                 if (i > 0) Spacer(modifier = Modifier.height(8.dp))
-                                PropertyCard(
-                                    property = selectedProperty,
-                                    onCardClick = { onViewSentPropertyDetails(selectedProperty.id) },
+                                ImovelCard(
+                                    imovel = selectedImovel,
+                                    onCardClick = { onViewSentImovelDetails(selectedImovel.id) },
                                     hasMoreOptionsMenu = false,
                                     hasCharacteristicsChipsRow = false,
                                 )
@@ -287,15 +287,15 @@ fun LeadTenantDetailsScreen(
                     onRegisterAssistance = { onRegisterAssistance(null) },
                     onEditAssistance = { onRegisterAssistance(loaded.currentAssistance?.id) },
                     onDeleteAssistance = { mustShowConfirmDeleteAssistanceDialog = true },
-                    onViewAllSentProperties = { isViewingAllSentProperties = true },
+                    onViewAllSentImoveis = { isViewingAllSentImoveis = true },
                     onViewAllInteractions = { isViewingAllInterations = true },
-                    onViewSentPropertyDetails = { propertyId ->
-                        onViewSentPropertyDetails(propertyId)
+                    onViewSentImovelDetails = { imovelId ->
+                        onViewSentImovelDetails(imovelId)
                     },
                     onViewInteractionDetails = { interaction ->
                         interactionToView = interaction
                     },
-                    isViewingAllSentProperties = isViewingAllSentProperties,
+                    isViewingAllSentImoveis = isViewingAllSentImoveis,
                     isViewingAllInterations = isViewingAllInterations,
                     isBringIntoViewEnabled = isBringIntoViewEnabled,
                     modifier = Modifier
@@ -307,7 +307,7 @@ fun LeadTenantDetailsScreen(
             loaded != null -> {
                 Column {
                     AnimatedVisibility(
-                        visible = !(isViewingAllSentProperties || isViewingAllInterations),
+                        visible = !(isViewingAllSentImoveis || isViewingAllInterations),
                     ) {
                         LeadTenantDetailsTabRow(
                             selectedTabId = selectedTabId,
@@ -346,15 +346,15 @@ fun LeadTenantDetailsScreen(
                                     onDeleteAssistance = {
                                         mustShowConfirmDeleteAssistanceDialog = true
                                     },
-                                    onViewAllSentProperties = { isViewingAllSentProperties = true },
+                                    onViewAllSentImoveis = { isViewingAllSentImoveis = true },
                                     onViewAllInteractions = { isViewingAllInterations = true },
-                                    onViewSentPropertyDetails = { propertyId ->
-                                        onViewSentPropertyDetails(propertyId)
+                                    onViewSentImovelDetails = { imovelId ->
+                                        onViewSentImovelDetails(imovelId)
                                     },
                                     onViewInteractionDetails = { interaction ->
                                         interactionToView = interaction
                                     },
-                                    isViewingAllSentProperties = isViewingAllSentProperties,
+                                    isViewingAllSentImoveis = isViewingAllSentImoveis,
                                     isViewingAllInterations = isViewingAllInterations,
                                     isBringIntoViewEnabled = isBringIntoViewEnabled,
                                 )

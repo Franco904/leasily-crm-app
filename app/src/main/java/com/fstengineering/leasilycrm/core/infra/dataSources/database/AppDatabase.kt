@@ -9,57 +9,60 @@ import androidx.room.TypeConverters
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDateTimeTypeConverter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDateTypeConverter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDecimalConverter
+import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSource
+import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ImovelDashboardReadDataSource
+import com.fstengineering.leasilycrm.imovelDetails.infra.dataSources.ImovelDetailsReadDataSource
+import com.fstengineering.leasilycrm.imovelOcupacao.infra.dataSources.ImovelOcupacaoReadDataSource
+import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelRegistrationReadDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentPropertyCrossRefDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentImovelCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTenantDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyCharacteristicPropertyCrossRefDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyFileDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyPriceDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceImovelCharacteristicCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentImovelCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.LeadTenantEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyCharacteristicCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyFileEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelCharacteristicCrossRefOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioFileOrm
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.PropertyPriceEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelPriceOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
-import com.fstengineering.leasilycrm.propertyDashboard.infra.dataSources.ProprietarioReadDataSource as PropertyDashboardProprietarioReadDataSource
-import com.fstengineering.leasilycrm.propertyRegistration.infra.dataSources.ProprietarioReadDataSource as PropertyRegistrationProprietarioReadDataSource
+import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ProprietarioReadDataSource as ImovelDashboardProprietarioReadDataSource
+import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ProprietarioReadDataSource as ImovelRegistrationProprietarioReadDataSource
 import com.fstengineering.leasilycrm.proprietarioDetails.infra.dataSources.ProprietarioDetailsReadDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
+import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import com.fstengineering.leasilycrm.proprietarios.infra.dataSources.ProprietariosReadDataSource
 
 @Database(
     entities = [
         AssistanceEntity::class,
-        AssistancePropertyCharacteristicCrossRefEntity::class,
+        AssistanceImovelCharacteristicCrossRefEntity::class,
         AssistanceInteractionEntity::class,
         AssistancePreferredNeighborhoodEntity::class,
-        AssistanceSentPropertyCrossRefEntity::class,
+        AssistanceSentImovelCrossRefEntity::class,
         LeadTenantEntity::class,
-        PropertyEntity::class,
-        PropertyCharacteristicCrossRefEntity::class,
-        PropertyFileEntity::class,
+        ImovelOrm::class,
+        ImovelCharacteristicCrossRefOrm::class,
+        ImovelFileOrm::class,
         ProprietarioOrm::class,
         ProprietarioFileOrm::class,
-        PropertyPriceEntity::class,
+        ImovelPriceOrm::class,
         StayEntity::class,
         StayFileEntity::class,
         StayTransferEntity::class,
@@ -86,19 +89,31 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun assistanceSearchedNeighborhoodDao(): AssistancePreferredNeighborhoodDao
 
-    abstract fun assistanceSentPropertyCrossRefDao(): AssistanceSentPropertyCrossRefDao
+    abstract fun assistanceSentImovelCrossRefDao(): AssistanceSentImovelCrossRefDao
 
     abstract fun userAnalyticsDao(): UserAnalyticsDao
 
     abstract fun leadTenantDao(): LeadTenantDao
 
-    abstract fun propertyDao(): PropertyDao
+    abstract fun imovelDao(): ImovelDao
 
-    abstract fun propertyCharacteristicPropertyCrossRefDao(): PropertyCharacteristicPropertyCrossRefDao
 
-    abstract fun propertyFileDao(): PropertyFileDao
 
     abstract fun proprietarioWriteDataSource(): ProprietarioWriteDataSource
+
+    abstract fun imovelWriteDataSource(): ImovelWriteDataSource
+
+    abstract fun imovelSharedWriteDataSource(): ImovelSharedWriteDataSource
+
+    abstract fun imoveisReadDataSource(): ImoveisReadDataSource
+
+    abstract fun imovelDetailsReadDataSource(): ImovelDetailsReadDataSource
+
+    abstract fun imovelDashboardReadDataSource(): ImovelDashboardReadDataSource
+
+    abstract fun imovelOcupacaoReadDataSource(): ImovelOcupacaoReadDataSource
+
+    abstract fun imovelRegistrationReadDataSource(): ImovelRegistrationReadDataSource
 
     abstract fun proprietarioRegistrationReadDataSource(): ProprietarioRegistrationReadDataSource
 
@@ -106,11 +121,10 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun proprietariosReadDataSource(): ProprietariosReadDataSource
 
-    abstract fun propertyRegistrationProprietarioReadDataSource(): PropertyRegistrationProprietarioReadDataSource
+    abstract fun imovelRegistrationProprietarioReadDataSource(): ImovelRegistrationProprietarioReadDataSource
 
-    abstract fun propertyDashboardProprietarioReadDataSource(): PropertyDashboardProprietarioReadDataSource
+    abstract fun imovelDashboardProprietarioReadDataSource(): ImovelDashboardProprietarioReadDataSource
 
-    abstract fun propertyPriceDao(): PropertyPriceDao
 
     abstract fun stayDao(): StayDao
 

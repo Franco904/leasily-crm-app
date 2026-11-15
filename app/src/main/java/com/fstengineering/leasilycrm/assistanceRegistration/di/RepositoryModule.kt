@@ -2,13 +2,13 @@ package com.fstengineering.leasilycrm.assistanceRegistration.di
 
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectablePropertyQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentPropertyQueryRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectableImovelQueryRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentImovelQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.LeadTenantQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceCommandRepositoryImpl
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceQueryRepositoryImpl
-import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceSelectablePropertyQueryRepositoryImpl
-import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceSentPropertyQueryRepositoryImpl
+import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceSelectableImovelQueryRepositoryImpl
+import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceSentImovelQueryRepositoryImpl
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.LeadTenantQueryRepositoryImpl
 import org.koin.dsl.module
 
@@ -20,7 +20,7 @@ val assistanceRegistrationRepositoryModule = module {
             assistanceCharacteristicCrossRefDatabaseDataSource = get(),
             assistanceInteractionDatabaseDataSource = get(),
             assistanceSearchedNeighborhoodDatabaseDataSource = get(),
-            assistanceSentPropertyCrossRefDatabaseDataSource = get(),
+            assistanceSentImovelCrossRefDatabaseDataSource = get(),
         )
     }
 
@@ -30,14 +30,14 @@ val assistanceRegistrationRepositoryModule = module {
         )
     }
 
-    single<AssistanceSentPropertyQueryRepository> {
-        AssistanceSentPropertyQueryRepositoryImpl(
-            propertyDatabaseDataSource = get(),
+    single<AssistanceSentImovelQueryRepository> {
+        AssistanceSentImovelQueryRepositoryImpl(
+            imovelDatabaseDataSource = get(),
         )
     }
 
-    single<AssistanceSelectablePropertyQueryRepository> {
-        AssistanceSelectablePropertyQueryRepositoryImpl(propertyDatabaseDataSource = get())
+    single<AssistanceSelectableImovelQueryRepository> {
+        AssistanceSelectableImovelQueryRepositoryImpl(imovelDatabaseDataSource = get())
     }
 
     single<LeadTenantQueryRepository> {

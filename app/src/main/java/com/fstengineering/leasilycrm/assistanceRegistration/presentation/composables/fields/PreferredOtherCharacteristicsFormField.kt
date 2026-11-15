@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicSelectableChip
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.mutate
@@ -22,7 +22,7 @@ fun PreferredOtherCharacteristicsFormField(
     onFormChange: (AssistanceDraftFormUiState.Loaded) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val otherCharacteristics = remember { PropertyCharacteristic.entries.toImmutableList() }
+    val otherCharacteristics = remember { ImovelCharacteristic.entries.toImmutableList() }
 
     FlowRow(
         modifier = modifier
@@ -30,7 +30,7 @@ fun PreferredOtherCharacteristicsFormField(
         otherCharacteristics.forEach { characteristic ->
             val onSelect = remember(characteristic, form, onFormChange) {
                 {
-                    onAssistancePropertyCharacteristicSelect(
+                    onAssistanceImovelCharacteristicSelect(
                         characteristic = characteristic,
                         form = form,
                         onFormChange = onFormChange,
@@ -40,7 +40,7 @@ fun PreferredOtherCharacteristicsFormField(
 
             CharacteristicSelectableChip(
                 label = stringResource(characteristic.presentationLabel()),
-                isSelected = characteristic in form.preferredPropertyCharacteristics,
+                isSelected = characteristic in form.preferredImovelCharacteristics,
                 onSelect = onSelect,
             )
             Spacer(modifier = Modifier.width(4.dp))
@@ -48,16 +48,16 @@ fun PreferredOtherCharacteristicsFormField(
     }
 }
 
-private fun onAssistancePropertyCharacteristicSelect(
-    characteristic: PropertyCharacteristic,
+private fun onAssistanceImovelCharacteristicSelect(
+    characteristic: ImovelCharacteristic,
     form: AssistanceDraftFormUiState.Loaded,
     onFormChange: (AssistanceDraftFormUiState.Loaded) -> Unit,
 ) {
-    val selectedCharacteristics = form.preferredPropertyCharacteristics
+    val selectedCharacteristics = form.preferredImovelCharacteristics
         .toPersistentList()
 
     val newForm = form.copy(
-        preferredPropertyCharacteristics = selectedCharacteristics.mutate { selectedOnes ->
+        preferredImovelCharacteristics = selectedCharacteristics.mutate { selectedOnes ->
             if (characteristic in selectedOnes) {
                 selectedOnes.remove(characteristic)
             } else {

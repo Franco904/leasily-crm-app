@@ -1,12 +1,12 @@
 package com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.mappers
 
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodRawReadModel
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.PropertyReadModel
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.StayFileReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.TenantReadModel
 import kotlinx.collections.immutable.toPersistentList
@@ -18,7 +18,7 @@ fun StayCompound.toRawReadModel(): OccupiedPeriodRawReadModel {
 
     return OccupiedPeriodRawReadModel(
         id = requireNotNull(stay.id),
-        propertyId = stay.propertyId,
+        imovelId = stay.imovelId,
         tenantId = stay.tenantId,
         vehicleMake = stay.vehicleMake,
         vehicleColor = stay.vehicleColor,
@@ -39,15 +39,15 @@ fun StayCompound.toRawReadModel(): OccupiedPeriodRawReadModel {
     )
 }
 
-fun PropertyCompound.toReadModel() = PropertyReadModel(
-    id = requireNotNull(property.id),
+fun ImovelCompound.toReadModel() = ImovelReadModel(
+    id = requireNotNull(imovel.id),
     mainPictureUriString = files
         .find { it.isMainPicture }
-        ?.propertyFileUri,
-    neighborhood = property.neighborhood,
-    streetAddress = property.streetAddress,
-    number = property.number,
-    type = requireNotNull(PropertyType.fromId(property.typeId)),
+        ?.imovelFileUri,
+    neighborhood = imovel.neighborhood,
+    streetAddress = imovel.streetAddress,
+    number = imovel.number,
+    type = requireNotNull(ImovelType.fromId(imovel.typeId)),
 )
 
 fun LeadTenantReadView.toReadModel() = TenantReadModel(

@@ -2,13 +2,13 @@ package com.fstengineering.leasilycrm.leadTenantDetails.di
 
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceQueryRepository
-import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceSentPropertyQueryRepository
+import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceSentImovelQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.LeadTenantCommandRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.LeadTenantQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.StayQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.AssistanceCommandRepositoryImpl
 import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.AssistanceQueryRepositoryImpl
-import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.AssistanceSentPropertyQueryRepositoryImpl
+import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.AssistanceSentImovelQueryRepositoryImpl
 import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.LeadTenantCommandRepositoryImpl
 import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.LeadTenantQueryRepositoryImpl
 import com.fstengineering.leasilycrm.leadTenantDetails.infra.repositories.StayQueryRepositoryImpl
@@ -41,9 +41,9 @@ val leadTenantDetailsRepositoryModule = module {
         )
     }
 
-    single<AssistanceSentPropertyQueryRepository> {
-        AssistanceSentPropertyQueryRepositoryImpl(
-            propertyDatabaseDataSource = get(),
+    single<AssistanceSentImovelQueryRepository> {
+        AssistanceSentImovelQueryRepositoryImpl(
+            imovelDatabaseDataSource = get(),
         )
     }
 

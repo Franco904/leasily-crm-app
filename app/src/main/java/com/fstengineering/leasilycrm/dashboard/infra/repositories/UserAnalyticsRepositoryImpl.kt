@@ -254,7 +254,7 @@ class UserAnalyticsRepositoryImpl(
                             .mapValues { (_, compounds) ->
                                 compounds
                                     .take(3)
-                                    .associate { it.propertyNeighborhood to it.bookingsCount }
+                                    .associate { it.imovelNeighborhood to it.bookingsCount }
                                     .toPersistentMap()
                             }
                             .toPersistentMap()
@@ -393,7 +393,7 @@ class UserAnalyticsRepositoryImpl(
                             .mapValues { (_, compounds) ->
                                 compounds
                                     .take(3)
-                                    .associate { it.propertyNeighborhood to it.commissionInvoice }
+                                    .associate { it.imovelNeighborhood to it.commissionInvoice }
                                     .toPersistentMap()
                             }
                             .toPersistentMap()

@@ -7,13 +7,13 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePropertyCharacteristicCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentPropertyCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceImovelCharacteristicCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentImovelCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceInteractionDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSearchedNeighborhoodDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSentPropertyCrossRefDatabaseDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSentImovelCrossRefDatabaseDataSource
 
 class AssistanceCommandRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
@@ -21,7 +21,7 @@ class AssistanceCommandRepositoryImpl(
     private val assistanceCharacteristicCrossRefDatabaseDataSource: AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource,
     private val assistanceInteractionDatabaseDataSource: AssistanceInteractionDatabaseDataSource,
     private val assistanceSearchedNeighborhoodDatabaseDataSource: AssistanceSearchedNeighborhoodDatabaseDataSource,
-    private val assistanceSentPropertyCrossRefDatabaseDataSource: AssistanceSentPropertyCrossRefDatabaseDataSource,
+    private val assistanceSentImovelCrossRefDatabaseDataSource: AssistanceSentImovelCrossRefDatabaseDataSource,
 ) : AssistanceCommandRepository {
     override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, ApplicationError> {
         return databaseAdapter.transaction {
@@ -35,9 +35,9 @@ class AssistanceCommandRepositoryImpl(
         val assistanceId = assistanceDatabaseDataSource.insertOrUpdate(assistanceEntity)
             .let { id -> assistanceEntity.id ?: id }
 
-        assistance.preferredPropertyCharacteristics.forEach {
-            val characteristic = AssistancePropertyCharacteristicCrossRefEntity(
-                propertyCharacteristicId = it.id,
+        assistance.preferredImovelCharacteristics.forEach {
+            val characteristic = AssistanceImovelCharacteristicCrossRefEntity(
+                imovelCharacteristicId = it.id,
                 assistanceId = assistanceId,
             )
 
@@ -58,13 +58,13 @@ class AssistanceCommandRepositoryImpl(
             assistanceSearchedNeighborhoodDatabaseDataSource.insertOrUpdate(searchedNeighborhood)
         }
 
-        assistance.sentPropertiesIds.forEach {
-            val sentProperty = AssistanceSentPropertyCrossRefEntity(
+        assistance.sentImoveisIds.forEach {
+            val sentImovel = AssistanceSentImovelCrossRefEntity(
                 assistanceId = assistanceId,
-                propertyId = it,
+                imovelId = it,
             )
 
-            assistanceSentPropertyCrossRefDatabaseDataSource.insertOrUpdate(sentProperty)
+            assistanceSentImovelCrossRefDatabaseDataSource.insertOrUpdate(sentImovel)
         }
     }
 

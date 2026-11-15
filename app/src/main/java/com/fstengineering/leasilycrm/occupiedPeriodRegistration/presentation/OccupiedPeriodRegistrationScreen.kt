@@ -31,13 +31,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.ImoveisEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.leadTenants.presentation.tenants.composables.TenantsEmptySection
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.OccupiedPeriodPropertySelectionList
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.OccupiedPeriodImovelSelectionList
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.StayRegistrationFormSection
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.StayRegistrationTopAppBar
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.StayTenantSelectionList
@@ -52,7 +52,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Composable
 fun OccupiedPeriodRegistrationScreen(
     stayId: Long?,
-    propertyId: Long?,
+    imovelId: Long?,
     tenantId: Long?,
     isUnavailablePeriod: Boolean,
     viewModel: OccupiedPeriodRegistrationViewModel,
@@ -72,8 +72,8 @@ fun OccupiedPeriodRegistrationScreen(
 
     val formErrors by viewModel.formErrors.collectAsStateWithLifecycle()
 
-    val propertySearchInput by viewModel.propertySearchInput.collectAsStateWithLifecycle()
-    val properties by viewModel.properties.collectAsStateWithLifecycle()
+    val imovelSearchInput by viewModel.imovelSearchInput.collectAsStateWithLifecycle()
+    val imoveis by viewModel.imoveis.collectAsStateWithLifecycle()
 
     val tenantSearchInput by viewModel.tenantSearchInput.collectAsStateWithLifecycle()
     val tenants by viewModel.tenants.collectAsStateWithLifecycle()
@@ -114,7 +114,7 @@ fun OccupiedPeriodRegistrationScreen(
     LaunchedEffect(Unit) {
         viewModel.init(
             occupiedPeriodId = stayId,
-            propertyId = propertyId,
+            imovelId = imovelId,
             tenantId = tenantId,
             isUnavailablePeriod = isUnavailablePeriod,
         )
@@ -172,7 +172,7 @@ fun OccupiedPeriodRegistrationScreen(
 
             isSearching -> {
                 isSearching = false
-                viewModel.onPropertySearchInputChange(searchInput = null)
+                viewModel.onImovelSearchInputChange(searchInput = null)
                 viewModel.onTenantSearchInputChange(searchInput = null)
             }
 
@@ -183,8 +183,8 @@ fun OccupiedPeriodRegistrationScreen(
 
     Scaffold(
         topBar = {
-            val isSelectingProperty =
-                listStatus == OccupiedPeriodRegistrationListState.SelectingProperty
+            val isSelectingImovel =
+                listStatus == OccupiedPeriodRegistrationListState.SelectingImovel
             val isSelectingTenant =
                 listStatus == OccupiedPeriodRegistrationListState.SelectingTenant
 
@@ -204,11 +204,11 @@ fun OccupiedPeriodRegistrationScreen(
                         viewModel.saveStay()
                     },
                     isUnavailablePeriod = isUnavailablePeriod,
-                    isSelectingProperty = isSelectingProperty,
+                    isSelectingImovel = isSelectingImovel,
                     isSelectingTenant = isSelectingTenant,
                     mustShowSearchAction = when {
                         isSearching -> false
-                        isSelectingProperty -> properties.isNotEmpty()
+                        isSelectingImovel -> imoveis.isNotEmpty()
                         isSelectingTenant -> tenants.isNotEmpty()
                         else -> false
                     },
@@ -216,12 +216,12 @@ fun OccupiedPeriodRegistrationScreen(
                     onSearch = { isSearching = true },
                     searchInput = when {
                         !isSearching -> null
-                        isSelectingProperty -> propertySearchInput
+                        isSelectingImovel -> imovelSearchInput
                         isSelectingTenant -> tenantSearchInput
                         else -> null
                     },
                     onSearchInputChange = when {
-                        isSelectingProperty -> viewModel::onPropertySearchInputChange
+                        isSelectingImovel -> viewModel::onImovelSearchInputChange
                         isSelectingTenant -> viewModel::onTenantSearchInputChange
                         else -> {
                             {}
@@ -235,7 +235,7 @@ fun OccupiedPeriodRegistrationScreen(
 
                             isSearching -> {
                                 isSearching = false
-                                viewModel.onPropertySearchInputChange(searchInput = null)
+                                viewModel.onImovelSearchInputChange(searchInput = null)
                                 viewModel.onTenantSearchInputChange(searchInput = null)
                             }
 
@@ -270,11 +270,11 @@ fun OccupiedPeriodRegistrationScreen(
                                     form = form,
                                     onFormChange = viewModel::onUnavailablePeriodFormChange,
                                     stayFormErrors = formErrors.errors,
-                                    onSelectProperty = {
+                                    onSelectImovel = {
                                         listStatus =
-                                            OccupiedPeriodRegistrationListState.SelectingProperty
+                                            OccupiedPeriodRegistrationListState.SelectingImovel
                                     },
-                                    onPeriodDisabledByPropertyUnselected = {
+                                    onPeriodDisabledByImovelUnselected = {
                                         onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
                                     },
                                     scrollToFieldFlow = scrollToFieldFlow,
@@ -296,10 +296,10 @@ fun OccupiedPeriodRegistrationScreen(
                                         viewModel.clearCommissionError()
                                     },
                                     stayFormErrors = formErrors.errors,
-                                    onSelectProperty = { isEnabled ->
+                                    onSelectImovel = { isEnabled ->
                                         if (isEnabled) {
                                             listStatus =
-                                                OccupiedPeriodRegistrationListState.SelectingProperty
+                                                OccupiedPeriodRegistrationListState.SelectingImovel
                                         } else {
                                             onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
                                         }
@@ -312,7 +312,7 @@ fun OccupiedPeriodRegistrationScreen(
                                             onUiEvent(UiEvent.ShowSnackBar(R.string.register_stay_check_in_already_done_warning_message))
                                         }
                                     },
-                                    onPeriodDisabledByPropertyUnselected = {
+                                    onPeriodDisabledByImovelUnselected = {
                                         onUiEvent(UiEvent.ShowSnackBar(R.string.register_first_select_property_warning_message))
                                     },
                                     onPeriodDisabledByCheckInDone = {
@@ -331,18 +331,18 @@ fun OccupiedPeriodRegistrationScreen(
                             }
                         }
 
-                        OccupiedPeriodRegistrationListState.SelectingProperty -> {
-                            if (properties.isEmpty()) {
-                                PropertiesEmptySection(isSearchingProperty = isSearching)
+                        OccupiedPeriodRegistrationListState.SelectingImovel -> {
+                            if (imoveis.isEmpty()) {
+                                ImoveisEmptySection(isSearchingImovel = isSearching)
                             } else {
-                                OccupiedPeriodPropertySelectionList(
-                                    properties = properties,
-                                    onPropertySelect = { property ->
+                                OccupiedPeriodImovelSelectionList(
+                                    imoveis = imoveis,
+                                    onImovelSelect = { imovel ->
                                         val form =
-                                            stayForm ?: return@OccupiedPeriodPropertySelectionList
+                                            stayForm ?: return@OccupiedPeriodImovelSelectionList
                                         viewModel.onOwnedStayFormChange(
                                             form.copy(
-                                                property = property,
+                                                imovel = imovel,
                                                 checkInDateTime = null,
                                                 checkOutDateTime = null,
                                             )
@@ -351,7 +351,7 @@ fun OccupiedPeriodRegistrationScreen(
                                         listStatus =
                                             OccupiedPeriodRegistrationListState.ShowingMainForm
                                         isSearching = false
-                                        viewModel.onPropertySearchInputChange(searchInput = null)
+                                        viewModel.onImovelSearchInputChange(searchInput = null)
                                     },
                                     modifier = Modifier
                                         .padding(innerPadding)

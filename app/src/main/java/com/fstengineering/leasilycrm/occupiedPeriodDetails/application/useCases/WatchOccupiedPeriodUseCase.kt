@@ -1,14 +1,14 @@
 package com.fstengineering.leasilycrm.occupiedPeriodDetails.application.useCases
 
-import com.fstengineering.leasilycrm.core.domain.services.PropertyOccupiedDatesService
+import com.fstengineering.leasilycrm.core.domain.services.ImovelOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyOccupiedPeriod
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.queries.OccupiedPeriodArgs
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodQueryRepository
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.PropertyQueryRepository
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.ImovelQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.TenantQueryRepository
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 
 class WatchOccupiedPeriodUseCase(
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
-    private val propertyQueryRepository: PropertyQueryRepository,
+    private val imovelQueryRepository: ImovelQueryRepository,
     private val tenantQueryRepository: TenantQueryRepository,
 ) {
     suspend operator fun invoke(args: OccupiedPeriodArgs): Flow<AppResult<OccupiedPeriodReadModel?, ApplicationError>> {
@@ -26,7 +26,7 @@ class WatchOccupiedPeriodUseCase(
                 onSuccess = { it },
             ) ?: return@outer AppResult.Success(data = null)
 
-            val property = propertyQueryRepository.getById(raw.propertyId)
+            val imovel = imovelQueryRepository.getById(raw.imovelId)
                 .fold(
                     onError = { e -> return@outer AppResult.Error(error = e) },
                     onSuccess = { it },
@@ -41,9 +41,9 @@ class WatchOccupiedPeriodUseCase(
             }
 
             val occupiedDatesGrouped =
-                PropertyOccupiedDatesService.getOccupiedPeriodsGroupedByMonthYear(
+                ImovelOccupiedDatesService.getOccupiedPeriodsGroupedByMonthYear(
                     occupiedPeriods = persistentListOf(
-                        PropertyOccupiedPeriod(
+                        ImovelPeriodoOcupado(
                             id = raw.id,
                             tenantId = raw.tenantId,
                             checkInDateTime = raw.checkInDateTime,
@@ -54,7 +54,7 @@ class WatchOccupiedPeriodUseCase(
 
             val readModel = OccupiedPeriodReadModel.create(
                 raw = raw,
-                property = property,
+                imovel = imovel,
                 tenant = tenant,
                 occupiedDatesGrouped = occupiedDatesGrouped,
             )

@@ -45,11 +45,11 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.O
 @Composable
 fun OccupiedPeriodDetailsScreen(
     occupiedPeriodId: Long,
-    cameFromProperty: Boolean,
+    cameFromImovel: Boolean,
     cameFromTenant: Boolean,
     viewModel: OccupiedPeriodDetailsViewModel,
     onEdit: (Long, Long?, Long?, Boolean) -> Unit,
-    onViewPropertyDashboard: (Long) -> Unit,
+    onViewImovelDashboard: (Long) -> Unit,
     onViewTenantDetails: (Long) -> Unit,
     onBack: () -> Unit,
     onUiEvent: (UiEvent) -> Unit,
@@ -143,7 +143,7 @@ fun OccupiedPeriodDetailsScreen(
                         if (loaded != null) {
                             onEdit(
                                 loaded.id,
-                                loaded.property.id,
+                                loaded.imovel.id,
                                 loaded.tenantId,
                                 loaded.isUnavailablePeriod,
                             )
@@ -181,8 +181,8 @@ fun OccupiedPeriodDetailsScreen(
                 if (loaded.isUnavailablePeriod) {
                     UnavailablePeriodDetailsSection(
                         unavailablePeriod = loaded,
-                        cameFromProperty = cameFromProperty,
-                        onViewPropertyDashboard = { onViewPropertyDashboard(loaded.property.id) },
+                        cameFromImovel = cameFromImovel,
+                        onViewImovelDashboard = { onViewImovelDashboard(loaded.imovel.id) },
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)
@@ -197,9 +197,9 @@ fun OccupiedPeriodDetailsScreen(
                                 onActivityNotFound = { mustShowNoAppToShowFileContentDialog = true }
                             )
                         },
-                        cameFromProperty = cameFromProperty,
+                        cameFromImovel = cameFromImovel,
                         cameFromTenant = cameFromTenant,
-                        onViewPropertyDashboard = { onViewPropertyDashboard(loaded.property.id) },
+                        onViewImovelDashboard = { onViewImovelDashboard(loaded.imovel.id) },
                         onViewTenantDetails = { onViewTenantDetails(loaded.tenantId!!) },
                         modifier = Modifier
                             .fillMaxSize()

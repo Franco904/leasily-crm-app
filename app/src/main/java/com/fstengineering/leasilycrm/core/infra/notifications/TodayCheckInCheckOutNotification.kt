@@ -11,7 +11,7 @@ import androidx.core.graphics.toColorInt
 import com.fstengineering.leasilycrm.MainActivity
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.models.OccupiedPeriodNotificationReadModel
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 
@@ -46,16 +46,16 @@ object TodayCheckInCheckOutNotification {
             if (status.isCheckInToday) R.string.upcoming_check_in_reminder_notification_description
             else R.string.upcoming_check_out_reminder_notification_description
 
-        val propertyTypeName = when {
-            status.propertyType == PropertyType.Apartment -> context.getString(R.string.no_label)
+        val imovelTypeName = when {
+            status.imovelType == ImovelType.Apartment -> context.getString(R.string.no_label)
             else -> context.getString(R.string.na_label)
         }
 
         val text = context.getString(
             textId,
             status.tenantName,
-            propertyTypeName,
-            context.getString(status.propertyType.presentationLabel()).lowercase(),
+            imovelTypeName,
+            context.getString(status.imovelType.presentationLabel()).lowercase(),
             status.proprietarioName,
             status.hourMinute.first.formatToTwoDigitsDateTime(),
             status.hourMinute.second.formatToTwoDigitsDateTime(),

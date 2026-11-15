@@ -11,14 +11,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.presentation.composables.HasCharacteristicRow
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun AssistancePreferredOtherCharacteristicsDetailsItems(
-    checkedCharacteristics: ImmutableList<PropertyCharacteristic>,
+    checkedCharacteristics: ImmutableList<ImovelCharacteristic>,
     modifier: Modifier = Modifier,
 ) {
     Column(

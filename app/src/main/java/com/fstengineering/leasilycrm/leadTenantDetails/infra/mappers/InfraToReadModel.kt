@@ -1,17 +1,17 @@
 package com.fstengineering.leasilycrm.leadTenantDetails.infra.mappers
 
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertySeaProximityType
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.AssistanceCompound
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.PropertyCompound
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceInteractionReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceRawReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentPropertyReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentImovelReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantRawReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.StayReadModel
 import kotlinx.collections.immutable.toPersistentList
@@ -34,16 +34,16 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
         .map { it.neighborhood }
         .toPersistentList()
 
-    val preferredCharacteristics = preferredPropertyCharacteristics
-        .mapNotNull { PropertyCharacteristic.fromId(it.propertyCharacteristicId) }
+    val preferredCharacteristics = preferredImovelCharacteristics
+        .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
         .toPersistentList()
 
     val interactionReadModels = interactions
         .map { it.toReadModel() }
         .toPersistentList()
 
-    val seaProximityType = assistance.propertySeaProximityTypeId?.let { typeId ->
-        PropertySeaProximityType.parse(typeId, assistance.distanceToSea)
+    val seaProximityType = assistance.imovelSeaProximityTypeId?.let { typeId ->
+        ImovelSeaProximityType.parse(typeId, assistance.distanceToSea)
             .fold(onError = { null }, onSuccess = { it })
     }
 
@@ -69,7 +69,7 @@ fun AssistanceCompound.toRawReadModel(): AssistanceRawReadModel {
         observations = assistance.observations,
         isFinished = assistance.isFinished,
         preferredNeighborhoods = preferredNeighborhoods,
-        preferredPropertyCharacteristics = preferredCharacteristics,
+        preferredImovelCharacteristics = preferredCharacteristics,
         interactions = interactionReadModels,
     )
 }
@@ -81,13 +81,13 @@ fun AssistanceInteractionEntity.toReadModel() = AssistanceInteractionReadModel(
     description = description,
 )
 
-fun PropertyCompound.toSentPropertyReadModel() = AssistanceSentPropertyReadModel(
-    id = requireNotNull(property.id),
-    mainPictureUriString = files.find { it.isMainPicture }?.propertyFileUri,
-    neighborhood = property.neighborhood,
-    streetAddress = property.streetAddress,
-    number = property.number,
-    type = requireNotNull(PropertyType.fromId(property.typeId)),
+fun ImovelCompound.toSentImovelReadModel() = AssistanceSentImovelReadModel(
+    id = requireNotNull(imovel.id),
+    mainPictureUriString = files.find { it.isMainPicture }?.imovelFileUri,
+    neighborhood = imovel.neighborhood,
+    streetAddress = imovel.streetAddress,
+    number = imovel.number,
+    type = requireNotNull(ImovelType.fromId(imovel.typeId)),
 )
 
 fun StayEntity.toReadModel() = StayReadModel(

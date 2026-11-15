@@ -5,11 +5,11 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceRawReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentPropertyReadModel
+import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentImovelReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantReadModel
 import com.fstengineering.leasilycrm.leadTenantDetails.application.models.queries.LeadTenantArgs
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceQueryRepository
-import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceSentPropertyQueryRepository
+import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.AssistanceSentImovelQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.LeadTenantQueryRepository
 import com.fstengineering.leasilycrm.leadTenantDetails.application.repositories.StayQueryRepository
 import kotlinx.collections.immutable.ImmutableList
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.map
 class WatchLeadTenantUseCase(
     private val leadTenantQueryRepository: LeadTenantQueryRepository,
     private val assistanceQueryRepository: AssistanceQueryRepository,
-    private val assistanceSentPropertyQueryRepository: AssistanceSentPropertyQueryRepository,
+    private val assistanceSentImovelQueryRepository: AssistanceSentImovelQueryRepository,
     private val stayQueryRepository: StayQueryRepository,
 ) {
     suspend operator fun invoke(args: LeadTenantArgs): Flow<AppResult<LeadTenantReadModel?, ApplicationError>> {
@@ -37,15 +37,15 @@ class WatchLeadTenantUseCase(
                     onSuccess = { storedAssistances -> storedAssistances },
                 )
                 .map { assistanceRaw ->
-                    val sentProperties = loadSentProperties(assistanceRaw.id)
+                    val sentImoveis = loadSentImoveis(assistanceRaw.id)
                         .fold(
                             onError = { e -> return@outer AppResult.Error(error = e) },
-                            onSuccess = { storedSentProperties -> storedSentProperties },
+                            onSuccess = { storedSentImoveis -> storedSentImoveis },
                         )
 
                     AssistanceReadModel.create(
                         assistanceRaw = assistanceRaw,
-                        sentProperties = sentProperties,
+                        sentImoveis = sentImoveis,
                     )
                 }
                 .toPersistentList()
@@ -87,13 +87,13 @@ class WatchLeadTenantUseCase(
         return assistanceQueryRepository.getAllByLeadTenantId(leadTenantId)
     }
 
-    private suspend fun loadSentProperties(
+    private suspend fun loadSentImoveis(
         assistanceId: Long?,
-    ): AppResult<ImmutableList<AssistanceSentPropertyReadModel>, ApplicationError> {
+    ): AppResult<ImmutableList<AssistanceSentImovelReadModel>, ApplicationError> {
         if (assistanceId == null) {
             return AppResult.Success(persistentListOf())
         }
 
-        return assistanceSentPropertyQueryRepository.getAllSentInAssistance(assistanceId)
+        return assistanceSentImovelQueryRepository.getAllSentInAssistance(assistanceId)
     }
 }

@@ -7,7 +7,7 @@ val occupiedPeriodDetailsUseCaseModule = module {
     factory {
         WatchOccupiedPeriodUseCase(
             occupiedPeriodQueryRepository = get(),
-            propertyQueryRepository = get(),
+            imovelQueryRepository = get(),
             tenantQueryRepository = get(),
         )
     }

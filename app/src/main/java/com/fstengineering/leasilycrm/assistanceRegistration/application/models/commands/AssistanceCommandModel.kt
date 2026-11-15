@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.assistanceRegistration.application.models.
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import kotlinx.collections.immutable.ImmutableList
 
 data class AssistanceCommandModel(
@@ -26,9 +26,9 @@ data class AssistanceCommandModel(
     val preferredNeighborhoods: ImmutableList<String>,
     val preferredSeaProximityTypeId: Long?,
     val preferredDistanceToSea: AppDecimal?,
-    val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
+    val preferredImovelCharacteristics: ImmutableList<ImovelCharacteristic>,
     val observations: String?,
-    val sentPropertiesIds: ImmutableList<Long>,
+    val sentImoveisIds: ImmutableList<Long>,
     val interactions: ImmutableList<AssistanceInteractionCommandModel>,
     val leadTenantId: Long?,
 )

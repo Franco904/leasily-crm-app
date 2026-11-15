@@ -51,8 +51,8 @@ class StayDatabaseDataSourceImpl(
         return onDatabase { dao.watchAllWithDetails() }
     }
 
-    override fun watchAllByPropertyId(propertyId: Long): Flow<AppResult<List<StayEntity>, ApplicationError>> {
-        return dao.watchAllByPropertyId(propertyId).asDatabaseFlowResult()
+    override fun watchAllByImovelId(imovelId: Long): Flow<AppResult<List<StayEntity>, ApplicationError>> {
+        return dao.watchAllByImovelId(imovelId).asDatabaseFlowResult()
     }
 
     override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<List<OccupiedPeriodNotificationProjection>, ApplicationError> {

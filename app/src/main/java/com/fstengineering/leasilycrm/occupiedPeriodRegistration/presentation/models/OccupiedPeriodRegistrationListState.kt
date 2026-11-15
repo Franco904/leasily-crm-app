@@ -2,6 +2,6 @@ package com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.mo
 
 enum class OccupiedPeriodRegistrationListState {
     ShowingMainForm,
-    SelectingProperty,
+    SelectingImovel,
     SelectingTenant,
 }

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.testUtils
 
-import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.fstengineering.leasilycrm.core.di.modules.daoModule
@@ -40,7 +39,7 @@ abstract class IntegrationTest : KoinTest {
         single<AppDateTimeProvider> { appDateTimeProvider }
         single<AppDatabase> {
             Room.inMemoryDatabaseBuilder(
-                ApplicationProvider.getApplicationContext<Context>(),
+                ApplicationProvider.getApplicationContext(),
                 AppDatabase::class.java,
             ).build()
         }

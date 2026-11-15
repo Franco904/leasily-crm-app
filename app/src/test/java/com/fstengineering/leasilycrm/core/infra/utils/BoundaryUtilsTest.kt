@@ -12,10 +12,6 @@ import io.mockk.mockkObject
 import io.mockk.runs
 import io.mockk.unmockkObject
 import io.mockk.verify
-import java.io.IOException
-import java.security.GeneralSecurityException
-import javax.crypto.AEADBadTagException
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBe
@@ -28,6 +24,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.io.IOException
+import java.security.GeneralSecurityException
+import javax.crypto.AEADBadTagException
+import kotlin.coroutines.cancellation.CancellationException
 
 class BoundaryUtilsTest {
     @BeforeEach

@@ -2,8 +2,8 @@ package com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.ma
 
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.PropertyReadModel
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.StayFileReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.StayReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.TenantReadModel
@@ -16,7 +16,7 @@ import kotlinx.collections.immutable.toPersistentList
 fun StayReadModel.toUiState() = OccupiedPeriodFormUiState.Loaded.Stay(
     id = id,
     createDateTime = createDateTime,
-    property = property?.toUiState(),
+    imovel = imovel?.toUiState(),
     tenant = tenant?.toUiState(),
     vehicleMake = vehicleMake,
     vehicleColor = vehicleColor,
@@ -37,17 +37,17 @@ fun StayReadModel.toUiState() = OccupiedPeriodFormUiState.Loaded.Stay(
 fun UnavailablePeriodReadModel.toUiState() = OccupiedPeriodFormUiState.Loaded.UnavailablePeriod(
     id = id,
     createDateTime = createDateTime,
-    property = property?.toUiState(),
+    imovel = imovel?.toUiState(),
     checkInDateTime = checkInDateTime,
     checkOutDateTime = checkOutDateTime,
     observations = observations,
 )
 
-fun PropertyReadModel.toUiState(): PropertyCardUiState {
+fun ImovelReadModel.toUiState(): ImovelCardUiState {
     val numberText = if (number != null) ", $number" else ""
     val streetAddressAndNumber = "${streetAddress}$numberText"
 
-    return PropertyCardUiState(
+    return ImovelCardUiState(
         id = requireNotNull(id),
         mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,

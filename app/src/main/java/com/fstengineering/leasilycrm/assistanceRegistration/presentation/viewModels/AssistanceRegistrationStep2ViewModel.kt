@@ -2,12 +2,12 @@ package com.fstengineering.leasilycrm.assistanceRegistration.presentation.viewMo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectablePropertyQueryRepository
+import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectableImovelQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -22,16 +22,16 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class AssistanceRegistrationStep2ViewModel(
-    private val assistanceSelectablePropertyQueryRepository: AssistanceSelectablePropertyQueryRepository,
+    private val assistanceSelectableImovelQueryRepository: AssistanceSelectableImovelQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _properties =
-        MutableStateFlow<ImmutableList<PropertyCardUiState>>(persistentListOf())
-    val properties = _properties.asStateFlow()
+    private val _imoveis =
+        MutableStateFlow<ImmutableList<ImovelCardUiState>>(persistentListOf())
+    val imoveis = _imoveis.asStateFlow()
 
     private val _searchInput = MutableStateFlow<String?>(null)
     val searchInput = _searchInput.asStateFlow()
@@ -39,22 +39,22 @@ class AssistanceRegistrationStep2ViewModel(
     fun init() {
         if (isInitialized) return
 
-        getProperties()
+        getImoveis()
         watchSearchInput()
 
         isInitialized = true
     }
 
-    private fun getProperties() {
+    private fun getImoveis() {
         viewModelScope.launch {
-            assistanceSelectablePropertyQueryRepository.getAll()
+            assistanceSelectableImovelQueryRepository.getAll()
                 .onError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
-                .onSuccess { properties ->
-                    val uiStates = properties
+                .onSuccess { imoveis ->
+                    val uiStates = imoveis
                         .map { it.toUiState() }
                         .toImmutableList()
 
-                    _properties.update { uiStates }
+                    _imoveis.update { uiStates }
                 }
         }
     }
@@ -65,14 +65,14 @@ class AssistanceRegistrationStep2ViewModel(
             searchInput
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
-                    assistanceSelectablePropertyQueryRepository.getAll(matching = searchInput)
+                    assistanceSelectableImovelQueryRepository.getAll(matching = searchInput)
                         .onError { e -> _uiEvents.send(UiEvent.BottomSheetError(e)) }
-                        .onSuccess { matchingProperties ->
-                            val uiStates = matchingProperties
+                        .onSuccess { matchingImoveis ->
+                            val uiStates = matchingImoveis
                                 .map { it.toUiState() }
                                 .toImmutableList()
 
-                            _properties.update { uiStates }
+                            _imoveis.update { uiStates }
                         }
                 }
         }

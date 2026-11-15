@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import kotlinx.collections.immutable.ImmutableList
 
 data class AssistanceRawReadModel(
@@ -26,7 +26,7 @@ data class AssistanceRawReadModel(
     val preferredSeaProximityTypeId: Long?,
     val preferredDistanceToSea: AppDecimal?,
     val preferredNeighborhoods: ImmutableList<String>,
-    val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
+    val preferredImovelCharacteristics: ImmutableList<ImovelCharacteristic>,
     val observations: String?,
     val interactions: ImmutableList<AssistanceInteractionReadModel>,
     val isFinished: Boolean,

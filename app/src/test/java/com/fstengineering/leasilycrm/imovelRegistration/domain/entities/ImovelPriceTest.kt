@@ -1,0 +1,112 @@
+package com.fstengineering.leasilycrm.imovelRegistration.domain.entities
+
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
+import com.fstengineering.leasilycrm.imovelRegistration.domain.valueObjects.ImovelPricePeriod
+import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldContain
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import java.math.BigDecimal
+import java.time.LocalDate
+
+class ImovelPriceTest {
+    private val d1 = AppDate(LocalDate.of(2025, 1, 1))
+    private val d5 = AppDate(LocalDate.of(2025, 1, 5))
+    private val d10 = AppDate(LocalDate.of(2025, 1, 10))
+    private val d15 = AppDate(LocalDate.of(2025, 1, 15))
+    private val validAmount = AppDecimal(BigDecimal("1500.00"))
+
+    @Nested
+    @DisplayName("parse")
+    inner class ParseTests {
+        @Test
+        fun `Deve criar preço de imóvel com sucesso quando todos os dados são válidos`() {
+            val result = ImovelPrice.parse(
+                startDate = d1,
+                endDate = d10,
+                amount = validAmount,
+            )
+
+            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+        }
+
+        @Test
+        fun `Deve retornar erro quando data de início está ausente`() {
+            val result = ImovelPrice.parse(
+                startDate = null,
+                endDate = d10,
+                amount = validAmount,
+            )
+
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.ImovelPricePeriod.Required
+        }
+
+        @Test
+        fun `Deve retornar erro quando data de fim está ausente`() {
+            val result = ImovelPrice.parse(
+                startDate = d1,
+                endDate = null,
+                amount = validAmount,
+            )
+
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.ImovelPricePeriod.Required
+        }
+
+        @Test
+        fun `Deve retornar erro quando valor do preço está ausente`() {
+            val result = ImovelPrice.parse(
+                startDate = d1,
+                endDate = d10,
+                amount = null,
+            )
+
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.Amount.Required
+        }
+
+        @Test
+        fun `Deve propagar erro de período inválido quando datas são iguais`() {
+            val result = ImovelPrice.parse(
+                startDate = d10,
+                endDate = d10,
+                amount = validAmount,
+            )
+
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.ImovelPricePeriod.StartAndEndDatesAreTheSame
+        }
+
+        @Test
+        fun `Deve propagar erro de sobreposição quando novo período conflita com existente`() {
+            val existing = period(start = d1, end = d10)
+
+            val result = ImovelPrice.parse(
+                startDate = d5,
+                endDate = d15,
+                amount = validAmount,
+                otherPeriods = listOf(existing),
+            )
+
+            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
+            validationErrors.errors shouldContain DomainError.ImovelPricePeriod.IsOverlappingOtherPricePeriod
+        }
+    }
+
+    private fun period(start: AppDate, end: AppDate): ImovelPricePeriod =
+        (ImovelPricePeriod.parse(
+            startDate = start,
+            endDate = end,
+        ) as AppResult.Success).data
+}

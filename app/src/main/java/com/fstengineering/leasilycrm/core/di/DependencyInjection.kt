@@ -39,27 +39,24 @@ import com.fstengineering.leasilycrm.occupiedPeriods.di.occupiedPeriodsViewModel
 import com.fstengineering.leasilycrm.profile.di.profileRepositoryModule
 import com.fstengineering.leasilycrm.profile.di.profileUseCaseModule
 import com.fstengineering.leasilycrm.profile.di.profileViewModelModule
-import com.fstengineering.leasilycrm.properties.di.propertiesRepositoryModule
-import com.fstengineering.leasilycrm.properties.di.propertiesViewModelModule
-import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardDataSourceModule
-import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardRepositoryModule
-import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardUseCaseModule
-import com.fstengineering.leasilycrm.propertyDashboard.di.propertyDashboardViewModelModule
-import com.fstengineering.leasilycrm.propertyDetails.di.propertyDetailsRepositoryModule
-import com.fstengineering.leasilycrm.propertyDetails.di.propertyDetailsViewModelModule
-import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationRepositoryModule
-import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationUseCaseModule
-import com.fstengineering.leasilycrm.propertyOccupation.di.propertyOccupationViewModelModule
+import com.fstengineering.leasilycrm.imoveis.di.imoveisDataSourceModule
+import com.fstengineering.leasilycrm.imoveis.di.imoveisViewModelModule
+import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardDataSourceModule
+import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardUseCaseModule
+import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardViewModelModule
+import com.fstengineering.leasilycrm.imovelDetails.di.imovelDetailsDataSourceModule
+import com.fstengineering.leasilycrm.imovelDetails.di.imovelDetailsViewModelModule
+import com.fstengineering.leasilycrm.imovelOcupacao.di.imovelOcupacaoDataSourceModule
+import com.fstengineering.leasilycrm.imovelOcupacao.di.imovelOcupacaoUseCaseModule
+import com.fstengineering.leasilycrm.imovelOcupacao.di.imovelOcupacaoViewModelModule
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsDataSourceModule
 import com.fstengineering.leasilycrm.proprietarioDetails.di.proprietarioDetailsViewModelModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationDataSourceModule
 import com.fstengineering.leasilycrm.proprietarioRegistration.di.proprietarioRegistrationViewModelModule
 import com.fstengineering.leasilycrm.proprietarios.di.proprietariosDataSourceModule
 import com.fstengineering.leasilycrm.proprietarios.di.proprietariosViewModelModule
-import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationDataSourceModule
-import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationRepositoryModule
-import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationUseCaseModule
-import com.fstengineering.leasilycrm.propertyRegistration.di.propertyRegistrationViewModelModule
+import com.fstengineering.leasilycrm.imovelRegistration.di.imovelRegistrationDataSourceModule
+import com.fstengineering.leasilycrm.imovelRegistration.di.imovelRegistrationViewModelModule
 import com.fstengineering.leasilycrm.root.di.rootViewModelModule
 import com.fstengineering.leasilycrm.settings.di.settingsViewModelModule
 import com.fstengineering.leasilycrm.signin.di.signinRepositoryModule
@@ -115,30 +112,27 @@ fun Application.configureDependencyInjection() {
             dashboardRepositoryModule,
             dashboardViewModelModule,
 
-            // Feature: properties
-            propertiesRepositoryModule,
-            propertiesViewModelModule,
+            // Feature: imoveis
+            imoveisDataSourceModule,
+            imoveisViewModelModule,
 
-            // Feature: propertyRegistration
-            propertyRegistrationDataSourceModule,
-            propertyRegistrationRepositoryModule,
-            propertyRegistrationUseCaseModule,
-            propertyRegistrationViewModelModule,
+            // Feature: imovelRegistration
+            imovelRegistrationDataSourceModule,
+            imovelRegistrationViewModelModule,
 
-            // Feature: propertyDashboard
-            propertyDashboardDataSourceModule,
-            propertyDashboardRepositoryModule,
-            propertyDashboardUseCaseModule,
-            propertyDashboardViewModelModule,
+            // Feature: imovelDashboard
+            imovelDashboardDataSourceModule,
+            imovelDashboardUseCaseModule,
+            imovelDashboardViewModelModule,
 
-            // Feature: propertyDetails
-            propertyDetailsRepositoryModule,
-            propertyDetailsViewModelModule,
+            // Feature: imovelDetails
+            imovelDetailsDataSourceModule,
+            imovelDetailsViewModelModule,
 
-            // Feature: propertyOccupation
-            propertyOccupationRepositoryModule,
-            propertyOccupationUseCaseModule,
-            propertyOccupationViewModelModule,
+            // Feature: imovelOcupacao
+            imovelOcupacaoDataSourceModule,
+            imovelOcupacaoUseCaseModule,
+            imovelOcupacaoViewModelModule,
 
             // Feature: proprietarios
             proprietariosDataSourceModule,

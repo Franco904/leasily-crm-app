@@ -10,7 +10,7 @@ val leadTenantDetailsUseCaseModule = module {
         WatchLeadTenantUseCase(
             leadTenantQueryRepository = get(),
             assistanceQueryRepository = get(),
-            assistanceSentPropertyQueryRepository = get(),
+            assistanceSentImovelQueryRepository = get(),
             stayQueryRepository = get(),
         )
     }

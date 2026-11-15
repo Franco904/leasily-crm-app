@@ -15,7 +15,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composab
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayCommissionDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayObservationsDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayPeriodDetailsItem
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayPropertyDetailsItem
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayImovelDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayQtGuestsDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayTenantDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayTenantVehicleDataDetailsItem
@@ -29,9 +29,9 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.S
 fun StayDetailsSection(
     stay: OccupiedPeriodDetailsUiState.Loaded,
     onOpenStayFile: (StayFileUiState) -> Unit,
-    cameFromProperty: Boolean,
+    cameFromImovel: Boolean,
     cameFromTenant: Boolean,
-    onViewPropertyDashboard: () -> Unit,
+    onViewImovelDashboard: () -> Unit,
     onViewTenantDetails: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -44,10 +44,10 @@ fun StayDetailsSection(
     ) {
         item { Spacer(modifier = Modifier.height(16.dp)) }
         item {
-            StayPropertyDetailsItem(
-                property = stay.property,
-                cameFromProperty = cameFromProperty,
-                onViewPropertyDashboard = onViewPropertyDashboard,
+            StayImovelDetailsItem(
+                imovel = stay.imovel,
+                cameFromImovel = cameFromImovel,
+                onViewImovelDashboard = onViewImovelDashboard,
             )
         }
         item { Spacer(modifier = Modifier.height(24.dp)) }

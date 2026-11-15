@@ -37,13 +37,13 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceDraftFormUiState
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.models.AssistanceRegistrationStep2ListState
-import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceSentPropertiesEmptySection
-import com.fstengineering.leasilycrm.core.presentation.composables.PropertiesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceSentImoveisEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.ImoveisEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.BackStepButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.CancelOutlinedButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.NextStepButton
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.PropertyCard
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -53,25 +53,25 @@ import kotlinx.collections.immutable.toPersistentList
 fun AssistanceRegistrationFormSectionStep2(
     listStatus: AssistanceRegistrationStep2ListState,
     assistanceForm: AssistanceDraftFormUiState.Loaded,
-    selectableProperties: ImmutableList<PropertyCardUiState>,
-    onAddSentProperty: () -> Unit,
-    isSearchingPropertyToSend: Boolean,
+    selectableImoveis: ImmutableList<ImovelCardUiState>,
+    onAddSentImovel: () -> Unit,
+    isSearchingImovelToSend: Boolean,
     onBack: () -> Unit,
-    onCancelPropertySelection: () -> Unit,
+    onCancelImovelSelection: () -> Unit,
     onNext: () -> Unit,
-    onSelectProperties: (ImmutableList<PropertyCardUiState>) -> Unit,
+    onSelectImoveis: (ImmutableList<ImovelCardUiState>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val outlineColor = MaterialTheme.colorScheme.outline
 
     val lazyListState = rememberLazyListState()
 
-    var assistanceSentProperties by remember(assistanceForm.sentProperties) {
-        mutableStateOf(assistanceForm.sentProperties.toPersistentList())
+    var assistanceSentImoveis by remember(assistanceForm.sentImoveis) {
+        mutableStateOf(assistanceForm.sentImoveis.toPersistentList())
     }
 
-    val isAddingSentProperty = remember(listStatus) {
-        listStatus == AssistanceRegistrationStep2ListState.AddingSentProperties
+    val isAddingSentImovel = remember(listStatus) {
+        listStatus == AssistanceRegistrationStep2ListState.AddingSentImoveis
     }
 
     Box(
@@ -87,7 +87,7 @@ fun AssistanceRegistrationFormSectionStep2(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    PropertiesEmptySection(isSearchingProperty = isSearchingPropertyToSend)
+                    ImoveisEmptySection(isSearchingImovel = isSearchingImovelToSend)
                 }
             } else {
                 LazyColumn(
@@ -96,25 +96,25 @@ fun AssistanceRegistrationFormSectionStep2(
                         .padding(horizontal = 16.dp)
                 ) {
                     when (listStatus) {
-                        AssistanceRegistrationStep2ListState.ShowingSelectedSentProperties -> {
-                            showingSelectedSentPropertiesList(
-                                alreadySelectedProperties = assistanceSentProperties,
-                                onAddSentProperty = onAddSentProperty,
+                        AssistanceRegistrationStep2ListState.ShowingSelectedSentImoveis -> {
+                            showingSelectedSentImoveisList(
+                                alreadySelectedImoveis = assistanceSentImoveis,
+                                onAddSentImovel = onAddSentImovel,
                             )
                         }
 
-                        AssistanceRegistrationStep2ListState.AddingSentProperties -> {
-                            addingSentPropertiesList(
-                                selectableProperties = selectableProperties,
-                                alreadySelectedPropertiesIds = assistanceSentProperties
+                        AssistanceRegistrationStep2ListState.AddingSentImoveis -> {
+                            addingSentImoveisList(
+                                selectableImoveis = selectableImoveis,
+                                alreadySelectedImoveisIds = assistanceSentImoveis
                                     .map { it.id }
                                     .toPersistentList(),
-                                onSentPropertySelect = { property ->
-                                    onSentPropertySelect(
-                                        selectedProperty = property,
-                                        assistanceSentProperties = assistanceSentProperties,
-                                        onNewSelectedProperties = {
-                                            assistanceSentProperties = it
+                                onSentImovelSelect = { imovel ->
+                                    onSentImovelSelect(
+                                        selectedImovel = imovel,
+                                        assistanceSentImoveis = assistanceSentImoveis,
+                                        onNewSelectedImoveis = {
+                                            assistanceSentImoveis = it
                                         },
                                     )
                                 },
@@ -147,14 +147,14 @@ fun AssistanceRegistrationFormSectionStep2(
             ) {
                 Spacer(modifier = Modifier.weight(1f))
 
-                if (isAddingSentProperty) CancelOutlinedButton(onCancel = onCancelPropertySelection)
+                if (isAddingSentImovel) CancelOutlinedButton(onCancel = onCancelImovelSelection)
                 else BackStepButton(onBack = onBack)
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                if (isAddingSentProperty) {
+                if (isAddingSentImovel) {
                     ApplySelectionButton(
-                        onAdd = { onSelectProperties(assistanceSentProperties) },
+                        onAdd = { onSelectImoveis(assistanceSentImoveis) },
                     )
                 } else {
                     NextStepButton(onNext = onNext)
@@ -164,26 +164,26 @@ fun AssistanceRegistrationFormSectionStep2(
     }
 }
 
-private fun LazyListScope.addingSentPropertiesList(
-    selectableProperties: ImmutableList<PropertyCardUiState>,
-    alreadySelectedPropertiesIds: ImmutableList<Long>,
-    onSentPropertySelect: (PropertyCardUiState) -> Unit,
+private fun LazyListScope.addingSentImoveisList(
+    selectableImoveis: ImmutableList<ImovelCardUiState>,
+    alreadySelectedImoveisIds: ImmutableList<Long>,
+    onSentImovelSelect: (ImovelCardUiState) -> Unit,
 ) {
-    val selectedPropertiesCount = alreadySelectedPropertiesIds.size
+    val selectedImoveisCount = alreadySelectedImoveisIds.size
 
     item { Spacer(modifier = Modifier.height(16.dp)) }
     item {
         Text(
             text = when {
-                selectedPropertiesCount == 0 -> {
+                selectedImoveisCount == 0 -> {
                     stringResource(R.string.assistance_registration_no_selected_sent_properties)
                 }
 
                 else -> {
                     pluralStringResource(
                         R.plurals.assistance_registration_number_of_selected_sent_properties,
-                        selectedPropertiesCount,
-                        selectedPropertiesCount,
+                        selectedImoveisCount,
+                        selectedImoveisCount,
                     )
                 }
             },
@@ -193,14 +193,14 @@ private fun LazyListScope.addingSentPropertiesList(
     }
     item { Spacer(modifier = Modifier.height(16.dp)) }
     itemsIndexed(
-        items = selectableProperties,
-        key = { _, property -> property.id },
+        items = selectableImoveis,
+        key = { _, imovel -> imovel.id },
         contentType = { _, entryType -> entryType },
-    ) { _, property ->
-        PropertyCard(
-            property = property,
-            isSelected = property.id in alreadySelectedPropertiesIds,
-            onCardClick = { onSentPropertySelect(property) },
+    ) { _, imovel ->
+        ImovelCard(
+            imovel = imovel,
+            isSelected = imovel.id in alreadySelectedImoveisIds,
+            onCardClick = { onSentImovelSelect(imovel) },
             hasMoreOptionsMenu = false,
             hasCharacteristicsChipsRow = false,
         )
@@ -208,9 +208,9 @@ private fun LazyListScope.addingSentPropertiesList(
     }
 }
 
-private fun LazyListScope.showingSelectedSentPropertiesList(
-    alreadySelectedProperties: ImmutableList<PropertyCardUiState>,
-    onAddSentProperty: () -> Unit,
+private fun LazyListScope.showingSelectedSentImoveisList(
+    alreadySelectedImoveis: ImmutableList<ImovelCardUiState>,
+    onAddSentImovel: () -> Unit,
 ) {
     item { Spacer(modifier = Modifier.height(16.dp)) }
     item {
@@ -224,10 +224,10 @@ private fun LazyListScope.showingSelectedSentPropertiesList(
                 modifier = Modifier
                     .weight(1f)
             )
-            TextButton(onClick = onAddSentProperty) {
+            TextButton(onClick = onAddSentImovel) {
                 Icon(
                     imageVector = when {
-                        alreadySelectedProperties.isEmpty() -> Icons.Default.Add
+                        alreadySelectedImoveis.isEmpty() -> Icons.Default.Add
                         else -> Icons.Outlined.Edit
                     },
                     contentDescription = null,
@@ -236,7 +236,7 @@ private fun LazyListScope.showingSelectedSentPropertiesList(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = when {
-                        alreadySelectedProperties.isEmpty() -> stringResource(R.string.add_action_button_text)
+                        alreadySelectedImoveis.isEmpty() -> stringResource(R.string.add_action_button_text)
                         else -> stringResource(R.string.edit_action_button_text)
                     },
                     style = MaterialTheme.typography.labelLarge,
@@ -246,17 +246,17 @@ private fun LazyListScope.showingSelectedSentPropertiesList(
         }
     }
     item { Spacer(modifier = Modifier.height(24.dp)) }
-    if (alreadySelectedProperties.isEmpty()) {
-        item { AssistanceSentPropertiesEmptySection() }
+    if (alreadySelectedImoveis.isEmpty()) {
+        item { AssistanceSentImoveisEmptySection() }
     } else {
         itemsIndexed(
-            items = alreadySelectedProperties,
+            items = alreadySelectedImoveis,
             key = { i, entry -> "${entry.id}-$i" },
             contentType = { _, entryType -> entryType },
-        ) { i, selectedProperty ->
+        ) { i, selectedImovel ->
             if (i > 0) Spacer(modifier = Modifier.height(8.dp))
-            PropertyCard(
-                property = selectedProperty,
+            ImovelCard(
+                imovel = selectedImovel,
                 hasMoreOptionsMenu = false,
                 hasCharacteristicsChipsRow = false,
             )
@@ -264,21 +264,21 @@ private fun LazyListScope.showingSelectedSentPropertiesList(
     }
 }
 
-private fun onSentPropertySelect(
-    selectedProperty: PropertyCardUiState,
-    assistanceSentProperties: PersistentList<PropertyCardUiState>,
-    onNewSelectedProperties: (PersistentList<PropertyCardUiState>) -> Unit,
+private fun onSentImovelSelect(
+    selectedImovel: ImovelCardUiState,
+    assistanceSentImoveis: PersistentList<ImovelCardUiState>,
+    onNewSelectedImoveis: (PersistentList<ImovelCardUiState>) -> Unit,
 ) {
-    val assistanceSentPropertiesIds = assistanceSentProperties.map { it.id }
+    val assistanceSentImoveisIds = assistanceSentImoveis.map { it.id }
 
-    val newAssistanceSentProperties = if (selectedProperty.id in assistanceSentPropertiesIds) {
-        val existingSentProperty = assistanceSentProperties
-            .find { it.id == selectedProperty.id } ?: return
+    val newAssistanceSentImoveis = if (selectedImovel.id in assistanceSentImoveisIds) {
+        val existingSentImovel = assistanceSentImoveis
+            .find { it.id == selectedImovel.id } ?: return
 
-        assistanceSentProperties.remove(existingSentProperty)
+        assistanceSentImoveis.remove(existingSentImovel)
     } else {
-        assistanceSentProperties.add(selectedProperty)
+        assistanceSentImoveis.add(selectedImovel)
     }
 
-    onNewSelectedProperties(newAssistanceSentProperties)
+    onNewSelectedImoveis(newAssistanceSentImoveis)
 }

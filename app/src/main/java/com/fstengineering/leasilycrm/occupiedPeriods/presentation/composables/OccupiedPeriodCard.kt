@@ -154,8 +154,8 @@ fun OccupiedPeriodCard(
             Text(
                 text = stringResource(
                     id = R.string.stay_card_subtitle_text,
-                    occupiedPeriod.propertyType?.name ?: "",
-                    occupiedPeriod.propertyNeighborhood ?: "",
+                    occupiedPeriod.imovelType?.name ?: "",
+                    occupiedPeriod.imovelNeighborhood ?: "",
                 ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

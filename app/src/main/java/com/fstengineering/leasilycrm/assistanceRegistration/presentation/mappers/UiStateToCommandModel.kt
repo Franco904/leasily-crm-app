@@ -27,9 +27,9 @@ fun AssistanceDraftFormUiState.Loaded.toCommandModel(): AssistanceCommandModel {
         preferredNeighborhoods = preferredNeighborhoods,
         preferredSeaProximityTypeId = preferredSeaProximityTypeId,
         preferredDistanceToSea = preferredDistanceToSea,
-        preferredPropertyCharacteristics = preferredPropertyCharacteristics,
+        preferredImovelCharacteristics = preferredImovelCharacteristics,
         observations = observations,
-        sentPropertiesIds = sentProperties.map { it.id }.toPersistentList(),
+        sentImoveisIds = sentImoveis.map { it.id }.toPersistentList(),
         interactions = interactions
             .map { it.toCommand() }
             .toPersistentList(),

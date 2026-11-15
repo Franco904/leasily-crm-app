@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.di
 
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadSelectablePropertiesUseCase
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadSelectableImoveisUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadStayUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.ReadUnavailablePeriodUseCase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases.WriteStayUseCase
@@ -11,7 +11,7 @@ val occupiedPeriodRegistrationUseCaseModule = module {
     factory {
         ReadStayUseCase(
             occupiedPeriodQueryRepository = get(),
-            propertyQueryRepository = get(),
+            imovelQueryRepository = get(),
             tenantQueryRepository = get(),
         )
     }
@@ -19,13 +19,13 @@ val occupiedPeriodRegistrationUseCaseModule = module {
     factory {
         ReadUnavailablePeriodUseCase(
             occupiedPeriodQueryRepository = get(),
-            propertyQueryRepository = get(),
+            imovelQueryRepository = get(),
         )
     }
 
     factory {
-        ReadSelectablePropertiesUseCase(
-            propertyQueryRepository = get(),
+        ReadSelectableImoveisUseCase(
+            imovelQueryRepository = get(),
             occupiedPeriodQueryRepository = get(),
         )
     }

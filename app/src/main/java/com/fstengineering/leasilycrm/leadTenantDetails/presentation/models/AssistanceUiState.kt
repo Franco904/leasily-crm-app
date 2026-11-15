@@ -4,8 +4,8 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
-import com.fstengineering.leasilycrm.core.domain.valueObjects.PropertyCharacteristic
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 
@@ -29,10 +29,10 @@ data class AssistanceUiState(
     val preferredSeaProximityTypeId: Long?,
     val distanceToSea: AppDecimal?,
     val preferredNeighborhoods: ImmutableList<String>,
-    val preferredPropertyCharacteristics: ImmutableList<PropertyCharacteristic>,
+    val preferredImovelCharacteristics: ImmutableList<ImovelCharacteristic>,
     val observations: String?,
-    val lastSentProperty: PropertyCardUiState?,
-    val sentProperties: ImmutableList<PropertyCardUiState>,
+    val lastSentImovel: ImovelCardUiState?,
+    val sentImoveis: ImmutableList<ImovelCardUiState>,
     val lastInteraction: AssistanceInteractionUiState?,
     val interactionsByMonth: ImmutableMap<AppYearMonth, List<AssistanceInteractionUiState>>,
     val isFinished: Boolean,

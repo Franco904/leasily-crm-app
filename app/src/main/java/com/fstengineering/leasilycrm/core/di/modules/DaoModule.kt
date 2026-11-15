@@ -5,13 +5,10 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.Assist
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentPropertyCrossRefDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentImovelCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTenantDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyCharacteristicPropertyCrossRefDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyFileDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.PropertyPriceDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
@@ -28,14 +25,9 @@ val daoModule = module {
     single<AssistancePreferredNeighborhoodDao> {
         get<AppDatabase>().assistanceSearchedNeighborhoodDao()
     }
-    single<AssistanceSentPropertyCrossRefDao> { get<AppDatabase>().assistanceSentPropertyCrossRefDao() }
+    single<AssistanceSentImovelCrossRefDao> { get<AppDatabase>().assistanceSentImovelCrossRefDao() }
     single<UserAnalyticsDao> { get<AppDatabase>().userAnalyticsDao() }
-    single<PropertyDao> { get<AppDatabase>().propertyDao() }
-    single<PropertyCharacteristicPropertyCrossRefDao> {
-        get<AppDatabase>().propertyCharacteristicPropertyCrossRefDao()
-    }
-    single<PropertyFileDao> { get<AppDatabase>().propertyFileDao() }
-    single<PropertyPriceDao> { get<AppDatabase>().propertyPriceDao() }
+    single<ImovelDao> { get<AppDatabase>().imovelDao() }
     single<StayDao> { get<AppDatabase>().stayDao() }
     single<StayFileDao> { get<AppDatabase>().stayFileDao() }
     single<StayTransferDao> { get<AppDatabase>().stayTransferDao() }

@@ -9,7 +9,7 @@ val assistanceRegistrationUseCaseModule = module {
         ReadAssistanceUseCase(
             leadTenantQueryRepository = get(),
             assistanceQueryRepository = get(),
-            assistanceSentPropertyQueryRepository = get(),
+            assistanceSentImovelQueryRepository = get(),
         )
     }
 

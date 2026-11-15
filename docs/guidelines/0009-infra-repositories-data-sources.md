@@ -220,7 +220,7 @@ Não faz CommandModel → Agregado (é `application/`,
 
 ## Módulos diferentes sobre o mesmo agregado
 
-e.g. Caso `imovelOccupation/` × `periodoOcupadoRegistration/` sobre `PeriodoOcupado`:
+e.g. Caso `imovelOcupacao/` × `periodoOcupadoRegistration/` sobre `PeriodoOcupado`:
 
 - Query ou regra específica de um módulo mora **dentro do módulo** — inclui
   o `ReadDataSource` dele.

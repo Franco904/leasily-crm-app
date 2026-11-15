@@ -11,7 +11,7 @@ import kotlinx.collections.immutable.toPersistentList
 class UnavailablePeriod private constructor(
     val id: Long?,
     val createDateTime: AppDateTime?,
-    val propertyId: Long,
+    val imovelId: Long,
     val period: OccupiedPeriodPeriod,
     val observations: String?,
 ) {
@@ -19,14 +19,14 @@ class UnavailablePeriod private constructor(
         fun parse(
             id: Long?,
             createDateTime: AppDateTime?,
-            propertyId: Long?,
+            imovelId: Long?,
             checkInDateTime: AppDateTime?,
             checkOutDateTime: AppDateTime?,
             observations: String?,
         ): AppResult<UnavailablePeriod, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
-            if (propertyId == null) errors.add(DomainError.StayProperty.Required)
+            if (imovelId == null) errors.add(DomainError.StayImovel.Required)
 
             val period = when {
                 checkInDateTime == null || checkOutDateTime == null -> {
@@ -48,7 +48,7 @@ class UnavailablePeriod private constructor(
             val parsed = UnavailablePeriod(
                 id = id,
                 createDateTime = createDateTime,
-                propertyId = requireNotNull(propertyId),
+                imovelId = requireNotNull(imovelId),
                 period = requireNotNull(period),
                 observations = observations,
             )

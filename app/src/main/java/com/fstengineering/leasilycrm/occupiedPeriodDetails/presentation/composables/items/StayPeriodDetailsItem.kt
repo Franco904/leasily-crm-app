@@ -19,13 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsCalendar
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCalendarOccupiedDateUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 
 @Composable
 fun StayPeriodDetailsItem(
-    occupiedDatesGrouped: ImmutableMap<AppYearMonth, ImmutableList<PropertyCalendarOccupiedDateUiState>>,
+    occupiedDatesGrouped: ImmutableMap<AppYearMonth, ImmutableList<ImovelCalendarOccupiedDateUiState>>,
     isUnavailablePeriod: Boolean,
     modifier: Modifier = Modifier,
 ) {

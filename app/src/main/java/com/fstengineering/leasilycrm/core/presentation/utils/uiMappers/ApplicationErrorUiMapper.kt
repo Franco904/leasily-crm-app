@@ -7,13 +7,13 @@ import com.fstengineering.leasilycrm.core.presentation.models.strategies.ErrorBo
 import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChannel
 
 fun ApplicationError.toBottomSheetData(
-    properties: ErrorBottomSheetDataPropertiesStrategy,
+    imoveis: ErrorBottomSheetDataPropertiesStrategy,
 ): ErrorBottomSheetData =
     when (this) {
         ApplicationError.NoInternet -> {
             ErrorBottomSheetData(
-                title = properties.noInternetErrorTitle,
-                description = properties.noInternetErrorDescription,
+                title = imoveis.noInternetErrorTitle,
+                description = imoveis.noInternetErrorDescription,
                 onSecondaryAction = null,
                 secondaryActionLabel = null,
             )
@@ -21,8 +21,8 @@ fun ApplicationError.toBottomSheetData(
 
         ApplicationError.Timeout -> {
             ErrorBottomSheetData(
-                title = properties.timeOutErrorTitle,
-                description = properties.timeOutErrorDescription,
+                title = imoveis.timeOutErrorTitle,
+                description = imoveis.timeOutErrorDescription,
                 onSecondaryAction = null,
                 secondaryActionLabel = null,
             )
@@ -30,8 +30,8 @@ fun ApplicationError.toBottomSheetData(
 
         ApplicationError.Unauthorized -> {
             ErrorBottomSheetData(
-                title = properties.unauthorizedErrorTitle,
-                description = properties.unauthorizedErrorDescription,
+                title = imoveis.unauthorizedErrorTitle,
+                description = imoveis.unauthorizedErrorDescription,
                 onSecondaryAction = null,
                 secondaryActionLabel = null,
             )
@@ -39,8 +39,8 @@ fun ApplicationError.toBottomSheetData(
 
 //        ApplicationError.Infra.Unknown -> {
 //            ErrorBottomSheetData(
-//                title = properties.inconsistencyErrorTitle,
-//                description = properties.inconsistencyErrorDescription,
+//                title = imoveis.inconsistencyErrorTitle,
+//                description = imoveis.inconsistencyErrorDescription,
 //                secondaryActionLabel = R.string.contact_support_action_button_text,
 //                onSecondaryAction = { onErrorEvent ->
 //                    mailToSupportChannel { errorUiEvent -> onErrorEvent(errorUiEvent) }
@@ -50,8 +50,8 @@ fun ApplicationError.toBottomSheetData(
 
         else -> {
             ErrorBottomSheetData(
-                title = properties.unknownErrorTitle,
-                description = properties.unknownErrorDescription,
+                title = imoveis.unknownErrorTitle,
+                description = imoveis.unknownErrorDescription,
                 secondaryActionLabel = R.string.contact_support_action_button_text,
                 onSecondaryAction = { onErrorEvent ->
                     mailToSupportChannel { errorUiEvent -> onErrorEvent(errorUiEvent) }

@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppTonalButton
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceLastInteractionDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceLastSentPropertyDetailsItem
+import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceLastSentImovelDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceLastUpdateDateDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceObservationsDetailsItem
 import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistancePreferredOtherCharacteristicsDetailsItems
@@ -42,23 +42,23 @@ fun LeadTenantDetailsCurrentAssistancePage(
     onRegisterAssistance: () -> Unit,
     onEditAssistance: () -> Unit,
     onDeleteAssistance: () -> Unit,
-    onViewAllSentProperties: () -> Unit,
+    onViewAllSentImoveis: () -> Unit,
     onViewAllInteractions: () -> Unit,
-    onViewSentPropertyDetails: (Long) -> Unit,
+    onViewSentImovelDetails: (Long) -> Unit,
     onViewInteractionDetails: (AssistanceInteractionUiState) -> Unit,
-    isViewingAllSentProperties: Boolean,
+    isViewingAllSentImoveis: Boolean,
     isViewingAllInterations: Boolean,
     isBringIntoViewEnabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
 
-    val sentPropertiesBringIntoViewRequester = remember { BringIntoViewRequester() }
+    val sentImoveisBringIntoViewRequester = remember { BringIntoViewRequester() }
     val interactionsBringIntoViewRequester = remember { BringIntoViewRequester() }
 
-    LaunchedEffect(isViewingAllSentProperties) {
-        if (isBringIntoViewEnabled && !isViewingAllSentProperties) {
-            sentPropertiesBringIntoViewRequester.bringIntoView()
+    LaunchedEffect(isViewingAllSentImoveis) {
+        if (isBringIntoViewEnabled && !isViewingAllSentImoveis) {
+            sentImoveisBringIntoViewRequester.bringIntoView()
         }
     }
 
@@ -122,7 +122,7 @@ fun LeadTenantDetailsCurrentAssistancePage(
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(24.dp))
                 AssistancePreferredOtherCharacteristicsDetailsItems(
-                    checkedCharacteristics = currentAssistance.preferredPropertyCharacteristics,
+                    checkedCharacteristics = currentAssistance.preferredImovelCharacteristics,
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()
@@ -131,14 +131,14 @@ fun LeadTenantDetailsCurrentAssistancePage(
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(24.dp))
-                AssistanceLastSentPropertyDetailsItem(
-                    lastSentProperty = currentAssistance.lastSentProperty,
-                    onViewAll = onViewAllSentProperties,
-                    onViewSentPropertyDetails = {
-                        onViewSentPropertyDetails(currentAssistance.lastSentProperty!!.id)
+                AssistanceLastSentImovelDetailsItem(
+                    lastSentImovel = currentAssistance.lastSentImovel,
+                    onViewAll = onViewAllSentImoveis,
+                    onViewSentImovelDetails = {
+                        onViewSentImovelDetails(currentAssistance.lastSentImovel!!.id)
                     },
                     modifier = Modifier
-                        .bringIntoViewRequester(sentPropertiesBringIntoViewRequester)
+                        .bringIntoViewRequester(sentImoveisBringIntoViewRequester)
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()

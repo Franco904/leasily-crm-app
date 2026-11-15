@@ -2,10 +2,10 @@ package com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.mappers
 
 import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCalendarOccupiedDateUiState
-import com.fstengineering.leasilycrm.core.presentation.models.PropertyCardUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.PropertyReadModel
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.StayFileReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.TenantReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.OccupiedPeriodDetailsUiState
@@ -17,7 +17,7 @@ import kotlinx.collections.immutable.toPersistentMap
 fun OccupiedPeriodReadModel.toUiState() = OccupiedPeriodDetailsUiState.Loaded(
     id = id,
     tenantId = tenantId,
-    property = property.toUiState(),
+    imovel = imovel.toUiState(),
     tenant = tenant?.toUiState(),
     vehicleMake = vehicleMake,
     vehicleColor = vehicleColor,
@@ -39,7 +39,7 @@ fun OccupiedPeriodReadModel.toUiState() = OccupiedPeriodDetailsUiState.Loaded(
     occupiedDatesGrouped = occupiedDatesGrouped
         .mapValues { (_, dates) ->
             dates.map { date ->
-                PropertyCalendarOccupiedDateUiState(
+                ImovelCalendarOccupiedDateUiState(
                     dayOfMonth = date.date.dayOfMonth.toString(),
                     firstHalfPeriodIndex = date.firstHalfPeriodIndex,
                     secondHalfPeriodIndex = date.secondHalfPeriodIndex,
@@ -50,10 +50,10 @@ fun OccupiedPeriodReadModel.toUiState() = OccupiedPeriodDetailsUiState.Loaded(
         .toPersistentMap(),
 )
 
-fun PropertyReadModel.toUiState(): PropertyCardUiState {
+fun ImovelReadModel.toUiState(): ImovelCardUiState {
     val numberText = if (number != null) ", $number" else ""
 
-    return PropertyCardUiState(
+    return ImovelCardUiState(
         id = id,
         mainPictureUri = mainPictureUriString?.toUri(),
         neighborhood = neighborhood,
