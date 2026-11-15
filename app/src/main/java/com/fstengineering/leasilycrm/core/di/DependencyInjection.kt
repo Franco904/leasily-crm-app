@@ -45,7 +45,7 @@ import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardDataSourc
 import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardRepositoryModule
 import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardUseCaseModule
 import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardViewModelModule
-import com.fstengineering.leasilycrm.imovelDetails.di.imovelDetailsRepositoryModule
+import com.fstengineering.leasilycrm.imovelDetails.di.imovelDetailsDataSourceModule
 import com.fstengineering.leasilycrm.imovelDetails.di.imovelDetailsViewModelModule
 import com.fstengineering.leasilycrm.imovelOccupation.di.imovelOccupationRepositoryModule
 import com.fstengineering.leasilycrm.imovelOccupation.di.imovelOccupationUseCaseModule
@@ -132,7 +132,7 @@ fun Application.configureDependencyInjection() {
             imovelDashboardViewModelModule,
 
             // Feature: imovelDetails
-            imovelDetailsRepositoryModule,
+            imovelDetailsDataSourceModule,
             imovelDetailsViewModelModule,
 
             // Feature: imovelOccupation

@@ -335,10 +335,9 @@ fun NavGraphBuilder.destinations(
     }
 
     composable<Destinations.ImovelDetails> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.ImovelDashboard>()
+        val args = backStackEntry.toRoute<Destinations.ImovelDetails>()
 
         ImovelDetailsScreen(
-            imovelId = args.imovelId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onEditImovel = {

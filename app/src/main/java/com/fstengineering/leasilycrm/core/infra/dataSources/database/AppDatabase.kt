@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDecimalConverter
 import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
+import com.fstengineering.leasilycrm.imovelDetails.infra.dataSources.ImovelDetailsReadDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
@@ -106,6 +107,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun imovelSharedWriteDataSource(): ImovelSharedWriteDataSource
     abstract fun imoveisReadDataSource(): ImoveisReadDataSource
+    abstract fun imovelDetailsReadDataSource(): ImovelDetailsReadDataSource
+
 
 
     abstract fun proprietarioRegistrationReadDataSource(): ProprietarioRegistrationReadDataSource

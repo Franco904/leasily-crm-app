@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
@@ -39,6 +40,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoApp
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.OccupiedPeriodTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
@@ -51,7 +53,6 @@ import com.fstengineering.leasilycrm.imovelDetails.presentation.models.ImovelUiS
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImovelDetailsScreen(
-    imovelId: Long,
     viewModel: ImovelDetailsViewModel,
     onBack: () -> Unit,
     onEditImovel: () -> Unit,
@@ -74,12 +75,16 @@ fun ImovelDetailsScreen(
     var mustShowNoAppToShowFileContentDialog by remember { mutableStateOf(false) }
     var mustShowStayTypeDialog by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        viewModel.init(imovelId = imovelId)
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-        viewModel.uiEvents.collect { uiEvent ->
+    LaunchedEffect(Unit) {
+        viewModel.init()
+    }
+
+    LaunchedEffect(viewModel, lifecycle) {
+        viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
-                is ImovelDetailsViewModel.UiEvent.BottomSheetError -> {
+                is ImovelDetailsViewModel.UiEvent.ShowErrorBottomSheet -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
@@ -90,7 +95,7 @@ fun ImovelDetailsScreen(
                     onBack()
                 }
 
-                is ImovelDetailsViewModel.UiEvent.ImovelDeleteSuccess -> {
+                is ImovelDetailsViewModel.UiEvent.ShowDeleteSuccessSnackbar -> {
                     onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_success_message))
                 }
             }

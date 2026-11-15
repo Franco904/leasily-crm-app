@@ -2,11 +2,12 @@ package com.fstengineering.leasilycrm.imovelDetails.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.ImovelSharedCommandRepository
+import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.imovelDetails.application.repositories.ImovelQueryRepository
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelSharedWriteDataSource
+import com.fstengineering.leasilycrm.imovelDetails.infra.dataSources.ImovelDetailsReadDataSource
 import com.fstengineering.leasilycrm.imovelDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.imovelDetails.presentation.models.ImovelUiState
 import kotlinx.coroutines.Job
@@ -19,12 +20,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ImovelDetailsViewModel(
-    private val imovelQueryRepository: ImovelQueryRepository,
-    private val imovelSharedCommandRepository: ImovelSharedCommandRepository,
+    private val route: Destinations.ImovelDetails,
+    private val imovelDetailsReadDataSource: ImovelDetailsReadDataSource,
+    private val imovelSharedWriteDataSource: ImovelSharedWriteDataSource,
 ) : ViewModel() {
-    private var isInitialized = false
+    private var isLoaded = false
 
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _imovel = MutableStateFlow<ImovelUiState>(ImovelUiState.Loading)
@@ -35,22 +37,21 @@ class ImovelDetailsViewModel(
 
     private var watchImovelJob: Job? = null
 
-    fun init(imovelId: Long) {
-        if (isInitialized) return
+    fun init() {
+        if (isLoaded) return
+        isLoaded = true
 
-        watchImovel(imovelId = imovelId)
-
-        isInitialized = true
+        watchImovel(imovelId = route.imovelId)
     }
 
     private fun watchImovel(imovelId: Long) {
         _isLoading.update { true }
 
         watchImovelJob = viewModelScope.launch {
-            imovelQueryRepository.watchById(imovelId)
+            imovelDetailsReadDataSource.watchImovel(imovelId)
                 .collectLatest { result ->
                     result
-                        .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                        .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                         .onSuccess { storedImovel ->
                             _imovel.update { storedImovel.toUiState() }
                         }
@@ -64,9 +65,9 @@ class ImovelDetailsViewModel(
         watchImovelJob?.cancel()
 
         viewModelScope.launch {
-            imovelSharedCommandRepository.delete(id = imovelId)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                .onSuccess { _uiEvents.trySend(UiEvent.ImovelDeleteSuccess) }
+            imovelSharedWriteDataSource.delete(imovelId = imovelId)
+                .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
+                .onSuccess { _uiEvents.trySend(UiEvent.ShowDeleteSuccessSnackbar) }
         }
     }
 
@@ -77,10 +78,10 @@ class ImovelDetailsViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError) : UiEvent
+        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
 
         data object NavigateUp : UiEvent
 
-        data object ImovelDeleteSuccess : UiEvent
+        data object ShowDeleteSuccessSnackbar : UiEvent
     }
 }
