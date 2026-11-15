@@ -25,8 +25,8 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.ImovelPricesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelPriceCard
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
-import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.imovelDetails.presentation.models.ImovelUiState

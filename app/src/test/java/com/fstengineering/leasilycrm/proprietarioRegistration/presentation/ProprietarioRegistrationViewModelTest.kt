@@ -50,7 +50,7 @@ class ProprietarioRegistrationViewModelTest {
                 val proprietario = createProprietarioReadModel(id = proprietarioId)
                 val file = proprietario.files.single()
                 coEvery { proprietarioRegistrationReadDataSourceMock.getProprietario(proprietarioId) } returns
-                    AppResult.Success(proprietario)
+                        AppResult.Success(proprietario)
                 val sut = createSut(route = Destinations.ProprietarioRegistration(proprietarioId))
 
                 sut.draftFormUiState.test {
@@ -66,7 +66,11 @@ class ProprietarioRegistrationViewModelTest {
                         email = proprietario.email,
                         paymentKey = proprietario.paymentKey,
                         files = persistentListOf(
-                            ProprietarioFileUiState(id = file.id, uriString = file.uriString, name = file.name),
+                            ProprietarioFileUiState(
+                                id = file.id,
+                                uriString = file.uriString,
+                                name = file.name
+                            ),
                         ),
                     )
                 }
@@ -74,7 +78,8 @@ class ProprietarioRegistrationViewModelTest {
 
         @Test
         fun `Deve iniciar formulário vazio quando a tela de cadastro é aberta`() = runTest {
-            val sut = createSut(route = Destinations.ProprietarioRegistration(proprietarioId = null))
+            val sut =
+                createSut(route = Destinations.ProprietarioRegistration(proprietarioId = null))
 
             sut.draftFormUiState.test {
                 awaitItem() shouldBeEqualTo ProprietarioDraftFormUiState.Loading
@@ -99,7 +104,9 @@ class ProprietarioRegistrationViewModelTest {
                     sut.saveProprietario()
 
                     awaitItem() shouldBeEqualTo
-                        ProprietarioRegistrationViewModel.UiEvent.ScrollToField(ProprietarioField.Name)
+                            ProprietarioRegistrationViewModel.UiEvent.ScrollToField(
+                                ProprietarioField.Name
+                            )
                 }
                 sut.formErrors.value.errors[ProprietarioField.Name].shouldNotBeNull()
                 coVerify(exactly = 0) { proprietarioWriteDataSourceMock.save(any()) }
@@ -110,13 +117,15 @@ class ProprietarioRegistrationViewModelTest {
             runTest {
                 val sut = createSutWithNewForm(createValidForm())
                 coEvery { proprietarioWriteDataSourceMock.save(any()) } returns
-                    AppResult.Error(ApplicationError.Unknown)
+                        AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
                     sut.saveProprietario()
 
                     awaitItem() shouldBeEqualTo
-                        ProprietarioRegistrationViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
+                            ProprietarioRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                                ApplicationError.Unknown
+                            )
                 }
             }
 
@@ -125,7 +134,9 @@ class ProprietarioRegistrationViewModelTest {
             runTest {
                 val form = createValidForm()
                 val sut = createSutWithNewForm(form)
-                coEvery { proprietarioWriteDataSourceMock.save(any()) } returns AppResult.Success(Unit)
+                coEvery { proprietarioWriteDataSourceMock.save(any()) } returns AppResult.Success(
+                    Unit
+                )
 
                 sut.uiEvents.test {
                     sut.saveProprietario()

@@ -55,7 +55,7 @@ class ProprietarioReadDataSourceTest : IntegrationTest() {
             val result = sut.getProprietario(ana.id)
 
             result.shouldBeInstanceOf<AppResult.Error<*, *>>().error shouldBeEqualTo
-                ApplicationError.Unknown
+                    ApplicationError.Unknown
         }
 
     // endregion

@@ -29,20 +29,33 @@ class UiStateToImovelTest {
     inner class ToImovelTests {
         @Test
         fun `Deve reunir os Preços de todos os meses no Imóvel quando os dados são válidos`() {
-            val januaryPrice = createPriceUiState(id = 1L, startDay = LocalDate.of(2025, 1, 1), endDay = LocalDate.of(2025, 1, 10))
-            val februaryPrice = createPriceUiState(id = 2L, startDay = LocalDate.of(2025, 2, 1), endDay = LocalDate.of(2025, 2, 10))
+            val januaryPrice = createPriceUiState(
+                id = 1L,
+                startDay = LocalDate.of(2025, 1, 1),
+                endDay = LocalDate.of(2025, 1, 10)
+            )
+            val februaryPrice = createPriceUiState(
+                id = 2L,
+                startDay = LocalDate.of(2025, 2, 1),
+                endDay = LocalDate.of(2025, 2, 10)
+            )
             val form = createValidForm().copy(
                 prices = ImovelPricesUiState(
                     persistentMapOf(
-                        PriceMonthYearUiState(month = 1, year = 2025) to persistentListOf(januaryPrice),
-                        PriceMonthYearUiState(month = 2, year = 2025) to persistentListOf(februaryPrice),
+                        PriceMonthYearUiState(month = 1, year = 2025) to persistentListOf(
+                            januaryPrice
+                        ),
+                        PriceMonthYearUiState(month = 2, year = 2025) to persistentListOf(
+                            februaryPrice
+                        ),
                     ),
                 ),
             )
 
             val result = form.toImovel()
 
-            val imovel = result.shouldBeInstanceOf<AppResult.Success<Imovel, ValidationErrors>>().data
+            val imovel =
+                result.shouldBeInstanceOf<AppResult.Success<Imovel, ValidationErrors>>().data
             imovel.prices.map { it.id }.toSet() shouldBeEqualTo setOf(1L, 2L)
         }
 
@@ -57,14 +70,17 @@ class UiStateToImovelTest {
                 neighborhood = null,
                 prices = ImovelPricesUiState(
                     persistentMapOf(
-                        PriceMonthYearUiState(month = 1, year = 2025) to persistentListOf(invalidPrice),
+                        PriceMonthYearUiState(month = 1, year = 2025) to persistentListOf(
+                            invalidPrice
+                        ),
                     ),
                 ),
             )
 
             val result = form.toImovel()
 
-            val errors = result.shouldBeInstanceOf<AppResult.Error<Imovel, ValidationErrors>>().error.errors
+            val errors =
+                result.shouldBeInstanceOf<AppResult.Error<Imovel, ValidationErrors>>().error.errors
             errors shouldBeEqualTo listOf(
                 DomainError.Neighborhood.Required,
                 DomainError.ImovelPricePeriod.StartDateIsAfterEndDate,

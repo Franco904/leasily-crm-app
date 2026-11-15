@@ -74,7 +74,7 @@ class UserSessionServiceTest {
         fun `Deve encerrar a sessão no dispositivo quando o Usuário sai do app, dado que o back-end está inacessível`() =
             runTest {
                 coEvery { userRemoteDataSourceMock.signOutUser() } returns
-                    AppResult.Error(ApplicationError.NoInternet)
+                        AppResult.Error(ApplicationError.NoInternet)
 
                 sut.userSessionEvents.test {
                     sut.onUserInitiatedSignOut()

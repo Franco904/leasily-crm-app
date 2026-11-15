@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.imovelRegistration.presentation.models
 
-import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toPersistentList

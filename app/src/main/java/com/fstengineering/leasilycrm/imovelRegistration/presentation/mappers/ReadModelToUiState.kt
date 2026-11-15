@@ -1,16 +1,16 @@
 package com.fstengineering.leasilycrm.imovelRegistration.presentation.mappers
 
 import androidx.core.net.toUri
-import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelFileReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelPriceReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelDraftFormUiState
-import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelPricesUiState
+import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ProprietarioUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList

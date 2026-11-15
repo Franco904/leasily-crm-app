@@ -23,14 +23,14 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.UserAnalyticsDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
-    single { get<AppDatabase>().imovelSharedWriteDataSource() }
-
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayFileDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayTransferDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource
 import org.koin.dsl.module
 
 val databaseDataSourceModule = module {
+    single { get<AppDatabase>().imovelSharedWriteDataSource() }
+
     single<DatabaseAdapter> { DatabaseAdapterImpl(db = get()) }
 
     single<AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource> {

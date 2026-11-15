@@ -4,8 +4,8 @@ import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelOccupiedDateReadModel
-import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelReadModel
+import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.models.ImovelAddressUiState
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.models.ImovelOccupiedDateUiState
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.models.ImovelUiState

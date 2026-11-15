@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.imovelRegistration.infra.mappers
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelPriceOrm
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.Imovel
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile

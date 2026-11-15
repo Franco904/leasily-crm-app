@@ -22,7 +22,8 @@ class ImovelSeaProximityTypeTest {
 
             val result = ImovelSeaProximityType.DistanceToSea.parse(distance)
 
-            val success = result.shouldBeInstanceOf<AppResult.Success<ImovelSeaProximityType.DistanceToSea, ValidationErrors>>()
+            val success =
+                result.shouldBeInstanceOf<AppResult.Success<ImovelSeaProximityType.DistanceToSea, ValidationErrors>>()
             success.data.distance shouldBeEqualTo distance
         }
 
@@ -30,9 +31,11 @@ class ImovelSeaProximityTypeTest {
         fun `Deve descartar o sinal quando a distância informada é negativa`() {
             val absoluteDistance = BigDecimal.valueOf(faker.random.nextLong(bound = 999999) + 1, 2)
 
-            val result = ImovelSeaProximityType.DistanceToSea.parse(AppDecimal(absoluteDistance.negate()))
+            val result =
+                ImovelSeaProximityType.DistanceToSea.parse(AppDecimal(absoluteDistance.negate()))
 
-            val success = result.shouldBeInstanceOf<AppResult.Success<ImovelSeaProximityType.DistanceToSea, ValidationErrors>>()
+            val success =
+                result.shouldBeInstanceOf<AppResult.Success<ImovelSeaProximityType.DistanceToSea, ValidationErrors>>()
             success.data.distance shouldBeEqualTo AppDecimal(absoluteDistance)
         }
 

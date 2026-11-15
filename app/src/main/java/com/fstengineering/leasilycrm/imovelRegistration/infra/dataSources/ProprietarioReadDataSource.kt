@@ -4,11 +4,11 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toProprietarioReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

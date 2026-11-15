@@ -3,9 +3,9 @@ package com.fstengineering.leasilycrm.imovelDetails.presentation.models
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
-import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
+import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 
