@@ -1,35 +1,32 @@
-package com.fstengineering.leasilycrm.imovelRegistration.application.mappers
+package com.fstengineering.leasilycrm.imovelRegistration.presentation.mappers
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.imovelRegistration.application.models.commands.ImovelCommandModel
-import com.fstengineering.leasilycrm.imovelRegistration.application.models.commands.ImovelFileCommandModel
-import com.fstengineering.leasilycrm.imovelRegistration.application.models.commands.ImovelPriceCommandModel
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelFileUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.Imovel
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelPrice
+import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelDraftFormUiState
 import kotlinx.collections.immutable.toPersistentList
 
-fun ImovelCommandModel.toEntity(): AppResult<Imovel, ValidationErrors> {
+fun ImovelDraftFormUiState.Loaded.toImovel(): AppResult<Imovel, ValidationErrors> {
     val errors = mutableListOf<DomainError>()
 
-    val prices = prices
+    val prices = pricesByMonthYear.values
+        .flatten()
         .mapNotNull { price ->
-            price.toEntity()
+            price.toImovelPrice()
                 .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
         }
         .toPersistentList()
 
-    val files = files
-        .map { file -> file.toEntity() }
-        .toPersistentList()
-
-    val parsed = Imovel.parse(
+    val imovel = Imovel.parse(
         id = id,
         createDateTime = createDateTime,
-        proprietarioId = proprietarioId,
+        proprietarioId = proprietario?.id,
         type = type,
         neighborhood = neighborhood,
         streetAddress = streetAddress,
@@ -55,25 +52,25 @@ fun ImovelCommandModel.toEntity(): AppResult<Imovel, ValidationErrors> {
         cleaningServiceTax = cleaningServiceTax,
         hasCleaningServiceIncluded = hasCleaningServiceIncluded,
         prices = prices,
-        files = files,
+        files = files.map { it.toImovelFile() }.toPersistentList(),
         observations = observations,
     )
         .fold(onError = { errors.addAll(0, it.errors); null }, onSuccess = { it })
 
     if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
-    return AppResult.Success(data = requireNotNull(parsed))
+    return AppResult.Success(data = requireNotNull(imovel))
 }
 
-private fun ImovelPriceCommandModel.toEntity() = ImovelPrice.parse(
+private fun ImovelPriceUiState.toImovelPrice() = ImovelPrice.parse(
     id = id,
     startDate = startDate,
     endDate = endDate,
     amount = amount,
 )
 
-private fun ImovelFileCommandModel.toEntity() = ImovelFile(
+private fun ImovelFileUiState.toImovelFile() = ImovelFile(
     id = id,
-    uriString = uriString,
+    uriString = uri.toString(),
     isMainPicture = isMainPicture,
 )

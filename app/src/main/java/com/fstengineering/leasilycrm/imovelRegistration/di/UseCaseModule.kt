@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.imovelRegistration.di
 
 import com.fstengineering.leasilycrm.imovelRegistration.application.useCases.ReadImovelUseCase
-import com.fstengineering.leasilycrm.imovelRegistration.application.useCases.WriteImovelUseCase
 import org.koin.dsl.module
 
 val imovelRegistrationUseCaseModule = module {
@@ -10,9 +9,5 @@ val imovelRegistrationUseCaseModule = module {
             imovelQueryRepository = get(),
             proprietarioReadDataSource = get(),
         )
-    }
-
-    factory {
-        WriteImovelUseCase(imovelCommandRepository = get())
     }
 }

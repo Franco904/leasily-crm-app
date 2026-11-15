@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelFileUiState
@@ -14,9 +15,9 @@ import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.models.
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.queries.ImovelArgs
 import com.fstengineering.leasilycrm.imovelRegistration.application.repositories.ImovelQueryRepository
 import com.fstengineering.leasilycrm.imovelRegistration.application.useCases.ReadImovelUseCase
-import com.fstengineering.leasilycrm.imovelRegistration.application.useCases.WriteImovelUseCase
+import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ProprietarioReadDataSource
-import com.fstengineering.leasilycrm.imovelRegistration.presentation.mappers.toCommandModel
+import com.fstengineering.leasilycrm.imovelRegistration.presentation.mappers.toImovel
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelDraftFormUiState
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ProprietarioUiState
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 
 class ImovelRegistrationViewModel(
     private val readImovel: ReadImovelUseCase,
-    private val writeImovel: WriteImovelUseCase,
+    private val imovelWriteDataSource: ImovelWriteDataSource,
     private val imovelQueryRepository: ImovelQueryRepository,
     private val proprietarioReadDataSource: ProprietarioReadDataSource,
 ) : ViewModel() {
@@ -133,16 +134,20 @@ class ImovelRegistrationViewModel(
                 return@launch
             }
 
-            writeImovel(form.toCommandModel())
-                .onError { error ->
-                    when (error) {
-                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
-
+            val imovel = form.toImovel()
+                .fold(
+                    onError = {
                         // TODO: Show something in the UI with the Domain errors
-                        is ValidationErrors, is DomainError -> {
-                            _uiEvents.trySend(UiEvent.BottomSheetError(ApplicationError.Unknown))
-                        }
-                    }
+                        _uiEvents.trySend(UiEvent.BottomSheetError(ApplicationError.Unknown))
+
+                        return@launch
+                    },
+                    onSuccess = { it },
+                )
+
+            imovelWriteDataSource.save(imovel)
+                .onError { error ->
+                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
 
                     return@launch
                 }

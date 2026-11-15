@@ -11,7 +11,7 @@ val imovelRegistrationViewModelModule = module {
     viewModel {
         ImovelRegistrationViewModel(
             readImovel = get(),
-            writeImovel = get(),
+            imovelWriteDataSource = get(),
             imovelQueryRepository = get(),
             proprietarioReadDataSource = get(),
         )
