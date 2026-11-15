@@ -14,16 +14,14 @@ import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ImovelDas
 import com.fstengineering.leasilycrm.imovelDetails.infra.dataSources.ImovelDetailsReadDataSource
 import com.fstengineering.leasilycrm.imovelOcupacao.infra.dataSources.ImovelOcupacaoReadDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelRegistrationReadDataSource
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentImovelCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTenantDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelCharacteristicImovelCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelFileDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelPriceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
@@ -99,23 +97,23 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun imovelDao(): ImovelDao
 
-    abstract fun imovelCharacteristicImovelCrossRefDao(): ImovelCharacteristicImovelCrossRefDao
 
-    abstract fun imovelFileDao(): ImovelFileDao
 
     abstract fun proprietarioWriteDataSource(): ProprietarioWriteDataSource
 
     abstract fun imovelWriteDataSource(): ImovelWriteDataSource
 
     abstract fun imovelSharedWriteDataSource(): ImovelSharedWriteDataSource
+
     abstract fun imoveisReadDataSource(): ImoveisReadDataSource
+
     abstract fun imovelDetailsReadDataSource(): ImovelDetailsReadDataSource
 
     abstract fun imovelDashboardReadDataSource(): ImovelDashboardReadDataSource
+
     abstract fun imovelOcupacaoReadDataSource(): ImovelOcupacaoReadDataSource
+
     abstract fun imovelRegistrationReadDataSource(): ImovelRegistrationReadDataSource
-
-
 
     abstract fun proprietarioRegistrationReadDataSource(): ProprietarioRegistrationReadDataSource
 
@@ -127,7 +125,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun imovelDashboardProprietarioReadDataSource(): ImovelDashboardProprietarioReadDataSource
 
-    abstract fun imovelPriceDao(): ImovelPriceDao
 
     abstract fun stayDao(): StayDao
 

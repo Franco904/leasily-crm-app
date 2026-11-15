@@ -5,7 +5,6 @@ import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSha
 import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
-import com.fstengineering.leasilycrm.core.application.repositories.ImovelSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
 import com.fstengineering.leasilycrm.core.di.qualifiers.encryptedPreferencesQualifier
@@ -19,7 +18,6 @@ import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedCom
 import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.OccupiedPeriodSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.OccupiedPeriodSharedQueryRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.ImovelSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.stores.SettingsSharedStoreImpl
 import com.fstengineering.leasilycrm.core.infra.stores.UserSessionSharedStoreImpl
 import org.koin.dsl.module
@@ -52,12 +50,6 @@ val repositoryModule = module {
         )
     }
 
-    single<ImovelSharedCommandRepository> {
-        ImovelSharedCommandRepositoryImpl(
-            databaseAdapter = get(),
-            imovelDatabaseDataSource = get(),
-        )
-    }
 
     single<AssistanceSharedCommandRepository> {
         AssistanceSharedCommandRepositoryImpl(

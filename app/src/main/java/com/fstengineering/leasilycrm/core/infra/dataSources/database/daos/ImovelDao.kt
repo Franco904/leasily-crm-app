@@ -3,19 +3,10 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.daos
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Upsert
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ImovelDao {
-    @Upsert
-    suspend fun insertOrUpdate(imovel: ImovelOrm): Long
-
-    @Query("UPDATE properties SET is_deleted = 1 WHERE id = :id")
-    suspend fun delete(id: Long)
-
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
     suspend fun getById(id: Long): ImovelCompound
@@ -37,15 +28,6 @@ interface ImovelDao {
 
     @Query(
         """
-        SELECT DISTINCT(neighborhood) FROM properties
-        WHERE is_deleted = 0
-        ORDER BY neighborhood
-    """
-    )
-    suspend fun getAllNeighborhoodNames(): List<String>
-
-    @Query(
-        """
         SELECT * FROM properties
         INNER JOIN assistance_sent_properties asp ON properties.id = asp.property_id
         WHERE asp.assistance_id = :assistanceId
@@ -53,18 +35,4 @@ interface ImovelDao {
     """
     )
     suspend fun getAllSentInAssistance(assistanceId: Long): List<ImovelCompound>
-
-    @Transaction
-    @Query("SELECT * FROM properties WHERE id = :id AND is_deleted = 0")
-    fun watchById(id: Long): Flow<ImovelCompound>
-
-    @Transaction
-    @Query(
-        """
-        SELECT * FROM properties
-        WHERE is_deleted = 0
-        ORDER BY neighborhood
-    """
-    )
-    fun watchAll(): Flow<List<ImovelCompound>>
 }

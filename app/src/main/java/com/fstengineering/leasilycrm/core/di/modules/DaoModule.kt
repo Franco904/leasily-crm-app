@@ -8,10 +8,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.Assist
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentImovelCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.LeadTenantDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelCharacteristicImovelCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelFileDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelPriceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
@@ -31,11 +28,6 @@ val daoModule = module {
     single<AssistanceSentImovelCrossRefDao> { get<AppDatabase>().assistanceSentImovelCrossRefDao() }
     single<UserAnalyticsDao> { get<AppDatabase>().userAnalyticsDao() }
     single<ImovelDao> { get<AppDatabase>().imovelDao() }
-    single<ImovelCharacteristicImovelCrossRefDao> {
-        get<AppDatabase>().imovelCharacteristicImovelCrossRefDao()
-    }
-    single<ImovelFileDao> { get<AppDatabase>().imovelFileDao() }
-    single<ImovelPriceDao> { get<AppDatabase>().imovelPriceDao() }
     single<StayDao> { get<AppDatabase>().stayDao() }
     single<StayFileDao> { get<AppDatabase>().stayFileDao() }
     single<StayTransferDao> { get<AppDatabase>().stayTransferDao() }

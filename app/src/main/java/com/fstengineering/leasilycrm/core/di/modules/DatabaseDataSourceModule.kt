@@ -10,10 +10,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceI
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceSearchedNeighborhoodDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceSentImovelCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.UserAnalyticsDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelCharacteristicCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelFileDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelPriceDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayFileDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayTransferDatabaseDataSourceImpl
@@ -24,10 +21,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSearchedNeighborhoodDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceSentImovelCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.UserAnalyticsDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelCharacteristicCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelFileDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelPriceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
     single { get<AppDatabase>().imovelSharedWriteDataSource() }
 
@@ -63,21 +57,12 @@ val databaseDataSourceModule = module {
         UserAnalyticsDatabaseDataSourceImpl(dao = get())
     }
 
-    single<ImovelCharacteristicCrossRefDatabaseDataSource> {
-        ImovelCharacteristicCrossRefDatabaseDataSourceImpl(dao = get())
-    }
 
     single<ImovelDatabaseDataSource> {
         ImovelDatabaseDataSourceImpl(dao = get())
     }
 
-    single<ImovelFileDatabaseDataSource> {
-        ImovelFileDatabaseDataSourceImpl(dao = get())
-    }
 
-    single<ImovelPriceDatabaseDataSource> {
-        ImovelPriceDatabaseDataSourceImpl(dao = get())
-    }
 
     single<StayDatabaseDataSource> {
         StayDatabaseDataSourceImpl(dao = get(), dateTimeProvider = get<AppDateTimeProvider>())
