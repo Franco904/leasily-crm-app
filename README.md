@@ -114,6 +114,47 @@ atualizado evita desvios durante a codificação.
 
 ---
 
+## Linguagem Ubíqua
+
+**Obrigatório:** use os termos definidos em `GLOSSARY.md` para nomear classes, métodos, variáveis,
+módulos e descrições de teste. Nunca invente sinônimos, abreviações não listadas ou termos técnicos
+da indústria (ex.: `Manager`, `Helper`, `DataService`).
+
+Exemplos corretos:
+
+- Entidades/estados: `Imovel`, `Proprietario`, `Lead`, `Inquilino`, `InquilinoAntigo`,
+  `Atendimento`, `PeriodoOcupado`, `Estadia`, `PeriodoIndisponivel`
+- Eventos: `CheckIn`, `CheckOut`
+- Use cases: `RegisterCheckInUseCase`, `RegisterCheckOutUseCase`, `UndoRegisterStayCheckOutUseCase`
+- Erros: `AppResult.Error(DomainError.StayPeriod.Overbooking)`, nunca `throw DomainException(...)`
+
+**Inglês por padrão fora do domínio:** nomes de variável, método, parâmetro e classe/interface usam
+**inglês**, exceto quando o nome é (ou incorpora) um termo definido em `GLOSSARY.md`, que nesse caso
+o termo permanece em português, palavra por palavra, sem acento (ex.: `EstadiaDao`, `getEstadia`,
+`WriteEstadiaUseCase`; não `StayDao`/`getStay`). Descrições de teste (`@Test fun`) continuam em
+português (`docs/guidelines/0002-all-tests.md`). O código legado ainda usa os termos traduzidos
+(`Stay`, `Property`, `LeadTenant`) — o alias de cada termo está no `GLOSSARY.md`; código novo segue
+a regra. Vale também para nomes de módulo, classes, métodos e funções, sem exceção.
+
+---
+
+## Convenções de Nomenclatura
+
+| Artefato                                | Sufixo / padrão                                                                                                                              |
+|-----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| Caso de uso                             | `<VerboInglês><TermoDeDomínio>UseCase` (ex: `RegisterCheckOutUseCase`, `WriteEstadiaUseCase`)                                                |
+| Repositório (write-side)                | `<Contexto>Repository` (classe concreta, sem `Impl`)                                                                                         |
+| DataSource                              | `<Contexto>WriteDataSource` / `<Contexto>ReadDataSource` (classe concreta, sem `Impl`) / DAO: `<Contexto>Dao`                                |
+| Erro                                    | `AppResult` com `DomainError`/`ValidationErrors` (regra de domínio) ou `ApplicationError` (falha de infra), todos `BaseError`; nunca `throw` |
+| ViewModel                               | `<Contexto>ViewModel`                                                                                                                        |
+| UiState                                 | `<Contexto>UiState`                                                                                                                          |
+| Modelo de UI (genérico de presentation) | `<Contexto>UiModel`                                                                                                                          |
+| Composable (tela)                       | `<Contexto>Screen`                                                                                                                           |
+| Composable (componente)                 | `<Contexto>` ou nome descritivo sem sufixo                                                                                                   |
+| Arquivo de teste                        | `<ArquivoProducao>Test.kt` (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`)                                                                |
+
+---
+
 ## Comandos Essenciais
 
 ### Desenvolvimento
