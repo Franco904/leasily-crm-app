@@ -121,7 +121,12 @@ fun ImovelRegistrationFormSectionStep2(
             IncludedItemsFormField(
                 value = form.includedItems,
                 onValueChange = {
-                    onFormChange(form.copy(includedItems = it, hasIncludedItems = true))
+                    onFormChange(
+                        form.copy(
+                            includedItems = it.ifBlank { null },
+                            hasIncludedItems = true
+                        )
+                    )
                 },
             )
             AppCheckbox(

@@ -38,9 +38,9 @@ import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.CepPostalCodeFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.HobbyBoxNumberFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.NumberFormField
-import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.ProprietarioFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.ParkingBasementLevelNumberFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.ParkingSpotNumberFormField
+import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.ProprietarioFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.StreetAddressFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields.TypeFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelDraftFormUiState
@@ -156,7 +156,7 @@ fun ImovelRegistrationFormSectionStep1(
             Spacer(modifier = Modifier.height(24.dp))
             NeighborhoodFormField(
                 value = form.neighborhood,
-                onValueChange = { onFormChange(form.copy(neighborhood = it)) },
+                onValueChange = { onFormChange(form.copy(neighborhood = it.ifBlank { null })) },
                 pastNeighborhoods = pastNeighborhoods,
                 error = formErrors[ImovelStep1Field.Neighborhood],
                 onDone = {
@@ -173,7 +173,7 @@ fun ImovelRegistrationFormSectionStep1(
             Spacer(modifier = Modifier.height(28.dp))
             StreetAddressFormField(
                 value = form.streetAddress,
-                onValueChange = { onFormChange(form.copy(streetAddress = it)) },
+                onValueChange = { onFormChange(form.copy(streetAddress = it.ifBlank { null })) },
                 error = formErrors[ImovelStep1Field.StreetAddress],
                 onDone = { cepPostalCodeFieldFocusRequester.requestFocus() },
                 fieldFocusRequester = streetAddressFieldFocusRequester,
@@ -187,7 +187,7 @@ fun ImovelRegistrationFormSectionStep1(
             Spacer(modifier = Modifier.height(28.dp))
             CepPostalCodeFormField(
                 value = form.cepPostalCode,
-                onValueChange = { onFormChange(form.copy(cepPostalCode = it)) },
+                onValueChange = { onFormChange(form.copy(cepPostalCode = it.ifBlank { null })) },
                 onDone = {
                     if (form.number == null) numberFieldFocusRequester.requestFocus()
                 },
@@ -205,7 +205,7 @@ fun ImovelRegistrationFormSectionStep1(
             Spacer(modifier = Modifier.height(28.dp))
             AddressLine2FormField(
                 value = form.addressLine2,
-                onValueChange = { onFormChange(form.copy(addressLine2 = it)) },
+                onValueChange = { onFormChange(form.copy(addressLine2 = it.ifBlank { null })) },
                 onDone = {
                     if (form.type == ImovelType.Apartment && form.parkingSpotNumber == null) {
                         parkingSpotNumberFieldFocusRequester.requestFocus()
@@ -221,7 +221,7 @@ fun ImovelRegistrationFormSectionStep1(
                     ParkingSpotNumberFormField(
                         value = form.parkingSpotNumber,
                         onValueChange = {
-                            onFormChange(form.copy(parkingSpotNumber = it))
+                            onFormChange(form.copy(parkingSpotNumber = it.ifBlank { null }))
                         },
                         onDone = {
                             if (form.parkingBasementLevelNumber == null)
@@ -233,7 +233,7 @@ fun ImovelRegistrationFormSectionStep1(
                     ParkingBasementLevelNumberFormField(
                         value = form.parkingBasementLevelNumber ?: "",
                         onValueChange = {
-                            onFormChange(form.copy(parkingBasementLevelNumber = it))
+                            onFormChange(form.copy(parkingBasementLevelNumber = it.ifBlank { null }))
                         },
                         onDone = {
                             if (form.hobbyBoxNumber == null)
@@ -244,7 +244,7 @@ fun ImovelRegistrationFormSectionStep1(
                     Spacer(modifier = Modifier.height(28.dp))
                     HobbyBoxNumberFormField(
                         value = form.hobbyBoxNumber,
-                        onValueChange = { onFormChange(form.copy(hobbyBoxNumber = it)) },
+                        onValueChange = { onFormChange(form.copy(hobbyBoxNumber = it.ifBlank { null })) },
                         onDone = { onLastTextFieldDone() },
                         fieldFocusRequester = hobbyBoxNumberFieldFocusRequester,
                     )

@@ -126,7 +126,7 @@ fun ImovelRegistrationFormSectionStep4(
             Spacer(modifier = Modifier.height(24.dp))
             ObservationsFormField(
                 value = form.observations,
-                onValueChange = { onFormChange(form.copy(observations = it)) },
+                onValueChange = { onFormChange(form.copy(observations = it.ifBlank { null })) },
             )
             Spacer(modifier = Modifier.height(120.dp))
         }
