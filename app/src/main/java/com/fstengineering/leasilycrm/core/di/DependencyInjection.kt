@@ -39,7 +39,7 @@ import com.fstengineering.leasilycrm.occupiedPeriods.di.occupiedPeriodsViewModel
 import com.fstengineering.leasilycrm.profile.di.profileRepositoryModule
 import com.fstengineering.leasilycrm.profile.di.profileUseCaseModule
 import com.fstengineering.leasilycrm.profile.di.profileViewModelModule
-import com.fstengineering.leasilycrm.imoveis.di.imoveisRepositoryModule
+import com.fstengineering.leasilycrm.imoveis.di.imoveisDataSourceModule
 import com.fstengineering.leasilycrm.imoveis.di.imoveisViewModelModule
 import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardDataSourceModule
 import com.fstengineering.leasilycrm.imovelDashboard.di.imovelDashboardRepositoryModule
@@ -116,7 +116,7 @@ fun Application.configureDependencyInjection() {
             dashboardViewModelModule,
 
             // Feature: imoveis
-            imoveisRepositoryModule,
+            imoveisDataSourceModule,
             imoveisViewModelModule,
 
             // Feature: imovelRegistration

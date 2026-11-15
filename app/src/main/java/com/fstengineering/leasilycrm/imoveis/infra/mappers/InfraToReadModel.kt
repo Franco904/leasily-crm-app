@@ -1,16 +1,14 @@
 package com.fstengineering.leasilycrm.imoveis.infra.mappers
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import com.fstengineering.leasilycrm.imoveis.application.models.dtos.ImovelReadModel
+import com.fstengineering.leasilycrm.imoveis.infra.projections.ImovelCardProjection
 
-fun ImovelCompound.toReadModel() = ImovelReadModel(
-    id = requireNotNull(imovel.id),
-    type = requireNotNull(ImovelType.fromId(imovel.typeId)),
-    neighborhood = imovel.neighborhood,
-    streetAddress = imovel.streetAddress,
-    number = imovel.number,
-    mainPictureUriString = files
-        .find { picture -> picture.isMainPicture }
-        ?.imovelFileUri,
+fun ImovelCardProjection.toImovelReadModel() = ImovelReadModel(
+    id = id,
+    mainPictureUriString = mainPictureUriString,
+    type = requireNotNull(ImovelType.fromId(typeId)),
+    neighborhood = neighborhood,
+    streetAddress = streetAddress,
+    number = number,
 )

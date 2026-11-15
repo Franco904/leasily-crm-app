@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.core.di.modules
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.infra.adapters.DatabaseAdapterImpl
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AssistanceInteractionDatabaseDataSourceImpl
@@ -28,6 +29,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelFileDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelPriceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
+    single { get<AppDatabase>().imovelSharedWriteDataSource() }
+
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayFileDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayTransferDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource

@@ -9,6 +9,7 @@ import androidx.room.TypeConverters
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDateTimeTypeConverter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDateTypeConverter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDecimalConverter
+import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
@@ -104,6 +105,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun imovelWriteDataSource(): ImovelWriteDataSource
 
     abstract fun imovelSharedWriteDataSource(): ImovelSharedWriteDataSource
+    abstract fun imoveisReadDataSource(): ImoveisReadDataSource
+
 
     abstract fun proprietarioRegistrationReadDataSource(): ProprietarioRegistrationReadDataSource
 

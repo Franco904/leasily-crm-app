@@ -2,19 +2,19 @@ package com.fstengineering.leasilycrm.imoveis.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fstengineering.leasilycrm.core.application.repositories.ImovelSharedCommandRepository
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelSharedWriteDataSource
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
-import com.fstengineering.leasilycrm.imoveis.application.repositories.ImovelQueryRepository
+import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSource
 import com.fstengineering.leasilycrm.imoveis.presentation.mappers.toUiState
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import com.fstengineering.leasilycrm.imoveis.presentation.models.ImoveisUiState
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -23,17 +23,16 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class ImoveisViewModel(
-    private val imovelQueryRepository: ImovelQueryRepository,
-    private val imovelSharedCommandRepository: ImovelSharedCommandRepository,
+    private val imoveisReadDataSource: ImoveisReadDataSource,
+    private val imovelSharedWriteDataSource: ImovelSharedWriteDataSource,
 ) : ViewModel() {
-    private var isInitialized = false
+    private var isLoaded = false
 
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    private val _imoveis =
-        MutableStateFlow<ImmutableList<ImovelCardUiState>>(persistentListOf())
-    val imoveis = _imoveis.asStateFlow()
+    private val _uiState = MutableStateFlow<ImoveisUiState>(ImoveisUiState.Loading)
+    val uiState: StateFlow<ImoveisUiState> = _uiState.asStateFlow()
 
     private val _imovelToDelete = MutableStateFlow<ImovelCardUiState?>(null)
     val imovelToDelete = _imovelToDelete.asStateFlow()
@@ -42,39 +41,37 @@ class ImoveisViewModel(
     val searchInput = _searchInput.asStateFlow()
 
     fun init() {
-        if (isInitialized) return
+        if (isLoaded) return
+        isLoaded = true
 
         watchImoveis()
         watchSearchInput()
-
-        isInitialized = true
     }
 
     private fun watchImoveis() {
         viewModelScope.launch {
-            imovelQueryRepository.watchAll().collect { result ->
+            imoveisReadDataSource.watchImoveis().collect { result ->
                 result
-                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                    .onSuccess { storedImoveis ->
-                        val imoveis = storedImoveis.map { it.toUiState() }.toPersistentList()
-                        _imoveis.update { imoveis }
+                    .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
+                    .onSuccess { readModels ->
+                        val imoveis = readModels.map { it.toUiState() }.toPersistentList()
+                        _uiState.update { ImoveisUiState.Loaded(imoveis = imoveis) }
                     }
             }
         }
     }
 
     @OptIn(FlowPreview::class)
-    fun watchSearchInput() {
+    private fun watchSearchInput() {
         viewModelScope.launch {
             searchInput
                 .debounce(500.milliseconds)
                 .collect { searchInput ->
-                    imovelQueryRepository.getAllMatching(matching = searchInput)
-                        .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
-                        .onSuccess { matchingImoveis ->
-                            val imoveis =
-                                matchingImoveis.map { it.toUiState() }.toPersistentList()
-                            _imoveis.update { imoveis }
+                    imoveisReadDataSource.getImoveis(matching = searchInput)
+                        .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
+                        .onSuccess { readModels ->
+                            val imoveis = readModels.map { it.toUiState() }.toPersistentList()
+                            _uiState.update { ImoveisUiState.Loaded(imoveis = imoveis) }
                         }
                 }
         }
@@ -89,13 +86,13 @@ class ImoveisViewModel(
     }
 
     fun deleteImovel() {
-        viewModelScope.launch {
-            val id = imovelToDelete.value?.id ?: return@launch
+        val imovelId = imovelToDelete.value?.id ?: return
 
-            imovelSharedCommandRepository.delete(id)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+        viewModelScope.launch {
+            imovelSharedWriteDataSource.delete(imovelId = imovelId)
+                .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                 .onSuccess {
-                    _uiEvents.trySend(UiEvent.ImovelDeleteSuccess)
+                    _uiEvents.trySend(UiEvent.ShowDeleteSuccessSnackbar)
 
                     onDeleteImovel(imovel = null)
                 }
@@ -109,7 +106,7 @@ class ImoveisViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError) : UiEvent
-        data object ImovelDeleteSuccess : UiEvent
+        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
+        data object ShowDeleteSuccessSnackbar : UiEvent
     }
 }

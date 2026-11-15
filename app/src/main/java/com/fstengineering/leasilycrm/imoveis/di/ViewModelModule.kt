@@ -7,8 +7,8 @@ import org.koin.dsl.module
 val imoveisViewModelModule = module {
     viewModel {
         ImoveisViewModel(
-            imovelQueryRepository = get(),
-            imovelSharedCommandRepository = get(),
+            imoveisReadDataSource = get(),
+            imovelSharedWriteDataSource = get(),
         )
     }
 }

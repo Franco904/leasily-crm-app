@@ -36,8 +36,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.ImoveisEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteImovelDialog
@@ -45,10 +47,13 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Occup
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.imoveis.presentation.ImoveisViewModel.UiEvent.BottomSheetError
-import com.fstengineering.leasilycrm.imoveis.presentation.ImoveisViewModel.UiEvent.ImovelDeleteSuccess
+import com.fstengineering.leasilycrm.imoveis.presentation.ImoveisViewModel.UiEvent.ShowDeleteSuccessSnackbar
+import com.fstengineering.leasilycrm.imoveis.presentation.ImoveisViewModel.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.imoveis.presentation.composables.ImoveisTopAppBar
+import com.fstengineering.leasilycrm.imoveis.presentation.models.ImoveisUiState
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ImoveisScreen(
@@ -68,16 +73,18 @@ fun ImoveisScreen(
 
     val surfaceColor = MaterialTheme.colorScheme.surface
 
-    val imoveis by viewModel.imoveis.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val imoveis = (uiState as? ImoveisUiState.Loaded)?.imoveis ?: persistentListOf()
     val imovelToDelete by viewModel.imovelToDelete.collectAsStateWithLifecycle()
 
     var isSearchingImovel by remember { mutableStateOf(false) }
     val searchInput by viewModel.searchInput.collectAsStateWithLifecycle()
 
-    val listStatus by remember(imoveis) {
-        val status = when {
-            imoveis.isEmpty() -> ListState.Empty
-            else -> ListState.Idle
+    val listStatus by remember(uiState) {
+        val status = when (val state = uiState) {
+            ImoveisUiState.Loading -> ListState.Loading
+            is ImoveisUiState.Loaded if state.imoveis.isEmpty() -> ListState.Empty
+            is ImoveisUiState.Loaded -> ListState.Idle
         }
 
         mutableStateOf(status)
@@ -85,19 +92,23 @@ fun ImoveisScreen(
 
     var imovelIdToRegisterOccupiedPeriod by remember { mutableStateOf<Long?>(null) }
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
     LaunchedEffect(Unit) {
         viewModel.init()
+    }
 
-        viewModel.uiEvents.collect { uiEvent ->
+    LaunchedEffect(viewModel, lifecycle) {
+        viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
-                is BottomSheetError -> {
+                is ShowErrorBottomSheet -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is ImovelDeleteSuccess -> {
+                is ShowDeleteSuccessSnackbar -> {
                     onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_success_message))
                 }
             }
@@ -163,7 +174,11 @@ fun ImoveisScreen(
             targetState = listStatus,
         ) { listStatus ->
             when (listStatus) {
-                ListState.Loading, ListState.Empty -> {
+                ListState.Loading -> {
+                    FullScreenLoadingIndicator(innerPadding)
+                }
+
+                ListState.Empty -> {
                     ImoveisEmptySection(isSearchingImovel = isSearchingImovel)
                 }
 
