@@ -18,12 +18,6 @@ class ImovelPricePeriodTest {
     private val d15 = AppDate(LocalDate.of(2025, 1, 15))
     private val d20 = AppDate(LocalDate.of(2025, 1, 20))
 
-    private fun period(start: AppDate, end: AppDate): ImovelPricePeriod =
-        (ImovelPricePeriod.parse(
-            startDate = start,
-            endDate = end,
-        ) as AppResult.Success).data
-
     @Nested
     @DisplayName("parse")
     inner class ParseTests {
@@ -109,4 +103,10 @@ class ImovelPricePeriodTest {
             result.shouldBeInstanceOf<AppResult.Success<*, *>>()
         }
     }
+
+    private fun period(start: AppDate, end: AppDate): ImovelPricePeriod =
+        (ImovelPricePeriod.parse(
+            startDate = start,
+            endDate = end,
+        ) as AppResult.Success).data
 }

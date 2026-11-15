@@ -21,12 +21,6 @@ class ImovelPriceTest {
     private val d15 = AppDate(LocalDate.of(2025, 1, 15))
     private val validAmount = AppDecimal(BigDecimal("1500.00"))
 
-    private fun period(start: AppDate, end: AppDate): ImovelPricePeriod =
-        (ImovelPricePeriod.parse(
-            startDate = start,
-            endDate = end,
-        ) as AppResult.Success).data
-
     @Nested
     @DisplayName("parse")
     inner class ParseTests {
@@ -109,4 +103,10 @@ class ImovelPriceTest {
             validationErrors.errors shouldContain DomainError.ImovelPricePeriod.IsOverlappingOtherPricePeriod
         }
     }
+
+    private fun period(start: AppDate, end: AppDate): ImovelPricePeriod =
+        (ImovelPricePeriod.parse(
+            startDate = start,
+            endDate = end,
+        ) as AppResult.Success).data
 }
