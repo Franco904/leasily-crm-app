@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
-data class ImovelOccupiedPeriod(
+data class ImovelPeriodoOcupado(
     val id: Long,
     val tenantId: Long?,
     val checkInDateTime: AppDateTime,

@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.imovelOccupation.application.mappers.toReadModel
 import com.fstengineering.leasilycrm.imovelOccupation.application.mappers.toValueObject
-import com.fstengineering.leasilycrm.imovelOccupation.application.models.dtos.ImovelOccupiedPeriodsReadModel
+import com.fstengineering.leasilycrm.imovelOccupation.application.models.dtos.ImovelPeriodosOcupadosReadModel
 import com.fstengineering.leasilycrm.imovelOccupation.application.models.queries.ImovelOccupationArgs
 import com.fstengineering.leasilycrm.imovelOccupation.application.repositories.OccupiedPeriodQueryRepository
 import kotlinx.collections.immutable.toPersistentList
@@ -21,7 +21,7 @@ class WatchImovelOccupationUseCase(
 ) {
     suspend operator fun invoke(
         args: ImovelOccupationArgs,
-    ): Flow<AppResult<ImovelOccupiedPeriodsReadModel, ApplicationError>> {
+    ): Flow<AppResult<ImovelPeriodosOcupadosReadModel, ApplicationError>> {
         return occupiedPeriodQueryRepository.watchAllByImovelId(imovelId = args.id)
             .map { occupiedPeriodsResult ->
                 val occupiedPeriods = occupiedPeriodsResult
@@ -53,7 +53,7 @@ class WatchImovelOccupationUseCase(
                     }
                     .toPersistentMap()
 
-                val readModel = ImovelOccupiedPeriodsReadModel(
+                val readModel = ImovelPeriodosOcupadosReadModel(
                     occupiedPeriods = occupiedPeriodsGrouped,
                 )
 

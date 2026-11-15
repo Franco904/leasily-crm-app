@@ -6,13 +6,13 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
-sealed interface ImovelOccupiedPeriodsUiState {
-    data object Loading : ImovelOccupiedPeriodsUiState
+sealed interface ImovelPeriodosOcupadosUiState {
+    data object Loading : ImovelPeriodosOcupadosUiState
 
     data class Loaded(
         val all: ImmutableMap<AppYearMonth, ImmutableList<ImovelOccupiedDateUiState>>,
         val selected: ImmutableMap<AppYearMonth, ImmutableList<ImovelOccupiedDateUiState>>,
-    ) : ImovelOccupiedPeriodsUiState {
+    ) : ImovelPeriodosOcupadosUiState {
         fun setPeriodsSelection(selectedYear: Int): Loaded {
             val selected = all
                 .mapValues { (_, dates) ->

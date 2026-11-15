@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.imovelOccupation.application.models.queries.ImovelOccupationArgs
 import com.fstengineering.leasilycrm.imovelOccupation.application.useCases.WatchImovelOccupationUseCase
 import com.fstengineering.leasilycrm.imovelOccupation.presentation.mappers.toUiState
-import com.fstengineering.leasilycrm.imovelOccupation.presentation.models.ImovelOccupiedPeriodsUiState
+import com.fstengineering.leasilycrm.imovelOccupation.presentation.models.ImovelPeriodosOcupadosUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +28,7 @@ class ImovelOccupationViewModel(
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _occupiedPeriods =
-        MutableStateFlow<ImovelOccupiedPeriodsUiState>(ImovelOccupiedPeriodsUiState.Loading)
+        MutableStateFlow<ImovelPeriodosOcupadosUiState>(ImovelPeriodosOcupadosUiState.Loading)
     val occupiedPeriods = _occupiedPeriods.asStateFlow()
 
     private val _selectedYear = MutableStateFlow(dateProvider.now().year)
@@ -57,10 +57,10 @@ class ImovelOccupationViewModel(
                             }
 
                             _occupiedPeriods.update {
-                                val loaded = it as? ImovelOccupiedPeriodsUiState.Loaded
+                                val loaded = it as? ImovelPeriodosOcupadosUiState.Loaded
 
                                 loaded?.setPeriodsSelection(selectedYear)
-                                    ?: ImovelOccupiedPeriodsUiState.Loading
+                                    ?: ImovelPeriodosOcupadosUiState.Loading
                             }
                         }
                 }
@@ -73,7 +73,7 @@ class ImovelOccupationViewModel(
 //        selectedStartYear: Int?,
 //        selectedEndMonth: Int?,
 //        selectedEndYear: Int?,
-//    ): StaysStructuredDatesMap {
+//    ): EstadiasStructuredDatesMap {
 //        val notDeletedStays = storedImovel.stays.filter { !it.isDeleted }
 //
 //        val staysStructuredDatesMap = getStaysStructuredDatesUseCase(stays = notDeletedStays)
@@ -109,10 +109,10 @@ class ImovelOccupationViewModel(
 //    fun getDatesWithMissingMonthsBetween(
 //        startDate: AppDate,
 //        endDate: AppDate,
-//        staysStructuredDatesMap: Map<CalendarMonthYear, PersistentList<StayCalendarDate>>,
-//    ): ImmutableMap<CalendarMonthYear, PersistentList<StayCalendarDate>> {
+//        staysStructuredDatesMap: Map<CalendarMonthYear, PersistentList<EstadiaCalendarDate>>,
+//    ): ImmutableMap<CalendarMonthYear, PersistentList<EstadiaCalendarDate>> {
 //        val staysStructuredDatesWithMissingMonthsMap =
-//            mutableMapOf<CalendarMonthYear, PersistentList<StayCalendarDate>>()
+//            mutableMapOf<CalendarMonthYear, PersistentList<EstadiaCalendarDate>>()
 //
 //        var currentDate = startDate.date()
 //        while (currentDate <= endDate.date()) {

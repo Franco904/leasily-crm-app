@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_IN
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelOccupiedDate
-import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelOccupiedPeriod
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentList
@@ -16,7 +16,7 @@ import kotlinx.collections.immutable.toPersistentMap
 class ImovelOccupiedDatesService {
     companion object {
         fun getOccupiedPeriodsGroupedByMonthYear(
-            occupiedPeriods: ImmutableList<ImovelOccupiedPeriod>
+            occupiedPeriods: ImmutableList<ImovelPeriodoOcupado>
         ): ImmutableMap<AppYearMonth, ImmutableList<ImovelOccupiedDate>> {
             if (occupiedPeriods.isEmpty()) return persistentMapOf()
 

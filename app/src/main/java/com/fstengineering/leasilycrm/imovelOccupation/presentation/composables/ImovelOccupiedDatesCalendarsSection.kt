@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.ColoredLabel
 import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsCalendar
-import com.fstengineering.leasilycrm.imovelOccupation.presentation.models.ImovelOccupiedPeriodsUiState
+import com.fstengineering.leasilycrm.imovelOccupation.presentation.models.ImovelPeriodosOcupadosUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -23,7 +23,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun OccupiedDatesCalendarsSection(
-    occupiedPeriods: ImovelOccupiedPeriodsUiState.Loaded,
+    occupiedPeriods: ImovelPeriodosOcupadosUiState.Loaded,
     stayColorToTenantsNames: ImmutableList<Triple<Long, @Composable () -> Color, String>>,
     hasUnavailablePeriod: Boolean,
     onViewPeriod: (Long) -> Unit,

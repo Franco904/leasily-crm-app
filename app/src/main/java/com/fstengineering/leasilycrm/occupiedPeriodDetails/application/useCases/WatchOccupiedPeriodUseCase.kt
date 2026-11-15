@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.services.ImovelOccupiedDatesSer
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelOccupiedPeriod
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.queries.OccupiedPeriodArgs
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodQueryRepository
@@ -43,7 +43,7 @@ class WatchOccupiedPeriodUseCase(
             val occupiedDatesGrouped =
                 ImovelOccupiedDatesService.getOccupiedPeriodsGroupedByMonthYear(
                     occupiedPeriods = persistentListOf(
-                        ImovelOccupiedPeriod(
+                        ImovelPeriodoOcupado(
                             id = raw.id,
                             tenantId = raw.tenantId,
                             checkInDateTime = raw.checkInDateTime,

@@ -33,7 +33,7 @@ import com.fstengineering.leasilycrm.imovelOccupation.presentation.ImovelOccupat
 import com.fstengineering.leasilycrm.imovelOccupation.presentation.ImovelOccupationViewModel.UiEvent.NavigateUp
 import com.fstengineering.leasilycrm.imovelOccupation.presentation.composables.ImovelOccupationTopAppBar
 import com.fstengineering.leasilycrm.imovelOccupation.presentation.composables.ImovelOccupiedDatesSection
-import com.fstengineering.leasilycrm.imovelOccupation.presentation.models.ImovelOccupiedPeriodsUiState
+import com.fstengineering.leasilycrm.imovelOccupation.presentation.models.ImovelPeriodosOcupadosUiState
 
 @Composable
 fun ImovelOccupationScreen(
@@ -105,13 +105,13 @@ fun ImovelOccupationScreen(
             }
     ) { innerPadding ->
         when (occupiedPeriods) {
-            is ImovelOccupiedPeriodsUiState.Loading -> {
+            is ImovelPeriodosOcupadosUiState.Loading -> {
                 FullScreenLoadingIndicator(innerPadding)
             }
 
-            is ImovelOccupiedPeriodsUiState.Loaded -> {
+            is ImovelPeriodosOcupadosUiState.Loaded -> {
                 ImovelOccupiedDatesSection(
-                    occupiedPeriods = occupiedPeriods as ImovelOccupiedPeriodsUiState.Loaded,
+                    occupiedPeriods = occupiedPeriods as ImovelPeriodosOcupadosUiState.Loaded,
                     selectedYear = selectedYear,
                     onYearChange = viewModel::onYearChange,
                     onViewPeriod = onViewStay,

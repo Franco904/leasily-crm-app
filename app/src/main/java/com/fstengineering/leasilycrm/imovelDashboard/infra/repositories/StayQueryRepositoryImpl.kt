@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
-import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelOccupiedPeriodRawReadModel
+import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.repositories.StayQueryRepository
 import com.fstengineering.leasilycrm.imovelDashboard.infra.mappers.toRawReadModel
 import kotlinx.collections.immutable.ImmutableList
@@ -17,7 +17,7 @@ class StayQueryRepositoryImpl(
 ) : StayQueryRepository {
     override fun watchAllByImovelId(
         imovelId: Long,
-    ): Flow<AppResult<ImmutableList<ImovelOccupiedPeriodRawReadModel>, ApplicationError>> {
+    ): Flow<AppResult<ImmutableList<ImovelPeriodoOcupadoRawReadModel>, ApplicationError>> {
         return databaseDataSource.watchAllByImovelId(imovelId)
             .map { result ->
                 result.fold(

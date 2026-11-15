@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.imovelDashboard.application.mappers
 
-import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelOccupiedPeriod
-import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelOccupiedPeriodRawReadModel
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
+import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
 
-fun ImovelOccupiedPeriodRawReadModel.toValueObject() = ImovelOccupiedPeriod(
+fun ImovelPeriodoOcupadoRawReadModel.toValueObject() = ImovelPeriodoOcupado(
     id = id,
     checkInDateTime = checkInDateTime,
     checkOutDateTime = checkOutDateTime,

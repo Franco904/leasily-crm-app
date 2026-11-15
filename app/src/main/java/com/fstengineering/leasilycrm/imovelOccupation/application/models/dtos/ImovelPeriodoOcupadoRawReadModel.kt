@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.imovelOccupation.application.models.dtos
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
-data class ImovelOccupiedPeriodRawReadModel(
+data class ImovelPeriodoOcupadoRawReadModel(
     val id: Long,
     val checkInDateTime: AppDateTime,
     val checkOutDateTime: AppDateTime,

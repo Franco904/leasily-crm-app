@@ -130,10 +130,10 @@ fun ImovelDashboardSection(
             onViewPeriod = onViewStay,
             actions = {
                 if (occupiedPeriods.isNotEmpty()) {
-                    ViewAllImovelStaysTextButton(onViewAllImovelStays = onViewAllImovelStays)
+                    ViewAllImovelEstadiasTextButton(onViewAllImovelStays = onViewAllImovelStays)
                     Spacer(modifier = Modifier.width(8.dp))
                 }
-                NewStayPrimaryButton(onNewStay = onNewStay)
+                NewEstadiaPrimaryButton(onNewStay = onNewStay)
             },
         )
         Spacer(modifier = Modifier.height(24.dp))

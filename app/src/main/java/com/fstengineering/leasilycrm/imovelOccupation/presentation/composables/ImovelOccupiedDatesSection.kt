@@ -19,13 +19,13 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsEmptySection
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
 import com.fstengineering.leasilycrm.core.presentation.theme.customColors
-import com.fstengineering.leasilycrm.imovelOccupation.presentation.models.ImovelOccupiedPeriodsUiState
+import com.fstengineering.leasilycrm.imovelOccupation.presentation.models.ImovelPeriodosOcupadosUiState
 import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImovelOccupiedDatesSection(
-    occupiedPeriods: ImovelOccupiedPeriodsUiState.Loaded,
+    occupiedPeriods: ImovelPeriodosOcupadosUiState.Loaded,
     selectedYear: Int,
     onYearChange: (Int) -> Unit,
     onViewPeriod: (Long) -> Unit,

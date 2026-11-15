@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryButton
 
 @Composable
-fun NewStayPrimaryButton(
+fun NewEstadiaPrimaryButton(
     onNewStay: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

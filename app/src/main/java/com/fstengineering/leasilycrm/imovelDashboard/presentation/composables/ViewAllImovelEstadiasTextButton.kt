@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
 
 @Composable
-fun ViewAllImovelStaysTextButton(
+fun ViewAllImovelEstadiasTextButton(
     onViewAllImovelStays: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
