@@ -29,15 +29,17 @@ abstract class ImovelWriteDataSource {
             .let { generatedId -> imovel.id ?: generatedId }
 
         imovel.characteristics.forEach {
-            upsert(ImovelCharacteristicCrossRefOrm(imovelCharacteristicId = it.id, imovelId = imovelId))
+            val crossRef =
+                ImovelCharacteristicCrossRefOrm(imovelCharacteristicId = it.id, imovelId = imovelId)
+            upsert(crossRef)
         }
 
         imovel.prices.forEach {
-            upsert(it.toLocalDataModel(imovelId))
+            upsert(imovelPrice = it.toLocalDataModel(imovelId))
         }
 
         imovel.files.forEach {
-            upsert(it.toLocalDataModel(imovelId))
+            upsert(imovelFile = it.toLocalDataModel(imovelId))
         }
     }
 
