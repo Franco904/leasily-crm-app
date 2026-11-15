@@ -13,8 +13,7 @@ import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.Imo
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.queries.ImovelArgs
-import com.fstengineering.leasilycrm.imovelDashboard.application.repositories.ImovelQueryRepository
-import com.fstengineering.leasilycrm.imovelDashboard.application.repositories.StayQueryRepository
+import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ImovelDashboardReadDataSource
 import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ProprietarioReadDataSource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -24,17 +23,17 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class WatchImovelUseCase(
-    private val imovelQueryRepository: ImovelQueryRepository,
+    private val imovelDashboardReadDataSource: ImovelDashboardReadDataSource,
     private val proprietarioReadDataSource: ProprietarioReadDataSource,
-    private val stayQueryRepository: StayQueryRepository,
     private val leadTenantSharedQueryRepository: LeadTenantSharedQueryRepository,
     private val dateProvider: AppDateProvider,
 ) {
     suspend operator fun invoke(
         args: ImovelArgs,
     ): Flow<AppResult<ImovelReadModel, ApplicationError>> {
-        val imovelFlow = imovelQueryRepository.watchById(imovelId = args.id)
-        val occupiedPeriodsFlow = stayQueryRepository.watchAllByImovelId(args.id)
+        val imovelFlow = imovelDashboardReadDataSource.watchImovel(imovelId = args.id)
+        val occupiedPeriodsFlow =
+            imovelDashboardReadDataSource.watchPeriodosOcupados(imovelId = args.id)
 
         return imovelFlow.combine(occupiedPeriodsFlow) { imovelResult, occupiedPeriodsResult ->
             imovelResult to occupiedPeriodsResult
@@ -46,11 +45,12 @@ class WatchImovelUseCase(
                         onSuccess = { it },
                     )
 
-                val proprietario = proprietarioReadDataSource.getProprietario(imovelRaw.proprietarioId)
-                    .fold(
-                        onError = { e -> return@outer AppResult.Error(error = e) },
-                        onSuccess = { it },
-                    )
+                val proprietario =
+                    proprietarioReadDataSource.getProprietario(imovelRaw.proprietarioId)
+                        .fold(
+                            onError = { e -> return@outer AppResult.Error(error = e) },
+                            onSuccess = { it },
+                        )
 
                 val currentMonthOccupiedPeriods =
                     getCurrentMonthOccupiedPeriods(occupiedPeriodsResult)
@@ -70,7 +70,7 @@ class WatchImovelUseCase(
     }
 
     private suspend fun getCurrentMonthOccupiedPeriods(
-        occupiedPeriodsResult: AppResult<ImmutableList<ImovelPeriodoOcupadoRawReadModel>, ApplicationError>,
+        occupiedPeriodsResult: AppResult<List<ImovelPeriodoOcupadoRawReadModel>, ApplicationError>,
     ): AppResult<Pair<AppYearMonth, ImmutableList<ImovelOccupiedDateReadModel>>, ApplicationError> {
         val occupiedPeriods = occupiedPeriodsResult
             .fold(

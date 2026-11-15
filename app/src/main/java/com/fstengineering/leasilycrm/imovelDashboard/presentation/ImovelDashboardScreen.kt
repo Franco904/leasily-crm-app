@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
@@ -23,17 +24,17 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.OccupiedPeriodTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.imovelDashboard.presentation.ImovelDashboardViewModel.UiEvent.BottomSheetError
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.ImovelDashboardViewModel.UiEvent.NavigateUp
-import com.fstengineering.leasilycrm.imovelDashboard.presentation.ImovelDashboardViewModel.UiEvent.ImovelDeleteSuccess
+import com.fstengineering.leasilycrm.imovelDashboard.presentation.ImovelDashboardViewModel.UiEvent.ShowDeleteSuccessSnackbar
+import com.fstengineering.leasilycrm.imovelDashboard.presentation.ImovelDashboardViewModel.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.composables.ImovelDashboardSection
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.composables.ImovelDashboardTopAppBar
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.models.ImovelUiState
 
 @Composable
 fun ImovelDashboardScreen(
-    imovelId: Long,
     viewModel: ImovelDashboardViewModel,
     onBack: () -> Unit,
     onEditImovel: () -> Unit,
@@ -54,12 +55,16 @@ fun ImovelDashboardScreen(
     var mustShowConfirmDeleteDialog by rememberSaveable { mutableStateOf(false) }
     var mustShowStayTypeDialog by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        viewModel.init(imovelId = imovelId)
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-        viewModel.uiEvents.collect { uiEvent ->
+    LaunchedEffect(Unit) {
+        viewModel.init()
+    }
+
+    LaunchedEffect(viewModel, lifecycle) {
+        viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
-                is BottomSheetError -> {
+                is ShowErrorBottomSheet -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
@@ -70,7 +75,7 @@ fun ImovelDashboardScreen(
                     onBack()
                 }
 
-                is ImovelDeleteSuccess -> {
+                is ShowDeleteSuccessSnackbar -> {
                     onUiEvent(UiEvent.ShowSnackBar(R.string.delete_property_success_message))
                 }
             }

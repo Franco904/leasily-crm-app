@@ -6,9 +6,8 @@ import org.koin.dsl.module
 val imovelDashboardUseCaseModule = module {
     factory {
         WatchImovelUseCase(
-            imovelQueryRepository = get(),
+            imovelDashboardReadDataSource = get(),
             proprietarioReadDataSource = get(),
-            stayQueryRepository = get(),
             leadTenantSharedQueryRepository = get(),
             dateProvider = get(),
         )

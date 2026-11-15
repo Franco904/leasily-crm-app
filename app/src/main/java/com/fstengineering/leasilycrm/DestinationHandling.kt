@@ -296,7 +296,6 @@ fun NavGraphBuilder.destinations(
         val args = backStackEntry.toRoute<Destinations.ImovelDashboard>()
 
         ImovelDashboardScreen(
-            imovelId = args.imovelId,
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onEditImovel = {

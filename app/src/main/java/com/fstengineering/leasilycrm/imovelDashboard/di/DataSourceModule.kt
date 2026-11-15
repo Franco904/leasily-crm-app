@@ -5,4 +5,5 @@ import org.koin.dsl.module
 
 val imovelDashboardDataSourceModule = module {
     single { get<AppDatabase>().imovelDashboardProprietarioReadDataSource() }
+    single { get<AppDatabase>().imovelDashboardReadDataSource() }
 }
