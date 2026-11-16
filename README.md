@@ -62,9 +62,9 @@ planejada (ex.: `occupiedPeriodRegistration` → `periodoOcupadoRegistration`).
 | `proprietarios`              | Proprietários         | Listagem de Proprietários                                                                                                                               |
 | `proprietarioRegistration`   | Proprietários         | Cadastro e edição de Proprietários                                                                                                                      |
 | `proprietarioDetails`        | Proprietários         | Detalhes de um Proprietário                                                                                                                             |
-| `leadTenants`                | Clientes              | Listagem de Clientes segmentada por estado (Leads e Inquilinos)                                                                                         |
-| `leadTenantRegistration`     | Clientes              | Cadastro e edição de Clientes                                                                                                                           |
-| `leadTenantDetails`          | Clientes              | SCV: visão centralizada do Cliente; exclusão de Atendimento e Cliente                                                                                   |
+| `clientes`                   | Clientes              | Listagem de Clientes segmentada por status (Leads e Hóspedes)                                                                                         |
+| `clienteRegistration`        | Clientes              | Cadastro e edição de Clientes                                                                                                                           |
+| `clienteDetails`             | Clientes              | SCV: visão centralizada do Cliente; exclusão de Atendimento e Cliente                                                                                   |
 | `assistanceRegistration`     | Atendimento           | Cadastro e gestão de Atendimentos                                                                                                                       |
 | `occupiedPeriodRegistration` | Períodos Ocupados     | Cadastro de Estadias e Períodos indisponíveis                                                                                                           |
 | `occupiedPeriods`            | Períodos Ocupados     | Listagem de Períodos Ocupados com filtros (status e subtipo)                                                                                            |
@@ -122,7 +122,7 @@ da indústria (ex.: `Manager`, `Helper`, `DataService`).
 
 Exemplos corretos:
 
-- Entidades/estados: `Imovel`, `Proprietario`, `Lead`, `Inquilino`, `InquilinoAntigo`,
+- Entidades/estados: `Imovel`, `Proprietario`, `Lead`, `Hospede`, `HospedeAntigo`,
   `Atendimento`, `PeriodoOcupado`, `Estadia`, `PeriodoIndisponivel`
 - Eventos: `CheckIn`, `CheckOut`
 - Use cases: `RegisterCheckInUseCase`, `RegisterCheckOutUseCase`, `UndoRegisterStayCheckOutUseCase`
