@@ -17,7 +17,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
             childColumns = ["property_id"],
         ),
         ForeignKey(
-            entity = LeadTenantEntity::class,
+            entity = ClienteOrm::class,
             parentColumns = ["id"],
             childColumns = ["tenant_id"],
         ),

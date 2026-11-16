@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.d
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.queries.AssistanceArgs
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentImovelQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.LeadTenantQueryRepository
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -14,17 +14,17 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 class ReadAssistanceUseCase(
-    private val leadTenantQueryRepository: LeadTenantQueryRepository,
+    private val clienteSharedReadDataSource: ClienteSharedReadDataSource,
     private val assistanceQueryRepository: AssistanceQueryRepository,
     private val assistanceSentImovelQueryRepository: AssistanceSentImovelQueryRepository,
 ) {
     suspend operator fun invoke(
         args: AssistanceArgs,
     ): AppResult<AssistanceReadModel, ApplicationError> {
-        val leadTenantName = leadTenantQueryRepository.getNameById(tenantId = args.leadTenantId)
+        val clienteName = clienteSharedReadDataSource.getName(clienteId = args.clienteId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
-                onSuccess = { leadTenantName -> leadTenantName },
+                onSuccess = { clienteName -> clienteName },
             )
 
         val assistanceRaw = loadAssistance(args.assistanceId)
@@ -40,8 +40,8 @@ class ReadAssistanceUseCase(
             )
 
         val updatedReadModel = AssistanceReadModel.create(
-            leadTenantId = args.leadTenantId,
-            leadTenantName = leadTenantName,
+            clienteId = args.clienteId,
+            clienteName = clienteName,
             assistanceRaw = assistanceRaw,
             sentImoveis = sentImoveis,
         )

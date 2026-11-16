@@ -47,7 +47,7 @@ fun AssistanceCommandModel.toEntity(): AppResult<Assistance, ValidationErrors> {
         observations = observations,
         sentImoveisIds = sentImoveisIds,
         interactions = interactions,
-        leadTenantId = leadTenantId,
+        clienteId = clienteId,
         isFinished = false,
     )
         .fold(onError = { errors.addAll(0, it.errors); null }, onSuccess = { it })

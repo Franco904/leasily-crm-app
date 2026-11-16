@@ -32,7 +32,7 @@ fun Assistance.toLocalDataModel(): AssistanceEntity {
         observations = observations,
         isFinished = isFinished,
         isDeleted = false,
-        leadTenantId = leadTenantId,
+        clienteId = clienteId,
         contractVersion = BuildConfig.CONTRACT_VERSION,
     )
 }

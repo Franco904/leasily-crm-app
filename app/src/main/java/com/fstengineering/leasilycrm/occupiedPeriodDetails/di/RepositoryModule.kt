@@ -7,9 +7,12 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositor
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.repositories.OccupiedPeriodQueryRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.repositories.ImovelQueryRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.repositories.TenantQueryRepositoryImpl
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
 import org.koin.dsl.module
 
 val occupiedPeriodDetailsRepositoryModule = module {
+    single { get<AppDatabase>().occupiedPeriodDetailsClienteReadDataSource() }
+
     single<OccupiedPeriodQueryRepository> {
         OccupiedPeriodQueryRepositoryImpl(
             stayDatabaseDataSource = get(),
@@ -25,7 +28,7 @@ val occupiedPeriodDetailsRepositoryModule = module {
 
     single<TenantQueryRepository> {
         TenantQueryRepositoryImpl(
-            tenantDatabaseDataSource = get(),
+            clienteReadDataSource = get(),
         )
     }
 }

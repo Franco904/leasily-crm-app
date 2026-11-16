@@ -7,7 +7,7 @@ import org.koin.dsl.module
 val assistanceRegistrationUseCaseModule = module {
     factory {
         ReadAssistanceUseCase(
-            leadTenantQueryRepository = get(),
+            clienteSharedReadDataSource = get(),
             assistanceQueryRepository = get(),
             assistanceSentImovelQueryRepository = get(),
         )

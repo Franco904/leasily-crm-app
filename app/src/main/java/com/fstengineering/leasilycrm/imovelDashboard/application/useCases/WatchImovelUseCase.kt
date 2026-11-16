@@ -1,6 +1,6 @@
 package com.fstengineering.leasilycrm.imovelDashboard.application.useCases
 
-import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.services.ImovelOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.map
 class WatchImovelUseCase(
     private val imovelDashboardReadDataSource: ImovelDashboardReadDataSource,
     private val proprietarioReadDataSource: ProprietarioReadDataSource,
-    private val leadTenantSharedQueryRepository: LeadTenantSharedQueryRepository,
+    private val clienteSharedReadDataSource: ClienteSharedReadDataSource,
     private val dateProvider: AppDateProvider,
 ) {
     suspend operator fun invoke(
@@ -82,7 +82,7 @@ class WatchImovelUseCase(
             .mapNotNull { it.tenantId }
             .distinct()
             .associateWith { tenantId ->
-                leadTenantSharedQueryRepository.getNameById(tenantId = tenantId)
+                clienteSharedReadDataSource.getName(clienteId = tenantId)
                     .fold(
                         onError = { e -> return AppResult.Error(error = e) },
                         onSuccess = { it },

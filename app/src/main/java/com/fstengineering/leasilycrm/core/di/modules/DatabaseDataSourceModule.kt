@@ -14,7 +14,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelDatab
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayFileDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.StayTransferDatabaseDataSourceImpl
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.TenantDatabaseDataSourceImpl
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceCharacteristicAssistanceCrossRefDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceInteractionDatabaseDataSource
@@ -25,11 +24,11 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayFileDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayTransferDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.TenantDatabaseDataSource
 import org.koin.dsl.module
 
 val databaseDataSourceModule = module {
     single { get<AppDatabase>().imovelSharedWriteDataSource() }
+    single { get<AppDatabase>().clienteSharedReadDataSource() }
 
     single<DatabaseAdapter> { DatabaseAdapterImpl(db = get()) }
 
@@ -74,10 +73,6 @@ val databaseDataSourceModule = module {
 
     single<StayTransferDatabaseDataSource> {
         StayTransferDatabaseDataSourceImpl(dao = get())
-    }
-
-    single<TenantDatabaseDataSource> {
-        TenantDatabaseDataSourceImpl(dao = get())
     }
 }
 

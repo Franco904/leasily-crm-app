@@ -26,8 +26,8 @@ interface AssistanceDao {
     suspend fun unfinishAssistanceByTenantId(tenantId: Long)
 
     @Transaction
-    @Query("SELECT * FROM assistances WHERE lead_tenant_id = :leadTenantId AND is_deleted = 0")
-    suspend fun getAllByLeadTenantId(leadTenantId: Long): List<AssistanceCompound>
+    @Query("SELECT * FROM assistances WHERE lead_tenant_id = :clienteId AND is_deleted = 0")
+    suspend fun getAllByClienteId(clienteId: Long): List<AssistanceCompound>
 
     @Query("SELECT (adults + kids + babies) FROM assistances WHERE lead_tenant_id = :tenantId AND is_deleted = 0 AND is_finished = 0 LIMIT 1")
     suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): Int?

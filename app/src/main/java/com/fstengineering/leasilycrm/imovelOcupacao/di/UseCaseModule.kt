@@ -7,7 +7,7 @@ val imovelOcupacaoUseCaseModule = module {
     factory {
         WatchImovelOcupacaoUseCase(
             imovelOcupacaoReadDataSource = get(),
-            leadTenantSharedQueryRepository = get(),
+            clienteSharedReadDataSource = get(),
         )
     }
 }

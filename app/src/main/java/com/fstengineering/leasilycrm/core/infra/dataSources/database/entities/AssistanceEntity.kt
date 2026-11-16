@@ -13,7 +13,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
     tableName = "assistances",
     foreignKeys = [
         ForeignKey(
-            entity = LeadTenantEntity::class,
+            entity = ClienteOrm::class,
             parentColumns = ["id"],
             childColumns = ["lead_tenant_id"],
         ),
@@ -45,6 +45,6 @@ data class AssistanceEntity(
     @ColumnInfo(name = "is_finished") val isFinished: Boolean,
     @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @ColumnInfo(name = "property_sea_proximity_type_id") val imovelSeaProximityTypeId: Long?,
-    @ColumnInfo(name = "lead_tenant_id") val leadTenantId: Long,
+    @ColumnInfo(name = "lead_tenant_id") val clienteId: Long,
     @ColumnInfo(name = "contract_version") val contractVersion: Int,
 )
