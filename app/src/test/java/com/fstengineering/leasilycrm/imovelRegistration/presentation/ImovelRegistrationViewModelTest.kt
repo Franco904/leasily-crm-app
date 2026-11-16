@@ -179,7 +179,7 @@ class ImovelRegistrationViewModelTest {
         bathroomsCount = null,
         parkingSpotsCount = null,
         airConditionersCount = null,
-        maxGuestsCount = null,
+        maxHospedesCount = null,
         seaProximityTypeId = null,
         distanceToSea = null,
         includedItems = null,

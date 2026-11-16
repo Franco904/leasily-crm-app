@@ -159,7 +159,7 @@ class ImovelDetailsViewModelTest {
         bathroomsCount = 0,
         parkingSpotsCount = 0,
         airConditionersCount = 0,
-        maxGuestsCount = 0,
+        maxHospedesCount = 0,
         seaProximityTypeId = null,
         distanceToSea = null,
         includedItems = null,

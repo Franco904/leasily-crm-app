@@ -8,5 +8,5 @@ data class ImovelQuantityCharacteristicsUiState(
     val bathroomsCount: Int,
     val parkingSpotsCount: Int,
     val airConditionersCount: Int,
-    val maxGuestsCount: Int,
+    val maxHospedesCount: Int,
 )

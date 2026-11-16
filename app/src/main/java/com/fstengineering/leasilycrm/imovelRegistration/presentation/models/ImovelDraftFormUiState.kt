@@ -33,7 +33,7 @@ sealed interface ImovelDraftFormUiState {
         val bathroomsCount: Int = 0,
         val parkingSpotsCount: Int = 0,
         val airConditionersCount: Int = 0,
-        val maxGuestsCount: Int = 0,
+        val maxHospedesCount: Int = 0,
         val seaProximityTypeId: Long? = null,
         val distanceToSea: AppDecimal? = null,
         val includedItems: String? = null,

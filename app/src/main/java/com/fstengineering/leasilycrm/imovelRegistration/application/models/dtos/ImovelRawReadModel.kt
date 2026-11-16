@@ -26,7 +26,7 @@ data class ImovelRawReadModel(
     val bathroomsCount: Int,
     val parkingSpotsCount: Int,
     val airConditionersCount: Int,
-    val maxGuestsCount: Int,
+    val maxHospedesCount: Int,
     val seaProximityTypeId: Long?,
     val distanceToSea: AppDecimal?,
     val includedItems: String?,

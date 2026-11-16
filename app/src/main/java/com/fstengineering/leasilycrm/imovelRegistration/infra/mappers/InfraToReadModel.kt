@@ -45,7 +45,7 @@ fun ImovelCompound.toRawReadModel(): ImovelRawReadModel {
         bathroomsCount = imovel.bathrooms,
         parkingSpotsCount = imovel.parkingSpots,
         airConditionersCount = imovel.airConditioners,
-        maxGuestsCount = imovel.maxGuests,
+        maxHospedesCount = imovel.maxHospedes,
         seaProximityTypeId = imovel.seaProximityTypeId,
         distanceToSea = imovel.distanceToSea,
         includedItems = imovel.includedItems,
