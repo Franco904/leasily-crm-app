@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.mappers
 
 import androidx.core.net.toUri
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
@@ -62,7 +62,7 @@ fun ImovelReadModel.toUiState(): ImovelCardUiState {
     )
 }
 
-fun TenantReadModel.toUiState() = LeadTenantUiState(
+fun TenantReadModel.toUiState() = ClienteUiState(
     id = id,
     name = name,
     city = city,

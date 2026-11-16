@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.leadTenantDetails.presentation
+package com.fstengineering.leasilycrm.clienteDetails.presentation
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
@@ -32,44 +32,45 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsViewModel.UiEvent.NavigateUp
+import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsViewModel.UiEvent.ShowAssistanceDeleteSnackbar
+import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsViewModel.UiEvent.ShowClienteDeleteSnackbar
+import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsCurrentAssistancePage
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsFloatingActionButton
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsHistoryPage
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsIdentificationPage
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsTabRow
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsTopAppBar
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceInteractionUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsTab
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.AssistanceInteractionCard
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteHospedeDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteTenantDialog
 import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
+import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel.UiEvents.BottomSheetError
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel.UiEvents.CurrentAssistanceDeleteSuccess
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel.UiEvents.LeadTenantDeleteSuccess
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsViewModel.UiEvents.NavigateUp
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.LeadTenantDetailsCurrentAssistancePage
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.LeadTenantDetailsFloatingActionButton
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.LeadTenantDetailsHistoryPage
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.LeadTenantDetailsIdentificationPage
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.LeadTenantDetailsTabRow
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.LeadTenantDetailsTopAppBar
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceInteractionUiState
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceUiState
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantDetailsTab
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantDetailsUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LeadTenantDetailsScreen(
-    leadTenantId: Long,
-    viewModel: LeadTenantDetailsViewModel,
-    onEditLeadTenant: () -> Unit,
+fun ClienteDetailsScreen(
+    viewModel: ClienteDetailsViewModel,
+    onEditCliente: () -> Unit,
     onRegisterAssistance: (Long?) -> Unit,
     onNewStay: () -> Unit,
     onViewStay: (Long) -> Unit,
@@ -89,11 +90,11 @@ fun LeadTenantDetailsScreen(
     val currentMonth = remember { AppDate.now().month }
 
     var selectedTabId by rememberSaveable {
-        mutableIntStateOf(LeadTenantDetailsTab.Details.id)
+        mutableIntStateOf(ClienteDetailsTab.Details.id)
     }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val loaded = uiState as? LeadTenantDetailsUiState.Loaded
+    val loaded = uiState as? ClienteDetailsUiState.Loaded
 
     var interactionToView by remember { mutableStateOf<AssistanceInteractionUiState?>(null) }
     var pastAssistanceToView by remember { mutableStateOf<AssistanceUiState?>(null) }
@@ -101,17 +102,21 @@ fun LeadTenantDetailsScreen(
     var isViewingAllSentImoveis by rememberSaveable { mutableStateOf(false) }
     var isViewingAllInterations by rememberSaveable { mutableStateOf(false) }
 
-    var mustShowConfirmDeleteLeadTenantDialog by rememberSaveable { mutableStateOf(false) }
+    var mustShowConfirmDeleteClienteDialog by rememberSaveable { mutableStateOf(false) }
     var mustShowConfirmDeleteAssistanceDialog by rememberSaveable { mutableStateOf(false) }
 
     var isBringIntoViewEnabled by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        viewModel.init(leadTenantId)
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-        viewModel.uiEvents.collect { uiEvent ->
+    LaunchedEffect(Unit) {
+        viewModel.init()
+    }
+
+    LaunchedEffect(viewModel, lifecycle) {
+        viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
-                is BottomSheetError -> {
+                is ShowErrorBottomSheet -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
@@ -122,7 +127,7 @@ fun LeadTenantDetailsScreen(
                     onBack()
                 }
 
-                is LeadTenantDeleteSuccess -> {
+                is ShowClienteDeleteSnackbar -> {
                     val deleteMessageId = when {
                         uiEvent.isLead -> R.string.delete_lead_success_message
                         else -> R.string.delete_tenant_success_message
@@ -131,7 +136,7 @@ fun LeadTenantDetailsScreen(
                     onUiEvent(UiEvent.ShowSnackBar(deleteMessageId))
                 }
 
-                is CurrentAssistanceDeleteSuccess -> {
+                is ShowAssistanceDeleteSnackbar -> {
                     onUiEvent(UiEvent.ShowSnackBar(R.string.delete_assistance_success_message))
                 }
             }
@@ -161,7 +166,7 @@ fun LeadTenantDetailsScreen(
 
     Scaffold(
         topBar = {
-            LeadTenantDetailsTopAppBar(
+            ClienteDetailsTopAppBar(
                 titleText = when {
                     isViewingAllSentImoveis -> stringResource(R.string.lead_tenant_details_top_app_bar_title_all_sent_properties)
                     isViewingAllInterations -> stringResource(R.string.lead_tenant_details_top_app_bar_title_all_interations)
@@ -186,13 +191,13 @@ fun LeadTenantDetailsScreen(
 
                     else -> onBack
                 },
-                onEditLeadTenant = onEditLeadTenant,
-                onDeleteLeadTenant = { mustShowConfirmDeleteLeadTenantDialog = true },
+                onEditCliente = onEditCliente,
+                onDeleteCliente = { mustShowConfirmDeleteClienteDialog = true },
             )
         },
         floatingActionButton = {
             if (loaded != null) {
-                LeadTenantDetailsFloatingActionButton(
+                ClienteDetailsFloatingActionButton(
                     hasCurrentStay = loaded.currentStayId != null,
                     onClick = {
                         if (loaded.currentStayId != null) onViewStay(loaded.currentStayId)
@@ -204,7 +209,7 @@ fun LeadTenantDetailsScreen(
         modifier = modifier
     ) { innerPadding ->
         when {
-            uiState is LeadTenantDetailsUiState.Loading -> {
+            uiState is ClienteDetailsUiState.Loading -> {
                 FullScreenLoadingIndicator(innerPadding)
             }
 
@@ -282,7 +287,7 @@ fun LeadTenantDetailsScreen(
             }
 
             loaded != null && pastAssistanceToView != null -> {
-                LeadTenantDetailsCurrentAssistancePage(
+                ClienteDetailsCurrentAssistancePage(
                     currentAssistance = pastAssistanceToView,
                     onRegisterAssistance = { onRegisterAssistance(null) },
                     onEditAssistance = { onRegisterAssistance(loaded.currentAssistance?.id) },
@@ -309,7 +314,7 @@ fun LeadTenantDetailsScreen(
                     AnimatedVisibility(
                         visible = !(isViewingAllSentImoveis || isViewingAllInterations),
                     ) {
-                        LeadTenantDetailsTabRow(
+                        ClienteDetailsTabRow(
                             selectedTabId = selectedTabId,
                             onTabSelect = { selectedTabId = it },
                             hasHistoryTab = loaded.isOld,
@@ -318,14 +323,14 @@ fun LeadTenantDetailsScreen(
                         )
                     }
                     AnimatedContent(
-                        targetState = LeadTenantDetailsTab.fromId(selectedTabId),
+                        targetState = ClienteDetailsTab.fromId(selectedTabId),
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
                     ) { selectedTab ->
                         when (selectedTab) {
-                            LeadTenantDetailsTab.Details -> {
-                                LeadTenantDetailsIdentificationPage(
+                            ClienteDetailsTab.Details -> {
+                                ClienteDetailsIdentificationPage(
                                     tag = loaded.tag,
                                     name = loaded.name,
                                     city = loaded.city,
@@ -338,8 +343,8 @@ fun LeadTenantDetailsScreen(
                                 )
                             }
 
-                            LeadTenantDetailsTab.CurrentAssistance -> {
-                                LeadTenantDetailsCurrentAssistancePage(
+                            ClienteDetailsTab.CurrentAssistance -> {
+                                ClienteDetailsCurrentAssistancePage(
                                     currentAssistance = loaded.currentAssistance,
                                     onRegisterAssistance = { onRegisterAssistance(null) },
                                     onEditAssistance = { onRegisterAssistance(loaded.currentAssistance?.id) },
@@ -360,8 +365,8 @@ fun LeadTenantDetailsScreen(
                                 )
                             }
 
-                            LeadTenantDetailsTab.History -> {
-                                LeadTenantDetailsHistoryPage(
+                            ClienteDetailsTab.History -> {
+                                ClienteDetailsHistoryPage(
                                     historyByYear = loaded.historyByYear,
                                     onViewHistoryItem = { id, isAssistance ->
                                         when {
@@ -395,26 +400,26 @@ fun LeadTenantDetailsScreen(
             )
         }
 
-        if (mustShowConfirmDeleteLeadTenantDialog && loaded != null) {
+        if (mustShowConfirmDeleteClienteDialog && loaded != null) {
             if (loaded.isLead) {
                 ConfirmDeleteLeadDialog(
                     onConfirmDelete = {
-                        viewModel.onDeleteLeadTenant()
+                        viewModel.onDeleteCliente()
 
-                        mustShowConfirmDeleteLeadTenantDialog = false
+                        mustShowConfirmDeleteClienteDialog = false
                         onBack()
                     },
-                    onCancel = { mustShowConfirmDeleteLeadTenantDialog = false },
+                    onCancel = { mustShowConfirmDeleteClienteDialog = false },
                 )
             } else {
-                ConfirmDeleteTenantDialog(
+                ConfirmDeleteHospedeDialog(
                     onConfirmDelete = {
-                        viewModel.onDeleteLeadTenant()
+                        viewModel.onDeleteCliente()
 
-                        mustShowConfirmDeleteLeadTenantDialog = false
+                        mustShowConfirmDeleteClienteDialog = false
                         onBack()
                     },
-                    onCancel = { mustShowConfirmDeleteLeadTenantDialog = false },
+                    onCancel = { mustShowConfirmDeleteClienteDialog = false },
                 )
             }
         }

@@ -1,23 +1,23 @@
-package com.fstengineering.leasilycrm.leadTenantDetails.presentation.mappers
+package com.fstengineering.leasilycrm.clienteDetails.presentation.mappers
 
 import androidx.core.net.toUri
+import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceInteractionReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceSentImovelReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.StayReadModel
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceInteractionUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteHistoryItemUiState
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceInteractionReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.AssistanceSentImovelReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.LeadTenantReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.application.models.dtos.StayReadModel
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceInteractionUiState
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceUiState
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantDetailsUiState
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantHistoryItemUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
-fun LeadTenantReadModel.toUiState(): LeadTenantDetailsUiState.Loaded {
+fun ClienteReadModel.toClienteDetailsUiState(): ClienteDetailsUiState.Loaded {
     val currentStayId = stays.find { !it.isCheckOutDone }?.id
 
     val allAssistancesUiState = assistances.map { it.toUiState() }.toPersistentList()
@@ -29,7 +29,7 @@ fun LeadTenantReadModel.toUiState(): LeadTenantDetailsUiState.Loaded {
         stays = stays,
     )
 
-    return LeadTenantDetailsUiState.Loaded(
+    return ClienteDetailsUiState.Loaded(
         id = id,
         tag = tag,
         name = name,
@@ -51,9 +51,9 @@ fun LeadTenantReadModel.toUiState(): LeadTenantDetailsUiState.Loaded {
 private fun buildHistory(
     assistances: ImmutableList<AssistanceUiState>,
     stays: List<StayReadModel>,
-): ImmutableMap<Int, ImmutableList<LeadTenantHistoryItemUiState>> {
+): ImmutableMap<Int, ImmutableList<ClienteHistoryItemUiState>> {
     val assistanceItems = assistances.map {
-        LeadTenantHistoryItemUiState(
+        ClienteHistoryItemUiState(
             id = it.id,
             isAssistance = true,
             dateTime = it.updateDateTime,
@@ -63,7 +63,7 @@ private fun buildHistory(
     val stayItems = stays
         .filter { it.isCheckOutDone }
         .map {
-            LeadTenantHistoryItemUiState(
+            ClienteHistoryItemUiState(
                 id = it.id,
                 isAssistance = false,
                 dateTime = it.checkInDateTime,
@@ -100,10 +100,10 @@ private fun AssistanceReadModel.toUiState(): AssistanceUiState {
         searchingEndDate = preferredEndDate,
         hasFlexibilityForPeriod = hasFlexibilityForPeriod,
         maxAcceptedNightlyRate = maxAcceptedNightlyRate,
-        qtAdultGuests = adultsCount ?: 0,
-        qtKidGuests = kidsCount ?: 0,
-        qtBabyGuests = babiesCount ?: 0,
-        qtAnimalGuests = animalsCount ?: 0,
+        qtAdultHospedes = adultsCount ?: 0,
+        qtKidHospedes = kidsCount ?: 0,
+        qtBabyHospedes = babiesCount ?: 0,
+        qtAnimalHospedes = animalsCount ?: 0,
         qtBedrooms = bedroomsCount ?: 0,
         qtEnSuites = enSuitesCount ?: 0,
         qtDoubleBeds = doubleBedsCount ?: 0,

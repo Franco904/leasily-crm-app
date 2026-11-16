@@ -124,7 +124,7 @@ fun AssistanceRegistrationStep2Screen(
                 if (loadedDraftForm == null) return@Scaffold
 
                 AssistanceRegistrationTopAppBar(
-                    leadTenantName = loadedDraftForm.leadTenantName,
+                    clienteName = loadedDraftForm.clienteName,
                     isAddingSentImovel = isAddingSentImovel,
                     mustShowSearchImovelAction = isAddingSentImovel
                             && selectableImoveis.isNotEmpty()

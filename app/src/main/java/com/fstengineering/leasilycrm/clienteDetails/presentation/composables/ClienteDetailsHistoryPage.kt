@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables
+package com.fstengineering.leasilycrm.clienteDetails.presentation.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,16 +17,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteHistoryItemUiState
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.LeadTenantHistoryItemUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 
 @Composable
-fun LeadTenantDetailsHistoryPage(
-    historyByYear: ImmutableMap<Int, ImmutableList<LeadTenantHistoryItemUiState>>,
+fun ClienteDetailsHistoryPage(
+    historyByYear: ImmutableMap<Int, ImmutableList<ClienteHistoryItemUiState>>,
     onViewHistoryItem: (id: Long, isAssistance: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -63,7 +63,7 @@ fun LeadTenantDetailsHistoryPage(
                         else R.string.lead_tenant_history_details_stay_at_label
 
                     if (i > 0) Spacer(modifier = Modifier.height(8.dp))
-                    LeadTenantDetailsHistoryCard(
+                    ClienteDetailsHistoryCard(
                         label = stringResource(
                             labelStringId,
                             historyItem.dateTime.dayOfMonth,
@@ -82,7 +82,7 @@ fun LeadTenantDetailsHistoryPage(
 }
 
 @Composable
-fun LeadTenantDetailsHistoryCard(
+fun ClienteDetailsHistoryCard(
     label: String,
     onViewHistoryItem: () -> Unit,
     modifier: Modifier = Modifier,

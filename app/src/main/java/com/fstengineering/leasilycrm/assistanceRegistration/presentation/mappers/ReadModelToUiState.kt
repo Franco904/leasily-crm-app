@@ -13,8 +13,8 @@ import kotlinx.collections.immutable.toPersistentList
 
 fun AssistanceReadModel.toUiState() = AssistanceDraftFormUiState.Loaded(
     id = id,
-    leadTenantId = leadTenantId,
-    leadTenantName = leadTenantName,
+    clienteId = clienteId,
+    clienteName = clienteName,
     createDateTime = createDateTime,
     preferredStartDate = preferredStartDate,
     preferredEndDate = preferredEndDate,

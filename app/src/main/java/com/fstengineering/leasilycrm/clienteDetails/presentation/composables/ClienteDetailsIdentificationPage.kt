@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables
+package com.fstengineering.leasilycrm.clienteDetails.presentation.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,17 +10,17 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.LeadTenantCityDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.LeadTenantContactOriginTypeDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.LeadTenantEmailDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.LeadTenantIdentityDocumentDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.LeadTenantNameDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.LeadTenantObservationsDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.LeadTenantPhoneDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.LeadTenantTagDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.ClienteCityDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.ClienteContactOriginTypeDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.ClienteEmailDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.ClienteIdentityDocumentDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.ClienteNameDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.ClienteObservationsDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.ClientePhoneDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.ClienteTagDetailsItem
 
 @Composable
-fun LeadTenantDetailsIdentificationPage(
+fun ClienteDetailsIdentificationPage(
     tag: String?,
     name: String,
     city: String?,
@@ -40,23 +40,23 @@ fun LeadTenantDetailsIdentificationPage(
             .fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.height(24.dp))
-        LeadTenantTagDetailsItem(tagName = tag)
+        ClienteTagDetailsItem(tagName = tag)
         Spacer(modifier = Modifier.height(24.dp))
-        LeadTenantNameDetailsItem(name = name)
+        ClienteNameDetailsItem(name = name)
         Spacer(modifier = Modifier.height(24.dp))
-        LeadTenantCityDetailsItem(city = city)
+        ClienteCityDetailsItem(city = city)
         Spacer(modifier = Modifier.height(24.dp))
-        LeadTenantIdentityDocumentDetailsItem(identityDocument = identityDocument)
+        ClienteIdentityDocumentDetailsItem(identityDocument = identityDocument)
         Spacer(modifier = Modifier.height(24.dp))
-        LeadTenantPhoneDetailsItem(phone = phone)
+        ClientePhoneDetailsItem(phone = phone)
         Spacer(modifier = Modifier.height(24.dp))
-        LeadTenantEmailDetailsItem(email = email)
+        ClienteEmailDetailsItem(email = email)
         Spacer(modifier = Modifier.height(24.dp))
-        LeadTenantContactOriginTypeDetailsItem(contactOriginTypeName = contactOrigin)
+        ClienteContactOriginTypeDetailsItem(contactOriginTypeName = contactOrigin)
         Spacer(modifier = Modifier.height(24.dp))
         HorizontalDivider()
         Spacer(modifier = Modifier.height(24.dp))
-        LeadTenantObservationsDetailsItem(
+        ClienteObservationsDetailsItem(
             observations = observations,
             isLead = isLead,
         )

@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables
+package com.fstengineering.leasilycrm.clienteDetails.presentation.composables
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -23,21 +23,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceLastInteractionDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceLastSentImovelDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceLastUpdateDateDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceObservationsDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistancePreferredOtherCharacteristicsDetailsItems
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceQuantityCharacteristicsDetailsItems
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceSearchedNeighborhoodsDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.PreferredSeaProximityTypeDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceInteractionUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceUiState
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppTonalButton
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceLastInteractionDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceLastSentImovelDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceLastUpdateDateDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceObservationsDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistancePreferredOtherCharacteristicsDetailsItems
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceQuantityCharacteristicsDetailsItems
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.AssistanceSearchedNeighborhoodsDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.composables.items.PreferredSeaProximityTypeDetailsItem
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceInteractionUiState
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.models.AssistanceUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LeadTenantDetailsCurrentAssistancePage(
+fun ClienteDetailsCurrentAssistancePage(
     currentAssistance: AssistanceUiState?,
     onRegisterAssistance: () -> Unit,
     onEditAssistance: () -> Unit,

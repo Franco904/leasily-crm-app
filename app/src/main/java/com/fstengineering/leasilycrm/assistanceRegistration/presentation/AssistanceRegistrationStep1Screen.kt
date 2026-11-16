@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AssistanceRegistrationStep1Screen(
     assistanceId: Long?,
-    leadTenantId: Long,
+    clienteId: Long,
     parentViewModel: AssistanceRegistrationViewModel,
     stepViewModel: AssistanceRegistrationStep1ViewModel,
     onLeaveRegistration: () -> Unit,
@@ -75,7 +75,7 @@ fun AssistanceRegistrationStep1Screen(
 
     LaunchedEffect(Unit) {
         parentViewModel.init(
-            leadTenantId = leadTenantId,
+            clienteId = clienteId,
             assistanceId = assistanceId,
         )
 
@@ -157,7 +157,7 @@ fun AssistanceRegistrationStep1Screen(
             if (loadedDraftForm == null) return@Scaffold
             Column {
                 AssistanceRegistrationTopAppBar(
-                    leadTenantName = loadedDraftForm.leadTenantName,
+                    clienteName = loadedDraftForm.clienteName,
                     onBack = parentViewModel::onExit,
                 )
                 HorizontalDivider()

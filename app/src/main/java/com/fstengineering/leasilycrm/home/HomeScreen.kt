@@ -43,8 +43,8 @@ import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvent.BottomSheetError
 import com.fstengineering.leasilycrm.home.presentation.composables.HomeBottomNavigationBar
 import com.fstengineering.leasilycrm.home.presentation.composables.HomeTopAppBar
 import com.fstengineering.leasilycrm.home.presentation.models.BottomNavBarDestination
-import com.fstengineering.leasilycrm.leadTenants.presentation.leads.LeadsPage
-import com.fstengineering.leasilycrm.leadTenants.presentation.tenants.TenantsPage
+import com.fstengineering.leasilycrm.clientes.presentation.leads.LeadsPage
+import com.fstengineering.leasilycrm.clientes.presentation.hospedes.HospedesPage
 import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsPage
 import org.koin.androidx.compose.koinViewModel
 
@@ -57,12 +57,12 @@ fun HomeScreen(
     onProfileSelect: () -> Unit,
     onImoveisSelect: () -> Unit,
     onProprietariosSelect: () -> Unit,
-    onRegisterLeadTenant: (Long?) -> Unit,
-    onViewLeadTenantDetails: (Long) -> Unit,
+    onRegisterCliente: (Long?) -> Unit,
+    onViewClienteDetails: (Long) -> Unit,
     onNewAssistance: (Long) -> Unit,
-    onNewStayWithLeadTenant: (Long) -> Unit,
+    onNewStayWithCliente: (Long) -> Unit,
     onRegisterStayBlank: (Long?, Boolean) -> Unit,
-    onViewStay: (Long, cameFromLeadTenant: Boolean) -> Unit,
+    onViewStay: (Long, cameFromCliente: Boolean) -> Unit,
     onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -211,23 +211,23 @@ fun HomeScreen(
                         viewModel = koinViewModel(),
                         isSearchingLead = isSearching,
                         searchInput = searchInput,
-                        onRegisterLead = onRegisterLeadTenant,
-                        onViewLeadDetails = onViewLeadTenantDetails,
+                        onRegisterLead = onRegisterCliente,
+                        onViewLeadDetails = onViewClienteDetails,
                         onNewAssistance = onNewAssistance,
-                        onNewStay = onNewStayWithLeadTenant,
+                        onNewStay = onNewStayWithCliente,
                         onViewStay = { stayId -> onViewStay(stayId, true) },
                         onUiEvent = onUiEvent,
                     )
                 }
                 composable<Destinations.Home.Tenants> {
-                    TenantsPage(
+                    HospedesPage(
                         viewModel = koinViewModel(),
-                        isSearchingTenant = isSearching,
+                        isSearchingHospede = isSearching,
                         searchInput = searchInput,
-                        onRegisterTenant = onRegisterLeadTenant,
-                        onViewTenantDetails = onViewLeadTenantDetails,
+                        onRegisterHospede = onRegisterCliente,
+                        onViewHospedeDetails = onViewClienteDetails,
                         onNewAssistance = onNewAssistance,
-                        onNewStay = onNewStayWithLeadTenant,
+                        onNewStay = onNewStayWithCliente,
                         onViewStay = { stayId -> onViewStay(stayId, true) },
                         onUiEvent = onUiEvent,
                     )
