@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.mo
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -24,7 +24,7 @@ sealed interface OccupiedPeriodFormUiState {
             override val id: Long?,
             override val createDateTime: AppDateTime?,
             override val imovel: ImovelCardUiState?,
-            val tenant: LeadTenantUiState?,
+            val tenant: ClienteUiState?,
             val vehicleMake: String?,
             val vehicleColor: String?,
             val vehicleLicensePlate: String?,

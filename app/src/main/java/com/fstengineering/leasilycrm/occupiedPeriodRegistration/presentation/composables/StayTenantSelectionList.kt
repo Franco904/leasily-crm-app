@@ -8,14 +8,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ClienteCard
+import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun StayTenantSelectionList(
-    tenants: ImmutableList<LeadTenantUiState>,
-    onTenantSelect: (LeadTenantUiState) -> Unit,
+    tenants: ImmutableList<ClienteUiState>,
+    onTenantSelect: (ClienteUiState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -30,8 +30,8 @@ fun StayTenantSelectionList(
             key = { _, tenant -> tenant.id },
             contentType = { _, entryType -> entryType },
         ) { _, tenant ->
-            LeadTenantCard(
-                leadTenant = tenant,
+            ClienteCard(
+                cliente = tenant,
                 onCardClick = { onTenantSelect(tenant) },
             )
             Spacer(modifier = Modifier.height(8.dp))

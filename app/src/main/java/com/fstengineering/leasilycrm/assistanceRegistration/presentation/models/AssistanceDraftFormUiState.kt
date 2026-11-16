@@ -34,7 +34,7 @@ sealed interface AssistanceDraftFormUiState {
         val observations: String?,
         val sentImoveis: ImmutableList<ImovelCardUiState>,
         val interactions: ImmutableList<AssistanceInteractionDraftFormUiState.Loaded>,
-        val leadTenantId: Long,
-        val leadTenantName: String,
+        val clienteId: Long,
+        val clienteName: String,
     ) : AssistanceDraftFormUiState
 }

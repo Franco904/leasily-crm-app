@@ -31,7 +31,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.textFields.Se
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssistanceRegistrationTopAppBar(
-    leadTenantName: String,
+    clienteName: String,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     isAddingSentImovel: Boolean = false,
@@ -101,7 +101,7 @@ fun AssistanceRegistrationTopAppBar(
                         Text(
                             text = stringResource(
                                 R.string.assistance_registration_top_app_bar_subtitle,
-                                leadTenantName,
+                                clienteName,
                             ),
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
