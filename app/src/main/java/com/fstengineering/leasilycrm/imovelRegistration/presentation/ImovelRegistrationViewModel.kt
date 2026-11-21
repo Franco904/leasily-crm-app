@@ -61,14 +61,14 @@ class ImovelRegistrationViewModel(
         isLoaded = true
 
         val imovelId = route.imovelId
-        if (imovelId != null) getImovelToEdit(imovelId)
+        if (imovelId != null) loadImovelToEdit(imovelId)
         else _draftFormUiState.update { ImovelDraftFormUiState.Loaded.Empty }
 
         watchProprietarios()
-        getPastNeighborhoods()
+        loadPastNeighborhoods()
     }
 
-    private fun getImovelToEdit(imovelId: Long) {
+    private fun loadImovelToEdit(imovelId: Long) {
         viewModelScope.launch {
             imovelRegistrationReadDataSource.getImovel(imovelId)
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
@@ -94,7 +94,7 @@ class ImovelRegistrationViewModel(
         }
     }
 
-    private fun getPastNeighborhoods() {
+    private fun loadPastNeighborhoods() {
         viewModelScope.launch {
             imovelRegistrationReadDataSource.getNeighborhoodNames()
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }

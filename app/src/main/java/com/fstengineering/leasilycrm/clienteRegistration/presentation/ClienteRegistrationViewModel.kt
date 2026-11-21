@@ -66,9 +66,9 @@ class ClienteRegistrationViewModel(
         if (isLoaded) return
         isLoaded = true
 
-        getPastTags()
-        getPastCities()
-        getPastContactOrigins()
+        loadPastTags()
+        loadPastCities()
+        loadPastContactOrigins()
 
         val clienteId = route.clienteId
         if (clienteId == null) {
@@ -76,10 +76,10 @@ class ClienteRegistrationViewModel(
             return
         }
 
-        getClienteToEdit(clienteId)
+        loadClienteToEdit(clienteId)
     }
 
-    private fun getPastTags() {
+    private fun loadPastTags() {
         viewModelScope.launch {
             clienteRegistrationReadDataSource.getTags()
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
@@ -87,7 +87,7 @@ class ClienteRegistrationViewModel(
         }
     }
 
-    private fun getPastCities() {
+    private fun loadPastCities() {
         viewModelScope.launch {
             clienteRegistrationReadDataSource.getCities()
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
@@ -95,7 +95,7 @@ class ClienteRegistrationViewModel(
         }
     }
 
-    private fun getPastContactOrigins() {
+    private fun loadPastContactOrigins() {
         viewModelScope.launch {
             clienteRegistrationReadDataSource.getContactOrigins()
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
@@ -105,7 +105,7 @@ class ClienteRegistrationViewModel(
         }
     }
 
-    private fun getClienteToEdit(clienteId: Long) {
+    private fun loadClienteToEdit(clienteId: Long) {
         viewModelScope.launch {
             clienteRegistrationReadDataSource.getCliente(clienteId)
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }

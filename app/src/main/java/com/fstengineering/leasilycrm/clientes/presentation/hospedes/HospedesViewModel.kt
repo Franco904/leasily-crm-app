@@ -64,11 +64,11 @@ class HospedesViewModel(
         if (isLoaded) return
         isLoaded = true
 
-        getPreferredOrderType()
+        loadPreferredOrderType()
         watchHospedes()
     }
 
-    private fun getPreferredOrderType() {
+    private fun loadPreferredOrderType() {
         viewModelScope.launch {
             clientesPreferencesDataSource.getHospedesOrderTypeId()
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
