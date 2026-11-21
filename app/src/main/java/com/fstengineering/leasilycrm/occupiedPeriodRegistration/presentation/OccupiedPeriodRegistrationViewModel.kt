@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
-import com.fstengineering.leasilycrm.core.domain.utils.CredentialsError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -307,7 +306,7 @@ class OccupiedPeriodRegistrationViewModel(
                             when (error) {
                                 is ValidationErrors -> setFieldErrors(error.errors)
                                 is DomainError -> setFieldErrors(listOf(error))
-                                is ApplicationError, is CredentialsError ->
+                                is ApplicationError ->
                                     _uiEvents.trySend(UiEvent.BottomSheetError(error))
                             }
 
@@ -323,7 +322,7 @@ class OccupiedPeriodRegistrationViewModel(
                             when (error) {
                                 is ValidationErrors -> setFieldErrors(error.errors)
                                 is DomainError -> setFieldErrors(listOf(error))
-                                is ApplicationError, is CredentialsError ->
+                                is ApplicationError ->
                                     _uiEvents.trySend(UiEvent.BottomSheetError(error))
                             }
 

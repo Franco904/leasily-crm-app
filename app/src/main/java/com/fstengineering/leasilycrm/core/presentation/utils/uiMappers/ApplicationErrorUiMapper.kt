@@ -3,12 +3,12 @@ package com.fstengineering.leasilycrm.core.presentation.utils.uiMappers
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
-import com.fstengineering.leasilycrm.core.domain.utils.CredentialsError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.ErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChannel
+import com.fstengineering.leasilycrm.core.presentation.utils.openAddGoogleAccountSettingsApp
 
 /**
  * Dados do bottom sheet de qualquer [BaseError]. Erro de domínio ou de validação não chega à
@@ -18,7 +18,6 @@ fun BaseError.toBottomSheetData(
     imoveis: ErrorBottomSheetDataPropertiesStrategy,
 ): ErrorBottomSheetData = when (this) {
     is ApplicationError -> toBottomSheetData(imoveis)
-    is CredentialsError -> toBottomSheetData()
     is DomainError, is ValidationErrors -> ApplicationError.Unknown.toBottomSheetData(imoveis)
 }
 
@@ -64,7 +63,27 @@ fun ApplicationError.toBottomSheetData(
 //            )
 //        }
 
-        else -> {
+        ApplicationError.UserCancellation -> {
+            ErrorBottomSheetData(
+                title = -1,
+                description = -1,
+                secondaryActionLabel = null,
+                onSecondaryAction = null,
+            )
+        }
+
+        ApplicationError.NoCredentialsFound -> {
+            ErrorBottomSheetData(
+                title = R.string.no_credentials_found_error_title,
+                description = R.string.no_credentials_found_error_description,
+                secondaryActionLabel = R.string.register_account_action_button_text,
+                onSecondaryAction = { onErrorEvent ->
+                    openAddGoogleAccountSettingsApp { errorUiEvent -> onErrorEvent(errorUiEvent) }
+                },
+            )
+        }
+
+        ApplicationError.Unknown -> {
             ErrorBottomSheetData(
                 title = imoveis.unknownErrorTitle,
                 description = imoveis.unknownErrorDescription,

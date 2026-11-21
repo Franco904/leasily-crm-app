@@ -26,8 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
-import com.fstengineering.leasilycrm.core.domain.utils.CredentialsError
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.signin.presentation.composables.SignInSection
@@ -117,9 +116,9 @@ fun SignInScreen(
                                 .onError { e ->
                                     isSigningIn = false
 
-                                    if (e == CredentialsError.UserCancellation) return@onError
+                                    if (e == ApplicationError.UserCancellation) return@onError
 
-                                    onUiEvent(UiEvent.ShowErrorBottomSheet(e.toBottomSheetData(DefaultErrorBottomSheetDataPropertiesStrategy)))
+                                    onUiEvent(UiEvent.ShowErrorBottomSheet(e.toBottomSheetData(SignInErrorBottomSheetDataPropertiesStrategy)))
                                 }
                                 .onSuccess { idToken ->
                                     viewModel.signInUser(idToken)

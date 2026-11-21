@@ -9,9 +9,9 @@ import androidx.credentials.GetCredentialRequest
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
-import com.fstengineering.leasilycrm.core.domain.utils.CredentialsError
+import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.CryptoUtils
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toCredentialsError
+import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toApplicationError
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import io.ktor.utils.io.CancellationException
@@ -32,7 +32,7 @@ class CredentialManagerAdapterImpl(
         )
 
         if (result is AppResult.Error
-            && result.error == CredentialsError.NoCredentialsFound
+            && result.error == ApplicationError.NoCredentialsFound
             && mustEnableAutoSelect
         ) {
             // Auto-select fails when the device has multiple Google accounts; retry with the picker.
@@ -71,7 +71,7 @@ class CredentialManagerAdapterImpl(
             if (!isSupportedCredentialType) {
                 if (BuildConfig.DEBUG) Log.e(TAG, "Unsupported credential type: ${credential.type}")
 
-                return AppResult.Error(error = CredentialsError.UnknownError)
+                return AppResult.Error(error = ApplicationError.Unknown)
             }
 
             val googleIdTokenCredential = GoogleIdTokenCredential
@@ -88,11 +88,11 @@ class CredentialManagerAdapterImpl(
 
     // O Credential Manager não sinaliza falta de internet com exceção própria: sem conexão, qualquer
     // falha que não seja cancelamento pelo Corretor é atribuída a ela.
-    private fun classifyGetCredentialFailure(exception: Exception): CredentialsError {
-        val error = exception.toCredentialsError()
-        if (error == CredentialsError.UserCancellation) return error
+    private fun classifyGetCredentialFailure(exception: Exception): ApplicationError {
+        val error = exception.toApplicationError()
+        if (error == ApplicationError.UserCancellation) return error
 
-        return if (connectivityAdapter.isDeviceConnectedToInternet()) error else CredentialsError.NoInternet
+        return if (connectivityAdapter.isDeviceConnectedToInternet()) error else ApplicationError.NoInternet
     }
 
     override suspend fun clearGoogleCredentialState(
@@ -109,7 +109,7 @@ class CredentialManagerAdapterImpl(
             if (e is CancellationException) throw e
             if (BuildConfig.DEBUG) e.printStackTrace()
 
-            return AppResult.Error(error = e.toCredentialsError())
+            return AppResult.Error(error = e.toApplicationError())
         }
     }
 

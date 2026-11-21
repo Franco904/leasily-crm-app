@@ -11,6 +11,6 @@ import kotlinx.collections.immutable.persistentListOf
 fun BaseError.toDomainErrors(): ImmutableList<DomainError> = when (this) {
     is DomainError -> persistentListOf(this)
     is ValidationErrors -> errors
-    is ApplicationError, is CredentialsError ->
+    is ApplicationError ->
         error("Factory de domínio devolveu um erro que não é de domínio: $this")
 }

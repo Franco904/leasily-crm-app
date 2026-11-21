@@ -92,8 +92,8 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
   substituível (Adapter, `0001-subdomains.md`) e as camadas de cima testáveis sem simular
   modos de falha de infra.
 - **Taxonomia de erro.** `BaseError` (`core/domain/utils/`) é uma `sealed interface`
-  marcadora, com os subtipos `ApplicationError` e `CredentialsError` (falha de infra),
-  `DomainError` (regra de domínio) e `ValidationErrors` (lista de `DomainError` da factory).
+  marcadora, com os subtipos `ApplicationError` (falha de infra), `DomainError` (regra de
+  domínio) e `ValidationErrors` (lista de `DomainError` da factory).
   Subtipo novo mora no mesmo pacote. **Não carregam mensagem nem causa.** Cada módulo declara o seu
   próprio `enum` / `sealed interface` herdando de um deles
   (ex.: `sealed interface PeriodoOcupadoRegistrationError : ApplicationError`), com um caso

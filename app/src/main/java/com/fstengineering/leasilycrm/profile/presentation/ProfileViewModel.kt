@@ -6,7 +6,6 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.services.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
-import com.fstengineering.leasilycrm.core.domain.utils.CredentialsError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
@@ -78,7 +77,7 @@ class ProfileViewModel(
                         }
 
                         is DomainError -> _creciFieldError.update { error.toInlineMessage() }
-                        is ApplicationError, is CredentialsError ->
+                        is ApplicationError ->
                             _uiEvents.send(UiEvent.BottomSheetError(error))
                     }
                 }

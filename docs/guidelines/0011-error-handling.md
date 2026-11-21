@@ -180,9 +180,7 @@ onDatabase {
 `AppResult<D>` tem **um só parâmetro**: `Success(data)` ou `Error(error: BaseError)`. O tipo do
 erro não aparece na assinatura; quem precisa distinguir ramifica sobre o valor com `when`/`is`
 (`BaseError` é `sealed`, então o `when` é exaustivo; liste os subtipos em vez de usar `else`,
-para o compilador avisar quando surgir um novo). Um tipo de erro por assinatura multiplicava
-parâmetros por UseCases, DataSources e extensões (`fold`, `onError`) sem que o ViewModel
-distinguisse nada: a UI trata todo erro de infra igual (`BaseError.toBottomSheetData`).
+para o compilador avisar quando surgir um novo). A UI deve tratar todo erro de infra igual (e.g. `BaseError.toBottomSheetData`).
 
 `<Contexto>Error` herda de `DomainError` (regra de domínio) ou `ApplicationError` (falha de infra),
 ambos `BaseError`, e pode assumir três formas — escolha pela necessidade do chamador, não por padrão

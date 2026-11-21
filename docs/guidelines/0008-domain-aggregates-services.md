@@ -61,7 +61,7 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
   `ValidationErrors(errors: ImmutableList<DomainError>)` (acumula todas as violações do
   formulário), e `AppResult<T>` com erro `DomainError` no comportamento do agregado. O chamador
   que precisa da lista de violações usa `error.toDomainErrors()` ou `is ValidationErrors`.
-  `DomainError`, `ValidationErrors`, `ApplicationError` e `CredentialsError` herdam de `BaseError`
+  `DomainError`, `ValidationErrors` e `ApplicationError` herdam de `BaseError`
   (`sealed interface`, `core/domain/utils/`) — a UI faz `when` exaustivo sobre o erro.
 - Invariante violado (bug: estado que a factory nunca deveria ter construído) não é erro de domínio:
   `check`/`require` e crash (`0011-error-handling.md`, passo 4).
