@@ -109,11 +109,19 @@ fun ImovelDashboardSection(
             color = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        ProprietarioCard(
-            proprietario = imovel.proprietario,
-            onViewProprietarioDetails = onViewProprietarioDetails,
-            hasMoreOptionsMenu = false,
-        )
+        if (imovel.proprietario != null) {
+            ProprietarioCard(
+                proprietario = imovel.proprietario,
+                onViewProprietarioDetails = onViewProprietarioDetails,
+                hasMoreOptionsMenu = false,
+            )
+        } else {
+            Text(
+                text = stringResource(R.string.property_dashboard_property_owner_deleted_text),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = stringResource(R.string.property_dashboard_current_month_stays_title),

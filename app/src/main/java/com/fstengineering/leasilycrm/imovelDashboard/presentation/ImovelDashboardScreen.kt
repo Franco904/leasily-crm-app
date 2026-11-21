@@ -113,7 +113,7 @@ fun ImovelDashboardScreen(
                     imovel = loadedImovel,
                     onViewImovelDetails = onViewImovelDetails,
                     onViewProprietarioDetails = {
-                        onViewProprietarioDetails(loadedImovel.proprietario.id)
+                        loadedImovel.proprietario?.let { onViewProprietarioDetails(it.id) }
                     },
                     onViewAllImovelStays = onViewAllImovelStays,
                     onNewStay = { mustShowStayTypeDialog = true },

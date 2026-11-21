@@ -2,7 +2,10 @@ package com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 
-/** Imóvel do painel com o Proprietário, sem os Períodos Ocupados do mês, que o UseCase compõe. */
+/**
+ * Imóvel do painel com o Proprietário, sem os Períodos Ocupados do mês, que o UseCase compõe.
+ * [proprietario] é `null` quando o Proprietário do Imóvel foi excluído.
+ */
 data class ImovelSummaryReadModel(
     val id: Long,
     val mainPictureUriString: String?,
@@ -10,5 +13,5 @@ data class ImovelSummaryReadModel(
     val neighborhood: String,
     val streetAddress: String,
     val number: Int?,
-    val proprietario: ProprietarioReadModel,
+    val proprietario: ProprietarioReadModel?,
 )

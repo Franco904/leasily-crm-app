@@ -19,8 +19,11 @@ import kotlinx.coroutines.flow.map
 /** Leitura do Imóvel e dos seus Períodos Ocupados para o painel do Imóvel. */
 @Dao
 abstract class ImovelDashboardReadDataSource {
-    /** Observa o Imóvel não excluído com a foto principal e o Proprietário; falha quando o
-     * Proprietário foi excluído. */
+    /**
+     * Observa o Imóvel não excluído com a foto principal e o Proprietário. Quando o Proprietário
+     * foi excluído, o Imóvel é emitido com `proprietario` nulo e a ausência é registrada em
+     * telemetria.
+     */
     fun watchImovel(imovelId: Long): Flow<AppResult<ImovelSummaryReadModel, ApplicationError>> =
         observeImovel(imovelId)
             .filterNotNull()

@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldBeNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -77,7 +78,7 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
         }
 
     @Test
-    fun deveFalharAoObservarImovelQuandoProprietarioExcluido(): Unit =
+    fun deveObservarImovelSemProprietarioQuandoProprietarioExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             imovelWriteDataSource.save(
@@ -88,8 +89,8 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
 
             val result = sut.watchImovel(imovelId = 4L).first()
 
-            result.shouldBeInstanceOf<AppResult.Error<*, *>>().error shouldBeEqualTo
-                    ApplicationError.Unknown
+            result.shouldBeInstanceOf<AppResult.Success<ImovelSummaryReadModel, ApplicationError>>()
+                .data.proprietario.shouldBeNull()
         }
 
     // endregion
