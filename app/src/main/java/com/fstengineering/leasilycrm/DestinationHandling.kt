@@ -10,9 +10,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.AssistanceRegistrationStep1Screen
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.AssistanceRegistrationStep2Screen
-import com.fstengineering.leasilycrm.assistanceRegistration.presentation.AssistanceRegistrationStep3Screen
+import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.AtendimentoRegistrationStep1Screen
+import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.AtendimentoRegistrationStep2Screen
+import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.AtendimentoRegistrationStep3Screen
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsScreen
@@ -120,9 +120,9 @@ fun NavGraphBuilder.destinations(
             onViewClienteDetails = { clienteId ->
                 navController.navigate(Destinations.ClienteDetails(clienteId))
             },
-            onNewAssistance = { clienteId ->
-                val destination = Destinations.AssistanceRegistration(
-                    assistanceId = null,
+            onNewAtendimento = { clienteId ->
+                val destination = Destinations.AtendimentoRegistration(
+                    atendimentoId = null,
                     clienteId = clienteId,
                 )
                 navController.navigate(destination)
@@ -437,9 +437,9 @@ fun NavGraphBuilder.destinations(
                     Destinations.ClienteRegistration(clienteId = args.clienteId),
                 )
             },
-            onRegisterAssistance = { assistanceId ->
-                val destination = Destinations.AssistanceRegistration(
-                    assistanceId = assistanceId,
+            onRegisterAtendimento = { atendimentoId ->
+                val destination = Destinations.AtendimentoRegistration(
+                    atendimentoId = atendimentoId,
                     clienteId = args.clienteId,
                 )
                 navController.navigate(destination)
@@ -471,67 +471,63 @@ fun NavGraphBuilder.destinations(
         )
     }
 
-    navigation<Destinations.AssistanceRegistration>(
-        startDestination = Destinations.AssistanceRegistration.AssistanceRegistrationStep1,
+    navigation<Destinations.AtendimentoRegistration>(
+        startDestination = Destinations.AtendimentoRegistration.AtendimentoRegistrationStep1,
     ) {
-        composable<Destinations.AssistanceRegistration.AssistanceRegistrationStep1> { backStackEntry ->
+        composable<Destinations.AtendimentoRegistration.AtendimentoRegistrationStep1> { backStackEntry ->
             val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry<Destinations.AssistanceRegistration>()
+                navController.getBackStackEntry<Destinations.AtendimentoRegistration>()
             }
 
-            val args = parentEntry.toRoute<Destinations.AssistanceRegistration>()
-
-            AssistanceRegistrationStep1Screen(
-                assistanceId = args.assistanceId,
-                clienteId = args.clienteId,
+            AtendimentoRegistrationStep1Screen(
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
                 onLeaveRegistration = {
                     navController
-                        .popBackStack<Destinations.AssistanceRegistration>(inclusive = true)
+                        .popBackStack<Destinations.AtendimentoRegistration>(inclusive = true)
                 },
                 onNext = {
                     val nextRoute =
-                        Destinations.AssistanceRegistration.AssistanceRegistrationStep2
+                        Destinations.AtendimentoRegistration.AtendimentoRegistrationStep2
                     navController.navigate(route = nextRoute)
                 },
                 onUiEvent = onUiEvent,
             )
         }
 
-        composable<Destinations.AssistanceRegistration.AssistanceRegistrationStep2> { backStackEntry ->
+        composable<Destinations.AtendimentoRegistration.AtendimentoRegistrationStep2> { backStackEntry ->
             val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry<Destinations.AssistanceRegistration>()
+                navController.getBackStackEntry<Destinations.AtendimentoRegistration>()
             }
 
-            AssistanceRegistrationStep2Screen(
+            AtendimentoRegistrationStep2Screen(
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
                 onLeaveRegistration = {
                     navController
-                        .popBackStack<Destinations.AssistanceRegistration>(inclusive = true)
+                        .popBackStack<Destinations.AtendimentoRegistration>(inclusive = true)
                 },
                 onBack = { navController.navigateUp() },
                 onNext = {
                     val nextRoute =
-                        Destinations.AssistanceRegistration.AssistanceRegistrationStep3
+                        Destinations.AtendimentoRegistration.AtendimentoRegistrationStep3
                     navController.navigate(route = nextRoute)
                 },
                 onUiEvent = onUiEvent,
             )
         }
 
-        composable<Destinations.AssistanceRegistration.AssistanceRegistrationStep3> { backStackEntry ->
+        composable<Destinations.AtendimentoRegistration.AtendimentoRegistrationStep3> { backStackEntry ->
             val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry<Destinations.AssistanceRegistration>()
+                navController.getBackStackEntry<Destinations.AtendimentoRegistration>()
             }
 
-            AssistanceRegistrationStep3Screen(
+            AtendimentoRegistrationStep3Screen(
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
                 onLeaveRegistration = {
                     navController
-                        .popBackStack<Destinations.AssistanceRegistration>(inclusive = true)
+                        .popBackStack<Destinations.AtendimentoRegistration>(inclusive = true)
                 },
                 onBack = { navController.navigateUp() },
                 onUiEvent = onUiEvent,

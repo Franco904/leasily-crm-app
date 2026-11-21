@@ -73,18 +73,18 @@ sealed interface Destinations {
     data class ClienteDetails(val clienteId: Long)
 
     @Serializable
-    data class AssistanceRegistration(
-        val assistanceId: Long?,
+    data class AtendimentoRegistration(
+        val atendimentoId: Long?,
         val clienteId: Long,
     ) {
         @Serializable
-        data object AssistanceRegistrationStep1
+        data object AtendimentoRegistrationStep1
 
         @Serializable
-        data object AssistanceRegistrationStep2
+        data object AtendimentoRegistrationStep2
 
         @Serializable
-        data object AssistanceRegistrationStep3
+        data object AtendimentoRegistrationStep3
     }
 
     @Serializable
