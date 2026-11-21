@@ -8,14 +8,13 @@ import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelPriceReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ImovelProprietarioProjection
 import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ImovelRegistrationProjection
 import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import kotlinx.collections.immutable.toPersistentList
 
-fun ImovelRegistrationProjection.toImovelReadModel(
-    proprietario: ImovelProprietarioProjection,
-): ImovelReadModel {
+fun ImovelRegistrationProjection.toImovelReadModel(): ImovelReadModel {
+    val proprietario = requireNotNull(proprietario?.takeUnless { it.isDeleted })
+
     val characteristics = characteristics
         .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
         .toPersistentList()

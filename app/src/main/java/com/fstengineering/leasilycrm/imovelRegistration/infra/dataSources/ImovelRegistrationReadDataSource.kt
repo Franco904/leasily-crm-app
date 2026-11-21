@@ -18,12 +18,7 @@ abstract class ImovelRegistrationReadDataSource {
      * falha quando o Imóvel ou o Proprietário não existe.
      */
     suspend fun getImovel(imovelId: Long): AppResult<ImovelReadModel, ApplicationError> =
-        onDatabase {
-            val projection = requireNotNull(findImovel(imovelId))
-            val proprietario = requireNotNull(projection.proprietario?.takeUnless { it.isDeleted })
-
-            projection.toImovelReadModel(proprietario)
-        }
+        onDatabase { requireNotNull(findImovel(imovelId)).toImovelReadModel() }
 
     /** Lista os bairros dos Imóveis não excluídos, sem repetição e em ordem alfabética. */
     suspend fun getNeighborhoodNames(): AppResult<List<String>, ApplicationError> =
