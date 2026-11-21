@@ -38,6 +38,8 @@ sealed interface AtendimentoDraftFormUiState {
         val clienteId: Long,
         val clienteName: String,
     ) : AtendimentoDraftFormUiState {
+        val needValidation = preferredSeaProximityTypeId != null
+
         companion object {
             fun empty(clienteId: Long, clienteName: String) = Loaded(
                 id = null,

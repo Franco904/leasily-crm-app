@@ -58,33 +58,41 @@ class AtendimentoRegistrationStep1ViewModel : ViewModel() {
             _formErrors.update { AtendimentoStep1ErrorUiState() }
             delay(150.milliseconds)
 
-            if (atendimentoForm.preferredSeaProximityTypeId == null) return@launch
+            if (atendimentoForm.needValidation) {
+                atendimentoForm.validate()
+            } else {
+                _uiEvents.trySend(UiEvent.ValidateSuccess)
+            }
+        }
+    }
 
-            val parsingResults = ImovelSeaProximityType.parse(
-                id = atendimentoForm.preferredSeaProximityTypeId,
-                distanceToSea = atendimentoForm.preferredDistanceToSea,
-            )
+    private fun AtendimentoDraftFormUiState.Loaded.validate() {
+        requireNotNull(preferredSeaProximityTypeId)
 
-            parsingResults
-                .onSuccess { _uiEvents.trySend(UiEvent.ValidateSuccess) }
-                .onError { error ->
-                    val distanceToSeaError =
-                        error.toDomainErrors().firstOrNull { it is DomainError.ImovelSeaProximity }
+        val parsingResults = ImovelSeaProximityType.parse(
+            id = preferredSeaProximityTypeId,
+            distanceToSea = preferredDistanceToSea,
+        )
 
-                    _formErrors.update {
-                        val newErrors = it.errors.mutate { map ->
-                            map[AtendimentoStep1Field.DistanceToSea] =
-                                distanceToSeaError?.toInlineMessage()
-                        }
+        parsingResults
+            .onSuccess { _uiEvents.trySend(UiEvent.ValidateSuccess) }
+            .onError { error ->
+                val distanceToSeaError =
+                    error.toDomainErrors().firstOrNull { it is DomainError.ImovelSeaProximityDistanceToSea }
 
-                        it.copy(errors = newErrors)
+                _formErrors.update {
+                    val newErrors = it.errors.mutate { map ->
+                        map[AtendimentoStep1Field.DistanceToSea] =
+                            distanceToSeaError?.toInlineMessage()
                     }
 
-                    val firstFieldWithError =
-                        _formErrors.value.errors.entries.first { it.value != null }.key
-                    _uiEvents.trySend(UiEvent.ScrollToField(firstFieldWithError))
+                    it.copy(errors = newErrors)
                 }
-        }
+
+                val firstFieldWithError =
+                    _formErrors.value.errors.entries.first { it.value != null }.key
+                _uiEvents.trySend(UiEvent.ScrollToField(firstFieldWithError))
+            }
     }
 
     fun savePreferredNeighborhood() {
