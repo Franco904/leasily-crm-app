@@ -5,11 +5,10 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toRawReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toImovelReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ImovelRegistrationProjection
 
 /** Leitura do cadastro de Imóvel: o Imóvel a editar e os bairros já cadastrados. */
 @Dao
@@ -20,17 +19,10 @@ abstract class ImovelRegistrationReadDataSource {
      */
     suspend fun getImovel(imovelId: Long): AppResult<ImovelReadModel, ApplicationError> =
         onDatabase {
-            val imovel = requireNotNull(findImovel(imovelId))
-            val proprietarioName =
-                requireNotNull(findProprietarioName(imovel.imovel.proprietarioId))
+            val projection = requireNotNull(findImovel(imovelId))
+            val proprietario = requireNotNull(projection.proprietario?.takeUnless { it.isDeleted })
 
-            ImovelReadModel.create(
-                imovelRaw = imovel.toRawReadModel(),
-                proprietario = ProprietarioReadModel(
-                    id = imovel.imovel.proprietarioId,
-                    name = proprietarioName,
-                ),
-            )
+            projection.toImovelReadModel(proprietario)
         }
 
     /** Lista os bairros dos Imóveis não excluídos, sem repetição e em ordem alfabética. */
@@ -39,10 +31,7 @@ abstract class ImovelRegistrationReadDataSource {
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :imovelId AND is_deleted = 0")
-    protected abstract suspend fun findImovel(imovelId: Long): ImovelCompound?
-
-    @Query("SELECT name FROM property_owners WHERE id = :proprietarioId AND is_deleted = 0")
-    protected abstract suspend fun findProprietarioName(proprietarioId: Long): String?
+    protected abstract suspend fun findImovel(imovelId: Long): ImovelRegistrationProjection?
 
     @Query(
         """

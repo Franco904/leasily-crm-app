@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteRe
 import com.fstengineering.leasilycrm.clienteDetails.application.models.StayReadModel
 import com.fstengineering.leasilycrm.clienteDetails.infra.projections.AtendimentoProjection
 import com.fstengineering.leasilycrm.clienteDetails.infra.projections.ClienteDetailsProjection
+import com.fstengineering.leasilycrm.clienteDetails.infra.projections.EstadiaProjection
 import com.fstengineering.leasilycrm.clienteDetails.infra.projections.ImovelEnviadoProjection
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
@@ -14,7 +15,6 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacterist
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import kotlinx.collections.immutable.toPersistentList
 
 fun ClienteDetailsProjection.toClienteReadModel() = ClienteReadModel(
@@ -82,7 +82,7 @@ private fun AtendimentoProjection.toAssistanceReadModel(): AssistanceReadModel {
         preferredImovelCharacteristics = preferredCharacteristics,
         interactions = interactionReadModels,
         sentImoveis = imoveisEnviados
-            .filterNot { it.imovel.isDeleted }
+            .filterNot { it.isDeleted }
             .map { it.toAssistanceSentImovelReadModel() }
             .toPersistentList(),
     )
@@ -97,16 +97,16 @@ private fun AssistanceInteractionEntity.toAssistanceInteractionReadModel() =
     )
 
 private fun ImovelEnviadoProjection.toAssistanceSentImovelReadModel() = AssistanceSentImovelReadModel(
-    id = requireNotNull(imovel.id),
-    mainPictureUriString = files.find { it.isMainPicture }?.imovelFileUri,
-    neighborhood = imovel.neighborhood,
-    streetAddress = imovel.streetAddress,
-    number = imovel.number,
-    type = requireNotNull(ImovelType.fromId(imovel.typeId)),
+    id = id,
+    mainPictureUriString = files.find { it.isMainPicture }?.uriString,
+    neighborhood = neighborhood,
+    streetAddress = streetAddress,
+    number = number,
+    type = requireNotNull(ImovelType.fromId(typeId)),
 )
 
-private fun StayEntity.toStayReadModel() = StayReadModel(
-    id = requireNotNull(id),
+private fun EstadiaProjection.toStayReadModel() = StayReadModel(
+    id = id,
     checkInDateTime = checkInDateTime,
     isCheckOutDone = status == 2,
 )

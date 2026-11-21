@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.As
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentImovelCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 
 /**
@@ -39,8 +40,9 @@ data class ClienteDetailsProjection(
         parentColumn = "id",
         entityColumn = "tenant_id",
         entity = StayEntity::class,
+        projection = ["id", "check_in_date_time", "status", "is_deleted"],
     )
-    val estadias: List<StayEntity>,
+    val estadias: List<EstadiaProjection>,
 )
 
 data class AtendimentoProjection(
@@ -72,16 +74,35 @@ data class AtendimentoProjection(
             parentColumn = "assistance_id",
             entityColumn = "property_id",
         ),
+        projection = ["id", "property_type_id", "neighborhood", "street_address", "number", "is_deleted"],
     )
     val imoveisEnviados: List<ImovelEnviadoProjection>,
 )
 
 data class ImovelEnviadoProjection(
-    @Embedded val imovel: ImovelOrm,
+    val id: Long,
+    @ColumnInfo(name = "property_type_id") val typeId: Long,
+    val neighborhood: String,
+    @ColumnInfo(name = "street_address") val streetAddress: String,
+    val number: Int?,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
     @Relation(
         parentColumn = "id",
         entityColumn = "property_id",
         entity = ImovelFileOrm::class,
+        projection = ["property_file_uri", "is_main_picture"],
     )
-    val files: List<ImovelFileOrm>,
+    val files: List<ImovelFileProjection>,
+)
+
+data class ImovelFileProjection(
+    @ColumnInfo(name = "property_file_uri") val uriString: String,
+    @ColumnInfo(name = "is_main_picture") val isMainPicture: Boolean,
+)
+
+data class EstadiaProjection(
+    val id: Long,
+    @ColumnInfo(name = "check_in_date_time") val checkInDateTime: AppDateTime,
+    val status: Int?,
+    @ColumnInfo(name = "is_deleted") val isDeleted: Boolean,
 )
