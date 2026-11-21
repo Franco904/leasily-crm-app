@@ -12,12 +12,12 @@ import com.fstengineering.leasilycrm.clienteRegistration.presentation.mappers.to
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteDraftFormUiState
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteErrorUiState
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteField
-import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate

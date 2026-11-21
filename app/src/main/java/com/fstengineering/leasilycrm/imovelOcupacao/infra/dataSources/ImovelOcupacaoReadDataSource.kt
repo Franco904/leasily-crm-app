@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.imovelOcupacao.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
+import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.imovelOcupacao.infra.mappers.toValueObject
 import com.fstengineering.leasilycrm.imovelOcupacao.infra.projections.PeriodoOcupadoProjection
 import kotlinx.coroutines.flow.Flow

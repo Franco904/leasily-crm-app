@@ -12,7 +12,6 @@ import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.Imov
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelPricesUiState
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ProprietarioUiState
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 

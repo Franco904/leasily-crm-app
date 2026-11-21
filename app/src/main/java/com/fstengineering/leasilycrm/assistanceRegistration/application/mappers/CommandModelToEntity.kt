@@ -5,10 +5,10 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.c
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.AssistanceInteraction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import kotlinx.collections.immutable.toPersistentList
 
 fun AssistanceCommandModel.toEntity(): AppResult<Assistance> {

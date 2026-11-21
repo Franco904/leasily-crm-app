@@ -4,10 +4,10 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.proprietarioRegistration.infra.projections.ProprietarioRegistrationProjection
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toReadModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.projections.ProprietarioRegistrationProjection
 
 /** Leitura do Proprietário a editar no cadastro. */
 @Dao

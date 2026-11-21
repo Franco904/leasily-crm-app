@@ -1,14 +1,14 @@
 package com.fstengineering.leasilycrm.imovelDashboard.application.useCases
 
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.services.ImovelOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.imovelDashboard.application.mappers.toReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelOccupiedDateReadModel
-import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.queries.ImovelArgs
 import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ImovelDashboardReadDataSource

@@ -32,7 +32,6 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.mod
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodFormUiState
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.StayFileUiState
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
@@ -46,6 +45,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class OccupiedPeriodRegistrationViewModel(
     private val readStay: ReadStayUseCase,

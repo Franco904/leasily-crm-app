@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
+import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelSummaryReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.infra.mappers.toValueObject

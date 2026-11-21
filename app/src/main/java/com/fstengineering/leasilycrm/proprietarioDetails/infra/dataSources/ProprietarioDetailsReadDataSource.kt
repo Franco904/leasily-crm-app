@@ -4,10 +4,10 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.proprietarioDetails.infra.projections.ProprietarioDetailsProjection
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.proprietarioDetails.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioDetails.infra.mappers.toReadModel
+import com.fstengineering.leasilycrm.proprietarioDetails.infra.projections.ProprietarioDetailsProjection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

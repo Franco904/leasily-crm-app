@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
@@ -21,7 +21,6 @@ import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.model
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioErrorUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioField
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioFileUiState
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.mutate
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -30,6 +29,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class ProprietarioRegistrationViewModel(
     private val route: Destinations.ProprietarioRegistration,

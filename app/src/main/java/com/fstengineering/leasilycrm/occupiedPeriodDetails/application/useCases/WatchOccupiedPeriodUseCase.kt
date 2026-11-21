@@ -6,8 +6,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.queries.OccupiedPeriodArgs
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.ImovelQueryRepository
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.OccupiedPeriodQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.repositories.TenantQueryRepository
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow

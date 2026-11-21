@@ -1,10 +1,10 @@
 package com.fstengineering.leasilycrm.imovelRegistration.presentation.mappers
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.Imovel
