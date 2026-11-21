@@ -4,13 +4,21 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeAtendimento
 import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeEstadia
+import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeInteracao
+import com.fstengineering.leasilycrm.testUtils.fakes.insertFakePreferencias
+import com.fstengineering.leasilycrm.testUtils.fakes.sendFakeImovel
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeCliente
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelComFotoPrincipal
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelId
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
@@ -109,6 +117,79 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
             .shouldBeInstanceOf<AppResult.Success<*, *>>()
             .data.shouldBeNull()
     }
+
+    @Test
+    fun deveEmitirDeNovoQuandoInteracaoEhRegistradaNoAtendimento(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val clienteId = db.saveFakeCliente()
+            val atendimentoId = db.insertFakeAtendimento(clienteId, isFinished = false)
+            val emissions = Channel<ClienteReadModel?>(Channel.UNLIMITED)
+            val collecting = launch {
+                sut.watchCliente(clienteId).collect { result ->
+                    emissions.send((result as AppResult.Success).data)
+                }
+            }
+            try {
+                withTimeout(2_000) { emissions.receive() }
+
+                db.insertFakeInteracao(atendimentoId, title = "Ligação")
+
+                val cliente = withTimeout(2_000) { emissions.receive() }.shouldNotBeNull()
+                cliente.assistances.single().interactions.map { it.title } shouldBeEqualTo
+                    listOf("Ligação")
+            } finally {
+                collecting.cancel()
+            }
+        }
+
+    @Test
+    fun deveExibirFotoDoImovelEnviadoEPreferenciasDoAtendimento(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val clienteId = db.saveFakeCliente()
+            val atendimentoId = db.insertFakeAtendimento(clienteId, isFinished = false)
+            val (imovelId, mainPictureUri) = db.saveFakeImovelComFotoPrincipal()
+            db.sendFakeImovel(atendimentoId, imovelId)
+            db.insertFakePreferencias(atendimentoId, "Campeche", ImovelCharacteristic.Balcony)
+
+            val atendimento = watchCliente(clienteId).assistances.single()
+
+            atendimento.sentImoveis.single().mainPictureUriString shouldBeEqualTo mainPictureUri
+            atendimento.preferredNeighborhoods shouldBeEqualTo listOf("Campeche")
+            atendimento.preferredImovelCharacteristics shouldBeEqualTo
+                listOf(ImovelCharacteristic.Balcony)
+        }
+
+    @Test
+    fun deveNaoExibirImovelEnviadoQuandoImovelEExcluido(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val clienteId = db.saveFakeCliente()
+            val atendimentoId = db.insertFakeAtendimento(clienteId, isFinished = false)
+            val keptImovelId = db.saveFakeImovelId()
+            val deletedImovelId = db.saveFakeImovelId()
+            db.sendFakeImovel(atendimentoId, keptImovelId)
+            db.sendFakeImovel(atendimentoId, deletedImovelId)
+            db.imovelSharedWriteDataSource().delete(deletedImovelId)
+                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+
+            val cliente = watchCliente(clienteId)
+
+            cliente.assistances.single().sentImoveis.map { it.id } shouldBeEqualTo
+                listOf(keptImovelId)
+        }
+
+    @Test
+    fun deveNaoExibirEstadiaQuandoEstadiaEExcluida(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val clienteId = db.saveFakeCliente()
+            val imovelId = db.saveFakeImovelId()
+            val keptEstadiaId = db.insertFakeEstadia(clienteId, imovelId, StayStatus.CheckOutDone)
+            val deletedEstadiaId = db.insertFakeEstadia(clienteId, imovelId, StayStatus.CheckOutDone)
+            db.stayDao().delete(deletedEstadiaId)
+
+            val cliente = watchCliente(clienteId)
+
+            cliente.stays.map { it.id } shouldBeEqualTo listOf(keptEstadiaId)
+        }
 
     private suspend fun watchCliente(clienteId: Long): ClienteReadModel =
         sut.watchCliente(clienteId).first()

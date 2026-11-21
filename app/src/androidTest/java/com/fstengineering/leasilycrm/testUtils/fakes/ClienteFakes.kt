@@ -2,11 +2,18 @@ package com.fstengineering.leasilycrm.testUtils.fakes
 
 import com.fstengineering.leasilycrm.clienteRegistration.domain.entities.Cliente
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceImovelCharacteristicCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentImovelCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
+import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.testUtils.faker
 import org.amshove.kluent.shouldBeInstanceOf
 
@@ -118,3 +125,56 @@ suspend fun AppDatabase.insertFakeAtendimento(
         contractVersion = 1,
     )
 )
+
+/** Registra uma Interação no Atendimento. */
+suspend fun AppDatabase.insertFakeInteracao(
+    atendimentoId: Long,
+    title: String = faker.random.nextUUID(),
+) {
+    assistanceInteractionDao().insertOrUpdate(
+        AssistanceInteractionEntity(
+            id = null,
+            date = AppDate.now(),
+            title = title,
+            description = null,
+            assistanceId = atendimentoId,
+        )
+    )
+}
+
+/** Envia o Imóvel ao Lead no Atendimento. */
+suspend fun AppDatabase.sendFakeImovel(atendimentoId: Long, imovelId: Long) {
+    assistanceSentImovelCrossRefDao().insertOrUpdate(
+        AssistanceSentImovelCrossRefEntity(assistanceId = atendimentoId, imovelId = imovelId)
+    )
+}
+
+/** Salva um Imóvel com foto principal e devolve o seu id e o URI da foto. */
+suspend fun AppDatabase.saveFakeImovelComFotoPrincipal(): Pair<Long, String> {
+    val imovelId = faker.random.nextInt(bound = 9999).toLong() + 1
+    val mainPictureUri = faker.random.nextUUID()
+    val imovel = createFakeImovel(
+        proprietarioId = saveFakeProprietario(),
+        id = imovelId,
+        files = listOf(ImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true)),
+    )
+    imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*, *>>()
+    return imovelId to mainPictureUri
+}
+
+/** Registra no Atendimento o bairro e a característica de Imóvel que o Lead procura. */
+suspend fun AppDatabase.insertFakePreferencias(
+    atendimentoId: Long,
+    neighborhood: String,
+    characteristic: ImovelCharacteristic,
+) {
+    assistanceSearchedNeighborhoodDao().insertOrUpdate(
+        AssistancePreferredNeighborhoodEntity(neighborhood = neighborhood, assistanceId = atendimentoId)
+    )
+    assistanceCharacteristicAssistanceCrossRefDao().insertOrUpdate(
+        AssistanceImovelCharacteristicCrossRefEntity(
+            assistanceId = atendimentoId,
+            imovelCharacteristicId = characteristic.id,
+        )
+    )
+}
