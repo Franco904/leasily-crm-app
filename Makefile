@@ -77,6 +77,31 @@ push-db:
 	$(call push_db,$(DB)) || exit 1; \
 	echo "$(DB) restaurado em $(QA_PACKAGE) ($(QA_SERIAL))"
 
+# Gera um banco de QA com volume alto (ex.: 20 mil registros por agregado) a partir do banco do app,
+# ou de BASE=<arquivo> (mesmo schema), e salva em qa/<SEED>.db sem tocar no banco do app.
+# Com PUSH=1 restaura o resultado no app (parando-o antes). Ex.: make seed [SEED=heavy] [BASE=qa/base.db] [PUSH=1]
+# O seed roda numa transação: se falhar, qa/<SEED>.db fica só com o banco base, sem dados pela metade
+SEED ?= heavy
+PUSH ?= 0
+seed:
+	@set -e; \
+	test -f scripts/seed/$(SEED)-seed.sql || { echo "scripts/seed/$(SEED)-seed.sql não encontrado"; exit 1; }; \
+	mkdir -p $(QA_DIR); \
+	if [ -n "$(BASE)" ]; then cp $(BASE) $(QA_DIR)/$(SEED).db; \
+	else \
+		$(REQUIRE_DEVICE); \
+		$(QA_ADB) shell am force-stop $(QA_PACKAGE); \
+		$(call pull_db,$(QA_DIR)/$(SEED).db) || { echo "não foi possível ler o $(DB_NAME) de $(QA_PACKAGE) em $(QA_SERIAL)"; exit 1; }; \
+	fi; \
+	sqlite3 $(QA_DIR)/$(SEED).db < scripts/seed/$(SEED)-seed.sql || { echo "falha ao aplicar scripts/seed/$(SEED)-seed.sql; $(QA_DIR)/$(SEED).db tem só o banco base"; exit 1; }; \
+	echo "$(QA_DIR)/$(SEED).db gerado"; \
+	if [ "$(PUSH)" = "1" ]; then \
+		$(REQUIRE_DEVICE); \
+		$(QA_ADB) shell am force-stop $(QA_PACKAGE); \
+		$(call push_db,$(QA_DIR)/$(SEED).db) || exit 1; \
+		echo "$(QA_DIR)/$(SEED).db restaurado em $(QA_PACKAGE) ($(QA_SERIAL))"; \
+	fi
+
 # Alterna o Wi-Fi do aparelho, ex.: make wifi DEVICE=2
 wifi:
 	@set -e; $(REQUIRE_DEVICE); \

@@ -187,6 +187,7 @@ no host.
 make pull-db DB=qa/cenario.db   # salva o banco do app para snapshot de cenário [sem param DB = qa/leasily_app_db.db]
 make push-db DB=qa/cenario.db   # restaura um banco salvo com pull-db (mesmo schema) [sem param DB = qa/leasily_app_db.db]
 make clear-data                 # limpa o storage dos apps dev e prod
+make seed                       # gera qa/heavy.db com 20 mil registros por agregado (SEED=, BASE=, PUSH=1); abra no Database Inspector para EXPLAIN QUERY PLAN
 
 # Aparelho
 make wifi                       # alterna o Wi-Fi
