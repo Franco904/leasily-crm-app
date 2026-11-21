@@ -7,7 +7,6 @@ val imovelDashboardUseCaseModule = module {
     factory {
         WatchImovelUseCase(
             imovelDashboardReadDataSource = get(),
-            proprietarioReadDataSource = get(),
             clienteSharedReadDataSource = get(),
             dateProvider = get(),
         )

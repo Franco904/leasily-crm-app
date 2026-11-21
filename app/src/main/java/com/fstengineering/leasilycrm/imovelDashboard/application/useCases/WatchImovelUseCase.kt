@@ -14,7 +14,6 @@ import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.Imo
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.queries.ImovelArgs
 import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ImovelDashboardReadDataSource
-import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ProprietarioReadDataSource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.map
 
 class WatchImovelUseCase(
     private val imovelDashboardReadDataSource: ImovelDashboardReadDataSource,
-    private val proprietarioReadDataSource: ProprietarioReadDataSource,
     private val clienteSharedReadDataSource: ClienteSharedReadDataSource,
     private val dateProvider: AppDateProvider,
 ) {
@@ -39,33 +37,22 @@ class WatchImovelUseCase(
             imovelResult to occupiedPeriodsResult
         }
             .map outer@{ (imovelResult, occupiedPeriodsResult) ->
-                val imovelRaw = imovelResult
+                val imovelSummary = imovelResult
                     .fold(
                         onError = { e -> return@outer AppResult.Error(error = e) },
                         onSuccess = { it },
                     )
 
-                val proprietario =
-                    proprietarioReadDataSource.getProprietario(imovelRaw.proprietarioId)
+                val currentMonthOccupiedPeriods =
+                    getCurrentMonthOccupiedPeriods(occupiedPeriodsResult)
                         .fold(
                             onError = { e -> return@outer AppResult.Error(error = e) },
                             onSuccess = { it },
                         )
 
-                val currentMonthOccupiedPeriods =
-                    getCurrentMonthOccupiedPeriods(occupiedPeriodsResult)
-                        .fold(
-                            onError = { e -> return@outer AppResult.Error(error = e) },
-                            onSuccess = { name -> name },
-                        )
-
-                val updatedImovel = ImovelReadModel.create(
-                    imovelRaw = imovelRaw,
-                    proprietario = proprietario,
-                    currentMonthOccupiedPeriods = currentMonthOccupiedPeriods,
+                AppResult.Success(
+                    data = imovelSummary.toReadModel(currentMonthOccupiedPeriods),
                 )
-
-                AppResult.Success(data = updatedImovel)
             }
     }
 

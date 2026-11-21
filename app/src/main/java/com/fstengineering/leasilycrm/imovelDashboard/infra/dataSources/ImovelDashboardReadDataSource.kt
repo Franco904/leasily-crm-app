@@ -2,12 +2,13 @@ package com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
-import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelRawReadModel
-import com.fstengineering.leasilycrm.imovelDashboard.infra.mappers.toImovelRawReadModel
+import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelSummaryReadModel
+import com.fstengineering.leasilycrm.imovelDashboard.infra.mappers.toImovelSummaryReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.infra.mappers.toPeriodoOcupadoRawReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.ImovelDashboardProjection
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.PeriodoOcupadoProjection
@@ -18,11 +19,12 @@ import kotlinx.coroutines.flow.map
 /** Leitura do Imóvel e dos seus Períodos Ocupados para o painel do Imóvel. */
 @Dao
 abstract class ImovelDashboardReadDataSource {
-    /** Observa o Imóvel não excluído com a foto principal e o id do Proprietário. */
-    fun watchImovel(imovelId: Long): Flow<AppResult<ImovelRawReadModel, ApplicationError>> =
+    /** Observa o Imóvel não excluído com a foto principal e o Proprietário; falha quando o
+     * Proprietário foi excluído. */
+    fun watchImovel(imovelId: Long): Flow<AppResult<ImovelSummaryReadModel, ApplicationError>> =
         observeImovel(imovelId)
             .filterNotNull()
-            .map { it.toImovelRawReadModel() }
+            .map { it.toImovelSummaryReadModel() }
             .asDatabaseFlowResult()
 
     /** Observa os Períodos Ocupados não excluídos do Imóvel, em ordem de check-in. */
@@ -33,6 +35,7 @@ abstract class ImovelDashboardReadDataSource {
             .map { projections -> projections.map { it.toPeriodoOcupadoRawReadModel() } }
             .asDatabaseFlowResult()
 
+    @Transaction
     @Query(
         """
         SELECT

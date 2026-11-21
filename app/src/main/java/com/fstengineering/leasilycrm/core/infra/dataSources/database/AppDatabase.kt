@@ -47,7 +47,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.St
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayTransferEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.ClienteView
-import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ProprietarioReadDataSource as ImovelDashboardProprietarioReadDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ProprietarioReadDataSource as ImovelRegistrationProprietarioReadDataSource
 import com.fstengineering.leasilycrm.proprietarioDetails.infra.dataSources.ProprietarioDetailsReadDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
@@ -142,9 +141,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun proprietariosReadDataSource(): ProprietariosReadDataSource
 
     abstract fun imovelRegistrationProprietarioReadDataSource(): ImovelRegistrationProprietarioReadDataSource
-
-    abstract fun imovelDashboardProprietarioReadDataSource(): ImovelDashboardProprietarioReadDataSource
-
 
     abstract fun stayDao(): StayDao
 

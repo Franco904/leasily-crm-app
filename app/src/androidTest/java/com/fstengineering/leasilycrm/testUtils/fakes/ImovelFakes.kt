@@ -17,12 +17,12 @@ import org.amshove.kluent.shouldBeInstanceOf
 import java.time.LocalDate
 
 /** Salva um Proprietário aleatório (exigido pela FK do Imóvel) e devolve o seu id. */
-suspend fun AppDatabase.saveFakeProprietario(): Long {
+suspend fun AppDatabase.saveFakeProprietario(name: String = faker.random.nextUUID()): Long {
     val proprietarioId = faker.random.nextInt(bound = 9999).toLong() + 1
     val proprietario = Proprietario.parse(
         id = proprietarioId,
         createDateTime = null,
-        name = faker.random.nextUUID(),
+        name = name,
         phone = null,
         email = null,
         paymentKey = null,

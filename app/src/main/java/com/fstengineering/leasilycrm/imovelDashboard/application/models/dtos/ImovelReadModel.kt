@@ -13,21 +13,4 @@ data class ImovelReadModel(
     val number: Int?,
     val proprietario: ProprietarioReadModel,
     val currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<ImovelOccupiedDateReadModel>>,
-) {
-    companion object {
-        fun create(
-            imovelRaw: ImovelRawReadModel,
-            proprietario: ProprietarioReadModel,
-            currentMonthOccupiedPeriods: Pair<AppYearMonth, ImmutableList<ImovelOccupiedDateReadModel>>,
-        ) = ImovelReadModel(
-            id = imovelRaw.id,
-            mainPictureUriString = imovelRaw.mainPictureUriString,
-            type = imovelRaw.type,
-            neighborhood = imovelRaw.neighborhood,
-            streetAddress = imovelRaw.streetAddress,
-            number = imovelRaw.number,
-            proprietario = proprietario,
-            currentMonthOccupiedPeriods = currentMonthOccupiedPeriods,
-        )
-    }
-}
+)

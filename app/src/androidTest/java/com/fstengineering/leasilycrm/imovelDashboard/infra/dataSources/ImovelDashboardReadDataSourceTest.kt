@@ -8,7 +8,8 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
-import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelRawReadModel
+import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelSummaryReadModel
+import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
@@ -43,9 +44,9 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
     // region watchImovel
 
     @Test
-    fun deveObservarImovelComFotoPrincipalEProprietario(): Unit =
+    fun deveObservarImovelComFotoPrincipalENomeDoProprietario(): Unit =
         runBlocking(Dispatchers.Default) {
-            val proprietarioId = db.saveFakeProprietario()
+            val proprietarioId = db.saveFakeProprietario(name = "Carla")
             val mainPictureUri = faker.random.nextUUID()
             val imovel = createFakeImovel(
                 proprietarioId = proprietarioId,
@@ -63,16 +64,32 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
 
             val result = sut.watchImovel(imovelId = 4L).first()
 
-            result.shouldBeInstanceOf<AppResult.Success<ImovelRawReadModel, ApplicationError>>()
-                .data shouldBeEqualTo ImovelRawReadModel(
+            result.shouldBeInstanceOf<AppResult.Success<ImovelSummaryReadModel, ApplicationError>>()
+                .data shouldBeEqualTo ImovelSummaryReadModel(
                 id = 4L,
-                proprietarioId = proprietarioId,
+                proprietario = ProprietarioReadModel(id = proprietarioId, name = "Carla"),
                 type = ImovelType.Apartment,
                 neighborhood = imovel.neighborhood,
                 streetAddress = imovel.streetAddress,
                 number = null,
                 mainPictureUriString = mainPictureUri,
             )
+        }
+
+    @Test
+    fun deveFalharAoObservarImovelQuandoProprietarioExcluido(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val proprietarioId = db.saveFakeProprietario()
+            imovelWriteDataSource.save(
+                createFakeImovel(proprietarioId = proprietarioId, id = 4L)
+            ).shouldBeInstanceOf<AppResult.Success<*, *>>()
+            db.proprietarioWriteDataSource().delete(proprietarioId)
+                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+
+            val result = sut.watchImovel(imovelId = 4L).first()
+
+            result.shouldBeInstanceOf<AppResult.Error<*, *>>().error shouldBeEqualTo
+                    ApplicationError.Unknown
         }
 
     // endregion
