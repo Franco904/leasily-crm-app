@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
-inline fun <T> onDatabase(block: () -> T): AppResult<T, ApplicationError> {
+inline fun <T> onDatabase(block: () -> T): AppResult<T> {
     try {
         return AppResult.Success(block())
     } catch (cancellation: CancellationException) {
@@ -24,9 +24,9 @@ inline fun <T> onDatabase(block: () -> T): AppResult<T, ApplicationError> {
     }
 }
 
-fun <T> Flow<T>.asDatabaseFlowResult(): Flow<AppResult<T, ApplicationError>> {
+fun <T> Flow<T>.asDatabaseFlowResult(): Flow<AppResult<T>> {
     return distinctUntilChanged()
-        .map<T, AppResult<T, ApplicationError>> { value -> AppResult.Success(value) }
+        .map<T, AppResult<T>> { value -> AppResult.Success(value) }
         .catchException { emit(AppResult.Error(ApplicationError.Unknown)) }
 }
 

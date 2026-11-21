@@ -27,9 +27,9 @@ suspend fun AppDatabase.saveFakeProprietario(name: String = faker.random.nextUUI
         email = null,
         paymentKey = null,
         files = persistentListOf(),
-    ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Proprietario>()
+    ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Proprietario>()
     proprietarioWriteDataSource().save(proprietario)
-        .shouldBeInstanceOf<AppResult.Success<*, *>>()
+        .shouldBeInstanceOf<AppResult.Success<*>>()
     return proprietarioId
 }
 
@@ -50,7 +50,7 @@ fun createFakeImovel(
     characteristics = persistentListOf<ImovelCharacteristic>().addAll(characteristics),
     prices = persistentListOf<ImovelPrice>().addAll(prices),
     files = persistentListOf<ImovelFile>().addAll(files),
-).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Imovel>()
+).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Imovel>()
 
 fun createFakeImovelPrice(
     id: Long? = null,
@@ -60,4 +60,4 @@ fun createFakeImovelPrice(
     startDate = AppDate(LocalDate.of(2030, 1, 1)),
     endDate = AppDate(LocalDate.of(2030, 1, 31)),
     amount = amount,
-).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<ImovelPrice>()
+).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<ImovelPrice>()

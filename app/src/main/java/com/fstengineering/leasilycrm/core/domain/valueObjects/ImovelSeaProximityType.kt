@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.domain.valueObjects
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -20,7 +21,7 @@ sealed class ImovelSeaProximityType(val id: Long) {
         companion object {
             fun parse(
                 distance: AppDecimal?,
-            ): AppResult<DistanceToSea, ValidationErrors> {
+            ): AppResult<DistanceToSea> {
                 if (distance == null) {
                     return AppResult.Error(
                         ValidationErrors(persistentListOf(DomainError.ImovelSeaProximityDistanceToSea.Required))
@@ -41,7 +42,7 @@ sealed class ImovelSeaProximityType(val id: Long) {
         fun parse(
             id: Long,
             distanceToSea: AppDecimal?,
-        ): AppResult<ImovelSeaProximityType, ValidationErrors> {
+        ): AppResult<ImovelSeaProximityType> {
             val errors = mutableListOf<DomainError>()
 
             val parsed = when (id) {
@@ -51,7 +52,7 @@ sealed class ImovelSeaProximityType(val id: Long) {
 
                 DISTANCE_TO_SEA_ID -> {
                     DistanceToSea.parse(distanceToSea)
-                        .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                        .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
                 }
 
                 else -> {

@@ -18,7 +18,7 @@ class AssistanceInteraction private constructor(
             date: AppDate?,
             title: String?,
             description: String?,
-        ): AppResult<AssistanceInteraction, ValidationErrors> {
+        ): AppResult<AssistanceInteraction> {
             val errors = mutableListOf<DomainError>()
 
             if (date == null) errors.add(DomainError.AssistanceInteractionDate.Required)

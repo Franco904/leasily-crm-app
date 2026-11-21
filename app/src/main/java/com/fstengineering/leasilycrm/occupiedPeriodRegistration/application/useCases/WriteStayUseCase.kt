@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.mappers.toEntity
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.commands.StayCommandModel
@@ -12,7 +11,7 @@ class WriteStayUseCase(
 ) {
     suspend operator fun invoke(
         command: StayCommandModel,
-    ): AppResult<Unit, BaseError> {
+    ): AppResult<Unit> {
         val stay = command.toEntity()
             .fold(onError = { return AppResult.Error(error = it) }, onSuccess = { it })
 

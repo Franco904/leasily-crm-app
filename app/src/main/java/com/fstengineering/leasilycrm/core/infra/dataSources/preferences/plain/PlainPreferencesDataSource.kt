@@ -16,7 +16,7 @@ class PlainPreferencesDataSource(
 ) : PreferencesDataSource<PlainPreferences> {
     override suspend fun savePreferences(
         onPreferencesFile: (PlainPreferences) -> PlainPreferences,
-    ): AppResult<Unit, ApplicationError> {
+    ): AppResult<Unit> {
         try {
             dataStore.updateData { preferences -> onPreferencesFile(preferences) }
 
@@ -29,7 +29,7 @@ class PlainPreferencesDataSource(
         }
     }
 
-    override suspend fun readPreferences(): AppResult<Flow<PlainPreferences>, ApplicationError> {
+    override suspend fun readPreferences(): AppResult<Flow<PlainPreferences>> {
         try {
             return AppResult.Success(data = dataStore.data)
         } catch (e: Exception) {

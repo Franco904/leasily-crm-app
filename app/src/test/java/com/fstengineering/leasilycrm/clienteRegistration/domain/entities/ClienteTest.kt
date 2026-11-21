@@ -23,7 +23,7 @@ class ClienteTest {
                 email = faker.random.nextUUID(),
             )
 
-            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val error = result.shouldBeInstanceOf<AppResult.Error>().error
             val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
             validationErrors.errors shouldContainSame listOf(
                 DomainError.Name.Required,
@@ -36,7 +36,7 @@ class ClienteTest {
         fun `Deve rejeitar Cliente quando cadastrado, dado que nome excede 100 caracteres`() {
             val result = parse(name = randomString(minLength = 101))
 
-            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val error = result.shouldBeInstanceOf<AppResult.Error>().error
             val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
             validationErrors.errors shouldContainSame listOf(
                 DomainError.Name.LengthIsGreaterThan100Chars,
@@ -52,7 +52,7 @@ class ClienteTest {
 
             val result = parse(id = id, name = name, phone = phone, email = email)
 
-            val cliente = result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            val cliente = result.shouldBeInstanceOf<AppResult.Success<*>>()
                 .data.shouldBeInstanceOf<Cliente>()
             cliente.id shouldBeEqualTo id
             cliente.name.value shouldBeEqualTo name

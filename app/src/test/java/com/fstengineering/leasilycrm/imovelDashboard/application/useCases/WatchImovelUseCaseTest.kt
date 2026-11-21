@@ -71,7 +71,7 @@ class WatchImovelUseCaseTest {
 
                 val result = sut(ImovelArgs(imovel.id)).first()
 
-                val imovelReadModel = result.shouldBeInstanceOf<AppResult.Success<*, *>>().data
+                val imovelReadModel = result.shouldBeInstanceOf<AppResult.Success<*>>().data
                     .shouldBeInstanceOf<ImovelReadModel>()
                 imovelReadModel shouldBeEqualTo ImovelReadModel(
                     id = imovel.id,
@@ -102,7 +102,7 @@ class WatchImovelUseCaseTest {
 
             val result = sut(ImovelArgs(imovel.id)).first()
 
-            val imovelReadModel = result.shouldBeInstanceOf<AppResult.Success<*, *>>().data
+            val imovelReadModel = result.shouldBeInstanceOf<AppResult.Success<*>>().data
                 .shouldBeInstanceOf<ImovelReadModel>()
             imovelReadModel.currentMonthOccupiedPeriods.second shouldBeEqualTo
                     persistentListOf()
@@ -118,7 +118,7 @@ class WatchImovelUseCaseTest {
 
             val result = sut(ImovelArgs(imovel.id)).first()
 
-            result.shouldBeInstanceOf<AppResult.Error<*, *>>().error shouldBeEqualTo
+            result.shouldBeInstanceOf<AppResult.Error>().error shouldBeEqualTo
                     ApplicationError.Unknown
         }
 
@@ -135,7 +135,7 @@ class WatchImovelUseCaseTest {
 
             val result = sut(ImovelArgs(imovel.id)).first()
 
-            result.shouldBeInstanceOf<AppResult.Error<*, *>>().error shouldBeEqualTo
+            result.shouldBeInstanceOf<AppResult.Error>().error shouldBeEqualTo
                     ApplicationError.Unknown
         }
     }

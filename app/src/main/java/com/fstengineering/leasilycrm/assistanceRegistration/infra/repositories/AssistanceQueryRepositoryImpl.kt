@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.d
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers.toRawReadModel
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.AssistanceDatabaseDataSource
 import kotlinx.collections.immutable.ImmutableList
@@ -13,7 +12,7 @@ import kotlinx.collections.immutable.toPersistentList
 class AssistanceQueryRepositoryImpl(
     private val assistanceDatabaseDataSource: AssistanceDatabaseDataSource,
 ) : AssistanceQueryRepository {
-    override suspend fun getById(assistanceId: Long): AppResult<AssistanceRawReadModel, ApplicationError> {
+    override suspend fun getById(assistanceId: Long): AppResult<AssistanceRawReadModel> {
         return assistanceDatabaseDataSource.getById(id = assistanceId)
             .fold(
                 onError = { AppResult.Error(error = it) },
@@ -21,7 +20,7 @@ class AssistanceQueryRepositoryImpl(
             )
     }
 
-    override suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>, ApplicationError> {
+    override suspend fun getAllNeighborhoodNames(): AppResult<ImmutableList<String>> {
         val neighborhoodNames =
             assistanceDatabaseDataSource.getAllNeighborhoodNames()
                 .fold(

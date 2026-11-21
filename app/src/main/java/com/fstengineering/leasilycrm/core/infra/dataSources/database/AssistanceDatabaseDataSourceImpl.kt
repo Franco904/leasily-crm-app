@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.AssistanceCompound
@@ -17,15 +16,15 @@ class AssistanceDatabaseDataSourceImpl(
     override suspend fun delete(id: Long) =
         dao.delete(id)
 
-    override suspend fun getById(id: Long): AppResult<AssistanceCompound, ApplicationError> {
+    override suspend fun getById(id: Long): AppResult<AssistanceCompound> {
         return onDatabase { dao.getById(id) }
     }
 
-    override suspend fun getAllByClienteId(clienteId: Long): AppResult<List<AssistanceCompound>, ApplicationError> {
+    override suspend fun getAllByClienteId(clienteId: Long): AppResult<List<AssistanceCompound>> {
         return onDatabase { dao.getAllByClienteId(clienteId) }
     }
 
-    override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, ApplicationError> {
+    override suspend fun getAllNeighborhoodNames(): AppResult<List<String>> {
         return onDatabase { dao.getAllNeighborhoodNames() }
     }
 
@@ -35,7 +34,7 @@ class AssistanceDatabaseDataSourceImpl(
     override suspend fun unfinishAssistanceByTenantId(tenantId: Long) =
         dao.unfinishAssistanceByTenantId(tenantId)
 
-    override suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): AppResult<Int?, ApplicationError> {
+    override suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): AppResult<Int?> {
         return onDatabase { dao.getCurrentAssistanceGuestsCountByTenantId(tenantId) }
     }
 }

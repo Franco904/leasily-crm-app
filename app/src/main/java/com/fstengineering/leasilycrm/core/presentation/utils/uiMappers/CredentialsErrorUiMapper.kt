@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.core.presentation.utils.uiMappers
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.NoCredentialException
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.infra.utils.CredentialsError
+import com.fstengineering.leasilycrm.core.domain.utils.CredentialsError
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
 import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChannel
 import com.fstengineering.leasilycrm.core.presentation.utils.openAddGoogleAccountSettingsApp

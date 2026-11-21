@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.imovelRegistration.presentation.mappers
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -12,14 +13,14 @@ import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelPr
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelDraftFormUiState
 import kotlinx.collections.immutable.toPersistentList
 
-fun ImovelDraftFormUiState.Loaded.toImovel(): AppResult<Imovel, ValidationErrors> {
+fun ImovelDraftFormUiState.Loaded.toImovel(): AppResult<Imovel> {
     val errors = mutableListOf<DomainError>()
 
     val prices = pricesByMonthYear.values
         .flatten()
         .mapNotNull { price ->
             price.toImovelPrice()
-                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
         }
         .toPersistentList()
 
@@ -55,7 +56,7 @@ fun ImovelDraftFormUiState.Loaded.toImovel(): AppResult<Imovel, ValidationErrors
         files = files.map { it.toImovelFile() }.toPersistentList(),
         observations = observations,
     )
-        .fold(onError = { errors.addAll(0, it.errors); null }, onSuccess = { it })
+        .fold(onError = { errors.addAll(0, it.toDomainErrors()); null }, onSuccess = { it })
 
     if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 

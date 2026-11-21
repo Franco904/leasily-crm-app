@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.assistanceRegistration.domain.entities
 
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.valueObjects.AssistancePreferredPeriod
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -66,7 +67,7 @@ class Assistance private constructor(
             sentImoveisIds: ImmutableList<Long>,
             interactions: ImmutableList<AssistanceInteraction>,
             isFinished: Boolean,
-        ): AppResult<Assistance, ValidationErrors> {
+        ): AppResult<Assistance> {
             val errors = mutableListOf<DomainError>()
 
             if (clienteId == null) errors.add(DomainError.AssistanceOtherFields.TenantRequired)
@@ -77,11 +78,11 @@ class Assistance private constructor(
                     startDate = preferredStartDate,
                     endDate = preferredEndDate,
                 )
-                    .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                    .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             val preferredSeaProximityType = preferredSeaProximityTypeId?.let { typeId ->
                 ImovelSeaProximityType.parse(typeId, distanceToSea = preferredDistanceToSea)
-                    .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                    .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
             }
 
             val isAnyNeighborhoodEmpty = preferredNeighborhoods.any { it.isBlank() }

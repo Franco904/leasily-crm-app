@@ -2,9 +2,25 @@ package com.fstengineering.leasilycrm.core.presentation.utils.uiMappers
 
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
+import com.fstengineering.leasilycrm.core.domain.utils.CredentialsError
+import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.ErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChannel
+
+/**
+ * Dados do bottom sheet de qualquer [BaseError]. Erro de domínio ou de validação não chega à
+ * tela como falha de infra: a tela já o trata no formulário, e se chegar mostra o erro genérico.
+ */
+fun BaseError.toBottomSheetData(
+    imoveis: ErrorBottomSheetDataPropertiesStrategy,
+): ErrorBottomSheetData = when (this) {
+    is ApplicationError -> toBottomSheetData(imoveis)
+    is CredentialsError -> toBottomSheetData()
+    is DomainError, is ValidationErrors -> ApplicationError.Unknown.toBottomSheetData(imoveis)
+}
 
 fun ApplicationError.toBottomSheetData(
     imoveis: ErrorBottomSheetDataPropertiesStrategy,

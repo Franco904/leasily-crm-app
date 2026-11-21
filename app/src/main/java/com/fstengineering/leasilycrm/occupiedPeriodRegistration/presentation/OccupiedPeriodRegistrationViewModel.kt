@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
+import com.fstengineering.leasilycrm.core.domain.utils.CredentialsError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -303,9 +305,10 @@ class OccupiedPeriodRegistrationViewModel(
                     writeStay(command)
                         .onError { error ->
                             when (error) {
-                                is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
                                 is ValidationErrors -> setFieldErrors(error.errors)
                                 is DomainError -> setFieldErrors(listOf(error))
+                                is ApplicationError, is CredentialsError ->
+                                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
                             }
 
                             return@launch
@@ -318,9 +321,10 @@ class OccupiedPeriodRegistrationViewModel(
                     writeUnavailablePeriod(command)
                         .onError { error ->
                             when (error) {
-                                is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
                                 is ValidationErrors -> setFieldErrors(error.errors)
                                 is DomainError -> setFieldErrors(listOf(error))
+                                is ApplicationError, is CredentialsError ->
+                                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
                             }
 
                             return@launch
@@ -391,7 +395,7 @@ class OccupiedPeriodRegistrationViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError) : UiEvent
+        data class BottomSheetError(val error: BaseError) : UiEvent
 
         data class ScrollToField(val field: OccupiedPeriodField) : UiEvent
 

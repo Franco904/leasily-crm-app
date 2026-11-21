@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.AssistanceCompound
 
@@ -10,15 +9,15 @@ interface AssistanceDatabaseDataSource {
 
     suspend fun delete(id: Long)
 
-    suspend fun getById(id: Long): AppResult<AssistanceCompound, ApplicationError>
+    suspend fun getById(id: Long): AppResult<AssistanceCompound>
 
-    suspend fun getAllByClienteId(clienteId: Long): AppResult<List<AssistanceCompound>, ApplicationError>
+    suspend fun getAllByClienteId(clienteId: Long): AppResult<List<AssistanceCompound>>
 
-    suspend fun getAllNeighborhoodNames(): AppResult<List<String>, ApplicationError>
+    suspend fun getAllNeighborhoodNames(): AppResult<List<String>>
 
     suspend fun finishOpenAssistanceByTenantId(tenantId: Long)
 
     suspend fun unfinishAssistanceByTenantId(tenantId: Long)
 
-    suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): AppResult<Int?, ApplicationError>
+    suspend fun getCurrentAssistanceGuestsCountByTenantId(tenantId: Long): AppResult<Int?>
 }

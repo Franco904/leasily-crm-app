@@ -6,7 +6,6 @@ import com.fstengineering.leasilycrm.clientes.application.models.ClienteReadMode
 import com.fstengineering.leasilycrm.clientes.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.clientes.infra.projections.ClienteListItemProjection
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.infra.utils.escapeLike
@@ -61,7 +60,7 @@ abstract class ClientesReadDataSource {
         status: ClienteStatus? = null,
         matching: String? = null,
         orderTypeId: Int? = null,
-    ): Flow<AppResult<List<ClienteReadModel>, ApplicationError>> =
+    ): Flow<AppResult<List<ClienteReadModel>>> =
         observeClientes(status?.id, matching?.escapeLike(), orderTypeId)
             .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()
@@ -70,7 +69,7 @@ abstract class ClientesReadDataSource {
     suspend fun getLeads(
         matching: String?,
         orderTypeId: Int,
-    ): AppResult<List<ClienteReadModel>, ApplicationError> = onDatabase {
+    ): AppResult<List<ClienteReadModel>> = onDatabase {
         selectClientes(ClienteStatus.Lead.id, matching?.escapeLike(), orderTypeId)
             .map { it.toReadModel() }
     }

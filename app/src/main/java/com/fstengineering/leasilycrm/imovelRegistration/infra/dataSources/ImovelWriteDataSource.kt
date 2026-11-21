@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelCharacteristicCrossRefOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
@@ -20,7 +19,7 @@ abstract class ImovelWriteDataSource {
      * Salva o Imóvel com seus Preços numa única transação: se o salvamento de algum Preço falha,
      * o Imóvel não é salvo.
      */
-    suspend fun save(imovel: Imovel): AppResult<Unit, ApplicationError> =
+    suspend fun save(imovel: Imovel): AppResult<Unit> =
         onDatabase { saveInTransaction(imovel) }
 
     @Transaction

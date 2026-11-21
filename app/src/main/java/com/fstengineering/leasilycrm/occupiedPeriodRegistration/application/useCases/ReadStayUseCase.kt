@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.StayReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.StayArgs
@@ -18,7 +17,7 @@ class ReadStayUseCase(
 ) {
     suspend operator fun invoke(
         args: StayArgs,
-    ): AppResult<StayReadModel, ApplicationError> {
+    ): AppResult<StayReadModel> {
         val stayRaw = args.id?.let {
             occupiedPeriodQueryRepository.getStayById(args.id)
                 .fold(

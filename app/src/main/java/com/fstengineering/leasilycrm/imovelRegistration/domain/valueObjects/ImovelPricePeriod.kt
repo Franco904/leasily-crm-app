@@ -20,7 +20,7 @@ class ImovelPricePeriod private constructor(
             startDate: AppDate,
             endDate: AppDate,
             otherPeriods: List<ImovelPricePeriod> = emptyList(),
-        ): AppResult<ImovelPricePeriod, ValidationErrors> {
+        ): AppResult<ImovelPricePeriod> {
             val errors = mutableListOf<DomainError.ImovelPricePeriod>()
 
             if (startDate == endDate) errors.add(DomainError.ImovelPricePeriod.StartAndEndDatesAreTheSame)

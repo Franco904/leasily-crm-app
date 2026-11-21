@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.imovelRegistration.presentation.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -60,7 +61,7 @@ class ImovelRegistrationStep1ViewModel : ViewModel() {
             streetAddress = form.streetAddress,
         )
             .onSuccess { _uiEvents.trySend(UiEvent.ValidateSuccess) }
-            .onError { error -> setFieldErrors(error.errors) }
+            .onError { error -> setFieldErrors(error.toDomainErrors()) }
     }
 
     private fun setFieldErrors(errors: ImmutableList<DomainError>) {

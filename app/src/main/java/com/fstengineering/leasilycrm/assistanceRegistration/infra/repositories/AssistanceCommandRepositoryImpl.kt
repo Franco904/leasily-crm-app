@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.reposito
 import com.fstengineering.leasilycrm.assistanceRegistration.domain.entities.Assistance
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers.toLocalDataModel
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceImovelCharacteristicCrossRefEntity
@@ -23,7 +22,7 @@ class AssistanceCommandRepositoryImpl(
     private val assistanceSearchedNeighborhoodDatabaseDataSource: AssistanceSearchedNeighborhoodDatabaseDataSource,
     private val assistanceSentImovelCrossRefDatabaseDataSource: AssistanceSentImovelCrossRefDatabaseDataSource,
 ) : AssistanceCommandRepository {
-    override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit, ApplicationError> {
+    override suspend fun insertOrUpdate(assistance: Assistance): AppResult<Unit> {
         return databaseAdapter.transaction {
             saveDataInDatabase(assistance)
         }
@@ -68,7 +67,7 @@ class AssistanceCommandRepositoryImpl(
         }
     }
 
-    override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
+    override suspend fun delete(id: Long): AppResult<Unit> {
         return databaseAdapter.transaction {
             assistanceDatabaseDataSource.delete(id)
         }

@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
@@ -52,12 +51,12 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
                 prices = listOf(price),
                 files = listOf(file),
             )
-            imovelWriteDataSource.save(imovel).shouldBeInstanceOf<AppResult.Success<*, *>>()
+            imovelWriteDataSource.save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.getImovel(imovelId = 5L)
 
             val readModel = result
-                .shouldBeInstanceOf<AppResult.Success<ImovelReadModel, ApplicationError>>().data
+                .shouldBeInstanceOf<AppResult.Success<ImovelReadModel>>().data
             readModel.id shouldBeEqualTo 5L
             readModel.proprietario?.id shouldBeEqualTo proprietarioId
             readModel.neighborhood shouldBeEqualTo imovel.neighborhood
@@ -71,13 +70,13 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             imovelWriteDataSource.save(createFakeImovel(proprietarioId = proprietarioId, id = 6L))
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
             db.proprietarioWriteDataSource().delete(proprietarioId)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.getImovel(imovelId = 6L)
 
-            result.shouldBeInstanceOf<AppResult.Success<ImovelReadModel, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Success<ImovelReadModel>>()
                 .data.proprietario.shouldBeNull()
         }
 
@@ -86,13 +85,13 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             imovelWriteDataSource.save(createFakeImovel(proprietarioId = proprietarioId, id = 7L))
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
             db.imovelSharedWriteDataSource().delete(imovelId = 7L)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.getImovel(imovelId = 7L)
 
-            result.shouldBeInstanceOf<AppResult.Error<ImovelReadModel, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Error>()
         }
 
     // endregion
@@ -117,14 +116,14 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
                             neighborhood = bairro
                         )
                     )
-                    .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                    .shouldBeInstanceOf<AppResult.Success<*>>()
             }
             db.imovelSharedWriteDataSource().delete(imovelId = 4L)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.getNeighborhoodNames()
 
-            result.shouldBeInstanceOf<AppResult.Success<List<String>, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Success<List<String>>>()
                 .data shouldBeEqualTo listOf("Agronômica", "Centro")
         }
 

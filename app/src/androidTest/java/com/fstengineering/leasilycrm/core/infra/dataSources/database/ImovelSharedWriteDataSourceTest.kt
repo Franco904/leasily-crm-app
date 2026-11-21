@@ -46,7 +46,7 @@ class ImovelSharedWriteDataSourceTest : IntegrationTest() {
 
             val result = sut.delete(imovelId)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             imovelDao.getAll().map { it.imovel.id }.shouldBeEqualTo(listOf(outroImovelId))
         }
 
@@ -62,9 +62,9 @@ class ImovelSharedWriteDataSourceTest : IntegrationTest() {
             email = null,
             paymentKey = null,
             files = persistentListOf(),
-        ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Proprietario>()
+        ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Proprietario>()
         db.proprietarioWriteDataSource().save(proprietario)
-            .shouldBeInstanceOf<AppResult.Success<*, *>>()
+            .shouldBeInstanceOf<AppResult.Success<*>>()
         return proprietarioId
     }
 
@@ -75,8 +75,8 @@ class ImovelSharedWriteDataSourceTest : IntegrationTest() {
             neighborhood = faker.random.nextUUID(),
             streetAddress = faker.random.nextUUID(),
             prices = persistentListOf(createFakeImovelPrice()),
-        ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Imovel>()
-        db.imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*, *>>()
+        ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Imovel>()
+        db.imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
         return imovelDao.getAll().maxOf { it.imovel.id!! }
     }
 
@@ -84,5 +84,5 @@ class ImovelSharedWriteDataSourceTest : IntegrationTest() {
         startDate = AppDate(LocalDate.of(2030, 1, 1)),
         endDate = AppDate(LocalDate.of(2030, 1, 31)),
         amount = (faker.random.nextInt(bound = 9999) + 1).toDecimal(),
-    ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<ImovelPrice>()
+    ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<ImovelPrice>()
 }

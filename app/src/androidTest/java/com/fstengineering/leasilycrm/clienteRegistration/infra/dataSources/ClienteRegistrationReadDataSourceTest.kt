@@ -45,7 +45,7 @@ class ClienteRegistrationReadDataSourceTest : IntegrationTest() {
 
             val result = sut.getCliente(clienteId)
 
-            val readModel = result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            val readModel = result.shouldBeInstanceOf<AppResult.Success<*>>()
                 .data.shouldBeInstanceOf<ClienteReadModel>()
             readModel.id shouldBeEqualTo clienteId
             readModel.name shouldBeEqualTo cliente.name.value
@@ -65,7 +65,7 @@ class ClienteRegistrationReadDataSourceTest : IntegrationTest() {
 
             val result = sut.getCliente(clienteId)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
                 .data.shouldBeInstanceOf<ClienteReadModel>().isLead shouldBeEqualTo false
         }
 
@@ -77,7 +77,7 @@ class ClienteRegistrationReadDataSourceTest : IntegrationTest() {
 
             val result = sut.getCliente(clienteId)
 
-            result.shouldBeInstanceOf<AppResult.Error<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Error>()
         }
 
     // endregion
@@ -96,7 +96,7 @@ class ClienteRegistrationReadDataSourceTest : IntegrationTest() {
 
             val result = sut.getTags()
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
                 .data shouldBeEqualTo listOf("Amigo", "VIP")
         }
 
@@ -109,7 +109,7 @@ class ClienteRegistrationReadDataSourceTest : IntegrationTest() {
 
             val result = sut.getCities()
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
                 .data shouldBeEqualTo listOf("Florianópolis", "Palhoça")
         }
 
@@ -122,7 +122,7 @@ class ClienteRegistrationReadDataSourceTest : IntegrationTest() {
 
             val result = sut.getContactOrigins()
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
                 .data shouldBeEqualTo listOf("Indicação", "Instagram")
         }
 

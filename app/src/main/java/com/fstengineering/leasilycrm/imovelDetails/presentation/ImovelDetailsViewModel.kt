@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.imovelDetails.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.Destinations
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelSharedWriteDataSource
@@ -78,7 +78,7 @@ class ImovelDetailsViewModel(
     }
 
     sealed interface UiEvent {
-        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
+        data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
 
         data object NavigateUp : UiEvent
 

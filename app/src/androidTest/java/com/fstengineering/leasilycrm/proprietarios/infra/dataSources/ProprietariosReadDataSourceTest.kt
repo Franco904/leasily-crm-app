@@ -42,14 +42,14 @@ class ProprietariosReadDataSourceTest : IntegrationTest() {
             val bruno = ProprietarioReadModel(id = 3L, name = "Bruno")
             listOf(carla, ana, bruno).forEach {
                 proprietarioWriteDataSource.save(createFakeProprietario(id = it.id, name = it.name))
-                    .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                    .shouldBeInstanceOf<AppResult.Success<*>>()
             }
             proprietarioWriteDataSource.delete(bruno.id)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.watchProprietarios().first()
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
                 .data shouldBeEqualTo listOf(ana, carla)
         }
 
@@ -63,5 +63,5 @@ class ProprietariosReadDataSourceTest : IntegrationTest() {
         email = "${faker.random.nextUUID()}@leasily.com",
         paymentKey = faker.random.nextUUID(),
         files = persistentListOf<ProprietarioFile>(),
-    ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Proprietario>()
+    ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Proprietario>()
 }

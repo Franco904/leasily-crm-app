@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.imoveis.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.infra.utils.escapeLike
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
@@ -34,7 +33,7 @@ private const val SELECT_IMOVEL_CARD = """
 @Dao
 abstract class ImoveisReadDataSource {
     /** Observa os Imóveis não excluídos, em ordem alfabética de bairro. */
-    fun watchImoveis(): Flow<AppResult<List<ImovelReadModel>, ApplicationError>> =
+    fun watchImoveis(): Flow<AppResult<List<ImovelReadModel>>> =
         observeImoveis()
             .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()
@@ -45,7 +44,7 @@ abstract class ImoveisReadDataSource {
      */
     suspend fun getImoveis(
         matching: String?,
-    ): AppResult<List<ImovelReadModel>, ApplicationError> = onDatabase {
+    ): AppResult<List<ImovelReadModel>> = onDatabase {
         selectImoveis(matching?.escapeLike()).map { it.toReadModel() }
     }
 

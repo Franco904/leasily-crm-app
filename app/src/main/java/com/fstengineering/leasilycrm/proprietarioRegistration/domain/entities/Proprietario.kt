@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
@@ -30,22 +31,22 @@ class Proprietario private constructor(
             email: String?,
             paymentKey: String?,
             files: ImmutableList<ProprietarioFile>,
-        ): AppResult<Proprietario, ValidationErrors> {
+        ): AppResult<Proprietario> {
             val errors = mutableListOf<DomainError>()
 
             if (name == null) errors.add(DomainError.Name.Required)
 
             val parsedName = name?.let { Name.parse(it) }
-                ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             val parsedPhone = phone?.let { Phone.parse(it) }
-                ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             val parsedEmail = email?.let { Email.parse(it) }
-                ?.fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             val parsedPaymentKey = paymentKey?.let { PaymentKey.parse(it) }
-                ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 

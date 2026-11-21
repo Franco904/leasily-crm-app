@@ -29,7 +29,7 @@ class ClienteSharedReadDataSourceTest : IntegrationTest() {
 
         val result = sut.getName(clienteId)
 
-        result.shouldBeInstanceOf<AppResult.Success<*, *>>().data shouldBeEqualTo "Maria Silva"
+        result.shouldBeInstanceOf<AppResult.Success<*>>().data shouldBeEqualTo "Maria Silva"
     }
 
     @Test
@@ -39,6 +39,6 @@ class ClienteSharedReadDataSourceTest : IntegrationTest() {
 
         val result = sut.getName(clienteId)
 
-        result.shouldBeInstanceOf<AppResult.Error<*, *>>()
+        result.shouldBeInstanceOf<AppResult.Error>()
     }
 }

@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 
 class Creci private constructor(val value: String) {
     companion object {
-        fun parse(creciNumber: String): AppResult<Creci, DomainError.Creci> {
+        fun parse(creciNumber: String): AppResult<Creci> {
             if (creciNumber.length > 8) {
                 return AppResult.Error(error = DomainError.Creci.LengthIsGreaterThan8Chars)
             }

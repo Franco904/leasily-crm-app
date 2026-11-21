@@ -1,9 +1,8 @@
 package com.fstengineering.leasilycrm.profile.application.repositories
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.profile.domain.entities.User
 
 interface UserCommandRepository {
-    suspend fun update(user: User): AppResult<Unit, ApplicationError>
+    suspend fun update(user: User): AppResult<Unit>
 }

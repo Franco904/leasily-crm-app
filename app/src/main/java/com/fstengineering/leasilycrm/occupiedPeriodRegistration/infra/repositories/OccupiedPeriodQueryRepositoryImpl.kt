@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.OccupiedPeriodReadModel
@@ -18,7 +17,7 @@ import kotlinx.coroutines.flow.first
 class OccupiedPeriodQueryRepositoryImpl(
     private val databaseDataSource: StayDatabaseDataSource,
 ) : OccupiedPeriodQueryRepository {
-    override suspend fun getStayById(id: Long): AppResult<StayRawReadModel, ApplicationError> {
+    override suspend fun getStayById(id: Long): AppResult<StayRawReadModel> {
         return databaseDataSource.getById(id = id)
             .fold(
                 onError = { AppResult.Error(error = it) },
@@ -28,7 +27,7 @@ class OccupiedPeriodQueryRepositoryImpl(
 
     override suspend fun getUnavailablePeriodById(
         id: Long,
-    ): AppResult<UnavailablePeriodRawReadModel, ApplicationError> {
+    ): AppResult<UnavailablePeriodRawReadModel> {
         return databaseDataSource.getById(id = id)
             .fold(
                 onError = { AppResult.Error(error = it) },
@@ -38,7 +37,7 @@ class OccupiedPeriodQueryRepositoryImpl(
 
     override suspend fun getOccupiedPeriodsByImovelId(
         imovelId: Long,
-    ): AppResult<ImmutableList<OccupiedPeriodReadModel>, ApplicationError> {
+    ): AppResult<ImmutableList<OccupiedPeriodReadModel>> {
         return databaseDataSource.watchAllByImovelId(imovelId)
             .first()
             .fold(

@@ -38,7 +38,7 @@ class ClienteReadDataSourceTest : IntegrationTest() {
 
             val result = sut.getClientesWithoutEstadiaAtiva(matching = null, currentClienteId = null)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>().data
+            result.shouldBeInstanceOf<AppResult.Success<*>>().data
                 .let { (it as List<*>).filterIsInstance<TenantReadModel>() }
                 .map { it.id } shouldBeEqualTo listOf(antigo, lead)
         }
@@ -54,7 +54,7 @@ class ClienteReadDataSourceTest : IntegrationTest() {
                 currentClienteId = comEstadiaAtiva,
             )
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>().data
+            result.shouldBeInstanceOf<AppResult.Success<*>>().data
                 .let { (it as List<*>).filterIsInstance<TenantReadModel>() }
                 .map { it.id } shouldBeEqualTo listOf(comEstadiaAtiva)
         }
@@ -65,7 +65,7 @@ class ClienteReadDataSourceTest : IntegrationTest() {
 
         val result = sut.getCliente(clienteId)
 
-        result.shouldBeInstanceOf<AppResult.Success<*, *>>().data shouldBeEqualTo
+        result.shouldBeInstanceOf<AppResult.Success<*>>().data shouldBeEqualTo
                 TenantReadModel(id = clienteId, name = "Maria", city = "Palhoça")
     }
 }

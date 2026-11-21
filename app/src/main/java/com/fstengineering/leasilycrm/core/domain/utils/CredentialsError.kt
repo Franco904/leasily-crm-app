@@ -1,6 +1,10 @@
-package com.fstengineering.leasilycrm.core.infra.utils
+package com.fstengineering.leasilycrm.core.domain.utils
 
-enum class CredentialsError {
+/**
+ * Falha do Credential Manager. Fica em `domain/utils` porque `BaseError` é `sealed`: os subtipos
+ * precisam estar no mesmo pacote e módulo.
+ */
+enum class CredentialsError : BaseError {
     UserCancellation,
     NoCredentialsFound,
     NoInternet,

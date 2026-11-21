@@ -46,11 +46,11 @@ class ProprietarioWriteDataSourceTest : IntegrationTest() {
 
             val result = sut.save(proprietario)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             val proprietarioReadModel = proprietarioDetailsReadDataSource
                 .watchProprietario(proprietarioId)
                 .first()
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
                 .data.shouldNotBeNull().shouldBeInstanceOf<ProprietarioReadModel>()
             proprietarioReadModel.copy(files = persistentListOf()) shouldBeEqualTo ProprietarioReadModel(
                 name = proprietario.name.value,
@@ -72,7 +72,7 @@ class ProprietarioWriteDataSourceTest : IntegrationTest() {
                 id = faker.random.nextInt(bound = 9999).toLong() + 1,
             )
             sut.save(createFakeProprietario(id = proprietarioId, files = listOf(existingFile)))
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
             val newFile = createFakeProprietarioFile()
             val editedProprietario = createFakeProprietario(
                 id = proprietarioId,
@@ -82,11 +82,11 @@ class ProprietarioWriteDataSourceTest : IntegrationTest() {
 
             val result = sut.save(editedProprietario)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             val proprietarioReadModel = proprietarioDetailsReadDataSource
                 .watchProprietario(proprietarioId)
                 .first()
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
                 .data.shouldNotBeNull().shouldBeInstanceOf<ProprietarioReadModel>()
             proprietarioReadModel.name shouldBeEqualTo editedProprietario.name.value
             proprietarioReadModel.files.size shouldBeEqualTo 2
@@ -104,15 +104,15 @@ class ProprietarioWriteDataSourceTest : IntegrationTest() {
         runBlocking(Dispatchers.Default) {
             val proprietarioId = faker.random.nextInt(bound = 9999).toLong() + 1
             sut.save(createFakeProprietario(id = proprietarioId, files = persistentListOf()))
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.delete(proprietarioId)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             proprietarioDetailsReadDataSource
                 .watchProprietario(proprietarioId)
                 .first()
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
                 .data.shouldBeNull()
         }
 
@@ -130,7 +130,7 @@ class ProprietarioWriteDataSourceTest : IntegrationTest() {
         email = "${faker.random.nextUUID()}@leasily.com",
         paymentKey = faker.random.nextUUID(),
         files = persistentListOf<ProprietarioFile>().addAll(files),
-    ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Proprietario>()
+    ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Proprietario>()
 
     private fun createFakeProprietarioFile(id: Long? = null): ProprietarioFile = ProprietarioFile(
         id = id,

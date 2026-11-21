@@ -7,9 +7,7 @@ import com.fstengineering.leasilycrm.core.application.models.commands.UndoCheckO
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.queries.OccupiedPeriodArgs
@@ -118,10 +116,7 @@ class OccupiedPeriodDetailsViewModel(
                 )
             )
                 .onError { error ->
-                    when (error) {
-                        is ApplicationError -> _uiEvents.trySend(UiEvents.BottomSheetError(error))
-                        is ValidationErrors, is DomainError -> Unit
-                    }
+                    _uiEvents.trySend(UiEvents.BottomSheetError(error))
                 }
                 .onSuccess { _uiEvents.trySend(UiEvents.RegisterCheckOutSuccess) }
         }
@@ -145,10 +140,7 @@ class OccupiedPeriodDetailsViewModel(
                 )
             )
                 .onError { error ->
-                    when (error) {
-                        is ApplicationError -> _uiEvents.trySend(UiEvents.BottomSheetError(error))
-                        is ValidationErrors, is DomainError -> Unit
-                    }
+                    _uiEvents.trySend(UiEvents.BottomSheetError(error))
                 }
         }
     }
@@ -160,7 +152,7 @@ class OccupiedPeriodDetailsViewModel(
     }
 
     sealed interface UiEvents {
-        data class BottomSheetError(val error: ApplicationError) : UiEvents
+        data class BottomSheetError(val error: BaseError) : UiEvents
         data object NavigateUp : UiEvents
         data object OccupiedPeriodDeleteSuccess : UiEvents
         data object RegisterCheckInSuccess : UiEvents

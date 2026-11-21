@@ -14,7 +14,7 @@ class AssistancePreferredPeriod private constructor(
         fun parse(
             startDate: AppDate,
             endDate: AppDate,
-        ): AppResult<AssistancePreferredPeriod, ValidationErrors> {
+        ): AppResult<AssistancePreferredPeriod> {
             val errors = mutableListOf<DomainError>()
 
             if (startDate == endDate) errors.add(DomainError.AssistanceOtherFields.PreferredPeriodStartAndEndDatesAreTheSame)

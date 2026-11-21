@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.dataSourc
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.escapeLike
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.TenantReadModel
@@ -13,7 +12,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.projection
 @Dao
 abstract class ClienteReadDataSource {
     /** Busca o Cliente não excluído. */
-    suspend fun getCliente(clienteId: Long): AppResult<TenantReadModel, ApplicationError> =
+    suspend fun getCliente(clienteId: Long): AppResult<TenantReadModel> =
         onDatabase { findCliente(clienteId).toTenantReadModel() }
 
     /**
@@ -24,7 +23,7 @@ abstract class ClienteReadDataSource {
     suspend fun getClientesWithoutEstadiaAtiva(
         matching: String?,
         currentClienteId: Long?,
-    ): AppResult<List<TenantReadModel>, ApplicationError> = onDatabase {
+    ): AppResult<List<TenantReadModel>> = onDatabase {
         selectClientesWithoutEstadiaAtiva(matching?.escapeLike(), currentClienteId)
             .map { it.toTenantReadModel() }
     }

@@ -6,26 +6,25 @@ import com.fstengineering.leasilycrm.clienteRegistration.application.models.Clie
 import com.fstengineering.leasilycrm.clienteRegistration.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.clienteRegistration.infra.projections.ClienteRegistrationProjection
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 
 /** Leitura do Cliente a editar e das sugestões de preenchimento do cadastro. */
 @Dao
 abstract class ClienteRegistrationReadDataSource {
     /** Busca o Cliente não excluído, para preencher o formulário de edição. */
-    suspend fun getCliente(clienteId: Long): AppResult<ClienteReadModel, ApplicationError> =
+    suspend fun getCliente(clienteId: Long): AppResult<ClienteReadModel> =
         onDatabase { selectCliente(clienteId).toReadModel() }
 
     /** Lista as etiquetas já usadas por Clientes não excluídos, em ordem alfabética. */
-    suspend fun getTags(): AppResult<List<String>, ApplicationError> =
+    suspend fun getTags(): AppResult<List<String>> =
         onDatabase { selectTags() }
 
     /** Lista as cidades já usadas por Clientes não excluídos, em ordem alfabética. */
-    suspend fun getCities(): AppResult<List<String>, ApplicationError> =
+    suspend fun getCities(): AppResult<List<String>> =
         onDatabase { selectCities() }
 
     /** Lista as Origens do contato já usadas por Clientes não excluídos, em ordem alfabética. */
-    suspend fun getContactOrigins(): AppResult<List<String>, ApplicationError> =
+    suspend fun getContactOrigins(): AppResult<List<String>> =
         onDatabase { selectContactOrigins() }
 
     @Query(

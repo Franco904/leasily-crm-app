@@ -16,7 +16,7 @@ class EncryptedPreferencesDataSource(
 ) : PreferencesDataSource<EncryptedPreferences> {
     override suspend fun savePreferences(
         onPreferencesFile: (EncryptedPreferences) -> EncryptedPreferences,
-    ): AppResult<Unit, ApplicationError> {
+    ): AppResult<Unit> {
         try {
             dataStore.updateData { preferences -> onPreferencesFile(preferences) }
 
@@ -29,7 +29,7 @@ class EncryptedPreferencesDataSource(
         }
     }
 
-    override suspend fun readPreferences(): AppResult<Flow<EncryptedPreferences>, ApplicationError> {
+    override suspend fun readPreferences(): AppResult<Flow<EncryptedPreferences>> {
         try {
             return AppResult.Success(data = dataStore.data)
         } catch (e: Exception) {

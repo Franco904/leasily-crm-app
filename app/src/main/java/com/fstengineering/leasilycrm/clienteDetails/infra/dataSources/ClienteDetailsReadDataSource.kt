@@ -7,7 +7,6 @@ import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteRe
 import com.fstengineering.leasilycrm.clienteDetails.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.clienteDetails.infra.projections.ClienteDetailsProjection
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -20,7 +19,7 @@ abstract class ClienteDetailsReadDataSource {
      * Estadias, lidos numa única transação, e emite de novo quando qualquer um deles muda. Emite
      * `null` quando o Cliente não existe ou foi excluído.
      */
-    fun watchCliente(clienteId: Long): Flow<AppResult<ClienteReadModel?, ApplicationError>> =
+    fun watchCliente(clienteId: Long): Flow<AppResult<ClienteReadModel?>> =
         observeCliente(clienteId)
             .map { projection -> projection?.toReadModel() }
             .asDatabaseFlowResult()

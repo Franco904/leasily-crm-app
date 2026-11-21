@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.proprietarios.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.proprietarios.infra.projections.ProprietarioNameProjection
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.proprietarios.application.models.ProprietarioReadModel
@@ -15,7 +14,7 @@ import kotlinx.coroutines.flow.map
 @Dao
 abstract class ProprietariosReadDataSource {
     /** Observa os Proprietários não excluídos, em ordem alfabética de nome. */
-    fun watchProprietarios(): Flow<AppResult<List<ProprietarioReadModel>, ApplicationError>> =
+    fun watchProprietarios(): Flow<AppResult<List<ProprietarioReadModel>>> =
         observeProprietarios()
             .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()

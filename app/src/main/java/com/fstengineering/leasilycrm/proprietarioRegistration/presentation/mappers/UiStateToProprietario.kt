@@ -1,13 +1,12 @@
 package com.fstengineering.leasilycrm.proprietarioRegistration.presentation.mappers
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioDraftFormUiState
 import kotlinx.collections.immutable.toPersistentList
 
-fun ProprietarioDraftFormUiState.Loaded.toProprietario(): AppResult<Proprietario, ValidationErrors> {
+fun ProprietarioDraftFormUiState.Loaded.toProprietario(): AppResult<Proprietario> {
     return Proprietario.parse(
         id = id,
         createDateTime = createDateTime,

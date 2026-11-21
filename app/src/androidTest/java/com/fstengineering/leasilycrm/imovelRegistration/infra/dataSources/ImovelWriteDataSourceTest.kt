@@ -51,7 +51,7 @@ class ImovelWriteDataSourceTest : IntegrationTest() {
 
             val result = sut.save(imovel)
 
-            result.shouldBeInstanceOf<AppResult.Error<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Error>()
             imovelDao.getAll().shouldBeEmpty()
         }
 
@@ -66,7 +66,7 @@ class ImovelWriteDataSourceTest : IntegrationTest() {
 
             val result = sut.save(imovel)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             imovelDao.getAll().single().characteristics.map { it.imovelCharacteristicId }
                 .shouldContainSame(characteristics.map { it.id })
         }
@@ -82,7 +82,7 @@ class ImovelWriteDataSourceTest : IntegrationTest() {
 
             val result = sut.save(imovel)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             imovelDao.getAll().single().files
                 .map { it.imovelFileUri to it.isMainPicture }
                 .shouldContainSame(files.map { it.uriString to it.isMainPicture })
@@ -97,7 +97,7 @@ class ImovelWriteDataSourceTest : IntegrationTest() {
                     proprietarioId = proprietarioId,
                     prices = listOf(createFakeImovelPrice()),
                 )
-            ).shouldBeInstanceOf<AppResult.Success<*, *>>()
+            ).shouldBeInstanceOf<AppResult.Success<*>>()
             val saved = imovelDao.getAll().single()
             val savedPrice = saved.prices.single()
             val editedNeighborhood = faker.random.nextUUID()
@@ -111,7 +111,7 @@ class ImovelWriteDataSourceTest : IntegrationTest() {
 
             val result = sut.save(edited)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             val imoveis = imovelDao.getAll()
             imoveis.shouldHaveSize(1)
             imoveis.single().imovel.neighborhood shouldBeEqualTo editedNeighborhood

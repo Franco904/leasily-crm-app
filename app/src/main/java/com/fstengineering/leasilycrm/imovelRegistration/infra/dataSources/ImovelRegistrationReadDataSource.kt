@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toReadModel
@@ -18,11 +17,11 @@ abstract class ImovelRegistrationReadDataSource {
      * falha quando o Imóvel não existe. Quando o Proprietário foi excluído, devolve o Imóvel com
      * `proprietario` nulo, para o Corretor escolher outro, e registra a ausência em telemetria.
      */
-    suspend fun getImovel(imovelId: Long): AppResult<ImovelReadModel, ApplicationError> =
+    suspend fun getImovel(imovelId: Long): AppResult<ImovelReadModel> =
         onDatabase { requireNotNull(selectImovel(imovelId)).toReadModel() }
 
     /** Lista os bairros dos Imóveis não excluídos, sem repetição e em ordem alfabética. */
-    suspend fun getNeighborhoodNames(): AppResult<List<String>, ApplicationError> =
+    suspend fun getNeighborhoodNames(): AppResult<List<String>> =
         onDatabase { selectNeighborhoodNames() }
 
     @Transaction

@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.imovelRegistration.presentation.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -81,7 +82,7 @@ class ImovelRegistrationStep3ViewModel : ViewModel() {
                 otherPeriods = otherPeriods,
             )
                 .onSuccess { _uiEvents.trySend(UiEvent.ImovelPriceValidateSuccess) }
-                .onError { error -> setFieldErrors(error.errors) }
+                .onError { error -> setFieldErrors(error.toDomainErrors()) }
         }
     }
 

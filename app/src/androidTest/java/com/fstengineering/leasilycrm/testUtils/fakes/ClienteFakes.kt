@@ -35,7 +35,7 @@ fun createFakeCliente(
     email = "${faker.random.nextUUID()}@leasily.com",
     contactOrigin = contactOrigin,
     observations = null,
-).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Cliente>()
+).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Cliente>()
 
 /** Salva um Cliente aleatório e devolve o seu id. */
 suspend fun AppDatabase.saveFakeCliente(
@@ -48,7 +48,7 @@ suspend fun AppDatabase.saveFakeCliente(
 ): Long {
     clienteWriteDataSource()
         .save(createFakeCliente(id, name, city, tag, contactOrigin, identityDocument))
-        .shouldBeInstanceOf<AppResult.Success<*, *>>()
+        .shouldBeInstanceOf<AppResult.Success<*>>()
     return id
 }
 
@@ -56,7 +56,7 @@ suspend fun AppDatabase.saveFakeCliente(
 suspend fun AppDatabase.saveFakeImovelId(): Long {
     val imovelId = faker.random.nextInt(bound = 9999).toLong() + 1
     val imovel = createFakeImovel(proprietarioId = saveFakeProprietario(), id = imovelId)
-    imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*, *>>()
+    imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
     return imovelId
 }
 
@@ -158,7 +158,7 @@ suspend fun AppDatabase.saveFakeImovelWithMainPicture(): Pair<Long, String> {
         id = imovelId,
         files = listOf(ImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true)),
     )
-    imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*, *>>()
+    imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
     return imovelId to mainPictureUri
 }
 

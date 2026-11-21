@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -165,7 +166,7 @@ class ImovelRegistrationViewModel(
     }
 
     sealed interface UiEvent {
-        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
+        data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
 
         data class CloseScreenWithSnackbar(@StringRes val messageId: Int) : UiEvent
 

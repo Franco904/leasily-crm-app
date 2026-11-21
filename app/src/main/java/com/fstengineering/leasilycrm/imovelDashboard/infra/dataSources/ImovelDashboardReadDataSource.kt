@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelSummaryReadModel
@@ -24,7 +23,7 @@ abstract class ImovelDashboardReadDataSource {
      * foi excluído, o Imóvel é emitido com `proprietario` nulo e a ausência é registrada em
      * telemetria.
      */
-    fun watchImovel(imovelId: Long): Flow<AppResult<ImovelSummaryReadModel, ApplicationError>> =
+    fun watchImovel(imovelId: Long): Flow<AppResult<ImovelSummaryReadModel>> =
         observeImovel(imovelId)
             .filterNotNull()
             .map { it.toReadModel() }
@@ -33,7 +32,7 @@ abstract class ImovelDashboardReadDataSource {
     /** Observa os Períodos Ocupados não excluídos do Imóvel, em ordem de check-in. */
     fun watchPeriodosOcupados(
         imovelId: Long,
-    ): Flow<AppResult<List<ImovelPeriodoOcupado>, ApplicationError>> =
+    ): Flow<AppResult<List<ImovelPeriodoOcupado>>> =
         observePeriodosOcupados(imovelId)
             .map { projections -> projections.map { it.toValueObject() } }
             .asDatabaseFlowResult()

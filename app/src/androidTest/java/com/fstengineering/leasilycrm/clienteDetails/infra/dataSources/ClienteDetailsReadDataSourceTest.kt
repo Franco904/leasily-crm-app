@@ -103,7 +103,7 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
             val atendimentoId = db.insertFakeAtendimento(clienteId, isFinished = false)
 
             db.assistanceWriteDataSource().delete(atendimentoId)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             watchCliente(clienteId).assistances shouldBeEqualTo emptyList()
         }
@@ -114,7 +114,7 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
         db.clienteWriteDataSource().delete(clienteId)
 
         sut.watchCliente(clienteId).first()
-            .shouldBeInstanceOf<AppResult.Success<*, *>>()
+            .shouldBeInstanceOf<AppResult.Success<*>>()
             .data.shouldBeNull()
     }
 
@@ -169,7 +169,7 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
             db.sendFakeImovel(atendimentoId, keptImovelId)
             db.sendFakeImovel(atendimentoId, deletedImovelId)
             db.imovelSharedWriteDataSource().delete(deletedImovelId)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val cliente = watchCliente(clienteId)
 
@@ -193,6 +193,6 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
 
     private suspend fun watchCliente(clienteId: Long): ClienteReadModel =
         sut.watchCliente(clienteId).first()
-            .shouldBeInstanceOf<AppResult.Success<*, *>>()
+            .shouldBeInstanceOf<AppResult.Success<*>>()
             .data.shouldNotBeNull().shouldBeInstanceOf<ClienteReadModel>()
 }

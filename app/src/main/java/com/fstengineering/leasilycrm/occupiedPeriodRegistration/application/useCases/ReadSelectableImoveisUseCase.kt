@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.SelectableImoveisArgs
@@ -17,7 +16,7 @@ class ReadSelectableImoveisUseCase(
 ) {
     suspend operator fun invoke(
         args: SelectableImoveisArgs,
-    ): AppResult<ImmutableList<ImovelReadModel>, ApplicationError> {
+    ): AppResult<ImmutableList<ImovelReadModel>> {
         val imoveis = imovelQueryRepository.getAll(args.matching)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },

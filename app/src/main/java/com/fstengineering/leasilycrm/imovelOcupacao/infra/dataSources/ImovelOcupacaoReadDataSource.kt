@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.imovelOcupacao.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.imovelOcupacao.infra.mappers.toValueObject
@@ -17,7 +16,7 @@ abstract class ImovelOcupacaoReadDataSource {
     /** Observa os Períodos Ocupados não excluídos do Imóvel, em ordem de check-in. */
     fun watchPeriodosOcupados(
         imovelId: Long,
-    ): Flow<AppResult<List<ImovelPeriodoOcupado>, ApplicationError>> =
+    ): Flow<AppResult<List<ImovelPeriodoOcupado>>> =
         observePeriodosOcupados(imovelId)
             .map { projections -> projections.map { it.toValueObject() } }
             .asDatabaseFlowResult()

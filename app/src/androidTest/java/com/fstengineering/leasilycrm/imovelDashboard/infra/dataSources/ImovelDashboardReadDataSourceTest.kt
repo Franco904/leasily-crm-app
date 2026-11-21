@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
@@ -61,11 +60,11 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
                     ),
                 ),
             )
-            imovelWriteDataSource.save(imovel).shouldBeInstanceOf<AppResult.Success<*, *>>()
+            imovelWriteDataSource.save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.watchImovel(imovelId = 4L).first()
 
-            result.shouldBeInstanceOf<AppResult.Success<ImovelSummaryReadModel, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Success<ImovelSummaryReadModel>>()
                 .data shouldBeEqualTo ImovelSummaryReadModel(
                 id = 4L,
                 proprietario = ProprietarioReadModel(id = proprietarioId, name = "Carla"),
@@ -83,13 +82,13 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
             val proprietarioId = db.saveFakeProprietario()
             imovelWriteDataSource.save(
                 createFakeImovel(proprietarioId = proprietarioId, id = 4L)
-            ).shouldBeInstanceOf<AppResult.Success<*, *>>()
+            ).shouldBeInstanceOf<AppResult.Success<*>>()
             db.proprietarioWriteDataSource().delete(proprietarioId)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.watchImovel(imovelId = 4L).first()
 
-            result.shouldBeInstanceOf<AppResult.Success<ImovelSummaryReadModel, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Success<ImovelSummaryReadModel>>()
                 .data.proprietario.shouldBeNull()
         }
 
@@ -110,7 +109,7 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
 
             val result = sut.watchPeriodosOcupados(imovelId = 1L).first()
 
-            result.shouldBeInstanceOf<AppResult.Success<List<ImovelPeriodoOcupado>, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Success<List<ImovelPeriodoOcupado>>>()
                 .data shouldBeEqualTo listOf(earlier, later)
         }
 

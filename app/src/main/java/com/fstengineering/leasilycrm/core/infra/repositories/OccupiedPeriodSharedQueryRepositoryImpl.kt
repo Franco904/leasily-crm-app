@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.core.application.models.OccupiedPeriodNotif
 import com.fstengineering.leasilycrm.core.application.models.StayCheckInCheckOutCountsReadModel
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.mappers.toReadModel
@@ -16,7 +15,7 @@ import kotlinx.coroutines.flow.map
 class OccupiedPeriodSharedQueryRepositoryImpl(
     private val occupiedPeriodDatabaseDataSource: StayDatabaseDataSource,
 ) : OccupiedPeriodSharedQueryRepository {
-    override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<ImmutableList<OccupiedPeriodNotificationReadModel>, ApplicationError> {
+    override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<ImmutableList<OccupiedPeriodNotificationReadModel>> {
         return occupiedPeriodDatabaseDataSource
             .getAllTodayCheckInsAndCheckOutsToNotify()
             .fold(
@@ -31,7 +30,7 @@ class OccupiedPeriodSharedQueryRepositoryImpl(
             )
     }
 
-    override fun watchAllPastCheckInCheckOutNotDoneCounts(): Flow<AppResult<StayCheckInCheckOutCountsReadModel, ApplicationError>> {
+    override fun watchAllPastCheckInCheckOutNotDoneCounts(): Flow<AppResult<StayCheckInCheckOutCountsReadModel>> {
         return occupiedPeriodDatabaseDataSource
             .watchAllPastCheckInCheckOutNotDoneCounts()
             .map { result ->

@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
@@ -119,7 +120,7 @@ class ProprietarioRegistrationViewModel(
 
         viewModelScope.launch {
             val proprietario = form.toProprietario()
-                .fold(onError = { setFieldErrors(it.errors); return@launch }, onSuccess = { it })
+                .fold(onError = { setFieldErrors(it.toDomainErrors()); return@launch }, onSuccess = { it })
 
             proprietarioWriteDataSource.save(proprietario)
                 .onError { error ->
@@ -178,7 +179,7 @@ class ProprietarioRegistrationViewModel(
     }
 
     sealed interface UiEvent {
-        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
+        data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
 
         data class ScrollToField(val field: ProprietarioField) : UiEvent
 

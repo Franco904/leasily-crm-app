@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.imovelDetails.application.models.dtos.ImovelReadModel
@@ -17,7 +16,7 @@ import kotlinx.coroutines.flow.map
 @Dao
 abstract class ImovelDetailsReadDataSource {
     /** Observa o Imóvel não excluído com características, Preços e arquivos. */
-    fun watchImovel(imovelId: Long): Flow<AppResult<ImovelReadModel, ApplicationError>> =
+    fun watchImovel(imovelId: Long): Flow<AppResult<ImovelReadModel>> =
         observeImovel(imovelId)
             .filterNotNull()
             .map { it.toReadModel() }

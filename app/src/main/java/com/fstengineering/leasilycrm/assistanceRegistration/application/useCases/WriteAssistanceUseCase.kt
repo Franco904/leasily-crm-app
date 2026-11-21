@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.mappers.
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.commands.AssistanceCommandModel
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceCommandRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 
 class WriteAssistanceUseCase(
@@ -12,7 +11,7 @@ class WriteAssistanceUseCase(
 ) {
     suspend operator fun invoke(
         command: AssistanceCommandModel,
-    ): AppResult<Unit, BaseError> {
+    ): AppResult<Unit> {
         val assistance = command.toEntity()
             .fold(onError = { return AppResult.Error(error = it) }, onSuccess = { it })
 

@@ -168,7 +168,7 @@ fun ProfileScreen(
                             credentialManager.clearGoogleCredentialState(activityContext = activity)
                                 .onError { e ->
                                     isSigningOut = false
-                                    onUiEvent(ShowErrorBottomSheet(e.toBottomSheetData()))
+                                    onUiEvent(ShowErrorBottomSheet(e.toBottomSheetData(DefaultErrorBottomSheetDataPropertiesStrategy)))
                                 }
                                 .onSuccess { viewModel.signOutUser() }
                         }

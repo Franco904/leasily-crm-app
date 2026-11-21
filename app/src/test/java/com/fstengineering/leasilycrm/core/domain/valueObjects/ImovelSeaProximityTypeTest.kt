@@ -23,7 +23,7 @@ class ImovelSeaProximityTypeTest {
             val result = ImovelSeaProximityType.DistanceToSea.parse(distance)
 
             val success =
-                result.shouldBeInstanceOf<AppResult.Success<ImovelSeaProximityType.DistanceToSea, ValidationErrors>>()
+                result.shouldBeInstanceOf<AppResult.Success<ImovelSeaProximityType.DistanceToSea>>()
             success.data.distance shouldBeEqualTo distance
         }
 
@@ -35,7 +35,7 @@ class ImovelSeaProximityTypeTest {
                 ImovelSeaProximityType.DistanceToSea.parse(AppDecimal(absoluteDistance.negate()))
 
             val success =
-                result.shouldBeInstanceOf<AppResult.Success<ImovelSeaProximityType.DistanceToSea, ValidationErrors>>()
+                result.shouldBeInstanceOf<AppResult.Success<ImovelSeaProximityType.DistanceToSea>>()
             success.data.distance shouldBeEqualTo AppDecimal(absoluteDistance)
         }
 

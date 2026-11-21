@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteShar
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.services.ImovelOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.imovelDashboard.application.mappers.toReadModel
@@ -27,7 +26,7 @@ class WatchImovelUseCase(
 ) {
     suspend operator fun invoke(
         args: ImovelArgs,
-    ): Flow<AppResult<ImovelReadModel, ApplicationError>> {
+    ): Flow<AppResult<ImovelReadModel>> {
         val imovelFlow = imovelDashboardReadDataSource.watchImovel(imovelId = args.id)
         val occupiedPeriodsFlow =
             imovelDashboardReadDataSource.watchPeriodosOcupados(imovelId = args.id)
@@ -56,8 +55,8 @@ class WatchImovelUseCase(
     }
 
     private suspend fun getCurrentMonthOccupiedPeriods(
-        occupiedPeriodsResult: AppResult<List<ImovelPeriodoOcupado>, ApplicationError>,
-    ): AppResult<Pair<AppYearMonth, ImmutableList<ImovelOccupiedDateReadModel>>, ApplicationError> {
+        occupiedPeriodsResult: AppResult<List<ImovelPeriodoOcupado>>,
+    ): AppResult<Pair<AppYearMonth, ImmutableList<ImovelOccupiedDateReadModel>>> {
         val occupiedPeriods = occupiedPeriodsResult
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },

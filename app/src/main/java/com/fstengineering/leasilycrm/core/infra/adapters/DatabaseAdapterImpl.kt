@@ -12,7 +12,7 @@ class DatabaseAdapterImpl(
 ) : DatabaseAdapter {
     override suspend fun transaction(
         transactionBlock: suspend () -> Unit,
-    ): AppResult<Unit, ApplicationError> {
+    ): AppResult<Unit> {
         try {
             db.withTransaction { transactionBlock() }
 

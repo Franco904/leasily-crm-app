@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.projections.ProprietarioRegistrationProjection
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
@@ -14,7 +13,7 @@ import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toRe
 @Dao
 abstract class ProprietarioRegistrationReadDataSource {
     /** Busca o Proprietário com seus arquivos, para preencher o formulário de edição. */
-    suspend fun getProprietario(proprietarioId: Long): AppResult<ProprietarioReadModel, ApplicationError> =
+    suspend fun getProprietario(proprietarioId: Long): AppResult<ProprietarioReadModel> =
         onDatabase { selectProprietario(proprietarioId).toReadModel() }
 
     @Transaction
