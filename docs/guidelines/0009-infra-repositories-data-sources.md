@@ -33,7 +33,7 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
   abstract class EstadiaReadDataSource : KoinComponent {
       private val dateTimeProvider: AppDateTimeProvider by inject()
 
-      fun watchCheckInCheckOutPendentes(): Flow<AppResult<List<EstadiaResumoReadModel>, ApplicationError>> =
+      fun watchCheckInCheckOutPendentes(): Flow<AppResult<List<EstadiaResumoReadModel>>> =
           observeCheckInCheckOutPendentes(dateTimeProvider.now())
               .map { orms -> orms.map { it.toEstadiaResumoReadModel() } }
               .asDatabaseFlowResult()
@@ -91,9 +91,10 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
   `IOException` ou similar, a fronteira vazou. Motivo: mantém o detalhe da biblioteca
   substituível (Adapter, `0001-subdomains.md`) e as camadas de cima testáveis sem simular
   modos de falha de infra.
-- **Taxonomia de erro.** `BaseError` (`core/domain/utils/`) é marcador puro, com dois
-  sub-marcadores: `ApplicationError` (falha de infra) e `DomainError` (regra de
-  domínio). **Não carregam mensagem nem causa.** Cada módulo declara o seu
+- **Taxonomia de erro.** `BaseError` (`core/domain/utils/`) é uma `sealed interface`
+  marcadora, com os subtipos `ApplicationError` e `CredentialsError` (falha de infra),
+  `DomainError` (regra de domínio) e `ValidationErrors` (lista de `DomainError` da factory).
+  Subtipo novo mora no mesmo pacote. **Não carregam mensagem nem causa.** Cada módulo declara o seu
   próprio `enum` / `sealed interface` herdando de um deles
   (ex.: `sealed interface PeriodoOcupadoRegistrationError : ApplicationError`), com um caso
   por modo de falha que a camada de cima precise distinguir.
@@ -130,7 +131,7 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
   ```kotlin
   @Dao
   abstract class ImovelWriteDataSource {
-      suspend fun save(imovel: Imovel): AppResult<Unit, ApplicationError> =
+      suspend fun save(imovel: Imovel): AppResult<Unit> =
           onDatabase { saveInTransaction(imovel.toImovelOrm(), imovel.precos.map { it.toImovelPrecoOrm() }) }
 
       @Transaction

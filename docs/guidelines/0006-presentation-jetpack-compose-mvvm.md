@@ -310,7 +310,7 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
 - Mapper que devolve coleção devolve o tipo imutável de
   `kotlinx.collections.immutable` (ver bullet de coleção em "ViewModel"), não `List`.
 - Write-side sem UseCase: **UiState → Agregado**, chamando a factory do agregado e devolvendo
-  `AppResult<Agregado, ValidationErrors>` (`fun ProprietarioDraftFormUiState.Loaded.toProprietario()`).
+  `AppResult<Agregado>` (erro `ValidationErrors`; `fun ProprietarioDraftFormUiState.Loaded.toProprietario()`).
   Só reshape — a validação é da factory. Não há `CommandModel` nesse caso.
 - Não faz Orm → ReadModel (é `infra/`, `0009-infra-repositories-data-sources.md`) nem
   CommandModel → Agregado (é `application/`, `0007-application-use-cases.md`).
