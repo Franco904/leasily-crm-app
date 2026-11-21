@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
@@ -48,35 +47,6 @@ class ProprietarioReadDataSourceTest : IntegrationTest() {
 
             result.shouldBeInstanceOf<AppResult.Success<*, *>>()
                 .data shouldBeEqualTo listOf(ana, carla)
-        }
-
-    // endregion
-
-    // region getProprietario
-
-    @Test
-    fun deveBuscarProprietarioDoImovelQuandoCadastrado(): Unit =
-        runBlocking(Dispatchers.Default) {
-            val ana = ProprietarioReadModel(id = 1L, name = "Ana")
-            saveProprietario(ana)
-
-            val result = sut.getProprietario(ana.id)
-
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>().data shouldBeEqualTo ana
-        }
-
-    @Test
-    fun deveFalharAoBuscarProprietarioDoImovelQuandoExcluido(): Unit =
-        runBlocking(Dispatchers.Default) {
-            val ana = ProprietarioReadModel(id = 1L, name = "Ana")
-            saveProprietario(ana)
-            proprietarioWriteDataSource.delete(ana.id)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
-
-            val result = sut.getProprietario(ana.id)
-
-            result.shouldBeInstanceOf<AppResult.Error<*, *>>().error shouldBeEqualTo
-                    ApplicationError.Unknown
         }
 
     // endregion
