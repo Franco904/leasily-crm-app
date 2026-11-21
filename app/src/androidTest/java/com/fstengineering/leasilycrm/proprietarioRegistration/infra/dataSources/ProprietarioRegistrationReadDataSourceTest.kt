@@ -44,12 +44,12 @@ class ProprietarioRegistrationReadDataSourceTest : IntegrationTest() {
             )
             val proprietario = createFakeProprietario(id = proprietarioId, files = files)
             proprietarioWriteDataSource.save(proprietario)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.getProprietario(proprietarioId)
 
             val proprietarioReadModel = result
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
                 .data.shouldNotBeNull().shouldBeInstanceOf<ProprietarioReadModel>()
             proprietarioReadModel.createDateTime.shouldNotBeNull()
             proprietarioReadModel.updateDateTime.shouldNotBeNull()
@@ -91,7 +91,7 @@ class ProprietarioRegistrationReadDataSourceTest : IntegrationTest() {
         email = "${faker.random.nextUUID()}@leasily.com",
         paymentKey = faker.random.nextUUID(),
         files = persistentListOf<ProprietarioFile>().addAll(files),
-    ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Proprietario>()
+    ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Proprietario>()
 
     private fun createFakeProprietarioFile(id: Long): ProprietarioFile = ProprietarioFile(
         id = id,

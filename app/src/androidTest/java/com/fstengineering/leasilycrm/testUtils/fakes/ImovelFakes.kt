@@ -17,19 +17,21 @@ import org.amshove.kluent.shouldBeInstanceOf
 import java.time.LocalDate
 
 /** Salva um Proprietário aleatório (exigido pela FK do Imóvel) e devolve o seu id. */
-suspend fun AppDatabase.saveFakeProprietario(): Long {
-    val proprietarioId = faker.random.nextInt(bound = 9999).toLong() + 1
+suspend fun AppDatabase.saveFakeProprietario(
+    name: String = faker.random.nextUUID(),
+    proprietarioId: Long = faker.random.nextInt(bound = 9999).toLong() + 1,
+): Long {
     val proprietario = Proprietario.parse(
         id = proprietarioId,
         createDateTime = null,
-        name = faker.random.nextUUID(),
+        name = name,
         phone = null,
         email = null,
         paymentKey = null,
         files = persistentListOf(),
-    ).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Proprietario>()
+    ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Proprietario>()
     proprietarioWriteDataSource().save(proprietario)
-        .shouldBeInstanceOf<AppResult.Success<*, *>>()
+        .shouldBeInstanceOf<AppResult.Success<*>>()
     return proprietarioId
 }
 
@@ -50,7 +52,7 @@ fun createFakeImovel(
     characteristics = persistentListOf<ImovelCharacteristic>().addAll(characteristics),
     prices = persistentListOf<ImovelPrice>().addAll(prices),
     files = persistentListOf<ImovelFile>().addAll(files),
-).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<Imovel>()
+).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Imovel>()
 
 fun createFakeImovelPrice(
     id: Long? = null,
@@ -60,4 +62,4 @@ fun createFakeImovelPrice(
     startDate = AppDate(LocalDate.of(2030, 1, 1)),
     endDate = AppDate(LocalDate.of(2030, 1, 31)),
     amount = amount,
-).shouldBeInstanceOf<AppResult.Success<*, *>>().data.shouldBeInstanceOf<ImovelPrice>()
+).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<ImovelPrice>()

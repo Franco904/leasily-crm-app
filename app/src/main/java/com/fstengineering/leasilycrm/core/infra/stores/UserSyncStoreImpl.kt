@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.core.infra.stores
 import com.fstengineering.leasilycrm.core.application.models.UserRetryInfoWriteModel
 import com.fstengineering.leasilycrm.core.application.stores.UserSyncStore
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -18,7 +17,7 @@ class UserSyncStoreImpl(
     private val remoteDataSource: UserRemoteDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
 ) : UserSyncStore {
-    override suspend fun retryUpdate(): AppResult<Unit, ApplicationError> {
+    override suspend fun retryUpdate(): AppResult<Unit> {
         val prefs = encryptedPreferencesDataSource.readPreferences()
             .fold(
                 onError = { return AppResult.Error(error = it) },

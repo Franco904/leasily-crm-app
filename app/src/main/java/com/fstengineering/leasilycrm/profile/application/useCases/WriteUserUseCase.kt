@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.profile.application.useCases
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.profile.application.mappers.toEntity
 import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
@@ -10,7 +9,7 @@ import com.fstengineering.leasilycrm.profile.application.repositories.UserComman
 class WriteUserUseCase(
     private val repository: UserCommandRepository,
 ) {
-    suspend operator fun invoke(command: UserCommandModel): AppResult<Unit, BaseError> {
+    suspend operator fun invoke(command: UserCommandModel): AppResult<Unit> {
         val user = command.toEntity()
             .fold(
                 onError = { return AppResult.Error(error = it) },

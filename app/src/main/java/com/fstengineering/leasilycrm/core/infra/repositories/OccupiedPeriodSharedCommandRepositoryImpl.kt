@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.core.infra.repositories
 
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
@@ -14,13 +13,13 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
     private val occupiedPeriodDatabaseDataSource: StayDatabaseDataSource,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : OccupiedPeriodSharedCommandRepository {
-    override suspend fun delete(id: Long): AppResult<Unit, ApplicationError> {
+    override suspend fun delete(id: Long): AppResult<Unit> {
         return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.delete(id)
         }
     }
 
-    override suspend fun registerCheckIn(id: Long): AppResult<Unit, ApplicationError> {
+    override suspend fun registerCheckIn(id: Long): AppResult<Unit> {
         return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.updateStatus(
                 id = id,
@@ -29,13 +28,13 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
         }
     }
 
-    override suspend fun undoRegisterCheckIn(id: Long): AppResult<Unit, ApplicationError> {
+    override suspend fun undoRegisterCheckIn(id: Long): AppResult<Unit> {
         return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.updateStatus(id = id, status = StayStatus.Upcoming.id)
         }
     }
 
-    override suspend fun registerCheckOut(id: Long): AppResult<Unit, ApplicationError> {
+    override suspend fun registerCheckOut(id: Long): AppResult<Unit> {
         return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.updateStatus(
                 id = id,
@@ -44,7 +43,7 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
         }
     }
 
-    override suspend fun undoRegisterCheckOut(id: Long): AppResult<Unit, ApplicationError> {
+    override suspend fun undoRegisterCheckOut(id: Long): AppResult<Unit> {
         return databaseAdapter.transaction {
             occupiedPeriodDatabaseDataSource.updateStatus(
                 id = id,
@@ -55,7 +54,7 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
 
     override suspend fun setMustNotShowCheckOutDialogAnymore(
         mustNotShowCheckOutDialogAnymore: Boolean,
-    ): AppResult<Unit, ApplicationError> {
+    ): AppResult<Unit> {
         return plainPreferencesDataSource.savePreferences { prefs ->
             prefs.copy(mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore)
         }

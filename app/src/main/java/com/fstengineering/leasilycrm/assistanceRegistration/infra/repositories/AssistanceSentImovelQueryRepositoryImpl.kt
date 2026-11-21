@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.d
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentImovelQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.mappers.toSentImovelReadModel
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelDatabaseDataSource
 import kotlinx.collections.immutable.ImmutableList
@@ -15,7 +14,7 @@ class AssistanceSentImovelQueryRepositoryImpl(
 ) : AssistanceSentImovelQueryRepository {
     override suspend fun getAllSentInAssistance(
         assistanceId: Long,
-    ): AppResult<ImmutableList<AssistanceSentImovelReadModel>, ApplicationError> {
+    ): AppResult<ImmutableList<AssistanceSentImovelReadModel>> {
         val sentImoveis = imovelDatabaseDataSource.getAllSentInAssistance(assistanceId)
             .fold(
                 onError = { return AppResult.Error(error = it) },

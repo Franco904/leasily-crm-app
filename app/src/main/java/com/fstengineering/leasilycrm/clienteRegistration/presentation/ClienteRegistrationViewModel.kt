@@ -12,11 +12,12 @@ import com.fstengineering.leasilycrm.clienteRegistration.presentation.mappers.to
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteDraftFormUiState
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteErrorUiState
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteField
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
@@ -66,9 +67,9 @@ class ClienteRegistrationViewModel(
         if (isLoaded) return
         isLoaded = true
 
-        getPastTags()
-        getPastCities()
-        getPastContactOrigins()
+        loadPastTags()
+        loadPastCities()
+        loadPastContactOrigins()
 
         val clienteId = route.clienteId
         if (clienteId == null) {
@@ -76,10 +77,10 @@ class ClienteRegistrationViewModel(
             return
         }
 
-        getClienteToEdit(clienteId)
+        loadClienteToEdit(clienteId)
     }
 
-    private fun getPastTags() {
+    private fun loadPastTags() {
         viewModelScope.launch {
             clienteRegistrationReadDataSource.getTags()
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
@@ -87,7 +88,7 @@ class ClienteRegistrationViewModel(
         }
     }
 
-    private fun getPastCities() {
+    private fun loadPastCities() {
         viewModelScope.launch {
             clienteRegistrationReadDataSource.getCities()
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
@@ -95,7 +96,7 @@ class ClienteRegistrationViewModel(
         }
     }
 
-    private fun getPastContactOrigins() {
+    private fun loadPastContactOrigins() {
         viewModelScope.launch {
             clienteRegistrationReadDataSource.getContactOrigins()
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
@@ -105,7 +106,7 @@ class ClienteRegistrationViewModel(
         }
     }
 
-    private fun getClienteToEdit(clienteId: Long) {
+    private fun loadClienteToEdit(clienteId: Long) {
         viewModelScope.launch {
             clienteRegistrationReadDataSource.getCliente(clienteId)
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
@@ -144,7 +145,7 @@ class ClienteRegistrationViewModel(
 
         viewModelScope.launch {
             val cliente = form.toCliente()
-                .fold(onError = { setFieldErrors(it.errors); return@launch }, onSuccess = { it })
+                .fold(onError = { setFieldErrors(it.toDomainErrors()); return@launch }, onSuccess = { it })
 
             clienteWriteDataSource.save(cliente)
                 .onError { error ->
@@ -203,7 +204,7 @@ class ClienteRegistrationViewModel(
     }
 
     sealed interface UiEvent {
-        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
+        data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
 
         data class ScrollToField(val field: ClienteField) : UiEvent
 

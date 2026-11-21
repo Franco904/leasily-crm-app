@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.imovelDetails.application.models.dtos.Imove
 import com.fstengineering.leasilycrm.imovelDetails.application.models.dtos.ImovelReadModel
 import kotlinx.collections.immutable.toPersistentList
 
-fun ImovelCompound.toImovelReadModel(): ImovelReadModel {
+fun ImovelCompound.toReadModel(): ImovelReadModel {
     val characteristics = characteristics
         .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
         .toPersistentList()

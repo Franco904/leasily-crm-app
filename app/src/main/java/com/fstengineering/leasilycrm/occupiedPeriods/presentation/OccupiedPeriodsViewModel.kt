@@ -8,15 +8,12 @@ import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPerio
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.useCases.RegisterStayCheckOutUseCase
 import com.fstengineering.leasilycrm.core.application.useCases.UndoRegisterStayCheckOutUseCase
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.DomainError
-import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
 import com.fstengineering.leasilycrm.occupiedPeriods.application.repositories.OccupiedPeriodQueryRepository
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -31,6 +28,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class OccupiedPeriodsViewModel(
     private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
@@ -217,10 +215,7 @@ class OccupiedPeriodsViewModel(
                 )
             )
                 .onError { error ->
-                    when (error) {
-                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
-                        is ValidationErrors, is DomainError -> Unit
-                    }
+                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
                 }
                 .onSuccess {
                     _uiEvents.trySend(UiEvent.RegisterCheckOutSuccess)
@@ -249,10 +244,7 @@ class OccupiedPeriodsViewModel(
                 )
             )
                 .onError { error ->
-                    when (error) {
-                        is ApplicationError -> _uiEvents.trySend(UiEvent.BottomSheetError(error))
-                        is ValidationErrors, is DomainError -> Unit
-                    }
+                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
                 }
         }
     }
@@ -264,7 +256,7 @@ class OccupiedPeriodsViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError) : UiEvent
+        data class BottomSheetError(val error: BaseError) : UiEvent
         data object OccupiedPeriodDeleteSuccess : UiEvent
         data object RegisterCheckInSuccess : UiEvent
         data object RegisterCheckOutSuccess : UiEvent

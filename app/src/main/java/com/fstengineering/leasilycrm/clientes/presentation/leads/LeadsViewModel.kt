@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesPreferen
 import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesReadDataSource
 import com.fstengineering.leasilycrm.clientes.presentation.mappers.toClienteListItemUiState
 import com.fstengineering.leasilycrm.clientes.presentation.models.ClienteListItemUiState
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
@@ -156,7 +156,7 @@ class LeadsViewModel(
     }
 
     sealed interface UiEvent {
-        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
+        data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
         data object ShowDeleteSuccessSnackbar : UiEvent
     }
 }

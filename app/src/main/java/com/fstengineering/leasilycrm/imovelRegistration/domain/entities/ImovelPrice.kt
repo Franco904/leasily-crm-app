@@ -4,6 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Amount
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
@@ -22,7 +23,7 @@ class ImovelPrice private constructor(
             endDate: AppDate? = null,
             amount: AppDecimal? = null,
             otherPeriods: List<ImovelPricePeriod> = emptyList(),
-        ): AppResult<ImovelPrice, ValidationErrors> {
+        ): AppResult<ImovelPrice> {
             val errors = mutableListOf<DomainError>()
 
             if (startDate == null || endDate == null) errors.add(DomainError.ImovelPricePeriod.Required)
@@ -35,7 +36,7 @@ class ImovelPrice private constructor(
                     endDate = endDate,
                     otherPeriods = otherPeriods,
                 )
-                    .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                    .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 

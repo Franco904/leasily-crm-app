@@ -8,9 +8,10 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import kotlinx.collections.immutable.toPersistentList
 
-fun AssistanceCommandModel.toEntity(): AppResult<Assistance, ValidationErrors> {
+fun AssistanceCommandModel.toEntity(): AppResult<Assistance> {
     val errors = mutableListOf<DomainError>()
 
     val isAnyNeighborhoodEmpty = preferredNeighborhoods.any { it.isBlank() }
@@ -19,7 +20,7 @@ fun AssistanceCommandModel.toEntity(): AppResult<Assistance, ValidationErrors> {
     val interactions = interactions
         .mapNotNull { interaction ->
             interaction.toEntity()
-                .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
         }
         .toPersistentList()
 
@@ -50,7 +51,7 @@ fun AssistanceCommandModel.toEntity(): AppResult<Assistance, ValidationErrors> {
         clienteId = clienteId,
         isFinished = false,
     )
-        .fold(onError = { errors.addAll(0, it.errors); null }, onSuccess = { it })
+        .fold(onError = { errors.addAll(0, it.toDomainErrors()); null }, onSuccess = { it })
 
     if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 

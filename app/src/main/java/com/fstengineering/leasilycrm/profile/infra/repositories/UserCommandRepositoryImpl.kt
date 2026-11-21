@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.profile.infra.repositories
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
@@ -16,7 +15,7 @@ class UserCommandRepositoryImpl(
     private val remoteDataSource: UserRemoteDataSource,
     private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
 ) : UserCommandRepository {
-    override suspend fun update(user: User): AppResult<Unit, ApplicationError> {
+    override suspend fun update(user: User): AppResult<Unit> {
         val creciNumber = user.creci?.value
 
         encryptedPreferencesDataSource.savePreferences { prefs ->

@@ -3,12 +3,11 @@ package com.fstengineering.leasilycrm.imoveis.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.core.infra.utils.escapeLike
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.imoveis.application.models.dtos.ImovelReadModel
-import com.fstengineering.leasilycrm.imoveis.infra.mappers.toImovelReadModel
+import com.fstengineering.leasilycrm.imoveis.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.imoveis.infra.projections.ImovelCardProjection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -34,9 +33,9 @@ private const val SELECT_IMOVEL_CARD = """
 @Dao
 abstract class ImoveisReadDataSource {
     /** Observa os Imóveis não excluídos, em ordem alfabética de bairro. */
-    fun watchImoveis(): Flow<AppResult<List<ImovelReadModel>, ApplicationError>> =
+    fun watchImoveis(): Flow<AppResult<List<ImovelReadModel>>> =
         observeImoveis()
-            .map { projections -> projections.map { it.toImovelReadModel() } }
+            .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()
 
     /**
@@ -45,8 +44,8 @@ abstract class ImoveisReadDataSource {
      */
     suspend fun getImoveis(
         matching: String?,
-    ): AppResult<List<ImovelReadModel>, ApplicationError> = onDatabase {
-        selectImoveis(matching?.escapeLike()).map { it.toImovelReadModel() }
+    ): AppResult<List<ImovelReadModel>> = onDatabase {
+        selectImoveis(matching?.escapeLike()).map { it.toReadModel() }
     }
 
     @Query("$SELECT_IMOVEL_CARD ORDER BY neighborhood")

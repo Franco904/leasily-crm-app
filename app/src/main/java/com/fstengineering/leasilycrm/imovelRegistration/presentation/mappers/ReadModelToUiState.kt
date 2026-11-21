@@ -12,14 +12,13 @@ import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.Imov
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelPricesUiState
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ProprietarioUiState
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 
 fun ImovelReadModel.toUiState() = ImovelDraftFormUiState.Loaded(
     id = id,
     createDateTime = createDateTime,
-    proprietario = proprietario.toUiState(),
+    proprietario = proprietario?.toUiState(),
     type = type,
     neighborhood = neighborhood,
     streetAddress = streetAddress,

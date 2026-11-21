@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 
 class Name private constructor(val value: String) {
     companion object {
-        fun parse(name: String): AppResult<Name, DomainError.Name> {
+        fun parse(name: String): AppResult<Name> {
             if (name.length > 100) {
                 return AppResult.Error(DomainError.Name.LengthIsGreaterThan100Chars)
             }

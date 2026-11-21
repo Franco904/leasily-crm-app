@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database
 
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.OccupiedPeriodListProjection
@@ -27,35 +26,35 @@ class StayDatabaseDataSourceImpl(
     override suspend fun updateStatus(id: Long, status: Int) =
         dao.updateStatus(id, status)
 
-    override suspend fun getById(id: Long): AppResult<StayCompound, ApplicationError> {
+    override suspend fun getById(id: Long): AppResult<StayCompound> {
         return onDatabase { dao.getById(id) }
     }
 
-    override suspend fun getAllByTenantId(tenantId: Long): AppResult<List<StayEntity>, ApplicationError> {
+    override suspend fun getAllByTenantId(tenantId: Long): AppResult<List<StayEntity>> {
         return onDatabase { dao.getAllByTenantId(tenantId) }
     }
 
-    override suspend fun getCurrentStayIdByTenantId(tenantId: Long): AppResult<Long?, ApplicationError> {
+    override suspend fun getCurrentStayIdByTenantId(tenantId: Long): AppResult<Long?> {
         return onDatabase { dao.getCurrentStayIdByTenantId(tenantId) }
     }
 
-    override fun watchById(id: Long): AppResult<Flow<StayCompound?>, ApplicationError> {
+    override fun watchById(id: Long): AppResult<Flow<StayCompound?>> {
         return onDatabase { dao.watchById(id) }
     }
 
-    override fun watchAll(): AppResult<Flow<List<StayCompound>>, ApplicationError> {
+    override fun watchAll(): AppResult<Flow<List<StayCompound>>> {
         return onDatabase { dao.watchAll() }
     }
 
-    override fun watchAllWithDetails(): AppResult<Flow<List<OccupiedPeriodListProjection>>, ApplicationError> {
+    override fun watchAllWithDetails(): AppResult<Flow<List<OccupiedPeriodListProjection>>> {
         return onDatabase { dao.watchAllWithDetails() }
     }
 
-    override fun watchAllByImovelId(imovelId: Long): Flow<AppResult<List<StayEntity>, ApplicationError>> {
+    override fun watchAllByImovelId(imovelId: Long): Flow<AppResult<List<StayEntity>>> {
         return dao.watchAllByImovelId(imovelId).asDatabaseFlowResult()
     }
 
-    override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<List<OccupiedPeriodNotificationProjection>, ApplicationError> {
+    override fun getAllTodayCheckInsAndCheckOutsToNotify(): AppResult<List<OccupiedPeriodNotificationProjection>> {
         return onDatabase {
             dao.getAllTodayCheckInsAndCheckOutsToNotify(
                 dateTimeProvider.now().toEpochMillisUTC()
@@ -63,7 +62,7 @@ class StayDatabaseDataSourceImpl(
         }
     }
 
-    override fun watchAllPastCheckInCheckOutNotDoneCounts(): Flow<AppResult<StayCheckInCheckOutCountsProjection, ApplicationError>> {
+    override fun watchAllPastCheckInCheckOutNotDoneCounts(): Flow<AppResult<StayCheckInCheckOutCountsProjection>> {
         val nowAdjusted = dateTimeProvider.now().withHourMinute(23, 59)
         return dao.watchAllPastCheckInCheckOutNotDoneCounts(nowAdjusted).asDatabaseFlowResult()
     }

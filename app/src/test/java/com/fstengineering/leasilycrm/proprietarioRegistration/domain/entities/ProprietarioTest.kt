@@ -28,7 +28,7 @@ class ProprietarioTest {
                 files = persistentListOf(),
             )
 
-            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val error = result.shouldBeInstanceOf<AppResult.Error>().error
             val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
             validationErrors.errors shouldContainSame listOf(
                 DomainError.Name.Required,
@@ -50,7 +50,7 @@ class ProprietarioTest {
                 files = persistentListOf(),
             )
 
-            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val error = result.shouldBeInstanceOf<AppResult.Error>().error
             val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
             validationErrors.errors shouldContainSame listOf(
                 DomainError.Name.LengthIsGreaterThan100Chars,
@@ -75,7 +75,7 @@ class ProprietarioTest {
                 files = persistentListOf(),
             )
 
-            val proprietario = result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            val proprietario = result.shouldBeInstanceOf<AppResult.Success<*>>()
                 .data.shouldBeInstanceOf<Proprietario>()
             proprietario.id shouldBeEqualTo id
             proprietario.name.value shouldBeEqualTo name

@@ -6,6 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelPrice
@@ -81,7 +82,7 @@ class ImovelRegistrationStep3ViewModel : ViewModel() {
                 otherPeriods = otherPeriods,
             )
                 .onSuccess { _uiEvents.trySend(UiEvent.ImovelPriceValidateSuccess) }
-                .onError { error -> setFieldErrors(error.errors) }
+                .onError { error -> setFieldErrors(error.toDomainErrors()) }
         }
     }
 

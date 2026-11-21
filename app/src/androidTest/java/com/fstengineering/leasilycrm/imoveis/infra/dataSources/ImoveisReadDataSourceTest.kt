@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.imoveis.infra.dataSources
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelSharedWriteDataSource
 import com.fstengineering.leasilycrm.imoveis.application.models.dtos.ImovelReadModel
@@ -68,14 +67,14 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
                 neighborhood = "Trindade"
             )
             listOf(centro, agronomica, trindade).forEach {
-                imovelWriteDataSource.save(it).shouldBeInstanceOf<AppResult.Success<*, *>>()
+                imovelWriteDataSource.save(it).shouldBeInstanceOf<AppResult.Success<*>>()
             }
             imovelSharedWriteDataSource.delete(imovelId = 3L)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.watchImoveis().first()
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>().data shouldBeEqualTo listOf(
+            result.shouldBeInstanceOf<AppResult.Success<*>>().data shouldBeEqualTo listOf(
                 ImovelReadModel(
                     id = 2L,
                     mainPictureUriString = null,
@@ -122,15 +121,15 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
                 streetAddress = "Avenida Centro Norte",
             )
             listOf(centro, trindade, agronomica).forEach {
-                imovelWriteDataSource.save(it).shouldBeInstanceOf<AppResult.Success<*, *>>()
+                imovelWriteDataSource.save(it).shouldBeInstanceOf<AppResult.Success<*>>()
             }
 
             val byNeighborhoodOrStreet = sut.getImoveis(matching = "centro")
             val byStreet = sut.getImoveis(matching = "flores")
 
-            byNeighborhoodOrStreet.shouldBeInstanceOf<AppResult.Success<List<ImovelReadModel>, ApplicationError>>()
+            byNeighborhoodOrStreet.shouldBeInstanceOf<AppResult.Success<List<ImovelReadModel>>>()
                 .data.map { it.id } shouldBeEqualTo listOf(3L, 1L)
-            byStreet.shouldBeInstanceOf<AppResult.Success<List<ImovelReadModel>, ApplicationError>>()
+            byStreet.shouldBeInstanceOf<AppResult.Success<List<ImovelReadModel>>>()
                 .data.map { it.id } shouldBeEqualTo listOf(1L)
         }
 
@@ -146,12 +145,12 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
                     neighborhood = "Agronômica"
                 ),
             ).forEach {
-                imovelWriteDataSource.save(it).shouldBeInstanceOf<AppResult.Success<*, *>>()
+                imovelWriteDataSource.save(it).shouldBeInstanceOf<AppResult.Success<*>>()
             }
 
             val result = sut.getImoveis(matching = null)
 
-            result.shouldBeInstanceOf<AppResult.Success<List<ImovelReadModel>, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Success<List<ImovelReadModel>>>()
                 .data.map { it.id } shouldBeEqualTo listOf(2L, 1L)
         }
 
@@ -171,12 +170,12 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
                     neighborhood = "Trindade"
                 ),
             ).forEach {
-                imovelWriteDataSource.save(it).shouldBeInstanceOf<AppResult.Success<*, *>>()
+                imovelWriteDataSource.save(it).shouldBeInstanceOf<AppResult.Success<*>>()
             }
 
             val result = sut.getImoveis(matching = "%")
 
-            result.shouldBeInstanceOf<AppResult.Success<List<ImovelReadModel>, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Success<List<ImovelReadModel>>>()
                 .data.map { it.id } shouldBeEqualTo listOf(1L)
         }
 

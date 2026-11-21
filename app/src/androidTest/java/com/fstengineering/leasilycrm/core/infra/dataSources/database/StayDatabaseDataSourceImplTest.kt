@@ -46,7 +46,7 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
 
             val result = sut.watchAllPastCheckInCheckOutNotDoneCounts().first()
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>().data shouldBeEqualTo
+            result.shouldBeInstanceOf<AppResult.Success<*>>().data shouldBeEqualTo
                     StayCheckInCheckOutCountsProjection(
                         staysAbleToCheckInCount = 2,
                         staysAbleToCheckOutCount = 0,
@@ -78,7 +78,7 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
 
             val result = sut.watchAllPastCheckInCheckOutNotDoneCounts().first()
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>().data shouldBeEqualTo
+            result.shouldBeInstanceOf<AppResult.Success<*>>().data shouldBeEqualTo
                     StayCheckInCheckOutCountsProjection(
                         staysAbleToCheckInCount = 0,
                         staysAbleToCheckOutCount = 1,
@@ -90,7 +90,7 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
     private suspend fun insertImovel(): Long {
         val imovelId = faker.random.nextInt(bound = 9999).toLong() + 1
         val imovel = createFakeImovel(proprietarioId = db.saveFakeProprietario(), id = imovelId)
-        db.imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*, *>>()
+        db.imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
 
         return imovelId
     }

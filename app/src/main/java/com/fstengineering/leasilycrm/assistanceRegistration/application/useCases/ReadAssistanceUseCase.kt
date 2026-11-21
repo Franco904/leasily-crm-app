@@ -6,10 +6,9 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.models.d
 import com.fstengineering.leasilycrm.assistanceRegistration.application.models.queries.AssistanceArgs
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentImovelQueryRepository
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -20,7 +19,7 @@ class ReadAssistanceUseCase(
 ) {
     suspend operator fun invoke(
         args: AssistanceArgs,
-    ): AppResult<AssistanceReadModel, ApplicationError> {
+    ): AppResult<AssistanceReadModel> {
         val clienteName = clienteSharedReadDataSource.getName(clienteId = args.clienteId)
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
@@ -51,7 +50,7 @@ class ReadAssistanceUseCase(
 
     private suspend fun loadAssistance(
         assistanceId: Long?,
-    ): AppResult<AssistanceRawReadModel?, ApplicationError> {
+    ): AppResult<AssistanceRawReadModel?> {
         if (assistanceId == null) {
             return AppResult.Success(null)
         }
@@ -61,7 +60,7 @@ class ReadAssistanceUseCase(
 
     private suspend fun loadSentImoveis(
         assistanceId: Long?,
-    ): AppResult<ImmutableList<AssistanceSentImovelReadModel>, ApplicationError> {
+    ): AppResult<ImmutableList<AssistanceSentImovelReadModel>> {
         if (assistanceId == null) {
             return AppResult.Success(persistentListOf())
         }

@@ -4,14 +4,13 @@ import com.fstengineering.leasilycrm.core.application.models.commands.RegisterCh
 import com.fstengineering.leasilycrm.core.application.repositories.AssistanceSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 
 class RegisterStayCheckOutUseCase(
     private val occupiedPeriodSharedCommandRepository: OccupiedPeriodSharedCommandRepository,
     private val assistanceSharedCommandRepository: AssistanceSharedCommandRepository,
 ) {
-    suspend operator fun invoke(command: RegisterCheckOutCommand): AppResult<Unit, BaseError> {
+    suspend operator fun invoke(command: RegisterCheckOutCommand): AppResult<Unit> {
         occupiedPeriodSharedCommandRepository.registerCheckOut(command.stayId)
             .onError { return AppResult.Error(error = it) }
 

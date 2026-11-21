@@ -1,12 +1,10 @@
 package com.fstengineering.leasilycrm.imovelOcupacao.application.useCases
 
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.core.domain.services.ImovelOccupiedDatesService
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.imovelOcupacao.application.mappers.toReadModel
-import com.fstengineering.leasilycrm.imovelOcupacao.application.mappers.toValueObject
 import com.fstengineering.leasilycrm.imovelOcupacao.application.models.dtos.ImovelPeriodosOcupadosReadModel
 import com.fstengineering.leasilycrm.imovelOcupacao.application.models.queries.ImovelOcupacaoArgs
 import com.fstengineering.leasilycrm.imovelOcupacao.infra.dataSources.ImovelOcupacaoReadDataSource
@@ -21,14 +19,14 @@ class WatchImovelOcupacaoUseCase(
 ) {
     suspend operator fun invoke(
         args: ImovelOcupacaoArgs,
-    ): Flow<AppResult<ImovelPeriodosOcupadosReadModel, ApplicationError>> {
+    ): Flow<AppResult<ImovelPeriodosOcupadosReadModel>> {
         return imovelOcupacaoReadDataSource.watchPeriodosOcupados(imovelId = args.id)
             .map { occupiedPeriodsResult ->
                 val occupiedPeriods = occupiedPeriodsResult
                     .fold(
                         onError = { e -> return@map AppResult.Error(error = e) },
                         onSuccess = { periods ->
-                            periods.map { it.toValueObject() }.toPersistentList()
+                            periods.toPersistentList()
                         },
                     )
 

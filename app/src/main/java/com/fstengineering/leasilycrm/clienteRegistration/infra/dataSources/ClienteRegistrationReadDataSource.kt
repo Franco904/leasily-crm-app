@@ -3,29 +3,28 @@ package com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.clienteRegistration.application.models.ClienteReadModel
-import com.fstengineering.leasilycrm.clienteRegistration.infra.mappers.toClienteReadModel
+import com.fstengineering.leasilycrm.clienteRegistration.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.clienteRegistration.infra.projections.ClienteRegistrationProjection
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 
 /** Leitura do Cliente a editar e das sugestões de preenchimento do cadastro. */
 @Dao
 abstract class ClienteRegistrationReadDataSource {
     /** Busca o Cliente não excluído, para preencher o formulário de edição. */
-    suspend fun getCliente(clienteId: Long): AppResult<ClienteReadModel, ApplicationError> =
-        onDatabase { findCliente(clienteId).toClienteReadModel() }
+    suspend fun getCliente(clienteId: Long): AppResult<ClienteReadModel> =
+        onDatabase { selectCliente(clienteId).toReadModel() }
 
     /** Lista as etiquetas já usadas por Clientes não excluídos, em ordem alfabética. */
-    suspend fun getTags(): AppResult<List<String>, ApplicationError> =
+    suspend fun getTags(): AppResult<List<String>> =
         onDatabase { selectTags() }
 
     /** Lista as cidades já usadas por Clientes não excluídos, em ordem alfabética. */
-    suspend fun getCities(): AppResult<List<String>, ApplicationError> =
+    suspend fun getCities(): AppResult<List<String>> =
         onDatabase { selectCities() }
 
     /** Lista as Origens do contato já usadas por Clientes não excluídos, em ordem alfabética. */
-    suspend fun getContactOrigins(): AppResult<List<String>, ApplicationError> =
+    suspend fun getContactOrigins(): AppResult<List<String>> =
         onDatabase { selectContactOrigins() }
 
     @Query(
@@ -36,7 +35,7 @@ abstract class ClienteRegistrationReadDataSource {
         WHERE id = :clienteId AND is_deleted = 0
         """
     )
-    protected abstract suspend fun findCliente(clienteId: Long): ClienteRegistrationProjection
+    protected abstract suspend fun selectCliente(clienteId: Long): ClienteRegistrationProjection
 
     @Query(
         """

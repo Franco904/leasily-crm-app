@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.ImovelDatabaseDataSource
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.ImovelReadModel
@@ -13,7 +12,7 @@ import kotlinx.collections.immutable.toPersistentList
 class ImovelQueryRepositoryImpl(
     private val databaseDataSource: ImovelDatabaseDataSource,
 ) : ImovelQueryRepository {
-    override suspend fun getById(imovelId: Long): AppResult<ImovelReadModel, ApplicationError> {
+    override suspend fun getById(imovelId: Long): AppResult<ImovelReadModel> {
         return databaseDataSource.getById(id = imovelId)
             .fold(
                 onError = { AppResult.Error(error = it) },
@@ -23,7 +22,7 @@ class ImovelQueryRepositoryImpl(
 
     override suspend fun getAll(
         matching: String?,
-    ): AppResult<ImmutableList<ImovelReadModel>, ApplicationError> {
+    ): AppResult<ImmutableList<ImovelReadModel>> {
         val imoveis = databaseDataSource.getAll(matching)
             .fold(
                 onError = { return AppResult.Error(error = it) },

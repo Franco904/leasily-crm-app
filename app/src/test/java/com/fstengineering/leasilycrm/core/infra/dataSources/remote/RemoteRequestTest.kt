@@ -56,7 +56,7 @@ class RemoteRequestTest {
 
                 val result = sut.requestBackend(url = randomUrl(), method = HttpMethod.Get)
 
-                result.shouldBeInstanceOf<AppResult.Error<*, *>>()
+                result.shouldBeInstanceOf<AppResult.Error>()
                 (result as AppResult.Error).error shouldBeEqualTo ApplicationError.NoInternet
             }
 
@@ -67,7 +67,7 @@ class RemoteRequestTest {
 
                 val result = sut.requestBackend(url = randomUrl(), method = HttpMethod.Get)
 
-                result.shouldBeInstanceOf<AppResult.Error<*, *>>()
+                result.shouldBeInstanceOf<AppResult.Error>()
                 (result as AppResult.Error).error shouldBeEqualTo ApplicationError.Timeout
             }
 
@@ -79,7 +79,7 @@ class RemoteRequestTest {
 
                 val result = sut.requestBackend(url = randomUrl(), method = HttpMethod.Get)
 
-                result.shouldBeInstanceOf<AppResult.Error<*, *>>()
+                result.shouldBeInstanceOf<AppResult.Error>()
                 (result as AppResult.Error).error shouldBeEqualTo ApplicationError.Timeout
             }
     }

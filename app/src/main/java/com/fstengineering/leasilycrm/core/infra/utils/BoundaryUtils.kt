@@ -4,15 +4,15 @@ import android.security.keystore.KeyPermanentlyInvalidatedException
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.adapters.ExceptionLogger
-import java.security.GeneralSecurityException
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import java.security.GeneralSecurityException
+import kotlin.coroutines.cancellation.CancellationException
 
-inline fun <T> onDatabase(block: () -> T): AppResult<T, ApplicationError> {
+inline fun <T> onDatabase(block: () -> T): AppResult<T> {
     try {
         return AppResult.Success(block())
     } catch (cancellation: CancellationException) {
@@ -24,9 +24,9 @@ inline fun <T> onDatabase(block: () -> T): AppResult<T, ApplicationError> {
     }
 }
 
-fun <T> Flow<T>.asDatabaseFlowResult(): Flow<AppResult<T, ApplicationError>> {
+fun <T> Flow<T>.asDatabaseFlowResult(): Flow<AppResult<T>> {
     return distinctUntilChanged()
-        .map<T, AppResult<T, ApplicationError>> { value -> AppResult.Success(value) }
+        .map<T, AppResult<T>> { value -> AppResult.Success(value) }
         .catchException { emit(AppResult.Error(ApplicationError.Unknown)) }
 }
 

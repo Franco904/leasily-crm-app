@@ -25,14 +25,14 @@ class ImovelPricePeriodTest {
         fun `Deve criar período com sucesso quando não há outros períodos`() {
             val result = ImovelPricePeriod.parse(startDate = d1, endDate = d10)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
         }
 
         @Test
         fun `Deve retornar erro quando data de início e data de fim são iguais`() {
             val result = ImovelPricePeriod.parse(startDate = d10, endDate = d10)
 
-            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val error = result.shouldBeInstanceOf<AppResult.Error>().error
             val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
             validationErrors.errors shouldContain DomainError.ImovelPricePeriod.StartAndEndDatesAreTheSame
         }
@@ -41,7 +41,7 @@ class ImovelPricePeriodTest {
         fun `Deve retornar erro quando data de início é posterior à data de fim`() {
             val result = ImovelPricePeriod.parse(startDate = d15, endDate = d5)
 
-            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val error = result.shouldBeInstanceOf<AppResult.Error>().error
             val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
             validationErrors.errors shouldContain DomainError.ImovelPricePeriod.StartDateIsAfterEndDate
         }
@@ -56,7 +56,7 @@ class ImovelPricePeriodTest {
                 otherPeriods = listOf(existing),
             )
 
-            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val error = result.shouldBeInstanceOf<AppResult.Error>().error
             val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
             validationErrors.errors shouldContain DomainError.ImovelPricePeriod.IsOverlappingOtherPricePeriod
         }
@@ -71,7 +71,7 @@ class ImovelPricePeriodTest {
                 otherPeriods = listOf(existing),
             )
 
-            val error = result.shouldBeInstanceOf<AppResult.Error<*, *>>().error
+            val error = result.shouldBeInstanceOf<AppResult.Error>().error
             val validationErrors = error.shouldBeInstanceOf<ValidationErrors>()
             validationErrors.errors shouldContain DomainError.ImovelPricePeriod.IsOverlappingOtherPricePeriod
         }
@@ -86,7 +86,7 @@ class ImovelPricePeriodTest {
                 otherPeriods = listOf(existing),
             )
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
         }
 
         @Test
@@ -100,7 +100,7 @@ class ImovelPricePeriodTest {
                 otherPeriods = listOf(adjacentBefore, adjacentAfter),
             )
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
         }
     }
 

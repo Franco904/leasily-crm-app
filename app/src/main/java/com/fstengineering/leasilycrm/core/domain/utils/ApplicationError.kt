@@ -4,5 +4,7 @@ enum class ApplicationError : BaseError {
     NoInternet,
     Timeout,
     Unauthorized,
+    UserCancellation,
+    NoCredentialsFound,
     Unknown,
 }

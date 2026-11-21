@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.services.UserSessionService
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
@@ -70,12 +72,13 @@ class ProfileViewModel(
             writeUser(command)
                 .onError { error ->
                     when (error) {
-                        is ApplicationError -> _uiEvents.send(UiEvent.BottomSheetError(error))
                         is ValidationErrors -> {
                             _creciFieldError.update { error.errors.firstOrNull()?.toInlineMessage() }
                         }
 
                         is DomainError -> _creciFieldError.update { error.toInlineMessage() }
+                        is ApplicationError ->
+                            _uiEvents.send(UiEvent.BottomSheetError(error))
                     }
                 }
                 .onSuccess {
@@ -94,7 +97,9 @@ class ProfileViewModel(
         if (input == null) return
 
         Creci.parse(creciNumber = input)
-            .onError { e -> _creciFieldError.update { e.toInlineMessage() } }
+            .onError { e ->
+                _creciFieldError.update { e.toDomainErrors().firstOrNull()?.toInlineMessage() }
+            }
     }
 
     fun clearErrors() {
@@ -116,7 +121,7 @@ class ProfileViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError) : UiEvent
+        data class BottomSheetError(val error: BaseError) : UiEvent
         data class EditUserSuccess(val messageId: Int) : UiEvent
         data object SignOutSuccess : UiEvent
     }

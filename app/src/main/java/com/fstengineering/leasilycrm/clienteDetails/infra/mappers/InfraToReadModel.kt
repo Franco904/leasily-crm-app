@@ -17,7 +17,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import kotlinx.collections.immutable.toPersistentList
 
-fun ClienteDetailsProjection.toClienteReadModel() = ClienteReadModel(
+fun ClienteDetailsProjection.toReadModel() = ClienteReadModel(
     id = id,
     tag = tag,
     name = name,
@@ -31,15 +31,15 @@ fun ClienteDetailsProjection.toClienteReadModel() = ClienteReadModel(
     isOld = status == ClienteStatus.HospedeAntigo.id,
     assistances = atendimentos
         .filterNot { it.assistance.isDeleted }
-        .map { it.toAssistanceReadModel() }
+        .map { it.toReadModel() }
         .toPersistentList(),
     stays = estadias
         .filterNot { it.isDeleted }
-        .map { it.toStayReadModel() }
+        .map { it.toReadModel() }
         .toPersistentList(),
 )
 
-private fun AtendimentoProjection.toAssistanceReadModel(): AssistanceReadModel {
+private fun AtendimentoProjection.toReadModel(): AssistanceReadModel {
     val preferredNeighborhoods = preferredNeighborhoods
         .map { it.neighborhood }
         .toPersistentList()
@@ -49,7 +49,7 @@ private fun AtendimentoProjection.toAssistanceReadModel(): AssistanceReadModel {
         .toPersistentList()
 
     val interactionReadModels = interactions
-        .map { it.toAssistanceInteractionReadModel() }
+        .map { it.toReadModel() }
         .toPersistentList()
 
     val seaProximityType = assistance.imovelSeaProximityTypeId?.let { typeId ->
@@ -83,12 +83,12 @@ private fun AtendimentoProjection.toAssistanceReadModel(): AssistanceReadModel {
         interactions = interactionReadModels,
         sentImoveis = imoveisEnviados
             .filterNot { it.isDeleted }
-            .map { it.toAssistanceSentImovelReadModel() }
+            .map { it.toReadModel() }
             .toPersistentList(),
     )
 }
 
-private fun AssistanceInteractionEntity.toAssistanceInteractionReadModel() =
+private fun AssistanceInteractionEntity.toReadModel() =
     AssistanceInteractionReadModel(
         id = requireNotNull(id),
         date = date,
@@ -96,7 +96,7 @@ private fun AssistanceInteractionEntity.toAssistanceInteractionReadModel() =
         description = description,
     )
 
-private fun ImovelEnviadoProjection.toAssistanceSentImovelReadModel() = AssistanceSentImovelReadModel(
+private fun ImovelEnviadoProjection.toReadModel() = AssistanceSentImovelReadModel(
     id = id,
     mainPictureUriString = files.find { it.isMainPicture }?.uriString,
     neighborhood = neighborhood,
@@ -105,7 +105,7 @@ private fun ImovelEnviadoProjection.toAssistanceSentImovelReadModel() = Assistan
     type = requireNotNull(ImovelType.fromId(typeId)),
 )
 
-private fun EstadiaProjection.toStayReadModel() = StayReadModel(
+private fun EstadiaProjection.toReadModel() = StayReadModel(
     id = id,
     checkInDateTime = checkInDateTime,
     isCheckOutDone = status == 2,

@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.home.application.repositories.UserQueryRepository
@@ -71,6 +71,6 @@ class HomeViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: ApplicationError) : UiEvent
+        data class BottomSheetError(val error: BaseError) : UiEvent
     }
 }

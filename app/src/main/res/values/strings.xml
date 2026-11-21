@@ -161,6 +161,7 @@
     <string name="property_dashboard_top_app_bar_title">Imóvel</string>
 
     <string name="property_dashboard_property_owner_title">Proprietário</string>
+    <string name="property_dashboard_property_owner_deleted_text">Proprietário excluído</string>
     <string name="property_dashboard_current_month_stays_title">Estadias no mês atual</string>
 
     <!-- Property details -->

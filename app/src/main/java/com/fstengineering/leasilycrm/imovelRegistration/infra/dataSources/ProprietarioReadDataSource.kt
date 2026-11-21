@@ -3,11 +3,9 @@ package com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
-import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toProprietarioReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -16,17 +14,10 @@ import kotlinx.coroutines.flow.map
 @Dao
 abstract class ProprietarioReadDataSource {
     /** Observa os Proprietários selecionáveis (não excluídos), em ordem alfabética de nome. */
-    fun watchProprietarios(): Flow<AppResult<List<ProprietarioReadModel>, ApplicationError>> =
+    fun watchProprietarios(): Flow<AppResult<List<ProprietarioReadModel>>> =
         observeProprietarios()
-            .map { projections -> projections.map { it.toProprietarioReadModel() } }
+            .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()
-
-    /** Busca o Proprietário do Imóvel em edição; falha quando ele não existe ou foi excluído. */
-    suspend fun getProprietario(
-        proprietarioId: Long,
-    ): AppResult<ProprietarioReadModel, ApplicationError> = onDatabase {
-        ProprietarioReadModel(id = proprietarioId, name = findProprietarioName(proprietarioId))
-    }
 
     @Query(
         """
@@ -37,13 +28,4 @@ abstract class ProprietarioReadDataSource {
         """
     )
     protected abstract fun observeProprietarios(): Flow<List<ProprietarioNameProjection>>
-
-    @Query(
-        """
-        SELECT name
-        FROM property_owners
-        WHERE id = :proprietarioId AND is_deleted = 0
-        """
-    )
-    protected abstract suspend fun findProprietarioName(proprietarioId: Long): String
 }

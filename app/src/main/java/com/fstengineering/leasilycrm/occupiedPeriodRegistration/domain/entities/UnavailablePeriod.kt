@@ -4,6 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.valueObjects.OccupiedPeriodPeriod
 import kotlinx.collections.immutable.toPersistentList
@@ -23,7 +24,7 @@ class UnavailablePeriod private constructor(
             checkInDateTime: AppDateTime?,
             checkOutDateTime: AppDateTime?,
             observations: String?,
-        ): AppResult<UnavailablePeriod, ValidationErrors> {
+        ): AppResult<UnavailablePeriod> {
             val errors = mutableListOf<DomainError>()
 
             if (imovelId == null) errors.add(DomainError.StayImovel.Required)
@@ -41,7 +42,7 @@ class UnavailablePeriod private constructor(
                     )
                 }
             }
-                ?.fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 

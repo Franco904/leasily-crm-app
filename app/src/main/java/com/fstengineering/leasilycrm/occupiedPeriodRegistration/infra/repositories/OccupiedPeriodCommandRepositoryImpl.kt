@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayFileDatabaseDataSource
@@ -15,7 +14,7 @@ class OccupiedPeriodCommandRepositoryImpl(
     private val stayDatabaseDataSource: StayDatabaseDataSource,
     private val stayFileDatabaseDataSource: StayFileDatabaseDataSource,
 ) : OccupiedPeriodCommandRepository {
-    override suspend fun insertOrUpdate(stay: Stay): AppResult<Unit, ApplicationError> {
+    override suspend fun insertOrUpdate(stay: Stay): AppResult<Unit> {
         return databaseAdapter.transaction {
             saveDataInDatabase(stay)
         }
@@ -33,7 +32,7 @@ class OccupiedPeriodCommandRepositoryImpl(
         }
     }
 
-    override suspend fun insertOrUpdate(unavailablePeriod: UnavailablePeriod): AppResult<Unit, ApplicationError> {
+    override suspend fun insertOrUpdate(unavailablePeriod: UnavailablePeriod): AppResult<Unit> {
         return databaseAdapter.transaction {
             stayDatabaseDataSource.insertOrUpdate(unavailablePeriod.toLocalDataModel())
         }

@@ -42,7 +42,7 @@ class ClienteWriteDataSourceTest : IntegrationTest() {
 
             val result = sut.save(cliente)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             val clienteReadModel = watchCliente(clienteId)
             clienteReadModel.name shouldBeEqualTo cliente.name.value
             clienteReadModel.city shouldBeEqualTo cliente.city
@@ -55,12 +55,12 @@ class ClienteWriteDataSourceTest : IntegrationTest() {
     fun deveExibirDadosAtualizadosNosDetalhesSemCriarOutroClienteQuandoClienteEditado(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = faker.random.nextInt(bound = 9999).toLong() + 1
-            sut.save(createFakeCliente(id = clienteId)).shouldBeInstanceOf<AppResult.Success<*, *>>()
+            sut.save(createFakeCliente(id = clienteId)).shouldBeInstanceOf<AppResult.Success<*>>()
             val editedCliente = createFakeCliente(id = clienteId, name = faker.random.nextUUID())
 
             val result = sut.save(editedCliente)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             watchCliente(clienteId).name shouldBeEqualTo editedCliente.name.value
         }
 
@@ -72,13 +72,13 @@ class ClienteWriteDataSourceTest : IntegrationTest() {
     fun deveDeixarDeExibirClienteNosDetalhesQuandoExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = faker.random.nextInt(bound = 9999).toLong() + 1
-            sut.save(createFakeCliente(id = clienteId)).shouldBeInstanceOf<AppResult.Success<*, *>>()
+            sut.save(createFakeCliente(id = clienteId)).shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.delete(clienteId)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>()
+            result.shouldBeInstanceOf<AppResult.Success<*>>()
             clienteDetailsReadDataSource.watchCliente(clienteId).first()
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
                 .data.shouldBeNull()
         }
 
@@ -86,6 +86,6 @@ class ClienteWriteDataSourceTest : IntegrationTest() {
 
     private suspend fun watchCliente(clienteId: Long): ClienteReadModel =
         clienteDetailsReadDataSource.watchCliente(clienteId).first()
-            .shouldBeInstanceOf<AppResult.Success<*, *>>()
+            .shouldBeInstanceOf<AppResult.Success<*>>()
             .data.shouldNotBeNull().shouldBeInstanceOf<ClienteReadModel>()
 }

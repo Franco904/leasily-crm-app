@@ -34,7 +34,7 @@ class OccupiedPeriodPeriod private constructor(
         fun parse(
             checkInDateTime: AppDateTime,
             checkOutDateTime: AppDateTime,
-        ): AppResult<OccupiedPeriodPeriod, ValidationErrors> {
+        ): AppResult<OccupiedPeriodPeriod> {
             val errors = mutableListOf<DomainError.StayPeriod>()
 
             if (checkInDateTime.isSameDayAs(checkOutDateTime)) {

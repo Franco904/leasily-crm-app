@@ -3,10 +3,9 @@ package com.fstengineering.leasilycrm.imovelOcupacao.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
-import com.fstengineering.leasilycrm.imovelOcupacao.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
-import com.fstengineering.leasilycrm.imovelOcupacao.infra.mappers.toPeriodoOcupadoRawReadModel
+import com.fstengineering.leasilycrm.imovelOcupacao.infra.mappers.toValueObject
 import com.fstengineering.leasilycrm.imovelOcupacao.infra.projections.PeriodoOcupadoProjection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -17,9 +16,9 @@ abstract class ImovelOcupacaoReadDataSource {
     /** Observa os Períodos Ocupados não excluídos do Imóvel, em ordem de check-in. */
     fun watchPeriodosOcupados(
         imovelId: Long,
-    ): Flow<AppResult<List<ImovelPeriodoOcupadoRawReadModel>, ApplicationError>> =
+    ): Flow<AppResult<List<ImovelPeriodoOcupado>>> =
         observePeriodosOcupados(imovelId)
-            .map { projections -> projections.map { it.toPeriodoOcupadoRawReadModel() } }
+            .map { projections -> projections.map { it.toValueObject() } }
             .asDatabaseFlowResult()
 
     @Query(

@@ -1,12 +1,11 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.useCases
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.UnavailablePeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.UnavailablePeriodArgs
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.OccupiedPeriodQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.ImovelQueryRepository
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.OccupiedPeriodQueryRepository
 
 class ReadUnavailablePeriodUseCase(
     private val occupiedPeriodQueryRepository: OccupiedPeriodQueryRepository,
@@ -14,7 +13,7 @@ class ReadUnavailablePeriodUseCase(
 ) {
     suspend operator fun invoke(
         args: UnavailablePeriodArgs,
-    ): AppResult<UnavailablePeriodReadModel, ApplicationError> {
+    ): AppResult<UnavailablePeriodReadModel> {
         val unavailablePeriodRaw = args.id?.let {
             occupiedPeriodQueryRepository.getUnavailablePeriodById(args.id)
                 .fold(

@@ -4,6 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
@@ -77,7 +78,7 @@ class Imovel private constructor(
             prices: ImmutableList<ImovelPrice> = persistentListOf(),
             files: ImmutableList<ImovelFile> = persistentListOf(),
             observations: String? = null,
-        ): AppResult<Imovel, ValidationErrors> {
+        ): AppResult<Imovel> {
             val errors = mutableListOf<DomainError>()
 
             if (proprietarioId == null) errors.add(DomainError.ImovelProprietario.Required)
@@ -88,7 +89,7 @@ class Imovel private constructor(
 
             val seaProximityType = seaProximityTypeId?.let { typeId ->
                 ImovelSeaProximityType.parse(typeId, distanceToSea = distanceToSea)
-                    .fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                    .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
             }
 
             if (files.count { it.isMainPicture } > 1) {

@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.repositories
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
@@ -19,7 +18,7 @@ class OccupiedPeriodQueryRepositoryImpl(
     private val stayDatabaseDataSource: StayDatabaseDataSource,
     private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
 ) : OccupiedPeriodQueryRepository {
-    override fun watchById(stayId: Long): Flow<AppResult<OccupiedPeriodRawReadModel?, ApplicationError>> =
+    override fun watchById(stayId: Long): Flow<AppResult<OccupiedPeriodRawReadModel?>> =
         flow {
             val stayFlow = stayDatabaseDataSource.watchById(id = stayId)
                 .fold(
@@ -30,14 +29,14 @@ class OccupiedPeriodQueryRepositoryImpl(
                     val raw = compound?.toRawReadModel()
                         ?: return@map AppResult.Success(data = null)
 
-                    AppResult.Success<OccupiedPeriodRawReadModel?, ApplicationError>(data = raw)
+                    AppResult.Success<OccupiedPeriodRawReadModel?>(data = raw)
                 }
                 .distinctUntilChanged()
 
             emitAll(stayFlow)
         }
 
-    override fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean, ApplicationError>> =
+    override fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean>> =
         flow {
             plainPreferencesDataSource.readPreferences()
                 .fold(

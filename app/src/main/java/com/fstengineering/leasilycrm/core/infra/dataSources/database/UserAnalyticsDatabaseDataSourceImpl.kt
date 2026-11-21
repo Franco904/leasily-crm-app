@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.database
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.AverageTicketPerMonthCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.CommissionInvoicePerMonthCompound
@@ -20,33 +19,33 @@ import kotlinx.coroutines.flow.Flow
 class UserAnalyticsDatabaseDataSourceImpl(
     private val dao: UserAnalyticsDao,
 ) : UserAnalyticsDatabaseDataSource {
-    override fun watchGeneratedLeadsPerMonth(): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>, ApplicationError> =
+    override fun watchGeneratedLeadsPerMonth(): AppResult<Flow<List<GeneratedLeadsPerMonthCompound>>> =
         onDatabase { dao.watchGeneratedLeadsPerMonth() }
 
-    override fun watchGeneratedLeadsPerTenantTagPerMonth(): AppResult<Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>, ApplicationError> =
+    override fun watchGeneratedLeadsPerTenantTagPerMonth(): AppResult<Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>> =
         onDatabase { dao.watchGeneratedLeadsPerTenantTagPerMonth() }
 
-    override fun watchCountLeadsByContactChannelType(): AppResult<Flow<List<LeadContactChannelCountCompound>>, ApplicationError> =
+    override fun watchCountLeadsByContactChannelType(): AppResult<Flow<List<LeadContactChannelCountCompound>>> =
         onDatabase { dao.watchCountLeadsByContactChannelType() }
 
-    override fun watchNewStayBookingsPerMonth(): AppResult<Flow<List<NewStayBookingsPerMonthCompound>>, ApplicationError> =
+    override fun watchNewStayBookingsPerMonth(): AppResult<Flow<List<NewStayBookingsPerMonthCompound>>> =
         onDatabase { dao.watchNewStayBookingsPerMonth() }
 
-    override fun watchNewStayBookingsPerTenantTagPerMonth(): AppResult<Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>, ApplicationError> =
+    override fun watchNewStayBookingsPerTenantTagPerMonth(): AppResult<Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>> =
         onDatabase { dao.watchNewStayBookingsPerTenantTagPerMonth() }
 
-    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): AppResult<Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>, ApplicationError> =
+    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): AppResult<Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>> =
         onDatabase { dao.watchNewStayBookingsPerTop3NeighborhoodsPerMonth() }
 
-    override fun watchCommissionInvoicePerMonth(): AppResult<Flow<List<CommissionInvoicePerMonthCompound>>, ApplicationError> =
+    override fun watchCommissionInvoicePerMonth(): AppResult<Flow<List<CommissionInvoicePerMonthCompound>>> =
         onDatabase { dao.watchCommissionInvoicePerMonth() }
 
-    override fun watchCommissionInvoicePerTenantTagPerMonth(): AppResult<Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>, ApplicationError> =
+    override fun watchCommissionInvoicePerTenantTagPerMonth(): AppResult<Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>> =
         onDatabase { dao.watchCommissionInvoicePerTenantTagPerMonth() }
 
-    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): AppResult<Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>, ApplicationError> =
+    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): AppResult<Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>> =
         onDatabase { dao.watchCommissionInvoicePerTop3NeighborhoodsPerMonth() }
 
-    override fun watchAverageTicketPerMonth(): AppResult<Flow<List<AverageTicketPerMonthCompound>>, ApplicationError> =
+    override fun watchAverageTicketPerMonth(): AppResult<Flow<List<AverageTicketPerMonthCompound>>> =
         onDatabase { dao.watchAverageTicketPerMonth() }
 }

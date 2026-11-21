@@ -2,7 +2,6 @@ package com.fstengineering.leasilycrm.dashboard.infra.repositories
 
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
@@ -22,7 +21,7 @@ class UserAnalyticsRepositoryImpl(
     private val databaseDataSource: UserAnalyticsDatabaseDataSource,
     private val dateProvider: AppDateProvider,
 ) : UserAnalyticsRepository {
-    override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>> =
+    override fun watchGeneratedLeadsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>>> =
         flow {
             val generatedLeadsPerMonthFlow = databaseDataSource
                 .watchGeneratedLeadsPerMonth()
@@ -55,7 +54,7 @@ class UserAnalyticsRepositoryImpl(
                         generatedLeadsWithMissingMonthsMap[monthYear] = leadsCount ?: 0
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>>(
                         data = generatedLeadsWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -63,7 +62,7 @@ class UserAnalyticsRepositoryImpl(
             emitAll(generatedLeadsPerMonthFlowMapped)
         }
 
-    override fun watchGeneratedLeadsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>> =
+    override fun watchGeneratedLeadsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>> =
         flow {
             val generatedLeadsPerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchGeneratedLeadsPerTenantTagPerMonth()
@@ -102,7 +101,7 @@ class UserAnalyticsRepositoryImpl(
                             leadsCountPerTenantSegment ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(
                         data = generatedLeadsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -111,7 +110,7 @@ class UserAnalyticsRepositoryImpl(
             emitAll(generatedLeadsPerTenantSegmentPerMonthFlowMapped)
         }
 
-    override fun watchLeadContactChannelDistribution(): Flow<AppResult<ImmutableMap<String?, Double>, ApplicationError>> =
+    override fun watchLeadContactChannelDistribution(): Flow<AppResult<ImmutableMap<String?, Double>>> =
         flow {
             val leadContactChannelDistributionFlow = databaseDataSource
                 .watchCountLeadsByContactChannelType()
@@ -133,7 +132,7 @@ class UserAnalyticsRepositoryImpl(
                         .filterValues { it > 0.0 }
                         .toPersistentMap()
 
-                    AppResult.Success<ImmutableMap<String?, Double>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<String?, Double>>(
                         data = leadContactChannelDistribution,
                     )
                 }
@@ -141,7 +140,7 @@ class UserAnalyticsRepositoryImpl(
             emitAll(leadContactChannelDistributionFlowMapped)
         }
 
-    override fun watchNewStayBookingsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>> =
+    override fun watchNewStayBookingsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>>> =
         flow {
             val newStayBookingsPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerMonth()
@@ -174,7 +173,7 @@ class UserAnalyticsRepositoryImpl(
                         newStayBookingsWithMissingMonthsMap[monthYear] = bookingsCount ?: 0
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, Int>>(
                         data = newStayBookingsWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -182,7 +181,7 @@ class UserAnalyticsRepositoryImpl(
             emitAll(newStayBookingsPerMonthFlowMapped)
         }
 
-    override fun watchNewStayBookingsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>> =
+    override fun watchNewStayBookingsPerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>> =
         flow {
             val newStayBookingsPerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerTenantTagPerMonth()
@@ -221,7 +220,7 @@ class UserAnalyticsRepositoryImpl(
                             bookingsCountPerTenantSegment ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(
                         data = newStayBookingsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -230,7 +229,7 @@ class UserAnalyticsRepositoryImpl(
             emitAll(newStayBookingsPerTenantSegmentPerMonthFlowMapped)
         }
 
-    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>> =
+    override fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>> =
         flow {
             val newStayBookingsPerTop3NeighborhoodsPerMonthFlow = databaseDataSource
                 .watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
@@ -270,7 +269,7 @@ class UserAnalyticsRepositoryImpl(
                             bookingsCountPerTop3Neighborhoods ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>(
                         data = newStayBookingsWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -279,7 +278,7 @@ class UserAnalyticsRepositoryImpl(
             emitAll(newStayBookingsPerTop3NeighborhoodsPerMonthFlowMapped)
         }
 
-    override fun watchCommissionInvoicePerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, ApplicationError>> =
+    override fun watchCommissionInvoicePerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>>> =
         flow {
             val commissionInvoicePerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerMonth()
@@ -313,7 +312,7 @@ class UserAnalyticsRepositoryImpl(
                             commissionInvoice ?: 0.toDecimal()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>>(
                         data = commissionInvoiceWithMissingMonthsMap.toPersistentMap(),
                     )
                 }
@@ -321,7 +320,7 @@ class UserAnalyticsRepositoryImpl(
             emitAll(commissionInvoicePerMonthFlowMapped)
         }
 
-    override fun watchCommissionInvoicePerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, ApplicationError>> =
+    override fun watchCommissionInvoicePerTenantTagPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>> =
         flow {
             val commissionInvoicePerTenantSegmentPerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerTenantTagPerMonth()
@@ -360,7 +359,7 @@ class UserAnalyticsRepositoryImpl(
                             commissionInvoicePerTenantSegment ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -369,7 +368,7 @@ class UserAnalyticsRepositoryImpl(
             emitAll(commissionInvoicePerTenantSegmentPerMonthFlowMapped)
         }
 
-    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, ApplicationError>> =
+    override fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>> =
         flow {
             val commissionInvoicePerTop3NeighborhoodsPerMonthFlow = databaseDataSource
                 .watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
@@ -409,7 +408,7 @@ class UserAnalyticsRepositoryImpl(
                             commissionInvoicePerTop3Neighborhoods ?: persistentMapOf()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>(
                         data = commissionInvoiceWithMissingMonthsMap
                             .toPersistentMap(),
                     )
@@ -418,7 +417,7 @@ class UserAnalyticsRepositoryImpl(
             emitAll(commissionInvoicePerTop3NeighborhoodsPerMonthFlowMapped)
         }
 
-    override fun watchAverageTicketPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>, ApplicationError>> =
+    override fun watchAverageTicketPerMonth(): Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>>> =
         flow {
             val averageTicketPerMonthFlow = databaseDataSource
                 .watchAverageTicketPerMonth()
@@ -452,7 +451,7 @@ class UserAnalyticsRepositoryImpl(
                             averageTicket ?: 0.toDecimal()
                     }
 
-                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>, ApplicationError>(
+                    AppResult.Success<ImmutableMap<CalendarMonthYear, AppDecimal>>(
                         data = averageTicketWithMissingMonthsMap.toPersistentMap(),
                     )
                 }

@@ -9,7 +9,7 @@ class Email private constructor(val value: String) {
     companion object {
         private const val EMAIL_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$"
 
-        fun parse(email: String): AppResult<Email, ValidationErrors> {
+        fun parse(email: String): AppResult<Email> {
             val errors = mutableListOf<DomainError.Email>()
 
             if (!email.trim().matches(Regex(EMAIL_REGEX, RegexOption.IGNORE_CASE))) {

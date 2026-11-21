@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.TenantReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.projections.ClienteProjection
@@ -12,7 +11,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.projections.Cli
 @Dao
 abstract class ClienteReadDataSource {
     /** Busca o Cliente não excluído. */
-    suspend fun getCliente(clienteId: Long): AppResult<TenantReadModel, ApplicationError> =
+    suspend fun getCliente(clienteId: Long): AppResult<TenantReadModel> =
         onDatabase {
             val projection = findCliente(clienteId)
             TenantReadModel(id = projection.id, name = projection.name, city = projection.city)

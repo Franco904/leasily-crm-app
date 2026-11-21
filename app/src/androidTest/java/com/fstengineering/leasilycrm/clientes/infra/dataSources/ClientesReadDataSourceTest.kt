@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
-import org.amshove.kluent.shouldBeNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -167,14 +166,14 @@ class ClientesReadDataSourceTest : IntegrationTest() {
 
             val result = sut.getLeads(matching = "silv", orderTypeId = 1)
 
-            result.shouldBeInstanceOf<AppResult.Success<*, *>>().data
+            result.shouldBeInstanceOf<AppResult.Success<*>>().data
                 .let { (it as List<*>).filterIsInstance<ClienteReadModel>() }
                 .map { it.id } shouldBeEqualTo listOf(lead)
         }
 
     // endregion
 
-    private suspend fun kotlinx.coroutines.flow.Flow<AppResult<List<ClienteReadModel>, *>>.firstSuccess() =
-        first().shouldBeInstanceOf<AppResult.Success<*, *>>().data
+    private suspend fun kotlinx.coroutines.flow.Flow<AppResult<List<ClienteReadModel>>>.firstSuccess() =
+        first().shouldBeInstanceOf<AppResult.Success<*>>().data
             .let { (it as List<*>).filterIsInstance<ClienteReadModel>() }
 }

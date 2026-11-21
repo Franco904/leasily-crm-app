@@ -5,7 +5,7 @@ De "A Philosophy of Software Design" (Ousterhout), capítulo "Define errors out 
 Cada lugar que precisa tratar um erro é complexidade que vaza para a interface e se multiplica pelos
 chamadores. O objetivo geral é **reduzir o número de lugares onde erros precisam ser tratados**.
 
-Isso vale para **todo** erro — exceção genuína ou caminho infeliz. Um `AppResult<T, E>` cujo lado de
+Isso vale para **todo** erro — exceção genuína ou caminho infeliz. Um `AppResult<T>` cujo lado de
 erro poderia não existir também obriga N chamadores a tratá-lo.
 
 ## A escada
@@ -18,11 +18,13 @@ Redefina a semântica da operação para que o caso deixe de ser erro. Some o ga
 tratamento em todos os chamadores.
 
 ```kotlin
-// Antes: chamador precisa tratar "não encontrada", embora o estado final desejado já valha
-suspend fun deleteEstadia(estadiaId: String): AppResult<Unit, EstadiaError>
+// Antes: devolve Error(EstadiaNaoEncontrada) e todo chamador precisa ramificar, embora o estado
+// final desejado já valha
+suspend fun deleteEstadia(estadiaId: String): AppResult<Unit>
 
-// Depois: idempotente — "Estadia não existe" ao final, independente de ter existido antes
-suspend fun deleteEstadia(estadiaId: String): AppResult<Unit, ApplicationError>
+// Depois: idempotente — devolve Success sempre que "Estadia não existe" ao final, tenha existido
+// antes ou não
+suspend fun deleteEstadia(estadiaId: String): AppResult<Unit>
 ```
 
 > **Critério**: só redefina se o estado final redefinido estiver correto do ponto de vista de
@@ -69,7 +71,7 @@ um único `.fold()` decide o que fazer.
 
 ```kotlin
 // interface
-suspend fun getEstadia(estadiaId: String): AppResult<EstadiaDetailsReadModel, ApplicationError>
+suspend fun getEstadia(estadiaId: String): AppResult<EstadiaDetailsReadModel>
 
 // chamador
 result.fold(
@@ -84,7 +86,7 @@ retorno de erro. Nenhum `throw` cruza para `domain/`, `application/` ou `present
 
 ```kotlin
 // agregador de borda (core/infra/utils/BoundaryUtils.kt) — todo acesso ao mundo externo passa por aqui
-inline fun <T> onDatabase(block: () -> T): AppResult<T, ApplicationError> {
+inline fun <T> onDatabase(block: () -> T): AppResult<T> {
     try {
         return AppResult.Success(block())
     } catch (cancellation: CancellationException) {
@@ -97,7 +99,7 @@ inline fun <T> onDatabase(block: () -> T): AppResult<T, ApplicationError> {
 }
 
 // DataSource — nenhum try/catch próprio
-suspend fun getEstadia(estadiaId: String): AppResult<EstadiaOrm?, ApplicationError> =
+suspend fun getEstadia(estadiaId: String): AppResult<EstadiaOrm?> =
     onDatabase { queryEstadia(estadiaId) }
 ```
 
@@ -174,6 +176,11 @@ onDatabase {
 > ```
 
 ## Modelando o lado de erro do retorno
+
+`AppResult<D>` tem **um só parâmetro**: `Success(data)` ou `Error(error: BaseError)`. O tipo do
+erro não aparece na assinatura; quem precisa distinguir ramifica sobre o valor com `when`/`is`
+(`BaseError` é `sealed`, então o `when` é exaustivo; liste os subtipos em vez de usar `else`,
+para o compilador avisar quando surgir um novo). A UI deve tratar todo erro de infra igual (e.g. `BaseError.toBottomSheetData`).
 
 `<Contexto>Error` herda de `DomainError` (regra de domínio) ou `ApplicationError` (falha de infra),
 ambos `BaseError`, e pode assumir três formas — escolha pela necessidade do chamador, não por padrão

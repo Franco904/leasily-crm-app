@@ -5,7 +5,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioOrm
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
@@ -20,11 +19,11 @@ abstract class ProprietarioWriteDataSource {
      * Salva o Proprietário com seus arquivos numa única transação. Com `id` preenchido, atualiza o
      * cadastro existente em vez de criar outro.
      */
-    suspend fun save(proprietario: Proprietario): AppResult<Unit, ApplicationError> =
+    suspend fun save(proprietario: Proprietario): AppResult<Unit> =
         onDatabase { saveInTransaction(proprietario) }
 
     /** Exclui o Proprietário, que deixa de aparecer na listagem e nos detalhes. */
-    suspend fun delete(proprietarioId: Long): AppResult<Unit, ApplicationError> =
+    suspend fun delete(proprietarioId: Long): AppResult<Unit> =
         onDatabase { markAsDeleted(proprietarioId) }
 
     @Transaction

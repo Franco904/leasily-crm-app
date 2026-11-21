@@ -11,16 +11,16 @@ import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeAtendimento
 import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeEstadia
 import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeInteracao
 import com.fstengineering.leasilycrm.testUtils.fakes.insertFakePreferencias
-import com.fstengineering.leasilycrm.testUtils.fakes.sendFakeImovel
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeCliente
-import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelWithMainPicture
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelId
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelWithMainPicture
+import com.fstengineering.leasilycrm.testUtils.fakes.sendFakeImovel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldBeNull
@@ -103,7 +103,7 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
             val atendimentoId = db.insertFakeAtendimento(clienteId, isFinished = false)
 
             db.assistanceWriteDataSource().delete(atendimentoId)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             watchCliente(clienteId).assistances shouldBeEqualTo emptyList()
         }
@@ -114,7 +114,7 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
         db.clienteWriteDataSource().delete(clienteId)
 
         sut.watchCliente(clienteId).first()
-            .shouldBeInstanceOf<AppResult.Success<*, *>>()
+            .shouldBeInstanceOf<AppResult.Success<*>>()
             .data.shouldBeNull()
     }
 
@@ -169,7 +169,7 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
             db.sendFakeImovel(atendimentoId, keptImovelId)
             db.sendFakeImovel(atendimentoId, deletedImovelId)
             db.imovelSharedWriteDataSource().delete(deletedImovelId)
-                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+                .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val cliente = watchCliente(clienteId)
 
@@ -193,6 +193,6 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
 
     private suspend fun watchCliente(clienteId: Long): ClienteReadModel =
         sut.watchCliente(clienteId).first()
-            .shouldBeInstanceOf<AppResult.Success<*, *>>()
+            .shouldBeInstanceOf<AppResult.Success<*>>()
             .data.shouldNotBeNull().shouldBeInstanceOf<ClienteReadModel>()
 }

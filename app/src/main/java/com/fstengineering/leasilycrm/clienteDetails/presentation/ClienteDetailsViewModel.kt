@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.clienteDetails.infra.dataSources.ClienteDet
 import com.fstengineering.leasilycrm.clienteDetails.presentation.mappers.toClienteDetailsUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import kotlinx.coroutines.Job
@@ -99,7 +99,7 @@ class ClienteDetailsViewModel(
     }
 
     sealed interface UiEvent {
-        data class ShowErrorBottomSheet(val error: ApplicationError) : UiEvent
+        data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
         data object NavigateUp : UiEvent
         data class ShowClienteDeleteSnackbar(val isLead: Boolean) : UiEvent
         data object ShowAssistanceDeleteSnackbar : UiEvent

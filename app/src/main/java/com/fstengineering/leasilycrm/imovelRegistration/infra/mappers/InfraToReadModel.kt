@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.imovelRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
+import com.fstengineering.leasilycrm.core.infra.adapters.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelPriceOrm
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelFileReadModel
@@ -12,8 +13,12 @@ import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.Imovel
 import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import kotlinx.collections.immutable.toPersistentList
 
-fun ImovelRegistrationProjection.toImovelReadModel(): ImovelReadModel {
-    val proprietario = requireNotNull(proprietario?.takeUnless { it.isDeleted })
+fun ImovelRegistrationProjection.toReadModel(): ImovelReadModel {
+    val activeProprietario = requireNotNull(proprietario).takeUnless { it.isDeleted }
+        ?: run {
+            ExceptionLogger.logMasked("Proprietário excluído no Imóvel ${imovel.id}")
+            null
+        }
 
     val characteristics = characteristics
         .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
@@ -30,7 +35,7 @@ fun ImovelRegistrationProjection.toImovelReadModel(): ImovelReadModel {
     return ImovelReadModel(
         id = requireNotNull(imovel.id),
         createDateTime = imovel.createDateTime,
-        proprietario = ProprietarioReadModel(id = proprietario.id, name = proprietario.name),
+        proprietario = activeProprietario?.let { ProprietarioReadModel(id = it.id, name = it.name) },
         type = requireNotNull(ImovelType.fromId(imovel.typeId)),
         neighborhood = imovel.neighborhood,
         streetAddress = imovel.streetAddress,
@@ -61,7 +66,7 @@ fun ImovelRegistrationProjection.toImovelReadModel(): ImovelReadModel {
     )
 }
 
-fun ProprietarioNameProjection.toProprietarioReadModel() = ProprietarioReadModel(
+fun ProprietarioNameProjection.toReadModel() = ProprietarioReadModel(
     id = id,
     name = name,
 )

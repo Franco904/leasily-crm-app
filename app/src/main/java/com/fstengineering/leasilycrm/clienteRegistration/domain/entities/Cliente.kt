@@ -4,6 +4,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Email
 import com.fstengineering.leasilycrm.core.domain.valueObjects.Name
@@ -34,19 +35,19 @@ class Cliente private constructor(
             email: String?,
             contactOrigin: String?,
             observations: String?,
-        ): AppResult<Cliente, ValidationErrors> {
+        ): AppResult<Cliente> {
             val errors = mutableListOf<DomainError>()
 
             if (name == null) errors.add(DomainError.Name.Required)
 
             val parsedName = name?.let { Name.parse(name) }
-                ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             val parsedPhone = phone?.let { Phone.parse(it) }
-                ?.fold(onError = { errors.add(it); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             val parsedEmail = email?.let { Email.parse(it) }
-                ?.fold(onError = { errors.addAll(it.errors); null }, onSuccess = { it })
+                ?.fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
 
             if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 

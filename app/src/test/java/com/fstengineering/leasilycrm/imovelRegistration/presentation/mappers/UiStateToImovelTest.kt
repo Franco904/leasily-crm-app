@@ -55,7 +55,7 @@ class UiStateToImovelTest {
             val result = form.toImovel()
 
             val imovel =
-                result.shouldBeInstanceOf<AppResult.Success<Imovel, ValidationErrors>>().data
+                result.shouldBeInstanceOf<AppResult.Success<Imovel>>().data
             imovel.prices.map { it.id }.toSet() shouldBeEqualTo setOf(1L, 2L)
         }
 
@@ -80,7 +80,8 @@ class UiStateToImovelTest {
             val result = form.toImovel()
 
             val errors =
-                result.shouldBeInstanceOf<AppResult.Error<Imovel, ValidationErrors>>().error.errors
+                result.shouldBeInstanceOf<AppResult.Error>().error
+                    .shouldBeInstanceOf<ValidationErrors>().errors
             errors shouldBeEqualTo listOf(
                 DomainError.Neighborhood.Required,
                 DomainError.ImovelPricePeriod.StartDateIsAfterEndDate,

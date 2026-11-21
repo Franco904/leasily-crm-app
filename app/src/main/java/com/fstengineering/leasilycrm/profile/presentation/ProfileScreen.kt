@@ -29,16 +29,17 @@ import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
+import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.profile.presentation.composables.ConfirmSignOutUserDialog
 import com.fstengineering.leasilycrm.profile.presentation.composables.EditCreciNumberDialog
 import com.fstengineering.leasilycrm.profile.presentation.composables.ProfileDataSection
 import com.fstengineering.leasilycrm.profile.presentation.composables.ProfileScreenTopBar
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
+import com.fstengineering.leasilycrm.signin.presentation.models.strategies.SignInErrorBottomSheetDataPropertiesStrategy
 import kotlinx.coroutines.launch
 
 @Composable
@@ -168,7 +169,11 @@ fun ProfileScreen(
                             credentialManager.clearGoogleCredentialState(activityContext = activity)
                                 .onError { e ->
                                     isSigningOut = false
-                                    onUiEvent(ShowErrorBottomSheet(e.toBottomSheetData()))
+                                    onUiEvent(
+                                        ShowErrorBottomSheet(
+                                            e.toBottomSheetData(SignInErrorBottomSheetDataPropertiesStrategy),
+                                        ),
+                                    )
                                 }
                                 .onSuccess { viewModel.signOutUser() }
                         }

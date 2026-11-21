@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.remote
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.constants.SIGN_IN_ROUTE
 import com.fstengineering.leasilycrm.core.infra.constants.SIGN_OUT_ROUTE
@@ -19,7 +18,7 @@ class UserRemoteDataSourceImpl(
 ) : UserRemoteDataSource {
     override suspend fun signInUser(
         signInRequestDto: SignInRequestDto,
-    ): AppResult<SignInUserResponseDto, ApplicationError> {
+    ): AppResult<SignInUserResponseDto> {
         return client.requestBackend(
             url = SIGN_IN_ROUTE,
             method = HttpMethod.Post,
@@ -31,7 +30,7 @@ class UserRemoteDataSourceImpl(
             )
     }
 
-    override suspend fun signOutUser(): AppResult<Unit, ApplicationError> {
+    override suspend fun signOutUser(): AppResult<Unit> {
         return client.requestBackend(
             url = SIGN_OUT_ROUTE,
             method = HttpMethod.Get,
@@ -44,7 +43,7 @@ class UserRemoteDataSourceImpl(
 
     override suspend fun updateUser(
         updateUserDto: UpdateUserDto,
-    ): AppResult<Unit, ApplicationError> {
+    ): AppResult<Unit> {
         return client.requestBackend(
             url = UPDATE_USER_ROUTE,
             method = HttpMethod.Put,
