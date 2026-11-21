@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AtendimentoUiState
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.presentation.composables.details.BathroomsDetailsItem
@@ -36,8 +36,8 @@ import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDa
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun AssistanceQuantityCharacteristicsDetailsItems(
-    assistance: AssistanceUiState,
+fun AtendimentoQuantityCharacteristicsDetailsItems(
+    atendimento: AtendimentoUiState,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -50,33 +50,33 @@ fun AssistanceQuantityCharacteristicsDetailsItems(
         )
         Spacer(modifier = Modifier.height(16.dp))
         SearchedDateRangeDetailsItem(
-            searchedStartDate = assistance.searchingStartDate,
-            searchedEndDate = assistance.searchingEndDate,
-            hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,
+            searchedStartDate = atendimento.searchingStartDate,
+            searchedEndDate = atendimento.searchingEndDate,
+            hasFlexibilityForPeriod = atendimento.hasFlexibilityForPeriod,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        MaxAcceptedNightlyRateDetailsItem(assistance.maxAcceptedNightlyRate)
+        MaxAcceptedNightlyRateDetailsItem(atendimento.maxAcceptedNightlyRate)
         Spacer(modifier = Modifier.height(16.dp))
         HospedesDetailsItem(
-            qtAdultHospedes = assistance.qtAdultHospedes,
-            qtKidHospedes = assistance.qtKidHospedes,
-            qtBabyHospedes = assistance.qtBabyHospedes,
-            qtAnimalHospedes = assistance.qtAnimalHospedes,
+            qtAdultHospedes = atendimento.qtAdultHospedes,
+            qtKidHospedes = atendimento.qtKidHospedes,
+            qtBabyHospedes = atendimento.qtBabyHospedes,
+            qtAnimalHospedes = atendimento.qtAnimalHospedes,
         )
         Spacer(modifier = Modifier.height(16.dp))
         BedroomsEnSuitesDetailsItem(
-            qtBedrooms = assistance.qtBedrooms,
-            qtEnSuites = assistance.qtEnSuites,
+            qtBedrooms = atendimento.qtBedrooms,
+            qtEnSuites = atendimento.qtEnSuites,
         )
         Spacer(modifier = Modifier.height(16.dp))
         DoubleSingleBedsDetailsItem(
-            qtDoubleBeds = assistance.qtDoubleBeds,
-            qtSingleBeds = assistance.qtSingleBeds,
+            qtDoubleBeds = atendimento.qtDoubleBeds,
+            qtSingleBeds = atendimento.qtSingleBeds,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        BathroomsDetailsItem(qtBathrooms = assistance.qtBathrooms)
+        BathroomsDetailsItem(qtBathrooms = atendimento.qtBathrooms)
         Spacer(modifier = Modifier.height(16.dp))
-        ParkingSpotsDetailsItem(qtParkingSpots = assistance.qtParkingSpots)
+        ParkingSpotsDetailsItem(qtParkingSpots = atendimento.qtParkingSpots)
     }
 }
 

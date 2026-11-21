@@ -11,7 +11,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 
 @Composable
-fun AssistanceLastUpdateDateDetailsItem(
+fun AtendimentoLastUpdateDateDetailsItem(
     updateDateTime: AppDateTime,
     modifier: Modifier = Modifier,
 ) {

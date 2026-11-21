@@ -26,22 +26,22 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
-import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionCardUiState
+import com.fstengineering.leasilycrm.core.presentation.models.InteracaoCardUiState
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun AssistanceInteractionCard(
-    interaction: AssistanceInteractionCardUiState,
-    onViewInteractionDetails: () -> Unit,
+fun InteracaoCard(
+    interacao: InteracaoCardUiState,
+    onViewInteracaoDetails: () -> Unit,
     modifier: Modifier = Modifier,
-    onEditInteraction: () -> Unit = {},
-    onDeleteInteraction: () -> Unit = {},
+    onEditInteracao: () -> Unit = {},
+    onDeleteInteracao: () -> Unit = {},
     hasMoreOptionsMenu: Boolean = true,
 ) {
     AppCard(
-        onClick = onViewInteractionDetails,
+        onClick = onViewInteracaoDetails,
         modifier = modifier
             .fillMaxWidth()
     ) {
@@ -74,9 +74,9 @@ fun AssistanceInteractionCard(
                     Text(
                         text = stringResource(
                             R.string.assistance_registration_interaction_registration_interaction_date_value,
-                            interaction.date.dayOfMonth.formatToTwoDigitsDateTime(),
-                            interaction.date.month.formatToTwoDigitsDateTime(),
-                            interaction.date.year,
+                            interacao.date.dayOfMonth.formatToTwoDigitsDateTime(),
+                            interacao.date.month.formatToTwoDigitsDateTime(),
+                            interacao.date.year,
                         ),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -89,12 +89,12 @@ fun AssistanceInteractionCard(
                                 MoreOptionsMenuOption(
                                     icon = Icons.Outlined.Edit,
                                     text = stringResource(R.string.edit_action_button_text),
-                                    onClick = onEditInteraction,
+                                    onClick = onEditInteracao,
                                 ),
                                 MoreOptionsMenuOption(
                                     icon = Icons.Outlined.Delete,
                                     text = stringResource(R.string.delete_action_button_text),
-                                    onClick = onDeleteInteraction,
+                                    onClick = onDeleteInteracao,
                                 ),
                             ),
                         )
@@ -102,7 +102,7 @@ fun AssistanceInteractionCard(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = interaction.title,
+                    text = interacao.title,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier

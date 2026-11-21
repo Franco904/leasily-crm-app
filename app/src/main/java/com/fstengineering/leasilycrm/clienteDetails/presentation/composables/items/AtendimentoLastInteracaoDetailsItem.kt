@@ -19,15 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.ImoveisEmptySection
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
-import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.InteracoesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.InteracaoCard
 
 @Composable
-fun AssistanceLastSentImovelDetailsItem(
-    lastSentImovel: ImovelCardUiState?,
+fun AtendimentoLastInteracaoDetailsItem(
+    lastInteracao: InteracaoUiState?,
     onViewAll: () -> Unit,
-    onViewSentImovelDetails: () -> Unit,
+    onViewInteracaoDetails: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -37,16 +37,16 @@ fun AssistanceLastSentImovelDetailsItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(R.string.lead_tenant_assistance_details_last_sent_property_title),
+                text = stringResource(R.string.lead_tenant_assistance_details_last_assistance_interaction_title),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .weight(1f)
             )
-            if (lastSentImovel != null) {
+            if (lastInteracao != null) {
                 TextButton(onClick = onViewAll) {
                     Text(
-                        text = stringResource(R.string.view_all_o_action_button_text),
+                        text = stringResource(R.string.view_all_a_action_button_text),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                     )
@@ -62,18 +62,16 @@ fun AssistanceLastSentImovelDetailsItem(
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        if (lastSentImovel == null) {
-            ImoveisEmptySection(
-                isSearchingImovel = false,
+        if (lastInteracao == null) {
+            InteracoesEmptySection(
                 modifier = Modifier
                     .padding(8.dp)
             )
         } else {
-            ImovelCard(
-                imovel = lastSentImovel,
-                onCardClick = onViewSentImovelDetails,
+            InteracaoCard(
+                interacao = lastInteracao.toCardUiState(),
+                onViewInteracaoDetails = onViewInteracaoDetails,
                 hasMoreOptionsMenu = false,
-                hasCharacteristicsChipsRow = false,
             )
         }
     }

@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.details.IconL
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun AssistanceSearchedNeighborhoodsDetailsItem(
+fun AtendimentoSearchedNeighborhoodsDetailsItem(
     searchedNeighborhoods: ImmutableList<String>,
     modifier: Modifier = Modifier,
 ) {

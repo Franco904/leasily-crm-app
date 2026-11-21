@@ -24,14 +24,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionBottomSheetUiState
+import com.fstengineering.leasilycrm.core.presentation.models.InteracaoBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AssistanceInteractionDetailsBottomSheet(
+fun InteracaoDetailsBottomSheet(
     sheetState: SheetState,
-    interaction: AssistanceInteractionBottomSheetUiState,
+    interacao: InteracaoBottomSheetUiState,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -64,9 +64,9 @@ fun AssistanceInteractionDetailsBottomSheet(
                 Text(
                     text = stringResource(
                         R.string.assistance_registration_interaction_registration_interaction_date_value,
-                        interaction.date.dayOfMonth.formatToTwoDigitsDateTime(),
-                        interaction.date.month.formatToTwoDigitsDateTime(),
-                        interaction.date.year,
+                        interacao.date.dayOfMonth.formatToTwoDigitsDateTime(),
+                        interacao.date.month.formatToTwoDigitsDateTime(),
+                        interacao.date.year,
                     ),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -76,16 +76,16 @@ fun AssistanceInteractionDetailsBottomSheet(
             HorizontalDivider()
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = interaction.title,
+                text = interacao.title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = interaction.description
+                text = interacao.description
                     ?: stringResource(R.string.assistance_registration_interaction_description_empty_text),
                 style = when {
-                    interaction.description == null -> {
+                    interacao.description == null -> {
                         MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic)
                     }
 

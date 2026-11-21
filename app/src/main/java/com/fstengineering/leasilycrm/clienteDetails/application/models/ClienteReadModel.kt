@@ -14,6 +14,6 @@ data class ClienteReadModel(
     val observations: String?,
     val isLead: Boolean,
     val isOld: Boolean,
-    val assistances: ImmutableList<AssistanceReadModel>,
+    val atendimentos: ImmutableList<AtendimentoReadModel>,
     val stays: ImmutableList<StayReadModel>,
 )

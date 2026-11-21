@@ -190,7 +190,7 @@ class HospedesViewModelTest {
         id = faker.random.nextLong(bound = 9999),
         name = faker.random.nextUUID(),
         city = faker.random.nextUUID(),
-        hasUnfinishedAssistance = false,
+        hasUnfinishedAtendimento = false,
         hospedesCount = null,
         hasUnfinishedStay = true,
         currentStayId = faker.random.nextLong(bound = 9999),

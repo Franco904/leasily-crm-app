@@ -4,6 +4,6 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 
 data class ClienteHistoryItemUiState(
     val id: Long,
-    val isAssistance: Boolean,
+    val isAtendimento: Boolean,
     val dateTime: AppDateTime,
 )

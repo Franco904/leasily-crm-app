@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.clienteDetails.application.models
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 
-data class AssistanceSentImovelReadModel(
+data class ImovelEnviadoReadModel(
     val id: Long,
     val mainPictureUriString: String?,
     val neighborhood: String,

@@ -27,7 +27,7 @@ import kotlinx.collections.immutable.ImmutableMap
 @Composable
 fun ClienteDetailsHistoryPage(
     historyByYear: ImmutableMap<Int, ImmutableList<ClienteHistoryItemUiState>>,
-    onViewHistoryItem: (id: Long, isAssistance: Boolean) -> Unit,
+    onViewHistoryItem: (id: Long, isAtendimento: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -59,7 +59,7 @@ fun ClienteDetailsHistoryPage(
             Column {
                 yearHistoryItems.forEachIndexed { i, historyItem ->
                     val labelStringId =
-                        if (historyItem.isAssistance) R.string.lead_tenant_history_details_assistance_at_label
+                        if (historyItem.isAtendimento) R.string.lead_tenant_history_details_assistance_at_label
                         else R.string.lead_tenant_history_details_stay_at_label
 
                     if (i > 0) Spacer(modifier = Modifier.height(8.dp))
@@ -71,7 +71,7 @@ fun ClienteDetailsHistoryPage(
                             historyItem.dateTime.year,
                         ),
                         onViewHistoryItem = {
-                            onViewHistoryItem(historyItem.id, historyItem.isAssistance)
+                            onViewHistoryItem(historyItem.id, historyItem.isAtendimento)
                         },
                     )
                 }

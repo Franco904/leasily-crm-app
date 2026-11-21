@@ -36,28 +36,28 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsViewModel.UiEvent.NavigateUp
-import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsViewModel.UiEvent.ShowAssistanceDeleteSnackbar
+import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsViewModel.UiEvent.ShowAtendimentoDeleteSnackbar
 import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsViewModel.UiEvent.ShowClienteDeleteSnackbar
 import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet
-import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsCurrentAssistancePage
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsCurrentAtendimentoPage
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsFloatingActionButton
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsHistoryPage
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsIdentificationPage
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsTabRow
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsTopAppBar
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceInteractionUiState
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AtendimentoUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsTab
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
-import com.fstengineering.leasilycrm.core.presentation.composables.AssistanceInteractionDetailsBottomSheet
+import com.fstengineering.leasilycrm.core.presentation.composables.InteracaoDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.AssistanceInteractionCard
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.InteracaoCard
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
-import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAssistanceDialog
+import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAtendimentoDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteHospedeDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
-import com.fstengineering.leasilycrm.core.presentation.models.AssistanceInteractionBottomSheetUiState
+import com.fstengineering.leasilycrm.core.presentation.models.InteracaoBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
@@ -71,7 +71,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomS
 fun ClienteDetailsScreen(
     viewModel: ClienteDetailsViewModel,
     onEditCliente: () -> Unit,
-    onRegisterAssistance: (Long?) -> Unit,
+    onRegisterAtendimento: (Long?) -> Unit,
     onNewStay: () -> Unit,
     onViewStay: (Long) -> Unit,
     onViewSentImovelDetails: (Long) -> Unit,
@@ -96,14 +96,14 @@ fun ClienteDetailsScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val loaded = uiState as? ClienteDetailsUiState.Loaded
 
-    var interactionToView by remember { mutableStateOf<AssistanceInteractionUiState?>(null) }
-    var pastAssistanceToView by remember { mutableStateOf<AssistanceUiState?>(null) }
+    var interacaoToView by remember { mutableStateOf<InteracaoUiState?>(null) }
+    var pastAtendimentoToView by remember { mutableStateOf<AtendimentoUiState?>(null) }
 
     var isViewingAllSentImoveis by rememberSaveable { mutableStateOf(false) }
     var isViewingAllInterations by rememberSaveable { mutableStateOf(false) }
 
     var mustShowConfirmDeleteClienteDialog by rememberSaveable { mutableStateOf(false) }
-    var mustShowConfirmDeleteAssistanceDialog by rememberSaveable { mutableStateOf(false) }
+    var mustShowConfirmDeleteAtendimentoDialog by rememberSaveable { mutableStateOf(false) }
 
     var isBringIntoViewEnabled by rememberSaveable { mutableStateOf(false) }
 
@@ -136,7 +136,7 @@ fun ClienteDetailsScreen(
                     onUiEvent(UiEvent.ShowSnackBar(deleteMessageId))
                 }
 
-                is ShowAssistanceDeleteSnackbar -> {
+                is ShowAtendimentoDeleteSnackbar -> {
                     onUiEvent(UiEvent.ShowSnackBar(R.string.delete_assistance_success_message))
                 }
             }
@@ -151,11 +151,11 @@ fun ClienteDetailsScreen(
 
     BackHandler {
         when {
-            pastAssistanceToView != null -> pastAssistanceToView = null
+            pastAtendimentoToView != null -> pastAtendimentoToView = null
             isViewingAllSentImoveis || isViewingAllInterations -> {
                 isViewingAllSentImoveis = false
                 isViewingAllInterations = false
-                pastAssistanceToView = null
+                pastAtendimentoToView = null
 
                 isBringIntoViewEnabled = true
             }
@@ -170,14 +170,14 @@ fun ClienteDetailsScreen(
                 titleText = when {
                     isViewingAllSentImoveis -> stringResource(R.string.lead_tenant_details_top_app_bar_title_all_sent_properties)
                     isViewingAllInterations -> stringResource(R.string.lead_tenant_details_top_app_bar_title_all_interations)
-                    pastAssistanceToView != null -> stringResource(R.string.lead_tenant_details_top_app_bar_title_past_assistance)
+                    pastAtendimentoToView != null -> stringResource(R.string.lead_tenant_details_top_app_bar_title_past_assistance)
                     loaded?.isLead == true -> stringResource(R.string.lead_tenant_details_top_app_bar_title_lead)
                     else -> stringResource(R.string.lead_tenant_details_top_app_bar_title_tenant)
                 },
-                hasMoreOptions = !(isViewingAllSentImoveis || isViewingAllInterations || pastAssistanceToView != null),
+                hasMoreOptions = !(isViewingAllSentImoveis || isViewingAllInterations || pastAtendimentoToView != null),
                 onBack = when {
-                    pastAssistanceToView != null -> {
-                        { pastAssistanceToView = null }
+                    pastAtendimentoToView != null -> {
+                        { pastAtendimentoToView = null }
                     }
 
                     isViewingAllSentImoveis || isViewingAllInterations -> {
@@ -214,7 +214,7 @@ fun ClienteDetailsScreen(
             }
 
             loaded != null && (isViewingAllSentImoveis || isViewingAllInterations) -> {
-                val currentAssistance = loaded.currentAssistance
+                val currentAtendimento = loaded.currentAtendimento
 
                 LazyColumn(
                     state = lazyListState,
@@ -226,7 +226,7 @@ fun ClienteDetailsScreen(
                     item { Spacer(modifier = Modifier.height(16.dp)) }
                     when {
                         isViewingAllSentImoveis -> {
-                            val sortedSentImoveis = currentAssistance?.sentImoveis
+                            val sortedSentImoveis = currentAtendimento?.sentImoveis
                                 ?: emptyList()
 
                             itemsIndexed(
@@ -245,14 +245,14 @@ fun ClienteDetailsScreen(
                         }
 
                         isViewingAllInterations -> {
-                            val interactions = currentAssistance?.interactionsByMonth
+                            val interacoes = currentAtendimento?.interacoesByMonth
                                 ?: emptyMap()
 
                             itemsIndexed(
-                                items = interactions,
+                                items = interacoes,
                                 key = { _, (monthYear, _) -> monthYear.id },
                                 contentType = { _, entryType -> entryType },
-                            ) { i, (monthYear, interactions) ->
+                            ) { i, (monthYear, interacoes) ->
                                 val monthLabel = when {
                                     monthYear.month == currentMonth -> stringResource(R.string.this_month_label)
                                     else -> context
@@ -269,11 +269,11 @@ fun ClienteDetailsScreen(
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Column {
-                                    interactions.forEach { interaction ->
-                                        AssistanceInteractionCard(
-                                            interaction = interaction.toCardUiState(),
-                                            onViewInteractionDetails = {
-                                                interactionToView = interaction
+                                    interacoes.forEach { interacao ->
+                                        InteracaoCard(
+                                            interacao = interacao.toCardUiState(),
+                                            onViewInteracaoDetails = {
+                                                interacaoToView = interacao
                                             },
                                             hasMoreOptionsMenu = false,
                                         )
@@ -286,19 +286,19 @@ fun ClienteDetailsScreen(
                 }
             }
 
-            loaded != null && pastAssistanceToView != null -> {
-                ClienteDetailsCurrentAssistancePage(
-                    currentAssistance = pastAssistanceToView,
-                    onRegisterAssistance = { onRegisterAssistance(null) },
-                    onEditAssistance = { onRegisterAssistance(loaded.currentAssistance?.id) },
-                    onDeleteAssistance = { mustShowConfirmDeleteAssistanceDialog = true },
+            loaded != null && pastAtendimentoToView != null -> {
+                ClienteDetailsCurrentAtendimentoPage(
+                    currentAtendimento = pastAtendimentoToView,
+                    onRegisterAtendimento = { onRegisterAtendimento(null) },
+                    onEditAtendimento = { onRegisterAtendimento(loaded.currentAtendimento?.id) },
+                    onDeleteAtendimento = { mustShowConfirmDeleteAtendimentoDialog = true },
                     onViewAllSentImoveis = { isViewingAllSentImoveis = true },
-                    onViewAllInteractions = { isViewingAllInterations = true },
+                    onViewAllInteracoes = { isViewingAllInterations = true },
                     onViewSentImovelDetails = { imovelId ->
                         onViewSentImovelDetails(imovelId)
                     },
-                    onViewInteractionDetails = { interaction ->
-                        interactionToView = interaction
+                    onViewInteracaoDetails = { interacao ->
+                        interacaoToView = interacao
                     },
                     isViewingAllSentImoveis = isViewingAllSentImoveis,
                     isViewingAllInterations = isViewingAllInterations,
@@ -343,21 +343,21 @@ fun ClienteDetailsScreen(
                                 )
                             }
 
-                            ClienteDetailsTab.CurrentAssistance -> {
-                                ClienteDetailsCurrentAssistancePage(
-                                    currentAssistance = loaded.currentAssistance,
-                                    onRegisterAssistance = { onRegisterAssistance(null) },
-                                    onEditAssistance = { onRegisterAssistance(loaded.currentAssistance?.id) },
-                                    onDeleteAssistance = {
-                                        mustShowConfirmDeleteAssistanceDialog = true
+                            ClienteDetailsTab.CurrentAtendimento -> {
+                                ClienteDetailsCurrentAtendimentoPage(
+                                    currentAtendimento = loaded.currentAtendimento,
+                                    onRegisterAtendimento = { onRegisterAtendimento(null) },
+                                    onEditAtendimento = { onRegisterAtendimento(loaded.currentAtendimento?.id) },
+                                    onDeleteAtendimento = {
+                                        mustShowConfirmDeleteAtendimentoDialog = true
                                     },
                                     onViewAllSentImoveis = { isViewingAllSentImoveis = true },
-                                    onViewAllInteractions = { isViewingAllInterations = true },
+                                    onViewAllInteracoes = { isViewingAllInterations = true },
                                     onViewSentImovelDetails = { imovelId ->
                                         onViewSentImovelDetails(imovelId)
                                     },
-                                    onViewInteractionDetails = { interaction ->
-                                        interactionToView = interaction
+                                    onViewInteracaoDetails = { interacao ->
+                                        interacaoToView = interacao
                                     },
                                     isViewingAllSentImoveis = isViewingAllSentImoveis,
                                     isViewingAllInterations = isViewingAllInterations,
@@ -368,10 +368,10 @@ fun ClienteDetailsScreen(
                             ClienteDetailsTab.History -> {
                                 ClienteDetailsHistoryPage(
                                     historyByYear = loaded.historyByYear,
-                                    onViewHistoryItem = { id, isAssistance ->
+                                    onViewHistoryItem = { id, isAtendimento ->
                                         when {
-                                            isAssistance -> {
-                                                pastAssistanceToView = loaded.pastAssistances
+                                            isAtendimento -> {
+                                                pastAtendimentoToView = loaded.pastAtendimentos
                                                     .find { it.id == id }
                                             }
 
@@ -388,15 +388,15 @@ fun ClienteDetailsScreen(
             }
         }
 
-        if (interactionToView != null) {
-            AssistanceInteractionDetailsBottomSheet(
+        if (interacaoToView != null) {
+            InteracaoDetailsBottomSheet(
                 sheetState = sheetState,
-                interaction = AssistanceInteractionBottomSheetUiState(
-                    date = interactionToView!!.date,
-                    title = interactionToView!!.title,
-                    description = interactionToView!!.description,
+                interacao = InteracaoBottomSheetUiState(
+                    date = interacaoToView!!.date,
+                    title = interacaoToView!!.title,
+                    description = interacaoToView!!.description,
                 ),
-                onDismissRequest = { interactionToView = null },
+                onDismissRequest = { interacaoToView = null },
             )
         }
 
@@ -424,16 +424,16 @@ fun ClienteDetailsScreen(
             }
         }
 
-        if (mustShowConfirmDeleteAssistanceDialog) {
-            ConfirmDeleteAssistanceDialog(
+        if (mustShowConfirmDeleteAtendimentoDialog) {
+            ConfirmDeleteAtendimentoDialog(
                 onConfirmDelete = {
-                    val assistanceId =
-                        loaded?.currentAssistance?.id ?: return@ConfirmDeleteAssistanceDialog
-                    viewModel.deleteCurrentAssistance(assistanceId)
+                    val atendimentoId =
+                        loaded?.currentAtendimento?.id ?: return@ConfirmDeleteAtendimentoDialog
+                    viewModel.deleteCurrentAtendimento(atendimentoId)
 
-                    mustShowConfirmDeleteAssistanceDialog = false
+                    mustShowConfirmDeleteAtendimentoDialog = false
                 },
-                onCancel = { mustShowConfirmDeleteAssistanceDialog = false },
+                onCancel = { mustShowConfirmDeleteAtendimentoDialog = false },
             )
         }
     }

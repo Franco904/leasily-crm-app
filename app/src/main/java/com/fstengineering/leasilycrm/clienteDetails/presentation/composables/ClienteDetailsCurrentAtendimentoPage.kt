@@ -23,29 +23,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceLastInteractionDetailsItem
-import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceLastSentImovelDetailsItem
-import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceLastUpdateDateDetailsItem
-import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceObservationsDetailsItem
-import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistancePreferredOtherCharacteristicsDetailsItems
-import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceQuantityCharacteristicsDetailsItems
-import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AssistanceSearchedNeighborhoodsDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AtendimentoLastInteracaoDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AtendimentoLastSentImovelDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AtendimentoLastUpdateDateDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AtendimentoObservationsDetailsItem
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AtendimentoPreferredOtherCharacteristicsDetailsItems
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AtendimentoQuantityCharacteristicsDetailsItems
+import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AtendimentoSearchedNeighborhoodsDetailsItem
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.PreferredSeaProximityTypeDetailsItem
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceInteractionUiState
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AtendimentoUiState
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppTonalButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClienteDetailsCurrentAssistancePage(
-    currentAssistance: AssistanceUiState?,
-    onRegisterAssistance: () -> Unit,
-    onEditAssistance: () -> Unit,
-    onDeleteAssistance: () -> Unit,
+fun ClienteDetailsCurrentAtendimentoPage(
+    currentAtendimento: AtendimentoUiState?,
+    onRegisterAtendimento: () -> Unit,
+    onEditAtendimento: () -> Unit,
+    onDeleteAtendimento: () -> Unit,
     onViewAllSentImoveis: () -> Unit,
-    onViewAllInteractions: () -> Unit,
+    onViewAllInteracoes: () -> Unit,
     onViewSentImovelDetails: (Long) -> Unit,
-    onViewInteractionDetails: (AssistanceInteractionUiState) -> Unit,
+    onViewInteracaoDetails: (InteracaoUiState) -> Unit,
     isViewingAllSentImoveis: Boolean,
     isViewingAllInterations: Boolean,
     isBringIntoViewEnabled: Boolean,
@@ -54,7 +54,7 @@ fun ClienteDetailsCurrentAssistancePage(
     val scrollState = rememberScrollState()
 
     val sentImoveisBringIntoViewRequester = remember { BringIntoViewRequester() }
-    val interactionsBringIntoViewRequester = remember { BringIntoViewRequester() }
+    val interacoesBringIntoViewRequester = remember { BringIntoViewRequester() }
 
     LaunchedEffect(isViewingAllSentImoveis) {
         if (isBringIntoViewEnabled && !isViewingAllSentImoveis) {
@@ -64,17 +64,17 @@ fun ClienteDetailsCurrentAssistancePage(
 
     LaunchedEffect(isViewingAllInterations) {
         if (isBringIntoViewEnabled && !isViewingAllInterations) {
-            interactionsBringIntoViewRequester.bringIntoView()
+            interacoesBringIntoViewRequester.bringIntoView()
         }
     }
 
     AnimatedContent(
-        targetState = currentAssistance != null,
-    ) { hasCurrentAssistance ->
-        if (!hasCurrentAssistance) {
-            AssistanceEmptySection(onRegisterAssistance = onRegisterAssistance)
+        targetState = currentAtendimento != null,
+    ) { hasCurrentAtendimento ->
+        if (!hasCurrentAtendimento) {
+            AtendimentoEmptySection(onRegisterAtendimento = onRegisterAtendimento)
         } else {
-            if (currentAssistance == null) return@AnimatedContent
+            if (currentAtendimento == null) return@AnimatedContent
 
             Column(
                 modifier = modifier
@@ -86,7 +86,7 @@ fun ClienteDetailsCurrentAssistancePage(
                     AppTonalButton(
                         icon = Icons.Outlined.Edit,
                         label = stringResource(R.string.edit_action_button_text),
-                        onClick = onEditAssistance,
+                        onClick = onEditAtendimento,
                         modifier = Modifier
                             .weight(1f)
                     )
@@ -94,7 +94,7 @@ fun ClienteDetailsCurrentAssistancePage(
                     AppTonalButton(
                         icon = Icons.Outlined.Delete,
                         label = stringResource(R.string.delete_action_button_text),
-                        onClick = onDeleteAssistance,
+                        onClick = onDeleteAtendimento,
                         modifier = Modifier
                             .weight(1f)
                     )
@@ -102,40 +102,40 @@ fun ClienteDetailsCurrentAssistancePage(
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(24.dp))
-                AssistanceLastUpdateDateDetailsItem(
-                    updateDateTime = currentAssistance.updateDateTime,
+                AtendimentoLastUpdateDateDetailsItem(
+                    updateDateTime = currentAtendimento.updateDateTime,
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                AssistanceQuantityCharacteristicsDetailsItems(assistance = currentAssistance)
+                AtendimentoQuantityCharacteristicsDetailsItems(atendimento = currentAtendimento)
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(24.dp))
                 PreferredSeaProximityTypeDetailsItem(
-                    seaProximityTypeId = currentAssistance.preferredSeaProximityTypeId,
-                    distanceToSea = currentAssistance.distanceToSea,
+                    seaProximityTypeId = currentAtendimento.preferredSeaProximityTypeId,
+                    distanceToSea = currentAtendimento.distanceToSea,
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                AssistanceSearchedNeighborhoodsDetailsItem(
-                    searchedNeighborhoods = currentAssistance.preferredNeighborhoods,
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                HorizontalDivider()
-                Spacer(modifier = Modifier.height(24.dp))
-                AssistancePreferredOtherCharacteristicsDetailsItems(
-                    checkedCharacteristics = currentAssistance.preferredImovelCharacteristics,
+                AtendimentoSearchedNeighborhoodsDetailsItem(
+                    searchedNeighborhoods = currentAtendimento.preferredNeighborhoods,
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(24.dp))
-                AssistanceObservationsDetailsItem(observations = currentAssistance.observations)
+                AtendimentoPreferredOtherCharacteristicsDetailsItems(
+                    checkedCharacteristics = currentAtendimento.preferredImovelCharacteristics,
+                )
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(24.dp))
-                AssistanceLastSentImovelDetailsItem(
-                    lastSentImovel = currentAssistance.lastSentImovel,
+                AtendimentoObservationsDetailsItem(observations = currentAtendimento.observations)
+                Spacer(modifier = Modifier.height(24.dp))
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(24.dp))
+                AtendimentoLastSentImovelDetailsItem(
+                    lastSentImovel = currentAtendimento.lastSentImovel,
                     onViewAll = onViewAllSentImoveis,
                     onViewSentImovelDetails = {
-                        onViewSentImovelDetails(currentAssistance.lastSentImovel!!.id)
+                        onViewSentImovelDetails(currentAtendimento.lastSentImovel!!.id)
                     },
                     modifier = Modifier
                         .bringIntoViewRequester(sentImoveisBringIntoViewRequester)
@@ -143,14 +143,14 @@ fun ClienteDetailsCurrentAssistancePage(
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(24.dp))
-                AssistanceLastInteractionDetailsItem(
-                    lastInteraction = currentAssistance.lastInteraction,
-                    onViewAll = onViewAllInteractions,
-                    onViewInteractionDetails = {
-                        onViewInteractionDetails(currentAssistance.lastInteraction!!)
+                AtendimentoLastInteracaoDetailsItem(
+                    lastInteracao = currentAtendimento.lastInteracao,
+                    onViewAll = onViewAllInteracoes,
+                    onViewInteracaoDetails = {
+                        onViewInteracaoDetails(currentAtendimento.lastInteracao!!)
                     },
                     modifier = Modifier
-                        .bringIntoViewRequester(interactionsBringIntoViewRequester)
+                        .bringIntoViewRequester(interacoesBringIntoViewRequester)
                 )
                 Spacer(modifier = Modifier.height(120.dp))
             }

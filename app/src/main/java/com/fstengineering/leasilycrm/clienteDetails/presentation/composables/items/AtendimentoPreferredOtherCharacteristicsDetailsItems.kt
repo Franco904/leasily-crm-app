@@ -17,7 +17,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun AssistancePreferredOtherCharacteristicsDetailsItems(
+fun AtendimentoPreferredOtherCharacteristicsDetailsItems(
     checkedCharacteristics: ImmutableList<ImovelCharacteristic>,
     modifier: Modifier = Modifier,
 ) {

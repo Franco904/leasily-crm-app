@@ -18,7 +18,7 @@ private const val SELECT_CLIENTES = """
                 c.id AS id,
                 c.name AS name,
                 c.city AS city,
-                c.has_unfinished_assistance AS hasUnfinishedAssistance,
+                c.has_unfinished_assistance AS hasUnfinishedAtendimento,
                 (
                     SELECT a.adults + a.kids + a.babies
                     FROM assistances a

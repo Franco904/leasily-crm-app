@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.clienteDetails.presentation.composables
+package com.fstengineering.leasilycrm.core.presentation.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Assignment
+import androidx.compose.material.icons.automirrored.outlined.Message
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,11 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryButton
 
 @Composable
-fun AssistanceEmptySection(
-    onRegisterAssistance: () -> Unit,
+fun InteracoesEmptySection(
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -31,7 +29,7 @@ fun AssistanceEmptySection(
             .fillMaxWidth()
     ) {
         Icon(
-            imageVector = Icons.AutoMirrored.Outlined.Assignment,
+            imageVector = Icons.AutoMirrored.Outlined.Message,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
@@ -39,16 +37,12 @@ fun AssistanceEmptySection(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = stringResource(R.string.assistance_empty_text),
+            text = stringResource(R.string.assistance_registration_interactions_empty_text),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        AppPrimaryButton(
-            label = stringResource(R.string.assist_now_action_button_text),
-            onClick = onRegisterAssistance,
-        )
     }
 }

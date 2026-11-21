@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.clienteDetails.presentation
 
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.Destinations
-import com.fstengineering.leasilycrm.assistanceRegistration.infra.dataSources.AssistanceWriteDataSource
+import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoWriteDataSource
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
 import com.fstengineering.leasilycrm.clienteDetails.infra.dataSources.ClienteDetailsReadDataSource
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
@@ -32,7 +32,7 @@ class ClienteDetailsViewModelTest {
     private val clienteDetailsReadDataSourceMock: ClienteDetailsReadDataSource =
         mockk(relaxed = true)
     private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxed = true)
-    private val assistanceWriteDataSourceMock: AssistanceWriteDataSource = mockk(relaxed = true)
+    private val atendimentoWriteDataSourceMock: AtendimentoWriteDataSource = mockk(relaxed = true)
 
     private val clienteId = faker.random.nextLong(bound = 9999)
 
@@ -171,31 +171,31 @@ class ClienteDetailsViewModelTest {
     }
 
     @Nested
-    @DisplayName("deleteCurrentAssistance")
-    inner class DeleteCurrentAssistanceTests {
+    @DisplayName("deleteCurrentAtendimento")
+    inner class DeleteCurrentAtendimentoTests {
         @Test
         fun `Deve confirmar exclusão quando o Atendimento atual é excluído`() = runTest {
-            val assistanceId = faker.random.nextLong(bound = 9999)
+            val atendimentoId = faker.random.nextLong(bound = 9999)
             val sut = createSut()
-            coEvery { assistanceWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
+            coEvery { atendimentoWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
 
             sut.uiEvents.test {
-                sut.deleteCurrentAssistance(assistanceId)
+                sut.deleteCurrentAtendimento(atendimentoId)
 
-                awaitItem() shouldBeEqualTo ClienteDetailsViewModel.UiEvent.ShowAssistanceDeleteSnackbar
+                awaitItem() shouldBeEqualTo ClienteDetailsViewModel.UiEvent.ShowAtendimentoDeleteSnackbar
             }
-            coVerify { assistanceWriteDataSourceMock.delete(assistanceId) }
+            coVerify { atendimentoWriteDataSourceMock.delete(atendimentoId) }
         }
 
         @Test
         fun `Deve informar falha quando o Atendimento atual é excluído, dado que o armazenamento local falha`() =
             runTest {
                 val sut = createSut()
-                coEvery { assistanceWriteDataSourceMock.delete(any()) } returns
+                coEvery { atendimentoWriteDataSourceMock.delete(any()) } returns
                         AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
-                    sut.deleteCurrentAssistance(faker.random.nextLong(bound = 9999))
+                    sut.deleteCurrentAtendimento(faker.random.nextLong(bound = 9999))
 
                     awaitItem() shouldBeEqualTo
                             ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
@@ -214,7 +214,7 @@ class ClienteDetailsViewModelTest {
         route = Destinations.ClienteDetails(clienteId = clienteId),
         clienteDetailsReadDataSource = clienteDetailsReadDataSourceMock,
         clienteWriteDataSource = clienteWriteDataSourceMock,
-        assistanceWriteDataSource = assistanceWriteDataSourceMock,
+        atendimentoWriteDataSource = atendimentoWriteDataSourceMock,
     )
 
     private fun createClienteReadModel(isLead: Boolean) = ClienteReadModel(
@@ -229,7 +229,7 @@ class ClienteDetailsViewModelTest {
         observations = null,
         isLead = isLead,
         isOld = false,
-        assistances = persistentListOf(),
+        atendimentos = persistentListOf(),
         stays = persistentListOf(),
     )
 }

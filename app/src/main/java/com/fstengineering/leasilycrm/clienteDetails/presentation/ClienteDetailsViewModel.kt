@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.clienteDetails.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.Destinations
-import com.fstengineering.leasilycrm.assistanceRegistration.infra.dataSources.AssistanceWriteDataSource
+import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoWriteDataSource
 import com.fstengineering.leasilycrm.clienteDetails.infra.dataSources.ClienteDetailsReadDataSource
 import com.fstengineering.leasilycrm.clienteDetails.presentation.mappers.toClienteDetailsUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
@@ -24,7 +24,7 @@ class ClienteDetailsViewModel(
     private val route: Destinations.ClienteDetails,
     private val clienteDetailsReadDataSource: ClienteDetailsReadDataSource,
     private val clienteWriteDataSource: ClienteWriteDataSource,
-    private val assistanceWriteDataSource: AssistanceWriteDataSource,
+    private val atendimentoWriteDataSource: AtendimentoWriteDataSource,
 ) : ViewModel() {
     private var isLoaded = false
 
@@ -79,16 +79,16 @@ class ClienteDetailsViewModel(
         }
     }
 
-    fun deleteCurrentAssistance(assistanceId: Long) {
+    fun deleteCurrentAtendimento(atendimentoId: Long) {
         viewModelScope.launch {
-            assistanceWriteDataSource.delete(assistanceId)
+            atendimentoWriteDataSource.delete(atendimentoId)
                 .onError { error ->
                     _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(error))
 
                     return@launch
                 }
 
-            _uiEvents.trySend(UiEvent.ShowAssistanceDeleteSnackbar)
+            _uiEvents.trySend(UiEvent.ShowAtendimentoDeleteSnackbar)
         }
     }
 
@@ -102,6 +102,6 @@ class ClienteDetailsViewModel(
         data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
         data object NavigateUp : UiEvent
         data class ShowClienteDeleteSnackbar(val isLead: Boolean) : UiEvent
-        data object ShowAssistanceDeleteSnackbar : UiEvent
+        data object ShowAtendimentoDeleteSnackbar : UiEvent
     }
 }

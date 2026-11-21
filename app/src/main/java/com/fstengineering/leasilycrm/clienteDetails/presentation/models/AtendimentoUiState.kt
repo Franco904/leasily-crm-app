@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 
-data class AssistanceUiState(
+data class AtendimentoUiState(
     val id: Long,
     val updateDateTime: AppDateTime,
     val searchingStartDate: AppDate?,
@@ -33,7 +33,7 @@ data class AssistanceUiState(
     val observations: String?,
     val lastSentImovel: ImovelCardUiState?,
     val sentImoveis: ImmutableList<ImovelCardUiState>,
-    val lastInteraction: AssistanceInteractionUiState?,
-    val interactionsByMonth: ImmutableMap<AppYearMonth, List<AssistanceInteractionUiState>>,
+    val lastInteracao: InteracaoUiState?,
+    val interacoesByMonth: ImmutableMap<AppYearMonth, List<InteracaoUiState>>,
     val isFinished: Boolean,
 )

@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.details.IconLabelValueDetailsItem
 
 @Composable
-fun AssistanceObservationsDetailsItem(
+fun AtendimentoObservationsDetailsItem(
     observations: String?,
     modifier: Modifier = Modifier,
 ) {

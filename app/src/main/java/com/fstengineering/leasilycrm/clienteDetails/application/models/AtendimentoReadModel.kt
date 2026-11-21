@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import kotlinx.collections.immutable.ImmutableList
 
-data class AssistanceReadModel(
+data class AtendimentoReadModel(
     val id: Long,
     val updateDateTime: AppDateTime,
     val preferredStartDate: AppDate?,
@@ -29,6 +29,6 @@ data class AssistanceReadModel(
     val isFinished: Boolean,
     val preferredNeighborhoods: ImmutableList<String>,
     val preferredImovelCharacteristics: ImmutableList<ImovelCharacteristic>,
-    val interactions: ImmutableList<AssistanceInteractionReadModel>,
-    val sentImoveis: ImmutableList<AssistanceSentImovelReadModel>,
+    val interacoes: ImmutableList<InteracaoReadModel>,
+    val sentImoveis: ImmutableList<ImovelEnviadoReadModel>,
 )

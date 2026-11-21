@@ -1,9 +1,8 @@
-package com.fstengineering.leasilycrm.clienteDetails.application.models
+package com.fstengineering.leasilycrm.core.presentation.models
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 
-data class AssistanceInteractionReadModel(
-    val id: Long,
+data class InteracaoBottomSheetUiState(
     val date: AppDate,
     val title: String,
     val description: String?,

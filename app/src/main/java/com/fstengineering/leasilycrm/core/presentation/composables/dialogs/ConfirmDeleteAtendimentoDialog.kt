@@ -6,7 +6,7 @@ import androidx.compose.ui.res.stringResource
 import com.fstengineering.leasilycrm.R
 
 @Composable
-fun ConfirmDeleteAssistanceDialog(
+fun ConfirmDeleteAtendimentoDialog(
     onConfirmDelete: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,

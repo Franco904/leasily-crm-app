@@ -10,7 +10,7 @@ fun ClienteReadModel.toClienteListItemUiState() = ClienteListItemUiState(
         name = name,
         city = city,
         hospedesCount = hospedesCount,
-        hasUnfinishedAssistance = hasUnfinishedAssistance,
+        hasUnfinishedAtendimento = hasUnfinishedAtendimento,
         hasUnfinishedStay = hasUnfinishedStay,
     ),
     currentStayId = currentStayId,

@@ -1,13 +1,13 @@
 package com.fstengineering.leasilycrm.clienteDetails.presentation.mappers
 
 import androidx.core.net.toUri
-import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceInteractionReadModel
-import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceReadModel
-import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceSentImovelReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.InteracaoReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.AtendimentoReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.ImovelEnviadoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.StayReadModel
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceInteractionUiState
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AssistanceUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AtendimentoUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteHistoryItemUiState
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
@@ -20,12 +20,12 @@ import kotlinx.collections.immutable.toPersistentMap
 fun ClienteReadModel.toClienteDetailsUiState(): ClienteDetailsUiState.Loaded {
     val currentStayId = stays.find { !it.isCheckOutDone }?.id
 
-    val allAssistancesUiState = assistances.map { it.toUiState() }.toPersistentList()
-    val currentAssistance = allAssistancesUiState.find { !it.isFinished }
-    val pastAssistances = allAssistancesUiState.filter { it.isFinished }.toPersistentList()
+    val allAtendimentosUiState = atendimentos.map { it.toUiState() }.toPersistentList()
+    val currentAtendimento = allAtendimentosUiState.find { !it.isFinished }
+    val pastAtendimentos = allAtendimentosUiState.filter { it.isFinished }.toPersistentList()
 
     val historyByYear = buildHistory(
-        assistances = pastAssistances,
+        atendimentos = pastAtendimentos,
         stays = stays,
     )
 
@@ -42,20 +42,20 @@ fun ClienteReadModel.toClienteDetailsUiState(): ClienteDetailsUiState.Loaded {
         isLead = isLead,
         isOld = isOld,
         currentStayId = currentStayId,
-        currentAssistance = currentAssistance,
-        pastAssistances = pastAssistances,
+        currentAtendimento = currentAtendimento,
+        pastAtendimentos = pastAtendimentos,
         historyByYear = historyByYear,
     )
 }
 
 private fun buildHistory(
-    assistances: ImmutableList<AssistanceUiState>,
+    atendimentos: ImmutableList<AtendimentoUiState>,
     stays: List<StayReadModel>,
 ): ImmutableMap<Int, ImmutableList<ClienteHistoryItemUiState>> {
-    val assistanceItems = assistances.map {
+    val atendimentoItems = atendimentos.map {
         ClienteHistoryItemUiState(
             id = it.id,
-            isAssistance = true,
+            isAtendimento = true,
             dateTime = it.updateDateTime,
         )
     }
@@ -65,26 +65,26 @@ private fun buildHistory(
         .map {
             ClienteHistoryItemUiState(
                 id = it.id,
-                isAssistance = false,
+                isAtendimento = false,
                 dateTime = it.checkInDateTime,
             )
         }
 
-    return (assistanceItems + stayItems)
+    return (atendimentoItems + stayItems)
         .sortedByDescending { it.dateTime }
         .groupBy { it.dateTime.year }
         .mapValues { (_, items) -> items.toPersistentList() }
         .toPersistentMap()
 }
 
-private fun AssistanceReadModel.toUiState(): AssistanceUiState {
-    val sortedInteractions = interactions
+private fun AtendimentoReadModel.toUiState(): AtendimentoUiState {
+    val sortedInteracoes = interacoes
         .map { it.toUiState() }
         .sortedByDescending { it.date }
-        .groupBy { interaction ->
+        .groupBy { interacao ->
             AppYearMonth.of(
-                year = interaction.date.year,
-                month = interaction.date.month,
+                year = interacao.date.year,
+                month = interacao.date.month,
             )
         }
         .toPersistentMap()
@@ -93,7 +93,7 @@ private fun AssistanceReadModel.toUiState(): AssistanceUiState {
         .map { it.toUiState() }
         .toPersistentList()
 
-    return AssistanceUiState(
+    return AtendimentoUiState(
         id = id,
         updateDateTime = updateDateTime,
         searchingStartDate = preferredStartDate,
@@ -117,20 +117,20 @@ private fun AssistanceReadModel.toUiState(): AssistanceUiState {
         observations = observations,
         lastSentImovel = sortedSentImoveis.firstOrNull(),
         sentImoveis = sortedSentImoveis,
-        lastInteraction = sortedInteractions.values.flatten().firstOrNull(),
-        interactionsByMonth = sortedInteractions,
+        lastInteracao = sortedInteracoes.values.flatten().firstOrNull(),
+        interacoesByMonth = sortedInteracoes,
         isFinished = isFinished,
     )
 }
 
-private fun AssistanceInteractionReadModel.toUiState() = AssistanceInteractionUiState(
+private fun InteracaoReadModel.toUiState() = InteracaoUiState(
     id = id,
     date = date,
     title = title,
     description = description,
 )
 
-private fun AssistanceSentImovelReadModel.toUiState(): ImovelCardUiState {
+private fun ImovelEnviadoReadModel.toUiState(): ImovelCardUiState {
     val streetAddressAndNumber = buildString {
         append(streetAddress)
         if (number != null) append(", $number")

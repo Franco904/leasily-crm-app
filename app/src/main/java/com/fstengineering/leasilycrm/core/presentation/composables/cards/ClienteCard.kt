@@ -39,11 +39,11 @@ fun ClienteCard(
     onCardClick: (() -> Unit)? = null,
     onEditCliente: () -> Unit = {},
     onDeleteCliente: () -> Unit = {},
-    onNewAssistance: () -> Unit = {},
+    onNewAtendimento: () -> Unit = {},
     onNewStay: () -> Unit = {},
     onViewStay: () -> Unit = {},
     hasMoreOptionsMenu: Boolean = false,
-    hasAssistanceText: Boolean = false,
+    hasAtendimentoText: Boolean = false,
     hasPrimaryActions: Boolean = false,
 ) {
     AppCard(
@@ -75,7 +75,7 @@ fun ClienteCard(
                 }
 
                 when {
-                    hasAssistanceText && !cliente.hasUnfinishedAssistance -> {
+                    hasAtendimentoText && !cliente.hasUnfinishedAtendimento -> {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = stringResource(R.string.no_unfinished_assistance_text),
@@ -149,10 +149,10 @@ fun ClienteCard(
                         .padding(bottom = 8.dp, end = 8.dp)
                         .align(Alignment.BottomEnd)
                 ) {
-                    if (!cliente.hasUnfinishedAssistance) {
+                    if (!cliente.hasUnfinishedAtendimento) {
                         AppTonalIconButton(
                             icon = painterResource(R.drawable.assignment_add),
-                            onClick = onNewAssistance
+                            onClick = onNewAtendimento
                         )
                     }
                     Spacer(modifier = Modifier.width(4.dp))
