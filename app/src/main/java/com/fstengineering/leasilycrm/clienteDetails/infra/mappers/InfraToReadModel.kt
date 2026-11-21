@@ -5,7 +5,9 @@ import com.fstengineering.leasilycrm.clienteDetails.application.models.Assistanc
 import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceSentImovelReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.StayReadModel
+import com.fstengineering.leasilycrm.clienteDetails.infra.projections.AtendimentoProjection
 import com.fstengineering.leasilycrm.clienteDetails.infra.projections.ClienteDetailsProjection
+import com.fstengineering.leasilycrm.clienteDetails.infra.projections.ImovelEnviadoProjection
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
@@ -13,15 +15,9 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximity
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.AssistanceCompound
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
-fun ClienteDetailsProjection.toClienteReadModel(
-    assistances: ImmutableList<AssistanceReadModel>,
-    stays: ImmutableList<StayReadModel>,
-) = ClienteReadModel(
+fun ClienteDetailsProjection.toClienteReadModel() = ClienteReadModel(
     id = id,
     tag = tag,
     name = name,
@@ -33,13 +29,17 @@ fun ClienteDetailsProjection.toClienteReadModel(
     observations = observations,
     isLead = status == ClienteStatus.Lead.id,
     isOld = status == ClienteStatus.HospedeAntigo.id,
-    assistances = assistances,
-    stays = stays,
+    assistances = atendimentos
+        .filterNot { it.assistance.isDeleted }
+        .map { it.toAssistanceReadModel() }
+        .toPersistentList(),
+    stays = estadias
+        .filterNot { it.isDeleted }
+        .map { it.toStayReadModel() }
+        .toPersistentList(),
 )
 
-fun AssistanceCompound.toAssistanceReadModel(
-    sentImoveis: ImmutableList<AssistanceSentImovelReadModel>,
-): AssistanceReadModel {
+private fun AtendimentoProjection.toAssistanceReadModel(): AssistanceReadModel {
     val preferredNeighborhoods = preferredNeighborhoods
         .map { it.neighborhood }
         .toPersistentList()
@@ -81,7 +81,10 @@ fun AssistanceCompound.toAssistanceReadModel(
         preferredNeighborhoods = preferredNeighborhoods,
         preferredImovelCharacteristics = preferredCharacteristics,
         interactions = interactionReadModels,
-        sentImoveis = sentImoveis,
+        sentImoveis = imoveisEnviados
+            .filterNot { it.imovel.isDeleted }
+            .map { it.toAssistanceSentImovelReadModel() }
+            .toPersistentList(),
     )
 }
 
@@ -93,7 +96,7 @@ private fun AssistanceInteractionEntity.toAssistanceInteractionReadModel() =
         description = description,
     )
 
-fun ImovelCompound.toAssistanceSentImovelReadModel() = AssistanceSentImovelReadModel(
+private fun ImovelEnviadoProjection.toAssistanceSentImovelReadModel() = AssistanceSentImovelReadModel(
     id = requireNotNull(imovel.id),
     mainPictureUriString = files.find { it.isMainPicture }?.imovelFileUri,
     neighborhood = imovel.neighborhood,
@@ -102,7 +105,7 @@ fun ImovelCompound.toAssistanceSentImovelReadModel() = AssistanceSentImovelReadM
     type = requireNotNull(ImovelType.fromId(imovel.typeId)),
 )
 
-fun StayEntity.toStayReadModel() = StayReadModel(
+private fun StayEntity.toStayReadModel() = StayReadModel(
     id = requireNotNull(id),
     checkInDateTime = checkInDateTime,
     isCheckOutDone = status == 2,
