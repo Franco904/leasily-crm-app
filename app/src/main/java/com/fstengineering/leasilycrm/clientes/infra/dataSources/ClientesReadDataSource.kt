@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.clientes.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.clientes.application.models.ClienteReadModel
-import com.fstengineering.leasilycrm.clientes.infra.mappers.toClienteReadModel
+import com.fstengineering.leasilycrm.clientes.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.clientes.infra.projections.ClienteListItemProjection
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
@@ -63,7 +63,7 @@ abstract class ClientesReadDataSource {
         orderTypeId: Int? = null,
     ): Flow<AppResult<List<ClienteReadModel>, ApplicationError>> =
         observeClientes(status?.id, matching?.escapeLike(), orderTypeId)
-            .map { projections -> projections.map { it.toClienteReadModel() } }
+            .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()
 
     /** Lista os Leads com o mesmo filtro e ordem de [watchClientes], sem observar mudanças. */
@@ -72,7 +72,7 @@ abstract class ClientesReadDataSource {
         orderTypeId: Int,
     ): AppResult<List<ClienteReadModel>, ApplicationError> = onDatabase {
         selectClientes(ClienteStatus.Lead.id, matching?.escapeLike(), orderTypeId)
-            .map { it.toClienteReadModel() }
+            .map { it.toReadModel() }
     }
 
     @Query("$SELECT_CLIENTES $ORDER_CLIENTES")

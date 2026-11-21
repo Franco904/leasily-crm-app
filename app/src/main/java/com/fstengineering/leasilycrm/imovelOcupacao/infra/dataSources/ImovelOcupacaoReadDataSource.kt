@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.imovelOcupacao.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
-import com.fstengineering.leasilycrm.imovelOcupacao.infra.mappers.toPeriodoOcupadoRawReadModel
+import com.fstengineering.leasilycrm.imovelOcupacao.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.imovelOcupacao.infra.projections.PeriodoOcupadoProjection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,7 +19,7 @@ abstract class ImovelOcupacaoReadDataSource {
         imovelId: Long,
     ): Flow<AppResult<List<ImovelPeriodoOcupadoRawReadModel>, ApplicationError>> =
         observePeriodosOcupados(imovelId)
-            .map { projections -> projections.map { it.toPeriodoOcupadoRawReadModel() } }
+            .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()
 
     @Query(

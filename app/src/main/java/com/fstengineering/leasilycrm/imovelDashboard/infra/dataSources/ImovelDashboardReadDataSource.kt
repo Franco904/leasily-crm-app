@@ -8,8 +8,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelSummaryReadModel
-import com.fstengineering.leasilycrm.imovelDashboard.infra.mappers.toImovelSummaryReadModel
-import com.fstengineering.leasilycrm.imovelDashboard.infra.mappers.toPeriodoOcupadoRawReadModel
+import com.fstengineering.leasilycrm.imovelDashboard.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.ImovelDashboardProjection
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.PeriodoOcupadoProjection
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +23,7 @@ abstract class ImovelDashboardReadDataSource {
     fun watchImovel(imovelId: Long): Flow<AppResult<ImovelSummaryReadModel, ApplicationError>> =
         observeImovel(imovelId)
             .filterNotNull()
-            .map { it.toImovelSummaryReadModel() }
+            .map { it.toReadModel() }
             .asDatabaseFlowResult()
 
     /** Observa os Períodos Ocupados não excluídos do Imóvel, em ordem de check-in. */
@@ -32,7 +31,7 @@ abstract class ImovelDashboardReadDataSource {
         imovelId: Long,
     ): Flow<AppResult<List<ImovelPeriodoOcupadoRawReadModel>, ApplicationError>> =
         observePeriodosOcupados(imovelId)
-            .map { projections -> projections.map { it.toPeriodoOcupadoRawReadModel() } }
+            .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()
 
     @Transaction

@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toProprietarioReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -17,7 +17,7 @@ abstract class ProprietarioReadDataSource {
     /** Observa os Proprietários selecionáveis (não excluídos), em ordem alfabética de nome. */
     fun watchProprietarios(): Flow<AppResult<List<ProprietarioReadModel>, ApplicationError>> =
         observeProprietarios()
-            .map { projections -> projections.map { it.toProprietarioReadModel() } }
+            .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()
 
     @Query(

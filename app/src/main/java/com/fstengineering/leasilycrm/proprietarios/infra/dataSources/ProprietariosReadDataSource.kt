@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.proprietarios.infra.projections.ProprietarioNameProjection
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.proprietarios.application.models.ProprietarioReadModel
-import com.fstengineering.leasilycrm.proprietarios.infra.mappers.toProprietarioReadModel
+import com.fstengineering.leasilycrm.proprietarios.infra.mappers.toReadModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -17,7 +17,7 @@ abstract class ProprietariosReadDataSource {
     /** Observa os Proprietários não excluídos, em ordem alfabética de nome. */
     fun watchProprietarios(): Flow<AppResult<List<ProprietarioReadModel>, ApplicationError>> =
         observeProprietarios()
-            .map { projections -> projections.map { it.toProprietarioReadModel() } }
+            .map { projections -> projections.map { it.toReadModel() } }
             .asDatabaseFlowResult()
 
     @Query(

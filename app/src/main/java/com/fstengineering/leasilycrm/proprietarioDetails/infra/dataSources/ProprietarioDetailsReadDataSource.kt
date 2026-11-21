@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.proprietarioDetails.infra.projections.ProprietarioDetailsProjection
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
 import com.fstengineering.leasilycrm.proprietarioDetails.application.models.ProprietarioReadModel
-import com.fstengineering.leasilycrm.proprietarioDetails.infra.mappers.toProprietarioReadModel
+import com.fstengineering.leasilycrm.proprietarioDetails.infra.mappers.toReadModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -20,7 +20,7 @@ abstract class ProprietarioDetailsReadDataSource {
         proprietarioId: Long,
     ): Flow<AppResult<ProprietarioReadModel?, ApplicationError>> =
         observeProprietario(proprietarioId)
-            .map { it?.toProprietarioReadModel() }
+            .map { it?.toReadModel() }
             .asDatabaseFlowResult()
 
     @Transaction

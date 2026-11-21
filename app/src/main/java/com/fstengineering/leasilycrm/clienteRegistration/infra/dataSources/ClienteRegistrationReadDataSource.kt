@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Query
 import com.fstengineering.leasilycrm.clienteRegistration.application.models.ClienteReadModel
-import com.fstengineering.leasilycrm.clienteRegistration.infra.mappers.toClienteReadModel
+import com.fstengineering.leasilycrm.clienteRegistration.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.clienteRegistration.infra.projections.ClienteRegistrationProjection
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
@@ -14,7 +14,7 @@ import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 abstract class ClienteRegistrationReadDataSource {
     /** Busca o Cliente não excluído, para preencher o formulário de edição. */
     suspend fun getCliente(clienteId: Long): AppResult<ClienteReadModel, ApplicationError> =
-        onDatabase { findCliente(clienteId).toClienteReadModel() }
+        onDatabase { findCliente(clienteId).toReadModel() }
 
     /** Lista as etiquetas já usadas por Clientes não excluídos, em ordem alfabética. */
     suspend fun getTags(): AppResult<List<String>, ApplicationError> =

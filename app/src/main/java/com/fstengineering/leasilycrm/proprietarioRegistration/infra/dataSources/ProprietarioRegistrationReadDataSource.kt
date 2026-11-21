@@ -8,14 +8,14 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.projections.ProprietarioRegistrationProjection
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toProprietarioReadModel
+import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toReadModel
 
 /** Leitura do Proprietário a editar no cadastro. */
 @Dao
 abstract class ProprietarioRegistrationReadDataSource {
     /** Busca o Proprietário com seus arquivos, para preencher o formulário de edição. */
     suspend fun getProprietario(proprietarioId: Long): AppResult<ProprietarioReadModel, ApplicationError> =
-        onDatabase { findProprietario(proprietarioId).toProprietarioReadModel() }
+        onDatabase { findProprietario(proprietarioId).toReadModel() }
 
     @Transaction
     @Query(

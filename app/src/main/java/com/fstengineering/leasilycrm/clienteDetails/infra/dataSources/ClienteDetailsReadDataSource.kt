@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
-import com.fstengineering.leasilycrm.clienteDetails.infra.mappers.toClienteReadModel
+import com.fstengineering.leasilycrm.clienteDetails.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.clienteDetails.infra.projections.ClienteDetailsProjection
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
@@ -22,7 +22,7 @@ abstract class ClienteDetailsReadDataSource {
      */
     fun watchCliente(clienteId: Long): Flow<AppResult<ClienteReadModel?, ApplicationError>> =
         observeCliente(clienteId)
-            .map { projection -> projection?.toClienteReadModel() }
+            .map { projection -> projection?.toReadModel() }
             .asDatabaseFlowResult()
 
     @Transaction

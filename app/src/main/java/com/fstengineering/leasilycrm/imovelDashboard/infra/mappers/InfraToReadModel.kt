@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.ImovelDas
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.PeriodoOcupadoProjection
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.ProprietarioProjection
 
-fun ImovelDashboardProjection.toImovelSummaryReadModel() = ImovelSummaryReadModel(
+fun ImovelDashboardProjection.toReadModel() = ImovelSummaryReadModel(
     id = id,
     proprietario = requireNotNull(proprietario?.takeUnless { it.isDeleted }).toReadModel(),
     type = requireNotNull(ImovelType.fromId(typeId)),
@@ -18,7 +18,7 @@ fun ImovelDashboardProjection.toImovelSummaryReadModel() = ImovelSummaryReadMode
     mainPictureUriString = mainPictureUriString,
 )
 
-fun PeriodoOcupadoProjection.toPeriodoOcupadoRawReadModel() = ImovelPeriodoOcupadoRawReadModel(
+fun PeriodoOcupadoProjection.toReadModel() = ImovelPeriodoOcupadoRawReadModel(
     id = id,
     tenantId = tenantId,
     checkInDateTime = checkInDateTime,

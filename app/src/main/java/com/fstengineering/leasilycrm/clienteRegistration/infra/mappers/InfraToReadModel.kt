@@ -4,7 +4,7 @@ import com.fstengineering.leasilycrm.clienteRegistration.application.models.Clie
 import com.fstengineering.leasilycrm.clienteRegistration.infra.projections.ClienteRegistrationProjection
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
 
-fun ClienteRegistrationProjection.toClienteReadModel() = ClienteReadModel(
+fun ClienteRegistrationProjection.toReadModel() = ClienteReadModel(
     id = id,
     createDateTime = createDateTime,
     tag = tag,

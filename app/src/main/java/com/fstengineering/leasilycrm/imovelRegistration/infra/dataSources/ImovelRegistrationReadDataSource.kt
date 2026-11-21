@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toImovelReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ImovelRegistrationProjection
 
 /** Leitura do cadastro de Imóvel: o Imóvel a editar e os bairros já cadastrados. */
@@ -18,7 +18,7 @@ abstract class ImovelRegistrationReadDataSource {
      * falha quando o Imóvel ou o Proprietário não existe.
      */
     suspend fun getImovel(imovelId: Long): AppResult<ImovelReadModel, ApplicationError> =
-        onDatabase { requireNotNull(findImovel(imovelId)).toImovelReadModel() }
+        onDatabase { requireNotNull(findImovel(imovelId)).toReadModel() }
 
     /** Lista os bairros dos Imóveis não excluídos, sem repetição e em ordem alfabética. */
     suspend fun getNeighborhoodNames(): AppResult<List<String>, ApplicationError> =

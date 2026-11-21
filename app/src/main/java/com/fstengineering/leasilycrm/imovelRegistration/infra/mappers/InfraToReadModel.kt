@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.Imovel
 import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import kotlinx.collections.immutable.toPersistentList
 
-fun ImovelRegistrationProjection.toImovelReadModel(): ImovelReadModel {
+fun ImovelRegistrationProjection.toReadModel(): ImovelReadModel {
     val proprietario = requireNotNull(proprietario?.takeUnless { it.isDeleted })
 
     val characteristics = characteristics
@@ -61,7 +61,7 @@ fun ImovelRegistrationProjection.toImovelReadModel(): ImovelReadModel {
     )
 }
 
-fun ProprietarioNameProjection.toProprietarioReadModel() = ProprietarioReadModel(
+fun ProprietarioNameProjection.toReadModel() = ProprietarioReadModel(
     id = id,
     name = name,
 )
