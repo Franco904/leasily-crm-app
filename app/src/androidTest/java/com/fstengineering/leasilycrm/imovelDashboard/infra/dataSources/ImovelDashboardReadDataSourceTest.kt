@@ -17,6 +17,9 @@ import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeProprietario
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
@@ -74,6 +77,30 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
                 number = null,
                 mainPictureUriString = mainPictureUri,
             )
+        }
+
+    @Test
+    fun deveReemitirImovelQuandoNomeDoProprietarioMuda(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val proprietarioId = db.saveFakeProprietario(name = "Carla")
+            imovelWriteDataSource.save(
+                createFakeImovel(proprietarioId = proprietarioId, id = 4L)
+            ).shouldBeInstanceOf<AppResult.Success<*>>()
+            val emittedNames = mutableListOf<String?>()
+
+            sut.watchImovel(imovelId = 4L)
+                .take(2)
+                .onEach { result ->
+                    emittedNames += result.shouldBeInstanceOf<AppResult.Success<ImovelSummaryReadModel>>()
+                        .data.proprietario?.name
+
+                    if (emittedNames.size == 1) {
+                        db.saveFakeProprietario(name = "Ana", proprietarioId = proprietarioId)
+                    }
+                }
+                .toList()
+
+            emittedNames shouldBeEqualTo listOf("Carla", "Ana")
         }
 
     @Test
