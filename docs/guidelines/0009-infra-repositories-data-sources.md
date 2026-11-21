@@ -188,6 +188,21 @@ Convenções para a camada `infra/`: acesso a dados e serviços externos.
   (`0007-application-use-cases.md`) — nunca um "Repository" de leitura, nome reservado ao
   write-side.
 
+### Verbos de leitura
+
+Um verbo por papel. O método público e a query protegida têm verbos diferentes de propósito: o
+chamador lê `get`/`watch`; quem lê o DataSource vê `select`/`observe` e sabe que ali mora o SQL.
+
+| Papel                                 | Público (devolve `AppResult`) | `@Query` protegida |
+|---------------------------------------|-------------------------------|--------------------|
+| Consulta única (`suspend`)            | `get<X>`                      | `select<X>`        |
+| Fluxo que re-emite quando o dado muda | `watch<X>`                    | `observe<X>`       |
+
+- `select<X>` serve para uma linha, uma lista ou um escalar: o verbo não muda quando a cardinalidade
+  muda.
+- O método público tem idealmente uma linha. Desembrulhar nulo, descartar
+  excluído e validação de invariante de execução pertencem ao mapper da projeção.
+
 ## Mappers de `infra/`
 
 `infra/mappers/`, três direções:
