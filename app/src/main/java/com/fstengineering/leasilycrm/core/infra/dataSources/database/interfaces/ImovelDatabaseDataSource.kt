@@ -7,6 +7,4 @@ interface ImovelDatabaseDataSource {
     suspend fun getById(id: Long): AppResult<ImovelCompound>
 
     suspend fun getAll(matching: String? = null): AppResult<List<ImovelCompound>>
-
-    suspend fun getAllSentInAssistance(assistanceId: Long): AppResult<List<ImovelCompound>>
 }

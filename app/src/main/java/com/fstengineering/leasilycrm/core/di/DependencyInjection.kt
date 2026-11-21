@@ -1,10 +1,8 @@
 package com.fstengineering.leasilycrm.core.di
 
 import android.app.Application
-import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationDataSourceModule
-import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationRepositoryModule
-import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationUseCaseModule
-import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationViewModelModule
+import com.fstengineering.leasilycrm.atendimentoRegistration.di.atendimentoRegistrationDataSourceModule
+import com.fstengineering.leasilycrm.atendimentoRegistration.di.atendimentoRegistrationViewModelModule
 import com.fstengineering.leasilycrm.core.di.modules.applicationServiceModule
 import com.fstengineering.leasilycrm.core.di.modules.coroutineModule
 import com.fstengineering.leasilycrm.core.di.modules.daoModule
@@ -157,11 +155,9 @@ fun Application.configureDependencyInjection() {
             clienteDetailsDataSourceModule,
             clienteDetailsViewModelModule,
 
-            // Feature: assistanceRegistration
-            assistanceRegistrationDataSourceModule,
-            assistanceRegistrationRepositoryModule,
-            assistanceRegistrationUseCaseModule,
-            assistanceRegistrationViewModelModule,
+            // Feature: atendimentoRegistration
+            atendimentoRegistrationDataSourceModule,
+            atendimentoRegistrationViewModelModule,
 
             // Feature: occupiedPeriods
             occupiedPeriodsRepositoryModule,

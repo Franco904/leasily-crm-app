@@ -1,0 +1,66 @@
+package com.fstengineering.leasilycrm.core.infra.dataSources.database
+
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.LargeTest
+import com.fstengineering.leasilycrm.core.domain.utils.AppResult
+import com.fstengineering.leasilycrm.testUtils.IntegrationTest
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeAtendimento
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeCliente
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeInstanceOf
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@LargeTest
+@RunWith(AndroidJUnit4::class)
+class AtendimentoSharedWriteDataSourceTest : IntegrationTest() {
+    private lateinit var sut: AtendimentoSharedWriteDataSource
+
+    @Before
+    fun setUp() {
+        sut = db.atendimentoSharedWriteDataSource()
+    }
+
+    @Test
+    fun deveFinalizarAtendimentoNaoFinalizadoDoCliente(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val clienteId = db.saveFakeCliente()
+            db.saveFakeAtendimento(clienteId, isFinished = false)
+
+            sut.finishOpen(clienteId).shouldBeInstanceOf<AppResult.Success<*>>()
+
+            isAtendimentoFinished(clienteId) shouldBeEqualTo true
+        }
+
+    @Test
+    fun deveReabrirAtendimentoFinalizadoDoCliente(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val clienteId = db.saveFakeCliente()
+            db.saveFakeAtendimento(clienteId, isFinished = true)
+
+            sut.unfinish(clienteId).shouldBeInstanceOf<AppResult.Success<*>>()
+
+            isAtendimentoFinished(clienteId) shouldBeEqualTo false
+        }
+
+    @Test
+    fun deveManterAtendimentoDeOutroClienteQuandoFinalizaOAtendimentoDoCliente(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val clienteId = db.saveFakeCliente()
+            val otherClienteId = db.saveFakeCliente()
+            db.saveFakeAtendimento(clienteId)
+            db.saveFakeAtendimento(otherClienteId)
+
+            sut.finishOpen(clienteId).shouldBeInstanceOf<AppResult.Success<*>>()
+
+            isAtendimentoFinished(otherClienteId) shouldBeEqualTo false
+        }
+
+    private suspend fun isAtendimentoFinished(clienteId: Long): Boolean =
+        (db.clienteDetailsReadDataSource().watchCliente(clienteId).first() as AppResult.Success)
+            .data!!.atendimentos.single().isFinished
+}

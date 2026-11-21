@@ -1,11 +1,6 @@
 package com.fstengineering.leasilycrm.core.di.modules
 
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentImovelCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
@@ -16,15 +11,6 @@ import org.koin.dsl.module
 val daoModule = module {
     single<AppDatabase> { AppDatabase.buildDatabase(appContext = get()) }
 
-    single<AssistanceDao> { get<AppDatabase>().assistanceDao() }
-    single<AssistanceCharacteristicAssistanceCrossRefDao> {
-        get<AppDatabase>().assistanceCharacteristicAssistanceCrossRefDao()
-    }
-    single<AssistanceInteractionDao> { get<AppDatabase>().assistanceInteractionDao() }
-    single<AssistancePreferredNeighborhoodDao> {
-        get<AppDatabase>().assistanceSearchedNeighborhoodDao()
-    }
-    single<AssistanceSentImovelCrossRefDao> { get<AppDatabase>().assistanceSentImovelCrossRefDao() }
     single<UserAnalyticsDao> { get<AppDatabase>().userAnalyticsDao() }
     single<ImovelDao> { get<AppDatabase>().imovelDao() }
     single<StayDao> { get<AppDatabase>().stayDao() }

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.core.di.modules
 
-import com.fstengineering.leasilycrm.core.application.repositories.AssistanceSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
@@ -11,7 +10,6 @@ import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
 import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
-import com.fstengineering.leasilycrm.core.infra.repositories.AssistanceSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.OccupiedPeriodSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.OccupiedPeriodSharedQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.stores.SettingsSharedStoreImpl
@@ -30,14 +28,6 @@ val repositoryModule = module {
     single<OccupiedPeriodSharedQueryRepository> {
         OccupiedPeriodSharedQueryRepositoryImpl(
             occupiedPeriodDatabaseDataSource = get(),
-        )
-    }
-
-
-    single<AssistanceSharedCommandRepository> {
-        AssistanceSharedCommandRepositoryImpl(
-            databaseAdapter = get(),
-            assistanceDatabaseDataSource = get(),
         )
     }
 

@@ -1,5 +1,7 @@
 package com.fstengineering.leasilycrm.testUtils.fakes
 
+import com.fstengineering.leasilycrm.atendimentoRegistration.domain.entities.Atendimento
+import com.fstengineering.leasilycrm.atendimentoRegistration.domain.entities.Interacao
 import com.fstengineering.leasilycrm.clienteRegistration.domain.entities.Cliente
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
@@ -7,14 +9,10 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceImovelCharacteristicCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentImovelCrossRefEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.testUtils.faker
+import kotlinx.collections.immutable.toPersistentList
 import org.amshove.kluent.shouldBeInstanceOf
 
 fun createFakeCliente(
@@ -90,63 +88,78 @@ suspend fun AppDatabase.insertFakeEstadia(
     )
 )
 
-/** Insere um Atendimento do Cliente e devolve o seu id. */
-suspend fun AppDatabase.insertFakeAtendimento(
+private val nextFakeAtendimentoId = java.util.concurrent.atomic.AtomicLong(0)
+
+/** Cria um Atendimento válido do Cliente, com as Interações e Preferências informadas. */
+fun createFakeAtendimento(
     clienteId: Long,
+    id: Long = nextFakeAtendimentoId.incrementAndGet(),
     isFinished: Boolean = false,
     adults: Int = 2,
     kids: Int = 1,
     babies: Int = 0,
-): Long = assistanceDao().insertOrUpdate(
-    AssistanceEntity(
-        id = null,
-        createDateTime = AppDateTime.now(),
-        updateDateTime = AppDateTime.now(),
-        searchedStartDate = null,
-        searchedEndDate = null,
+    interacoesTitles: List<String> = emptyList(),
+    imoveisEnviadosIds: List<Long> = emptyList(),
+    preferredNeighborhoods: List<String> = emptyList(),
+    preferredImovelCharacteristics: List<ImovelCharacteristic> = emptyList(),
+): Atendimento {
+    val interacoes = interacoesTitles.map {
+        Interacao.parse(id = null, date = AppDate.now(), title = it, description = null)
+            .shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Interacao>()
+    }
+
+    return Atendimento.parse(
+        id = id,
+        clienteId = clienteId,
+        createDateTime = null,
+        preferredStartDate = null,
+        preferredEndDate = null,
         hasFlexibilityForPeriod = false,
         maxAcceptedNightlyRate = null,
-        adults = adults,
-        kids = kids,
-        babies = babies,
-        animals = 0,
-        bedrooms = 0,
-        enSuites = 0,
-        doubleBeds = 0,
-        singleBeds = 0,
-        bathrooms = 0,
-        parkingSpots = 0,
-        distanceToSea = null,
+        adultsCount = adults,
+        kidsCount = kids,
+        babiesCount = babies,
+        animalsCount = 0,
+        bedroomsCount = 0,
+        enSuitesCount = 0,
+        doubleBedsCount = 0,
+        singleBedsCount = 0,
+        bathroomsCount = 0,
+        parkingSpotsCount = 0,
+        preferredSeaProximityTypeId = null,
+        preferredDistanceToSea = null,
+        preferredNeighborhoods = preferredNeighborhoods.toPersistentList(),
+        preferredImovelCharacteristics = preferredImovelCharacteristics.toPersistentList(),
         observations = null,
+        imoveisEnviadosIds = imoveisEnviadosIds.toPersistentList(),
+        interacoes = interacoes.toPersistentList(),
         isFinished = isFinished,
-        isDeleted = false,
-        imovelSeaProximityTypeId = null,
-        clienteId = clienteId,
-        contractVersion = 1,
-    )
-)
-
-/** Registra uma Interação no Atendimento. */
-suspend fun AppDatabase.insertFakeInteracao(
-    atendimentoId: Long,
-    title: String = faker.random.nextUUID(),
-) {
-    assistanceInteractionDao().insertOrUpdate(
-        AssistanceInteractionEntity(
-            id = null,
-            date = AppDate.now(),
-            title = title,
-            description = null,
-            assistanceId = atendimentoId,
-        )
-    )
+    ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Atendimento>()
 }
 
-/** Envia o Imóvel ao Lead no Atendimento. */
-suspend fun AppDatabase.sendFakeImovel(atendimentoId: Long, imovelId: Long) {
-    assistanceSentImovelCrossRefDao().insertOrUpdate(
-        AssistanceSentImovelCrossRefEntity(assistanceId = atendimentoId, imovelId = imovelId)
+/**
+ * Salva um Atendimento do Cliente pelo `AtendimentoWriteDataSource` e devolve o seu id. Salvar de
+ * novo com o mesmo [id] acrescenta Interações, Imóveis enviados e Preferências de procura.
+ */
+suspend fun AppDatabase.saveFakeAtendimento(
+    clienteId: Long,
+    id: Long = nextFakeAtendimentoId.incrementAndGet(),
+    isFinished: Boolean = false,
+    adults: Int = 2,
+    kids: Int = 1,
+    babies: Int = 0,
+    interacoesTitles: List<String> = emptyList(),
+    imoveisEnviadosIds: List<Long> = emptyList(),
+    preferredNeighborhoods: List<String> = emptyList(),
+    preferredImovelCharacteristics: List<ImovelCharacteristic> = emptyList(),
+): Long {
+    val atendimento = createFakeAtendimento(
+        clienteId, id, isFinished, adults, kids, babies, interacoesTitles, imoveisEnviadosIds,
+        preferredNeighborhoods, preferredImovelCharacteristics,
     )
+
+    atendimentoWriteDataSource().save(atendimento).shouldBeInstanceOf<AppResult.Success<*>>()
+    return id
 }
 
 /** Salva um Imóvel com foto principal e devolve o seu id e o URI da foto. */
@@ -160,21 +173,4 @@ suspend fun AppDatabase.saveFakeImovelWithMainPicture(): Pair<Long, String> {
     )
     imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
     return imovelId to mainPictureUri
-}
-
-/** Registra no Atendimento o bairro e a característica de Imóvel que o Lead procura. */
-suspend fun AppDatabase.insertFakePreferencias(
-    atendimentoId: Long,
-    neighborhood: String,
-    characteristic: ImovelCharacteristic,
-) {
-    assistanceSearchedNeighborhoodDao().insertOrUpdate(
-        AssistancePreferredNeighborhoodEntity(neighborhood = neighborhood, assistanceId = atendimentoId)
-    )
-    assistanceCharacteristicAssistanceCrossRefDao().insertOrUpdate(
-        AssistanceImovelCharacteristicCrossRefEntity(
-            assistanceId = atendimentoId,
-            imovelCharacteristicId = characteristic.id,
-        )
-    )
 }

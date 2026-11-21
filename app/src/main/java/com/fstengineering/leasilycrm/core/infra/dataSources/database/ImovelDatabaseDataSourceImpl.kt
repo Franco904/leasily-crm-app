@@ -16,10 +16,4 @@ class ImovelDatabaseDataSourceImpl(
     override suspend fun getAll(matching: String?): AppResult<List<ImovelCompound>> {
         return onDatabase { dao.getAll() }
     }
-
-    override suspend fun getAllSentInAssistance(
-        assistanceId: Long,
-    ): AppResult<List<ImovelCompound>> {
-        return onDatabase { dao.getAllSentInAssistance(assistanceId) }
-    }
 }
