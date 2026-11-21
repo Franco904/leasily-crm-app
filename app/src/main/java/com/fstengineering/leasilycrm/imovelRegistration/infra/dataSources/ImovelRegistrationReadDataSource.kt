@@ -18,7 +18,7 @@ abstract class ImovelRegistrationReadDataSource {
      * falha quando o Imóvel ou o Proprietário não existe.
      */
     suspend fun getImovel(imovelId: Long): AppResult<ImovelReadModel, ApplicationError> =
-        onDatabase { requireNotNull(findImovel(imovelId)).toReadModel() }
+        onDatabase { requireNotNull(selectImovel(imovelId)).toReadModel() }
 
     /** Lista os bairros dos Imóveis não excluídos, sem repetição e em ordem alfabética. */
     suspend fun getNeighborhoodNames(): AppResult<List<String>, ApplicationError> =
@@ -26,7 +26,7 @@ abstract class ImovelRegistrationReadDataSource {
 
     @Transaction
     @Query("SELECT * FROM properties WHERE id = :imovelId AND is_deleted = 0")
-    protected abstract suspend fun findImovel(imovelId: Long): ImovelRegistrationProjection?
+    protected abstract suspend fun selectImovel(imovelId: Long): ImovelRegistrationProjection?
 
     @Query(
         """

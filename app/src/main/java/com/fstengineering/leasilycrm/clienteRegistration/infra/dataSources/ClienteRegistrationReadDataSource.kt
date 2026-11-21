@@ -14,7 +14,7 @@ import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 abstract class ClienteRegistrationReadDataSource {
     /** Busca o Cliente não excluído, para preencher o formulário de edição. */
     suspend fun getCliente(clienteId: Long): AppResult<ClienteReadModel, ApplicationError> =
-        onDatabase { findCliente(clienteId).toReadModel() }
+        onDatabase { selectCliente(clienteId).toReadModel() }
 
     /** Lista as etiquetas já usadas por Clientes não excluídos, em ordem alfabética. */
     suspend fun getTags(): AppResult<List<String>, ApplicationError> =
@@ -36,7 +36,7 @@ abstract class ClienteRegistrationReadDataSource {
         WHERE id = :clienteId AND is_deleted = 0
         """
     )
-    protected abstract suspend fun findCliente(clienteId: Long): ClienteRegistrationProjection
+    protected abstract suspend fun selectCliente(clienteId: Long): ClienteRegistrationProjection
 
     @Query(
         """

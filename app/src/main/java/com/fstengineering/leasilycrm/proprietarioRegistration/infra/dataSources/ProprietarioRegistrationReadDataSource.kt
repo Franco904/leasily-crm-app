@@ -15,7 +15,7 @@ import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toRe
 abstract class ProprietarioRegistrationReadDataSource {
     /** Busca o Proprietário com seus arquivos, para preencher o formulário de edição. */
     suspend fun getProprietario(proprietarioId: Long): AppResult<ProprietarioReadModel, ApplicationError> =
-        onDatabase { findProprietario(proprietarioId).toReadModel() }
+        onDatabase { selectProprietario(proprietarioId).toReadModel() }
 
     @Transaction
     @Query(
@@ -25,5 +25,5 @@ abstract class ProprietarioRegistrationReadDataSource {
         WHERE id = :proprietarioId AND is_deleted = 0
         """
     )
-    protected abstract suspend fun findProprietario(proprietarioId: Long): ProprietarioRegistrationProjection
+    protected abstract suspend fun selectProprietario(proprietarioId: Long): ProprietarioRegistrationProjection
 }
