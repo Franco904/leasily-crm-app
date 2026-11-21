@@ -8,9 +8,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.imovelDashboard.application.mappers.toReadModel
-import com.fstengineering.leasilycrm.imovelDashboard.application.mappers.toValueObject
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelOccupiedDateReadModel
-import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.queries.ImovelArgs
 import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ImovelDashboardReadDataSource
@@ -57,12 +56,12 @@ class WatchImovelUseCase(
     }
 
     private suspend fun getCurrentMonthOccupiedPeriods(
-        occupiedPeriodsResult: AppResult<List<ImovelPeriodoOcupadoRawReadModel>, ApplicationError>,
+        occupiedPeriodsResult: AppResult<List<ImovelPeriodoOcupado>, ApplicationError>,
     ): AppResult<Pair<AppYearMonth, ImmutableList<ImovelOccupiedDateReadModel>>, ApplicationError> {
         val occupiedPeriods = occupiedPeriodsResult
             .fold(
                 onError = { e -> return AppResult.Error(error = e) },
-                onSuccess = { periods -> periods.map { it.toValueObject() }.toPersistentList() },
+                onSuccess = { periods -> periods.toPersistentList() },
             )
 
         val tenantNamesById = occupiedPeriods

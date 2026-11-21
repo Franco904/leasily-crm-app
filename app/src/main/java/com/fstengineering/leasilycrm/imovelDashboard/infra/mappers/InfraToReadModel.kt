@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.imovelDashboard.infra.mappers
 
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
-import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelSummaryReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ProprietarioReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.ImovelDashboardProjection
@@ -18,7 +18,7 @@ fun ImovelDashboardProjection.toReadModel() = ImovelSummaryReadModel(
     mainPictureUriString = mainPictureUriString,
 )
 
-fun PeriodoOcupadoProjection.toReadModel() = ImovelPeriodoOcupadoRawReadModel(
+fun PeriodoOcupadoProjection.toValueObject() = ImovelPeriodoOcupado(
     id = id,
     tenantId = tenantId,
     checkInDateTime = checkInDateTime,

@@ -6,7 +6,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
-import com.fstengineering.leasilycrm.imovelOcupacao.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
@@ -51,7 +51,7 @@ class ImovelOcupacaoReadDataSourceTest : IntegrationTest() {
 
             val result = sut.watchPeriodosOcupados(imovelId = 1L).first()
 
-            result.shouldBeInstanceOf<AppResult.Success<List<ImovelPeriodoOcupadoRawReadModel>, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Success<List<ImovelPeriodoOcupado>, ApplicationError>>()
                 .data shouldBeEqualTo listOf(earlier, later)
         }
 
@@ -61,7 +61,7 @@ class ImovelOcupacaoReadDataSourceTest : IntegrationTest() {
         imovelId: Long,
         checkIn: AppDateTime,
         isDeleted: Boolean = false,
-    ): ImovelPeriodoOcupadoRawReadModel {
+    ): ImovelPeriodoOcupado {
         val checkOut = checkIn.plusDays(3)
         val id = db.stayDao().insertOrUpdate(
             StayEntity(
@@ -86,7 +86,7 @@ class ImovelOcupacaoReadDataSourceTest : IntegrationTest() {
                 contractVersion = 1,
             )
         )
-        return ImovelPeriodoOcupadoRawReadModel(
+        return ImovelPeriodoOcupado(
             id = id,
             tenantId = null,
             checkInDateTime = checkIn,

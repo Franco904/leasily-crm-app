@@ -6,7 +6,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.imovelOcupacao.application.mappers.toReadModel
-import com.fstengineering.leasilycrm.imovelOcupacao.application.mappers.toValueObject
 import com.fstengineering.leasilycrm.imovelOcupacao.application.models.dtos.ImovelPeriodosOcupadosReadModel
 import com.fstengineering.leasilycrm.imovelOcupacao.application.models.queries.ImovelOcupacaoArgs
 import com.fstengineering.leasilycrm.imovelOcupacao.infra.dataSources.ImovelOcupacaoReadDataSource
@@ -28,7 +27,7 @@ class WatchImovelOcupacaoUseCase(
                     .fold(
                         onError = { e -> return@map AppResult.Error(error = e) },
                         onSuccess = { periods ->
-                            periods.map { it.toValueObject() }.toPersistentList()
+                            periods.toPersistentList()
                         },
                     )
 

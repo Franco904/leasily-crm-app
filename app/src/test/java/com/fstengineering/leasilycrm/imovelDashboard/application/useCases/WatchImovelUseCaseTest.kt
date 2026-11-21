@@ -8,7 +8,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
-import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelPeriodoOcupadoRawReadModel
+import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelPeriodoOcupado
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelSummaryReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ProprietarioReadModel
@@ -146,7 +146,7 @@ class WatchImovelUseCaseTest {
         checkIn: Int,
         checkOut: Int,
         month: Int = 3,
-    ) = ImovelPeriodoOcupadoRawReadModel(
+    ) = ImovelPeriodoOcupado(
         id = id,
         tenantId = tenantId,
         checkInDateTime = AppDateTime(LocalDateTime.of(2026, month, checkIn, 14, 0)),
