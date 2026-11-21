@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.imovelRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
+import com.fstengineering.leasilycrm.core.infra.adapters.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelPriceOrm
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelFileReadModel
@@ -13,7 +14,11 @@ import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.Propri
 import kotlinx.collections.immutable.toPersistentList
 
 fun ImovelRegistrationProjection.toReadModel(): ImovelReadModel {
-    val proprietario = requireNotNull(proprietario?.takeUnless { it.isDeleted })
+    val activeProprietario = requireNotNull(proprietario).takeUnless { it.isDeleted }
+        ?: run {
+            ExceptionLogger.logMasked("Proprietário excluído no Imóvel ${imovel.id}")
+            null
+        }
 
     val characteristics = characteristics
         .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
@@ -30,7 +35,7 @@ fun ImovelRegistrationProjection.toReadModel(): ImovelReadModel {
     return ImovelReadModel(
         id = requireNotNull(imovel.id),
         createDateTime = imovel.createDateTime,
-        proprietario = ProprietarioReadModel(id = proprietario.id, name = proprietario.name),
+        proprietario = activeProprietario?.let { ProprietarioReadModel(id = it.id, name = it.name) },
         type = requireNotNull(ImovelType.fromId(imovel.typeId)),
         neighborhood = imovel.neighborhood,
         streetAddress = imovel.streetAddress,

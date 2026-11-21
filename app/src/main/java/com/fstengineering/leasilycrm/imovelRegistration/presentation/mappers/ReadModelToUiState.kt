@@ -19,7 +19,7 @@ import kotlinx.collections.immutable.toPersistentMap
 fun ImovelReadModel.toUiState() = ImovelDraftFormUiState.Loaded(
     id = id,
     createDateTime = createDateTime,
-    proprietario = proprietario.toUiState(),
+    proprietario = proprietario?.toUiState(),
     type = type,
     neighborhood = neighborhood,
     streetAddress = streetAddress,

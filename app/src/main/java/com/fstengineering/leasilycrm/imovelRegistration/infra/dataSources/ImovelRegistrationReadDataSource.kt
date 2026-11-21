@@ -15,7 +15,8 @@ import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.Imovel
 abstract class ImovelRegistrationReadDataSource {
     /**
      * Busca o Imóvel não excluído com o seu Proprietário, Preços, arquivos e características;
-     * falha quando o Imóvel ou o Proprietário não existe.
+     * falha quando o Imóvel não existe. Quando o Proprietário foi excluído, devolve o Imóvel com
+     * `proprietario` nulo, para o Corretor escolher outro, e registra a ausência em telemetria.
      */
     suspend fun getImovel(imovelId: Long): AppResult<ImovelReadModel, ApplicationError> =
         onDatabase { requireNotNull(selectImovel(imovelId)).toReadModel() }

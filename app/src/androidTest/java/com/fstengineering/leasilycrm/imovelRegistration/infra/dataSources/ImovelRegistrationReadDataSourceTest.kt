@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldContainSame
 import org.junit.Before
 import org.junit.Test
@@ -66,7 +67,7 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
         }
 
     @Test
-    fun deveFalharAoBuscarImovelParaEdicaoQuandoProprietarioFoiExcluido(): Unit =
+    fun deveBuscarImovelParaEdicaoSemProprietarioQuandoProprietarioFoiExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             imovelWriteDataSource.save(createFakeImovel(proprietarioId = proprietarioId, id = 6L))
@@ -76,7 +77,8 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
 
             val result = sut.getImovel(imovelId = 6L)
 
-            result.shouldBeInstanceOf<AppResult.Error<ImovelReadModel, ApplicationError>>()
+            result.shouldBeInstanceOf<AppResult.Success<ImovelReadModel, ApplicationError>>()
+                .data.proprietario.shouldBeNull()
         }
 
     @Test
