@@ -8,8 +8,8 @@ import kotlinx.collections.immutable.ImmutableList
 
 data class AssistanceReadModel(
     val id: Long?,
-    val leadTenantId: Long,
-    val leadTenantName: String,
+    val clienteId: Long,
+    val clienteName: String,
     val createDateTime: AppDateTime?,
     val preferredStartDate: AppDate?,
     val preferredEndDate: AppDate?,
@@ -36,14 +36,14 @@ data class AssistanceReadModel(
 ) {
     companion object {
         fun create(
-            leadTenantId: Long,
-            leadTenantName: String,
+            clienteId: Long,
+            clienteName: String,
             assistanceRaw: AssistanceRawReadModel?,
             sentImoveis: ImmutableList<AssistanceSentImovelReadModel>,
         ) = AssistanceReadModel(
             id = assistanceRaw?.id,
-            leadTenantId = leadTenantId,
-            leadTenantName = leadTenantName,
+            clienteId = clienteId,
+            clienteName = clienteName,
             createDateTime = assistanceRaw?.createDateTime,
             preferredStartDate = assistanceRaw?.preferredStartDate,
             preferredEndDate = assistanceRaw?.preferredEndDate,

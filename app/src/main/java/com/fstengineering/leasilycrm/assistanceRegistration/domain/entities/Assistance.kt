@@ -16,7 +16,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 class Assistance private constructor(
     val id: Long?,
-    val leadTenantId: Long,
+    val clienteId: Long,
     val createDateTime: AppDateTime?,
     val preferredPeriod: AssistancePreferredPeriod?,
     val hasFlexibilityForPeriod: Boolean,
@@ -42,7 +42,7 @@ class Assistance private constructor(
     companion object {
         fun parse(
             id: Long?,
-            leadTenantId: Long?,
+            clienteId: Long?,
             createDateTime: AppDateTime?,
             preferredStartDate: AppDate?,
             preferredEndDate: AppDate?,
@@ -69,7 +69,7 @@ class Assistance private constructor(
         ): AppResult<Assistance, ValidationErrors> {
             val errors = mutableListOf<DomainError>()
 
-            if (leadTenantId == null) errors.add(DomainError.AssistanceOtherFields.TenantRequired)
+            if (clienteId == null) errors.add(DomainError.AssistanceOtherFields.TenantRequired)
 
             val preferredPeriod =
                 if (preferredStartDate == null || preferredEndDate == null) null
@@ -112,7 +112,7 @@ class Assistance private constructor(
                 observations = observations,
                 sentImoveisIds = sentImoveisIds,
                 interactions = interactions,
-                leadTenantId = requireNotNull(leadTenantId),
+                clienteId = requireNotNull(clienteId),
             )
 
             return AppResult.Success(data = parsed)

@@ -4,12 +4,10 @@ import com.fstengineering.leasilycrm.assistanceRegistration.application.reposito
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSelectableImovelQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.AssistanceSentImovelQueryRepository
-import com.fstengineering.leasilycrm.assistanceRegistration.application.repositories.LeadTenantQueryRepository
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceCommandRepositoryImpl
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceQueryRepositoryImpl
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceSelectableImovelQueryRepositoryImpl
 import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.AssistanceSentImovelQueryRepositoryImpl
-import com.fstengineering.leasilycrm.assistanceRegistration.infra.repositories.LeadTenantQueryRepositoryImpl
 import org.koin.dsl.module
 
 val assistanceRegistrationRepositoryModule = module {
@@ -38,11 +36,5 @@ val assistanceRegistrationRepositoryModule = module {
 
     single<AssistanceSelectableImovelQueryRepository> {
         AssistanceSelectableImovelQueryRepositoryImpl(imovelDatabaseDataSource = get())
-    }
-
-    single<LeadTenantQueryRepository> {
-        LeadTenantQueryRepositoryImpl(
-            databaseDataSource = get(),
-        )
     }
 }

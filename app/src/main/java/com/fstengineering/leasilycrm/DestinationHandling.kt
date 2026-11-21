@@ -15,8 +15,8 @@ import com.fstengineering.leasilycrm.assistanceRegistration.presentation.Assista
 import com.fstengineering.leasilycrm.assistanceRegistration.presentation.AssistanceRegistrationStep3Screen
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.home.HomeScreen
-import com.fstengineering.leasilycrm.leadTenantDetails.presentation.LeadTenantDetailsScreen
-import com.fstengineering.leasilycrm.leadTenantRegistration.presentation.LeadTenantRegistrationScreen
+import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsScreen
+import com.fstengineering.leasilycrm.clienteRegistration.presentation.ClienteRegistrationScreen
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsScreen
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.OccupiedPeriodRegistrationScreen
 import com.fstengineering.leasilycrm.profile.presentation.ProfileScreen
@@ -114,24 +114,24 @@ fun NavGraphBuilder.destinations(
             onProprietariosSelect = {
                 navController.navigate(Destinations.Proprietarios)
             },
-            onRegisterLeadTenant = { leadTenantId ->
-                navController.navigate(Destinations.LeadTenantRegistration(leadTenantId))
+            onRegisterCliente = { clienteId ->
+                navController.navigate(Destinations.ClienteRegistration(clienteId))
             },
-            onViewLeadTenantDetails = { leadTenantId ->
-                navController.navigate(Destinations.LeadTenantDetails(leadTenantId))
+            onViewClienteDetails = { clienteId ->
+                navController.navigate(Destinations.ClienteDetails(clienteId))
             },
-            onNewAssistance = { leadTenantId ->
+            onNewAssistance = { clienteId ->
                 val destination = Destinations.AssistanceRegistration(
                     assistanceId = null,
-                    leadTenantId = leadTenantId,
+                    clienteId = clienteId,
                 )
                 navController.navigate(destination)
             },
-            onNewStayWithLeadTenant = { leadTenantId ->
+            onNewStayWithCliente = { clienteId ->
                 val destination = Destinations.OccupiedPeriodRegistration(
                     occupiedPeriodId = null,
                     imovelId = null,
-                    leadTenantId = leadTenantId,
+                    clienteId = clienteId,
                     isUnavailablePeriod = false,
                 )
 
@@ -141,17 +141,17 @@ fun NavGraphBuilder.destinations(
                 val destination = Destinations.OccupiedPeriodRegistration(
                     occupiedPeriodId = stayId,
                     imovelId = null,
-                    leadTenantId = null,
+                    clienteId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
                 )
 
                 navController.navigate(destination)
             },
-            onViewStay = { stayId, cameFromLeadTenant ->
+            onViewStay = { stayId, cameFromCliente ->
                 val destination = Destinations.OccupiedPeriodDetails(
                     occupiedPeriodId = stayId,
                     cameFromImovel = false,
-                    cameFromTenant = cameFromLeadTenant,
+                    cameFromTenant = cameFromCliente,
                 )
 
                 navController.navigate(destination)
@@ -194,7 +194,7 @@ fun NavGraphBuilder.destinations(
                 val destination = Destinations.OccupiedPeriodRegistration(
                     occupiedPeriodId = null,
                     imovelId = imovelId,
-                    leadTenantId = null,
+                    clienteId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
                 )
 
@@ -311,7 +311,7 @@ fun NavGraphBuilder.destinations(
                 val destination = Destinations.OccupiedPeriodRegistration(
                     occupiedPeriodId = null,
                     imovelId = args.imovelId,
-                    leadTenantId = null,
+                    clienteId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
                 )
 
@@ -345,7 +345,7 @@ fun NavGraphBuilder.destinations(
                 val destination = Destinations.OccupiedPeriodRegistration(
                     occupiedPeriodId = null,
                     imovelId = args.imovelId,
-                    leadTenantId = null,
+                    clienteId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
                 )
 
@@ -365,7 +365,7 @@ fun NavGraphBuilder.destinations(
                 val destination = Destinations.OccupiedPeriodRegistration(
                     occupiedPeriodId = null,
                     imovelId = args.imovelId,
-                    leadTenantId = null,
+                    clienteId = null,
                     isUnavailablePeriod = isUnavailablePeriod,
                 )
 
@@ -419,32 +419,28 @@ fun NavGraphBuilder.destinations(
         )
     }
 
-    composable<Destinations.LeadTenantRegistration> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.LeadTenantRegistration>()
-
-        LeadTenantRegistrationScreen(
-            leadTenantId = args.leadTenantId,
+    composable<Destinations.ClienteRegistration> {
+        ClienteRegistrationScreen(
             viewModel = koinViewModel(),
             onBack = { navController.navigateUp() },
             onUiEvent = onUiEvent,
         )
     }
 
-    composable<Destinations.LeadTenantDetails> { backStackEntry ->
-        val args = backStackEntry.toRoute<Destinations.LeadTenantDetails>()
+    composable<Destinations.ClienteDetails> { backStackEntry ->
+        val args = backStackEntry.toRoute<Destinations.ClienteDetails>()
 
-        LeadTenantDetailsScreen(
-            leadTenantId = args.leadTenantId,
+        ClienteDetailsScreen(
             viewModel = koinViewModel(),
-            onEditLeadTenant = {
+            onEditCliente = {
                 navController.navigate(
-                    Destinations.LeadTenantRegistration(leadTenantId = args.leadTenantId),
+                    Destinations.ClienteRegistration(clienteId = args.clienteId),
                 )
             },
             onRegisterAssistance = { assistanceId ->
                 val destination = Destinations.AssistanceRegistration(
                     assistanceId = assistanceId,
-                    leadTenantId = args.leadTenantId,
+                    clienteId = args.clienteId,
                 )
                 navController.navigate(destination)
             },
@@ -452,7 +448,7 @@ fun NavGraphBuilder.destinations(
                 val destination = Destinations.OccupiedPeriodRegistration(
                     occupiedPeriodId = null,
                     imovelId = null,
-                    leadTenantId = args.leadTenantId,
+                    clienteId = args.clienteId,
                     isUnavailablePeriod = false,
                 )
 
@@ -487,7 +483,7 @@ fun NavGraphBuilder.destinations(
 
             AssistanceRegistrationStep1Screen(
                 assistanceId = args.assistanceId,
-                leadTenantId = args.leadTenantId,
+                clienteId = args.clienteId,
                 parentViewModel = koinViewModel(viewModelStoreOwner = parentEntry),
                 stepViewModel = koinViewModel(),
                 onLeaveRegistration = {
@@ -550,7 +546,7 @@ fun NavGraphBuilder.destinations(
         OccupiedPeriodRegistrationScreen(
             stayId = args.occupiedPeriodId,
             imovelId = args.imovelId,
-            tenantId = args.leadTenantId,
+            tenantId = args.clienteId,
             isUnavailablePeriod = args.isUnavailablePeriod,
             viewModel = koinViewModel(),
             onBack = { success ->
@@ -576,7 +572,7 @@ fun NavGraphBuilder.destinations(
                 val destination = Destinations.OccupiedPeriodRegistration(
                     occupiedPeriodId = stayId,
                     imovelId = imovelId,
-                    leadTenantId = tenantId,
+                    clienteId = tenantId,
                     isUnavailablePeriod = isUnavailablePeriod,
                 )
 
@@ -586,7 +582,7 @@ fun NavGraphBuilder.destinations(
                 navController.navigate(Destinations.ImovelDashboard(imovelId))
             },
             onViewTenantDetails = { tenantId ->
-                navController.navigate(Destinations.LeadTenantDetails(tenantId))
+                navController.navigate(Destinations.ClienteDetails(tenantId))
             },
             onBack = { navController.navigateUp() },
             onUiEvent = onUiEvent,

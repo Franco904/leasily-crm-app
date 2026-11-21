@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.commands.StayCommandModel
@@ -65,7 +65,7 @@ class OccupiedPeriodRegistrationViewModel(
         MutableStateFlow<ImmutableList<ImovelCardUiState>>(persistentListOf())
     val imoveis = _imoveis.asStateFlow()
 
-    private val _tenants = MutableStateFlow<ImmutableList<LeadTenantUiState>>(persistentListOf())
+    private val _tenants = MutableStateFlow<ImmutableList<ClienteUiState>>(persistentListOf())
     val tenants = _tenants.asStateFlow()
 
     private val _draftFormUiState =

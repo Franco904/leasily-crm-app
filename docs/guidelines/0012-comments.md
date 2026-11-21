@@ -95,7 +95,7 @@ protected open suspend fun saveInTransaction(imovel: ImovelOrm, outbox: List<Out
 suspend fun getEstadia(estadiaId: String): EstadiaDetailsReadModel?
 
 // BOM
-/** Estadia com Inquilino e Imóvel resolvidos. `null` quando a Estadia foi excluída. */
+/** Estadia com Hóspede e Imóvel resolvidos. `null` quando a Estadia foi excluída. */
 suspend fun getEstadia(estadiaId: String): EstadiaDetailsReadModel?
 ```
 

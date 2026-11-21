@@ -43,7 +43,7 @@ fun ImovelDraftFormUiState.Loaded.toImovel(): AppResult<Imovel, ValidationErrors
         bathroomsCount = bathroomsCount,
         parkingSpotsCount = parkingSpotsCount,
         airConditionersCount = airConditionersCount,
-        maxGuestsCount = maxGuestsCount,
+        maxHospedesCount = maxHospedesCount,
         seaProximityTypeId = seaProximityTypeId,
         distanceToSea = distanceToSea,
         includedItems = includedItems,

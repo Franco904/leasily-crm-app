@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.core.presentation.models.StayTransferUiState
@@ -17,7 +17,7 @@ sealed interface OccupiedPeriodDetailsUiState {
         val id: Long,
         val tenantId: Long?,
         val imovel: ImovelCardUiState,
-        val tenant: LeadTenantUiState?,
+        val tenant: ClienteUiState?,
         val vehicleMake: String?,
         val vehicleColor: String?,
         val vehicleLicensePlate: String?,

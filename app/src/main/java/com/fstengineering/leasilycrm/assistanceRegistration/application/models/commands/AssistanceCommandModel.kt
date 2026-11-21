@@ -30,5 +30,5 @@ data class AssistanceCommandModel(
     val observations: String?,
     val sentImoveisIds: ImmutableList<Long>,
     val interactions: ImmutableList<AssistanceInteractionCommandModel>,
-    val leadTenantId: Long?,
+    val clienteId: Long?,
 )

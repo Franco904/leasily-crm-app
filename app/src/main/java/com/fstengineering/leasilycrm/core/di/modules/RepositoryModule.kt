@@ -1,8 +1,6 @@
 package com.fstengineering.leasilycrm.core.di.modules
 
 import com.fstengineering.leasilycrm.core.application.repositories.AssistanceSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedCommandRepository
-import com.fstengineering.leasilycrm.core.application.repositories.LeadTenantSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedCommandRepository
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
@@ -14,8 +12,6 @@ import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderIm
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.infra.repositories.AssistanceSharedCommandRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedCommandRepositoryImpl
-import com.fstengineering.leasilycrm.core.infra.repositories.LeadTenantSharedQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.OccupiedPeriodSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.OccupiedPeriodSharedQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.stores.SettingsSharedStoreImpl
@@ -34,19 +30,6 @@ val repositoryModule = module {
     single<OccupiedPeriodSharedQueryRepository> {
         OccupiedPeriodSharedQueryRepositoryImpl(
             occupiedPeriodDatabaseDataSource = get(),
-        )
-    }
-
-    single<LeadTenantSharedCommandRepository> {
-        LeadTenantSharedCommandRepositoryImpl(
-            databaseAdapter = get(),
-            databaseDataSource = get(),
-        )
-    }
-
-    single<LeadTenantSharedQueryRepository> {
-        LeadTenantSharedQueryRepositoryImpl(
-            databaseDataSource = get(),
         )
     }
 

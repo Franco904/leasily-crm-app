@@ -12,7 +12,7 @@ interface AssistanceDatabaseDataSource {
 
     suspend fun getById(id: Long): AppResult<AssistanceCompound, ApplicationError>
 
-    suspend fun getAllByLeadTenantId(leadTenantId: Long): AppResult<List<AssistanceCompound>, ApplicationError>
+    suspend fun getAllByClienteId(clienteId: Long): AppResult<List<AssistanceCompound>, ApplicationError>
 
     suspend fun getAllNeighborhoodNames(): AppResult<List<String>, ApplicationError>
 

@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.core.di
 
 import android.app.Application
+import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationDataSourceModule
 import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationRepositoryModule
 import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationUseCaseModule
 import com.fstengineering.leasilycrm.assistanceRegistration.di.assistanceRegistrationViewModelModule
@@ -18,16 +19,14 @@ import com.fstengineering.leasilycrm.core.di.modules.useCaseModule
 import com.fstengineering.leasilycrm.core.di.modules.workerModule
 import com.fstengineering.leasilycrm.dashboard.di.dashboardRepositoryModule
 import com.fstengineering.leasilycrm.dashboard.di.dashboardViewModelModule
+import com.fstengineering.leasilycrm.clienteDetails.di.clienteDetailsDataSourceModule
+import com.fstengineering.leasilycrm.clienteDetails.di.clienteDetailsViewModelModule
+import com.fstengineering.leasilycrm.clienteRegistration.di.clienteRegistrationDataSourceModule
+import com.fstengineering.leasilycrm.clienteRegistration.di.clienteRegistrationViewModelModule
+import com.fstengineering.leasilycrm.clientes.di.clientesDataSourceModule
+import com.fstengineering.leasilycrm.clientes.di.clientesViewModelModule
 import com.fstengineering.leasilycrm.home.di.homeRepositoryModule
 import com.fstengineering.leasilycrm.home.di.homeViewModelModule
-import com.fstengineering.leasilycrm.leadTenantDetails.di.leadTenantDetailsRepositoryModule
-import com.fstengineering.leasilycrm.leadTenantDetails.di.leadTenantDetailsUseCaseModule
-import com.fstengineering.leasilycrm.leadTenantDetails.di.leadTenantDetailsViewModelModule
-import com.fstengineering.leasilycrm.leadTenantRegistration.di.leadTenantRegistrationRepositoryModule
-import com.fstengineering.leasilycrm.leadTenantRegistration.di.leadTenantRegistrationUseCaseModule
-import com.fstengineering.leasilycrm.leadTenantRegistration.di.leadTenantRegistrationViewModelModule
-import com.fstengineering.leasilycrm.leadTenants.di.leadTenantsRepositoryModule
-import com.fstengineering.leasilycrm.leadTenants.di.leadTenantsViewModelModule
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.di.occupiedPeriodDetailsRepositoryModule
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.di.occupiedPeriodDetailsUseCaseModule
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.di.occupiedPeriodDetailsViewModelModule
@@ -146,21 +145,20 @@ fun Application.configureDependencyInjection() {
             proprietarioDetailsDataSourceModule,
             proprietarioDetailsViewModelModule,
 
-            // Feature: leadTenants
-            leadTenantsRepositoryModule,
-            leadTenantsViewModelModule,
+            // Feature: clientes
+            clientesDataSourceModule,
+            clientesViewModelModule,
 
-            // Feature: leadTenantRegistration
-            leadTenantRegistrationRepositoryModule,
-            leadTenantRegistrationUseCaseModule,
-            leadTenantRegistrationViewModelModule,
+            // Feature: clienteRegistration
+            clienteRegistrationDataSourceModule,
+            clienteRegistrationViewModelModule,
 
-            // Feature: leadTenantDetails
-            leadTenantDetailsRepositoryModule,
-            leadTenantDetailsUseCaseModule,
-            leadTenantDetailsViewModelModule,
+            // Feature: clienteDetails
+            clienteDetailsDataSourceModule,
+            clienteDetailsViewModelModule,
 
             // Feature: assistanceRegistration
+            assistanceRegistrationDataSourceModule,
             assistanceRegistrationRepositoryModule,
             assistanceRegistrationUseCaseModule,
             assistanceRegistrationViewModelModule,

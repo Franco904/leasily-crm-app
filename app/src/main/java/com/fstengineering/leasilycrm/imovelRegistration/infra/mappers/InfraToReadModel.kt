@@ -4,15 +4,17 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacterist
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelPriceOrm
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelFileReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelPriceReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelRawReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
+import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ImovelRegistrationProjection
 import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import kotlinx.collections.immutable.toPersistentList
 
-fun ImovelCompound.toRawReadModel(): ImovelRawReadModel {
+fun ImovelRegistrationProjection.toImovelReadModel(): ImovelReadModel {
+    val proprietario = requireNotNull(proprietario?.takeUnless { it.isDeleted })
+
     val characteristics = characteristics
         .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
         .toPersistentList()
@@ -25,10 +27,10 @@ fun ImovelCompound.toRawReadModel(): ImovelRawReadModel {
         .map { it.toReadModel() }
         .toPersistentList()
 
-    return ImovelRawReadModel(
-        id = imovel.id,
+    return ImovelReadModel(
+        id = requireNotNull(imovel.id),
         createDateTime = imovel.createDateTime,
-        proprietarioId = imovel.proprietarioId,
+        proprietario = ProprietarioReadModel(id = proprietario.id, name = proprietario.name),
         type = requireNotNull(ImovelType.fromId(imovel.typeId)),
         neighborhood = imovel.neighborhood,
         streetAddress = imovel.streetAddress,
@@ -45,7 +47,7 @@ fun ImovelCompound.toRawReadModel(): ImovelRawReadModel {
         bathroomsCount = imovel.bathrooms,
         parkingSpotsCount = imovel.parkingSpots,
         airConditionersCount = imovel.airConditioners,
-        maxGuestsCount = imovel.maxGuests,
+        maxHospedesCount = imovel.maxHospedes,
         seaProximityTypeId = imovel.seaProximityTypeId,
         distanceToSea = imovel.distanceToSea,
         includedItems = imovel.includedItems,

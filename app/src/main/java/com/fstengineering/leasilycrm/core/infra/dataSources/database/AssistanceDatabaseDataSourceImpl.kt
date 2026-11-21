@@ -21,8 +21,8 @@ class AssistanceDatabaseDataSourceImpl(
         return onDatabase { dao.getById(id) }
     }
 
-    override suspend fun getAllByLeadTenantId(leadTenantId: Long): AppResult<List<AssistanceCompound>, ApplicationError> {
-        return onDatabase { dao.getAllByLeadTenantId(leadTenantId) }
+    override suspend fun getAllByClienteId(clienteId: Long): AppResult<List<AssistanceCompound>, ApplicationError> {
+        return onDatabase { dao.getAllByClienteId(clienteId) }
     }
 
     override suspend fun getAllNeighborhoodNames(): AppResult<List<String>, ApplicationError> {

@@ -10,12 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ClienteCard
+import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 
 @Composable
 fun StayTenantDetailsItem(
-    tenant: LeadTenantUiState?,
+    tenant: ClienteUiState?,
     cameFromTenant: Boolean,
     onViewTenantDetails: () -> Unit,
     modifier: Modifier = Modifier,
@@ -30,8 +30,8 @@ fun StayTenantDetailsItem(
         )
         Spacer(modifier = Modifier.height(16.dp))
         if (tenant != null) {
-            LeadTenantCard(
-                leadTenant = tenant,
+            ClienteCard(
+                cliente = tenant,
                 onCardClick = if (cameFromTenant) null else onViewTenantDetails,
             )
         }

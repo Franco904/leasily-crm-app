@@ -33,7 +33,7 @@ fun AssistanceDraftFormUiState.Loaded.toCommandModel(): AssistanceCommandModel {
         interactions = interactions
             .map { it.toCommand() }
             .toPersistentList(),
-        leadTenantId = leadTenantId,
+        clienteId = clienteId,
     )
 }
 

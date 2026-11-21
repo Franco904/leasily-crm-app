@@ -40,7 +40,7 @@ data class ImovelOrm(
     @ColumnInfo(name = "bathrooms") val bathrooms: Int,
     @ColumnInfo(name = "parking_spots") val parkingSpots: Int,
     @ColumnInfo(name = "air_conditioners") val airConditioners: Int,
-    @ColumnInfo(name = "max_guests") val maxGuests: Int,
+    @ColumnInfo(name = "max_guests") val maxHospedes: Int,
     @ColumnInfo(name = "distance_to_sea") val distanceToSea: AppDecimal?,
     @ColumnInfo(name = "included_items") val includedItems: String?,
     @ColumnInfo(name = "has_included_items") val hasIncludedItems: Boolean,

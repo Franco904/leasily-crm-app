@@ -5,6 +5,7 @@ import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
@@ -20,6 +21,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -158,7 +160,7 @@ class ImovelRegistrationViewModelTest {
 
     private fun createImovelReadModel(id: Long) = ImovelReadModel(
         id = id,
-        createDateTime = null,
+        createDateTime = AppDateTime.now(),
         proprietario = ProprietarioReadModel(
             id = faker.random.nextLong(bound = 9999),
             name = faker.random.nextUUID(),
@@ -172,23 +174,23 @@ class ImovelRegistrationViewModelTest {
         parkingSpotNumber = null,
         parkingBasementLevelNumber = null,
         hobbyBoxNumber = null,
-        bedroomsCount = null,
-        enSuitesCount = null,
-        doubleBedsCount = null,
-        singleBedsCount = null,
-        bathroomsCount = null,
-        parkingSpotsCount = null,
-        airConditionersCount = null,
-        maxGuestsCount = null,
+        bedroomsCount = 0,
+        enSuitesCount = 0,
+        doubleBedsCount = 0,
+        singleBedsCount = 0,
+        bathroomsCount = 0,
+        parkingSpotsCount = 0,
+        airConditionersCount = 0,
+        maxHospedesCount = 0,
         seaProximityTypeId = null,
         distanceToSea = null,
         includedItems = null,
-        hasIncludedItems = null,
-        characteristics = null,
+        hasIncludedItems = false,
+        characteristics = persistentListOf(),
         cleaningServiceTax = null,
-        hasCleaningServiceIncluded = null,
-        prices = null,
-        files = null,
+        hasCleaningServiceIncluded = false,
+        prices = persistentListOf(),
+        files = persistentListOf(),
         observations = null,
     )
 }

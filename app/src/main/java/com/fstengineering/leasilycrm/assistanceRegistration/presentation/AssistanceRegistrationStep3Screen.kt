@@ -165,7 +165,7 @@ fun AssistanceRegistrationStep3Screen(
                 if (loadedDraftForm == null) return@Scaffold
 
                 AssistanceRegistrationTopAppBar(
-                    leadTenantName = loadedDraftForm.leadTenantName,
+                    clienteName = loadedDraftForm.clienteName,
                     onBack = parentViewModel::onExit,
                 )
                 HorizontalDivider()

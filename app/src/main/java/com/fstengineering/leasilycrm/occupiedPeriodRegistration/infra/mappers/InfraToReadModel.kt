@@ -5,7 +5,6 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.St
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.StayFileReadModel
@@ -75,8 +74,3 @@ fun ImovelCompound.toReadModel() = ImovelReadModel(
     occupiedDates = persistentSetOf(),
 )
 
-fun LeadTenantReadView.toReadModel() = TenantReadModel(
-    id = id,
-    name = name,
-    city = city,
-)

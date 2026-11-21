@@ -54,8 +54,8 @@ fun CharacteristicsCountFormField(
             ),
             CountAnswer(
                 label = stringResource(R.string.property_registration_max_guests_body_text),
-                count = form.maxGuestsCount,
-                onCountChange = { onFormChange(form.copy(maxGuestsCount = it)) },
+                count = form.maxHospedesCount,
+                onCountChange = { onFormChange(form.copy(maxHospedesCount = it)) },
             ),
         ),
         modifier = modifier

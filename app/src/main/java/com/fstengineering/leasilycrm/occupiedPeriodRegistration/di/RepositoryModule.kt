@@ -8,9 +8,12 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositori
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories.OccupiedPeriodQueryRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories.ImovelQueryRepositoryImpl
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.repositories.TenantQueryRepositoryImpl
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
 import org.koin.dsl.module
 
 val occupiedPeriodRegistrationRepositoryModule = module {
+    single { get<AppDatabase>().occupiedPeriodRegistrationClienteReadDataSource() }
+
     single<ImovelQueryRepository> {
         ImovelQueryRepositoryImpl(databaseDataSource = get())
     }
@@ -20,7 +23,7 @@ val occupiedPeriodRegistrationRepositoryModule = module {
     }
 
     single<TenantQueryRepository> {
-        TenantQueryRepositoryImpl(databaseDataSource = get())
+        TenantQueryRepositoryImpl(clienteReadDataSource = get())
     }
 
     single<OccupiedPeriodCommandRepository> {

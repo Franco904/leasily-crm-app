@@ -48,14 +48,14 @@ class AssistanceRegistrationViewModel(
     private var formToEdit: AssistanceDraftFormUiState? = null
 
     fun init(
-        leadTenantId: Long,
+        clienteId: Long,
         assistanceId: Long?,
     ) {
         if (isInitialized) return
 
         this.assistanceId = assistanceId
 
-        readAssistance(leadTenantId, assistanceId)
+        readAssistance(clienteId, assistanceId)
 
         getPastNeighborhoods()
 
@@ -63,11 +63,11 @@ class AssistanceRegistrationViewModel(
     }
 
     private fun readAssistance(
-        leadTenantId: Long,
+        clienteId: Long,
         assistanceId: Long?,
     ) {
         val query = AssistanceArgs(
-            leadTenantId = leadTenantId,
+            clienteId = clienteId,
             assistanceId = assistanceId,
         )
 

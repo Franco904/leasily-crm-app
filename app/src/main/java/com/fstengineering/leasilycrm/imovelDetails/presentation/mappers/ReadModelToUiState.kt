@@ -36,7 +36,7 @@ fun ImovelReadModel.toUiState() = ImovelUiState.Loaded(
         bathroomsCount = bathroomsCount,
         parkingSpotsCount = parkingSpotsCount,
         airConditionersCount = airConditionersCount,
-        maxGuestsCount = maxGuestsCount,
+        maxHospedesCount = maxHospedesCount,
     ),
     seaProximityTypeId = seaProximityTypeId,
     distanceToSea = distanceToSea,

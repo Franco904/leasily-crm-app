@@ -51,7 +51,7 @@ fun ImovelQuantityCharacteristicsDetailsItems(
         Spacer(modifier = Modifier.height(16.dp))
         AirConditionersDetailsItem(qtAirConditioners = qtCharacteristics.airConditionersCount)
         Spacer(modifier = Modifier.height(16.dp))
-        MaxGuestsDetailsItem(qtMaxGuests = qtCharacteristics.maxGuestsCount)
+        MaxHospedesDetailsItem(qtMaxHospedes = qtCharacteristics.maxHospedesCount)
     }
 }
 
@@ -80,22 +80,22 @@ fun AirConditionersDetailsItem(
 }
 
 @Composable
-fun MaxGuestsDetailsItem(
-    qtMaxGuests: Int,
+fun MaxHospedesDetailsItem(
+    qtMaxHospedes: Int,
     modifier: Modifier = Modifier,
 ) {
     IconValueDetailsItem(
         icon = Icons.Outlined.FamilyRestroom,
         value = when {
-            qtMaxGuests == 0 -> {
+            qtMaxHospedes == 0 -> {
                 stringResource(R.string.property_details_no_max_guests)
             }
 
             else -> {
                 pluralStringResource(
                     R.plurals.property_details_qt_max_guests,
-                    qtMaxGuests,
-                    qtMaxGuests,
+                    qtMaxHospedes,
+                    qtMaxHospedes,
                 )
             }
         },

@@ -32,7 +32,7 @@ fun Imovel.toLocalDataModel(): ImovelOrm {
         bathrooms = bathroomsCount.value,
         parkingSpots = parkingSpotsCount.value,
         airConditioners = airConditionersCount.value,
-        maxGuests = maxGuestsCount.value,
+        maxHospedes = maxHospedesCount.value,
         seaProximityTypeId = seaProximityType?.id,
         distanceToSea = (seaProximityType as? ImovelSeaProximityType.DistanceToSea)?.distance,
         includedItems = includedItems,

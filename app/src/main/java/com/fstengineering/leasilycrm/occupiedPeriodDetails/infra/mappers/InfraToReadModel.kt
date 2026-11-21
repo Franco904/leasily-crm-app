@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayFileEntity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.ImovelCompound
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.compounds.StayCompound
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.views.LeadTenantReadView
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodRawReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.StayFileReadModel
@@ -48,12 +47,6 @@ fun ImovelCompound.toReadModel() = ImovelReadModel(
     streetAddress = imovel.streetAddress,
     number = imovel.number,
     type = requireNotNull(ImovelType.fromId(imovel.typeId)),
-)
-
-fun LeadTenantReadView.toReadModel() = TenantReadModel(
-    id = requireNotNull(id),
-    name = name,
-    city = city,
 )
 
 private fun StayFileEntity.toReadModel() = StayFileReadModel(

@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.mappers
 
 import androidx.core.net.toUri
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
+import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.StayFileReadModel
@@ -57,7 +57,7 @@ fun ImovelReadModel.toUiState(): ImovelCardUiState {
     )
 }
 
-fun TenantReadModel.toUiState() = LeadTenantUiState(
+fun TenantReadModel.toUiState() = ClienteUiState(
     id = requireNotNull(id),
     name = name,
     city = city,

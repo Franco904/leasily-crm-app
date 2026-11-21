@@ -65,6 +65,34 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
             readModel.files!!.single().uriString shouldBeEqualTo file.uriString
         }
 
+    @Test
+    fun deveFalharAoBuscarImovelParaEdicaoQuandoProprietarioFoiExcluido(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val proprietarioId = db.saveFakeProprietario()
+            imovelWriteDataSource.save(createFakeImovel(proprietarioId = proprietarioId, id = 6L))
+                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+            db.proprietarioWriteDataSource().delete(proprietarioId)
+                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+
+            val result = sut.getImovel(imovelId = 6L)
+
+            result.shouldBeInstanceOf<AppResult.Error<ImovelReadModel, ApplicationError>>()
+        }
+
+    @Test
+    fun deveFalharAoBuscarImovelParaEdicaoQuandoImovelFoiExcluido(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val proprietarioId = db.saveFakeProprietario()
+            imovelWriteDataSource.save(createFakeImovel(proprietarioId = proprietarioId, id = 7L))
+                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+            db.imovelSharedWriteDataSource().delete(imovelId = 7L)
+                .shouldBeInstanceOf<AppResult.Success<*, *>>()
+
+            val result = sut.getImovel(imovelId = 7L)
+
+            result.shouldBeInstanceOf<AppResult.Error<ImovelReadModel, ApplicationError>>()
+        }
+
     // endregion
 
     // region getNeighborhoodNames

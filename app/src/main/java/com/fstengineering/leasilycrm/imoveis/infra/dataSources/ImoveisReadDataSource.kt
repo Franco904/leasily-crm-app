@@ -5,6 +5,7 @@ import androidx.room.Query
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.utils.asDatabaseFlowResult
+import com.fstengineering.leasilycrm.core.infra.utils.escapeLike
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.imoveis.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imoveis.infra.mappers.toImovelReadModel
@@ -28,9 +29,6 @@ private const val SELECT_IMOVEL_CARD = """
     FROM properties
     WHERE is_deleted = 0
 """
-
-private fun String.escapeLike() =
-    replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 /** Leitura da listagem de Imóveis. */
 @Dao

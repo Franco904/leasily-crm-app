@@ -17,12 +17,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppOutlinedButton
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.LeadTenantCard
-import com.fstengineering.leasilycrm.core.presentation.models.LeadTenantUiState
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.ClienteCard
+import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 
 @Composable
 fun StayTenantFormField(
-    stayTenant: LeadTenantUiState?,
+    stayTenant: ClienteUiState?,
     onSelectStayTenant: () -> Unit,
     isEnabled: Boolean,
     error: Int?,
@@ -59,7 +59,7 @@ fun StayTenantFormField(
         AnimatedVisibility(stayTenant != null) {
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
-                LeadTenantCard(leadTenant = stayTenant!!)
+                ClienteCard(cliente = stayTenant!!)
             }
         }
         Spacer(modifier = Modifier.height(12.dp))
