@@ -150,7 +150,7 @@ suspend fun AppDatabase.sendFakeImovel(atendimentoId: Long, imovelId: Long) {
 }
 
 /** Salva um Imóvel com foto principal e devolve o seu id e o URI da foto. */
-suspend fun AppDatabase.saveFakeImovelComFotoPrincipal(): Pair<Long, String> {
+suspend fun AppDatabase.saveFakeImovelWithMainPicture(): Pair<Long, String> {
     val imovelId = faker.random.nextInt(bound = 9999).toLong() + 1
     val mainPictureUri = faker.random.nextUUID()
     val imovel = createFakeImovel(

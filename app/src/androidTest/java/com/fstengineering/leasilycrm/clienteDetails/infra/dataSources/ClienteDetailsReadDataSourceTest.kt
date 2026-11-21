@@ -13,7 +13,7 @@ import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeInteracao
 import com.fstengineering.leasilycrm.testUtils.fakes.insertFakePreferencias
 import com.fstengineering.leasilycrm.testUtils.fakes.sendFakeImovel
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeCliente
-import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelComFotoPrincipal
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelWithMainPicture
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -147,7 +147,7 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
             val atendimentoId = db.insertFakeAtendimento(clienteId, isFinished = false)
-            val (imovelId, mainPictureUri) = db.saveFakeImovelComFotoPrincipal()
+            val (imovelId, mainPictureUri) = db.saveFakeImovelWithMainPicture()
             db.sendFakeImovel(atendimentoId, imovelId)
             db.insertFakePreferencias(atendimentoId, "Campeche", ImovelCharacteristic.Balcony)
 
