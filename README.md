@@ -65,7 +65,7 @@ planejada (ex.: `occupiedPeriodRegistration` → `periodoOcupadoRegistration`).
 | `clientes`                   | Clientes              | Listagem de Clientes segmentada por status (Leads e Hóspedes)                                                                                         |
 | `clienteRegistration`        | Clientes              | Cadastro e edição de Clientes                                                                                                                           |
 | `clienteDetails`             | Clientes              | SCV: visão centralizada do Cliente; exclusão de Atendimento e Cliente                                                                                   |
-| `assistanceRegistration`     | Atendimento           | Cadastro e gestão de Atendimentos                                                                                                                       |
+| `atendimentoRegistration`    | Atendimento           | Cadastro e gestão de Atendimentos                                                                                                                       |
 | `occupiedPeriodRegistration` | Períodos Ocupados     | Cadastro de Estadias e Períodos indisponíveis                                                                                                           |
 | `occupiedPeriods`            | Períodos Ocupados     | Listagem de Períodos Ocupados com filtros (status e subtipo)                                                                                            |
 | `occupiedPeriodDetails`      | Períodos Ocupados     | Detalhes de Período Ocupado; check-in e check-out                                                                                                       |

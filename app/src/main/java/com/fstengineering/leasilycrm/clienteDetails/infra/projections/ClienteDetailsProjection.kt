@@ -4,11 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceImovelCharacteristicCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentImovelCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoImovelCharacteristicCrossRefOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.InteracaoOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoPreferredNeighborhoodOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoImovelEnviadoCrossRefOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
@@ -33,7 +33,7 @@ data class ClienteDetailsProjection(
     @Relation(
         parentColumn = "id",
         entityColumn = "lead_tenant_id",
-        entity = AssistanceEntity::class,
+        entity = AtendimentoOrm::class,
     )
     val atendimentos: List<AtendimentoProjection>,
     @Relation(
@@ -46,31 +46,31 @@ data class ClienteDetailsProjection(
 )
 
 data class AtendimentoProjection(
-    @Embedded val assistance: AssistanceEntity,
+    @Embedded val atendimento: AtendimentoOrm,
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",
-        entity = AssistancePreferredNeighborhoodEntity::class,
+        entity = AtendimentoPreferredNeighborhoodOrm::class,
     )
-    val preferredNeighborhoods: List<AssistancePreferredNeighborhoodEntity>,
+    val preferredNeighborhoods: List<AtendimentoPreferredNeighborhoodOrm>,
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",
-        entity = AssistanceImovelCharacteristicCrossRefEntity::class,
+        entity = AtendimentoImovelCharacteristicCrossRefOrm::class,
     )
-    val preferredImovelCharacteristics: List<AssistanceImovelCharacteristicCrossRefEntity>,
+    val preferredImovelCharacteristics: List<AtendimentoImovelCharacteristicCrossRefOrm>,
     @Relation(
         parentColumn = "id",
         entityColumn = "assistance_id",
-        entity = AssistanceInteractionEntity::class,
+        entity = InteracaoOrm::class,
     )
-    val interactions: List<AssistanceInteractionEntity>,
+    val interacoes: List<InteracaoOrm>,
     @Relation(
         parentColumn = "id",
         entityColumn = "id",
         entity = ImovelOrm::class,
         associateBy = Junction(
-            value = AssistanceSentImovelCrossRefEntity::class,
+            value = AtendimentoImovelEnviadoCrossRefOrm::class,
             parentColumn = "assistance_id",
             entityColumn = "property_id",
         ),

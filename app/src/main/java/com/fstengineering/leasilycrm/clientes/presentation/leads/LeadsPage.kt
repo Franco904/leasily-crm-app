@@ -54,7 +54,7 @@ fun LeadsPage(
     searchInput: String?,
     onRegisterLead: (Long?) -> Unit,
     onViewLeadDetails: (Long) -> Unit,
-    onNewAssistance: (Long) -> Unit,
+    onNewAtendimento: (Long) -> Unit,
     onNewStay: (Long) -> Unit,
     onViewStay: (Long) -> Unit,
     onUiEvent: (UiEvent) -> Unit,
@@ -194,11 +194,11 @@ fun LeadsPage(
                                 onCardClick = { onViewLeadDetails(item.cliente.id) },
                                 onEditCliente = { onRegisterLead(item.cliente.id) },
                                 onDeleteCliente = { viewModel.onDeleteLead(item.cliente.id) },
-                                onNewAssistance = { onNewAssistance(item.cliente.id) },
+                                onNewAtendimento = { onNewAtendimento(item.cliente.id) },
                                 onViewStay = { item.currentStayId?.let { id -> onViewStay(id) } },
                                 onNewStay = { onNewStay(item.cliente.id) },
                                 hasMoreOptionsMenu = true,
-                                hasAssistanceText = true,
+                                hasAtendimentoText = true,
                                 hasPrimaryActions = true,
                             )
                             Spacer(modifier = Modifier.height(8.dp))

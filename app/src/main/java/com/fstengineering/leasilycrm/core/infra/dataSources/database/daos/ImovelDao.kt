@@ -25,14 +25,4 @@ interface ImovelDao {
     """
     )
     suspend fun getAll(matching: String? = null): List<ImovelCompound>
-
-    @Query(
-        """
-        SELECT * FROM properties
-        INNER JOIN assistance_sent_properties asp ON properties.id = asp.property_id
-        WHERE asp.assistance_id = :assistanceId
-        AND is_deleted = 0
-    """
-    )
-    suspend fun getAllSentInAssistance(assistanceId: Long): List<ImovelCompound>
 }

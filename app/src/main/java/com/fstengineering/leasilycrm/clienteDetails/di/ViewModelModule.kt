@@ -12,7 +12,7 @@ val clienteDetailsViewModelModule = module {
             route = get<SavedStateHandle>().toRoute(),
             clienteDetailsReadDataSource = get(),
             clienteWriteDataSource = get(),
-            assistanceWriteDataSource = get(),
+            atendimentoWriteDataSource = get(),
         )
     }
 }

@@ -1,8 +1,8 @@
 package com.fstengineering.leasilycrm.clienteDetails.infra.mappers
 
-import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceInteractionReadModel
-import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceReadModel
-import com.fstengineering.leasilycrm.clienteDetails.application.models.AssistanceSentImovelReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.InteracaoReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.AtendimentoReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.ImovelEnviadoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.StayReadModel
 import com.fstengineering.leasilycrm.clienteDetails.infra.projections.AtendimentoProjection
@@ -14,7 +14,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.InteracaoOrm
 import kotlinx.collections.immutable.toPersistentList
 
 fun ClienteDetailsProjection.toReadModel() = ClienteReadModel(
@@ -29,8 +29,8 @@ fun ClienteDetailsProjection.toReadModel() = ClienteReadModel(
     observations = observations,
     isLead = status == ClienteStatus.Lead.id,
     isOld = status == ClienteStatus.HospedeAntigo.id,
-    assistances = atendimentos
-        .filterNot { it.assistance.isDeleted }
+    atendimentos = atendimentos
+        .filterNot { it.atendimento.isDeleted }
         .map { it.toReadModel() }
         .toPersistentList(),
     stays = estadias
@@ -39,7 +39,7 @@ fun ClienteDetailsProjection.toReadModel() = ClienteReadModel(
         .toPersistentList(),
 )
 
-private fun AtendimentoProjection.toReadModel(): AssistanceReadModel {
+private fun AtendimentoProjection.toReadModel(): AtendimentoReadModel {
     val preferredNeighborhoods = preferredNeighborhoods
         .map { it.neighborhood }
         .toPersistentList()
@@ -48,39 +48,39 @@ private fun AtendimentoProjection.toReadModel(): AssistanceReadModel {
         .mapNotNull { ImovelCharacteristic.fromId(it.imovelCharacteristicId) }
         .toPersistentList()
 
-    val interactionReadModels = interactions
+    val interacaoReadModels = interacoes
         .map { it.toReadModel() }
         .toPersistentList()
 
-    val seaProximityType = assistance.imovelSeaProximityTypeId?.let { typeId ->
-        ImovelSeaProximityType.parse(typeId, assistance.distanceToSea)
+    val seaProximityType = atendimento.imovelSeaProximityTypeId?.let { typeId ->
+        ImovelSeaProximityType.parse(typeId, atendimento.distanceToSea)
             .fold(onError = { null }, onSuccess = { it })
     }
 
-    return AssistanceReadModel(
-        id = requireNotNull(assistance.id),
-        updateDateTime = assistance.updateDateTime,
-        preferredStartDate = assistance.searchedStartDate,
-        preferredEndDate = assistance.searchedEndDate,
-        hasFlexibilityForPeriod = assistance.hasFlexibilityForPeriod,
-        maxAcceptedNightlyRate = assistance.maxAcceptedNightlyRate,
-        adultsCount = assistance.adults,
-        kidsCount = assistance.kids,
-        babiesCount = assistance.babies,
-        animalsCount = assistance.animals,
-        bedroomsCount = assistance.bedrooms,
-        enSuitesCount = assistance.enSuites,
-        doubleBedsCount = assistance.doubleBeds,
-        singleBedsCount = assistance.singleBeds,
-        bathroomsCount = assistance.bathrooms,
-        parkingSpotsCount = assistance.parkingSpots,
+    return AtendimentoReadModel(
+        id = requireNotNull(atendimento.id),
+        updateDateTime = atendimento.updateDateTime,
+        preferredStartDate = atendimento.searchedStartDate,
+        preferredEndDate = atendimento.searchedEndDate,
+        hasFlexibilityForPeriod = atendimento.hasFlexibilityForPeriod,
+        maxAcceptedNightlyRate = atendimento.maxAcceptedNightlyRate,
+        adultsCount = atendimento.adults,
+        kidsCount = atendimento.kids,
+        babiesCount = atendimento.babies,
+        animalsCount = atendimento.animals,
+        bedroomsCount = atendimento.bedrooms,
+        enSuitesCount = atendimento.enSuites,
+        doubleBedsCount = atendimento.doubleBeds,
+        singleBedsCount = atendimento.singleBeds,
+        bathroomsCount = atendimento.bathrooms,
+        parkingSpotsCount = atendimento.parkingSpots,
         preferredSeaProximityTypeId = seaProximityType?.id,
-        preferredDistanceToSea = assistance.distanceToSea,
-        observations = assistance.observations,
-        isFinished = assistance.isFinished,
+        preferredDistanceToSea = atendimento.distanceToSea,
+        observations = atendimento.observations,
+        isFinished = atendimento.isFinished,
         preferredNeighborhoods = preferredNeighborhoods,
         preferredImovelCharacteristics = preferredCharacteristics,
-        interactions = interactionReadModels,
+        interacoes = interacaoReadModels,
         sentImoveis = imoveisEnviados
             .filterNot { it.isDeleted }
             .map { it.toReadModel() }
@@ -88,15 +88,15 @@ private fun AtendimentoProjection.toReadModel(): AssistanceReadModel {
     )
 }
 
-private fun AssistanceInteractionEntity.toReadModel() =
-    AssistanceInteractionReadModel(
+private fun InteracaoOrm.toReadModel() =
+    InteracaoReadModel(
         id = requireNotNull(id),
         date = date,
         title = title,
         description = description,
     )
 
-private fun ImovelEnviadoProjection.toReadModel() = AssistanceSentImovelReadModel(
+private fun ImovelEnviadoProjection.toReadModel() = ImovelEnviadoReadModel(
     id = id,
     mainPictureUriString = files.find { it.isMainPicture }?.uriString,
     neighborhood = neighborhood,

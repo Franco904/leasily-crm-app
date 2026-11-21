@@ -5,15 +5,15 @@ sealed interface DomainError : BaseError {
         Required,
     }
 
-    enum class AssistanceInteractionDate : DomainError {
+    enum class InteracaoDate : DomainError {
         Required,
     }
 
-    enum class AssistanceInteractionTitle : DomainError {
+    enum class InteracaoTitle : DomainError {
         Required,
     }
 
-    enum class AssistanceOtherFields : DomainError {
+    enum class AtendimentoOtherFields : DomainError {
         TenantRequired,
         PreferredPeriodRequired,
         PreferredPeriodStartAndEndDatesAreTheSame,

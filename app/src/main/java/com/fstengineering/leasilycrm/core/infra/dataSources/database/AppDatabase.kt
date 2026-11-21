@@ -6,7 +6,9 @@ import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.fstengineering.leasilycrm.assistanceRegistration.infra.dataSources.AssistanceWriteDataSource
+import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoRegistrationReadDataSource
+import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoWriteDataSource
+import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.ImovelReadDataSource as AtendimentoRegistrationImovelReadDataSource
 import com.fstengineering.leasilycrm.clienteDetails.infra.dataSources.ClienteDetailsReadDataSource
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteRegistrationReadDataSource
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
@@ -14,21 +16,16 @@ import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesReadData
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDateTimeTypeConverter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDateTypeConverter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.converters.AppDecimalConverter
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceCharacteristicAssistanceCrossRefDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceInteractionDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistancePreferredNeighborhoodDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.AssistanceSentImovelCrossRefDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceImovelCharacteristicCrossRefEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceInteractionEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistancePreferredNeighborhoodEntity
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AssistanceSentImovelCrossRefEntity
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoImovelCharacteristicCrossRefOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.InteracaoOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoPreferredNeighborhoodOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoImovelEnviadoCrossRefOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ClienteOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelCharacteristicCrossRefOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
@@ -56,11 +53,11 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.dataSource
 
 @Database(
     entities = [
-        AssistanceEntity::class,
-        AssistanceImovelCharacteristicCrossRefEntity::class,
-        AssistanceInteractionEntity::class,
-        AssistancePreferredNeighborhoodEntity::class,
-        AssistanceSentImovelCrossRefEntity::class,
+        AtendimentoOrm::class,
+        AtendimentoImovelCharacteristicCrossRefOrm::class,
+        InteracaoOrm::class,
+        AtendimentoPreferredNeighborhoodOrm::class,
+        AtendimentoImovelEnviadoCrossRefOrm::class,
         ClienteOrm::class,
         ImovelOrm::class,
         ImovelCharacteristicCrossRefOrm::class,
@@ -86,16 +83,6 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.dataSource
 )
 @RewriteQueriesToDropUnusedColumns
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun assistanceDao(): AssistanceDao
-
-    abstract fun assistanceCharacteristicAssistanceCrossRefDao(): AssistanceCharacteristicAssistanceCrossRefDao
-
-    abstract fun assistanceInteractionDao(): AssistanceInteractionDao
-
-    abstract fun assistanceSearchedNeighborhoodDao(): AssistancePreferredNeighborhoodDao
-
-    abstract fun assistanceSentImovelCrossRefDao(): AssistanceSentImovelCrossRefDao
-
     abstract fun userAnalyticsDao(): UserAnalyticsDao
 
     abstract fun clienteSharedReadDataSource(): ClienteSharedReadDataSource
@@ -108,7 +95,13 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun clienteDetailsReadDataSource(): ClienteDetailsReadDataSource
 
-    abstract fun assistanceWriteDataSource(): AssistanceWriteDataSource
+    abstract fun atendimentoWriteDataSource(): AtendimentoWriteDataSource
+
+    abstract fun atendimentoSharedWriteDataSource(): AtendimentoSharedWriteDataSource
+
+    abstract fun atendimentoRegistrationReadDataSource(): AtendimentoRegistrationReadDataSource
+
+    abstract fun atendimentoRegistrationImovelReadDataSource(): AtendimentoRegistrationImovelReadDataSource
 
     abstract fun occupiedPeriodRegistrationClienteReadDataSource(): OccupiedPeriodRegistrationClienteReadDataSource
 

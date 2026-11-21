@@ -45,7 +45,7 @@ fun HospedesPage(
     searchInput: String?,
     onRegisterHospede: (Long?) -> Unit,
     onViewHospedeDetails: (Long) -> Unit,
-    onNewAssistance: (Long) -> Unit,
+    onNewAtendimento: (Long) -> Unit,
     onNewStay: (Long) -> Unit,
     onViewStay: (Long) -> Unit,
     onUiEvent: (UiEvent) -> Unit,
@@ -182,11 +182,11 @@ fun HospedesPage(
                                 onCardClick = { onViewHospedeDetails(item.cliente.id) },
                                 onEditCliente = { onRegisterHospede(item.cliente.id) },
                                 onDeleteCliente = { viewModel.onDeleteHospede(item.cliente.id) },
-                                onNewAssistance = { onNewAssistance(item.cliente.id) },
+                                onNewAtendimento = { onNewAtendimento(item.cliente.id) },
                                 onViewStay = { item.currentStayId?.let { id -> onViewStay(id) } },
                                 onNewStay = { onNewStay(item.cliente.id) },
                                 hasMoreOptionsMenu = true,
-                                hasAssistanceText = true,
+                                hasAtendimentoText = true,
                                 hasPrimaryActions = true,
                             )
                             Spacer(modifier = Modifier.height(8.dp))

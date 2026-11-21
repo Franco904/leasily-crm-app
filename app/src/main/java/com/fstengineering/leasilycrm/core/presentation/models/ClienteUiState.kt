@@ -5,6 +5,6 @@ data class ClienteUiState(
     val name: String,
     val city: String?,
     val hospedesCount: Int? = null,
-    val hasUnfinishedAssistance: Boolean = false,
+    val hasUnfinishedAtendimento: Boolean = false,
     val hasUnfinishedStay: Boolean = false,
 )

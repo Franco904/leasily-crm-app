@@ -170,7 +170,7 @@ class LeadsViewModelTest {
         id = faker.random.nextLong(bound = 9999),
         name = faker.random.nextUUID(),
         city = faker.random.nextUUID(),
-        hasUnfinishedAssistance = true,
+        hasUnfinishedAtendimento = true,
         hospedesCount = 2,
         hasUnfinishedStay = false,
         currentStayId = null,

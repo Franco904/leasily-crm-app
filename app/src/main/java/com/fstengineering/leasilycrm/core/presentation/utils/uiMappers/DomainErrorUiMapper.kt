@@ -9,13 +9,13 @@ private val INLINE_GENERIC_INVALID_DATA = R.string.inline_invalid_data
 fun DomainError.toInlineMessage() = when (this) {
     DomainError.Amount.Required -> INLINE_REQUIRED
 
-    DomainError.AssistanceInteractionDate.Required -> INLINE_REQUIRED
-    DomainError.AssistanceInteractionTitle.Required -> INLINE_REQUIRED
+    DomainError.InteracaoDate.Required -> INLINE_REQUIRED
+    DomainError.InteracaoTitle.Required -> INLINE_REQUIRED
 
-    DomainError.AssistanceOtherFields.TenantRequired -> INLINE_REQUIRED
-    DomainError.AssistanceOtherFields.PreferredPeriodRequired -> INLINE_REQUIRED
-    DomainError.AssistanceOtherFields.PreferredPeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
-    DomainError.AssistanceOtherFields.PreferredPeriodStartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
+    DomainError.AtendimentoOtherFields.TenantRequired -> INLINE_REQUIRED
+    DomainError.AtendimentoOtherFields.PreferredPeriodRequired -> INLINE_REQUIRED
+    DomainError.AtendimentoOtherFields.PreferredPeriodStartAndEndDatesAreTheSame -> R.string.inline_period_start_end_date_are_same_period
+    DomainError.AtendimentoOtherFields.PreferredPeriodStartDateIsAfterEndDate -> R.string.inline_period_start_date_is_after_end_date_period
 
     DomainError.Creci.LengthIsGreaterThan8Chars -> R.string.inline_too_big_8_chars
 

@@ -8,14 +8,14 @@ val useCaseModule = module {
     factory {
         RegisterStayCheckOutUseCase(
             occupiedPeriodSharedCommandRepository = get(),
-            assistanceSharedCommandRepository = get(),
+            atendimentoSharedWriteDataSource = get(),
         )
     }
 
     factory {
         UndoRegisterStayCheckOutUseCase(
             occupiedPeriodSharedCommandRepository = get(),
-            assistanceSharedCommandRepository = get(),
+            atendimentoSharedWriteDataSource = get(),
         )
     }
 }

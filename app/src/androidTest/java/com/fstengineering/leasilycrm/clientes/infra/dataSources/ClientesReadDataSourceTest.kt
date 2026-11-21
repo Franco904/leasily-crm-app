@@ -7,7 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
-import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeAtendimento
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeAtendimento
 import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeEstadia
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeCliente
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelId
@@ -79,7 +79,7 @@ class ClientesReadDataSourceTest : IntegrationTest() {
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
             db.insertFakeEstadia(clienteId, db.saveFakeImovelId(), StayStatus.CheckOutDone)
-            db.insertFakeAtendimento(clienteId, isFinished = false)
+            db.saveFakeAtendimento(clienteId, isFinished = false)
 
             val leads = sut.watchClientes(status = ClienteStatus.Lead).firstSuccess()
 
@@ -90,11 +90,11 @@ class ClientesReadDataSourceTest : IntegrationTest() {
     fun deveExibirHospedesDoAtendimentoNaoFinalizadoQuandoLeadEhListado(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
-            db.insertFakeAtendimento(clienteId, adults = 2, kids = 1, babies = 1)
+            db.saveFakeAtendimento(clienteId, adults = 2, kids = 1, babies = 1)
 
             val lead = sut.watchClientes(status = ClienteStatus.Lead).firstSuccess().single()
 
-            lead.hasUnfinishedAssistance shouldBeEqualTo true
+            lead.hasUnfinishedAtendimento shouldBeEqualTo true
             lead.hospedesCount shouldBeEqualTo 4
         }
 

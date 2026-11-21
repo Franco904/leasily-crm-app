@@ -19,8 +19,8 @@ sealed interface ClienteDetailsUiState {
         val isLead: Boolean,
         val isOld: Boolean,
         val currentStayId: Long?,
-        val currentAssistance: AssistanceUiState?,
-        val pastAssistances: ImmutableList<AssistanceUiState>,
+        val currentAtendimento: AtendimentoUiState?,
+        val pastAtendimentos: ImmutableList<AtendimentoUiState>,
         val historyByYear: ImmutableMap<Int, ImmutableList<ClienteHistoryItemUiState>>,
     ) : ClienteDetailsUiState
 }
