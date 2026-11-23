@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.core.di.modules.applicationServiceModule
 import com.fstengineering.leasilycrm.core.di.modules.coroutineModule
 import com.fstengineering.leasilycrm.core.di.modules.daoModule
 import com.fstengineering.leasilycrm.core.di.modules.databaseDataSourceModule
+import com.fstengineering.leasilycrm.core.di.modules.exceptionLoggerModule
 import com.fstengineering.leasilycrm.core.di.modules.inMemoryStorageModule
 import com.fstengineering.leasilycrm.core.di.modules.localStorageModule
 import com.fstengineering.leasilycrm.core.di.modules.presentationModule
@@ -83,6 +84,7 @@ fun Application.configureDependencyInjection() {
             sharedStorageModule,
             daoModule,
             coroutineModule,
+            exceptionLoggerModule,
             workerModule,
 
             // Feature: root

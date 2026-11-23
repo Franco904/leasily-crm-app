@@ -1,11 +1,14 @@
 package com.fstengineering.leasilycrm.core.infra.adapters
 
-import android.util.Log
-import com.fstengineering.leasilycrm.BuildConfig
+import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.ExceptionLoggerBackend
+import org.koin.core.context.GlobalContext
 
+/**
+ * Ponto único de registro de falhas. O backend vem do Koin, registrado em `exceptionLoggerModule`;
+ * sem Koin (testes JVM) o registro é descartado. Único acesso ao Koin fora de `di/`: `object`
+ * estático não é instanciado pelo Android nem recebe construtor.
+ */
 object ExceptionLogger {
-    private const val TAG = "ExceptionLogger"
-
     /**
      * Registra uma falha que não é uma exceção capturada, como um dado ausente que o código
      * mascara. A [message] vai com a stacktrace de quem chamou: a exceção é só construída, nunca
@@ -14,8 +17,9 @@ object ExceptionLogger {
     fun logMasked(message: String) = log(MaskedFailure(message))
 
     fun log(throwable: Throwable) {
-        if (BuildConfig.DEBUG) Log.e(TAG, throwable.message.orEmpty(), throwable)
-        // TODO: FirebaseCrashlytics.getInstance().recordException(throwable)
+        val backend = GlobalContext.getOrNull()?.getOrNull<ExceptionLoggerBackend>()
+            ?: NoOpExceptionLoggerBackend
+        backend.log(throwable)
     }
 
     fun setUserIdentifier(identifier: String) {
