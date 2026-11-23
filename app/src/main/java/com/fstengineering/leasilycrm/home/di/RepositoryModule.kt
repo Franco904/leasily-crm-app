@@ -8,7 +8,7 @@ import org.koin.dsl.module
 val homeRepositoryModule = module {
     single<UserQueryRepository> {
         UserQueryRepositoryImpl(
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
+            encryptedLocalStorage = get(encryptedPreferencesQualifier),
         )
     }
 }

@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.occupiedPeriods.infra.repositories
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
+import com.fstengineering.leasilycrm.core.infra.localStorage.interfaces.LocalStorage
+import com.fstengineering.leasilycrm.core.infra.localStorage.plain.PlainPreferences
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
 import com.fstengineering.leasilycrm.occupiedPeriods.application.repositories.OccupiedPeriodQueryRepository
 import com.fstengineering.leasilycrm.occupiedPeriods.infra.mappers.toReadModel
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.map
 
 class OccupiedPeriodQueryRepositoryImpl(
     private val occupiedPeriodDatabaseDataSource: StayDatabaseDataSource,
-    private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
+    private val plainLocalStorage: LocalStorage<PlainPreferences>,
 ) : OccupiedPeriodQueryRepository {
     override fun watchAll(): Flow<AppResult<ImmutableList<OccupiedPeriodListReadModel>>> =
         flow {
@@ -41,7 +41,7 @@ class OccupiedPeriodQueryRepositoryImpl(
 
     override fun watchMustNotShowCheckOutDialogAnymore(): Flow<AppResult<Boolean>> =
         flow {
-            plainPreferencesDataSource.readPreferences()
+            plainLocalStorage.readPreferences()
                 .fold(
                     onError = { return@flow emit(AppResult.Error(error = it)) },
                     onSuccess = { prefsFlow ->

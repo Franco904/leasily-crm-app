@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
+import com.fstengineering.leasilycrm.core.infra.sharedStorage.SharedStorage
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioFileReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
@@ -33,7 +33,7 @@ class ProprietarioRegistrationViewModelTest {
     private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource = mockk(relaxed = true)
     private val proprietarioRegistrationReadDataSourceMock: ProprietarioRegistrationReadDataSource =
         mockk(relaxed = true)
-    private val sharedStorageDataSourceMock: SharedStorageDataSource = mockk(relaxed = true)
+    private val sharedStorageMock: SharedStorage = mockk(relaxed = true)
 
     @BeforeEach
     fun setUp() {
@@ -171,7 +171,7 @@ class ProprietarioRegistrationViewModelTest {
             route = route,
             proprietarioWriteDataSource = proprietarioWriteDataSourceMock,
             proprietarioRegistrationReadDataSource = proprietarioRegistrationReadDataSourceMock,
-            sharedStorageDataSource = sharedStorageDataSourceMock,
+            sharedStorage = sharedStorageMock,
         )
 
     private fun createProprietarioReadModel(id: Long) = ProprietarioReadModel(

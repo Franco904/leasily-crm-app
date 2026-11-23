@@ -11,13 +11,13 @@ val profileRepositoryModule = module {
     single<UserCommandRepository> {
         UserCommandRepositoryImpl(
             remoteDataSource = get(),
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
+            encryptedLocalStorage = get(encryptedPreferencesQualifier),
         )
     }
 
     single<UserQueryRepository> {
         UserQueryRepositoryImpl(
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
+            encryptedLocalStorage = get(encryptedPreferencesQualifier),
         )
     }
 }

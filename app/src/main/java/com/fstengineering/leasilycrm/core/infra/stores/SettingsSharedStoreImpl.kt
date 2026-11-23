@@ -3,20 +3,20 @@ package com.fstengineering.leasilycrm.core.infra.stores
 import com.fstengineering.leasilycrm.core.application.models.SettingsSharedReadModel
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
+import com.fstengineering.leasilycrm.core.infra.localStorage.interfaces.LocalStorage
+import com.fstengineering.leasilycrm.core.infra.localStorage.plain.PlainPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class SettingsSharedStoreImpl(
-    private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
+    private val plainLocalStorage: LocalStorage<PlainPreferences>,
 ) : SettingsSharedStore {
     override suspend fun setIsTodayCheckInCheckOutNotificationEnabled(
         isEnabled: Boolean,
     ) {
-        plainPreferencesDataSource.savePreferences { prefs ->
+        plainLocalStorage.savePreferences { prefs ->
             prefs.copy(isTodayCheckInCheckOutNotificationEnabled = isEnabled)
         }
     }
@@ -26,7 +26,7 @@ class SettingsSharedStoreImpl(
             isTodayCheckInCheckOutNotificationEnabled = false
         )
 
-        plainPreferencesDataSource.readPreferences()
+        plainLocalStorage.readPreferences()
             .fold(
                 onError = { return@flow emit(defaultSettings) },
                 onSuccess = { prefsFlow ->

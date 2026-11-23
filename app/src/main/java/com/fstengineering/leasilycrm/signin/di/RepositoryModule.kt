@@ -13,6 +13,6 @@ val signinRepositoryModule = module {
     }
 
     single<UserSessionStore> {
-        UserSessionStoreImpl(encryptedPreferencesDataSource = get(encryptedPreferencesQualifier))
+        UserSessionStoreImpl(encryptedLocalStorage = get(encryptedPreferencesQualifier))
     }
 }

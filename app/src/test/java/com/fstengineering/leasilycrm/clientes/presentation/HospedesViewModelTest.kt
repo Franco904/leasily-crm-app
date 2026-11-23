@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.clientes.presentation
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
 import com.fstengineering.leasilycrm.clientes.application.models.ClienteReadModel
-import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesPreferencesDataSource
+import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesReadDataSource
 import com.fstengineering.leasilycrm.clientes.presentation.hospedes.HospedesViewModel
 import com.fstengineering.leasilycrm.clientes.presentation.models.HospedeFilterType
@@ -35,23 +35,23 @@ import org.junit.jupiter.api.Test
 class HospedesViewModelTest {
     private val clientesReadDataSourceMock: ClientesReadDataSource = mockk(relaxed = true)
     private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxed = true)
-    private val clientesPreferencesDataSourceMock: ClientesPreferencesDataSource =
+    private val clientesLocalStorageMock: ClientesLocalStorage =
         mockk(relaxed = true)
 
     private fun createSut() = HospedesViewModel(
         clientesReadDataSource = clientesReadDataSourceMock,
         clienteWriteDataSource = clienteWriteDataSourceMock,
-        clientesPreferencesDataSource = clientesPreferencesDataSourceMock,
+        clientesLocalStorage = clientesLocalStorageMock,
     )
 
     @BeforeEach
     fun setUp() {
         clearAllMocks()
-        coEvery { clientesPreferencesDataSourceMock.getHospedesOrderTypeId() } returns
+        coEvery { clientesLocalStorageMock.getHospedesOrderTypeId() } returns
                 AppResult.Success(ClienteOrderType.Name.id)
         every { clientesReadDataSourceMock.watchClientes(any(), any(), any()) } returns
                 flowOf(AppResult.Success(emptyList()))
-        coEvery { clientesPreferencesDataSourceMock.saveHospedesOrderTypeId(any()) } returns
+        coEvery { clientesLocalStorageMock.saveHospedesOrderTypeId(any()) } returns
                 AppResult.Success(Unit)
     }
 
@@ -134,9 +134,9 @@ class HospedesViewModelTest {
                 sut.onOrderTypeChange(ClienteOrderType.LastUpdateDate)
 
                 coVerify {
-                    clientesPreferencesDataSourceMock.saveHospedesOrderTypeId(ClienteOrderType.LastUpdateDate.id)
+                    clientesLocalStorageMock.saveHospedesOrderTypeId(ClienteOrderType.LastUpdateDate.id)
                 }
-                coVerify(exactly = 0) { clientesPreferencesDataSourceMock.saveLeadsOrderTypeId(any()) }
+                coVerify(exactly = 0) { clientesLocalStorageMock.saveLeadsOrderTypeId(any()) }
                 verify {
                     clientesReadDataSourceMock.watchClientes(
                         status = ClienteStatus.Hospede,

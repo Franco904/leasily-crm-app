@@ -7,7 +7,7 @@ val applicationServiceModule = module {
     single {
         UserSessionService(
             userSessionSharedStore = get(),
-            userRemoteDataSource = get(),
+            userApi = get(),
         )
     }
 }

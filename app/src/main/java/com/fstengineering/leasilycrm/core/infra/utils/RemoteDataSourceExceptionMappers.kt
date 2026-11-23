@@ -1,7 +1,7 @@
 package com.fstengineering.leasilycrm.core.infra.utils
 
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.infra.dataSources.remote.NoInternetException
+import com.fstengineering.leasilycrm.core.infra.api.NoInternetException
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.http.HttpStatusCode

@@ -12,7 +12,7 @@ val proprietarioRegistrationViewModelModule = module {
             route = get<SavedStateHandle>().toRoute(),
             proprietarioWriteDataSource = get(),
             proprietarioRegistrationReadDataSource = get(),
-            sharedStorageDataSource = get(),
+            sharedStorage = get(),
         )
     }
 }

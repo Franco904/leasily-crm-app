@@ -23,7 +23,7 @@ val repositoryModule = module {
         OccupiedPeriodSharedCommandRepositoryImpl(
             databaseAdapter = get(),
             occupiedPeriodDatabaseDataSource = get(),
-            plainPreferencesDataSource = get(plainPreferencesQualifier),
+            plainLocalStorage = get(plainPreferencesQualifier),
         )
     }
 
@@ -35,13 +35,13 @@ val repositoryModule = module {
 
     single<SettingsSharedStore> {
         SettingsSharedStoreImpl(
-            plainPreferencesDataSource = get(plainPreferencesQualifier),
+            plainLocalStorage = get(plainPreferencesQualifier),
         )
     }
 
     single<UserSessionSharedStore> {
         UserSessionSharedStoreImpl(
-            encryptedPreferencesDataSource = get(encryptedPreferencesQualifier),
+            encryptedLocalStorage = get(encryptedPreferencesQualifier),
         )
     }
 

@@ -2,14 +2,14 @@ package com.fstengineering.leasilycrm.signin.infra.gateways
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.remote.requestDtos.user.SignInRequestDto
+import com.fstengineering.leasilycrm.core.infra.api.interfaces.UserApi
+import com.fstengineering.leasilycrm.core.infra.api.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.signin.application.gateways.UserSessionGateway
 import com.fstengineering.leasilycrm.signin.application.models.dtos.SignInResultWriteModel
 import com.fstengineering.leasilycrm.signin.infra.mappers.toWriteModel
 
 class UserSessionGatewayImpl(
-    private val remoteDataSource: UserRemoteDataSource,
+    private val remoteDataSource: UserApi,
 ) : UserSessionGateway {
     override suspend fun signIn(idToken: String): AppResult<SignInResultWriteModel> {
         val signInRequestDto = SignInRequestDto(idToken = idToken)

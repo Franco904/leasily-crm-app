@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.clientes.presentation.hospedes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
-import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesPreferencesDataSource
+import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesReadDataSource
 import com.fstengineering.leasilycrm.clientes.presentation.mappers.toClienteListItemUiState
 import com.fstengineering.leasilycrm.clientes.presentation.models.ClienteListItemUiState
@@ -31,7 +31,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class HospedesViewModel(
     private val clientesReadDataSource: ClientesReadDataSource,
     private val clienteWriteDataSource: ClienteWriteDataSource,
-    private val clientesPreferencesDataSource: ClientesPreferencesDataSource,
+    private val clientesLocalStorage: ClientesLocalStorage,
 ) : ViewModel() {
     private var isLoaded = false
 
@@ -70,7 +70,7 @@ class HospedesViewModel(
 
     private fun loadPreferredOrderType() {
         viewModelScope.launch {
-            clientesPreferencesDataSource.getHospedesOrderTypeId()
+            clientesLocalStorage.getHospedesOrderTypeId()
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                 .onSuccess { orderTypeId ->
                     _orderType.update { ClienteOrderType.fromId(orderTypeId) }
@@ -122,7 +122,7 @@ class HospedesViewModel(
         _orderType.update { orderType }
 
         viewModelScope.launch {
-            clientesPreferencesDataSource.saveHospedesOrderTypeId(orderType.id)
+            clientesLocalStorage.saveHospedesOrderTypeId(orderType.id)
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
         }
     }

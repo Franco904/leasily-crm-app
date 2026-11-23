@@ -3,7 +3,7 @@ package com.fstengineering.leasilycrm.clientes.presentation
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
 import com.fstengineering.leasilycrm.clientes.application.models.ClienteReadModel
-import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesPreferencesDataSource
+import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesReadDataSource
 import com.fstengineering.leasilycrm.clientes.presentation.leads.LeadsViewModel
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
@@ -30,23 +30,23 @@ import org.junit.jupiter.api.Test
 class LeadsViewModelTest {
     private val clientesReadDataSourceMock: ClientesReadDataSource = mockk(relaxed = true)
     private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxed = true)
-    private val clientesPreferencesDataSourceMock: ClientesPreferencesDataSource =
+    private val clientesLocalStorageMock: ClientesLocalStorage =
         mockk(relaxed = true)
 
     private fun createSut() = LeadsViewModel(
         clientesReadDataSource = clientesReadDataSourceMock,
         clienteWriteDataSource = clienteWriteDataSourceMock,
-        clientesPreferencesDataSource = clientesPreferencesDataSourceMock,
+        clientesLocalStorage = clientesLocalStorageMock,
     )
 
     @BeforeEach
     fun setUp() {
         clearAllMocks()
-        coEvery { clientesPreferencesDataSourceMock.getLeadsOrderTypeId() } returns
+        coEvery { clientesLocalStorageMock.getLeadsOrderTypeId() } returns
                 AppResult.Success(ClienteOrderType.Name.id)
         every { clientesReadDataSourceMock.watchClientes(any(), any(), any()) } returns
                 flowOf(AppResult.Success(emptyList()))
-        coEvery { clientesPreferencesDataSourceMock.saveLeadsOrderTypeId(any()) } returns
+        coEvery { clientesLocalStorageMock.saveLeadsOrderTypeId(any()) } returns
                 AppResult.Success(Unit)
         coEvery { clientesReadDataSourceMock.getLeads(any(), any()) } returns
                 AppResult.Success(emptyList())
@@ -59,7 +59,7 @@ class LeadsViewModelTest {
         fun `Deve exibir Leads na ordem preferida quando a listagem é aberta`() = runTest {
             val sut = createSut()
             val lead = createClienteReadModel()
-            coEvery { clientesPreferencesDataSourceMock.getLeadsOrderTypeId() } returns
+            coEvery { clientesLocalStorageMock.getLeadsOrderTypeId() } returns
                     AppResult.Success(ClienteOrderType.LastUpdateDate.id)
             every {
                 clientesReadDataSourceMock.watchClientes(
@@ -97,7 +97,7 @@ class LeadsViewModelTest {
             sut.init()
             sut.init()
 
-            coVerify(exactly = 1) { clientesPreferencesDataSourceMock.getLeadsOrderTypeId() }
+            coVerify(exactly = 1) { clientesLocalStorageMock.getLeadsOrderTypeId() }
         }
     }
 
@@ -112,7 +112,7 @@ class LeadsViewModelTest {
 
                 sut.onOrderTypeChange(ClienteOrderType.LastUpdateDate)
 
-                coVerify { clientesPreferencesDataSourceMock.saveLeadsOrderTypeId(ClienteOrderType.LastUpdateDate.id) }
+                coVerify { clientesLocalStorageMock.saveLeadsOrderTypeId(ClienteOrderType.LastUpdateDate.id) }
             }
     }
 

@@ -5,13 +5,13 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.DatabaseAdapter
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.interfaces.StayDatabaseDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain.PlainPreferences
+import com.fstengineering.leasilycrm.core.infra.localStorage.interfaces.LocalStorage
+import com.fstengineering.leasilycrm.core.infra.localStorage.plain.PlainPreferences
 
 class OccupiedPeriodSharedCommandRepositoryImpl(
     private val databaseAdapter: DatabaseAdapter,
     private val occupiedPeriodDatabaseDataSource: StayDatabaseDataSource,
-    private val plainPreferencesDataSource: PreferencesDataSource<PlainPreferences>,
+    private val plainLocalStorage: LocalStorage<PlainPreferences>,
 ) : OccupiedPeriodSharedCommandRepository {
     override suspend fun delete(id: Long): AppResult<Unit> {
         return databaseAdapter.transaction {
@@ -55,7 +55,7 @@ class OccupiedPeriodSharedCommandRepositoryImpl(
     override suspend fun setMustNotShowCheckOutDialogAnymore(
         mustNotShowCheckOutDialogAnymore: Boolean,
     ): AppResult<Unit> {
-        return plainPreferencesDataSource.savePreferences { prefs ->
+        return plainLocalStorage.savePreferences { prefs ->
             prefs.copy(mustNotShowCheckOutDialogAnymore = mustNotShowCheckOutDialogAnymore)
         }
     }

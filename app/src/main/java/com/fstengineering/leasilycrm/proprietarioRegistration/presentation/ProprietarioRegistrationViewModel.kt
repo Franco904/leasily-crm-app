@@ -11,7 +11,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
-import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
+import com.fstengineering.leasilycrm.core.infra.sharedStorage.SharedStorage
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
@@ -35,7 +35,7 @@ class ProprietarioRegistrationViewModel(
     private val route: Destinations.ProprietarioRegistration,
     private val proprietarioWriteDataSource: ProprietarioWriteDataSource,
     private val proprietarioRegistrationReadDataSource: ProprietarioRegistrationReadDataSource,
-    private val sharedStorageDataSource: SharedStorageDataSource,
+    private val sharedStorage: SharedStorage,
 ) : ViewModel() {
     val isEditing: Boolean = route.proprietarioId != null
 
@@ -99,7 +99,7 @@ class ProprietarioRegistrationViewModel(
         val form = (draftFormUiState.value as? ProprietarioDraftFormUiState.Loaded) ?: return
 
         viewModelScope.launch {
-            val fileName = sharedStorageDataSource.getFileName(contentUriString)
+            val fileName = sharedStorage.getFileName(contentUriString)
 
             val fileDraft = ProprietarioFileUiState(
                 uriString = contentUriString,

@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
+import com.fstengineering.leasilycrm.core.infra.sharedStorage.SharedStorage
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -55,7 +55,7 @@ class OccupiedPeriodRegistrationViewModel(
     private val writeUnavailablePeriod: WriteUnavailablePeriodUseCase,
     private val imovelQueryRepository: ImovelQueryRepository,
     private val tenantQueryRepository: TenantQueryRepository,
-    private val sharedStorageDataSource: SharedStorageDataSource,
+    private val sharedStorage: SharedStorage,
 ) : ViewModel() {
     private var isInitialized = false
 
@@ -275,7 +275,7 @@ class OccupiedPeriodRegistrationViewModel(
         val form = (draftFormUiState.value as? OccupiedPeriodFormUiState.Loaded.Stay) ?: return
 
         viewModelScope.launch {
-            val fileName = sharedStorageDataSource.getFileName(contentUriString)
+            val fileName = sharedStorage.getFileName(contentUriString)
 
             val fileDraft = StayFileUiState(
                 uri = contentUriString.toUri(),
