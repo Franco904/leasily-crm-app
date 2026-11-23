@@ -130,7 +130,6 @@ class ImovelRegistrationViewModel(
             val imovel = form.toImovel()
                 .fold(
                     onError = {
-                        // TODO: Show something in the UI with the Domain errors
                         _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown))
 
                         return@launch
