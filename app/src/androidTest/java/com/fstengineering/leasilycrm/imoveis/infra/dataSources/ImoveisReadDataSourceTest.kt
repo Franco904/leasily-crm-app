@@ -40,7 +40,7 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
     // region watchImoveis
 
     @Test
-    fun deveListarImoveisEmOrdemDeBairroSemOsExcluidosEComFotoPrincipal(): Unit =
+    fun deveListarImoveisEmOrdemDeBairroComFotoPrincipalQuandoHaImovelExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             val mainPictureUri = faker.random.nextUUID()
@@ -100,7 +100,7 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
     // region getImoveis
 
     @Test
-    fun deveListarApenasImoveisCujoBairroOuEnderecoContemOTextoBuscado(): Unit =
+    fun deveListarApenasImoveisCujoBairroOuEnderecoContemOTextoQuandoHaBusca(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             val centro = createFakeImovel(
@@ -156,7 +156,7 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
         }
 
     @Test
-    fun deveTratarPorcentagemDaBuscaComoTextoLiteral(): Unit =
+    fun deveTratarPorcentagemComoTextoLiteralQuandoBuscaContemPorcentagem(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             listOf(

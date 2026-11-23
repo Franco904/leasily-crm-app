@@ -29,7 +29,7 @@ class AtendimentoSharedWriteDataSourceTest : IntegrationTest() {
     }
 
     @Test
-    fun deveFinalizarAtendimentoNaoFinalizadoDoCliente(): Unit =
+    fun deveFinalizarAtendimentoQuandoClienteTemAtendimentoNaoFinalizado(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
             db.saveFakeAtendimento(clienteId, isFinished = false)
@@ -40,7 +40,7 @@ class AtendimentoSharedWriteDataSourceTest : IntegrationTest() {
         }
 
     @Test
-    fun deveReabrirAtendimentoFinalizadoDoCliente(): Unit =
+    fun deveReabrirAtendimentoQuandoClienteTemAtendimentoFinalizado(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
             db.saveFakeAtendimento(clienteId, isFinished = true)

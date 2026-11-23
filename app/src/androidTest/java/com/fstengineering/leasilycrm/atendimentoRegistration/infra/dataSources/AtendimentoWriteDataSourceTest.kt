@@ -35,7 +35,7 @@ class AtendimentoWriteDataSourceTest : IntegrationTest() {
     // region save
 
     @Test
-    fun deveSalvarAtendimentoComPreferenciasInteracoesEImoveisEnviados(): Unit =
+    fun deveSalvarAtendimentoComPreferenciasInteracoesEImoveisEnviadosQuandoAtendimentoEhCadastrado(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
             val imovelId = db.saveFakeImovelId()

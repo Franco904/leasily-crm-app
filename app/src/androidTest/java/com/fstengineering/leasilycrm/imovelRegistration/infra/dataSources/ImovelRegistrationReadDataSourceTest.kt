@@ -38,7 +38,7 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
     // region getImovel
 
     @Test
-    fun deveBuscarImovelParaEdicaoComProprietarioCaracteristicasPrecosEArquivos(): Unit =
+    fun deveBuscarImovelParaEdicaoComProprietarioCaracteristicasPrecosEArquivosQuandoImovelEstaCadastrado(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             val characteristics = ImovelCharacteristic.entries.take(2)
@@ -100,7 +100,7 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
     // region getNeighborhoodNames
 
     @Test
-    fun deveListarBairrosSemRepeticaoEmOrdemAlfabeticaSemOsDeImoveisExcluidos(): Unit =
+    fun deveListarBairrosSemRepeticaoEmOrdemAlfabeticaQuandoHaImovelExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             listOf(

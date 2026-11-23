@@ -48,7 +48,7 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
     // region watchImovel
 
     @Test
-    fun deveObservarImovelComFotoPrincipalENomeDoProprietario(): Unit =
+    fun deveObservarImovelComFotoPrincipalENomeDoProprietarioQuandoImovelTemArquivos(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario(name = "Carla")
             val mainPictureUri = faker.random.nextUUID()
@@ -125,7 +125,7 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
     // region watchPeriodosOcupados
 
     @Test
-    fun deveObservarPeriodosOcupadosDoImovelEmOrdemDeCheckInSemOsExcluidos(): Unit =
+    fun deveObservarPeriodosOcupadosDoImovelEmOrdemDeCheckInQuandoHaPeriodoExcluidoEDeOutroImovel(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             imovelWriteDataSource.save(createFakeImovel(proprietarioId = proprietarioId, id = 1L))

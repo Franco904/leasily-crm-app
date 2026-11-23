@@ -30,7 +30,7 @@ class AtendimentoRegistrationReadDataSourceTest : IntegrationTest() {
     // region getAtendimento
 
     @Test
-    fun deveBuscarAtendimentoParaEdicaoComNomeDoClienteEFotoDoImovelEnviado(): Unit =
+    fun deveBuscarAtendimentoParaEdicaoComNomeDoClienteEFotoDoImovelEnviadoQuandoAtendimentoTemImovelEnviado(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente(name = "Maria")
             val (imovelId, mainPictureUri) = db.saveFakeImovelWithMainPicture()
@@ -78,7 +78,7 @@ class AtendimentoRegistrationReadDataSourceTest : IntegrationTest() {
     // region getNeighborhoodNames
 
     @Test
-    fun deveListarBairrosProcuradosSemRepeticaoEmOrdemAlfabetica(): Unit =
+    fun deveListarBairrosProcuradosSemRepeticaoEmOrdemAlfabeticaQuandoAtendimentoTemBairrosPreferidos(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
             db.saveFakeAtendimento(clienteId, preferredNeighborhoods = listOf("Trindade", "Centro"))

@@ -140,7 +140,7 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
         }
 
     @Test
-    fun deveExibirFotoDoImovelEnviadoEPreferenciasDoAtendimento(): Unit =
+    fun deveExibirFotoDoImovelEnviadoEPreferenciasDoAtendimentoQuandoAtendimentoTemImovelEnviado(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
             val atendimentoId = db.saveFakeAtendimento(clienteId, isFinished = false)

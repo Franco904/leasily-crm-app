@@ -26,7 +26,7 @@ class ImovelReadDataSourceTest : IntegrationTest() {
     }
 
     @Test
-    fun deveListarImoveisNaoExcluidosEmOrdemAlfabeticaDeBairroSemFiltro(): Unit =
+    fun deveListarImoveisEmOrdemAlfabeticaDeBairroQuandoNaoHaFiltroEHaImovelExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             saveImovel(id = 1L, neighborhood = "Centro")
             saveImovel(id = 2L, neighborhood = "Trindade")
@@ -41,7 +41,7 @@ class ImovelReadDataSourceTest : IntegrationTest() {
         }
 
     @Test
-    fun deveFiltrarImoveisPorBairroOuEnderecoSemDiferenciarMaiusculas(): Unit =
+    fun deveFiltrarImoveisPorBairroOuEnderecoQuandoFiltroTemCaixaDiferente(): Unit =
         runBlocking(Dispatchers.Default) {
             saveImovel(id = 1L, neighborhood = "Centro", streetAddress = "Rua Trindade")
             saveImovel(id = 2L, neighborhood = "Trindade", streetAddress = "Rua A")
@@ -54,7 +54,7 @@ class ImovelReadDataSourceTest : IntegrationTest() {
         }
 
     @Test
-    fun deveTratarPorcentagemDoFiltroComoTextoLiteral(): Unit =
+    fun deveTratarPorcentagemComoTextoLiteralQuandoFiltroContemPorcentagem(): Unit =
         runBlocking(Dispatchers.Default) {
             saveImovel(id = 1L, neighborhood = "Centro")
 

@@ -44,7 +44,7 @@ class ImovelDetailsReadDataSourceTest : IntegrationTest() {
     // region watchImovel
 
     @Test
-    fun deveObservarImovelComCaracteristicasPrecosEArquivos(): Unit =
+    fun deveObservarImovelComCaracteristicasPrecosEArquivosQuandoImovelEstaCadastrado(): Unit =
         runBlocking(Dispatchers.Default) {
             val characteristics = ImovelCharacteristic.entries.take(2)
             val price = createFakeImovelPrice()
@@ -81,7 +81,7 @@ class ImovelDetailsReadDataSourceTest : IntegrationTest() {
         }
 
     @Test
-    fun deveNaoObservarImovelExcluido(): Unit = runBlocking(Dispatchers.Default) {
+    fun deveNaoObservarImovelQuandoImovelEhExcluido(): Unit = runBlocking(Dispatchers.Default) {
         val imovel = createFakeImovel(proprietarioId = db.saveFakeProprietario(), id = 8L)
         imovelWriteDataSource.save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
         db.imovelSharedWriteDataSource().delete(imovelId = 8L)
