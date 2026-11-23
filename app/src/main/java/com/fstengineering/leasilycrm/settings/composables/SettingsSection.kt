@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
+import android.provider.Settings as AndroidSettings
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -57,8 +58,8 @@ fun SettingsSection(
 
     fun openAppNotificationSettings() {
         val intent = Intent().apply {
-            action = android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS
-            putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, context.packageName)
+            action = AndroidSettings.ACTION_APP_NOTIFICATION_SETTINGS
+            putExtra(AndroidSettings.EXTRA_APP_PACKAGE, context.packageName)
         }
 
         context.startActivity(intent)

@@ -7,12 +7,13 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
-import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeAtendimento
 import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeEstadia
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeAtendimento
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeCliente
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
@@ -173,7 +174,7 @@ class ClientesReadDataSourceTest : IntegrationTest() {
 
     // endregion
 
-    private suspend fun kotlinx.coroutines.flow.Flow<AppResult<List<ClienteReadModel>>>.firstSuccess() =
+    private suspend fun Flow<AppResult<List<ClienteReadModel>>>.firstSuccess() =
         first().shouldBeInstanceOf<AppResult.Success<*>>().data
             .let { (it as List<*>).filterIsInstance<ClienteReadModel>() }
 }

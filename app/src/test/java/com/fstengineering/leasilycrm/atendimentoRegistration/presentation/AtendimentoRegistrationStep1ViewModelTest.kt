@@ -6,10 +6,11 @@ import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.models
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.models.fields.AtendimentoStep1Field
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.viewModels.AtendimentoRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.viewModels.AtendimentoRegistrationStep1ViewModel.UiEvent
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimal
-import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
+import com.fstengineering.leasilycrm.testUtils.faker
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -242,7 +243,7 @@ class AtendimentoRegistrationStep1ViewModelTest {
 
     private fun createForm(
         seaProximityTypeId: Long?,
-        distanceToSea: com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal? = null,
+        distanceToSea: AppDecimal? = null,
     ) = AtendimentoDraftFormUiState.Loaded.empty(clienteId = 1L, clienteName = faker.random.nextUUID())
         .copy(
             preferredSeaProximityTypeId = seaProximityTypeId,

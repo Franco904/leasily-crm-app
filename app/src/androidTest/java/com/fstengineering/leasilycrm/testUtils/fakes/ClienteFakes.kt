@@ -15,6 +15,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.St
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelFile
+import java.util.concurrent.atomic.AtomicLong
 import kotlinx.collections.immutable.toPersistentList
 import org.amshove.kluent.shouldBeInstanceOf
 
@@ -91,7 +92,7 @@ suspend fun AppDatabase.insertFakeEstadia(
     )
 )
 
-private val nextFakeAtendimentoId = java.util.concurrent.atomic.AtomicLong(0)
+private val nextFakeAtendimentoId = AtomicLong(0)
 
 /** Cria um Atendimento válido do Cliente, com as Interações e Preferências informadas. */
 fun createFakeAtendimento(
