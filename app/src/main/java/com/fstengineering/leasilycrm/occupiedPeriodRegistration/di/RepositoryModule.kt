@@ -31,6 +31,7 @@ val occupiedPeriodRegistrationRepositoryModule = module {
             databaseAdapter = get(),
             stayDatabaseDataSource = get(),
             stayFileDatabaseDataSource = get(),
+            dateTimeProvider = get(),
         )
     }
 }

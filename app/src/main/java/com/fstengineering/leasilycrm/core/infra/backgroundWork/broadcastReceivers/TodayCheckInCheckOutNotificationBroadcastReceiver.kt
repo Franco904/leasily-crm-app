@@ -9,7 +9,7 @@ import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPerio
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.infra.notifications.TodayCheckInCheckOutNotification
 import com.fstengineering.leasilycrm.core.infra.utils.hasNotificationPermission
 import kotlinx.coroutines.CoroutineScope
@@ -22,6 +22,7 @@ class TodayCheckInCheckOutNotificationBroadcastReceiver : BroadcastReceiver(),
     KoinComponent {
     private val settingsSharedStore: SettingsSharedStore by inject()
     private val userSessionSharedStore: UserSessionSharedStore by inject()
+    private val dateTimeProvider: AppDateTimeProvider by inject()
     private val occupiedSharedQueryRepository: OccupiedPeriodSharedQueryRepository by inject()
 
     private val applicationScope: CoroutineScope by inject()
@@ -40,7 +41,7 @@ class TodayCheckInCheckOutNotificationBroadcastReceiver : BroadcastReceiver(),
             val isSessionAlive = userSessionSharedStore.isSessionAlive()
 
             if (
-                AppDateTime.now().hour > 9 ||
+                dateTimeProvider.now().hour > 9 ||
                 !isTodayCheckInCheckOutNotificationEnabled ||
                 !isSessionAlive ||
                 !context.hasNotificationPermission()

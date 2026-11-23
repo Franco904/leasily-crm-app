@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.imovelRegistration.presentation
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
@@ -160,7 +161,7 @@ class ImovelRegistrationViewModelTest {
 
     private fun createImovelReadModel(id: Long) = ImovelReadModel(
         id = id,
-        createDateTime = AppDateTime.now(),
+        createDateTime = AppDateTimeProviderImpl().now(),
         proprietario = ProprietarioReadModel(
             id = faker.random.nextLong(bound = 9999),
             name = faker.random.nextUUID(),

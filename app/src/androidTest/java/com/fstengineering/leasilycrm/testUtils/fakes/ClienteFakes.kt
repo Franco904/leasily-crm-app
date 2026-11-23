@@ -3,6 +3,8 @@ package com.fstengineering.leasilycrm.testUtils.fakes
 import com.fstengineering.leasilycrm.atendimentoRegistration.domain.entities.Atendimento
 import com.fstengineering.leasilycrm.atendimentoRegistration.domain.entities.Interacao
 import com.fstengineering.leasilycrm.clienteRegistration.domain.entities.Cliente
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
@@ -63,7 +65,7 @@ suspend fun AppDatabase.insertFakeEstadia(
     clienteId: Long,
     imovelId: Long,
     status: StayStatus,
-    checkIn: AppDateTime = AppDateTime.now(),
+    checkIn: AppDateTime = AppDateTimeProviderImpl().now(),
 ): Long = stayDao().insertOrUpdate(
     StayEntity(
         id = null,
@@ -104,7 +106,7 @@ fun createFakeAtendimento(
     preferredImovelCharacteristics: List<ImovelCharacteristic> = emptyList(),
 ): Atendimento {
     val interacoes = interacoesTitles.map {
-        Interacao.parse(id = null, date = AppDate.now(), title = it, description = null)
+        Interacao.parse(id = null, date = AppDateProviderImpl().now(), title = it, description = null)
             .shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Interacao>()
     }
 

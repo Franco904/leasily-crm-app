@@ -8,6 +8,7 @@ import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.Clien
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteDraftFormUiState
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteField
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
@@ -291,7 +292,7 @@ class ClienteRegistrationViewModelTest {
 
     private fun createClienteReadModel(id: Long, isLead: Boolean = true) = ClienteReadModel(
         id = id,
-        createDateTime = com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime.now(),
+        createDateTime = AppDateTimeProviderImpl().now(),
         tag = faker.random.nextUUID(),
         name = faker.random.nextUUID(),
         city = faker.random.nextUUID(),

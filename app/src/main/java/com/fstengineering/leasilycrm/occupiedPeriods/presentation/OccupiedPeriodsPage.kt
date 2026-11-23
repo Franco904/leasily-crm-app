@@ -40,7 +40,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsEmptySection
@@ -65,6 +65,7 @@ import com.fstengineering.leasilycrm.occupiedPeriods.presentation.composables.Oc
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 fun OccupiedPeriodsPage(
@@ -91,8 +92,9 @@ fun OccupiedPeriodsPage(
         )
     }
 
-    val currentMonth = remember { AppDate.now().month }
-    val currentYear = remember { AppDate.now().year }
+    val dateProvider: AppDateProvider = koinInject()
+    val currentMonth = remember { dateProvider.now().month }
+    val currentYear = remember { dateProvider.now().year }
 
     val occupiedPeriods by viewModel.occupiedPeriods.collectAsStateWithLifecycle()
     val occupiedPeriodToDelete by viewModel.occupiedPeriodToDelete.collectAsStateWithLifecycle()

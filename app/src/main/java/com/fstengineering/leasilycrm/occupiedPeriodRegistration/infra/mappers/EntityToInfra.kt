@@ -8,11 +8,11 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.entities.
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.entities.StayFile
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.domain.entities.UnavailablePeriod
 
-fun Stay.toLocalDataModel(): StayEntity {
+fun Stay.toLocalDataModel(now: AppDateTime): StayEntity {
     return StayEntity(
         id = id,
-        createDateTime = createDateTime ?: AppDateTime.now(),
-        updateDateTime = AppDateTime.now(),
+        createDateTime = createDateTime ?: now,
+        updateDateTime = now,
         vehicleMake = vehicleMake,
         vehicleColor = vehicleColor,
         vehicleLicensePlate = vehicleLicensePlate,
@@ -32,11 +32,11 @@ fun Stay.toLocalDataModel(): StayEntity {
     )
 }
 
-fun UnavailablePeriod.toLocalDataModel(): StayEntity {
+fun UnavailablePeriod.toLocalDataModel(now: AppDateTime): StayEntity {
     return StayEntity(
         id = id,
-        createDateTime = createDateTime ?: AppDateTime.now(),
-        updateDateTime = AppDateTime.now(),
+        createDateTime = createDateTime ?: now,
+        updateDateTime = now,
         vehicleMake = null,
         vehicleColor = null,
         vehicleLicensePlate = null,

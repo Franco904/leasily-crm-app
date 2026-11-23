@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioOrm
@@ -11,10 +12,14 @@ import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toProprietarioFileOrm
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers.toProprietarioOrm
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /** Escrita do cadastro de Proprietário. */
 @Dao
-abstract class ProprietarioWriteDataSource {
+abstract class ProprietarioWriteDataSource : KoinComponent {
+    private val dateTimeProvider: AppDateTimeProvider by inject()
+
     /**
      * Salva o Proprietário com seus arquivos numa única transação. Com `id` preenchido, atualiza o
      * cadastro existente em vez de criar outro.
@@ -28,7 +33,7 @@ abstract class ProprietarioWriteDataSource {
 
     @Transaction
     protected open suspend fun saveInTransaction(proprietario: Proprietario) {
-        val proprietarioId = upsert(proprietario.toProprietarioOrm())
+        val proprietarioId = upsert(proprietario.toProprietarioOrm(now = dateTimeProvider.now()))
             .let { generatedId -> proprietario.id ?: generatedId }
 
         proprietario.files.forEach {

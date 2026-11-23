@@ -14,7 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppTimeProvider
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppTime
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,7 +26,8 @@ fun TimePickerDialog(
     modifier: Modifier = Modifier,
     title: String? = null,
 ) {
-    val timeNow = remember { AppTime.now() }
+    val timeProvider: AppTimeProvider = koinInject()
+    val timeNow = remember { timeProvider.now() }
 
     val timePickerState = rememberTimePickerState(
         initialHour = timeNow.hour,
@@ -49,7 +52,7 @@ fun TimePickerDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    val selectedTime = AppTime.now()
+                    val selectedTime = timeProvider.now()
                         .withHourMinute(timePickerState.hour, timePickerState.minute)
 
                     onTimeSelect(selectedTime)

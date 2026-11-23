@@ -5,17 +5,22 @@ import androidx.room.Query
 import androidx.room.Upsert
 import com.fstengineering.leasilycrm.clienteRegistration.domain.entities.Cliente
 import com.fstengineering.leasilycrm.clienteRegistration.infra.mappers.toClienteOrm
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ClienteOrm
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /** Escrita do cadastro de Cliente. */
 @Dao
-abstract class ClienteWriteDataSource {
+abstract class ClienteWriteDataSource : KoinComponent {
+    private val dateTimeProvider: AppDateTimeProvider by inject()
+
     /** Salva o Cliente. Com `id` preenchido, atualiza o cadastro existente em vez de criar outro. */
     suspend fun save(cliente: Cliente): AppResult<Unit> =
         onDatabase {
-            upsert(cliente.toClienteOrm())
+            upsert(cliente.toClienteOrm(now = dateTimeProvider.now()))
         }
 
     /** Exclui o Cliente, que deixa de aparecer nas listagens e nos detalhes. */

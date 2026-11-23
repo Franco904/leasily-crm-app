@@ -8,10 +8,10 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximity
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.InteracaoOrm
 
-fun Atendimento.toAtendimentoOrm() = AtendimentoOrm(
+fun Atendimento.toAtendimentoOrm(now: AppDateTime) = AtendimentoOrm(
     id = id,
-    createDateTime = createDateTime ?: AppDateTime.now(),
-    updateDateTime = AppDateTime.now(),
+    createDateTime = createDateTime ?: now,
+    updateDateTime = now,
     searchedStartDate = preferredPeriod?.startDate,
     searchedEndDate = preferredPeriod?.endDate,
     hasFlexibilityForPeriod = hasFlexibilityForPeriod,

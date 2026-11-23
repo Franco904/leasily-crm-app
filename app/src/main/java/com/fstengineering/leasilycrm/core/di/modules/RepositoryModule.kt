@@ -8,8 +8,10 @@ import com.fstengineering.leasilycrm.core.di.qualifiers.encryptedPreferencesQual
 import com.fstengineering.leasilycrm.core.di.qualifiers.plainPreferencesQualifier
 import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
 import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
+import com.fstengineering.leasilycrm.core.domain.providers.AppTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppTimeProvider
 import com.fstengineering.leasilycrm.core.infra.repositories.OccupiedPeriodSharedCommandRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.repositories.OccupiedPeriodSharedQueryRepositoryImpl
 import com.fstengineering.leasilycrm.core.infra.stores.SettingsSharedStoreImpl
@@ -45,4 +47,5 @@ val repositoryModule = module {
 
     single<AppDateProvider> { AppDateProviderImpl() }
     single<AppDateTimeProvider> { AppDateTimeProviderImpl() }
+    single<AppTimeProvider> { AppTimeProviderImpl() }
 }

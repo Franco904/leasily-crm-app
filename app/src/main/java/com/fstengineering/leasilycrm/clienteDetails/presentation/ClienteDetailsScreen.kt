@@ -45,15 +45,15 @@ import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.Cli
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsIdentificationPage
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsTabRow
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsTopAppBar
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AtendimentoUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsTab
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
-import com.fstengineering.leasilycrm.core.presentation.composables.InteracaoDetailsBottomSheet
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.InteracaoCard
+import com.fstengineering.leasilycrm.core.presentation.composables.InteracaoDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.InteracaoCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAtendimentoDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteHospedeDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
@@ -65,6 +65,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycl
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,7 +88,8 @@ fun ClienteDetailsScreen(
     val lazyListState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
 
-    val currentMonth = remember { AppDate.now().month }
+    val dateProvider: AppDateProvider = koinInject()
+    val currentMonth = remember { dateProvider.now().month }
 
     var selectedTabId by rememberSaveable {
         mutableIntStateOf(ClienteDetailsTab.Details.id)

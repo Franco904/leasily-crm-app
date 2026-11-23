@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources
 import androidx.room.Dao
 import androidx.room.Transaction
 import androidx.room.Upsert
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelCharacteristicCrossRefOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
@@ -11,10 +12,14 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.Im
 import com.fstengineering.leasilycrm.core.infra.utils.onDatabase
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.Imovel
 import com.fstengineering.leasilycrm.imovelRegistration.infra.mappers.toLocalDataModel
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /** Escrita do cadastro de Imóvel. */
 @Dao
-abstract class ImovelWriteDataSource {
+abstract class ImovelWriteDataSource : KoinComponent {
+    private val dateTimeProvider: AppDateTimeProvider by inject()
+
     /**
      * Salva o Imóvel com seus Preços numa única transação: se o salvamento de algum Preço falha,
      * o Imóvel não é salvo.
@@ -24,7 +29,7 @@ abstract class ImovelWriteDataSource {
 
     @Transaction
     protected open suspend fun saveInTransaction(imovel: Imovel) {
-        val imovelId = upsert(imovel.toLocalDataModel())
+        val imovelId = upsert(imovel.toLocalDataModel(now = dateTimeProvider.now()))
             .let { generatedId -> imovel.id ?: generatedId }
 
         imovel.characteristics.forEach {

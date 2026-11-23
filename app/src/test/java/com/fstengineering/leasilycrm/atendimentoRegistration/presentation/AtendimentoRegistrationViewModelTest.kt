@@ -8,6 +8,8 @@ import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.A
 import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoWriteDataSource
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.models.AtendimentoDraftFormUiState
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.models.InteracaoDraftFormUiState
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
@@ -123,7 +125,7 @@ class AtendimentoRegistrationViewModelTest {
                         interacoes = persistentListOf(
                             InteracaoDraftFormUiState.Loaded(
                                 id = null,
-                                date = AppDate.now(),
+                                date = AppDateProviderImpl().now(),
                                 title = "",
                                 description = null,
                             ),
@@ -271,7 +273,7 @@ class AtendimentoRegistrationViewModelTest {
         id = id,
         clienteId = clienteId,
         clienteName = faker.random.nextUUID(),
-        createDateTime = AppDateTime.now(),
+        createDateTime = AppDateTimeProviderImpl().now(),
         preferredStartDate = null,
         preferredEndDate = null,
         hasFlexibilityForPeriod = false,

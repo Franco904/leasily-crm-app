@@ -71,10 +71,6 @@ data class AppDate(val date: LocalDate) : Comparable<AppDate> {
     }
 
     companion object {
-        fun now(): AppDate {
-            return AppDate(date = LocalDate.now())
-        }
-
         fun fromMillis(millis: Long): AppDate {
             return AppDate(
                 date = Instant
