@@ -4,7 +4,7 @@ De "A Philosophy of Software Design" (Ousterhout):
 
 Projete **módulos profundos**: encapsule bastante comportamento por trás de uma interface pequena e posicionada em um ponto de injeção claro. O comportamento complexo deve ser testável através dessa interface. Use os princípios descritos sempre que o código estiver sendo projetado ou reestruturado. O objetivo é elevar: capacidade por unidade para os chamadores, concentração de mudanças para os mantenedores e testabilidade para ambos.
 
-> Não confundir "interface" como a palavra-chave `interface` do Kotlin/Java: muito restrito — interface aqui é uma superfície de contato que inclui todos os fatos que um chamador precisa saber para usar o módulo, sem precisar olhar a implementação: assinatura dos métodos públicos, efeitos colaterais, exceções possíveis e garantias (ex: "esse método é idempotente", "essa chamada é thread-safe").
+> Não confundir "interface" como a palavra-chave `interface` do Kotlin/Java: muito restrito — interface aqui é uma superfície de contato que inclui todos os fatos que um chamador precisa saber para usar o módulo, sem precisar olhar a implementação: assinatura dos métodos públicos, efeitos colaterais, erros possíveis (`AppResult`) e garantias (ex: "esse método é idempotente", "essa chamada é thread-safe").
 
 ## Deep Modules x Shallow Modules
 
@@ -43,8 +43,10 @@ Ao projetar interfaces, pergunte:
 - **Profundidade é uma propriedade da interface, não da implementação**: Um módulo profundo pode ser internamente composto de partes pequenas (métodos privados, classes helpers, etc.) e dependências mockáveis e intercambiáveis — elas simplesmente não fazem parte da interface e não a tornam grande. O que importa é o que o chamador enxerga.
 - **Teste da exclusão**: Imagine excluir o módulo. Se a complexidade desaparecer, era um pass-through: só repassava a chamada adiante sem esconder nada de fato e agregar valor — ex: use case raso entre ViewModel e DAO. Se a complexidade reaparece em N chamadores, ele estava sendo útil e deve ser preservado.
 - **A interface é a superfície para testes**: Chamadores em código de produção e testes usam o mesmo ponto de injeção. Se você precisar testar *além* da interface (usar métodos privados, reflection), o módulo provavelmente está mal projetado.
-- **YAGNI principle**: Não introduza uma abstração a menos que algo realmente varie através dela pelo ponto de injeção. Isso adiciona custo de indireção desnecessário. Ao invés disso, espere até ter o segundo caso de uso real antes de generalizar — não generalize preventivamente "porque pode precisar no futuro".
-- **Pass-through variable**: parâmetro (de construtor ou de método) que uma classe só recebe para repassar a outra, sem usá-lo, é vazamento de interface. Elimine-o: a dependência é entregue direto ao consumidor final no ponto de composição; o dado é lido por quem precisa, não carregado pelas camadas de cima.
+- **YAGNI principle**: Não introduza uma abstração a menos que algo realmente varie através dela pelo ponto de injeção. Isso adiciona custo de indireção desnecessário. Ao invés disso, espere até ter o segundo caso de uso real antes de generalizar — não generalize preventivamente "porque pode precisar no futuro". Na prática: `interface` que não é `sealed` nem `@Dao` precisa de 2+ implementações em qualquer source set (um fake de teste conta), e `*Impl` não existe.
+- **Pass-through variable**: parâmetro (de construtor ou de método) que uma classe só recebe para repassar a outra, sem usá-lo, é vazamento de interface. Elimine-o: a dependência é entregue direto ao consumidor final no ponto de composição; o dado é lido por quem precisa, não carregado pelas camadas de cima. Sinal mecânico: parâmetro `val` de construtor que o corpo da classe só repassa como argumento de outra chamada.
+- **Sem estado global mutável**: `object` e `companion object` não têm `var`, `lateinit` nem coleção `Mutable*` no nível do objeto, e não há `var` top-level. Estado compartilhado mora numa instância criada no ponto de composição.
+- **Sem alçapão de teste**: `@VisibleForTesting` e `spyk` (parcial) não existem; o teste usa a interface do módulo.
 
 ## Design de Interface para Testabilidade
 
@@ -133,7 +135,7 @@ Inclua o vocabulário do @GLOSSARY.md no resumo, para que cada subagente nomeie 
 
 Cada subagente produz como saída:
 
-1. Interface (tipos, métodos, parâmetros — além de caminhos de exceções e invariantes)
+1. Interface (tipos, métodos, parâmetros — além de caminhos de erro e invariantes)
 2. Exemplo de uso mostrando como os chamadores a usam
 3. O que a implementação esconde por trás do ponto de injeção
 4. Natureza da dependência e adapters (local substituível x remoto externo)

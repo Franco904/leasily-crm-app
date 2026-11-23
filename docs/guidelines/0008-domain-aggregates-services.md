@@ -4,12 +4,16 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
 
 ## Isolamento total
 
-- `domain/` **não importa nada** de `application/`, `infra/`, `presentation/`, nem
-  de framework Android, ORM, coroutines ou I/O.
+- `domain/` importa só `domain/`, `kotlin.*`, `kotlinx.collections.immutable`, `java.time` e
+  `java.math`: nada de `application/`, `infra/`, `presentation/`, framework Android, ORM,
+  coroutines ou I/O.
+- **O relógio do sistema fica fora dos tipos.** `AppDate`, `AppDateTime`, `AppTime` e `java.time`
+  não chamam `.now()`; só `core/domain/providers/` lê o relógio.
 - Dependências só **entram**: de `application/` e de `presentation/` (caso de validações parciais
   quando há perda de foco ou edição de form field). O domínio nunca alcança nada para fora — se um agregado precisa
   de um dado externo, o UseCase busca e passa como parâmetro.
-- Sem `suspend`, sem acesso a framework de UI, sem anotação de persistência, sem `String` de UI.
+- Sem `suspend`, `throw`, framework de UI, anotação de persistência (`@Entity`, `@Parcelize`,
+  `@Serializable`) nem `String` de UI.
 - Só subdomínio **Principal** justifica modelo de domínio rico. Subdomínios de Suporte podem adotar
   script de transação (UseCase/ViewModel → `infra/`) sem agregado/`domain/`.
 
@@ -17,12 +21,15 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
 
 - **Único lugar onde invariante de negócio vive.**
 - **Construído por factory validante** (`companion object parse(...)` e
-  construtor privado). A factory rejeita estado inválido com exceção de
-  domínio tipada — nunca devolve um agregado meio-válido. Validação de
+  construtor privado), com retorno `AppResult<Self>`. A factory rejeita estado inválido com
+  `AppResult.Error(ValidationErrors)` — nunca devolve um agregado meio-válido. Vale para toda
+  `class` de `entities/` (exceto `enum` e `sealed`): `data class` não existe lá, e a `class` de
+  apoio (`ImovelFile`) também tem construtor privado e `parse`. Validação de
   invariante de negócio em mapper, UseCase, ViewModel ou DataSource é proibido: a invariante
   tem um dono só.
 - **Comportamento no agregado**, não num objeto utilitário anêmico ao lado dele (e.g. `Validator`).
-  Métodos nomeiam operações do domínio; a mutação de estado passa por eles.
+  Métodos nomeiam operações do domínio; agregado e Value Object são imutáveis (sem `var`), e a
+  "mutação" devolve uma nova instância.
 - **Fronteira de consistência**: 1 agregado = 1 fronteira transacional. Referência
   a outro agregado é por identidade, não por objeto aninhado.
 - Agregado vs. Entidade não tem marcador no código — a distinção é pacote +
@@ -38,7 +45,8 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
 
 - Tipo imutável sem identidade, definido pelo valor (e.g. `Cpf`, `Creci`,
   `Diaria`). Valida o próprio formato/faixa na construção (factory `parse(...)`),
-  como o agregado.
+  como o agregado: quem declara `parse` tem construtor privado e retorna `AppResult<Self>`; Value
+  Object sem `parse` (`enum`, wrapper de `java.time`) é livre.
 - **Reutilizável fora do agregado**: pode ser usado em `presentation/` para validar um campo
   isoladamente antes de existir agregado (e.g. por form field, formulário em etapas).
   Não arrasta o resto do domínio junto.
@@ -53,13 +61,16 @@ Convenções para a camada `domain/`: o núcleo isolado de regra de negócio.
   UseCase de leitura (`0007-application-use-cases.md`).
 - Se envolve I/O, autorização de acesso, permissão de conectividade ou orquestração de persistência → não é
   serviço de domínio, é UseCase ou Application Service (`0007-application-use-cases.md`).
-- Também é puro e isolado — mesmas restrições do agregado.
+- Também é puro e isolado — mesmas restrições do agregado. É um `object` sem estado mutável
+  (nenhuma propriedade `var` nem `Mutable*`; locais de função podem), então o teste o executa de
+  verdade: não se mocka um Domain Service.
 
 ## Erros de domínio
 
 - **Nunca `throw`.** Retornados como valor: `AppResult<Agregado>` na factory, com erro
   `ValidationErrors(errors: ImmutableList<DomainError>)` (acumula todas as violações do
-  formulário), e `AppResult<T>` com erro `DomainError` no comportamento do agregado. O chamador
+  formulário), e `AppResult<T>` com erro `DomainError` no comportamento do agregado. Só `domain/`
+  constrói `DomainError.X(...)`. O chamador
   que precisa da lista de violações usa `error.toDomainErrors()` ou `is ValidationErrors`.
   `DomainError`, `ValidationErrors` e `ApplicationError` herdam de `BaseError`
   (`sealed interface`, `core/domain/utils/`) — a UI faz `when` exaustivo sobre o erro.

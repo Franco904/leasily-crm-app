@@ -32,7 +32,12 @@ Convenções para a camada `application/`: orquestração da intenção de negó
   default, normalização de nulo — `comissao = comissaoEstadia ?: comissaoPadraoImovel`).
 - **Nomenclatura**: `<VerboInglês><TermoDeDomínio>UseCase` — verbo em inglês,
   substantivo palavra por palavra do `GLOSSARY.md`. Ex.: `RegisterCheckInUseCase`,
-  `WriteEstadiaUseCase`. Não `RegistrarCheckIn…`, não `…StayUseCase`.
+  `WriteEstadiaUseCase`. Não `RegistrarCheckIn…`, não `…StayUseCase`. O verbo vem do conjunto
+  fechado `Read`, `Write`, `Watch`, `Register`, `Undo`, `Sign`.
+- **Uma função pública** (`operator fun invoke`), classe sem supertipo, em `application/useCases/`.
+  Função com 4+ parâmetros primitivos recebe um `CommandModel`/`QueryModel`.
+- **`withContext` e `Dispatchers.*` ficam em `infra/` e `di/`**; transação (`DatabaseAdapter`,
+  `withTransaction`) só em `application/` e `di/`.
 
 ## Application Service
 
@@ -137,6 +142,13 @@ sufixo (`toImovelResumoReadModel()`, `toPeriodoOcupadoRegistrationUiState()`); s
 `toAgregado()` fica sem. O Agregado é a única exceção porque é o modelo do
 domínio, não um DTO de fronteira — a ausência de sufixo o marca. Objetivo:
 nenhuma ambiguidade sobre qual camada um model pertence ao ler o nome.
+
+O sufixo fixa o pacote: `*ReadModel`, `*CommandModel` e `*QueryModel` só em `application/models/`;
+`*Orm` só em `infra/`; `*UiState` só em `presentation/`. Módulo sem subpacotes de camada
+(`settings`, `root`) conta como `presentation/`. `application/models/` guarda só classes com esses
+sufixos, só com `val`, sem função, sem `companion object` e sem subpacotes; argumento de UseCase
+que não é um deles vira `CommandModel`/`QueryModel`. Model de `application/` e de `presentation/`
+guarda URI como `String`, não `android.net.Uri`.
 
 ## Mappers de `application/`
 

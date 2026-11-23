@@ -112,7 +112,9 @@ O protocolo da borda (relançar `CancellationException` e as fatais do passo 4, 
 genérico mora só lá; fora dele, capture o subtipo específico da biblioteca ou use um wrapper. O
 wrapper escolhe o degrau: agregar devolve `AppResult.Error(ApplicationError.Unknown)` (este passo);
 mascarar registra e devolve o valor de fallback, com a degradação declarada no KDoc de interface
-(passo 2).
+(passo 2). Os wrappers de `BoundaryUtils.kt` são `onBoundary`/`onDatabase` (agregar), `maskFailure`
+(mascarar) e `onSerializationRead` (converte em `CorruptionException`, contrato do `Serializer` do
+DataStore).
 
 #### Princípio: Não distinga o que nenhum chamador distingue
 
