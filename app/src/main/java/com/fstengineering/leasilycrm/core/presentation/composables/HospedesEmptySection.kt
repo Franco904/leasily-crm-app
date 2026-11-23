@@ -1,5 +1,6 @@
-package com.fstengineering.leasilycrm.clientes.presentation.hospedes.composables
+package com.fstengineering.leasilycrm.core.presentation.composables
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,14 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.clientes.presentation.models.HospedeFilterType
 
 @Composable
 fun HospedesEmptySection(
+    @StringRes messageId: Int,
     modifier: Modifier = Modifier,
-    hospedeFilterType: HospedeFilterType? = null,
-    isSearchingHospede: Boolean = false,
-    isSelectingHospede: Boolean = false,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,15 +39,7 @@ fun HospedesEmptySection(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = stringResource(
-                when {
-                    isSearchingHospede -> R.string.tenants_empty_search_text
-                    isSelectingHospede -> R.string.tenants_empty_select_text
-                    hospedeFilterType == HospedeFilterType.ComEstadia -> R.string.tenants_upcoming_stay_empty_text
-                    hospedeFilterType == HospedeFilterType.Antigo -> R.string.tenants_old_empty_text
-                    else -> R.string.tenants_generic_empty_text
-                },
-            ),
+            text = stringResource(messageId),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier

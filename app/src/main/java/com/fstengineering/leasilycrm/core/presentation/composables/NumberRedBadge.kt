@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.home.presentation.composables
+package com.fstengineering.leasilycrm.core.presentation.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

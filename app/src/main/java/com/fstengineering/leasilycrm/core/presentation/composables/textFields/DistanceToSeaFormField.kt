@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.fields
+package com.fstengineering.leasilycrm.core.presentation.composables.textFields
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

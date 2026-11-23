@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.home.presentation.composables
+package com.fstengineering.leasilycrm.core.presentation.composables.cards
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

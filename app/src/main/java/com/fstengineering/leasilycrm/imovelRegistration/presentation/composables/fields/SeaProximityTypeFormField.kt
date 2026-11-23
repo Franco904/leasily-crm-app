@@ -18,6 +18,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximity
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimalOrNull
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioGroup
 import com.fstengineering.leasilycrm.core.presentation.composables.AppRadioOption
+import com.fstengineering.leasilycrm.core.presentation.composables.textFields.DistanceToSeaFormField
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelDraftFormUiState
 import kotlinx.collections.immutable.persistentListOf
 

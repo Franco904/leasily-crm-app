@@ -36,7 +36,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.clientes.presentation.hospedes.composables.HospedesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.HospedesEmptySection
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.OccupiedPeriodImovelSelectionList
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.StayRegistrationFormSection
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.StayRegistrationTopAppBar
@@ -363,8 +363,8 @@ fun OccupiedPeriodRegistrationScreen(
                         OccupiedPeriodRegistrationListState.SelectingTenant -> {
                             if (tenants.isEmpty()) {
                                 HospedesEmptySection(
-                                    isSearchingHospede = isSearching,
-                                    isSelectingHospede = true,
+                                    messageId = if (isSearching) R.string.tenants_empty_search_text
+                                    else R.string.tenants_empty_select_text,
                                 )
                             } else {
                                 StayTenantSelectionList(
