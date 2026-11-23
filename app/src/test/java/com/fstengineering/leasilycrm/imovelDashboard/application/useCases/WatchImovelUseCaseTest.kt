@@ -64,7 +64,7 @@ class WatchImovelUseCaseTest {
     @DisplayName("invoke")
     inner class InvokeTests {
         @Test
-        fun `Deve compor o painel com o Imóvel, o Proprietário e as datas ocupadas com o nome do Inquilino quando há Estadia no mês corrente`() =
+        fun `Deve compor o painel com o Imóvel, o Proprietário e as datas ocupadas com o nome do Hóspede quando há Estadia no mês corrente`() =
             runTest {
                 val currentMonthEstadia = periodoOcupado(id = estadiaId, tenantId = tenantId, checkIn = 12, checkOut = 15)
                 every { imovelDashboardReadDataSourceMock.watchImovel(imovel.id) } returns
@@ -115,7 +115,7 @@ class WatchImovelUseCaseTest {
         }
 
         @Test
-        fun `Deve associar cada data ocupada ao nome do seu Inquilino quando há Estadias de Inquilinos diferentes no mês corrente`() =
+        fun `Deve associar cada data ocupada ao nome do seu Hóspede quando há Estadias de Hóspedes diferentes no mês corrente`() =
             runTest {
                 val otherTenantId = tenantId + 1
                 val otherTenantName = faker.random.nextUUID()
@@ -145,7 +145,7 @@ class WatchImovelUseCaseTest {
             }
 
         @Test
-        fun `Deve compor a data ocupada sem nome de Inquilino quando o Período Ocupado é Indisponível no mês corrente`() =
+        fun `Deve compor a data ocupada sem nome de Hóspede quando o Período Ocupado é Indisponível no mês corrente`() =
             runTest {
                 val unavailablePeriod = periodoOcupado(
                     id = estadiaId, tenantId = null, checkIn = 5, checkOut = 7,
@@ -194,7 +194,7 @@ class WatchImovelUseCaseTest {
         }
 
         @Test
-        fun `Deve falhar quando a leitura do nome do Inquilino falha`() = runTest {
+        fun `Deve falhar quando a leitura do nome do Hóspede falha`() = runTest {
             val estadia = periodoOcupado(id = estadiaId, tenantId = tenantId, checkIn = 12, checkOut = 15)
             every { imovelDashboardReadDataSourceMock.watchImovel(imovel.id) } returns
                     flowOf(AppResult.Success(imovel))
