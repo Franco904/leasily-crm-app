@@ -86,9 +86,9 @@ class CredentialManagerAdapterImpl(
         }
     }
 
-    // O Credential Manager não sinaliza falta de internet com exceção própria: sem conexão, qualquer
-    // falha que não seja cancelamento pelo Corretor é atribuída a ela.
     private fun classifyGetCredentialFailure(exception: Exception): ApplicationError {
+        // O Credential Manager não sinaliza falta de internet com exceção própria: sem conexão,
+        // qualquer falha que não seja cancelamento pelo Corretor é atribuída a ela.
         val error = exception.toApplicationError()
         if (error == ApplicationError.UserCancellation) return error
 

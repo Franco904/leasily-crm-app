@@ -18,7 +18,6 @@ class DashboardViewModel(
 ) : ViewModel() {
     private var isInitialized = false
 
-    // Leads CRM metrics
     private val _generatedLeadsPerMonth =
         MutableStateFlow<ImmutableMap<CalendarMonthYear, Int>>(persistentMapOf())
     val generatedLeadsPerMonth = _generatedLeadsPerMonth.asStateFlow()
@@ -32,7 +31,6 @@ class DashboardViewModel(
         MutableStateFlow<ImmutableMap<String?, Double>>(persistentMapOf())
     val leadContactChannelDistribution = _leadContactChannelDistribution.asStateFlow()
 
-    // Stay bookings CRM metrics
     private val _newStayBookingsPerMonth =
         MutableStateFlow<ImmutableMap<CalendarMonthYear, Int>>(persistentMapOf())
     val newStayBookingsPerMonth = _newStayBookingsPerMonth.asStateFlow()
@@ -47,7 +45,6 @@ class DashboardViewModel(
     val newStayBookingsPerTop3NeighborhoodsPerMonth =
         _newStayBookingsPerTop3NeighborhoodsPerMonth.asStateFlow()
 
-    // Commission invoice CRM metrics
     private val _commissionInvoicePerMonth =
         MutableStateFlow<ImmutableMap<CalendarMonthYear, AppDecimal>>(persistentMapOf())
     val commissionInvoicePerMonth = _commissionInvoicePerMonth.asStateFlow()
