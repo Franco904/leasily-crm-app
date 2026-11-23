@@ -30,14 +30,14 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularPr
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent.ShowSnackBar
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.profile.presentation.composables.ConfirmSignOutUserDialog
 import com.fstengineering.leasilycrm.profile.presentation.composables.EditCreciNumberDialog
 import com.fstengineering.leasilycrm.profile.presentation.composables.ProfileDataSection
 import com.fstengineering.leasilycrm.profile.presentation.composables.ProfileScreenTopBar
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
-import com.fstengineering.leasilycrm.signin.presentation.models.strategies.SignInErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.signin.presentation.utils.strategies.SignInErrorBottomSheetDataPropertiesStrategy
 
 @Composable
 fun ProfileScreen(

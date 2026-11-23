@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,12 +52,12 @@ fun ProprietarioDetailsTopAppBar(
         actions = {
             AppMoreOptionsIconDropdownMenu(
                 options = persistentListOf(
-                    MoreOptionsMenuOption(
+                    MoreOptionsMenuOptionUiState(
                         icon = Icons.Outlined.Edit,
                         text = stringResource(R.string.edit_action_button_text),
                         onClick = onEditProprietario,
                     ),
-                    MoreOptionsMenuOption(
+                    MoreOptionsMenuOptionUiState(
                         icon = Icons.Outlined.Delete,
                         text = stringResource(R.string.delete_action_button_text),
                         onClick = onDeleteProprietario,

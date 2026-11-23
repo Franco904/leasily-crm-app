@@ -29,7 +29,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOption
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryIconButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppTonalIconButton
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -122,14 +122,14 @@ fun ClienteCard(
                 AppMoreOptionsIconDropdownMenu(
                     options = buildList {
                         add(
-                            MoreOptionsMenuOption(
+                            MoreOptionsMenuOptionUiState(
                                 icon = Icons.Outlined.Edit,
                                 text = stringResource(R.string.edit_action_button_text),
                                 onClick = onEditCliente,
                             ),
                         )
                         add(
-                            MoreOptionsMenuOption(
+                            MoreOptionsMenuOptionUiState(
                                 icon = Icons.Outlined.Delete,
                                 text = stringResource(R.string.delete_action_button_text),
                                 onClick = onDeleteCliente,

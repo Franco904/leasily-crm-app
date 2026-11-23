@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -79,12 +79,12 @@ fun ImovelPriceCard(
                         Spacer(modifier = Modifier.width(24.dp))
                         AppMoreOptionsIconDropdownMenu(
                             options = persistentListOf(
-                                MoreOptionsMenuOption(
+                                MoreOptionsMenuOptionUiState(
                                     icon = Icons.Outlined.Edit,
                                     text = stringResource(R.string.edit_action_button_text),
                                     onClick = { onEditImovelPrice(price) },
                                 ),
-                                MoreOptionsMenuOption(
+                                MoreOptionsMenuOptionUiState(
                                     icon = Icons.Outlined.Delete,
                                     text = stringResource(R.string.delete_action_button_text),
                                     onClick = { onDeleteImovelPrice(price) },

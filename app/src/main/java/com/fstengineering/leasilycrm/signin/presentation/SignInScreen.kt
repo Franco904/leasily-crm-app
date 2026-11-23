@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.signin.presentation.composables.SignInSection
-import com.fstengineering.leasilycrm.signin.presentation.models.strategies.SignInErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.signin.presentation.utils.strategies.SignInErrorBottomSheetDataPropertiesStrategy
 
 @Composable
 fun SignInScreen(

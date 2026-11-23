@@ -59,7 +59,7 @@ import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_IN
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.theme.customColors
 import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
@@ -379,7 +379,7 @@ fun SelectedCalendarDate(
         ) {
             AppMoreOptionsDropdownMenu(
                 options = persistentListOf(
-                    MoreOptionsMenuOption(
+                    MoreOptionsMenuOptionUiState(
                         iconDrawable = R.drawable.calendar_view,
                         text = stringResource(
                             when {

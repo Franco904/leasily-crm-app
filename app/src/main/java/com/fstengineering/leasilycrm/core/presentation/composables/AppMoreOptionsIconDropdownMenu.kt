@@ -23,12 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun AppMoreOptionsIconDropdownMenu(
-    options: ImmutableList<MoreOptionsMenuOption>,
+    options: ImmutableList<MoreOptionsMenuOptionUiState>,
     modifier: Modifier = Modifier,
 ) {
     var isMenuExpanded by remember { mutableStateOf(false) }

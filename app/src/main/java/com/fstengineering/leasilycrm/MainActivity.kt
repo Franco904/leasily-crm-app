@@ -38,7 +38,7 @@ import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.LazyWrite
 import com.fstengineering.leasilycrm.core.infra.constants.NAVIGATE_TO_STAYS_EXTRA
 import com.fstengineering.leasilycrm.core.presentation.composables.AppErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.AppSnackbarHost
-import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
+import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-                    var errorBottomSheetData: ErrorBottomSheetData? by remember { mutableStateOf(null) }
+                    var errorBottomSheetData: ErrorBottomSheetUiState? by remember { mutableStateOf(null) }
                     val sheetState = rememberModalBottomSheetState()
                     val snackBarHostState = remember { SnackbarHostState() }
 

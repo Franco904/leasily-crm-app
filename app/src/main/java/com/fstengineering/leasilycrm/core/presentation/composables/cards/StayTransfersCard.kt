@@ -22,7 +22,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.StayTransfersEmptySection
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.models.StayTransferUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.ImmutableList
@@ -132,12 +132,12 @@ fun StayTransfersCard(
                             Spacer(modifier = Modifier.width(16.dp))
                             AppMoreOptionsIconDropdownMenu(
                                 options = persistentListOf(
-                                    MoreOptionsMenuOption(
+                                    MoreOptionsMenuOptionUiState(
                                         icon = Icons.Outlined.Edit,
                                         text = stringResource(R.string.edit_action_button_text),
                                         onClick = { onEditTransfer(transfer) },
                                     ),
-                                    MoreOptionsMenuOption(
+                                    MoreOptionsMenuOptionUiState(
                                         icon = Icons.Outlined.Delete,
                                         text = stringResource(R.string.delete_action_button_text),
                                         onClick = { onDeleteTransfer(transfer) },

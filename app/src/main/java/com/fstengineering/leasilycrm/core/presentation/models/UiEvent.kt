@@ -8,5 +8,5 @@ sealed interface UiEvent {
         val action: () -> Unit,
     ) : UiEvent
 
-    data class ShowErrorBottomSheet(val error: ErrorBottomSheetData) : UiEvent
+    data class ShowErrorBottomSheet(val error: ErrorBottomSheetUiState) : UiEvent
 }

@@ -1,7 +1,7 @@
-package com.fstengineering.leasilycrm.signin.presentation.models.strategies
+package com.fstengineering.leasilycrm.signin.presentation.utils.strategies
 
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.ErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.ErrorBottomSheetDataPropertiesStrategy
 
 data object SignInErrorBottomSheetDataPropertiesStrategy : ErrorBottomSheetDataPropertiesStrategy {
     override val noInternetErrorDescription: Int get() = R.string.no_internet_error_description_sign_in

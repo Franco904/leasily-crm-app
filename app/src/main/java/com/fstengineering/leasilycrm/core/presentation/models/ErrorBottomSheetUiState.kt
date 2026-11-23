@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.core.presentation.models
 
 import android.content.Context
 
-data class ErrorBottomSheetData(
+data class ErrorBottomSheetUiState(
     val title: Int,
     val description: Int,
     val secondaryActionLabel: Int?,

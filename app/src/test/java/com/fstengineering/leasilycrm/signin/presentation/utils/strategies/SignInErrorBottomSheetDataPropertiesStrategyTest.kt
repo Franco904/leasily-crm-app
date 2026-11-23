@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.signin.presentation.models.strategies
+package com.fstengineering.leasilycrm.signin.presentation.utils.strategies
 
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError

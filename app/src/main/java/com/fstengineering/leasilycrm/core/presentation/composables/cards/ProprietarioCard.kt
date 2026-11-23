@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ProprietarioUiState
 import kotlinx.collections.immutable.persistentListOf
 
@@ -49,12 +49,12 @@ fun ProprietarioCard(
             if (hasMoreOptionsMenu) {
                 AppMoreOptionsIconDropdownMenu(
                     options = persistentListOf(
-                        MoreOptionsMenuOption(
+                        MoreOptionsMenuOptionUiState(
                             icon = Icons.Outlined.Edit,
                             text = stringResource(R.string.edit_action_button_text),
                             onClick = onEditProprietario,
                         ),
-                        MoreOptionsMenuOption(
+                        MoreOptionsMenuOptionUiState(
                             icon = Icons.Outlined.Delete,
                             text = stringResource(R.string.delete_action_button_text),
                             onClick = onDeleteProprietario,

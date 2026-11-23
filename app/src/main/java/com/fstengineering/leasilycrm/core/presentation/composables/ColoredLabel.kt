@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -103,7 +103,7 @@ fun ColoredLabel(
         ) {
             AppMoreOptionsDropdownMenu(
                 options = persistentListOf(
-                    MoreOptionsMenuOption(
+                    MoreOptionsMenuOptionUiState(
                         iconDrawable = R.drawable.calendar_view,
                         text = stringResource(R.string.view_property_stay_action_button_text),
                         onClick = onClick,

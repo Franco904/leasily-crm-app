@@ -2,7 +2,7 @@ package com.fstengineering.leasilycrm.core.presentation.models
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
-data class MoreOptionsMenuOption(
+data class MoreOptionsMenuOptionUiState(
     val icon: ImageVector? = null,
     val iconDrawable: Int? = null,
     val text: String? = null,
