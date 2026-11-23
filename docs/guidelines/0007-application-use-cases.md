@@ -36,10 +36,10 @@ Convenções para a camada `application/`: orquestração da intenção de negó
 
 ## Application Service
 
-- **Application Service** é a categoria geral: orquestrador sem estado em
+- **Application Service** é a categoria geral: orquestrador em
   `application/` que coordena `domain/` + `infra/` para atender a uma operação da
   aplicação. Mesmas regras do UseCase (classe concreta sem interface,
-  coroutine-native, não valida invariante de negócio).
+  coroutine-native, não valida invariante de negócio), exceto que pode ter estado.
 - **UseCase é a forma especializada e preferida** — cobre exatamente uma intenção
   de um ator ("o profissional quer X"). Se a operação é uma intenção única, é UseCase.
 - Use o sufixo **`Service`** (`<TermoDeDomínio>Service`) quando a orquestração

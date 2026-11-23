@@ -22,8 +22,8 @@ tratamento em todos os chamadores.
 // final desejado já valha
 suspend fun deleteEstadia(estadiaId: String): AppResult<Unit>
 
-// Depois: idempotente — devolve Success sempre que "Estadia não existe" ao final, tenha existido
-// antes ou não
+// Depois: idempotente — "Estadia não existe" ao final, tenha existido antes ou não. Só uma falha de
+// infra volta como erro (passo 3)
 suspend fun deleteEstadia(estadiaId: String): AppResult<Unit>
 ```
 
@@ -58,6 +58,10 @@ suspend fun getImovelFotos(imovelId: String): List<ImovelFotoReadModel>
 Faltando qualquer item, não é mascaramento — é **engolir o erro**: o chamador acredita que a operação
 foi cumprida quando não foi. Sinais típicos: `(result as? AppResult.Success)?.data ?: <valor>`,
 `onError = { <valor> }` ou `catch { log(e) }` sem degradação declarada na interface.
+
+> **Linha do banco com campo obrigatório nulo** é dado vindo de sistema externo, não invariante
+> violado (passo 4): o mapper de `infra/` retorna `null` e o DataSource descarta (`.mapNotNull`) ou
+> degrada o item. Isso é mascaramento — vale só com (b) e (c).
 
 ### 3. Agregar
 
@@ -103,6 +107,13 @@ suspend fun getEstadia(estadiaId: String): AppResult<EstadiaOrm?> =
     onDatabase { queryEstadia(estadiaId) }
 ```
 
+O protocolo da borda (relançar `CancellationException` e as fatais do passo 4, registrar no
+`ExceptionLogger`, converter) existe **uma vez só**, em `BoundaryUtils.kt`. `catch (e: Exception)`
+genérico mora só lá; fora dele, capture o subtipo específico da biblioteca ou use um wrapper. O
+wrapper escolhe o degrau: agregar devolve `AppResult.Error(ApplicationError.Unknown)` (este passo);
+mascarar registra e devolve o valor de fallback, com a degradação declarada no KDoc de interface
+(passo 2).
+
 #### Princípio: Não distinga o que nenhum chamador distingue
 
 Cada tipo de erro é parte da interface. Uma hierarquia (`Timeout` / `NoInternet` /
@@ -137,6 +148,10 @@ Quando não há recuperação significativa, não trate.
   a conversa com o mundo externo (e mapeamento mecânico do que voltou). Lógica de domínio —
   validação, cálculo, decisão — dentro dele teria seus bugs convertidos em `Unknown` e escondidos do
   monitoramento de estabilidade.
+- `check`/`require` sobre o dado que acabou de voltar do mundo externo pode ficar dentro do `block`
+  quando o crash não resolveria o problema (reiniciar o processo não corrige o dado ou o ambiente que
+  causou a violação): o agregador o converte em erro (passo 3). Quando o crash resolve (ex.:
+  `OutOfMemoryError`), nada o captura e o processo cai (passo 4).
 
 ```kotlin
 // BOM: borda só fala com o mundo externo; agregado (e seus check/require) fora dela
@@ -182,9 +197,10 @@ erro não aparece na assinatura; quem precisa distinguir ramifica sobre o valor 
 (`BaseError` é `sealed`, então o `when` é exaustivo; liste os subtipos em vez de usar `else`,
 para o compilador avisar quando surgir um novo). A UI deve tratar todo erro de infra igual (e.g. `BaseError.toBottomSheetData`).
 
-`<Contexto>Error` herda de `DomainError` (regra de domínio) ou `ApplicationError` (falha de infra),
-ambos `BaseError`, e pode assumir três formas — escolha pela necessidade do chamador, não por padrão
-fixo:
+Os erros vivem num catálogo central em `core/domain/utils/` (kernel,
+[ADR-0001](../adr/0001-core-shared-kernel.md)): caso novo entra como `enum` aninhado em
+`DomainError` (regra de domínio) ou como membro de `ApplicationError` (falha de infra), ambos
+`BaseError`, e pode assumir três formas — escolha pela necessidade do chamador, não por padrão fixo:
 
 | Forma                         | Quando usar                                                                                 | Exemplo                                       |
 |-------------------------------|---------------------------------------------------------------------------------------------|-----------------------------------------------|
