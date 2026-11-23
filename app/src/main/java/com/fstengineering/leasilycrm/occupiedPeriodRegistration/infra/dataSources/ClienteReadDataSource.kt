@@ -13,7 +13,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.projection
 abstract class ClienteReadDataSource {
     /** Busca o Cliente não excluído. */
     suspend fun getCliente(clienteId: Long): AppResult<TenantReadModel> =
-        onDatabase { findCliente(clienteId).toTenantReadModel() }
+        onDatabase { selectCliente(clienteId).toTenantReadModel() }
 
     /**
      * Lista, em ordem alfabética, os Clientes não excluídos sem Estadia ativa cujo nome ou cidade
@@ -29,7 +29,7 @@ abstract class ClienteReadDataSource {
     }
 
     @Query("SELECT id, name, city FROM lead_tenants WHERE id = :clienteId AND is_deleted = 0")
-    protected abstract suspend fun findCliente(clienteId: Long): ClienteProjection
+    protected abstract suspend fun selectCliente(clienteId: Long): ClienteProjection
 
     @Query(
         """

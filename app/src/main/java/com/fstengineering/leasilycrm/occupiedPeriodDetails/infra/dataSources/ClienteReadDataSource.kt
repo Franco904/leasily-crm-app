@@ -13,10 +13,10 @@ abstract class ClienteReadDataSource {
     /** Busca o Cliente não excluído. */
     suspend fun getCliente(clienteId: Long): AppResult<TenantReadModel> =
         onDatabase {
-            val projection = findCliente(clienteId)
+            val projection = selectCliente(clienteId)
             TenantReadModel(id = projection.id, name = projection.name, city = projection.city)
         }
 
     @Query("SELECT id, name, city FROM lead_tenants WHERE id = :clienteId AND is_deleted = 0")
-    protected abstract suspend fun findCliente(clienteId: Long): ClienteProjection
+    protected abstract suspend fun selectCliente(clienteId: Long): ClienteProjection
 }
