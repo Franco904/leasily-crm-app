@@ -76,8 +76,7 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   campo `val`, nenhum atributo `var` nem tipo mutável** (`ArrayList`,
   `mutableStateOf` embutido no state, objeto com `var`). Tipo com `var` é instável
   para o Compose compiler pela mesma razão das coleções — quebra a *skippability* e
-  o `equals` estrutural que dirige a recomposição. Exceção para campos criados visando integração
-  com Views legadas – ver "Interoperabilidade com View"; ter parcimônia na adoção.
+  o `equals` estrutural que dirige a recomposição.
 
 - **Atualização de estado via `.update { }`, não `.value = `** — no par `MutableStateFlow` privado.
   `update` aplica a transformação de forma atômica sobre o valor vigente; `.value =` sobrescreve sem
