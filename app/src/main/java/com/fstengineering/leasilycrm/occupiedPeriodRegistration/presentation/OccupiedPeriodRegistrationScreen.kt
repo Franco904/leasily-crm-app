@@ -326,7 +326,7 @@ fun OccupiedPeriodRegistrationScreen(
                                     scrollToFieldFlow = scrollToFieldFlow,
                                     modifier = Modifier
                                         .padding(innerPadding)
-                                        .padding(horizontal = 24.dp),
+                                        .padding(horizontal = 24.dp)
                                 )
                             }
                         }
@@ -355,7 +355,7 @@ fun OccupiedPeriodRegistrationScreen(
                                     },
                                     modifier = Modifier
                                         .padding(innerPadding)
-                                        .padding(horizontal = 24.dp),
+                                        .padding(horizontal = 24.dp)
                                 )
                             }
                         }
@@ -380,7 +380,7 @@ fun OccupiedPeriodRegistrationScreen(
                                     },
                                     modifier = Modifier
                                         .padding(innerPadding)
-                                        .padding(horizontal = 24.dp),
+                                        .padding(horizontal = 24.dp)
                                 )
                             }
                         }

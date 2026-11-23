@@ -168,7 +168,7 @@ fun ImovelRegistrationFormSectionStep1(
                         fieldsCoords = fieldsCoords.mutate { map ->
                             map[ImovelStep1Field.Neighborhood] = coords
                         }
-                    },
+                    }
             )
             Spacer(modifier = Modifier.height(28.dp))
             StreetAddressFormField(

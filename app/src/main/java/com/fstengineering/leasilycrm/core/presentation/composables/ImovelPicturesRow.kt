@@ -79,7 +79,7 @@ private fun ImovelPictureItem(
                 shape = MaterialTheme.shapes.small,
                 onClick = onClick,
                 modifier = modifier
-                    .size(96.dp),
+                    .size(96.dp)
             ) {
                 AsyncImage(
                     model = picture.uri,

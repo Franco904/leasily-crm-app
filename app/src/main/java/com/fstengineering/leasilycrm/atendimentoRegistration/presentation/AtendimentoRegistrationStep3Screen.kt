@@ -193,7 +193,7 @@ fun AtendimentoRegistrationStep3Screen(
                             parentViewModel.saveAtendimento()
                         },
                         modifier = Modifier
-                            .padding(innerPadding),
+                            .padding(innerPadding)
                     )
                 }
             }

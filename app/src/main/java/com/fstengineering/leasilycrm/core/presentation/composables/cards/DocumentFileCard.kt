@@ -62,7 +62,7 @@ fun DocumentFileCard(
             IconButton(
                 onClick = onAction,
                 modifier = Modifier
-                    .size(24.dp),
+                    .size(24.dp)
             ) {
                 Icon(
                     imageVector = actionIcon,

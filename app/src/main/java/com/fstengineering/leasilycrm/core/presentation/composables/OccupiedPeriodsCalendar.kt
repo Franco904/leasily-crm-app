@@ -375,7 +375,7 @@ fun SelectedCalendarDate(
             contentAlignment = Alignment.TopStart,
             modifier = Modifier
                 .fillMaxSize()
-                .zIndex(10f),
+                .zIndex(10f)
         ) {
             AppMoreOptionsDropdownMenu(
                 options = persistentListOf(
@@ -500,31 +500,6 @@ fun OccupiedDateCircle(
     }
 }
 
-fun DrawScope.occupiedDateSemiCircleFirstHalf(
-    firstHalfColor: Color,
-) {
-    // arc 0° angle starts at 3 o'clock
-    drawArc(
-        color = firstHalfColor,
-        startAngle = 90f,
-        sweepAngle = 180f,
-        useCenter = true,
-        style = Fill,
-    )
-}
-
-fun DrawScope.occupiedDateSemiCircleSecondHalf(
-    secondHalfColor: Color,
-) {
-    drawArc(
-        color = secondHalfColor,
-        startAngle = 270f,
-        sweepAngle = 180f,
-        useCenter = true,
-        style = Fill,
-    )
-}
-
 @Composable
 fun UnavailablePeriodDateCircle(
     sizeDp: Dp,
@@ -557,60 +532,6 @@ fun UnavailablePeriodDateCircle(
             )
         }
     }
-}
-
-fun DrawScope.unavailablePeriodDateSemiCircleFirstHalf(
-    outlineVariantColor: Color,
-) {
-    val radius = size.minDimension / 2f
-    val center = Offset(size.width / 2f, size.height / 2f)
-    val strokeWidth = 6f
-
-    // Outer semicircle
-    drawArc(
-        color = outlineVariantColor,
-        startAngle = 90f,
-        sweepAngle = 180f,
-        useCenter = true,
-        style = Stroke(width = strokeWidth)
-    )
-
-    // Diagonal slash
-    val offset = radius * 0.7f
-    drawLine(
-        color = outlineVariantColor,
-        start = center,
-        end = Offset(center.x - offset, center.y + offset),
-        strokeWidth = strokeWidth,
-        cap = StrokeCap.Round,
-    )
-}
-
-fun DrawScope.unavailablePeriodDateSemiCircleSecondHalf(
-    outlineVariantColor: Color,
-) {
-    val radius = size.minDimension / 2f
-    val center = Offset(size.width / 2f, size.height / 2f)
-    val strokeWidth = 6f
-
-    // Outer semicircle
-    drawArc(
-        color = outlineVariantColor,
-        startAngle = 270f,
-        sweepAngle = 180f,
-        useCenter = true,
-        style = Stroke(width = strokeWidth)
-    )
-
-    // Diagonal slash
-    val offset = radius * 0.7f
-    drawLine(
-        color = outlineVariantColor,
-        start = Offset(center.x + offset, center.y - offset),
-        end = center,
-        strokeWidth = strokeWidth,
-        cap = StrokeCap.Round,
-    )
 }
 
 @Preview
@@ -793,4 +714,83 @@ fun OccupiedPeriodsCalendarPreview(
             modifier = modifier,
         )
     }
+}
+
+private fun DrawScope.occupiedDateSemiCircleFirstHalf(
+    firstHalfColor: Color,
+) {
+    // arc 0° angle starts at 3 o'clock
+    drawArc(
+        color = firstHalfColor,
+        startAngle = 90f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Fill,
+    )
+}
+
+private fun DrawScope.occupiedDateSemiCircleSecondHalf(
+    secondHalfColor: Color,
+) {
+    drawArc(
+        color = secondHalfColor,
+        startAngle = 270f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Fill,
+    )
+}
+
+private fun DrawScope.unavailablePeriodDateSemiCircleFirstHalf(
+    outlineVariantColor: Color,
+) {
+    val radius = size.minDimension / 2f
+    val center = Offset(size.width / 2f, size.height / 2f)
+    val strokeWidth = 6f
+
+    // Outer semicircle
+    drawArc(
+        color = outlineVariantColor,
+        startAngle = 90f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Stroke(width = strokeWidth)
+    )
+
+    // Diagonal slash
+    val offset = radius * 0.7f
+    drawLine(
+        color = outlineVariantColor,
+        start = center,
+        end = Offset(center.x - offset, center.y + offset),
+        strokeWidth = strokeWidth,
+        cap = StrokeCap.Round,
+    )
+}
+
+private fun DrawScope.unavailablePeriodDateSemiCircleSecondHalf(
+    outlineVariantColor: Color,
+) {
+    val radius = size.minDimension / 2f
+    val center = Offset(size.width / 2f, size.height / 2f)
+    val strokeWidth = 6f
+
+    // Outer semicircle
+    drawArc(
+        color = outlineVariantColor,
+        startAngle = 270f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Stroke(width = strokeWidth)
+    )
+
+    // Diagonal slash
+    val offset = radius * 0.7f
+    drawLine(
+        color = outlineVariantColor,
+        start = Offset(center.x + offset, center.y - offset),
+        end = center,
+        strokeWidth = strokeWidth,
+        cap = StrokeCap.Round,
+    )
 }

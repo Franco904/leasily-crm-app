@@ -99,7 +99,7 @@ fun ColoredLabel(
             contentAlignment = Alignment.TopStart,
             modifier = Modifier
                 .fillMaxSize()
-                .zIndex(10f),
+                .zIndex(10f)
         ) {
             AppMoreOptionsDropdownMenu(
                 options = persistentListOf(

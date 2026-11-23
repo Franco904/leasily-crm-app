@@ -114,34 +114,6 @@ fun FormTextField(
                 keyboardType = keyboardType,
             ),
             interactionSource = interactionSource,
-            modifier = modifier
-                .fillMaxWidth()
-                .onFocusChanged { state ->
-                    if (wasFocused && !state.isFocused) onFocusLost?.invoke()
-                    wasFocused = state.isFocused
-                }
-                .then(
-                    fieldFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier
-                )
-                .then(
-                    if (!isEnabled) {
-                        Modifier.pointerInput(Unit) {
-                            detectTapGestures { onTap?.invoke() }
-                        }
-                    } else Modifier
-                )
-                .then(
-                    if (!isPlaceholder) {
-                        // all children accessibility nodes (label, input, supporting text) are merged into an unique semantic node
-                        Modifier
-                            .semantics(mergeDescendants = true) {}
-                            .padding(top = with(density) { 8.sp.toDp() }) // for floating label only
-                    } else Modifier
-                )
-                .defaultMinSize(
-                    minWidth = OutlinedTextFieldDefaults.MinWidth,
-                    minHeight = OutlinedTextFieldDefaults.MinHeight,
-                ),
             decorationBox = { innerTextField ->
                 OutlinedTextFieldDefaults.DecorationBox(
                     value = value,
@@ -225,6 +197,34 @@ fun FormTextField(
                     },
                 )
             },
+            modifier = modifier
+                .fillMaxWidth()
+                .onFocusChanged { state ->
+                    if (wasFocused && !state.isFocused) onFocusLost?.invoke()
+                    wasFocused = state.isFocused
+                }
+                .then(
+                    fieldFocusRequester?.let { Modifier.focusRequester(it) } ?: Modifier
+                )
+                .then(
+                    if (!isEnabled) {
+                        Modifier.pointerInput(Unit) {
+                            detectTapGestures { onTap?.invoke() }
+                        }
+                    } else Modifier
+                )
+                .then(
+                    if (!isPlaceholder) {
+                        // all children accessibility nodes (label, input, supporting text) are merged into an unique semantic node
+                        Modifier
+                            .semantics(mergeDescendants = true) {}
+                            .padding(top = with(density) { 8.sp.toDp() }) // for floating label only
+                    } else Modifier
+                )
+                .defaultMinSize(
+                    minWidth = OutlinedTextFieldDefaults.MinWidth,
+                    minHeight = OutlinedTextFieldDefaults.MinHeight,
+                )
         )
     }
 }

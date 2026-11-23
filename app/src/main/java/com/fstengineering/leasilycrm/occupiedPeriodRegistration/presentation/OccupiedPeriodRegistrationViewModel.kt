@@ -125,8 +125,8 @@ class OccupiedPeriodRegistrationViewModel(
             }
 
             if (occupiedPeriodId == null) {
-                if (imovelId != null) getImovelToAutofill(imovelId)
-                if (tenantId != null) getTenantToAutofill(tenantId)
+                if (imovelId != null) loadImovelToAutofill(imovelId)
+                if (tenantId != null) loadTenantToAutofill(tenantId)
             }
 
             watchImovelSearchInput(occupiedPeriodId)
@@ -134,7 +134,7 @@ class OccupiedPeriodRegistrationViewModel(
         }
     }
 
-    private fun getImovelToAutofill(imovelId: Long) {
+    private fun loadImovelToAutofill(imovelId: Long) {
         viewModelScope.launch {
             imovelQueryRepository.getById(imovelId)
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
@@ -153,7 +153,7 @@ class OccupiedPeriodRegistrationViewModel(
         }
     }
 
-    private fun getTenantToAutofill(tenantId: Long) {
+    private fun loadTenantToAutofill(tenantId: Long) {
         viewModelScope.launch {
             tenantQueryRepository.getById(tenantId)
                 .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }

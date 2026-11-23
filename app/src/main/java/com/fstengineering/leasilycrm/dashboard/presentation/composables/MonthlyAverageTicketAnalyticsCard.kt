@@ -94,14 +94,14 @@ fun MonthlyAverageTicketAnalyticsCard(
                     rows = rows,
                     height = 520.dp,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
+                        .align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(32.dp))
                 ColoredLabel(
                     color = deepPurple,
                     label = stringResource(R.string.dashboard_average_ticket_body_text),
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
+                        .align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
