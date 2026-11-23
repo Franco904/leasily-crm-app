@@ -4,6 +4,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelId
+import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeEstadia
+import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeAtendimento
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeCliente
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +63,30 @@ class AtendimentoSharedWriteDataSourceTest : IntegrationTest() {
             isAtendimentoFinished(otherClienteId) shouldBeEqualTo false
         }
 
+    // region delete
+
+    @Test
+    fun deveVoltarParaHospedeAntigoQuandoAtendimentoEhExcluido(): Unit =
+        runBlocking(Dispatchers.Default) {
+            val clienteId = db.saveFakeCliente()
+            db.insertFakeEstadia(clienteId, db.saveFakeImovelId(), StayStatus.CheckOutDone)
+            val atendimentoId = db.saveFakeAtendimento(clienteId)
+            isLead(clienteId) shouldBeEqualTo true
+
+            sut.delete(atendimentoId).shouldBeInstanceOf<AppResult.Success<*>>()
+
+            isLead(clienteId) shouldBeEqualTo false
+            db.atendimentoRegistrationReadDataSource().getAtendimento(atendimentoId)
+                .shouldBeInstanceOf<AppResult.Error>()
+        }
+
+    // endregion
+
     private suspend fun isAtendimentoFinished(clienteId: Long): Boolean =
         (db.clienteDetailsReadDataSource().watchCliente(clienteId).first() as AppResult.Success)
             .data!!.atendimentos.single().isFinished
+
+    private suspend fun isLead(clienteId: Long): Boolean? =
+        (db.clienteDetailsReadDataSource().watchCliente(clienteId).first() as AppResult.Success)
+            .data?.isLead
 }

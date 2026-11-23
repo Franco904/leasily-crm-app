@@ -67,7 +67,7 @@ class AtendimentoRegistrationReadDataSourceTest : IntegrationTest() {
     fun deveFalharAoBuscarAtendimentoQuandoAtendimentoFoiExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val atendimentoId = db.saveFakeAtendimento(db.saveFakeCliente())
-            db.atendimentoWriteDataSource().delete(atendimentoId)
+            db.atendimentoSharedWriteDataSource().delete(atendimentoId)
                 .shouldBeInstanceOf<AppResult.Success<*>>()
 
             sut.getAtendimento(atendimentoId).shouldBeInstanceOf<AppResult.Error>()

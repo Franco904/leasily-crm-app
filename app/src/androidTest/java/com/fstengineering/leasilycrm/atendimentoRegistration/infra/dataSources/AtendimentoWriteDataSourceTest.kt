@@ -101,25 +101,6 @@ class AtendimentoWriteDataSourceTest : IntegrationTest() {
 
     // endregion
 
-    // region delete
-
-    @Test
-    fun deveVoltarParaHospedeAntigoQuandoAtendimentoEhExcluido(): Unit =
-        runBlocking(Dispatchers.Default) {
-            val clienteId = db.saveFakeCliente()
-            db.insertFakeEstadia(clienteId, db.saveFakeImovelId(), StayStatus.CheckOutDone)
-            val atendimentoId = db.saveFakeAtendimento(clienteId)
-            isLead(clienteId) shouldBeEqualTo true
-
-            sut.delete(atendimentoId).shouldBeInstanceOf<AppResult.Success<*>>()
-
-            isLead(clienteId) shouldBeEqualTo false
-            db.atendimentoRegistrationReadDataSource().getAtendimento(atendimentoId)
-                .shouldBeInstanceOf<AppResult.Error>()
-        }
-
-    // endregion
-
     private suspend fun getAtendimento(atendimentoId: Long): AtendimentoReadModel =
         db.atendimentoRegistrationReadDataSource().getAtendimento(atendimentoId)
             .shouldBeInstanceOf<AppResult.Success<AtendimentoReadModel>>().data

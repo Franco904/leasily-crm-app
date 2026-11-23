@@ -99,7 +99,7 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
             val clienteId = db.saveFakeCliente()
             val atendimentoId = db.saveFakeAtendimento(clienteId, isFinished = false)
 
-            db.atendimentoWriteDataSource().delete(atendimentoId)
+            db.atendimentoSharedWriteDataSource().delete(atendimentoId)
                 .shouldBeInstanceOf<AppResult.Success<*>>()
 
             watchCliente(clienteId).atendimentos shouldBeEqualTo emptyList()

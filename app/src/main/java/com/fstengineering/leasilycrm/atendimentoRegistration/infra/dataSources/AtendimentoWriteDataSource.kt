@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources
 
 import androidx.room.Dao
-import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.fstengineering.leasilycrm.atendimentoRegistration.domain.entities.Atendimento
@@ -29,10 +28,6 @@ abstract class AtendimentoWriteDataSource : KoinComponent {
      */
     suspend fun save(atendimento: Atendimento): AppResult<Unit> =
         onDatabase { saveInTransaction(atendimento) }
-
-    /** Exclui o Atendimento, que deixa de contar como procura ativa do Cliente. */
-    suspend fun delete(atendimentoId: Long): AppResult<Unit> =
-        onDatabase { markAsDeleted(atendimentoId) }
 
     @Transaction
     protected open suspend fun saveInTransaction(atendimento: Atendimento) {
@@ -79,7 +74,4 @@ abstract class AtendimentoWriteDataSource : KoinComponent {
 
     @Upsert
     protected abstract suspend fun upsert(crossRef: AtendimentoImovelEnviadoCrossRefOrm): Long
-
-    @Query("UPDATE assistances SET is_deleted = 1, is_finished = 1 WHERE id = :atendimentoId")
-    protected abstract suspend fun markAsDeleted(atendimentoId: Long)
 }

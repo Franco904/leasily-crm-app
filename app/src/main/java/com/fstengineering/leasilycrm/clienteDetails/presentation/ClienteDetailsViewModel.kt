@@ -3,7 +3,6 @@ package com.fstengineering.leasilycrm.clienteDetails.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.Destinations
-import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoWriteDataSource
 import com.fstengineering.leasilycrm.clienteDetails.infra.dataSources.ClienteDetailsReadDataSource
 import com.fstengineering.leasilycrm.clienteDetails.presentation.mappers.toClienteDetailsUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
@@ -11,6 +10,7 @@ import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.Clien
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.AtendimentoSharedWriteDataSource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,7 @@ class ClienteDetailsViewModel(
     private val route: Destinations.ClienteDetails,
     private val clienteDetailsReadDataSource: ClienteDetailsReadDataSource,
     private val clienteWriteDataSource: ClienteWriteDataSource,
-    private val atendimentoWriteDataSource: AtendimentoWriteDataSource,
+    private val atendimentoSharedWriteDataSource: AtendimentoSharedWriteDataSource,
 ) : ViewModel() {
     private var isLoaded = false
 
@@ -81,7 +81,7 @@ class ClienteDetailsViewModel(
 
     fun deleteCurrentAtendimento(atendimentoId: Long) {
         viewModelScope.launch {
-            atendimentoWriteDataSource.delete(atendimentoId)
+            atendimentoSharedWriteDataSource.delete(atendimentoId)
                 .onError { error ->
                     _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(error))
 
