@@ -15,8 +15,9 @@ Aplica-se a todos os níveis de teste neste projeto: unitário (`app/src/test/`)
   template `"Deve [resultado] quando [ação], dado que [contexto opcional]"`.
 - `androidTest/` (JUnit 4): camelCase `deve<Resultado>Quando<Condição>`, sem backtick
   (`deveSalvarEstadiaQuandoDadosValidos`); `Quando` é obrigatório, como no template de `test/`.
-  **Exceção obrigatória**: o nome de método com espaço em backtick é rejeitado pelo D8 em
-  `minSdk` < 30, e o do projeto é 29. Vale mesmo para teste com Compose.
+  **Exceção obrigatória**: o formato com espaço em backtick gera nome de método/classe sintética
+  com espaço, rejeitado pelo D8 no `minSdk` 29 do projeto (DEX < versão 040). Não usar backtick
+  com espaço em `app/src/androidTest/` mesmo que o teste envolva Compose.
 - Basear-se em CAs da especificação quando fornecidos.
 - **Proibido mencionar nomes de tipos ou valores de implementação nas descrições** — não citar enums internos, estados internos ou nomes de classes de implementação. Use o termo de negócio.
 
