@@ -1,9 +1,7 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.preferences.plain
 
 import androidx.datastore.core.Serializer
-import com.fstengineering.leasilycrm.core.infra.adapters.ExceptionLogger
-import com.fstengineering.leasilycrm.core.infra.utils.isFatal
-import kotlinx.coroutines.CancellationException
+import com.fstengineering.leasilycrm.core.infra.utils.onSerializationRead
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -23,20 +21,17 @@ object PlainPreferencesSerializer : Serializer<PlainPreferences> {
         }
     }
 
-    /** Degrada para [defaultValue] quando o arquivo não pode ser lido/desserializado. */
+    /**
+     * Arquivo que não pode ser lido/desserializado vira `CorruptionException`; o `corruptionHandler`
+     * do DataStore o substitui por [defaultValue].
+     */
     override suspend fun readFrom(input: InputStream): PlainPreferences {
-        return try {
+        return onSerializationRead {
             withContext(Dispatchers.IO) {
                 input.use {
                     Json.decodeFromString<PlainPreferences>(it.readBytes().decodeToString())
                 }
             }
-        } catch (cancellation: CancellationException) {
-            throw cancellation
-        } catch (e: Exception) {
-            if (e.isFatal()) throw e
-            ExceptionLogger.log(e)
-            defaultValue
         }
     }
 }

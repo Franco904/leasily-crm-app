@@ -11,10 +11,10 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.infra.utils.CryptoUtils
+import com.fstengineering.leasilycrm.core.infra.utils.onBoundary
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toApplicationError
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import io.ktor.utils.io.CancellationException
 
 class CredentialManagerAdapterImpl(
     private val connectivityAdapter: ConnectivityAdapter,
@@ -58,7 +58,7 @@ class CredentialManagerAdapterImpl(
             .addCredentialOption(googleIdOption)
             .build()
 
-        try {
+        val idToken = onBoundary(toError = { classifyGetCredentialFailure(it) }) {
             val result = credentialManager.getCredential(
                 context = activityContext,
                 request = credentialRequest,
@@ -68,22 +68,22 @@ class CredentialManagerAdapterImpl(
             val isSupportedCredentialType = credential is CustomCredential
                     && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 
-            if (!isSupportedCredentialType) {
+            if (isSupportedCredentialType) {
+                GoogleIdTokenCredential.createFrom(credential.data).idToken
+            } else {
                 if (BuildConfig.DEBUG) Log.e(TAG, "Unsupported credential type: ${credential.type}")
 
-                return AppResult.Error(error = ApplicationError.Unknown)
+                null
             }
-
-            val googleIdTokenCredential = GoogleIdTokenCredential
-                .createFrom(credential.data)
-
-            return AppResult.Success(data = googleIdTokenCredential.idToken)
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            if (BuildConfig.DEBUG) e.printStackTrace()
-
-            return AppResult.Error(error = classifyGetCredentialFailure(e))
+        }.let { result ->
+            when (result) {
+                is AppResult.Error -> return result
+                is AppResult.Success -> result.data
+            }
         }
+
+        return if (idToken != null) AppResult.Success(data = idToken)
+        else AppResult.Error(error = ApplicationError.Unknown)
     }
 
     private fun classifyGetCredentialFailure(exception: Exception): ApplicationError {
@@ -101,15 +101,8 @@ class CredentialManagerAdapterImpl(
         val credentialManager = CredentialManager.create(activityContext)
         val clearCredentialStateRequest = ClearCredentialStateRequest()
 
-        try {
+        return onBoundary(toError = { it.toApplicationError() }) {
             credentialManager.clearCredentialState(clearCredentialStateRequest)
-
-            return AppResult.Success(data = Unit)
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            if (BuildConfig.DEBUG) e.printStackTrace()
-
-            return AppResult.Error(error = e.toApplicationError())
         }
     }
 

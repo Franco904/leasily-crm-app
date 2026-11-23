@@ -2,13 +2,11 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypt
 
 import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStore
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.infra.adapters.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
-import com.fstengineering.leasilycrm.core.infra.utils.isFatal
-import io.ktor.utils.io.CancellationException
+import com.fstengineering.leasilycrm.core.infra.utils.onBoundary
 import kotlinx.coroutines.flow.Flow
 
 class EncryptedPreferencesDataSource(
@@ -17,33 +15,22 @@ class EncryptedPreferencesDataSource(
     override suspend fun savePreferences(
         onPreferencesFile: (EncryptedPreferences) -> EncryptedPreferences,
     ): AppResult<Unit> {
-        try {
+        return onBoundary {
             dataStore.updateData { preferences -> onPreferencesFile(preferences) }
 
-            return AppResult.Success(data = Unit)
-        } catch (e: Exception) {
-            if (e is CancellationException || e.isFatal()) throw e
-            ExceptionLogger.log(e)
-
-            return AppResult.Error(error = ApplicationError.Unknown)
+            Unit
         }
     }
 
     override suspend fun readPreferences(): AppResult<Flow<EncryptedPreferences>> {
-        try {
-            return AppResult.Success(data = dataStore.data)
-        } catch (e: Exception) {
-            if (e is CancellationException || e.isFatal()) throw e
-            ExceptionLogger.log(e)
-
-            return AppResult.Error(error = ApplicationError.Unknown)
-        }
+        return AppResult.Success(data = dataStore.data)
     }
 
     companion object {
         val Context.encryptedDataStore: DataStore<EncryptedPreferences> by dataStore(
             fileName = "encrypted-preferences",
             serializer = EncryptedPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { EncryptedPreferences() },
         )
     }
 }

@@ -1,10 +1,8 @@
 package com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted
 
 import androidx.datastore.core.Serializer
-import com.fstengineering.leasilycrm.core.infra.adapters.ExceptionLogger
 import com.fstengineering.leasilycrm.core.infra.utils.CryptoUtils
-import com.fstengineering.leasilycrm.core.infra.utils.isFatal
-import kotlinx.coroutines.CancellationException
+import com.fstengineering.leasilycrm.core.infra.utils.onSerializationRead
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -26,12 +24,13 @@ object EncryptedPreferencesSerializer : Serializer<EncryptedPreferences> {
     }
 
     /**
-     * Degrada para [defaultValue] — sem Token de sessão, o Usuário faz novo login — quando a chave
-     * do Keystore foi invalidada pela plataforma ou o arquivo não pode ser lido/desserializado.
+     * Quando a chave do Keystore foi invalidada pela plataforma ou o arquivo não pode ser
+     * lido/desserializado, lança `CorruptionException`; o `corruptionHandler` do DataStore o
+     * substitui por [defaultValue] — sem Token de sessão, o Usuário faz novo login.
      * Dado que falha na autenticação da criptografia é adulteração: propaga e crasha.
      */
     override suspend fun readFrom(input: InputStream): EncryptedPreferences {
-        return try {
+        return onSerializationRead {
             val preferencesEncryptedBytes = withContext(Dispatchers.IO) {
                 input.use { it.readBytes() }
             }
@@ -41,12 +40,6 @@ object EncryptedPreferencesSerializer : Serializer<EncryptedPreferences> {
             Json.decodeFromString<EncryptedPreferences>(
                 string = preferencesDecryptedBytes.decodeToString(),
             )
-        } catch (cancellation: CancellationException) {
-            throw cancellation
-        } catch (e: Exception) {
-            if (e.isFatal()) throw e
-            ExceptionLogger.log(e)
-            defaultValue
         }
     }
 }
