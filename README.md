@@ -128,13 +128,12 @@ Exemplos corretos:
 - Use cases: `RegisterCheckInUseCase`, `RegisterCheckOutUseCase`, `UndoRegisterStayCheckOutUseCase`
 - Erros: `AppResult.Error(DomainError.StayPeriod.Overbooking)`, nunca `throw DomainException(...)`
 
-**Inglês por padrão fora do domínio:** nomes de variável, método, parâmetro e classe/interface usam
-**inglês**, exceto quando o nome é (ou incorpora) um termo definido em `GLOSSARY.md`, que nesse caso
-o termo permanece em português, palavra por palavra, sem acento (ex.: `EstadiaDao`, `getEstadia`,
-`WriteEstadiaUseCase`; não `StayDao`/`getStay`). Descrições de teste (`@Test fun`) continuam em
-português (`docs/guidelines/0002-all-tests.md`). O código legado ainda usa os termos traduzidos
-(`Stay`, `Property`, `LeadTenant`) — o alias de cada termo está no `GLOSSARY.md`; código novo segue
-a regra. Vale também para nomes de módulo, classes, métodos e funções, sem exceção.
+**Inglês por padrão fora do domínio:** nome que não é (nem incorpora) termo do `GLOSSARY.md` é em
+inglês; termo do glossário fica em português, palavra por palavra, sem acento e sem preposição
+(`EstadiaDao`, `getEstadia`, `OrigemContato`; não `StayDao`/`getStay`). Vale para módulo, classe,
+método, função, variável e parâmetro, sem exceção; o código legado com termos traduzidos (`Stay`,
+`Property`, `LeadTenant`) migra para o alias do glossário. Regra completa em
+[`docs/guidelines/0013-naming.md`](docs/guidelines/0013-naming.md#idioma).
 
 ---
 

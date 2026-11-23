@@ -9,9 +9,14 @@ Aplica-se a todos os níveis de teste neste projeto: unitário (`app/src/test/`)
 ## 1. Nomenclatura e Idioma
 
 - Descrições de teste em **português**, respeitando a linguagem do negócio.
-- Kotlin: backtick string `` `Deve salvar Estadia quando dados são válidos` ``.
-- `androidTest/` (JUnit 4): backtick string ou camelCase descritivo (`deveSalvarEstadiaQuandoDadosValidos`).
-- Template obrigatório: `"Deve [resultado] quando [ação], dado que [contexto opcional]"`
+- Demais nomes (helpers, fixtures, variáveis, parâmetros, constantes) seguem o
+  [Idioma da 0013](0013-naming.md#idioma).
+- `test/` (JUnit 5): backtick string `` `Deve salvar Estadia quando dados são válidos` ``, no
+  template `"Deve [resultado] quando [ação], dado que [contexto opcional]"`.
+- `androidTest/` (JUnit 4): camelCase `deve<Resultado>Quando<Condição>`, sem backtick
+  (`deveSalvarEstadiaQuandoDadosValidos`); `Quando` é obrigatório, como no template de `test/`.
+  **Exceção obrigatória**: o nome de método com espaço em backtick é rejeitado pelo D8 em
+  `minSdk` < 30, e o do projeto é 29. Vale mesmo para teste com Compose.
 - Basear-se em CAs da especificação quando fornecidos.
 - **Proibido mencionar nomes de tipos ou valores de implementação nas descrições** — não citar enums internos, estados internos ou nomes de classes de implementação. Use o termo de negócio.
 
@@ -22,12 +27,8 @@ Aplica-se a todos os níveis de teste neste projeto: unitário (`app/src/test/`)
 | `` `Deve chamar estadiaDao.upsert` ``            | `` `Deve persistir Estadia quando dados são válidos` ``                      |
 | `` `Deve retornar OverbookingDetected` ``        | `` `Deve rejeitar Estadia quando o período conflita com outra ocupação` ``   |
 
-- **Corpo do teste** (variáveis, parâmetros, helpers, nomes de `inner class`) segue a regra de
-  idioma do código de produção (`README.md`): inglês, exceto termo do `GLOSSARY.md`, que fica
-  em português (`existingEstadia`, `validAmount`, `result`). Nunca traduzir o que é genérico:
-  `val resultado`, `val erros` são **errados**.
-- Nomes de mocks, fakes e classes de teste usam os termos do domínio (`estadiaRepositoryMock`,
-  `createFakeImovel()`); evite `Manager`, `Helper`, `DataService`, `Json` e nomes de libs de infra.
+- Mocks terminam em `Mock` (`estadiaRepositoryMock`); builders de fake são `createFake<Termo>()`
+  (`createFakeImovel()`). `result` é o nome canônico da saída do SUT.
 
 ---
 
@@ -36,7 +37,7 @@ Aplica-se a todos os níveis de teste neste projeto: unitário (`app/src/test/`)
 Seguir esta ordem obrigatória nas declarações:
 
 1. Variáveis de dependências mockadas (sufixo `Mock`, ex: `writeEstadiaUseCaseMock`)
-2. Variável do SUT
+2. Variável do SUT (`sut`, local ou propriedade)
 3. Constantes e atributos de configuração
 4. `@BeforeEach setUp()` / `@Before setUp()` e equivalente teardown (se necessários)
 5. Métodos de teste agrupados por método público testado
@@ -46,7 +47,8 @@ O mecanismo de agrupamento varia: `@Nested` (JUnit 5 — unit/ViewModel) ou come
 Helpers ficam por último: quem abre o arquivo lê primeiro o contrato testado.
 
 - Uma classe de teste por arquivo, nomeada como o arquivo de produção sufixado com `Test`
-  (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`).
+  (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`), no **mesmo pacote** dele: o teste de
+  `.../presentation/viewModels/FooViewModel.kt` mora em `.../presentation/viewModels/`.
 
 ## 2.1 Valores de entrada
 
@@ -105,7 +107,7 @@ fun `Deve chamar estadiaDao.upsert quando saveEstadia`() = runTest {
 fun `Deve salvar no banco de dados`() = runTest {
     sut.insert(estadia)
     val cursor = db.query("SELECT * FROM estadia", null)
-    assertNotNull(cursor)
+    cursor.shouldNotBeNull()
 }
 
 // BOM: Verifica através da interface do DAO
@@ -113,7 +115,7 @@ fun `Deve salvar no banco de dados`() = runTest {
 fun `Deve tornar Estadia recuperável após inserção`() = runTest {
     sut.insert(estadia)
     val result = sut.findById(estadia.id)
-    assertEquals(estadia.id, result?.id)
+    result?.id shouldBeEqualTo estadia.id
 }
 ```
 
@@ -133,10 +135,11 @@ Não use mock em:
 - Classes e colaboradores internos da mesma camada
 - Qualquer coisa que você controla integralmente dentro do mesmo módulo
 
-**Nunca use `mockkStatic`**: instrumenta o bytecode da classe e degrada o desempenho da suíte
-inteira. Se o teste precisa deles, o SUT chama uma API estática de
-plataforma fora da fronteira — mova a chamada para a borda (ex.: `Uri` só no Composable e no
-DataSource de arquivo, `0006`).
+**`mockkStatic`, `mockkObject` e `mockkConstructor` não existem aqui**: instrumentam o bytecode da
+classe e degradam o desempenho da suíte inteira. Se o teste precisa deles, o SUT chama uma API
+estática de plataforma fora da fronteira — mova a chamada para a borda (ex.: `Uri` só no
+Composable e no DataSource de arquivo, `0006`) ou resolva por uma dependência que a JVM
+substitui (ex.: o backend do `ExceptionLogger` cai em no-op quando o Koin não sobe, `0009`).
 
 ---
 
