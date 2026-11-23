@@ -22,9 +22,5 @@ object ExceptionLogger {
         backend.log(throwable)
     }
 
-    fun setUserIdentifier(identifier: String) {
-        // TODO: FirebaseCrashlytics.getInstance().setUserId(identifier)
-    }
-
     private class MaskedFailure(message: String) : Exception(message)
 }

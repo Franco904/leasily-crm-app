@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.adapters
 
 import android.app.Activity
-import android.util.Log
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -23,8 +22,7 @@ class CredentialManagerAdapterImpl(
     override suspend fun chooseGoogleAccount(
         mustEnableAutoSelect: Boolean,
     ): AppResult<String> {
-        val activityContext = currentActivityTracker.current()
-            ?: return AppResult.Error(error = ApplicationError.Unknown)
+        val activityContext = currentActivityTracker.current() ?: return noActivityError()
 
         val credentialManager = CredentialManager.create(activityContext)
 
@@ -74,7 +72,7 @@ class CredentialManagerAdapterImpl(
             if (isSupportedCredentialType) {
                 GoogleIdTokenCredential.createFrom(credential.data).idToken
             } else {
-                if (BuildConfig.DEBUG) Log.e(TAG, "Unsupported credential type: ${credential.type}")
+                ExceptionLogger.logMasked("Unsupported credential type: ${credential.type}")
 
                 null
             }
@@ -99,8 +97,7 @@ class CredentialManagerAdapterImpl(
     }
 
     override suspend fun clearGoogleCredentialState(): AppResult<Unit> {
-        val activityContext = currentActivityTracker.current()
-            ?: return AppResult.Error(error = ApplicationError.Unknown)
+        val activityContext = currentActivityTracker.current() ?: return noActivityError()
 
         val credentialManager = CredentialManager.create(activityContext)
         val clearCredentialStateRequest = ClearCredentialStateRequest()
@@ -110,7 +107,9 @@ class CredentialManagerAdapterImpl(
         }
     }
 
-    private companion object {
-        const val TAG = "AppCredentialManagerImpl"
+    private fun noActivityError(): AppResult.Error {
+        ExceptionLogger.logMasked("Credential Manager chamado sem Activity em primeiro plano")
+
+        return AppResult.Error(error = ApplicationError.Unknown)
     }
 }
