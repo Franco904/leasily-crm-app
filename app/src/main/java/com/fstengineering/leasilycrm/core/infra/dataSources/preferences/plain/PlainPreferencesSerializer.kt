@@ -15,10 +15,10 @@ object PlainPreferencesSerializer : Serializer<PlainPreferences> {
         get() = PlainPreferences()
 
     /** Falha de escrita propaga ao `updateData` do DataStore — nada é gravado pela metade. */
-    override suspend fun writeTo(t: PlainPreferences, output: OutputStream) {
+    override suspend fun writeTo(preferences: PlainPreferences, output: OutputStream) {
         withContext(Dispatchers.IO) {
             output.use {
-                it.write(Json.encodeToString(t).toByteArray())
+                it.write(Json.encodeToString(preferences).toByteArray())
             }
         }
     }

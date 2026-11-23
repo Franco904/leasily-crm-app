@@ -65,7 +65,7 @@ Ao desenhar uma regra, pergunte:
 - **Descrição:** extremamente concisa. Priorize concisão em detrimento de gramática.
 - **Atomicidade:** cada commit deve conter uma única mudança logicamente coesa.
 - **Formatador e testes automatizados:** rode o formatador, linter e os testes automatizados do
-  projeto (`make format && make test`) antes de cada commit.
+  projeto (`make format && make test`) antes de cada commit com alteração no código coberto.
 
 ---
 

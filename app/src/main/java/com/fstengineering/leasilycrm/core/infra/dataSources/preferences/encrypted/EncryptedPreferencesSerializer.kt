@@ -16,8 +16,8 @@ object EncryptedPreferencesSerializer : Serializer<EncryptedPreferences> {
         get() = EncryptedPreferences()
 
     /** Falha de escrita propaga ao `updateData` do DataStore — nada é gravado pela metade. */
-    override suspend fun writeTo(t: EncryptedPreferences, output: OutputStream) {
-        val preferencesJson = Json.encodeToString(t)
+    override suspend fun writeTo(preferences: EncryptedPreferences, output: OutputStream) {
+        val preferencesJson = Json.encodeToString(preferences)
         val preferencesEncryptedBytes = CryptoUtils.encrypt(preferencesJson.toByteArray())
 
         withContext(Dispatchers.IO) {
