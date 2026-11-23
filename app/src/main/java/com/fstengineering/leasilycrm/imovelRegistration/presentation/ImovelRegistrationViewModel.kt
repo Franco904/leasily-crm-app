@@ -24,6 +24,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -82,7 +83,7 @@ class ImovelRegistrationViewModel(
 
     private fun watchProprietarios() {
         viewModelScope.launch {
-            proprietarioReadDataSource.watchProprietarios().collect { result ->
+            proprietarioReadDataSource.watchProprietarios().collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                     .onSuccess { storedProprietarios ->
