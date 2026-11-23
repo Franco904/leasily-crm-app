@@ -4,11 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
-import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
-import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
-import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
-import kotlinx.collections.immutable.persistentListOf
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeProprietario
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -23,12 +20,9 @@ import org.junit.runner.RunWith
 class ProprietarioReadDataSourceTest : IntegrationTest() {
     private lateinit var sut: ProprietarioReadDataSource
 
-    private lateinit var proprietarioWriteDataSource: ProprietarioWriteDataSource
-
     @Before
     fun setUp() {
         sut = db.imovelRegistrationProprietarioReadDataSource()
-        proprietarioWriteDataSource = db.proprietarioWriteDataSource()
     }
 
     // region watchProprietarios
@@ -40,7 +34,7 @@ class ProprietarioReadDataSourceTest : IntegrationTest() {
             val ana = ProprietarioReadModel(id = 2L, name = "Ana")
             val bruno = ProprietarioReadModel(id = 3L, name = "Bruno")
             listOf(carla, ana, bruno).forEach { saveProprietario(it) }
-            proprietarioWriteDataSource.delete(bruno.id)
+            db.proprietarioWriteDataSource().delete(bruno.id)
                 .shouldBeInstanceOf<AppResult.Success<*>>()
 
             val result = sut.watchProprietarios().first()
@@ -52,17 +46,6 @@ class ProprietarioReadDataSourceTest : IntegrationTest() {
     // endregion
 
     private suspend fun saveProprietario(readModel: ProprietarioReadModel) {
-        val proprietario = Proprietario.parse(
-            id = readModel.id,
-            createDateTime = null,
-            name = readModel.name,
-            phone = null,
-            email = null,
-            paymentKey = null,
-            files = persistentListOf<ProprietarioFile>(),
-        ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Proprietario>()
-
-        proprietarioWriteDataSource.save(proprietario)
-            .shouldBeInstanceOf<AppResult.Success<*>>()
+        db.saveFakeProprietario(name = readModel.name, proprietarioId = readModel.id)
     }
 }

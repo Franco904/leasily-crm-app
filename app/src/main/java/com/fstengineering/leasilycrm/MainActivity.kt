@@ -31,6 +31,7 @@ import com.fstengineering.leasilycrm.core.infra.backgroundWork.enqueueBootstrapp
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.enqueueLazyWritesWorker
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.BootstrappingWorker
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.LazyWritesWorker
+import com.fstengineering.leasilycrm.core.infra.constants.NAVIGATE_TO_STAYS_EXTRA
 import com.fstengineering.leasilycrm.core.presentation.composables.AppErrorBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.AppSnackbarHost
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
@@ -164,9 +165,5 @@ class MainActivity : ComponentActivity() {
             cancelUniqueWork(LazyWritesWorker.uniqueName)
             cancelUniqueWork(BootstrappingWorker.uniqueName)
         }
-    }
-
-    companion object {
-        const val NAVIGATE_TO_STAYS_EXTRA = "navigate_to_stays"
     }
 }

@@ -8,10 +8,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.graphics.toColorInt
-import com.fstengineering.leasilycrm.MainActivity
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.application.models.OccupiedPeriodNotificationReadModel
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
+import com.fstengineering.leasilycrm.core.infra.constants.NAVIGATE_TO_STAYS_EXTRA
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 
@@ -61,9 +61,11 @@ object TodayCheckInCheckOutNotification {
             status.hourMinute.second.formatToTwoDigitsDateTime(),
         )
 
-        val notificationIntent = Intent(context, MainActivity::class.java).apply {
+        val notificationIntent = requireNotNull(
+            context.packageManager.getLaunchIntentForPackage(context.packageName)
+        ).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra(MainActivity.NAVIGATE_TO_STAYS_EXTRA, true)
+            putExtra(NAVIGATE_TO_STAYS_EXTRA, true)
         }
 
         val pendingIntent = PendingIntent.getActivity(
