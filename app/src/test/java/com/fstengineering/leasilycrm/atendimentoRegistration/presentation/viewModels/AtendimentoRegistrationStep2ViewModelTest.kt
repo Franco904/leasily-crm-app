@@ -1,9 +1,8 @@
-package com.fstengineering.leasilycrm.atendimentoRegistration.presentation
+package com.fstengineering.leasilycrm.atendimentoRegistration.presentation.viewModels
 
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.atendimentoRegistration.application.models.AtendimentoSelectableImovelReadModel
 import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.ImovelReadDataSource
-import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.viewModels.AtendimentoRegistrationStep2ViewModel
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType

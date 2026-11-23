@@ -1,11 +1,10 @@
-package com.fstengineering.leasilycrm.clientes.presentation
+package com.fstengineering.leasilycrm.clientes.presentation.leads
 
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
 import com.fstengineering.leasilycrm.clientes.application.models.ClienteReadModel
 import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesReadDataSource
-import com.fstengineering.leasilycrm.clientes.presentation.leads.LeadsViewModel
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus

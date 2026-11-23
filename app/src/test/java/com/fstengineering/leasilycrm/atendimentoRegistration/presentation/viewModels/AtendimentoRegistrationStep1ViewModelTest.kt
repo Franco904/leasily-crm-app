@@ -1,10 +1,9 @@
-package com.fstengineering.leasilycrm.atendimentoRegistration.presentation
+package com.fstengineering.leasilycrm.atendimentoRegistration.presentation.viewModels
 
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.models.AtendimentoDraftFormUiState
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.models.AtendimentoStep1ErrorUiState
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.models.fields.AtendimentoStep1Field
-import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.viewModels.AtendimentoRegistrationStep1ViewModel
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.viewModels.AtendimentoRegistrationStep1ViewModel.UiEvent
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
