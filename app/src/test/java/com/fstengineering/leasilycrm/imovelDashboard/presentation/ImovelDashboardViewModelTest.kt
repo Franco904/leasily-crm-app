@@ -28,8 +28,8 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ImovelDashboardViewModelTest {
-    private val watchImovelMock: WatchImovelUseCase = mockk(relaxed = true)
-    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxed = true)
+    private val watchImovelMock: WatchImovelUseCase = mockk(relaxUnitFun = true)
+    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("init")

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class AtendimentoRegistrationStep2ViewModelTest {
-    private val imovelReadDataSourceMock: ImovelReadDataSource = mockk(relaxed = true)
+    private val imovelReadDataSourceMock: ImovelReadDataSource = mockk(relaxUnitFun = true)
 
     @BeforeEach
     fun setUp() {

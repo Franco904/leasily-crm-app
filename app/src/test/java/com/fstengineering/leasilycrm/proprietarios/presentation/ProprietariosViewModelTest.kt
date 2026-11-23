@@ -25,9 +25,9 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ProprietariosViewModelTest {
-    private val proprietariosReadDataSourceMock: ProprietariosReadDataSource = mockk(relaxed = true)
+    private val proprietariosReadDataSourceMock: ProprietariosReadDataSource = mockk(relaxUnitFun = true)
     private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource =
-        mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
 
     private val sut = ProprietariosViewModel(
         proprietariosReadDataSource = proprietariosReadDataSourceMock,

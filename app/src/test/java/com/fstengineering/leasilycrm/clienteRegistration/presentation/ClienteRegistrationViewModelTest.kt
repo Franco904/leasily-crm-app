@@ -27,9 +27,9 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ClienteRegistrationViewModelTest {
-    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxed = true)
+    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxUnitFun = true)
     private val clienteRegistrationReadDataSourceMock: ClienteRegistrationReadDataSource =
-        mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
 
     @BeforeEach
     fun setUp() {

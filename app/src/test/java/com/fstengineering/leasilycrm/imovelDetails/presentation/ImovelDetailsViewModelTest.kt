@@ -27,8 +27,8 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ImovelDetailsViewModelTest {
-    private val imovelDetailsReadDataSourceMock: ImovelDetailsReadDataSource = mockk(relaxed = true)
-    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxed = true)
+    private val imovelDetailsReadDataSourceMock: ImovelDetailsReadDataSource = mockk(relaxUnitFun = true)
+    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("init")

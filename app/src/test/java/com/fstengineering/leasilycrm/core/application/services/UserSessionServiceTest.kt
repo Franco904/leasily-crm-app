@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class UserSessionServiceTest {
-    private val userSessionSharedStoreMock: UserSessionSharedStore = mockk(relaxed = true)
-    private val userApiMock: UserApi = mockk(relaxed = true)
+    private val userSessionSharedStoreMock: UserSessionSharedStore = mockk(relaxUnitFun = true)
+    private val userApiMock: UserApi = mockk(relaxUnitFun = true)
 
     private val sut = UserSessionService(
         userSessionSharedStore = userSessionSharedStoreMock,

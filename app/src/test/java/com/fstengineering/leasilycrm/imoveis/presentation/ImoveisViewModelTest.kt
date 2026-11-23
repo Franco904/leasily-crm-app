@@ -30,8 +30,8 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ImoveisViewModelTest {
-    private val imoveisReadDataSourceMock: ImoveisReadDataSource = mockk(relaxed = true)
-    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxed = true)
+    private val imoveisReadDataSourceMock: ImoveisReadDataSource = mockk(relaxUnitFun = true)
+    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxUnitFun = true)
 
     @BeforeEach
     fun setUp() {

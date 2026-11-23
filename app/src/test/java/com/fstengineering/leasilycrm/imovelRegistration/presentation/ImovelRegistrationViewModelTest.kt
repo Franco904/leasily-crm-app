@@ -32,9 +32,9 @@ import org.junit.jupiter.api.Test
 @ViewModelCoroutineTest
 class ImovelRegistrationViewModelTest {
     private val imovelRegistrationReadDataSourceMock: ImovelRegistrationReadDataSource =
-        mockk(relaxed = true)
-    private val imovelWriteDataSourceMock: ImovelWriteDataSource = mockk(relaxed = true)
-    private val proprietarioReadDataSourceMock: ProprietarioReadDataSource = mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
+    private val imovelWriteDataSourceMock: ImovelWriteDataSource = mockk(relaxUnitFun = true)
+    private val proprietarioReadDataSourceMock: ProprietarioReadDataSource = mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("saveImovel")

@@ -27,10 +27,10 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class LeadsViewModelTest {
-    private val clientesReadDataSourceMock: ClientesReadDataSource = mockk(relaxed = true)
-    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxed = true)
+    private val clientesReadDataSourceMock: ClientesReadDataSource = mockk(relaxUnitFun = true)
+    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxUnitFun = true)
     private val clientesLocalStorageMock: ClientesLocalStorage =
-        mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
 
     private fun createSut() = LeadsViewModel(
         clientesReadDataSource = clientesReadDataSourceMock,

@@ -28,10 +28,10 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ProprietarioRegistrationViewModelTest {
-    private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource = mockk(relaxed = true)
+    private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource = mockk(relaxUnitFun = true)
     private val proprietarioRegistrationReadDataSourceMock: ProprietarioRegistrationReadDataSource =
-        mockk(relaxed = true)
-    private val sharedStorageMock: SharedStorage = mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
+    private val sharedStorageMock: SharedStorage = mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("init")

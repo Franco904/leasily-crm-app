@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test
 import java.io.IOException
 
 class RemoteRequestTest {
-    private val connectivityAdapterMock: ConnectivityAdapter = mockk()
+    private val connectivityAdapterMock: ConnectivityAdapter = mockk(relaxUnitFun = true)
 
     private val sut = HttpClient(MockEngine { throw IOException("Falha de rede") }) {
         classifyNetworkFailures(connectivityAdapter = connectivityAdapterMock)

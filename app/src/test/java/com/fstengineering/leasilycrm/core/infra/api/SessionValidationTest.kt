@@ -8,15 +8,18 @@ import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
+import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class SessionValidationTest {
-    private val onSessionExpiredMock: suspend () -> Unit = mockk(relaxed = true)
+    private val onSessionExpiredMock: suspend () -> Unit = mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("validateSession")
@@ -24,6 +27,8 @@ class SessionValidationTest {
         @Test
         fun `Deve encerrar a sessão quando o back-end recusa o token de sessão por não autenticado`() =
             runTest {
+                coEvery { onSessionExpiredMock() } just runs
+
                 request(route = UPDATE_USER_ROUTE, status = HttpStatusCode.Unauthorized)
 
                 coVerify(exactly = 1) { onSessionExpiredMock() }
@@ -32,6 +37,8 @@ class SessionValidationTest {
         @Test
         fun `Deve encerrar a sessão quando o back-end recusa o token de sessão por acesso negado`() =
             runTest {
+                coEvery { onSessionExpiredMock() } just runs
+
                 request(route = UPDATE_USER_ROUTE, status = HttpStatusCode.Forbidden)
 
                 coVerify(exactly = 1) { onSessionExpiredMock() }

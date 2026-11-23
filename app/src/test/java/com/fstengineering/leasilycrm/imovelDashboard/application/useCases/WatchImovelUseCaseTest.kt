@@ -32,9 +32,9 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 class WatchImovelUseCaseTest {
-    private val imovelDashboardReadDataSourceMock: ImovelDashboardReadDataSource = mockk()
-    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource = mockk()
-    private val dateProviderMock: AppDateProvider = mockk()
+    private val imovelDashboardReadDataSourceMock: ImovelDashboardReadDataSource = mockk(relaxUnitFun = true)
+    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource = mockk(relaxUnitFun = true)
+    private val dateProviderMock: AppDateProvider = mockk(relaxUnitFun = true)
 
     private val today = AppDate(LocalDate.of(2026, 3, 10))
 

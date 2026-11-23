@@ -27,9 +27,9 @@ import org.junit.jupiter.api.Test
 @ViewModelCoroutineTest
 class ProprietarioDetailsViewModelTest {
     private val proprietarioDetailsReadDataSourceMock: ProprietarioDetailsReadDataSource =
-        mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
     private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource =
-        mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("init")

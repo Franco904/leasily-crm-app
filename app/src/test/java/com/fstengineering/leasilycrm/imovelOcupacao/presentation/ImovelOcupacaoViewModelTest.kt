@@ -25,8 +25,8 @@ import java.time.LocalDate
 
 @ViewModelCoroutineTest
 class ImovelOcupacaoViewModelTest {
-    private val watchImovelOcupacaoMock: WatchImovelOcupacaoUseCase = mockk(relaxed = true)
-    private val dateProviderMock: AppDateProvider = mockk()
+    private val watchImovelOcupacaoMock: WatchImovelOcupacaoUseCase = mockk(relaxUnitFun = true)
+    private val dateProviderMock: AppDateProvider = mockk(relaxUnitFun = true)
 
     @BeforeEach
     fun setUp() {

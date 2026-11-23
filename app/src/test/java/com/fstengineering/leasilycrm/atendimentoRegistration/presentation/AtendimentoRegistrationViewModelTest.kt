@@ -34,9 +34,9 @@ import org.junit.jupiter.api.Test
 @ViewModelCoroutineTest
 class AtendimentoRegistrationViewModelTest {
     private val atendimentoRegistrationReadDataSourceMock: AtendimentoRegistrationReadDataSource =
-        mockk(relaxed = true)
-    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource = mockk(relaxed = true)
-    private val atendimentoWriteDataSourceMock: AtendimentoWriteDataSource = mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
+    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource = mockk(relaxUnitFun = true)
+    private val atendimentoWriteDataSourceMock: AtendimentoWriteDataSource = mockk(relaxUnitFun = true)
 
     private val clienteId = 7L
 

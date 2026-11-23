@@ -28,9 +28,9 @@ import org.junit.jupiter.api.Test
 @ViewModelCoroutineTest
 class ClienteDetailsViewModelTest {
     private val clienteDetailsReadDataSourceMock: ClienteDetailsReadDataSource =
-        mockk(relaxed = true)
-    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxed = true)
-    private val atendimentoSharedWriteDataSourceMock: AtendimentoSharedWriteDataSource = mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
+    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxUnitFun = true)
+    private val atendimentoSharedWriteDataSourceMock: AtendimentoSharedWriteDataSource = mockk(relaxUnitFun = true)
 
     private val clienteId = faker.random.nextLong(bound = 9999)
 

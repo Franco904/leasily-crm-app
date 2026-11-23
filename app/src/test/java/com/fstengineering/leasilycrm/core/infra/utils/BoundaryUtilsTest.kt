@@ -56,7 +56,7 @@ class BoundaryUtilsTest {
 
         @Test
         fun `Deve considerar não fatal quando a plataforma invalida a chave do Keystore`() {
-            mockk<KeyPermanentlyInvalidatedException>().isFatal().shouldBeFalse()
+            mockk<KeyPermanentlyInvalidatedException>(relaxUnitFun = true).isFatal().shouldBeFalse()
         }
 
         @Test
