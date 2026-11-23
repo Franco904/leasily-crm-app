@@ -12,6 +12,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +28,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
 import com.fstengineering.leasilycrm.core.application.services.UserSessionService
 import com.fstengineering.leasilycrm.core.application.services.UserSessionService.UserSessionEvent
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
+import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppTimeProvider
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.enqueueBootstrappingWorker
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.enqueueLazyWritesWorker
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.workers.BootstrappingWorker
@@ -37,11 +41,17 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppSnackbarHo
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateTimeProvider
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppTimeProvider
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
     private val userSessionService: UserSessionService by inject()
+    private val dateProvider: AppDateProvider by inject()
+    private val dateTimeProvider: AppDateTimeProvider by inject()
+    private val timeProvider: AppTimeProvider by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,96 +67,102 @@ class MainActivity : ComponentActivity() {
             ?.getBooleanExtra(NAVIGATE_TO_STAYS_EXTRA, false) == true
 
         setContent {
-            AppTheme {
-                val context = LocalContext.current
-                val coroutineScope = rememberCoroutineScope()
+            CompositionLocalProvider(
+                LocalAppDateProvider provides dateProvider,
+                LocalAppDateTimeProvider provides dateTimeProvider,
+                LocalAppTimeProvider provides timeProvider,
+            ) {
+                AppTheme {
+                    val context = LocalContext.current
+                    val coroutineScope = rememberCoroutineScope()
 
-                val navController = rememberNavController()
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val navController = rememberNavController()
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-                var errorBottomSheetData: ErrorBottomSheetData? by remember { mutableStateOf(null) }
-                val sheetState = rememberModalBottomSheetState()
-                val snackBarHostState = remember { SnackbarHostState() }
+                    var errorBottomSheetData: ErrorBottomSheetData? by remember { mutableStateOf(null) }
+                    val sheetState = rememberModalBottomSheetState()
+                    val snackBarHostState = remember { SnackbarHostState() }
 
-                fun onUiEvent(uiEvent: UiEvent) {
-                    when (uiEvent) {
-                        is UiEvent.ShowErrorBottomSheet -> {
-                            errorBottomSheetData = uiEvent.error
-                        }
-
-                        is UiEvent.ShowSnackBar -> {
-                            coroutineScope.launch {
-                                val message = context.getString(uiEvent.message)
-                                snackBarHostState.showSnackbar(message)
+                    fun onUiEvent(uiEvent: UiEvent) {
+                        when (uiEvent) {
+                            is UiEvent.ShowErrorBottomSheet -> {
+                                errorBottomSheetData = uiEvent.error
                             }
-                        }
 
-                        is UiEvent.ShowActionSnackBar -> {
-                            coroutineScope.launch {
-                                val message = context.getString(uiEvent.message)
-                                val actionLabel = context.getString(uiEvent.actionLabel)
+                            is UiEvent.ShowSnackBar -> {
+                                coroutineScope.launch {
+                                    val message = context.getString(uiEvent.message)
+                                    snackBarHostState.showSnackbar(message)
+                                }
+                            }
 
-                                val result = snackBarHostState.showSnackbar(
-                                    message = message,
-                                    actionLabel = actionLabel,
-                                    duration = SnackbarDuration.Long,
-                                )
+                            is UiEvent.ShowActionSnackBar -> {
+                                coroutineScope.launch {
+                                    val message = context.getString(uiEvent.message)
+                                    val actionLabel = context.getString(uiEvent.actionLabel)
 
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    uiEvent.action()
+                                    val result = snackBarHostState.showSnackbar(
+                                        message = message,
+                                        actionLabel = actionLabel,
+                                        duration = SnackbarDuration.Long,
+                                    )
+
+                                    if (result == SnackbarResult.ActionPerformed) {
+                                        uiEvent.action()
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                LaunchedEffect(Unit) {
-                    userSessionService.userSessionEvents.collect { event ->
-                        val isSessionExpired = event is UserSessionEvent.SessionExpiredEvent
+                    LaunchedEffect(Unit) {
+                        userSessionService.userSessionEvents.collect { event ->
+                            val isSessionExpired = event is UserSessionEvent.SessionExpiredEvent
 
-                        cancelAppWorkers()
-                        navController.navigate(Destinations.SignIn(isSessionExpired))
-                    }
-                }
-
-                Scaffold(
-                    snackbarHost = {
-                        val isHomeDest by remember(navBackStackEntry) {
-                            mutableStateOf(
-                                navBackStackEntry?.destination?.route?.contains("Home") == true
-                            )
+                            cancelAppWorkers()
+                            navController.navigate(Destinations.SignIn(isSessionExpired))
                         }
+                    }
 
-                        AppSnackbarHost(
-                            snackbarHostState = snackBarHostState,
-                            modifier = Modifier
-                                .padding(bottom = if (isHomeDest) 48.dp else 0.dp)
-                        )
-                    },
-                ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Destinations.Root,
-                        builder = {
-                            destinations(
-                                navController = navController,
-                                startedFromStayNotificationPopUp = startedFromStayNotificationPopUp,
-                                onSignIn = { enqueueAppWorkers() },
-                                onUiEvent = { uiEvent -> onUiEvent(uiEvent) }
+                    Scaffold(
+                        snackbarHost = {
+                            val isHomeDest by remember(navBackStackEntry) {
+                                mutableStateOf(
+                                    navBackStackEntry?.destination?.route?.contains("Home") == true
+                                )
+                            }
+
+                            AppSnackbarHost(
+                                snackbarHostState = snackBarHostState,
+                                modifier = Modifier
+                                    .padding(bottom = if (isHomeDest) 48.dp else 0.dp)
                             )
                         },
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .consumeWindowInsets(innerPadding)
-                    )
-
-                    if (errorBottomSheetData != null) {
-                        AppErrorBottomSheet(
-                            sheetState = sheetState,
-                            errorBottomSheetData = errorBottomSheetData!!,
-                            onDismissRequest = { errorBottomSheetData = null },
-                            onUiEvent = { uiEvent -> onUiEvent(uiEvent) }
+                    ) { innerPadding ->
+                        NavHost(
+                            navController = navController,
+                            startDestination = Destinations.Root,
+                            builder = {
+                                destinations(
+                                    navController = navController,
+                                    startedFromStayNotificationPopUp = startedFromStayNotificationPopUp,
+                                    onSignIn = { enqueueAppWorkers() },
+                                    onUiEvent = { uiEvent -> onUiEvent(uiEvent) }
+                                )
+                            },
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .consumeWindowInsets(innerPadding)
                         )
+
+                        if (errorBottomSheetData != null) {
+                            AppErrorBottomSheet(
+                                sheetState = sheetState,
+                                errorBottomSheetData = errorBottomSheetData!!,
+                                onDismissRequest = { errorBottomSheetData = null },
+                                onUiEvent = { uiEvent -> onUiEvent(uiEvent) }
+                            )
+                        }
                     }
                 }
             }

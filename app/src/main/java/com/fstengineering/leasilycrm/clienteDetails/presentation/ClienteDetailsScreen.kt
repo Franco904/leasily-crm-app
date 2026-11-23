@@ -49,7 +49,6 @@ import com.fstengineering.leasilycrm.clienteDetails.presentation.models.Atendime
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsTab
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
-import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.InteracaoDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
@@ -60,12 +59,12 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.models.InteracaoBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,7 +87,7 @@ fun ClienteDetailsScreen(
     val lazyListState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
 
-    val dateProvider: AppDateProvider = koinInject()
+    val dateProvider = LocalAppDateProvider.current
     val currentMonth = remember { dateProvider.now().month }
 
     var selectedTabId by rememberSaveable {

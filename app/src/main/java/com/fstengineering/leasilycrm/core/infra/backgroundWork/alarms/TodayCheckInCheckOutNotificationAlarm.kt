@@ -4,17 +4,13 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.backgroundWork.broadcastReceivers.TodayCheckInCheckOutNotificationBroadcastReceiver
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-object TodayCheckInCheckOutNotificationAlarm : KoinComponent {
-    private val dateTimeProvider: AppDateTimeProvider by inject()
-
+object TodayCheckInCheckOutNotificationAlarm {
     private const val ALARM_INTENT_REQUEST_CODE = 0
 
-    fun schedule(context: Context) {
+    fun schedule(context: Context, now: AppDateTime) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val receiverIntent = Intent(
@@ -32,7 +28,6 @@ object TodayCheckInCheckOutNotificationAlarm : KoinComponent {
             /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
-        val now = dateTimeProvider.now()
         val triggerAtMillis = now.withHourMinute(hour = 7, minute = 0)
 
         val triggerAtMillisAdjusted = (

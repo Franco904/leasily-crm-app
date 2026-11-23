@@ -56,13 +56,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
-import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateProvider
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
 import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.theme.customColors
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
 import com.fstengineering.leasilycrm.core.presentation.utils.daysOfWeek
 import com.fstengineering.leasilycrm.core.presentation.utils.getFirstDayOfWeekOfMonth
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
@@ -71,7 +71,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
-import org.koin.compose.koinInject
 
 @Composable
 fun OccupiedPeriodsCalendar(
@@ -86,7 +85,7 @@ fun OccupiedPeriodsCalendar(
 ) {
     val context = LocalContext.current
 
-    val dateProvider: AppDateProvider = koinInject()
+    val dateProvider = LocalAppDateProvider.current
     val now = remember { dateProvider.now() }
 
     val monthYearLabel = remember(month) {
