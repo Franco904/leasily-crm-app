@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.profile.presentation
 
+import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
@@ -14,6 +15,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
+import com.fstengineering.leasilycrm.profile.application.useCases.ClearGoogleCredentialStateUseCase
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
 import com.fstengineering.leasilycrm.profile.domain.valueObjects.Creci
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
@@ -26,6 +28,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val writeUser: WriteUserUseCase,
+    private val clearGoogleCredentialState: ClearGoogleCredentialStateUseCase,
     private val userSessionService: UserSessionService,
     private val userQueryRepository: UserQueryRepository,
 ) : ViewModel() {
@@ -106,8 +109,15 @@ class ProfileViewModel(
         _creciFieldError.update { null }
     }
 
-    fun signOutUser() {
+    fun signOutUser(activityContext: Activity) {
         viewModelScope.launch {
+            clearGoogleCredentialState(activityContext)
+                .onError { error ->
+                    _uiEvents.trySend(UiEvent.SignOutError(error))
+
+                    return@launch
+                }
+
             userSessionService.onUserInitiatedSignOut()
 
             _uiEvents.trySend(UiEvent.SignOutSuccess)
@@ -123,6 +133,7 @@ class ProfileViewModel(
     sealed interface UiEvent {
         data class BottomSheetError(val error: BaseError) : UiEvent
         data class EditUserSuccess(val messageId: Int) : UiEvent
+        data class SignOutError(val error: BaseError) : UiEvent
         data object SignOutSuccess : UiEvent
     }
 }

@@ -39,7 +39,6 @@ import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 
 private fun newAtendimentoOf(clienteId: Long) = Destinations.AtendimentoRegistration(
     atendimentoId = null,
@@ -88,7 +87,6 @@ fun NavGraphBuilder.destinations(
         SignInScreen(
             hasSessionExpired = args.hasSessionExpired,
             viewModel = koinViewModel(),
-            credentialManager = koinInject(),
             onSignIn = {
                 onSignIn()
 
@@ -205,7 +203,6 @@ fun NavGraphBuilder.destinations(
     composable<Destinations.Profile> {
         ProfileScreen(
             viewModel = koinViewModel(),
-            credentialManager = koinInject(),
             onBack = { navController.navigateUp() },
             onUiEvent = onUiEvent,
         )

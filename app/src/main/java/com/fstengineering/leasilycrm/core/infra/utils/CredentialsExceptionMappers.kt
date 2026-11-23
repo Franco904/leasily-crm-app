@@ -1,4 +1,4 @@
-package com.fstengineering.leasilycrm.core.presentation.utils.uiMappers
+package com.fstengineering.leasilycrm.core.infra.utils
 
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.NoCredentialException

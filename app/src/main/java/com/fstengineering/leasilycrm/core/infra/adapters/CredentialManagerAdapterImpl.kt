@@ -12,7 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.infra.utils.CryptoUtils
 import com.fstengineering.leasilycrm.core.infra.utils.onBoundary
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toApplicationError
+import com.fstengineering.leasilycrm.core.infra.utils.toApplicationError
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 

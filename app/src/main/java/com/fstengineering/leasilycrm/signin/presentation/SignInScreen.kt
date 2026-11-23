@@ -17,27 +17,20 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.utils.onError
-import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.signin.presentation.composables.SignInSection
 import com.fstengineering.leasilycrm.signin.presentation.models.strategies.SignInErrorBottomSheetDataPropertiesStrategy
-import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
     hasSessionExpired: Boolean,
     viewModel: SignInViewModel,
-    credentialManager: CredentialManagerAdapter,
     modifier: Modifier = Modifier,
     onSignIn: () -> Unit = {},
     onUiEvent: (UiEvent) -> Unit,
@@ -48,7 +41,6 @@ fun SignInScreen(
     val surfaceColor = MaterialTheme.colorScheme.surface
 
     var isSigningIn by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         viewModel.uiEvents.collect { uiEvent ->
@@ -60,6 +52,10 @@ fun SignInScreen(
                         SignInErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
+                }
+
+                is SignInViewModel.UiEvent.SignInCancelled -> {
+                    isSigningIn = false
                 }
 
                 is SignInViewModel.UiEvent.SignInSuccess -> {
@@ -108,22 +104,10 @@ fun SignInScreen(
                     if (!isSigningIn) {
                         isSigningIn = true
 
-                        coroutineScope.launch {
-                            credentialManager.chooseGoogleAccount(
-                                activityContext = activity,
-                                mustEnableAutoSelect = !hasSessionExpired,
-                            )
-                                .onError { e ->
-                                    isSigningIn = false
-
-                                    if (e == ApplicationError.UserCancellation) return@onError
-
-                                    onUiEvent(UiEvent.ShowErrorBottomSheet(e.toBottomSheetData(SignInErrorBottomSheetDataPropertiesStrategy)))
-                                }
-                                .onSuccess { idToken ->
-                                    viewModel.signInUser(idToken)
-                                }
-                        }
+                        viewModel.onSignInSelect(
+                            activityContext = activity,
+                            mustEnableAutoSelect = !hasSessionExpired,
+                        )
                     }
                 },
                 modifier = Modifier

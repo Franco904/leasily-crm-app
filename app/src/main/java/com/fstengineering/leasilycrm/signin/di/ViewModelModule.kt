@@ -8,6 +8,7 @@ val signinViewModelModule = module {
     viewModel {
         SignInViewModel(
             signIn = get(),
+            chooseGoogleAccount = get(),
         )
     }
 }
