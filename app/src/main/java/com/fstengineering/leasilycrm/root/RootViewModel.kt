@@ -29,7 +29,7 @@ class RootViewModel(
         viewModelScope.launch {
             val isSessionAlive = userSessionSharedStore.isSessionAlive()
 
-            _uiEvents.trySend(UiEvent.SignInState(isSessionAlive))
+            _uiEvents.trySend(UiEvent.NavigateToFirstDestination(isSessionAlive))
         }
     }
 
@@ -47,6 +47,6 @@ class RootViewModel(
     }
 
     sealed interface UiEvent {
-        data class SignInState(val isSessionAlive: Boolean) : UiEvent
+        data class NavigateToFirstDestination(val isSessionAlive: Boolean) : UiEvent
     }
 }

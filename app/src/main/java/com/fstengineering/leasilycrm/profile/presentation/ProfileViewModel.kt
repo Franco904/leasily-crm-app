@@ -54,7 +54,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             userQueryRepository.watch().collect { result ->
                 result
-                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                     .onSuccess { user -> _uiState.update { ProfileUiState.Loaded.fromReadModel(user) } }
             }
         }
@@ -80,7 +80,7 @@ class ProfileViewModel(
 
                         is DomainError -> _creciFieldError.update { error.toInlineMessage() }
                         is ApplicationError ->
-                            _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                            _uiEvents.trySend(UiEvent.ShowError(error))
                     }
                 }
                 .onSuccess {
@@ -112,14 +112,14 @@ class ProfileViewModel(
         viewModelScope.launch {
             clearGoogleCredentialState()
                 .onError { error ->
-                    _uiEvents.trySend(UiEvent.SignOutError(error))
+                    _uiEvents.trySend(UiEvent.ShowSignOutError(error))
 
                     return@launch
                 }
 
             userSessionService.onUserInitiatedSignOut()
 
-            _uiEvents.trySend(UiEvent.SignOutSuccess)
+            _uiEvents.trySend(UiEvent.FinishSignOut)
         }
     }
 
@@ -130,9 +130,9 @@ class ProfileViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: BaseError) : UiEvent
+        data class ShowError(val error: BaseError) : UiEvent
         data class EditUserSuccess(val messageId: Int) : UiEvent
-        data class SignOutError(val error: BaseError) : UiEvent
-        data object SignOutSuccess : UiEvent
+        data class ShowSignOutError(val error: BaseError) : UiEvent
+        data object FinishSignOut : UiEvent
     }
 }

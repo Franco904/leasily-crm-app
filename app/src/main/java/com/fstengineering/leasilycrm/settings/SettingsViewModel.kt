@@ -52,6 +52,6 @@ class SettingsViewModel(
     }
 
     sealed interface UiEvent {
-        data class Error(val error: BaseError) : UiEvent
+        data class ShowError(val error: BaseError) : UiEvent
     }
 }

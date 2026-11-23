@@ -112,7 +112,7 @@ fun AtendimentoRegistrationStep1Screen(
                         onNext()
                     }
 
-                    is AtendimentoRegistrationStep1ViewModel.UiEvent.AtendimentoSearchedNeighborhoodSaveSuccess -> {
+                    is AtendimentoRegistrationStep1ViewModel.UiEvent.FinishSearchedNeighborhoodSave -> {
                         if (neighborhoodForm == null || loadedDraftForm == null) return@collectWithLifecycle
 
                         val atendimentoSearchedNeighborhoods =

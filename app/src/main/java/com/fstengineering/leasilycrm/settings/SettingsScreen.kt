@@ -44,7 +44,7 @@ fun SettingsScreen(
     LaunchedEffect(viewModel, lifecycle) {
         viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
-                is SettingsViewModel.UiEvent.Error -> {
+                is SettingsViewModel.UiEvent.ShowError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )

@@ -56,8 +56,8 @@ import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.BottomSheetError
-import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.OccupiedPeriodDeleteSuccess
+import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.ShowError
+import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.FinishOccupiedPeriodDelete
 import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.RegisterCheckInSuccess
 import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.RegisterCheckOutSuccess
 import com.fstengineering.leasilycrm.occupiedPeriods.presentation.composables.OccupiedPeriodCard
@@ -121,14 +121,14 @@ fun OccupiedPeriodsPage(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is BottomSheetError -> {
+                is ShowError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is OccupiedPeriodDeleteSuccess -> {
+                is FinishOccupiedPeriodDelete -> {
                     if (occupiedPeriodToDelete == null) return@collect
 
                     val messageId =

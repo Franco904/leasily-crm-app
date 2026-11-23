@@ -31,9 +31,9 @@ import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.BottomSheetError
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.ShowError
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.NavigateUp
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.OccupiedPeriodDeleteSuccess
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.FinishOccupiedPeriodDelete
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.RegisterCheckInSuccess
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.RegisterCheckOutSuccess
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.StayDetailsFloatingActionButton
@@ -84,14 +84,14 @@ fun OccupiedPeriodDetailsScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is BottomSheetError -> {
+                is ShowError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is OccupiedPeriodDeleteSuccess -> {
+                is FinishOccupiedPeriodDelete -> {
                     val messageId =
                         if (loaded?.isUnavailablePeriod == true) R.string.delete_unavailable_period_success_message
                         else R.string.delete_stay_success_message

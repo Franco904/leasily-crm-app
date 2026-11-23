@@ -62,7 +62,7 @@ fun ProfileScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is ProfileViewModel.UiEvent.BottomSheetError -> {
+                is ProfileViewModel.UiEvent.ShowError -> {
                     isSigningOut = false
 
                     val errorData = uiEvent.error.toBottomSheetData(
@@ -71,7 +71,7 @@ fun ProfileScreen(
                     onUiEvent(ShowErrorBottomSheet(errorData))
                 }
 
-                is ProfileViewModel.UiEvent.SignOutError -> {
+                is ProfileViewModel.UiEvent.ShowSignOutError -> {
                     isSigningOut = false
 
                     val errorData = uiEvent.error.toBottomSheetData(
@@ -84,7 +84,7 @@ fun ProfileScreen(
                     onUiEvent(ShowSnackBar(uiEvent.messageId))
                 }
 
-                is ProfileViewModel.UiEvent.SignOutSuccess -> {
+                is ProfileViewModel.UiEvent.FinishSignOut -> {
                     isSigningOut = false
                 }
             }

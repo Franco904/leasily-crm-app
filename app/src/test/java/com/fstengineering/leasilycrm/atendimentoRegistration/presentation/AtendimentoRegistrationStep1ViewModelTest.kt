@@ -202,7 +202,7 @@ class AtendimentoRegistrationStep1ViewModelTest {
             sut.uiEvents.test {
                 sut.savePreferredNeighborhood()
 
-                awaitItem() shouldBeEqualTo UiEvent.AtendimentoSearchedNeighborhoodSaveSuccess
+                awaitItem() shouldBeEqualTo UiEvent.FinishSearchedNeighborhoodSave
             }
         }
 

@@ -19,7 +19,7 @@ import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.infra.utils.hasNotificationPermission
-import com.fstengineering.leasilycrm.root.RootViewModel.UiEvent.SignInState
+import com.fstengineering.leasilycrm.root.RootViewModel.UiEvent.NavigateToFirstDestination
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,7 +40,7 @@ fun RootScreen(
         launch {
             viewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is SignInState -> {
+                    is NavigateToFirstDestination -> {
                         val firstDestination = when {
                             uiEvent.isSessionAlive || BuildConfig.SKIP_AUTH -> {
                                 Destinations.Home(startedFromStayNotificationPopUp)

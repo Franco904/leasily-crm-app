@@ -38,7 +38,7 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvent.BottomSheetError
+import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvent.ShowError
 import com.fstengineering.leasilycrm.home.presentation.composables.HomeBottomNavigationBar
 import com.fstengineering.leasilycrm.home.presentation.composables.HomeTopAppBar
 import com.fstengineering.leasilycrm.home.presentation.models.BottomNavBarDestination
@@ -90,7 +90,7 @@ fun HomeScreen(
     LaunchedEffect(viewModel, lifecycle) {
         viewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
             when (uiEvent) {
-                is BottomSheetError -> {
+                is ShowError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy
                     )

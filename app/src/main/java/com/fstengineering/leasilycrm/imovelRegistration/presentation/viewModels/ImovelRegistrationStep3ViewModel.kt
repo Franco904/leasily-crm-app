@@ -81,7 +81,7 @@ class ImovelRegistrationStep3ViewModel : ViewModel() {
                 amount = form.amount,
                 otherPeriods = otherPeriods,
             )
-                .onSuccess { _uiEvents.trySend(UiEvent.ImovelPriceValidateSuccess) }
+                .onSuccess { _uiEvents.trySend(UiEvent.FinishImovelPriceValidation) }
                 .onError { error -> setFieldErrors(error.toDomainErrors()) }
         }
     }
@@ -107,7 +107,7 @@ class ImovelRegistrationStep3ViewModel : ViewModel() {
             }
 
             if (!_priceFormErrors.value.hasErrors) {
-                _uiEvents.trySend(UiEvent.ImovelPriceValidateSuccess)
+                _uiEvents.trySend(UiEvent.FinishImovelPriceValidation)
             }
         }
     }
@@ -127,6 +127,6 @@ class ImovelRegistrationStep3ViewModel : ViewModel() {
     }
 
     sealed interface UiEvent {
-        data object ImovelPriceValidateSuccess : UiEvent
+        data object FinishImovelPriceValidation : UiEvent
     }
 }

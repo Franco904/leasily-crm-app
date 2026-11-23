@@ -42,7 +42,7 @@ class HomeViewModel(
         viewModelScope.launch {
             userQueryRepository.watchUserProfilePictureUrl().collect { result ->
                 result
-                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                     .onSuccess { picUrl -> _userProfilePictureUrl.value = picUrl }
             }
         }
@@ -53,7 +53,7 @@ class HomeViewModel(
             occupiedPeriodSharedQueryRepository.watchAllPastCheckInCheckOutNotDoneCounts()
                 .collect { result ->
                     result
-                        .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                        .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                         .onSuccess { counts ->
                             val todayCheckInsAndCheckOutsCount =
                                 counts.staysAbleToCheckInCount + counts.staysAbleToCheckOutCount
@@ -71,6 +71,6 @@ class HomeViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: BaseError) : UiEvent
+        data class ShowError(val error: BaseError) : UiEvent
     }
 }

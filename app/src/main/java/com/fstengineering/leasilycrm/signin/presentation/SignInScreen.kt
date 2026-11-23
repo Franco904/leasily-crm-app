@@ -45,7 +45,7 @@ fun SignInScreen(
     LaunchedEffect(Unit) {
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is SignInViewModel.UiEvent.BottomSheetError -> {
+                is SignInViewModel.UiEvent.ShowError -> {
                     isSigningIn = false
 
                     val errorData = uiEvent.error.toBottomSheetData(
@@ -54,11 +54,11 @@ fun SignInScreen(
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is SignInViewModel.UiEvent.SignInCancelled -> {
+                is SignInViewModel.UiEvent.CloseSignInAttempt -> {
                     isSigningIn = false
                 }
 
-                is SignInViewModel.UiEvent.SignInSuccess -> {
+                is SignInViewModel.UiEvent.FinishSignIn -> {
                     isSigningIn = false
 
                     onSignIn()

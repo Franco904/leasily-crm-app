@@ -97,7 +97,7 @@ fun ImovelRegistrationStep3Screen(
         launch {
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is ImovelRegistrationStep3ViewModel.UiEvent.ImovelPriceValidateSuccess -> {
+                    is ImovelRegistrationStep3ViewModel.UiEvent.FinishImovelPriceValidation -> {
                         if (imovelPriceForm == null) return@collect
                         val loadedForm =
                             draftForm as? ImovelDraftFormUiState.Loaded ?: return@collect

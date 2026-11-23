@@ -107,7 +107,7 @@ class AtendimentoRegistrationStep1ViewModel : ViewModel() {
             }
 
             clearPreferredNeighborhoodErrors()
-            _uiEvents.trySend(UiEvent.AtendimentoSearchedNeighborhoodSaveSuccess)
+            _uiEvents.trySend(UiEvent.FinishSearchedNeighborhoodSave)
         }
     }
 
@@ -126,6 +126,6 @@ class AtendimentoRegistrationStep1ViewModel : ViewModel() {
 
         data object ValidateSuccess : UiEvent
 
-        data object AtendimentoSearchedNeighborhoodSaveSuccess : UiEvent
+        data object FinishSearchedNeighborhoodSave : UiEvent
     }
 }

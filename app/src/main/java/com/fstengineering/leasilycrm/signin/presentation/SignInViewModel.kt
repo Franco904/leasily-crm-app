@@ -27,8 +27,8 @@ class SignInViewModel(
                 .fold(
                     onError = { error ->
                         _uiEvents.trySend(
-                            if (error == ApplicationError.UserCancellation) UiEvent.SignInCancelled
-                            else UiEvent.BottomSheetError(error),
+                            if (error == ApplicationError.UserCancellation) UiEvent.CloseSignInAttempt
+                            else UiEvent.ShowError(error),
                         )
 
                         return@launch
@@ -43,9 +43,9 @@ class SignInViewModel(
     private suspend fun signInUser(idToken: String) {
         signIn(command = IdToken(idToken))
             .onError { error ->
-                _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                _uiEvents.trySend(UiEvent.ShowError(error))
             }
-            .onSuccess { _uiEvents.trySend(UiEvent.SignInSuccess) }
+            .onSuccess { _uiEvents.trySend(UiEvent.FinishSignIn) }
     }
 
     override fun onCleared() {
@@ -55,8 +55,8 @@ class SignInViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: BaseError) : UiEvent
-        data object SignInCancelled : UiEvent
-        data object SignInSuccess : UiEvent
+        data class ShowError(val error: BaseError) : UiEvent
+        data object CloseSignInAttempt : UiEvent
+        data object FinishSignIn : UiEvent
     }
 }

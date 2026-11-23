@@ -79,7 +79,7 @@ class AtendimentoRegistrationStep3ViewModel : ViewModel() {
 
             if (interacaoFromForm == storedInteracao) {
                 val msg = R.string.no_data_changed_success_message
-                _uiEvents.trySend(UiEvent.InteracaoEditSuccess(messageId = msg))
+                _uiEvents.trySend(UiEvent.FinishInteracaoEdit(messageId = msg))
                 return
             }
         }
@@ -114,8 +114,8 @@ class AtendimentoRegistrationStep3ViewModel : ViewModel() {
                 }
 
             val saveEvent =
-                if (isEditing) UiEvent.InteracaoEditSuccess(messageId = R.string.edit_assistance_interaction_success_message)
-                else UiEvent.InteracaoCreateSuccess
+                if (isEditing) UiEvent.FinishInteracaoEdit(messageId = R.string.edit_assistance_interaction_success_message)
+                else UiEvent.FinishInteracaoCreate
 
             _uiEvents.trySend(saveEvent)
         }
@@ -132,8 +132,8 @@ class AtendimentoRegistrationStep3ViewModel : ViewModel() {
     }
 
     sealed interface UiEvent {
-        data object InteracaoCreateSuccess : UiEvent
+        data object FinishInteracaoCreate : UiEvent
 
-        data class InteracaoEditSuccess(val messageId: Int) : UiEvent
+        data class FinishInteracaoEdit(val messageId: Int) : UiEvent
     }
 }

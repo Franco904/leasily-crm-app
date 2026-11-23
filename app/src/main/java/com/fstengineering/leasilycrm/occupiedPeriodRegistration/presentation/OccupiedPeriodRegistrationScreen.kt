@@ -121,7 +121,7 @@ fun OccupiedPeriodRegistrationScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is OccupiedPeriodRegistrationViewModel.UiEvent.BottomSheetError -> {
+                is OccupiedPeriodRegistrationViewModel.UiEvent.ShowError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
@@ -132,7 +132,7 @@ fun OccupiedPeriodRegistrationScreen(
                     scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
-                is OccupiedPeriodRegistrationViewModel.UiEvent.StayCreateSuccess -> {
+                is OccupiedPeriodRegistrationViewModel.UiEvent.FinishStayCreate -> {
                     onBack(true)
 
                     val messageId =
@@ -141,7 +141,7 @@ fun OccupiedPeriodRegistrationScreen(
                     onUiEvent(UiEvent.ShowSnackBar(messageId))
                 }
 
-                is OccupiedPeriodRegistrationViewModel.UiEvent.StayEditSuccess -> {
+                is OccupiedPeriodRegistrationViewModel.UiEvent.FinishStayEdit -> {
                     onBack(true)
 
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
