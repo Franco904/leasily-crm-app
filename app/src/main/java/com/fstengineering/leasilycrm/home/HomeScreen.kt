@@ -38,15 +38,10 @@ import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.dashboard.presentation.DashboardPage
 import com.fstengineering.leasilycrm.home.HomeViewModel.UiEvent.BottomSheetError
 import com.fstengineering.leasilycrm.home.presentation.composables.HomeBottomNavigationBar
 import com.fstengineering.leasilycrm.home.presentation.composables.HomeTopAppBar
 import com.fstengineering.leasilycrm.home.presentation.models.BottomNavBarDestination
-import com.fstengineering.leasilycrm.clientes.presentation.leads.LeadsPage
-import com.fstengineering.leasilycrm.clientes.presentation.hospedes.HospedesPage
-import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsPage
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
@@ -55,14 +50,10 @@ fun HomeScreen(
     isStayRegistrationSuccess: Boolean,
     onSettingsSelect: () -> Unit,
     onProfileSelect: () -> Unit,
-    onImoveisSelect: () -> Unit,
-    onProprietariosSelect: () -> Unit,
-    onRegisterCliente: (Long?) -> Unit,
-    onViewClienteDetails: (Long) -> Unit,
-    onNewAtendimento: (Long) -> Unit,
-    onNewStayWithCliente: (Long) -> Unit,
-    onRegisterStayBlank: (Long?, Boolean) -> Unit,
-    onViewStay: (Long, cameFromCliente: Boolean) -> Unit,
+    dashboardPage: @Composable () -> Unit,
+    leadsPage: @Composable (isSearching: Boolean, searchInput: String?) -> Unit,
+    hospedesPage: @Composable (isSearching: Boolean, searchInput: String?) -> Unit,
+    occupiedPeriodsPage: @Composable () -> Unit,
     onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -199,49 +190,10 @@ fun HomeScreen(
                     Destinations.Home.OccupiedPeriods
                 } else Destinations.Home.Dashboard,
             ) {
-                composable<Destinations.Home.Dashboard> {
-                    DashboardPage(
-                        viewModel = koinViewModel(),
-                        onImoveisSelect = onImoveisSelect,
-                        onProprietariosSelect = onProprietariosSelect,
-                    )
-                }
-                composable<Destinations.Home.Leads> {
-                    LeadsPage(
-                        viewModel = koinViewModel(),
-                        isSearchingLead = isSearching,
-                        searchInput = searchInput,
-                        onRegisterLead = onRegisterCliente,
-                        onViewLeadDetails = onViewClienteDetails,
-                        onNewAtendimento = onNewAtendimento,
-                        onNewStay = onNewStayWithCliente,
-                        onViewStay = { stayId -> onViewStay(stayId, true) },
-                        onUiEvent = onUiEvent,
-                    )
-                }
-                composable<Destinations.Home.Tenants> {
-                    HospedesPage(
-                        viewModel = koinViewModel(),
-                        isSearchingHospede = isSearching,
-                        searchInput = searchInput,
-                        onRegisterHospede = onRegisterCliente,
-                        onViewHospedeDetails = onViewClienteDetails,
-                        onNewAtendimento = onNewAtendimento,
-                        onNewStay = onNewStayWithCliente,
-                        onViewStay = { stayId -> onViewStay(stayId, true) },
-                        onUiEvent = onUiEvent,
-                    )
-                }
-                composable<Destinations.Home.OccupiedPeriods> {
-                    OccupiedPeriodsPage(
-                        viewModel = koinViewModel(),
-                        onRegisterOccupiedPeriod = { stayId, isUnavailablePeriod ->
-                            onRegisterStayBlank(stayId, isUnavailablePeriod)
-                        },
-                        onViewOccupiedPeriodDetails = { stayId -> onViewStay(stayId, false) },
-                        onUiEvent = onUiEvent,
-                    )
-                }
+                composable<Destinations.Home.Dashboard> { dashboardPage() }
+                composable<Destinations.Home.Leads> { leadsPage(isSearching, searchInput) }
+                composable<Destinations.Home.Tenants> { hospedesPage(isSearching, searchInput) }
+                composable<Destinations.Home.OccupiedPeriods> { occupiedPeriodsPage() }
             }
         }
     }
