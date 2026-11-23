@@ -8,7 +8,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -26,7 +25,6 @@ class AtendimentoRegistrationStep2ViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         coEvery { imovelReadDataSourceMock.getImoveis(any()) } returns AppResult.Success(emptyList())
     }
 

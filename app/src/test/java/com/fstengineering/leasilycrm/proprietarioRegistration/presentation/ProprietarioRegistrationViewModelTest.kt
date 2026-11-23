@@ -15,7 +15,6 @@ import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.model
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioFileUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -23,7 +22,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -34,11 +32,6 @@ class ProprietarioRegistrationViewModelTest {
     private val proprietarioRegistrationReadDataSourceMock: ProprietarioRegistrationReadDataSource =
         mockk(relaxed = true)
     private val sharedStorageMock: SharedStorage = mockk(relaxed = true)
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
 
     @Nested
     @DisplayName("init")

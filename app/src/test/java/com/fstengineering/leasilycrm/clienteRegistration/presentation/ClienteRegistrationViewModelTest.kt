@@ -13,7 +13,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -34,7 +33,6 @@ class ClienteRegistrationViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         coEvery { clienteRegistrationReadDataSourceMock.getTags() } returns
                 AppResult.Success(emptyList())
         coEvery { clienteRegistrationReadDataSourceMock.getCities() } returns

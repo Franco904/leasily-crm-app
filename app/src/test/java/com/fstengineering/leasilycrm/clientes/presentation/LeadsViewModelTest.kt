@@ -12,7 +12,6 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteOrderType
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -41,7 +40,6 @@ class LeadsViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         coEvery { clientesLocalStorageMock.getLeadsOrderTypeId() } returns
                 AppResult.Success(ClienteOrderType.Name.id)
         every { clientesReadDataSourceMock.watchClientes(any(), any(), any()) } returns

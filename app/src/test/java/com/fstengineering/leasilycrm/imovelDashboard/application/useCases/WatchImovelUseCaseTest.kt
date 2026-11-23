@@ -15,7 +15,6 @@ import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.Pro
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.queries.ImovelArgs
 import com.fstengineering.leasilycrm.imovelDashboard.infra.dataSources.ImovelDashboardReadDataSource
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -58,7 +57,6 @@ class WatchImovelUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         every { dateProviderMock.now() } returns today
     }
 

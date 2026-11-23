@@ -12,7 +12,6 @@ import com.fstengineering.leasilycrm.imovelDetails.presentation.mappers.toUiStat
 import com.fstengineering.leasilycrm.imovelDetails.presentation.models.ImovelUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -22,7 +21,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -31,11 +29,6 @@ import org.junit.jupiter.api.Test
 class ImovelDetailsViewModelTest {
     private val imovelDetailsReadDataSourceMock: ImovelDetailsReadDataSource = mockk(relaxed = true)
     private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxed = true)
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
 
     @Nested
     @DisplayName("init")

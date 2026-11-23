@@ -6,13 +6,11 @@ import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedSt
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.api.interfaces.UserApi
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -25,11 +23,6 @@ class UserSessionServiceTest {
         userSessionSharedStore = userSessionSharedStoreMock,
         userApi = userApiMock,
     )
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
 
     @Nested
     @DisplayName("onSessionExpired")

@@ -10,7 +10,6 @@ import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -36,7 +35,6 @@ class RemoteRequestTest {
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         mockkObject(ExceptionLogger)
         every { ExceptionLogger.log(any()) } just runs
     }

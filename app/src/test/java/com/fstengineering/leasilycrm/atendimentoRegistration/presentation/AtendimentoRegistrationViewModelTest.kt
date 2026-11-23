@@ -17,7 +17,6 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -43,7 +42,6 @@ class AtendimentoRegistrationViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         coEvery { atendimentoRegistrationReadDataSourceMock.getNeighborhoodNames() } returns
                 AppResult.Success(emptyList())
         coEvery { clienteSharedReadDataSourceMock.getName(clienteId) } returns

@@ -17,7 +17,6 @@ import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.Imov
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -26,7 +25,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -37,11 +35,6 @@ class ImovelRegistrationViewModelTest {
         mockk(relaxed = true)
     private val imovelWriteDataSourceMock: ImovelWriteDataSource = mockk(relaxed = true)
     private val proprietarioReadDataSourceMock: ProprietarioReadDataSource = mockk(relaxed = true)
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
 
     @Nested
     @DisplayName("saveImovel")

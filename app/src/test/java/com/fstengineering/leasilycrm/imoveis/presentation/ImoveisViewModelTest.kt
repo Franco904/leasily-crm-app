@@ -11,7 +11,6 @@ import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSo
 import com.fstengineering.leasilycrm.imoveis.presentation.models.ImoveisUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -36,7 +35,6 @@ class ImoveisViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         coEvery { imoveisReadDataSourceMock.getImoveis(any()) } returns AppResult.Success(emptyList())
     }
 

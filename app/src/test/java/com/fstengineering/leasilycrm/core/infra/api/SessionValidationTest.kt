@@ -8,22 +8,15 @@ import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
-import io.mockk.clearAllMocks
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class SessionValidationTest {
     private val onSessionExpiredMock: suspend () -> Unit = mockk(relaxed = true)
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
 
     @Nested
     @DisplayName("validateSession")
