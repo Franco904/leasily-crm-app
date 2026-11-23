@@ -18,7 +18,7 @@ class SignInViewModel(
     private val signIn: SignInUseCase,
     private val chooseGoogleAccount: ChooseGoogleAccountUseCase,
 ) : ViewModel() {
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     fun onSignInSelect(mustEnableAutoSelect: Boolean) {

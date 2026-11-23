@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class ImovelRegistrationStep3ViewModel : ViewModel() {
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _priceFormErrors = MutableStateFlow(ImovelPriceErrorUiState())

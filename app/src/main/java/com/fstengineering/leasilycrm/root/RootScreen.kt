@@ -19,7 +19,7 @@ import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.infra.utils.hasNotificationPermission
-import com.fstengineering.leasilycrm.root.RootViewModel.UiEvents.SignInState
+import com.fstengineering.leasilycrm.root.RootViewModel.UiEvent.SignInState
 import kotlinx.coroutines.launch
 
 @Composable

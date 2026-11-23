@@ -31,7 +31,7 @@ class OccupiedPeriodDetailsViewModel(
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvents>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _uiState =
@@ -54,10 +54,10 @@ class OccupiedPeriodDetailsViewModel(
         viewModelScope.launch {
             watchOccupiedPeriod.invoke(OccupiedPeriodArgs(stayId)).collect { result ->
                 result
-                    .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
                     .onSuccess { storedPeriod ->
                         if (storedPeriod == null) {
-                            _uiEvents.trySend(UiEvents.NavigateUp)
+                            _uiEvents.trySend(UiEvent.NavigateUp)
                             return@onSuccess
                         }
 
@@ -81,8 +81,8 @@ class OccupiedPeriodDetailsViewModel(
 
         viewModelScope.launch {
             occupiedPeriodSharedCommandRepository.delete(periodId)
-                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
-                .onSuccess { _uiEvents.trySend(UiEvents.OccupiedPeriodDeleteSuccess) }
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onSuccess { _uiEvents.trySend(UiEvent.OccupiedPeriodDeleteSuccess) }
         }
     }
 
@@ -91,8 +91,8 @@ class OccupiedPeriodDetailsViewModel(
 
         viewModelScope.launch {
             occupiedPeriodSharedCommandRepository.registerCheckIn(periodId)
-                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
-                .onSuccess { _uiEvents.trySend(UiEvents.RegisterCheckInSuccess) }
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onSuccess { _uiEvents.trySend(UiEvent.RegisterCheckInSuccess) }
         }
     }
 
@@ -101,7 +101,7 @@ class OccupiedPeriodDetailsViewModel(
 
         viewModelScope.launch {
             occupiedPeriodSharedCommandRepository.undoRegisterCheckIn(periodId)
-                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
         }
     }
 
@@ -116,16 +116,16 @@ class OccupiedPeriodDetailsViewModel(
                 )
             )
                 .onError { error ->
-                    _uiEvents.trySend(UiEvents.BottomSheetError(error))
+                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
                 }
-                .onSuccess { _uiEvents.trySend(UiEvents.RegisterCheckOutSuccess) }
+                .onSuccess { _uiEvents.trySend(UiEvent.RegisterCheckOutSuccess) }
         }
 
         viewModelScope.launch {
             occupiedPeriodSharedCommandRepository.setMustNotShowCheckOutDialogAnymore(
                 mustNotShowCheckOutDialogAnymore,
             )
-                .onError { e -> _uiEvents.trySend(UiEvents.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
         }
     }
 
@@ -140,7 +140,7 @@ class OccupiedPeriodDetailsViewModel(
                 )
             )
                 .onError { error ->
-                    _uiEvents.trySend(UiEvents.BottomSheetError(error))
+                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
                 }
         }
     }
@@ -151,11 +151,11 @@ class OccupiedPeriodDetailsViewModel(
         super.onCleared()
     }
 
-    sealed interface UiEvents {
-        data class BottomSheetError(val error: BaseError) : UiEvents
-        data object NavigateUp : UiEvents
-        data object OccupiedPeriodDeleteSuccess : UiEvents
-        data object RegisterCheckInSuccess : UiEvents
-        data object RegisterCheckOutSuccess : UiEvents
+    sealed interface UiEvent {
+        data class BottomSheetError(val error: BaseError) : UiEvent
+        data object NavigateUp : UiEvent
+        data object OccupiedPeriodDeleteSuccess : UiEvent
+        data object RegisterCheckInSuccess : UiEvent
+        data object RegisterCheckOutSuccess : UiEvent
     }
 }

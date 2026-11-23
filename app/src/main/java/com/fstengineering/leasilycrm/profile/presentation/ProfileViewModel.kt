@@ -33,7 +33,7 @@ class ProfileViewModel(
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
@@ -80,7 +80,7 @@ class ProfileViewModel(
 
                         is DomainError -> _creciFieldError.update { error.toInlineMessage() }
                         is ApplicationError ->
-                            _uiEvents.send(UiEvent.BottomSheetError(error))
+                            _uiEvents.trySend(UiEvent.BottomSheetError(error))
                     }
                 }
                 .onSuccess {

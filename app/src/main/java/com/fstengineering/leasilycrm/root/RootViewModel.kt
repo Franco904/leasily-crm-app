@@ -14,7 +14,7 @@ class RootViewModel(
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvents>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     fun init() {
@@ -29,7 +29,7 @@ class RootViewModel(
         viewModelScope.launch {
             val isSessionAlive = userSessionSharedStore.isSessionAlive()
 
-            _uiEvents.send(UiEvents.SignInState(isSessionAlive))
+            _uiEvents.trySend(UiEvent.SignInState(isSessionAlive))
         }
     }
 
@@ -40,7 +40,13 @@ class RootViewModel(
         }
     }
 
-    sealed interface UiEvents {
-        data class SignInState(val isSessionAlive: Boolean) : UiEvents
+    override fun onCleared() {
+        _uiEvents.close()
+
+        super.onCleared()
+    }
+
+    sealed interface UiEvent {
+        data class SignInState(val isSessionAlive: Boolean) : UiEvent
     }
 }
