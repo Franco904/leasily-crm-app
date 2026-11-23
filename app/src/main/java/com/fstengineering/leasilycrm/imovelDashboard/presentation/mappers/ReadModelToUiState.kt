@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.imovelDashboard.presentation.mappers
 
-import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelOccupiedDateReadModel
@@ -17,7 +16,7 @@ fun ImovelReadModel.toUiState(): ImovelUiState.Loaded {
     return ImovelUiState.Loaded(
         id = id,
         mainPicture = mainPictureUriString?.let {
-            ImovelFileUiState(uri = it.toUri(), isMainPicture = true)
+            ImovelFileUiState(uriString = it, isMainPicture = true)
         },
         type = type,
         address = ImovelAddressUiState(

@@ -193,7 +193,7 @@ fun OccupiedPeriodDetailsScreen(
                         stay = loaded,
                         onOpenStayFile = { file ->
                             context.openFileWithChooser(
-                                uriString = file.uri.toString(),
+                                uriString = file.uriString,
                                 onActivityNotFound = { mustShowNoAppToShowFileContentDialog = true }
                             )
                         },

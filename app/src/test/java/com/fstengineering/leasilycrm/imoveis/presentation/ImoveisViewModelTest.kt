@@ -184,7 +184,7 @@ class ImoveisViewModelTest {
 
     private fun ImovelReadModel.toCardUiState() = ImovelCardUiState(
         id = id,
-        mainPictureUri = null,
+        mainPictureUriString = null,
         neighborhood = neighborhood,
         streetAddressAndNumber = "$streetAddress, $number",
         type = type,

@@ -177,7 +177,7 @@ fun ImovelDetailsScreen(
                                     imovel = imovel as ImovelUiState.Loaded,
                                     onViewImovelPicture = { pictureFile ->
                                         context.openFileWithChooser(
-                                            uriString = pictureFile.uri.toString(),
+                                            uriString = pictureFile.uriString,
                                             onActivityNotFound = {
                                                 mustShowNoAppToShowFileContentDialog = true
                                             }

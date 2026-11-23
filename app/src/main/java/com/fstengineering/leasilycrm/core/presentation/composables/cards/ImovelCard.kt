@@ -61,7 +61,7 @@ fun ImovelCard(
             .fillMaxWidth()
     ) {
         Column {
-            if (imovel.mainPictureUri != null) {
+            if (imovel.mainPictureUriString != null) {
                 Card(
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
@@ -69,7 +69,7 @@ fun ImovelCard(
                         .height(180.dp)
                 ) {
                     AsyncImage(
-                        model = imovel.mainPictureUri,
+                        model = imovel.mainPictureUriString,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

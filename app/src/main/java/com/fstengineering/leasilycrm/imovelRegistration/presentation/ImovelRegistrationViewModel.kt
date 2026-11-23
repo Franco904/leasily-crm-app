@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.imovelRegistration.presentation
 
 import androidx.annotation.StringRes
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.Destinations
@@ -110,7 +109,7 @@ class ImovelRegistrationViewModel(
         val form = (draftFormUiState.value as? ImovelDraftFormUiState.Loaded) ?: return
 
         val fileDraft = ImovelFileUiState(
-            uri = contentUriString.toUri(),
+            uriString = contentUriString,
             isMainPicture = false,
         )
 

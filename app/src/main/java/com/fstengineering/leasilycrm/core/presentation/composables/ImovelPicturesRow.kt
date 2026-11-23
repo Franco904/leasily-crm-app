@@ -42,7 +42,7 @@ fun ImovelPicturesRow(
     ) {
         itemsIndexed(
             items = pictures,
-            key = { i, file -> file.id ?: "${file.uri}$i" },
+            key = { i, file -> file.id ?: "${file.uriString}$i" },
         ) { i, file ->
             ImovelPictureItem(
                 picture = file,
@@ -82,7 +82,7 @@ private fun ImovelPictureItem(
                     .size(96.dp)
             ) {
                 AsyncImage(
-                    model = picture.uri,
+                    model = picture.uriString,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                 )

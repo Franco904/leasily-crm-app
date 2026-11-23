@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.clienteDetails.presentation.mappers
 
-import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.clienteDetails.application.models.InteracaoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.AtendimentoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ImovelEnviadoReadModel
@@ -138,7 +137,7 @@ private fun ImovelEnviadoReadModel.toUiState(): ImovelCardUiState {
 
     return ImovelCardUiState(
         id = id,
-        mainPictureUri = mainPictureUriString?.toUri(),
+        mainPictureUriString = mainPictureUriString,
         neighborhood = neighborhood,
         streetAddressAndNumber = streetAddressAndNumber,
         type = type,

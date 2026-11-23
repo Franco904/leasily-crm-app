@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation
 
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
@@ -278,7 +277,7 @@ class OccupiedPeriodRegistrationViewModel(
             val fileName = sharedStorage.getFileName(contentUriString)
 
             val fileDraft = StayFileUiState(
-                uri = contentUriString.toUri(),
+                uriString = contentUriString,
                 name = fileName ?: defaultFileName,
             )
 

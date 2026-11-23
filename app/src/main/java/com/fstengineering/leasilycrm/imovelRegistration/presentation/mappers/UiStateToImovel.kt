@@ -79,6 +79,6 @@ private fun ImovelPriceUiState.toImovelPrice() = ImovelPrice.parse(
 
 private fun ImovelFileUiState.toImovelFile() = ImovelFile.parse(
     id = id,
-    uriString = uri.toString(),
+    uriString = uriString,
     isMainPicture = isMainPicture,
 )
