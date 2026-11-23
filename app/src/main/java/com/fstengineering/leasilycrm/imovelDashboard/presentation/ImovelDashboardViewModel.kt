@@ -14,6 +14,7 @@ import com.fstengineering.leasilycrm.imovelDashboard.presentation.models.ImovelU
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -40,7 +41,7 @@ class ImovelDashboardViewModel(
 
     private fun watchImovel(imovelId: Long) {
         viewModelScope.launch {
-            watchImovel.invoke(ImovelArgs(imovelId)).collect { result ->
+            watchImovel.invoke(ImovelArgs(imovelId)).collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                     .onSuccess { storedImovel ->

@@ -8,6 +8,7 @@ import com.fstengineering.leasilycrm.settings.models.SettingsUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,7 +34,7 @@ class SettingsViewModel(
 
     private fun watchSettings() {
         viewModelScope.launch {
-            settingsSharedStore.watch().collect { settings ->
+            settingsSharedStore.watch().collectLatest { settings ->
                 _settingsUiState.update { SettingsUiState.Loaded.fromReadModel(settings) }
             }
         }

@@ -10,6 +10,7 @@ import com.fstengineering.leasilycrm.home.application.repositories.UserQueryRepo
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -40,7 +41,7 @@ class HomeViewModel(
 
     private fun watchUserProfilePictureUrl() {
         viewModelScope.launch {
-            userQueryRepository.watchUserProfilePictureUrl().collect { result ->
+            userQueryRepository.watchUserProfilePictureUrl().collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                     .onSuccess { picUrl -> _userProfilePictureUrl.value = picUrl }
@@ -51,7 +52,7 @@ class HomeViewModel(
     private fun watchTodayCheckInsAndCheckouts() {
         viewModelScope.launch {
             occupiedPeriodSharedQueryRepository.watchAllPastCheckInCheckOutNotDoneCounts()
-                .collect { result ->
+                .collectLatest { result ->
                     result
                         .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                         .onSuccess { counts ->
