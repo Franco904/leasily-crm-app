@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.profile.presentation
 
-import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
@@ -109,9 +108,9 @@ class ProfileViewModel(
         _creciFieldError.update { null }
     }
 
-    fun signOutUser(activityContext: Activity) {
+    fun signOutUser() {
         viewModelScope.launch {
-            clearGoogleCredentialState(activityContext)
+            clearGoogleCredentialState()
                 .onError { error ->
                     _uiEvents.trySend(UiEvent.SignOutError(error))
 

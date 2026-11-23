@@ -1,15 +1,13 @@
 package com.fstengineering.leasilycrm.core.infra.adapters.interfaces
 
-import android.app.Activity
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 
 interface CredentialManagerAdapter {
+    /** Id token da conta escolhida. `ApplicationError.Unknown` quando o app não tem tela em primeiro plano. */
     suspend fun chooseGoogleAccount(
-        activityContext: Activity,
         mustEnableAutoSelect: Boolean,
     ): AppResult<String>
 
-    suspend fun clearGoogleCredentialState(
-        activityContext: Activity,
-    ): AppResult<Unit>
+    /** Esquece a conta selecionada. `ApplicationError.Unknown` quando o app não tem tela em primeiro plano. */
+    suspend fun clearGoogleCredentialState(): AppResult<Unit>
 }

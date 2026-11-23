@@ -18,11 +18,14 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 
 class CredentialManagerAdapterImpl(
     private val connectivityAdapter: ConnectivityAdapter,
+    private val currentActivityTracker: CurrentActivityTracker,
 ) : CredentialManagerAdapter {
     override suspend fun chooseGoogleAccount(
-        activityContext: Activity,
         mustEnableAutoSelect: Boolean,
     ): AppResult<String> {
+        val activityContext = currentActivityTracker.current()
+            ?: return AppResult.Error(error = ApplicationError.Unknown)
+
         val credentialManager = CredentialManager.create(activityContext)
 
         val result = getCredential(
@@ -95,9 +98,10 @@ class CredentialManagerAdapterImpl(
         return if (connectivityAdapter.isDeviceConnectedToInternet()) error else ApplicationError.NoInternet
     }
 
-    override suspend fun clearGoogleCredentialState(
-        activityContext: Activity,
-    ): AppResult<Unit> {
+    override suspend fun clearGoogleCredentialState(): AppResult<Unit> {
+        val activityContext = currentActivityTracker.current()
+            ?: return AppResult.Error(error = ApplicationError.Unknown)
+
         val credentialManager = CredentialManager.create(activityContext)
         val clearCredentialStateRequest = ClearCredentialStateRequest()
 

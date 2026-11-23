@@ -169,7 +169,7 @@ fun ProfileScreen(
                         isConfirmingSigningOut = false
                         isSigningOut = true
 
-                        viewModel.signOutUser(activityContext = activity)
+                        viewModel.signOutUser()
                     },
                     onCancel = { isConfirmingSigningOut = false },
                 )

@@ -104,10 +104,7 @@ fun SignInScreen(
                     if (!isSigningIn) {
                         isSigningIn = true
 
-                        viewModel.onSignInSelect(
-                            activityContext = activity,
-                            mustEnableAutoSelect = !hasSessionExpired,
-                        )
+                        viewModel.onSignInSelect(mustEnableAutoSelect = !hasSessionExpired)
                     }
                 },
                 modifier = Modifier

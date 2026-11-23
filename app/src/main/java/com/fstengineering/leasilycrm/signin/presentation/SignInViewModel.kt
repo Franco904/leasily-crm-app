@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.signin.presentation
 
-import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
@@ -22,9 +21,9 @@ class SignInViewModel(
     private val _uiEvents = Channel<UiEvent>()
     val uiEvents = _uiEvents.receiveAsFlow()
 
-    fun onSignInSelect(activityContext: Activity, mustEnableAutoSelect: Boolean) {
+    fun onSignInSelect(mustEnableAutoSelect: Boolean) {
         viewModelScope.launch {
-            val idToken = chooseGoogleAccount(activityContext, mustEnableAutoSelect)
+            val idToken = chooseGoogleAccount(mustEnableAutoSelect)
                 .fold(
                     onError = { error ->
                         _uiEvents.trySend(
