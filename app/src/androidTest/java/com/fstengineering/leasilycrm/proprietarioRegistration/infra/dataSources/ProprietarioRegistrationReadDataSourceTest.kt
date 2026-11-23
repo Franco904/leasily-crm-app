@@ -93,9 +93,9 @@ class ProprietarioRegistrationReadDataSourceTest : IntegrationTest() {
         files = persistentListOf<ProprietarioFile>().addAll(files),
     ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Proprietario>()
 
-    private fun createFakeProprietarioFile(id: Long): ProprietarioFile = ProprietarioFile(
+    private fun createFakeProprietarioFile(id: Long): ProprietarioFile = ProprietarioFile.parse(
         id = id,
         uriString = "content://${faker.random.nextUUID()}",
         name = faker.random.nextUUID(),
-    )
+    ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<ProprietarioFile>()
 }

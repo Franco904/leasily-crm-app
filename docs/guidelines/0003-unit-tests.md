@@ -32,14 +32,21 @@ inner class InvokeTests {
 
 ## 2. Fronteiras lógicas
 
-- Testes de **domínio** (agregados, Value Objects, Domain Services): sem dependência de Android ou
-  infraestrutura. Objetos Kotlin puros.
+- Testes de **domínio** (agregados, Value Objects, Domain Services): sem `android`, `androidx`,
+  `mockk`, `infra` nem `application`. Objetos Kotlin puros.
 - Testes de **UseCase** e **ViewModel**: todas as dependências (Repositories, DataSources) são
   mockadas. Nunca acesse banco de dados real.
 - Testes de **infraestrutura** (Repository, DataSource): mockar dependências externas; DAOs que
   tocam SQLite e código abrangido por transação são cobertos por testes instrumentados
   ([0004-integration-tests.md](0004-integration-tests.md)).
-- Testes de um contexto delimitado não importam lógica de negócio interna de outro contexto.
+- **Fronteira de contexto** (produção, `test/` e `androidTest/`): o módulo importa só o próprio
+  módulo, os módulos do **mesmo contexto** (coluna "Contexto" da tabela de módulos do
+  `README.md`), o `core` e, do pacote raiz, `Destinations`. Módulo sem contexto na tabela (`home`,
+  `settings`, `root`) é contexto próprio.
+- **Raiz de composição**, por papel, pode importar qualquer módulo: o pacote raiz
+  (`DestinationHandling.kt`, `Destinations.kt`, `MainActivity.kt`, `LeasilyCrmApplication.kt`),
+  `core/di/**` (só pacotes `.di`) e a classe `@Database` (só classes `@Dao`). O `core` não
+  importa módulo fora disso.
 
 ---
 
@@ -51,8 +58,7 @@ erro retornado, não apenas que houve erro:
 
 ```kotlin
 val result = sut(command)
-assertTrue(result is AppResult.Error)
-assertEquals(DomainError.StayPeriod.Overbooking, (result as AppResult.Error).error)
+result shouldBeEqualTo AppResult.Error(DomainError.StayPeriod.Overbooking)
 ```
 
 ---
@@ -91,11 +97,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 ```
 
-- **JUnit 5** + **MockK** + asserções `kluent`.
-- Criar mocks: `mockk(relaxed = true)` para mocks que não precisam de stubs explícitos. MockK
-  mocka classe concreta — não crie interface só para testar.
-- Coroutines: `runTest { }` para suspending functions; `@ExtendWith(MainDispatcherExtension::class)`
-  quando o SUT usa `Dispatchers.Main`.
+- **JUnit 5** + **MockK** + asserções só `kluent` (sem `Assertions.*` nem `kotlin.test`).
+- Criar mocks: `mockk(relaxUnitFun = true)`. Ele dispensa o stub de função que devolve `Unit`; o
+  resto o teste declara. `relaxed = true` não existe aqui: devolve valores padrão e enfraquece o
+  teste. Lambda `suspend () -> Unit` não devolve `Unit` (é `Any?`), então leva
+  `coEvery { … } just runs`. MockK mocka classe concreta — não crie interface só para testar.
+- Coroutines: `runTest { }` para suspending functions (`runBlocking` não existe em `test/`);
+  `@ExtendWith(MainDispatcherExtension::class)` quando o SUT usa `Dispatchers.Main`.
 - ViewModel: ver [0005-presentation-tests.md](0005-presentation-tests.md).
 
 ---

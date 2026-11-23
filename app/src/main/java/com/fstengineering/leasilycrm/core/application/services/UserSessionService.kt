@@ -1,14 +1,14 @@
 package com.fstengineering.leasilycrm.core.application.services
 
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
-import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
+import com.fstengineering.leasilycrm.core.infra.api.interfaces.UserApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 class UserSessionService(
     private val userSessionSharedStore: UserSessionSharedStore,
-    private val userRemoteDataSource: UserRemoteDataSource,
+    private val userApi: UserApi,
 ) {
     private val _userSessionEvents = MutableSharedFlow<UserSessionEvent>()
     val userSessionEvents: Flow<UserSessionEvent> = _userSessionEvents.asSharedFlow()
@@ -18,7 +18,7 @@ class UserSessionService(
      * de qualquer forma) e, em seguida, no dispositivo.
      */
     suspend fun onUserInitiatedSignOut() {
-        userRemoteDataSource.signOutUser()
+        userApi.signOutUser()
         endSession(event = UserSessionEvent.UserInitiatedSignOutEvent)
     }
 

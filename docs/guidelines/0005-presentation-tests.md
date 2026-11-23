@@ -20,11 +20,8 @@ import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTes
 
 @ViewModelCoroutineTest
 class PeriodoOcupadoRegistrationViewModelTest {
-    private val registerEstadiaUseCaseMock: RegisterEstadiaUseCase = mockk(relaxed = true)
+    private val registerEstadiaUseCaseMock: RegisterEstadiaUseCase = mockk(relaxUnitFun = true)
     private val sut = PeriodoOcupadoRegistrationViewModel(registerEstadiaUseCase = registerEstadiaUseCaseMock)
-
-    @BeforeEach
-    fun setUp() { clearAllMocks() }
 
     @Nested
     @DisplayName("registerEstadia")
@@ -41,16 +38,26 @@ class PeriodoOcupadoRegistrationViewModelTest {
 
 Essa anotação combina:
 
-- `@TestInstance(Lifecycle.PER_CLASS)` — instância compartilhada por todos os testes da classe.
 - `@ExtendWith(MainDispatcherExtension::class)` — substitui `Dispatchers.Main` pelo
-  `TestDispatcher`.
+  `UnconfinedTestDispatcher`.
+
+Só a annotation carrega `@ExtendWith(MainDispatcherExtension)`. A instância é por método
+(`@TestInstance`, `@BeforeAll` e `@AfterAll` não existem em `test/`): mocks e SUT nascem novos a
+cada teste, então `clearAllMocks()` não é necessário. O teste importa só o JVM: nada de
+`androidx.compose`, `androidx.activity`, `androidx.fragment` nem `androidx.navigation`.
 
 ---
 
 ## 2. O que verificar
 
-- **Estados emitidos:** sempre via Turbine — `uiState.test { awaitItem() }`, idem para `uiEvents`.
-  Nunca leia `.value` direto.
+- **Eventos (`uiEvents`):** sempre via Turbine — `uiEvents.test { awaitItem() }`.
+- **Estado (`uiState`):** leitura pontual vale: `.value` do `StateFlow` e operadores de um valor só
+  (`first`, `firstOrNull`, `last`, `single`, `toList`, `take`, `onEach`, `filterIsInstance`,
+  `combine`). O `MainDispatcherExtension` usa `UnconfinedTestDispatcher`, então o `.value` é
+  determinístico. A sequência `Loading` → `Loaded` pede Turbine.
+- **Coletor lançado fica de fora:** `collect`, `collectLatest`, `launchIn`, `stateIn`, `shareIn`,
+  `LiveData`, `Observer`, `observeForever` e `CompletableFuture` fogem do controle do teste.
+  `StandardTestDispatcher`, `Dispatchers.setMain` e `resetMain` vivem só em `testUtils/`.
 - **Chamadas às dependências:** `coVerify { useCaseMock(...) }` — confirmar que o ViewModel delegou
   corretamente.
 - **Argumentos:** verificar os dados passados às dependências quando envolvem regras de negócio.

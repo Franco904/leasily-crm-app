@@ -117,7 +117,12 @@ curto, o problema está na interface: volte à [0010](0010-interface-design.md).
 - **O comentário acompanha o código.** Um diff que muda um fato documentado atualiza o comentário de
   interface no mesmo commit, evitando mentir aos chamadores.
 - **TODO não é comentário.** Trabalho pendente vai para a lista de comportamentos da `tdd` ou para
-  uma issue de débito técnico, nunca para o código.
+  uma issue de débito técnico, nunca para o código (`TODO`, `FIXME`, `HACK`, `XXX` e `TODO()`).
+- **Código comentado é removido; o histórico vive no git.** Um `//` ou `/* */` cujo conteúdo é
+  código (`val`, `fun`, `if`, `return`, `import`, `@…`) é código morto.
+- **`//` só dentro de corpo.** Acima de uma declaração de classe, arquivo ou função, o comentário é
+  KDoc (se há gatilho) ou vira nome. KDoc só em declaração pública: `private` e `protected` não
+  levam KDoc.
 - **Antes do commit**, o diff passa no Teste da exclusão: toda declaração pública com gatilho tem
   comentário de interface, todo trecho cujo o quê ou por quê não é óbvio tem comentário de
   implementação, e não há TODO.
@@ -133,6 +138,7 @@ curto, o problema está na interface: volte à [0010](0010-interface-design.md).
 | Detalhe de implementação em comentário de interface ([Teste da exclusão](#teste-da-exclusão))               | `[should fix]`                            |
 | Nome explicado por comentário ([Nome antes de comentário](#nome-antes-de-comentário))                       | `[should fix]`                            |
 | TODO no diff ([Manutenção](#manutenção))                                                                    | `[should fix]`                            |
+| Código comentado ([Manutenção](#manutenção))                                                                    | `[should fix]`                            |
 | Explicação só no commit ou na PR ([Manutenção](#manutenção))                                                | `[should fix]`                            |
 | Comentário que repete a assinatura ou o código ([Teste da exclusão](#teste-da-exclusão))                    | `[nitpick]`                               |
 | Comentário difícil de escrever ([Comentário primeiro](#comentário-primeiro))                                | code-smell de design, arrumar ao escrever |

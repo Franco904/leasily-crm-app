@@ -10,17 +10,18 @@ import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSource
 import com.fstengineering.leasilycrm.imoveis.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.imoveis.presentation.models.ImoveisUiState
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 class ImoveisViewModel(
     private val imoveisReadDataSource: ImoveisReadDataSource,
@@ -50,7 +51,7 @@ class ImoveisViewModel(
 
     private fun watchImoveis() {
         viewModelScope.launch {
-            imoveisReadDataSource.watchImoveis().collect { result ->
+            imoveisReadDataSource.watchImoveis().collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                     .onSuccess { readModels ->
@@ -66,7 +67,7 @@ class ImoveisViewModel(
         viewModelScope.launch {
             searchInput
                 .debounce(500.milliseconds)
-                .collect { searchInput ->
+                .collectLatest { searchInput ->
                     imoveisReadDataSource.getImoveis(matching = searchInput)
                         .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                         .onSuccess { readModels ->

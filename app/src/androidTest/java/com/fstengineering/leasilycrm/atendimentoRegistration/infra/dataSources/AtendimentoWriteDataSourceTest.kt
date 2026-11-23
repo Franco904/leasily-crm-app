@@ -35,7 +35,7 @@ class AtendimentoWriteDataSourceTest : IntegrationTest() {
     // region save
 
     @Test
-    fun deveSalvarAtendimentoComPreferenciasInteracoesEImoveisEnviados(): Unit =
+    fun deveSalvarAtendimentoComPreferenciasInteracoesEImoveisEnviadosQuandoAtendimentoEhCadastrado(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
             val imovelId = db.saveFakeImovelId()
@@ -97,25 +97,6 @@ class AtendimentoWriteDataSourceTest : IntegrationTest() {
             db.saveFakeAtendimento(clienteId)
 
             isLead(clienteId) shouldBeEqualTo true
-        }
-
-    // endregion
-
-    // region delete
-
-    @Test
-    fun deveVoltarParaHospedeAntigoQuandoAtendimentoEhExcluido(): Unit =
-        runBlocking(Dispatchers.Default) {
-            val clienteId = db.saveFakeCliente()
-            db.insertFakeEstadia(clienteId, db.saveFakeImovelId(), StayStatus.CheckOutDone)
-            val atendimentoId = db.saveFakeAtendimento(clienteId)
-            isLead(clienteId) shouldBeEqualTo true
-
-            sut.delete(atendimentoId).shouldBeInstanceOf<AppResult.Success<*>>()
-
-            isLead(clienteId) shouldBeEqualTo false
-            db.atendimentoRegistrationReadDataSource().getAtendimento(atendimentoId)
-                .shouldBeInstanceOf<AppResult.Error>()
         }
 
     // endregion

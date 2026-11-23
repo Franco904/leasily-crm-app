@@ -59,14 +59,6 @@ data class AppDateTime(val dateTime: LocalDateTime) : Comparable<AppDateTime> {
         return other == null || dateTime < other.dateTime
     }
 
-    fun isToday(): Boolean {
-        val todayDateTime = now()
-
-        return dateTime.dayOfMonth == todayDateTime.dateTime.dayOfMonth
-                && dateTime.month == todayDateTime.dateTime.month
-                && dateTime.year == todayDateTime.dateTime.year
-    }
-
     fun isSameDayAs(other: AppDateTime): Boolean {
         return dateTime.toLocalDate() == other.dateTime.toLocalDate()
     }
@@ -80,10 +72,6 @@ data class AppDateTime(val dateTime: LocalDateTime) : Comparable<AppDateTime> {
     }
 
     companion object {
-        fun now(): AppDateTime {
-            return AppDateTime(dateTime = LocalDateTime.now())
-        }
-
         fun fromMillis(millis: Long): AppDateTime {
             return AppDateTime(
                 dateTime = Instant

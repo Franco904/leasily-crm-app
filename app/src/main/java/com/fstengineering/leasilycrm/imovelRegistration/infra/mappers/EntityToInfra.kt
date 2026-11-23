@@ -10,11 +10,11 @@ import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.Imovel
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelPrice
 
-fun Imovel.toLocalDataModel(): ImovelOrm {
+fun Imovel.toLocalDataModel(now: AppDateTime): ImovelOrm {
     return ImovelOrm(
         id = id,
-        createDateTime = createDateTime ?: AppDateTime.now(),
-        updateDateTime = AppDateTime.now(),
+        createDateTime = createDateTime ?: now,
+        updateDateTime = now,
         proprietarioId = proprietarioId,
         typeId = type.id,
         neighborhood = neighborhood,

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.imovelDetails.presentation.mappers
 
-import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelFileUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
 import com.fstengineering.leasilycrm.core.presentation.models.PriceMonthYearUiState
@@ -78,6 +77,6 @@ private fun ImovelPriceReadModel.toUiState() = ImovelPriceUiState(
 )
 
 private fun ImovelFileReadModel.toUiState() = ImovelFileUiState(
-    uri = uriString.toUri(),
+    uriString = uriString,
     isMainPicture = isMainPicture,
 )

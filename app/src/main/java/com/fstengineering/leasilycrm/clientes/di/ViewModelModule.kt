@@ -10,7 +10,7 @@ val clientesViewModelModule = module {
         LeadsViewModel(
             clientesReadDataSource = get(),
             clienteWriteDataSource = get(),
-            clientesPreferencesDataSource = get(),
+            clientesLocalStorage = get(),
         )
     }
 
@@ -18,7 +18,7 @@ val clientesViewModelModule = module {
         HospedesViewModel(
             clientesReadDataSource = get(),
             clienteWriteDataSource = get(),
-            clientesPreferencesDataSource = get(),
+            clientesLocalStorage = get(),
         )
     }
 }

@@ -5,7 +5,7 @@ import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
+import com.fstengineering.leasilycrm.core.infra.sharedStorage.SharedStorage
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioFileReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.application.models.ProprietarioReadModel
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
@@ -15,7 +15,6 @@ import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.model
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioFileUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -23,22 +22,16 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBeNull
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ProprietarioRegistrationViewModelTest {
-    private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource = mockk(relaxed = true)
+    private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource = mockk(relaxUnitFun = true)
     private val proprietarioRegistrationReadDataSourceMock: ProprietarioRegistrationReadDataSource =
-        mockk(relaxed = true)
-    private val sharedStorageDataSourceMock: SharedStorageDataSource = mockk(relaxed = true)
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
+        mockk(relaxUnitFun = true)
+    private val sharedStorageMock: SharedStorage = mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("init")
@@ -171,7 +164,7 @@ class ProprietarioRegistrationViewModelTest {
             route = route,
             proprietarioWriteDataSource = proprietarioWriteDataSourceMock,
             proprietarioRegistrationReadDataSource = proprietarioRegistrationReadDataSourceMock,
-            sharedStorageDataSource = sharedStorageDataSourceMock,
+            sharedStorage = sharedStorageMock,
         )
 
     private fun createProprietarioReadModel(id: Long) = ProprietarioReadModel(

@@ -5,8 +5,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
-import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.ErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetUiState
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.ErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChannel
 import com.fstengineering.leasilycrm.core.presentation.utils.openAddGoogleAccountSettingsApp
 
@@ -16,17 +16,17 @@ import com.fstengineering.leasilycrm.core.presentation.utils.openAddGoogleAccoun
  */
 fun BaseError.toBottomSheetData(
     imoveis: ErrorBottomSheetDataPropertiesStrategy,
-): ErrorBottomSheetData = when (this) {
+): ErrorBottomSheetUiState = when (this) {
     is ApplicationError -> toBottomSheetData(imoveis)
     is DomainError, is ValidationErrors -> ApplicationError.Unknown.toBottomSheetData(imoveis)
 }
 
 fun ApplicationError.toBottomSheetData(
     imoveis: ErrorBottomSheetDataPropertiesStrategy,
-): ErrorBottomSheetData =
+): ErrorBottomSheetUiState =
     when (this) {
         ApplicationError.NoInternet -> {
-            ErrorBottomSheetData(
+            ErrorBottomSheetUiState(
                 title = imoveis.noInternetErrorTitle,
                 description = imoveis.noInternetErrorDescription,
                 onSecondaryAction = null,
@@ -35,7 +35,7 @@ fun ApplicationError.toBottomSheetData(
         }
 
         ApplicationError.Timeout -> {
-            ErrorBottomSheetData(
+            ErrorBottomSheetUiState(
                 title = imoveis.timeOutErrorTitle,
                 description = imoveis.timeOutErrorDescription,
                 onSecondaryAction = null,
@@ -44,7 +44,7 @@ fun ApplicationError.toBottomSheetData(
         }
 
         ApplicationError.Unauthorized -> {
-            ErrorBottomSheetData(
+            ErrorBottomSheetUiState(
                 title = imoveis.unauthorizedErrorTitle,
                 description = imoveis.unauthorizedErrorDescription,
                 onSecondaryAction = null,
@@ -52,19 +52,8 @@ fun ApplicationError.toBottomSheetData(
             )
         }
 
-//        ApplicationError.Infra.Unknown -> {
-//            ErrorBottomSheetData(
-//                title = imoveis.inconsistencyErrorTitle,
-//                description = imoveis.inconsistencyErrorDescription,
-//                secondaryActionLabel = R.string.contact_support_action_button_text,
-//                onSecondaryAction = { onErrorEvent ->
-//                    mailToSupportChannel { errorUiEvent -> onErrorEvent(errorUiEvent) }
-//                },
-//            )
-//        }
-
         ApplicationError.UserCancellation -> {
-            ErrorBottomSheetData(
+            ErrorBottomSheetUiState(
                 title = -1,
                 description = -1,
                 secondaryActionLabel = null,
@@ -73,7 +62,7 @@ fun ApplicationError.toBottomSheetData(
         }
 
         ApplicationError.NoCredentialsFound -> {
-            ErrorBottomSheetData(
+            ErrorBottomSheetUiState(
                 title = R.string.no_credentials_found_error_title,
                 description = R.string.no_credentials_found_error_description,
                 secondaryActionLabel = R.string.register_account_action_button_text,
@@ -84,7 +73,7 @@ fun ApplicationError.toBottomSheetData(
         }
 
         ApplicationError.Unknown -> {
-            ErrorBottomSheetData(
+            ErrorBottomSheetUiState(
                 title = imoveis.unknownErrorTitle,
                 description = imoveis.unknownErrorDescription,
                 secondaryActionLabel = R.string.contact_support_action_button_text,

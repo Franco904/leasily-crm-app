@@ -143,7 +143,7 @@ fun MonthlyCommissionInvoicePerTenantTagAnalyticsCard(
                     height = (520.0 + (12.0 * rows.size.toDouble() * tenantSegmentsToColors.size.toDouble()))
                         .coerceAtLeast(520.0).dp,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
+                        .align(Alignment.CenterHorizontally)
                 )
             }
             if (tenantSegmentsToColorsChunked.isNotEmpty()) {

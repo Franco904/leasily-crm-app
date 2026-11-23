@@ -10,11 +10,4 @@ data class AppTime(val time: () -> LocalTime) {
         val updatedTime = time().withHour(hour).withMinute(minute)
         return copy(time = { updatedTime })
     }
-
-    companion object {
-        fun now(): AppTime {
-            val now = LocalTime.now()
-            return AppTime { now }
-        }
-    }
 }

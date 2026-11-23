@@ -38,7 +38,7 @@ class ImovelOcupacaoReadDataSourceTest : IntegrationTest() {
     // region watchPeriodosOcupados
 
     @Test
-    fun deveObservarPeriodosOcupadosDoImovelEmOrdemDeCheckInSemOsExcluidos(): Unit =
+    fun deveObservarPeriodosOcupadosDoImovelEmOrdemDeCheckInQuandoHaPeriodoExcluidoEDeOutroImovel(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             imovelWriteDataSource.save(createFakeImovel(proprietarioId = proprietarioId, id = 1L))

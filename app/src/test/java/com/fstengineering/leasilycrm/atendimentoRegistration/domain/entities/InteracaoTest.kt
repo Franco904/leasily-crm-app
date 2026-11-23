@@ -1,5 +1,6 @@
 package com.fstengineering.leasilycrm.atendimentoRegistration.domain.entities
 
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
@@ -30,7 +31,7 @@ class InteracaoTest {
         fun `Deve aceitar Interação sem descrição quando registrada, dado que data e título foram informados`() {
             val result = Interacao.parse(
                 id = null,
-                date = AppDate.now(),
+                date = AppDateProviderImpl().now(),
                 title = "Ligação",
                 description = null,
             )

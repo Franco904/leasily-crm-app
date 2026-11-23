@@ -56,7 +56,7 @@ fun StayRegistrationTopAppBar(
         modifier = modifier
             .fillMaxWidth()
             .height(84.dp)
-            .padding(start = 8.dp, end = 24.dp),
+            .padding(start = 8.dp, end = 24.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

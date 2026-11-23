@@ -8,6 +8,8 @@ import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.A
 import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoWriteDataSource
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.models.AtendimentoDraftFormUiState
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.models.InteracaoDraftFormUiState
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
@@ -15,7 +17,6 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -33,15 +34,14 @@ import org.junit.jupiter.api.Test
 @ViewModelCoroutineTest
 class AtendimentoRegistrationViewModelTest {
     private val atendimentoRegistrationReadDataSourceMock: AtendimentoRegistrationReadDataSource =
-        mockk(relaxed = true)
-    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource = mockk(relaxed = true)
-    private val atendimentoWriteDataSourceMock: AtendimentoWriteDataSource = mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
+    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource = mockk(relaxUnitFun = true)
+    private val atendimentoWriteDataSourceMock: AtendimentoWriteDataSource = mockk(relaxUnitFun = true)
 
     private val clienteId = 7L
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         coEvery { atendimentoRegistrationReadDataSourceMock.getNeighborhoodNames() } returns
                 AppResult.Success(emptyList())
         coEvery { clienteSharedReadDataSourceMock.getName(clienteId) } returns
@@ -123,7 +123,7 @@ class AtendimentoRegistrationViewModelTest {
                         interacoes = persistentListOf(
                             InteracaoDraftFormUiState.Loaded(
                                 id = null,
-                                date = AppDate.now(),
+                                date = AppDateProviderImpl().now(),
                                 title = "",
                                 description = null,
                             ),
@@ -271,7 +271,7 @@ class AtendimentoRegistrationViewModelTest {
         id = id,
         clienteId = clienteId,
         clienteName = faker.random.nextUUID(),
-        createDateTime = AppDateTime.now(),
+        createDateTime = AppDateTimeProviderImpl().now(),
         preferredStartDate = null,
         preferredEndDate = null,
         hasFlexibilityForPeriod = false,

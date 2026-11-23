@@ -14,7 +14,9 @@ import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.Imovel
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
+import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelFile
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeProprietario
+import java.time.LocalDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
@@ -27,7 +29,6 @@ import org.amshove.kluent.shouldBeNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.time.LocalDateTime
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -47,7 +48,7 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
     // region watchImovel
 
     @Test
-    fun deveObservarImovelComFotoPrincipalENomeDoProprietario(): Unit =
+    fun deveObservarImovelComFotoPrincipalENomeDoProprietarioQuandoImovelTemArquivos(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario(name = "Carla")
             val mainPictureUri = faker.random.nextUUID()
@@ -55,8 +56,8 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
                 proprietarioId = proprietarioId,
                 id = 4L,
                 files = listOf(
-                    ImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true),
-                    ImovelFile(
+                    createFakeImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true),
+                    createFakeImovelFile(
                         id = null,
                         uriString = faker.random.nextUUID(),
                         isMainPicture = false
@@ -124,7 +125,7 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
     // region watchPeriodosOcupados
 
     @Test
-    fun deveObservarPeriodosOcupadosDoImovelEmOrdemDeCheckInSemOsExcluidos(): Unit =
+    fun deveObservarPeriodosOcupadosDoImovelEmOrdemDeCheckInQuandoHaPeriodoExcluidoEDeOutroImovel(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             imovelWriteDataSource.save(createFakeImovel(proprietarioId = proprietarioId, id = 1L))

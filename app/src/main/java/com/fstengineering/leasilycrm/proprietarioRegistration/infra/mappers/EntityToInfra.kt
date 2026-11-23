@@ -8,11 +8,11 @@ import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile
 
-fun Proprietario.toProprietarioOrm(): ProprietarioOrm {
+fun Proprietario.toProprietarioOrm(now: AppDateTime): ProprietarioOrm {
     return ProprietarioOrm(
         id = id,
-        createDateTime = createDateTime ?: AppDateTime.now(),
-        updateDateTime = AppDateTime.now(),
+        createDateTime = createDateTime ?: now,
+        updateDateTime = now,
         name = name.value.normalizeEncoding(),
         phone = phone?.value,
         email = email?.value,

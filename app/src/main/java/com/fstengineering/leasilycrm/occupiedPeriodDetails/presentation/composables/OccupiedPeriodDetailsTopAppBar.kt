@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +62,7 @@ fun StayDetailsTopAppBar(
             AppMoreOptionsIconDropdownMenu(
                 options = buildList {
                     add(
-                        MoreOptionsMenuOption(
+                        MoreOptionsMenuOptionUiState(
                             icon = Icons.Outlined.EditCalendar,
                             text = stringResource(R.string.edit_action_button_text),
                             onClick = onEdit,
@@ -70,7 +70,7 @@ fun StayDetailsTopAppBar(
                     )
                     if (!isCheckOutDone) {
                         add(
-                            MoreOptionsMenuOption(
+                            MoreOptionsMenuOptionUiState(
                                 iconDrawable = R.drawable.event_busy,
                                 text = stringResource(R.string.delete_action_button_text),
                                 onClick = onDelete,

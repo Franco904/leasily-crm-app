@@ -8,6 +8,7 @@ val profileViewModelModule = module {
     viewModel {
         ProfileViewModel(
             writeUser = get(),
+            clearGoogleCredentialState = get(),
             userSessionService = get(),
             userQueryRepository = get(),
         )

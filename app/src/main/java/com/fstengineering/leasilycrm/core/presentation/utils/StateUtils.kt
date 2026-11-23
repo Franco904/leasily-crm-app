@@ -12,11 +12,12 @@ import kotlin.time.Duration.Companion.minutes
 
 @Composable
 fun rememberNow(interval: Duration = 1.minutes): State<AppDateTime> {
-    val now = remember { mutableStateOf(AppDateTime.now()) }
+    val dateTimeProvider = LocalAppDateTimeProvider.current
+    val now = remember { mutableStateOf(dateTimeProvider.now()) }
 
     LaunchedEffect(Unit) {
         while (true) {
-            now.value = AppDateTime.now()
+            now.value = dateTimeProvider.now()
             delay(interval)
         }
     }

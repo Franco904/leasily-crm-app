@@ -14,7 +14,7 @@ val occupiedPeriodRegistrationViewModelModule = module {
             writeUnavailablePeriod = get(),
             imovelQueryRepository = get(),
             tenantQueryRepository = get(),
-            sharedStorageDataSource = get(),
+            sharedStorage = get(),
         )
     }
 }

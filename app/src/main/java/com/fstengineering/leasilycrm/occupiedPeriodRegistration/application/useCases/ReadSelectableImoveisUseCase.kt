@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.use
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.mappers.toIntervals
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.models.queries.SelectableImoveisArgs
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.application.repositories.ImovelQueryRepository
@@ -37,7 +38,7 @@ class ReadSelectableImoveisUseCase(
                         )
 
                 val occupiedDates = ImovelOccupiedDatesService.getOccupiedDates(
-                    occupiedPeriods = occupiedPeriods,
+                    occupiedPeriods = occupiedPeriods.toIntervals(),
                     stayToEditId = args.stayId,
                 )
 

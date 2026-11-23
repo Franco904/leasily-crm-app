@@ -10,7 +10,6 @@ import com.fstengineering.leasilycrm.imovelOcupacao.application.models.queries.I
 import com.fstengineering.leasilycrm.imovelOcupacao.application.useCases.WatchImovelOcupacaoUseCase
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -26,12 +25,11 @@ import java.time.LocalDate
 
 @ViewModelCoroutineTest
 class ImovelOcupacaoViewModelTest {
-    private val watchImovelOcupacaoMock: WatchImovelOcupacaoUseCase = mockk(relaxed = true)
-    private val dateProviderMock: AppDateProvider = mockk()
+    private val watchImovelOcupacaoMock: WatchImovelOcupacaoUseCase = mockk(relaxUnitFun = true)
+    private val dateProviderMock: AppDateProvider = mockk(relaxUnitFun = true)
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         every { dateProviderMock.now() } returns AppDate(LocalDate.of(2026, 3, 10))
     }
 

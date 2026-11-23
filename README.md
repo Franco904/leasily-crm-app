@@ -44,7 +44,16 @@ ubíqua e o mapa dos contextos delimitados do domínio.
 
 Módulos são packages dentro de `app/src/main/java/com/fstengineering/leasilycrm/`. Os nomes em
 inglês são legado: a migração para os termos do [`GLOSSARY.md`](GLOSSARY.md) em português está
-planejada (ex.: `occupiedPeriodRegistration` → `periodoOcupadoRegistration`).
+planejada (ex.: `occupiedPeriodRegistration` → `periodoOcupadoRegistration`). Os módulos da tabela
+são exatamente os pacotes de primeiro nível.
+
+**Fronteira de contexto:** o módulo importa só o próprio módulo, os módulos do mesmo contexto, o
+`core` e, do pacote raiz, `Destinations`. Módulo sem contexto próprio na tabela (`home`,
+`settings`, `root`) conta como contexto à parte.
+
+**Raiz de composição**, por papel, é o que pode importar qualquer módulo: o pacote raiz
+(`DestinationHandling.kt`, `Destinations.kt`, `MainActivity.kt`, `LeasilyCrmApplication.kt`),
+`core/di/**` e a classe `@Database`. O `core` não importa módulo fora disso.
 
 | Módulo                       | Contexto delimitado   | Responsabilidade                                                                                                                                        |
 |------------------------------|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -128,13 +137,12 @@ Exemplos corretos:
 - Use cases: `RegisterCheckInUseCase`, `RegisterCheckOutUseCase`, `UndoRegisterStayCheckOutUseCase`
 - Erros: `AppResult.Error(DomainError.StayPeriod.Overbooking)`, nunca `throw DomainException(...)`
 
-**Inglês por padrão fora do domínio:** nomes de variável, método, parâmetro e classe/interface usam
-**inglês**, exceto quando o nome é (ou incorpora) um termo definido em `GLOSSARY.md`, que nesse caso
-o termo permanece em português, palavra por palavra, sem acento (ex.: `EstadiaDao`, `getEstadia`,
-`WriteEstadiaUseCase`; não `StayDao`/`getStay`). Descrições de teste (`@Test fun`) continuam em
-português (`docs/guidelines/0002-all-tests.md`). O código legado ainda usa os termos traduzidos
-(`Stay`, `Property`, `LeadTenant`) — o alias de cada termo está no `GLOSSARY.md`; código novo segue
-a regra. Vale também para nomes de módulo, classes, métodos e funções, sem exceção.
+**Inglês por padrão fora do domínio:** nome que não é (nem incorpora) termo do `GLOSSARY.md` é em
+inglês; termo do glossário fica em português, palavra por palavra, sem acento e sem preposição
+(`EstadiaDao`, `getEstadia`, `OrigemContato`; não `StayDao`/`getStay`). Vale para módulo, classe,
+método, função, variável e parâmetro, sem exceção; o código legado com termos traduzidos (`Stay`,
+`Property`, `LeadTenant`) migra para o alias do glossário. Regra completa em
+[`docs/guidelines/0013-naming.md`](docs/guidelines/0013-naming.md#idioma).
 
 ---
 
@@ -143,12 +151,11 @@ a regra. Vale também para nomes de módulo, classes, métodos e funções, sem 
 | Artefato                                | Sufixo / padrão                                                                                                                              |
 |-----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
 | Caso de uso                             | `<VerboInglês><TermoDeDomínio>UseCase` (ex: `RegisterCheckOutUseCase`, `WriteEstadiaUseCase`)                                                |
-| Repositório (write-side)                | `<Contexto>Repository` (classe concreta, sem `Impl`)                                                                                         |
-| DataSource                              | `<Contexto>WriteDataSource` / `<Contexto>ReadDataSource` (classe concreta, sem `Impl`) / DAO: `<Contexto>Dao`                                |
+| Repositório (sincronização)             | `<Agregado>SyncRepository` (classe concreta, sem `Impl`)                                             |
+| DataSource (só Room)                    | `@Dao abstract class <Contexto>WriteDataSource` / `<Contexto>ReadDataSource`                                             |
 | Erro                                    | `AppResult` com `DomainError`/`ValidationErrors` (regra de domínio) ou `ApplicationError` (falha de infra), todos `BaseError`; nunca `throw` |
 | ViewModel                               | `<Contexto>ViewModel`                                                                                                                        |
 | UiState                                 | `<Contexto>UiState`                                                                                                                          |
-| Modelo de UI (genérico de presentation) | `<Contexto>UiModel`                                                                                                                          |
 | Composable (tela)                       | `<Contexto>Screen`                                                                                                                           |
 | Composable (componente)                 | `<Contexto>` ou nome descritivo sem sufixo                                                                                                   |
 | Arquivo de teste                        | `<ArquivoProducao>Test.kt` (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`)                                                                |

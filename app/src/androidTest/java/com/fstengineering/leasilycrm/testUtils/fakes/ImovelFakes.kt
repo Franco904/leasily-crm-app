@@ -63,3 +63,11 @@ fun createFakeImovelPrice(
     endDate = AppDate(LocalDate.of(2030, 1, 31)),
     amount = amount,
 ).shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<ImovelPrice>()
+
+/** [ImovelFile] válido para os testes de integração. */
+fun createFakeImovelFile(
+    id: Long? = null,
+    uriString: String = "content://${faker.random.nextUUID()}",
+    isMainPicture: Boolean = false,
+): ImovelFile = ImovelFile.parse(id = id, uriString = uriString, isMainPicture = isMainPicture)
+    .shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<ImovelFile>()

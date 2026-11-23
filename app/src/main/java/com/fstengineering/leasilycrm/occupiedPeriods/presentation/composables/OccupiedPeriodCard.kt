@@ -39,7 +39,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.CheckInCheckOutChipLabel
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
@@ -132,7 +132,7 @@ fun OccupiedPeriodCard(
                 AppMoreOptionsIconDropdownMenu(
                     options = buildList {
                         add(
-                            MoreOptionsMenuOption(
+                            MoreOptionsMenuOptionUiState(
                                 icon = Icons.Outlined.EditCalendar,
                                 text = stringResource(R.string.edit_action_button_text),
                                 onClick = onEditPeriod,
@@ -140,7 +140,7 @@ fun OccupiedPeriodCard(
                         )
                         if (!occupiedPeriod.isCheckOutDone) {
                             add(
-                                MoreOptionsMenuOption(
+                                MoreOptionsMenuOptionUiState(
                                     iconDrawable = R.drawable.event_busy,
                                     text = stringResource(R.string.delete_action_button_text),
                                     onClick = onDeletePeriod,

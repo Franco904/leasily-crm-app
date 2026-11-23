@@ -11,7 +11,6 @@ import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSo
 import com.fstengineering.leasilycrm.imoveis.presentation.models.ImoveisUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -31,12 +30,11 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ImoveisViewModelTest {
-    private val imoveisReadDataSourceMock: ImoveisReadDataSource = mockk(relaxed = true)
-    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxed = true)
+    private val imoveisReadDataSourceMock: ImoveisReadDataSource = mockk(relaxUnitFun = true)
+    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxUnitFun = true)
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         coEvery { imoveisReadDataSourceMock.getImoveis(any()) } returns AppResult.Success(emptyList())
     }
 
@@ -184,7 +182,7 @@ class ImoveisViewModelTest {
 
     private fun ImovelReadModel.toCardUiState() = ImovelCardUiState(
         id = id,
-        mainPictureUri = null,
+        mainPictureUriString = null,
         neighborhood = neighborhood,
         streetAddressAndNumber = "$streetAddress, $number",
         type = type,

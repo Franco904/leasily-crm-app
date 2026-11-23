@@ -5,31 +5,24 @@ import com.fstengineering.leasilycrm.core.application.services.UserSessionServic
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.infra.dataSources.remote.interfaces.UserRemoteDataSource
-import io.mockk.clearAllMocks
+import com.fstengineering.leasilycrm.core.infra.api.interfaces.UserApi
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class UserSessionServiceTest {
-    private val userSessionSharedStoreMock: UserSessionSharedStore = mockk(relaxed = true)
-    private val userRemoteDataSourceMock: UserRemoteDataSource = mockk(relaxed = true)
+    private val userSessionSharedStoreMock: UserSessionSharedStore = mockk(relaxUnitFun = true)
+    private val userApiMock: UserApi = mockk(relaxUnitFun = true)
 
     private val sut = UserSessionService(
         userSessionSharedStore = userSessionSharedStoreMock,
-        userRemoteDataSource = userRemoteDataSourceMock,
+        userApi = userApiMock,
     )
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
 
     @Nested
     @DisplayName("onSessionExpired")
@@ -49,7 +42,7 @@ class UserSessionServiceTest {
         fun `Deve encerrar a sessão sem acionar o back-end quando a sessão expira`() = runTest {
             sut.onSessionExpired()
 
-            coVerify(exactly = 0) { userRemoteDataSourceMock.signOutUser() }
+            coVerify(exactly = 0) { userApiMock.signOutUser() }
         }
     }
 
@@ -59,21 +52,21 @@ class UserSessionServiceTest {
         @Test
         fun `Deve encerrar a sessão no back-end e no dispositivo quando o Usuário sai do app`() =
             runTest {
-                coEvery { userRemoteDataSourceMock.signOutUser() } returns AppResult.Success(Unit)
+                coEvery { userApiMock.signOutUser() } returns AppResult.Success(Unit)
 
                 sut.userSessionEvents.test {
                     sut.onUserInitiatedSignOut()
 
                     awaitItem() shouldBeEqualTo UserSessionEvent.UserInitiatedSignOutEvent
                 }
-                coVerify { userRemoteDataSourceMock.signOutUser() }
+                coVerify { userApiMock.signOutUser() }
                 coVerify { userSessionSharedStoreMock.clearSessionState() }
             }
 
         @Test
         fun `Deve encerrar a sessão no dispositivo quando o Usuário sai do app, dado que o back-end está inacessível`() =
             runTest {
-                coEvery { userRemoteDataSourceMock.signOutUser() } returns
+                coEvery { userApiMock.signOutUser() } returns
                         AppResult.Error(ApplicationError.NoInternet)
 
                 sut.userSessionEvents.test {

@@ -8,11 +8,11 @@ import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.Clien
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteDraftFormUiState
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.models.ClienteField
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -27,13 +27,12 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ClienteRegistrationViewModelTest {
-    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxed = true)
+    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxUnitFun = true)
     private val clienteRegistrationReadDataSourceMock: ClienteRegistrationReadDataSource =
-        mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
 
     @BeforeEach
     fun setUp() {
-        clearAllMocks()
         coEvery { clienteRegistrationReadDataSourceMock.getTags() } returns
                 AppResult.Success(emptyList())
         coEvery { clienteRegistrationReadDataSourceMock.getCities() } returns
@@ -291,7 +290,7 @@ class ClienteRegistrationViewModelTest {
 
     private fun createClienteReadModel(id: Long, isLead: Boolean = true) = ClienteReadModel(
         id = id,
-        createDateTime = com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime.now(),
+        createDateTime = AppDateTimeProviderImpl().now(),
         tag = faker.random.nextUUID(),
         name = faker.random.nextUUID(),
         city = faker.random.nextUUID(),

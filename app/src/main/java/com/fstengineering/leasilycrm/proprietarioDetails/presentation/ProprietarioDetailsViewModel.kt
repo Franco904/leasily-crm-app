@@ -14,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -40,7 +41,7 @@ class ProprietarioDetailsViewModel(
         isLoaded = true
 
         watchProprietarioJob = viewModelScope.launch {
-            proprietarioDetailsReadDataSource.watchProprietario(proprietarioId).collect { result ->
+            proprietarioDetailsReadDataSource.watchProprietario(proprietarioId).collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                     .onSuccess { readModel ->

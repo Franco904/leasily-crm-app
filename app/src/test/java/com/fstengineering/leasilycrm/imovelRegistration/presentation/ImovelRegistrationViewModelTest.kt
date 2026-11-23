@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.imovelRegistration.presentation
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.Destinations
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
@@ -16,7 +17,6 @@ import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.Imov
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -25,7 +25,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -33,14 +32,9 @@ import org.junit.jupiter.api.Test
 @ViewModelCoroutineTest
 class ImovelRegistrationViewModelTest {
     private val imovelRegistrationReadDataSourceMock: ImovelRegistrationReadDataSource =
-        mockk(relaxed = true)
-    private val imovelWriteDataSourceMock: ImovelWriteDataSource = mockk(relaxed = true)
-    private val proprietarioReadDataSourceMock: ProprietarioReadDataSource = mockk(relaxed = true)
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
+        mockk(relaxUnitFun = true)
+    private val imovelWriteDataSourceMock: ImovelWriteDataSource = mockk(relaxUnitFun = true)
+    private val proprietarioReadDataSourceMock: ProprietarioReadDataSource = mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("saveImovel")
@@ -160,7 +154,7 @@ class ImovelRegistrationViewModelTest {
 
     private fun createImovelReadModel(id: Long) = ImovelReadModel(
         id = id,
-        createDateTime = AppDateTime.now(),
+        createDateTime = AppDateTimeProviderImpl().now(),
         proprietario = ProprietarioReadModel(
             id = faker.random.nextLong(bound = 9999),
             name = faker.random.nextUUID(),

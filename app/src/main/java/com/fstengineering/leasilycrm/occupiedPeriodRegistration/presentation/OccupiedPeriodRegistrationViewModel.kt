@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation
 
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.R
@@ -10,7 +9,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.infra.dataSources.sharedStorage.SharedStorageDataSource
+import com.fstengineering.leasilycrm.core.infra.sharedStorage.SharedStorage
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
@@ -32,6 +31,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.mod
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodFormUiState
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.StayFileUiState
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
@@ -41,11 +41,11 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 class OccupiedPeriodRegistrationViewModel(
     private val readStay: ReadStayUseCase,
@@ -55,11 +55,11 @@ class OccupiedPeriodRegistrationViewModel(
     private val writeUnavailablePeriod: WriteUnavailablePeriodUseCase,
     private val imovelQueryRepository: ImovelQueryRepository,
     private val tenantQueryRepository: TenantQueryRepository,
-    private val sharedStorageDataSource: SharedStorageDataSource,
+    private val sharedStorage: SharedStorage,
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _imoveis =
@@ -106,7 +106,7 @@ class OccupiedPeriodRegistrationViewModel(
         viewModelScope.launch {
             if (isUnavailablePeriod) {
                 readUnavailablePeriod(UnavailablePeriodArgs(id = occupiedPeriodId))
-                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                     .onSuccess { storedUnavailablePeriod ->
                         val draftForm = storedUnavailablePeriod.toUiState()
 
@@ -115,7 +115,7 @@ class OccupiedPeriodRegistrationViewModel(
                     }
             } else {
                 readStay(StayArgs(id = occupiedPeriodId))
-                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                     .onSuccess { storedStay ->
                         val draftForm = storedStay.toUiState()
 
@@ -125,8 +125,8 @@ class OccupiedPeriodRegistrationViewModel(
             }
 
             if (occupiedPeriodId == null) {
-                if (imovelId != null) getImovelToAutofill(imovelId)
-                if (tenantId != null) getTenantToAutofill(tenantId)
+                if (imovelId != null) loadImovelToAutofill(imovelId)
+                if (tenantId != null) loadTenantToAutofill(tenantId)
             }
 
             watchImovelSearchInput(occupiedPeriodId)
@@ -134,10 +134,10 @@ class OccupiedPeriodRegistrationViewModel(
         }
     }
 
-    private fun getImovelToAutofill(imovelId: Long) {
+    private fun loadImovelToAutofill(imovelId: Long) {
         viewModelScope.launch {
             imovelQueryRepository.getById(imovelId)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                 .onSuccess { storedImovel ->
                     _draftFormUiState.update {
                         when (it) {
@@ -153,10 +153,10 @@ class OccupiedPeriodRegistrationViewModel(
         }
     }
 
-    private fun getTenantToAutofill(tenantId: Long) {
+    private fun loadTenantToAutofill(tenantId: Long) {
         viewModelScope.launch {
             tenantQueryRepository.getById(tenantId)
-                .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                 .onSuccess { storedTenant ->
                     _draftFormUiState.update {
                         when (it) {
@@ -173,14 +173,14 @@ class OccupiedPeriodRegistrationViewModel(
         viewModelScope.launch {
             imovelSearchInput
                 .debounce(500.milliseconds)
-                .collect { searchInput ->
+                .collectLatest { searchInput ->
                     val args = SelectableImoveisArgs(
                         matching = searchInput,
                         stayId = stayId,
                     )
 
                     readSelectableImoveis(args)
-                        .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                        .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                         .onSuccess { matchingImoveis ->
                             val imoveis =
                                 matchingImoveis.map { it.toUiState() }.toPersistentList()
@@ -195,14 +195,14 @@ class OccupiedPeriodRegistrationViewModel(
         viewModelScope.launch {
             tenantSearchInput
                 .debounce(500.milliseconds)
-                .collect { searchInput ->
+                .collectLatest { searchInput ->
                     val tenant = (formToEdit as? OccupiedPeriodFormUiState.Loaded.Stay)?.tenant
 
                     tenantQueryRepository.getAllWithoutUpcomingStays(
                         matching = searchInput,
                         currentTenantId = tenant?.id,
                     )
-                        .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                        .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                         .onSuccess { matchingTenants ->
                             val tenants =
                                 matchingTenants.map { it.toUiState() }.toPersistentList()
@@ -275,10 +275,10 @@ class OccupiedPeriodRegistrationViewModel(
         val form = (draftFormUiState.value as? OccupiedPeriodFormUiState.Loaded.Stay) ?: return
 
         viewModelScope.launch {
-            val fileName = sharedStorageDataSource.getFileName(contentUriString)
+            val fileName = sharedStorage.getFileName(contentUriString)
 
             val fileDraft = StayFileUiState(
-                uri = contentUriString.toUri(),
+                uriString = contentUriString,
                 name = fileName ?: defaultFileName,
             )
 
@@ -288,7 +288,7 @@ class OccupiedPeriodRegistrationViewModel(
 
     fun saveStay() {
         if (formToEdit != null && draftFormUiState.value == formToEdit) {
-            _uiEvents.trySend(UiEvent.StayEditSuccess(messageId = R.string.no_data_changed_success_message))
+            _uiEvents.trySend(UiEvent.FinishStayEdit(messageId = R.string.no_data_changed_success_message))
             return
         }
 
@@ -307,7 +307,7 @@ class OccupiedPeriodRegistrationViewModel(
                                 is ValidationErrors -> setFieldErrors(error.errors)
                                 is DomainError -> setFieldErrors(listOf(error))
                                 is ApplicationError ->
-                                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                                    _uiEvents.trySend(UiEvent.ShowError(error))
                             }
 
                             return@launch
@@ -323,7 +323,7 @@ class OccupiedPeriodRegistrationViewModel(
                                 is ValidationErrors -> setFieldErrors(error.errors)
                                 is DomainError -> setFieldErrors(listOf(error))
                                 is ApplicationError ->
-                                    _uiEvents.trySend(UiEvent.BottomSheetError(error))
+                                    _uiEvents.trySend(UiEvent.ShowError(error))
                             }
 
                             return@launch
@@ -336,8 +336,8 @@ class OccupiedPeriodRegistrationViewModel(
             }
 
             val saveEvent =
-                if (formToEdit != null) UiEvent.StayEditSuccess(messageId = editMessageId)
-                else UiEvent.StayCreateSuccess
+                if (formToEdit != null) UiEvent.FinishStayEdit(messageId = editMessageId)
+                else UiEvent.FinishStayCreate
 
             _uiEvents.trySend(saveEvent)
         }
@@ -394,13 +394,13 @@ class OccupiedPeriodRegistrationViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: BaseError) : UiEvent
+        data class ShowError(val error: BaseError) : UiEvent
 
         data class ScrollToField(val field: OccupiedPeriodField) : UiEvent
 
-        data class StayEditSuccess(val messageId: Int) : UiEvent
+        data class FinishStayEdit(val messageId: Int) : UiEvent
 
-        data object StayCreateSuccess : UiEvent
+        data object FinishStayCreate : UiEvent
 
         data class Exit(val needConfirmation: Boolean) : UiEvent
     }

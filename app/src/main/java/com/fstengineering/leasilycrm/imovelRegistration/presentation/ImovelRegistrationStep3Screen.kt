@@ -27,7 +27,7 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.ConfirmDeleteImovelPriceDialog
@@ -97,7 +97,7 @@ fun ImovelRegistrationStep3Screen(
         launch {
             stepViewModel.uiEvents.collect { uiEvent ->
                 when (uiEvent) {
-                    is ImovelRegistrationStep3ViewModel.UiEvent.ImovelPriceValidateSuccess -> {
+                    is ImovelRegistrationStep3ViewModel.UiEvent.FinishImovelPriceValidation -> {
                         if (imovelPriceForm == null) return@collect
                         val loadedForm =
                             draftForm as? ImovelDraftFormUiState.Loaded ?: return@collect

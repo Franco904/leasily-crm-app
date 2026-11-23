@@ -35,7 +35,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicReadOnlyChip
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryIconButton
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.persistentListOf
@@ -61,7 +61,7 @@ fun ImovelCard(
             .fillMaxWidth()
     ) {
         Column {
-            if (imovel.mainPictureUri != null) {
+            if (imovel.mainPictureUriString != null) {
                 Card(
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
@@ -69,7 +69,7 @@ fun ImovelCard(
                         .height(180.dp)
                 ) {
                     AsyncImage(
-                        model = imovel.mainPictureUri,
+                        model = imovel.mainPictureUriString,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -105,12 +105,12 @@ fun ImovelCard(
                 if (hasMoreOptionsMenu) {
                     AppMoreOptionsIconDropdownMenu(
                         options = persistentListOf(
-                            MoreOptionsMenuOption(
+                            MoreOptionsMenuOptionUiState(
                                 icon = Icons.Outlined.Edit,
                                 text = stringResource(R.string.edit_action_button_text),
                                 onClick = onEditImovel,
                             ),
-                            MoreOptionsMenuOption(
+                            MoreOptionsMenuOptionUiState(
                                 icon = Icons.Outlined.Delete,
                                 text = stringResource(R.string.delete_action_button_text),
                                 onClick = onDeleteImovel,

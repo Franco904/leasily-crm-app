@@ -30,7 +30,7 @@ class AtendimentoRegistrationReadDataSourceTest : IntegrationTest() {
     // region getAtendimento
 
     @Test
-    fun deveBuscarAtendimentoParaEdicaoComNomeDoClienteEFotoDoImovelEnviado(): Unit =
+    fun deveBuscarAtendimentoParaEdicaoComNomeDoClienteEFotoDoImovelEnviadoQuandoAtendimentoTemImovelEnviado(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente(name = "Maria")
             val (imovelId, mainPictureUri) = db.saveFakeImovelWithMainPicture()
@@ -67,7 +67,7 @@ class AtendimentoRegistrationReadDataSourceTest : IntegrationTest() {
     fun deveFalharAoBuscarAtendimentoQuandoAtendimentoFoiExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val atendimentoId = db.saveFakeAtendimento(db.saveFakeCliente())
-            db.atendimentoWriteDataSource().delete(atendimentoId)
+            db.atendimentoSharedWriteDataSource().delete(atendimentoId)
                 .shouldBeInstanceOf<AppResult.Success<*>>()
 
             sut.getAtendimento(atendimentoId).shouldBeInstanceOf<AppResult.Error>()
@@ -78,7 +78,7 @@ class AtendimentoRegistrationReadDataSourceTest : IntegrationTest() {
     // region getNeighborhoodNames
 
     @Test
-    fun deveListarBairrosProcuradosSemRepeticaoEmOrdemAlfabetica(): Unit =
+    fun deveListarBairrosProcuradosSemRepeticaoEmOrdemAlfabeticaQuandoAtendimentoTemBairrosPreferidos(): Unit =
         runBlocking(Dispatchers.Default) {
             val clienteId = db.saveFakeCliente()
             db.saveFakeAtendimento(clienteId, preferredNeighborhoods = listOf("Trindade", "Centro"))

@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.mappers
 
-import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
@@ -55,7 +54,7 @@ fun ImovelReadModel.toUiState(): ImovelCardUiState {
 
     return ImovelCardUiState(
         id = id,
-        mainPictureUri = mainPictureUriString?.toUri(),
+        mainPictureUriString = mainPictureUriString,
         neighborhood = neighborhood,
         streetAddressAndNumber = "$streetAddress$numberText",
         type = type,
@@ -69,6 +68,6 @@ fun TenantReadModel.toUiState() = ClienteUiState(
 )
 
 fun StayFileReadModel.toUiState() = StayFileUiState(
-    uri = uriString.toUri(),
+    uriString = uriString,
     name = name,
 )

@@ -14,24 +14,27 @@ import com.fstengineering.leasilycrm.core.domain.utils.toDomainErrors
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toInlineMessage
 import com.fstengineering.leasilycrm.profile.application.models.commands.UserCommandModel
 import com.fstengineering.leasilycrm.profile.application.repositories.UserQueryRepository
+import com.fstengineering.leasilycrm.profile.application.useCases.ClearGoogleCredentialStateUseCase
 import com.fstengineering.leasilycrm.profile.application.useCases.WriteUserUseCase
 import com.fstengineering.leasilycrm.profile.domain.valueObjects.Creci
 import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val writeUser: WriteUserUseCase,
+    private val clearGoogleCredentialState: ClearGoogleCredentialStateUseCase,
     private val userSessionService: UserSessionService,
     private val userQueryRepository: UserQueryRepository,
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
@@ -50,9 +53,9 @@ class ProfileViewModel(
 
     private fun watchUser() {
         viewModelScope.launch {
-            userQueryRepository.watch().collect { result ->
+            userQueryRepository.watch().collectLatest { result ->
                 result
-                    .onError { e -> _uiEvents.trySend(UiEvent.BottomSheetError(e)) }
+                    .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                     .onSuccess { user -> _uiState.update { ProfileUiState.Loaded.fromReadModel(user) } }
             }
         }
@@ -78,7 +81,7 @@ class ProfileViewModel(
 
                         is DomainError -> _creciFieldError.update { error.toInlineMessage() }
                         is ApplicationError ->
-                            _uiEvents.send(UiEvent.BottomSheetError(error))
+                            _uiEvents.trySend(UiEvent.ShowError(error))
                     }
                 }
                 .onSuccess {
@@ -108,9 +111,16 @@ class ProfileViewModel(
 
     fun signOutUser() {
         viewModelScope.launch {
+            clearGoogleCredentialState()
+                .onError { error ->
+                    _uiEvents.trySend(UiEvent.ShowSignOutError(error))
+
+                    return@launch
+                }
+
             userSessionService.onUserInitiatedSignOut()
 
-            _uiEvents.trySend(UiEvent.SignOutSuccess)
+            _uiEvents.trySend(UiEvent.FinishSignOut)
         }
     }
 
@@ -121,8 +131,9 @@ class ProfileViewModel(
     }
 
     sealed interface UiEvent {
-        data class BottomSheetError(val error: BaseError) : UiEvent
+        data class ShowError(val error: BaseError) : UiEvent
         data class EditUserSuccess(val messageId: Int) : UiEvent
-        data object SignOutSuccess : UiEvent
+        data class ShowSignOutError(val error: BaseError) : UiEvent
+        data object FinishSignOut : UiEvent
     }
 }

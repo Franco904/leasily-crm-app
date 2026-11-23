@@ -3,6 +3,8 @@ package com.fstengineering.leasilycrm.testUtils.fakes
 import com.fstengineering.leasilycrm.atendimentoRegistration.domain.entities.Atendimento
 import com.fstengineering.leasilycrm.atendimentoRegistration.domain.entities.Interacao
 import com.fstengineering.leasilycrm.clienteRegistration.domain.entities.Cliente
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
+import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
@@ -12,6 +14,8 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.testUtils.faker
+import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelFile
+import java.util.concurrent.atomic.AtomicLong
 import kotlinx.collections.immutable.toPersistentList
 import org.amshove.kluent.shouldBeInstanceOf
 
@@ -63,7 +67,7 @@ suspend fun AppDatabase.insertFakeEstadia(
     clienteId: Long,
     imovelId: Long,
     status: StayStatus,
-    checkIn: AppDateTime = AppDateTime.now(),
+    checkIn: AppDateTime = AppDateTimeProviderImpl().now(),
 ): Long = stayDao().insertOrUpdate(
     StayEntity(
         id = null,
@@ -88,7 +92,7 @@ suspend fun AppDatabase.insertFakeEstadia(
     )
 )
 
-private val nextFakeAtendimentoId = java.util.concurrent.atomic.AtomicLong(0)
+private val nextFakeAtendimentoId = AtomicLong(0)
 
 /** Cria um Atendimento válido do Cliente, com as Interações e Preferências informadas. */
 fun createFakeAtendimento(
@@ -104,7 +108,7 @@ fun createFakeAtendimento(
     preferredImovelCharacteristics: List<ImovelCharacteristic> = emptyList(),
 ): Atendimento {
     val interacoes = interacoesTitles.map {
-        Interacao.parse(id = null, date = AppDate.now(), title = it, description = null)
+        Interacao.parse(id = null, date = AppDateProviderImpl().now(), title = it, description = null)
             .shouldBeInstanceOf<AppResult.Success<*>>().data.shouldBeInstanceOf<Interacao>()
     }
 
@@ -169,7 +173,7 @@ suspend fun AppDatabase.saveFakeImovelWithMainPicture(): Pair<Long, String> {
     val imovel = createFakeImovel(
         proprietarioId = saveFakeProprietario(),
         id = imovelId,
-        files = listOf(ImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true)),
+        files = listOf(createFakeImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true)),
     )
     imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
     return imovelId to mainPictureUri

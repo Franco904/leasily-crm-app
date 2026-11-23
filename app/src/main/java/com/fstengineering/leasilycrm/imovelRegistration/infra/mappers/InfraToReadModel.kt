@@ -13,6 +13,12 @@ import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.Imovel
 import com.fstengineering.leasilycrm.imovelRegistration.infra.projections.ProprietarioNameProjection
 import kotlinx.collections.immutable.toPersistentList
 
+/**
+ * Imóvel do cadastro com Proprietário, Características, Preços e arquivos.
+ *
+ * Proprietário excluído vira `null` no read model e é registrado em log, sem interromper a leitura.
+ * Característica com id desconhecido é descartada.
+ */
 fun ImovelRegistrationProjection.toReadModel(): ImovelReadModel {
     val activeProprietario = requireNotNull(proprietario).takeUnless { it.isDeleted }
         ?: run {

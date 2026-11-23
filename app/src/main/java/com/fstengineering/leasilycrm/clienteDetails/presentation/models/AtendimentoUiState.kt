@@ -34,6 +34,6 @@ data class AtendimentoUiState(
     val lastSentImovel: ImovelCardUiState?,
     val sentImoveis: ImmutableList<ImovelCardUiState>,
     val lastInteracao: InteracaoUiState?,
-    val interacoesByMonth: ImmutableMap<AppYearMonth, List<InteracaoUiState>>,
+    val interacoesByMonth: ImmutableMap<AppYearMonth, ImmutableList<InteracaoUiState>>,
     val isFinished: Boolean,
 )

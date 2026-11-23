@@ -27,7 +27,7 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.models.InteracaoCardUiState
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.formatToTwoDigitsDateTime
 import kotlinx.collections.immutable.persistentListOf
 
@@ -86,12 +86,12 @@ fun InteracaoCard(
                     if (hasMoreOptionsMenu) {
                         AppMoreOptionsIconDropdownMenu(
                             options = persistentListOf(
-                                MoreOptionsMenuOption(
+                                MoreOptionsMenuOptionUiState(
                                     icon = Icons.Outlined.Edit,
                                     text = stringResource(R.string.edit_action_button_text),
                                     onClick = onEditInteracao,
                                 ),
-                                MoreOptionsMenuOption(
+                                MoreOptionsMenuOptionUiState(
                                     icon = Icons.Outlined.Delete,
                                     text = stringResource(R.string.delete_action_button_text),
                                     onClick = onDeleteInteracao,

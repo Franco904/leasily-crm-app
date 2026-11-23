@@ -1,7 +1,6 @@
 package com.fstengineering.leasilycrm.core.infra.adapters
 
 import android.app.Activity
-import android.util.Log
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -11,18 +10,20 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.adapters.interfaces.CredentialManagerAdapter
 import com.fstengineering.leasilycrm.core.infra.utils.CryptoUtils
-import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toApplicationError
+import com.fstengineering.leasilycrm.core.infra.utils.onBoundary
+import com.fstengineering.leasilycrm.core.infra.utils.toApplicationError
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import io.ktor.utils.io.CancellationException
 
 class CredentialManagerAdapterImpl(
     private val connectivityAdapter: ConnectivityAdapter,
+    private val currentActivityTracker: CurrentActivityTracker,
 ) : CredentialManagerAdapter {
     override suspend fun chooseGoogleAccount(
-        activityContext: Activity,
         mustEnableAutoSelect: Boolean,
     ): AppResult<String> {
+        val activityContext = currentActivityTracker.current() ?: return noActivityError()
+
         val credentialManager = CredentialManager.create(activityContext)
 
         val result = getCredential(
@@ -58,7 +59,7 @@ class CredentialManagerAdapterImpl(
             .addCredentialOption(googleIdOption)
             .build()
 
-        try {
+        val idToken = onBoundary(toError = { classifyGetCredentialFailure(it) }) {
             val result = credentialManager.getCredential(
                 context = activityContext,
                 request = credentialRequest,
@@ -68,52 +69,47 @@ class CredentialManagerAdapterImpl(
             val isSupportedCredentialType = credential is CustomCredential
                     && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 
-            if (!isSupportedCredentialType) {
-                if (BuildConfig.DEBUG) Log.e(TAG, "Unsupported credential type: ${credential.type}")
+            if (isSupportedCredentialType) {
+                GoogleIdTokenCredential.createFrom(credential.data).idToken
+            } else {
+                ExceptionLogger.logMasked("Unsupported credential type: ${credential.type}")
 
-                return AppResult.Error(error = ApplicationError.Unknown)
+                null
             }
-
-            val googleIdTokenCredential = GoogleIdTokenCredential
-                .createFrom(credential.data)
-
-            return AppResult.Success(data = googleIdTokenCredential.idToken)
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            if (BuildConfig.DEBUG) e.printStackTrace()
-
-            return AppResult.Error(error = classifyGetCredentialFailure(e))
+        }.let { result ->
+            when (result) {
+                is AppResult.Error -> return result
+                is AppResult.Success -> result.data
+            }
         }
+
+        return if (idToken != null) AppResult.Success(data = idToken)
+        else AppResult.Error(error = ApplicationError.Unknown)
     }
 
-    // O Credential Manager não sinaliza falta de internet com exceção própria: sem conexão, qualquer
-    // falha que não seja cancelamento pelo Corretor é atribuída a ela.
     private fun classifyGetCredentialFailure(exception: Exception): ApplicationError {
+        // O Credential Manager não sinaliza falta de internet com exceção própria: sem conexão,
+        // qualquer falha que não seja cancelamento pelo Corretor é atribuída a ela.
         val error = exception.toApplicationError()
         if (error == ApplicationError.UserCancellation) return error
 
         return if (connectivityAdapter.isDeviceConnectedToInternet()) error else ApplicationError.NoInternet
     }
 
-    override suspend fun clearGoogleCredentialState(
-        activityContext: Activity,
-    ): AppResult<Unit> {
+    override suspend fun clearGoogleCredentialState(): AppResult<Unit> {
+        val activityContext = currentActivityTracker.current() ?: return noActivityError()
+
         val credentialManager = CredentialManager.create(activityContext)
         val clearCredentialStateRequest = ClearCredentialStateRequest()
 
-        try {
+        return onBoundary(toError = { it.toApplicationError() }) {
             credentialManager.clearCredentialState(clearCredentialStateRequest)
-
-            return AppResult.Success(data = Unit)
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            if (BuildConfig.DEBUG) e.printStackTrace()
-
-            return AppResult.Error(error = e.toApplicationError())
         }
     }
 
-    private companion object {
-        const val TAG = "AppCredentialManagerImpl"
+    private fun noActivityError(): AppResult.Error {
+        ExceptionLogger.logMasked("Credential Manager chamado sem Activity em primeiro plano")
+
+        return AppResult.Error(error = ApplicationError.Unknown)
     }
 }

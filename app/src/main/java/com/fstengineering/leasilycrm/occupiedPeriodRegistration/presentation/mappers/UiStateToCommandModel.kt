@@ -42,6 +42,6 @@ fun OccupiedPeriodFormUiState.Loaded.UnavailablePeriod.toCommandModel() =
 
 fun StayFileUiState.toCommandModel() = StayFileCommandModel(
     id = id,
-    uriString = uri.toString(),
+    uriString = uriString,
     name = name,
 )

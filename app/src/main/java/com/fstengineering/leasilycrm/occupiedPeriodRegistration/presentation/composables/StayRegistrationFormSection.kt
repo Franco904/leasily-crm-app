@@ -29,20 +29,20 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDateTime
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCheckbox
 import com.fstengineering.leasilycrm.core.presentation.composables.CountAnswerCounter
 import com.fstengineering.leasilycrm.core.presentation.composables.centerVisibleLazyItemByKey
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.DateRangePickerDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.TimePickerDialog
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthTimestamp
 import com.fstengineering.leasilycrm.core.presentation.utils.getSelectableDates
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayCheckInTimeFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayCheckOutTimeFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayCommissionFormField
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayPeriodFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayImovelFormField
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayPeriodFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayTenantFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayTenantVehicleColorFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.StayTenantVehicleLicensePlateFormField
@@ -52,12 +52,12 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.com
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.stayDocumentsFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodFormUiState
+import java.util.Calendar
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,6 +78,7 @@ fun StayRegistrationFormSection(
     scrollToFieldFlow: Flow<OccupiedPeriodField>,
     modifier: Modifier = Modifier,
 ) {
+    val dateProvider = LocalAppDateProvider.current
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
 
@@ -126,7 +127,7 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(OccupiedPeriodField.Imovel))
             ) {
-                val isEnabled = form.checkInDateTime?.toDate()?.isBefore(AppDate.now()) ?: true
+                val isEnabled = form.checkInDateTime?.toDate()?.isBefore(dateProvider.now()) ?: true
 
                 StayImovelFormField(
                     stayImovel = form.imovel,
@@ -144,7 +145,7 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(OccupiedPeriodField.Tenant))
             ) {
-                val isEnabled = form.checkInDateTime?.toDate()?.isBefore(AppDate.now()) ?: true
+                val isEnabled = form.checkInDateTime?.toDate()?.isBefore(dateProvider.now()) ?: true
 
                 StayTenantFormField(
                     stayTenant = form.tenant,
@@ -210,7 +211,7 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(OccupiedPeriodField.Period))
             ) {
-                val isPastCheckIn = form.checkInDateTime?.toDate()?.isBefore(AppDate.now()) ?: true
+                val isPastCheckIn = form.checkInDateTime?.toDate()?.isBefore(dateProvider.now()) ?: true
                 val isEnabled = form.imovel != null && !isPastCheckIn
 
                 StayPeriodFormField(

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppOutlinedButton
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryButton
-import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetData
+import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 
@@ -29,7 +29,7 @@ import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 @Composable
 fun AppErrorBottomSheet(
     sheetState: SheetState,
-    errorBottomSheetData: ErrorBottomSheetData,
+    errorBottomSheetData: ErrorBottomSheetUiState,
     onDismissRequest: () -> Unit,
     onUiEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
@@ -72,7 +72,7 @@ fun AppErrorBottomSheet(
                     label = stringResource(errorBottomSheetData.secondaryActionLabel),
                     onClick = {
                         onDismissRequest()
-                        errorBottomSheetData.onSecondaryAction(context) { a -> onUiEvent(a) }
+                        errorBottomSheetData.onSecondaryAction(context) { uiEvent -> onUiEvent(uiEvent) }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -91,7 +91,7 @@ fun AppErrorBottomSheetPreview(
     AppTheme {
         AppErrorBottomSheet(
             sheetState = rememberModalBottomSheetState(),
-            errorBottomSheetData = ErrorBottomSheetData(
+            errorBottomSheetData = ErrorBottomSheetUiState(
                 title = R.string.unknown_error_title,
                 description = R.string.unknown_error_description_default,
                 secondaryActionLabel = null,

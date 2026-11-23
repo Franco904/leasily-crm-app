@@ -7,12 +7,13 @@ import com.fstengineering.leasilycrm.core.di.modules.applicationServiceModule
 import com.fstengineering.leasilycrm.core.di.modules.coroutineModule
 import com.fstengineering.leasilycrm.core.di.modules.daoModule
 import com.fstengineering.leasilycrm.core.di.modules.databaseDataSourceModule
-import com.fstengineering.leasilycrm.core.di.modules.inMemoryDataSourceModule
-import com.fstengineering.leasilycrm.core.di.modules.preferencesDataSourceModule
+import com.fstengineering.leasilycrm.core.di.modules.exceptionLoggerModule
+import com.fstengineering.leasilycrm.core.di.modules.inMemoryStorageModule
+import com.fstengineering.leasilycrm.core.di.modules.localStorageModule
 import com.fstengineering.leasilycrm.core.di.modules.presentationModule
-import com.fstengineering.leasilycrm.core.di.modules.remoteDataSourceModule
+import com.fstengineering.leasilycrm.core.di.modules.apiModule
 import com.fstengineering.leasilycrm.core.di.modules.repositoryModule
-import com.fstengineering.leasilycrm.core.di.modules.sharedStorageDataSourceModule
+import com.fstengineering.leasilycrm.core.di.modules.sharedStorageModule
 import com.fstengineering.leasilycrm.core.di.modules.useCaseModule
 import com.fstengineering.leasilycrm.core.di.modules.workerModule
 import com.fstengineering.leasilycrm.dashboard.di.dashboardRepositoryModule
@@ -77,12 +78,13 @@ fun Application.configureDependencyInjection() {
             useCaseModule,
             applicationServiceModule,
             databaseDataSourceModule,
-            inMemoryDataSourceModule,
-            preferencesDataSourceModule,
-            remoteDataSourceModule,
-            sharedStorageDataSourceModule,
+            inMemoryStorageModule,
+            localStorageModule,
+            apiModule,
+            sharedStorageModule,
             daoModule,
             coroutineModule,
+            exceptionLoggerModule,
             workerModule,
 
             // Feature: root

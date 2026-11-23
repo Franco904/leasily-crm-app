@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.FilterConnectedButton
 import com.fstengineering.leasilycrm.core.presentation.models.FilterConnectedButtonPosition
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
-import com.fstengineering.leasilycrm.home.presentation.composables.NumberRedBadge
+import com.fstengineering.leasilycrm.core.presentation.composables.NumberRedBadge
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.mutate
 
@@ -49,7 +49,7 @@ fun OccupiedPeriodFilterButtonGroup(
                             it[OccupiedPeriodFilterType.UpcomingCheckIn] = coords
                         },
                     )
-                },
+                }
         )
         Spacer(modifier = Modifier.width(2.dp))
         FilterConnectedButton(
@@ -69,7 +69,7 @@ fun OccupiedPeriodFilterButtonGroup(
                             it[OccupiedPeriodFilterType.UpcomingCheckOut] = coords
                         },
                     )
-                },
+                }
         )
         Spacer(modifier = Modifier.width(2.dp))
         FilterConnectedButton(
@@ -82,7 +82,7 @@ fun OccupiedPeriodFilterButtonGroup(
                     onButtonGroupCoords(
                         buttonsCoords.mutate { it[OccupiedPeriodFilterType.Finished] = coords },
                     )
-                },
+                }
         )
         Spacer(modifier = Modifier.width(2.dp))
         FilterConnectedButton(
@@ -97,7 +97,7 @@ fun OccupiedPeriodFilterButtonGroup(
                             it[OccupiedPeriodFilterType.UnavailablePeriod] = coords
                         },
                     )
-                },
+                }
         )
         Spacer(modifier = Modifier.width(2.dp))
         FilterConnectedButton(
@@ -110,7 +110,7 @@ fun OccupiedPeriodFilterButtonGroup(
                     onButtonGroupCoords(
                         buttonsCoords.mutate { it[OccupiedPeriodFilterType.All] = coords },
                     )
-                },
+                }
         )
         Spacer(modifier = Modifier.width(16.dp))
     }

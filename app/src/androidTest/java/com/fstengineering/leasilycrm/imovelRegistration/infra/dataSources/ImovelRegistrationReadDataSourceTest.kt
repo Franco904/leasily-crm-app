@@ -9,6 +9,7 @@ import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFi
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
+import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelFile
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelPrice
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeProprietario
 import kotlinx.coroutines.Dispatchers
@@ -37,13 +38,13 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
     // region getImovel
 
     @Test
-    fun deveBuscarImovelParaEdicaoComProprietarioCaracteristicasPrecosEArquivos(): Unit =
+    fun deveBuscarImovelParaEdicaoComProprietarioCaracteristicasPrecosEArquivosQuandoImovelEstaCadastrado(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             val characteristics = ImovelCharacteristic.entries.take(2)
             val price = createFakeImovelPrice()
             val file =
-                ImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = true)
+                createFakeImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = true)
             val imovel = createFakeImovel(
                 proprietarioId = proprietarioId,
                 id = 5L,
@@ -99,7 +100,7 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
     // region getNeighborhoodNames
 
     @Test
-    fun deveListarBairrosSemRepeticaoEmOrdemAlfabeticaSemOsDeImoveisExcluidos(): Unit =
+    fun deveListarBairrosSemRepeticaoEmOrdemAlfabeticaQuandoHaImovelExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             listOf(

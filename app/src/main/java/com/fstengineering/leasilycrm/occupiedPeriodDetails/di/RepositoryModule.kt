@@ -16,7 +16,7 @@ val occupiedPeriodDetailsRepositoryModule = module {
     single<OccupiedPeriodQueryRepository> {
         OccupiedPeriodQueryRepositoryImpl(
             stayDatabaseDataSource = get(),
-            plainPreferencesDataSource = get(plainPreferencesQualifier),
+            plainLocalStorage = get(plainPreferencesQualifier),
         )
     }
 

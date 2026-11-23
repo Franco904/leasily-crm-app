@@ -66,33 +66,6 @@ fun ImovelOccupiedDatesSection(
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-//                        MonthYearFilterField(
-//                            placeholder = stringResource(R.string.property_stays_start_month_year_filter_field_placeholder),
-//                            monthYearValue = startMonthYearValue,
-//                            onTap = { mustShowStartMonthYearFilterComboBottomsheet = true },
-//                            modifier = Modifier
-//                                .weight(1f)
-//                        )
-//                        Spacer(modifier = Modifier.width(8.dp))
-//                        Text(
-//                            text = stringResource(R.string.until_label),
-//                            style = MaterialTheme.typography.bodyMedium,
-//                            color = MaterialTheme.colorScheme.onSurface,
-//                            modifier = Modifier
-//                                .offset(y = (-4).dp)
-//                        )
-//                        Spacer(modifier = Modifier.width(8.dp))
-//                        MonthYearFilterField(
-//                            placeholder = stringResource(R.string.property_stays_end_month_year_filter_field_placeholder),
-//                            monthYearValue = endMonthYearValue,
-//                            onTap = { mustShowEndMonthYearFilterComboBottomsheet = true },
-//                            modifier = Modifier
-//                                .weight(1f)
-//                        )
-            }
             Spacer(modifier = Modifier.height(16.dp))
             if (occupiedDates.isEmpty()) {
                 OccupiedPeriodsEmptySection(occupiedPeriodFilterType = OccupiedPeriodFilterType.All)

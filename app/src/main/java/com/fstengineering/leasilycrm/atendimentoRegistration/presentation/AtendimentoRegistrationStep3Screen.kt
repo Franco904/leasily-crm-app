@@ -36,7 +36,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoa
 import com.fstengineering.leasilycrm.core.presentation.composables.InteracaoDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import kotlinx.collections.immutable.mutate
@@ -109,7 +109,7 @@ fun AtendimentoRegistrationStep3Screen(
         launch {
             stepViewModel.uiEvents.collectWithLifecycle(lifecycle) { uiEvent ->
                 when (uiEvent) {
-                    is AtendimentoRegistrationStep3ViewModel.UiEvent.InteracaoCreateSuccess -> {
+                    is AtendimentoRegistrationStep3ViewModel.UiEvent.FinishInteracaoCreate -> {
                         if (loadedInteracaoForm == null) return@collectWithLifecycle
                         if (loadedDraftForm?.interacoes == null) return@collectWithLifecycle
 
@@ -123,7 +123,7 @@ fun AtendimentoRegistrationStep3Screen(
                         onUiEvent(UiEvent.ShowSnackBar(R.string.create_assistance_interaction_success_message))
                     }
 
-                    is AtendimentoRegistrationStep3ViewModel.UiEvent.InteracaoEditSuccess -> {
+                    is AtendimentoRegistrationStep3ViewModel.UiEvent.FinishInteracaoEdit -> {
                         if (loadedInteracaoForm == null) return@collectWithLifecycle
                         if (loadedDraftForm?.interacoes == null) return@collectWithLifecycle
 
@@ -193,7 +193,7 @@ fun AtendimentoRegistrationStep3Screen(
                             parentViewModel.saveAtendimento()
                         },
                         modifier = Modifier
-                            .padding(innerPadding),
+                            .padding(innerPadding)
                     )
                 }
             }

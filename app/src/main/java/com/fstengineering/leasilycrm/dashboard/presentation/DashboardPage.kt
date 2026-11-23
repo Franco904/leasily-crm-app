@@ -34,7 +34,7 @@ import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyL
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsAnalyticsCard
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsPerTenantSegmentAnalyticsCard
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsPerTop3NeighborhoodsAnalyticsCard
-import com.fstengineering.leasilycrm.home.presentation.composables.HomeNavCard
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.HomeNavCard
 
 @Composable
 fun DashboardPage(

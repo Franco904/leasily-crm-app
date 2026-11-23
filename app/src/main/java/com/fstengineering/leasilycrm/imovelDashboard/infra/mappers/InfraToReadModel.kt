@@ -9,6 +9,11 @@ import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.ImovelDas
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.PeriodoOcupadoProjection
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.ProprietarioProjection
 
+/**
+ * Resumo do Imóvel para o painel.
+ *
+ * Proprietário excluído vira `null` no read model e é registrado em log, sem interromper a leitura.
+ */
 fun ImovelDashboardProjection.toReadModel(): ImovelSummaryReadModel {
     val activeProprietario = requireNotNull(proprietario).takeUnless { it.isDeleted }
         ?: run {

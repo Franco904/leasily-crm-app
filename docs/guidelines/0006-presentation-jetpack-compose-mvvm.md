@@ -5,12 +5,14 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
 ## Posição da camada
 
 - `presentation/` **depende de** `application/` (UseCases / Application Services) e de
-  `infra/` direto quando a operação dispensa UseCase (ver `0007-application-use-cases.md`):
+  `infra/dataSources` direto quando a operação dispensa UseCase (ver `0007-application-use-cases.md`):
   no read-side sem regra de negócio (`ReadDataSource`) e no write-side sem leitura prévia,
   sem coordenação entre agregados e sem transação orquestrada (`WriteDataSource`).
 - Pode tocar em `domain/` para validação parcial de campo (perda
   de foco, edição de form field, formulário em etapas) e, no write-side sem UseCase, para
   construir o agregado pela factory (`Agregado.parse`) a partir do `UiState`.
+- `presentation/` não importa `infra.adapters`: biblioteca de plataforma (Credential Manager,
+  Keystore) entra por UseCase. `Orm` e projeções nunca saem de `infra/`.
 - ViewModel expõe estado via `StateFlow`; o Composable observa. MVP não entra em
   código novo.
 - **Toolkit Compose + Material Design 3**: componentes de `androidx.compose.material3`
@@ -20,6 +22,11 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   `Parcelable` manual nem `java.io.Serializable`.
 
 ## ViewModel
+
+- **`presentation/models` só declara `UiState` (e `enum class`).** Estratégia de apresentação
+  (`*DataPropertiesStrategy`) vive em `presentation/utils`; `UiEvent` aninhado fica no ViewModel
+  (ver "Eventos"). Todo `@Composable` e declaração do app é público ou `private`: `internal` não
+  existe, porque o app é um módulo Gradle só.
 
 - **Estado exposto sempre via `MutableStateFlow` privado + `StateFlow` público** (`.asStateFlow()`).
   Nunca exponha o `MutableStateFlow` diretamente — o Composable não deve poder emitir estado.
@@ -69,8 +76,7 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   campo `val`, nenhum atributo `var` nem tipo mutável** (`ArrayList`,
   `mutableStateOf` embutido no state, objeto com `var`). Tipo com `var` é instável
   para o Compose compiler pela mesma razão das coleções — quebra a *skippability* e
-  o `equals` estrutural que dirige a recomposição. Exceção para campos criados visando integração
-  com Views legadas – ver "Interoperabilidade com View"; ter parcimônia na adoção.
+  o `equals` estrutural que dirige a recomposição.
 
 - **Atualização de estado via `.update { }`, não `.value = `** — no par `MutableStateFlow` privado.
   `update` aplica a transformação de forma atômica sobre o valor vigente; `.value =` sobrescreve sem
@@ -90,13 +96,21 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   Nesse padrão, mantenha a escrita single-writer (só o próprio `ViewModel`) para não recair na
   race condition que o `.update { }` evita.
 
+- **Coleta de `Flow` no ViewModel: `collectLatest` para estado e busca, `collect` para evento.**
+  Estado persistente (`watch*`, `searchInput`) só renderiza o último valor, então o valor novo
+  cancela o processamento do anterior (uma busca nova cancela a que está em andamento). Evento de
+  UI (`uiEvents`, snackbar, navegação) não pode ser descartado: usa `collect`.
+
 - **Corrotinas que tocam persistência ou serviço externo demorado sempre em `viewModelScope`** —
   nunca `lifecycleScope` (Activity/Fragment) nem `rememberCoroutineScope` (Composable) para esse
   tipo de trabalho. `lifecycleScope`/`rememberCoroutineScope` são cancelados e recriados a cada
   recriação de Activity/recomposição (rotação, por exemplo — este app não usa
   `android:configChanges`, ver nota abaixo), cancelando no meio uma chamada
   de banco/rede em andamento. `viewModelScope` sobrevive porque o `ViewModel` sobrevive. Decorrência
-  direta: **o ViewModel nunca expõe `suspend fun`** — quem dispara a corrotina é sempre o próprio
+  direta: o `launch` de um `rememberCoroutineScope`/`lifecycleScope` só chama membros de estado
+  de UI terminados em `State` (`snackbarHostState`, `sheetState`, `scrollState`); serviço externo,
+  como o Credential Manager, é chamado por UseCase (`ChooseGoogleAccountUseCase`), com a
+  `Activity` vinda do `CurrentActivityTracker` na infra. **O ViewModel nunca expõe `suspend fun`** — quem dispara a corrotina é sempre o próprio
   ViewModel (`fun algo() { viewModelScope.launch { ... } }`), a Activity/Composable só chama funções
   síncronas.
 
@@ -107,7 +121,9 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   unidirecional. Decorrência: além de não expor `suspend fun` (acima), não use expression body.
   `fun algo() = viewModelScope.launch { ... }` — retorna `Job`, que deixa a UI cancelar ou aguardar
   a corrotina que `viewModelScope` existe justamente para manter fora do alcance dela. Use block
-  body com retorno implícito `Unit`.
+  body com retorno implícito `Unit`. Não declara função `get*`: leitura de camada inferior é
+  `load…` (privada); valor derivado de função pura e síncrona é propriedade (`val x get() = …`),
+  não função. Nenhum bloco `init {}` do Kotlin (ver "Carga assíncrona inicial").
 
 - **Argumentos de navegação entram pelo construtor, como a rota tipada.** O app é
   single-Activity com Navigation Compose; o `ViewModel` é criado por `koinViewModel()` no
@@ -216,8 +232,9 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
 - **Eventos one-shot** (exibir snackbar, navegar — qualquer efeito que não é estado persistente da
   tela) são emitidos do ViewModel via `Channel(Channel.BUFFERED)` e escutados no Composable com
   `collectWithLifecycle` (`core/presentation/utils/FlowExtensions.kt`) — coleta só com a tela ao
-  menos em `STARTED`, sem entregar evento com a tela em segundo plano. Nunca `.collectLatest`, que
-  pode descartar eventos emitidos em rajada durante uma recomposição. O `Channel` é fechado em `onCleared()`.
+  menos em `STARTED`, sem entregar evento com a tela em segundo plano. Nunca `.collectLatest` em
+  evento, que pode descartar eventos emitidos em rajada durante uma recomposição. O `Channel` é
+  fechado em `onCleared()`.
 
   ```kotlin
   // ViewModel
@@ -262,11 +279,14 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   `companion object` é metadado estático da classe (constantes, factory), não parte do contrato de
   instância que o resto do arquivo declara.
 
-- **Eventos declarados como `sealed interface UiEvent`, no final do ViewModel** (dentro do escopo
-  da própria classe, antes do `companion object`) — um `data class`/`data object` por evento.
+- **Eventos declarados como `sealed interface UiEvent` (singular), no final do ViewModel** (dentro
+  do escopo da própria classe, antes do `companion object`) — um `data class`/`data object` por
+  evento. O único `UiEvent` top-level é o do kernel, em `core/presentation/models/` (ADR-0001), com
+  eventos que 2+ telas emitem (snackbar, bottom sheet de erro).
 
     - **O nome de cada membro do `UiEvent` começa com um verbo em inglês no imperativo**
-      (`Show…`, `Close…`, `Finish…`, `Navigate…`, `Request…`, `Scroll…`) — nomeia a ação one-shot
+      (conjunto fechado: `Show…`, `Close…`, `Finish…`, `Navigate…`, `Request…`, `Scroll…`,
+      `Register…`, `Validate…`, `Exit…`, `Edit…`) — nomeia a ação one-shot
       que a camada de UI deve executar ao receber o evento, não um substantivo ou estado
       (`Snackbar`, `LocationTimeout` → `ShowSnackbar`, `ShowSnackbarError`).
 
@@ -359,13 +379,16 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
 ### Parâmetros de função `@Composable`
 
 - **Ordem**: estado primeiro, callbacks depois, `modifier` como primeiro parâmetro default.
-- **`modifier: Modifier = Modifier` é obrigatório em todo `@Composable` público** que emite UI —
-  mesmo quando a função não tem uso óbvio pra ele hoje. Sem isso o Composable não é reutilizável
-  nem posicionável pelo chamador. **Opcional em `@Composable` privado**: call site único e
+- **`modifier: Modifier = Modifier` é obrigatório em todo `@Composable` não-`private` que emite
+  UI, exceto `*Screen`** — mesmo quando a função não tem uso óbvio pra ele hoje. Sem isso o
+  Composable não é reutilizável nem posicionável pelo chamador. **Opcional em `@Composable`
+  privado**: call site único e
   conhecido no mesmo arquivo, ajustável sem quebrar contrato externo — acrescenta quando surge
   necessidade real (reuso em 2+ lugares, ou posicionamento que o único chamador não resolve).
 - **No call site, `modifier` é sempre o último argumento.**
 
 ### Encadeamento de `Modifier`
 
-- **Sempre quebra de linha por chamada** quando o encadeamento tem mais de uma função.
+- **Sempre quebra de linha por chamada** quando o encadeamento tem mais de uma função. A última
+  chamada do encadeamento multilinha não termina com vírgula (a vírgula só entra quando o
+  encadeamento é inline): acrescentar um `Modifier` não altera a linha anterior no git.

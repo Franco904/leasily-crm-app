@@ -34,9 +34,9 @@ import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoa
 import com.fstengineering.leasilycrm.core.presentation.composables.ImoveisEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.clientes.presentation.hospedes.composables.HospedesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.HospedesEmptySection
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.OccupiedPeriodImovelSelectionList
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.StayRegistrationFormSection
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.StayRegistrationTopAppBar
@@ -121,7 +121,7 @@ fun OccupiedPeriodRegistrationScreen(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is OccupiedPeriodRegistrationViewModel.UiEvent.BottomSheetError -> {
+                is OccupiedPeriodRegistrationViewModel.UiEvent.ShowError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
@@ -132,7 +132,7 @@ fun OccupiedPeriodRegistrationScreen(
                     scrollToFieldChannel.trySend(uiEvent.field)
                 }
 
-                is OccupiedPeriodRegistrationViewModel.UiEvent.StayCreateSuccess -> {
+                is OccupiedPeriodRegistrationViewModel.UiEvent.FinishStayCreate -> {
                     onBack(true)
 
                     val messageId =
@@ -141,7 +141,7 @@ fun OccupiedPeriodRegistrationScreen(
                     onUiEvent(UiEvent.ShowSnackBar(messageId))
                 }
 
-                is OccupiedPeriodRegistrationViewModel.UiEvent.StayEditSuccess -> {
+                is OccupiedPeriodRegistrationViewModel.UiEvent.FinishStayEdit -> {
                     onBack(true)
 
                     onUiEvent(UiEvent.ShowSnackBar(uiEvent.messageId))
@@ -326,7 +326,7 @@ fun OccupiedPeriodRegistrationScreen(
                                     scrollToFieldFlow = scrollToFieldFlow,
                                     modifier = Modifier
                                         .padding(innerPadding)
-                                        .padding(horizontal = 24.dp),
+                                        .padding(horizontal = 24.dp)
                                 )
                             }
                         }
@@ -355,7 +355,7 @@ fun OccupiedPeriodRegistrationScreen(
                                     },
                                     modifier = Modifier
                                         .padding(innerPadding)
-                                        .padding(horizontal = 24.dp),
+                                        .padding(horizontal = 24.dp)
                                 )
                             }
                         }
@@ -363,8 +363,8 @@ fun OccupiedPeriodRegistrationScreen(
                         OccupiedPeriodRegistrationListState.SelectingTenant -> {
                             if (tenants.isEmpty()) {
                                 HospedesEmptySection(
-                                    isSearchingHospede = isSearching,
-                                    isSelectingHospede = true,
+                                    messageId = if (isSearching) R.string.tenants_empty_search_text
+                                    else R.string.tenants_empty_select_text,
                                 )
                             } else {
                                 StayTenantSelectionList(
@@ -380,7 +380,7 @@ fun OccupiedPeriodRegistrationScreen(
                                     },
                                     modifier = Modifier
                                         .padding(innerPadding)
-                                        .padding(horizontal = 24.dp),
+                                        .padding(horizontal = 24.dp)
                                 )
                             }
                         }

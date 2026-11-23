@@ -12,7 +12,6 @@ import com.fstengineering.leasilycrm.proprietarioDetails.presentation.models.Pro
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -21,7 +20,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -29,14 +27,9 @@ import org.junit.jupiter.api.Test
 @ViewModelCoroutineTest
 class ProprietarioDetailsViewModelTest {
     private val proprietarioDetailsReadDataSourceMock: ProprietarioDetailsReadDataSource =
-        mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
     private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource =
-        mockk(relaxed = true)
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
+        mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("init")

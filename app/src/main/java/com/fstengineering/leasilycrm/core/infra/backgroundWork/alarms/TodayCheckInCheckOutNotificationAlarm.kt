@@ -10,7 +10,7 @@ import com.fstengineering.leasilycrm.core.infra.backgroundWork.broadcastReceiver
 object TodayCheckInCheckOutNotificationAlarm {
     private const val ALARM_INTENT_REQUEST_CODE = 0
 
-    fun schedule(context: Context) {
+    fun schedule(context: Context, now: AppDateTime) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val receiverIntent = Intent(
@@ -28,7 +28,6 @@ object TodayCheckInCheckOutNotificationAlarm {
             /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
-        val now = AppDateTime.now()
         val triggerAtMillis = now.withHourMinute(hour = 7, minute = 0)
 
         val triggerAtMillisAdjusted = (

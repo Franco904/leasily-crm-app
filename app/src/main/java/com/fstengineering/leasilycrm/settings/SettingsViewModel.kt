@@ -8,6 +8,7 @@ import com.fstengineering.leasilycrm.settings.models.SettingsUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ class SettingsViewModel(
 ) : ViewModel() {
     private var isInitialized = false
 
-    private val _uiEvents = Channel<UiEvent>()
+    private val _uiEvents = Channel<UiEvent>(Channel.BUFFERED)
     val uiEvents = _uiEvents.receiveAsFlow()
 
     private val _settingsUiState = MutableStateFlow<SettingsUiState>(SettingsUiState.Loading)
@@ -33,7 +34,7 @@ class SettingsViewModel(
 
     private fun watchSettings() {
         viewModelScope.launch {
-            settingsSharedStore.watch().collect { settings ->
+            settingsSharedStore.watch().collectLatest { settings ->
                 _settingsUiState.update { SettingsUiState.Loaded.fromReadModel(settings) }
             }
         }
@@ -52,6 +53,6 @@ class SettingsViewModel(
     }
 
     sealed interface UiEvent {
-        data class Error(val error: BaseError) : UiEvent
+        data class ShowError(val error: BaseError) : UiEvent
     }
 }

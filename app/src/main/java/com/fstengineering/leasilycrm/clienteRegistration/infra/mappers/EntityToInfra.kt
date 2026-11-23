@@ -6,11 +6,11 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ClienteOrm
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 
-fun Cliente.toClienteOrm(): ClienteOrm {
+fun Cliente.toClienteOrm(now: AppDateTime): ClienteOrm {
     return ClienteOrm(
         id = id,
-        createDateTime = createDateTime ?: AppDateTime.now(),
-        updateDateTime = AppDateTime.now(),
+        createDateTime = createDateTime ?: now,
+        updateDateTime = now,
         tag = tag,
         name = name.value.normalizeEncoding(),
         city = city,

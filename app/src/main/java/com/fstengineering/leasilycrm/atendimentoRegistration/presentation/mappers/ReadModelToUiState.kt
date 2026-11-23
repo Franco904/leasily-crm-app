@@ -1,6 +1,5 @@
 package com.fstengineering.leasilycrm.atendimentoRegistration.presentation.mappers
 
-import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.atendimentoRegistration.application.models.AtendimentoReadModel
 import com.fstengineering.leasilycrm.atendimentoRegistration.application.models.AtendimentoSelectableImovelReadModel
 import com.fstengineering.leasilycrm.atendimentoRegistration.application.models.ImovelEnviadoReadModel
@@ -43,7 +42,7 @@ fun ImovelEnviadoReadModel.toImovelCardUiState(): ImovelCardUiState {
 
     return ImovelCardUiState(
         id = id,
-        mainPictureUri = mainPictureUriString?.toUri(),
+        mainPictureUriString = mainPictureUriString,
         neighborhood = neighborhood,
         streetAddressAndNumber = "${streetAddress}$numberText",
         type = type,
@@ -58,7 +57,7 @@ fun AtendimentoSelectableImovelReadModel.toImovelCardUiState(): ImovelCardUiStat
 
     return ImovelCardUiState(
         id = id,
-        mainPictureUri = mainPictureUriString?.toUri(),
+        mainPictureUriString = mainPictureUriString,
         neighborhood = neighborhood,
         streetAddressAndNumber = "${streetAddress}$numberText",
         type = type,

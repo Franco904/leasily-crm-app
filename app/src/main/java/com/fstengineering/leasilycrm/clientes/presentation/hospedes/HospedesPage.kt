@@ -23,8 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.clientes.presentation.models.HospedeFilterType
 import com.fstengineering.leasilycrm.clientes.presentation.hospedes.composables.HospedeFilterButtonGroup
-import com.fstengineering.leasilycrm.clientes.presentation.hospedes.composables.HospedesEmptySection
+import com.fstengineering.leasilycrm.core.presentation.composables.HospedesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByMenuOption
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByTextButton
@@ -33,7 +34,7 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteOrderType
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import kotlinx.collections.immutable.persistentListOf
@@ -133,8 +134,12 @@ fun HospedesPage(
 
                 ListState.Empty -> {
                     HospedesEmptySection(
-                        isSearchingHospede = isSearchingHospede,
-                        hospedeFilterType = currentHospedeFilter,
+                        messageId = when {
+                            isSearchingHospede -> R.string.tenants_empty_search_text
+                            currentHospedeFilter == HospedeFilterType.ComEstadia -> R.string.tenants_upcoming_stay_empty_text
+                            currentHospedeFilter == HospedeFilterType.Antigo -> R.string.tenants_old_empty_text
+                            else -> R.string.tenants_generic_empty_text
+                        },
                     )
                 }
 

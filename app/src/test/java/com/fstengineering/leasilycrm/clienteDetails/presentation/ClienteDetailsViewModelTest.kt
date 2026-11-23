@@ -2,16 +2,15 @@ package com.fstengineering.leasilycrm.clienteDetails.presentation
 
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.Destinations
-import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoWriteDataSource
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
 import com.fstengineering.leasilycrm.clienteDetails.infra.dataSources.ClienteDetailsReadDataSource
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.AtendimentoSharedWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -22,7 +21,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -30,16 +28,11 @@ import org.junit.jupiter.api.Test
 @ViewModelCoroutineTest
 class ClienteDetailsViewModelTest {
     private val clienteDetailsReadDataSourceMock: ClienteDetailsReadDataSource =
-        mockk(relaxed = true)
-    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxed = true)
-    private val atendimentoWriteDataSourceMock: AtendimentoWriteDataSource = mockk(relaxed = true)
+        mockk(relaxUnitFun = true)
+    private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxUnitFun = true)
+    private val atendimentoSharedWriteDataSourceMock: AtendimentoSharedWriteDataSource = mockk(relaxUnitFun = true)
 
     private val clienteId = faker.random.nextLong(bound = 9999)
-
-    @BeforeEach
-    fun setUp() {
-        clearAllMocks()
-    }
 
     @Nested
     @DisplayName("init")
@@ -177,21 +170,21 @@ class ClienteDetailsViewModelTest {
         fun `Deve confirmar exclusão quando o Atendimento atual é excluído`() = runTest {
             val atendimentoId = faker.random.nextLong(bound = 9999)
             val sut = createSut()
-            coEvery { atendimentoWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
+            coEvery { atendimentoSharedWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
 
             sut.uiEvents.test {
                 sut.deleteCurrentAtendimento(atendimentoId)
 
                 awaitItem() shouldBeEqualTo ClienteDetailsViewModel.UiEvent.ShowAtendimentoDeleteSnackbar
             }
-            coVerify { atendimentoWriteDataSourceMock.delete(atendimentoId) }
+            coVerify { atendimentoSharedWriteDataSourceMock.delete(atendimentoId) }
         }
 
         @Test
         fun `Deve informar falha quando o Atendimento atual é excluído, dado que o armazenamento local falha`() =
             runTest {
                 val sut = createSut()
-                coEvery { atendimentoWriteDataSourceMock.delete(any()) } returns
+                coEvery { atendimentoSharedWriteDataSourceMock.delete(any()) } returns
                         AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
@@ -214,7 +207,7 @@ class ClienteDetailsViewModelTest {
         route = Destinations.ClienteDetails(clienteId = clienteId),
         clienteDetailsReadDataSource = clienteDetailsReadDataSourceMock,
         clienteWriteDataSource = clienteWriteDataSourceMock,
-        atendimentoWriteDataSource = atendimentoWriteDataSourceMock,
+        atendimentoSharedWriteDataSource = atendimentoSharedWriteDataSourceMock,
     )
 
     private fun createClienteReadModel(isLead: Boolean) = ClienteReadModel(

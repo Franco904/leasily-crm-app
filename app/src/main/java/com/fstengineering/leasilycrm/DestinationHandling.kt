@@ -13,29 +13,50 @@ import androidx.navigation.toRoute
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.AtendimentoRegistrationStep1Screen
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.AtendimentoRegistrationStep2Screen
 import com.fstengineering.leasilycrm.atendimentoRegistration.presentation.AtendimentoRegistrationStep3Screen
-import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.clienteDetails.presentation.ClienteDetailsScreen
 import com.fstengineering.leasilycrm.clienteRegistration.presentation.ClienteRegistrationScreen
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsScreen
-import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.OccupiedPeriodRegistrationScreen
-import com.fstengineering.leasilycrm.profile.presentation.ProfileScreen
+import com.fstengineering.leasilycrm.clientes.presentation.hospedes.HospedesPage
+import com.fstengineering.leasilycrm.clientes.presentation.leads.LeadsPage
+import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
+import com.fstengineering.leasilycrm.dashboard.presentation.DashboardPage
+import com.fstengineering.leasilycrm.home.HomeScreen
 import com.fstengineering.leasilycrm.imoveis.presentation.ImoveisScreen
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.ImovelDashboardScreen
 import com.fstengineering.leasilycrm.imovelDetails.presentation.ImovelDetailsScreen
 import com.fstengineering.leasilycrm.imovelOcupacao.presentation.ImovelOcupacaoScreen
-import com.fstengineering.leasilycrm.proprietarioDetails.presentation.ProprietarioDetailsScreen
-import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationScreen
-import com.fstengineering.leasilycrm.proprietarios.presentation.ProprietariosScreen
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.ImovelRegistrationStep1Screen
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.ImovelRegistrationStep2Screen
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.ImovelRegistrationStep3Screen
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.ImovelRegistrationStep4Screen
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsScreen
+import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.OccupiedPeriodRegistrationScreen
+import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsPage
+import com.fstengineering.leasilycrm.profile.presentation.ProfileScreen
+import com.fstengineering.leasilycrm.proprietarioDetails.presentation.ProprietarioDetailsScreen
+import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.ProprietarioRegistrationScreen
+import com.fstengineering.leasilycrm.proprietarios.presentation.ProprietariosScreen
 import com.fstengineering.leasilycrm.root.RootScreen
 import com.fstengineering.leasilycrm.settings.SettingsScreen
 import com.fstengineering.leasilycrm.signin.presentation.SignInScreen
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
+
+private fun newAtendimentoOf(clienteId: Long) = Destinations.AtendimentoRegistration(
+    atendimentoId = null,
+    clienteId = clienteId,
+)
+
+private fun newStayOf(clienteId: Long) = Destinations.OccupiedPeriodRegistration(
+    occupiedPeriodId = null,
+    imovelId = null,
+    clienteId = clienteId,
+    isUnavailablePeriod = false,
+)
+
+private fun viewStayOf(stayId: Long, cameFromCliente: Boolean) = Destinations.OccupiedPeriodDetails(
+    occupiedPeriodId = stayId,
+    cameFromImovel = false,
+    cameFromTenant = cameFromCliente,
+)
 
 private const val STAY_REGISTRATION_SUCCESS_KEY = "stay_registration_success"
 
@@ -66,7 +87,6 @@ fun NavGraphBuilder.destinations(
         SignInScreen(
             hasSessionExpired = args.hasSessionExpired,
             viewModel = koinViewModel(),
-            credentialManager = koinInject(),
             onSignIn = {
                 onSignIn()
 
@@ -108,53 +128,65 @@ fun NavGraphBuilder.destinations(
             onProfileSelect = {
                 navController.navigateAndPopAllTo(Destinations.Profile)
             },
-            onImoveisSelect = {
-                navController.navigate(Destinations.Imoveis)
-            },
-            onProprietariosSelect = {
-                navController.navigate(Destinations.Proprietarios)
-            },
-            onRegisterCliente = { clienteId ->
-                navController.navigate(Destinations.ClienteRegistration(clienteId))
-            },
-            onViewClienteDetails = { clienteId ->
-                navController.navigate(Destinations.ClienteDetails(clienteId))
-            },
-            onNewAtendimento = { clienteId ->
-                val destination = Destinations.AtendimentoRegistration(
-                    atendimentoId = null,
-                    clienteId = clienteId,
+            dashboardPage = {
+                DashboardPage(
+                    viewModel = koinViewModel(),
+                    onImoveisSelect = { navController.navigate(Destinations.Imoveis) },
+                    onProprietariosSelect = { navController.navigate(Destinations.Proprietarios) },
                 )
-                navController.navigate(destination)
             },
-            onNewStayWithCliente = { clienteId ->
-                val destination = Destinations.OccupiedPeriodRegistration(
-                    occupiedPeriodId = null,
-                    imovelId = null,
-                    clienteId = clienteId,
-                    isUnavailablePeriod = false,
+            leadsPage = { isSearching, searchInput ->
+                LeadsPage(
+                    viewModel = koinViewModel(),
+                    isSearchingLead = isSearching,
+                    searchInput = searchInput,
+                    onRegisterLead = { clienteId ->
+                        navController.navigate(Destinations.ClienteRegistration(clienteId))
+                    },
+                    onViewLeadDetails = { clienteId ->
+                        navController.navigate(Destinations.ClienteDetails(clienteId))
+                    },
+                    onNewAtendimento = { clienteId -> navController.navigate(newAtendimentoOf(clienteId)) },
+                    onNewStay = { clienteId -> navController.navigate(newStayOf(clienteId)) },
+                    onViewStay = { stayId -> navController.navigate(viewStayOf(stayId, cameFromCliente = true)) },
+                    onUiEvent = onUiEvent,
                 )
+            },
+            hospedesPage = { isSearching, searchInput ->
+                HospedesPage(
+                    viewModel = koinViewModel(),
+                    isSearchingHospede = isSearching,
+                    searchInput = searchInput,
+                    onRegisterHospede = { clienteId ->
+                        navController.navigate(Destinations.ClienteRegistration(clienteId))
+                    },
+                    onViewHospedeDetails = { clienteId ->
+                        navController.navigate(Destinations.ClienteDetails(clienteId))
+                    },
+                    onNewAtendimento = { clienteId -> navController.navigate(newAtendimentoOf(clienteId)) },
+                    onNewStay = { clienteId -> navController.navigate(newStayOf(clienteId)) },
+                    onViewStay = { stayId -> navController.navigate(viewStayOf(stayId, cameFromCliente = true)) },
+                    onUiEvent = onUiEvent,
+                )
+            },
+            occupiedPeriodsPage = {
+                OccupiedPeriodsPage(
+                    viewModel = koinViewModel(),
+                    onRegisterOccupiedPeriod = { stayId, isUnavailablePeriod ->
+                        val destination = Destinations.OccupiedPeriodRegistration(
+                            occupiedPeriodId = stayId,
+                            imovelId = null,
+                            clienteId = null,
+                            isUnavailablePeriod = isUnavailablePeriod,
+                        )
 
-                navController.navigate(destination)
-            },
-            onRegisterStayBlank = { stayId, isUnavailablePeriod ->
-                val destination = Destinations.OccupiedPeriodRegistration(
-                    occupiedPeriodId = stayId,
-                    imovelId = null,
-                    clienteId = null,
-                    isUnavailablePeriod = isUnavailablePeriod,
+                        navController.navigate(destination)
+                    },
+                    onViewOccupiedPeriodDetails = { stayId ->
+                        navController.navigate(viewStayOf(stayId, cameFromCliente = false))
+                    },
+                    onUiEvent = onUiEvent,
                 )
-
-                navController.navigate(destination)
-            },
-            onViewStay = { stayId, cameFromCliente ->
-                val destination = Destinations.OccupiedPeriodDetails(
-                    occupiedPeriodId = stayId,
-                    cameFromImovel = false,
-                    cameFromTenant = cameFromCliente,
-                )
-
-                navController.navigate(destination)
             },
             onUiEvent = onUiEvent,
         )
@@ -171,7 +203,6 @@ fun NavGraphBuilder.destinations(
     composable<Destinations.Profile> {
         ProfileScreen(
             viewModel = koinViewModel(),
-            credentialManager = koinInject(),
             onBack = { navController.navigateUp() },
             onUiEvent = onUiEvent,
         )

@@ -58,10 +58,11 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.constants.UNAVAILABLE_PERIOD_INDEX
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.theme.AppTheme
 import com.fstengineering.leasilycrm.core.presentation.theme.customColors
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
 import com.fstengineering.leasilycrm.core.presentation.utils.daysOfWeek
 import com.fstengineering.leasilycrm.core.presentation.utils.getFirstDayOfWeekOfMonth
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
@@ -84,7 +85,8 @@ fun OccupiedPeriodsCalendar(
 ) {
     val context = LocalContext.current
 
-    val now = remember { AppDate.now() }
+    val dateProvider = LocalAppDateProvider.current
+    val now = remember { dateProvider.now() }
 
     val monthYearLabel = remember(month) {
         val monthLabel = context.getMonthLabelByNumber(monthNumber = month)
@@ -373,11 +375,11 @@ fun SelectedCalendarDate(
             contentAlignment = Alignment.TopStart,
             modifier = Modifier
                 .fillMaxSize()
-                .zIndex(10f),
+                .zIndex(10f)
         ) {
             AppMoreOptionsDropdownMenu(
                 options = persistentListOf(
-                    MoreOptionsMenuOption(
+                    MoreOptionsMenuOptionUiState(
                         iconDrawable = R.drawable.calendar_view,
                         text = stringResource(
                             when {
@@ -498,31 +500,6 @@ fun OccupiedDateCircle(
     }
 }
 
-fun DrawScope.occupiedDateSemiCircleFirstHalf(
-    firstHalfColor: Color,
-) {
-    // arc 0° angle starts at 3 o'clock
-    drawArc(
-        color = firstHalfColor,
-        startAngle = 90f,
-        sweepAngle = 180f,
-        useCenter = true,
-        style = Fill,
-    )
-}
-
-fun DrawScope.occupiedDateSemiCircleSecondHalf(
-    secondHalfColor: Color,
-) {
-    drawArc(
-        color = secondHalfColor,
-        startAngle = 270f,
-        sweepAngle = 180f,
-        useCenter = true,
-        style = Fill,
-    )
-}
-
 @Composable
 fun UnavailablePeriodDateCircle(
     sizeDp: Dp,
@@ -555,60 +532,6 @@ fun UnavailablePeriodDateCircle(
             )
         }
     }
-}
-
-fun DrawScope.unavailablePeriodDateSemiCircleFirstHalf(
-    outlineVariantColor: Color,
-) {
-    val radius = size.minDimension / 2f
-    val center = Offset(size.width / 2f, size.height / 2f)
-    val strokeWidth = 6f
-
-    // Outer semicircle
-    drawArc(
-        color = outlineVariantColor,
-        startAngle = 90f,
-        sweepAngle = 180f,
-        useCenter = true,
-        style = Stroke(width = strokeWidth)
-    )
-
-    // Diagonal slash
-    val offset = radius * 0.7f
-    drawLine(
-        color = outlineVariantColor,
-        start = center,
-        end = Offset(center.x - offset, center.y + offset),
-        strokeWidth = strokeWidth,
-        cap = StrokeCap.Round,
-    )
-}
-
-fun DrawScope.unavailablePeriodDateSemiCircleSecondHalf(
-    outlineVariantColor: Color,
-) {
-    val radius = size.minDimension / 2f
-    val center = Offset(size.width / 2f, size.height / 2f)
-    val strokeWidth = 6f
-
-    // Outer semicircle
-    drawArc(
-        color = outlineVariantColor,
-        startAngle = 270f,
-        sweepAngle = 180f,
-        useCenter = true,
-        style = Stroke(width = strokeWidth)
-    )
-
-    // Diagonal slash
-    val offset = radius * 0.7f
-    drawLine(
-        color = outlineVariantColor,
-        start = Offset(center.x + offset, center.y - offset),
-        end = center,
-        strokeWidth = strokeWidth,
-        cap = StrokeCap.Round,
-    )
 }
 
 @Preview
@@ -791,4 +714,83 @@ fun OccupiedPeriodsCalendarPreview(
             modifier = modifier,
         )
     }
+}
+
+private fun DrawScope.occupiedDateSemiCircleFirstHalf(
+    firstHalfColor: Color,
+) {
+    // arc 0° angle starts at 3 o'clock
+    drawArc(
+        color = firstHalfColor,
+        startAngle = 90f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Fill,
+    )
+}
+
+private fun DrawScope.occupiedDateSemiCircleSecondHalf(
+    secondHalfColor: Color,
+) {
+    drawArc(
+        color = secondHalfColor,
+        startAngle = 270f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Fill,
+    )
+}
+
+private fun DrawScope.unavailablePeriodDateSemiCircleFirstHalf(
+    outlineVariantColor: Color,
+) {
+    val radius = size.minDimension / 2f
+    val center = Offset(size.width / 2f, size.height / 2f)
+    val strokeWidth = 6f
+
+    // Outer semicircle
+    drawArc(
+        color = outlineVariantColor,
+        startAngle = 90f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Stroke(width = strokeWidth)
+    )
+
+    // Diagonal slash
+    val offset = radius * 0.7f
+    drawLine(
+        color = outlineVariantColor,
+        start = center,
+        end = Offset(center.x - offset, center.y + offset),
+        strokeWidth = strokeWidth,
+        cap = StrokeCap.Round,
+    )
+}
+
+private fun DrawScope.unavailablePeriodDateSemiCircleSecondHalf(
+    outlineVariantColor: Color,
+) {
+    val radius = size.minDimension / 2f
+    val center = Offset(size.width / 2f, size.height / 2f)
+    val strokeWidth = 6f
+
+    // Outer semicircle
+    drawArc(
+        color = outlineVariantColor,
+        startAngle = 270f,
+        sweepAngle = 180f,
+        useCenter = true,
+        style = Stroke(width = strokeWidth)
+    )
+
+    // Diagonal slash
+    val offset = radius * 0.7f
+    drawLine(
+        color = outlineVariantColor,
+        start = Offset(center.x + offset, center.y - offset),
+        end = center,
+        strokeWidth = strokeWidth,
+        cap = StrokeCap.Round,
+    )
 }

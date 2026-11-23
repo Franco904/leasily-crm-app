@@ -14,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOption
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun AppMoreOptionsDropdownMenu(
-    options: ImmutableList<MoreOptionsMenuOption>,
+    options: ImmutableList<MoreOptionsMenuOptionUiState>,
     modifier: Modifier = Modifier,
     isMenuExpanded: Boolean = false,
     onMenuExpanded: (Boolean) -> Unit,

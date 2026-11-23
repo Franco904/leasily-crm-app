@@ -45,21 +45,21 @@ import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.Cli
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsIdentificationPage
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsTabRow
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ClienteDetailsTopAppBar
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AtendimentoUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsTab
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
-import com.fstengineering.leasilycrm.core.presentation.composables.InteracaoDetailsBottomSheet
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.InteracaoCard
+import com.fstengineering.leasilycrm.core.presentation.composables.InteracaoDetailsBottomSheet
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ImovelCard
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.InteracaoCard
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteAtendimentoDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteHospedeDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteLeadDialog
 import com.fstengineering.leasilycrm.core.presentation.models.InteracaoBottomSheetUiState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
@@ -87,7 +87,8 @@ fun ClienteDetailsScreen(
     val lazyListState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
 
-    val currentMonth = remember { AppDate.now().month }
+    val dateProvider = LocalAppDateProvider.current
+    val currentMonth = remember { dateProvider.now().month }
 
     var selectedTabId by rememberSaveable {
         mutableIntStateOf(ClienteDetailsTab.Details.id)

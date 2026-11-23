@@ -14,6 +14,7 @@ import com.fstengineering.leasilycrm.imovelOcupacao.presentation.models.ImovelPe
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
@@ -49,7 +50,7 @@ class ImovelOcupacaoViewModel(
                 .combine(selectedYear) { occupiedPeriodsResult, selectedYear ->
                     occupiedPeriodsResult to selectedYear
                 }
-                .collect { (result, selectedYear) ->
+                .collectLatest { (result, selectedYear) ->
                     result
                         .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                         .onSuccess { storedOccupiedPeriods ->
@@ -67,77 +68,6 @@ class ImovelOcupacaoViewModel(
                 }
         }
     }
-
-//    private fun getSelectedYearStaysDates(
-//        storedImovel: Imovel,
-//        selectedStartMonth: Int?,
-//        selectedStartYear: Int?,
-//        selectedEndMonth: Int?,
-//        selectedEndYear: Int?,
-//    ): EstadiasStructuredDatesMap {
-//        val notDeletedStays = storedImovel.stays.filter { !it.isDeleted }
-//
-//        val staysStructuredDatesMap = getStaysStructuredDatesUseCase(stays = notDeletedStays)
-//            .takeIf { it.isNotEmpty() }
-//            ?.also { stayDates ->
-//                _monthYearOptions.update { stayDates.keys.toPersistentList() }
-//            }
-//            .takeIf {
-//                selectedStartMonth != null
-//                        && selectedStartYear != null
-//                        && selectedEndMonth != null
-//                        && selectedEndYear != null
-//            }
-//            ?.filter { (monthYear, _) ->
-//                val date = now.withMonthYear(monthYear.month, monthYear.year)
-//                val selectedStart = now.withMonthYear(selectedStartMonth!!, selectedStartYear!!)
-//                val selectedEnd = now.withMonthYear(selectedEndMonth!!, selectedEndYear!!)
-//
-//                date.isAfter(selectedStart) && date.isBefore(selectedEnd)
-//            }
-//            ?: return persistentMapOf()
-//
-//        val staysStructuredDatesWithMissingMonthsMap =
-//            AppDate.Companion.getDatesWithMissingMonthsBetween(
-//                startDate = now.withMonthYear(selectedStartMonth!!, selectedStartYear!!),
-//                endDate = now.withMonthYear(selectedEndMonth!!, selectedEndYear!!),
-//                staysStructuredDatesMap = staysStructuredDatesMap,
-//            )
-//
-//        return staysStructuredDatesWithMissingMonthsMap
-//    }
-//
-//    fun getDatesWithMissingMonthsBetween(
-//        startDate: AppDate,
-//        endDate: AppDate,
-//        staysStructuredDatesMap: Map<CalendarMonthYear, PersistentList<EstadiaCalendarDate>>,
-//    ): ImmutableMap<CalendarMonthYear, PersistentList<EstadiaCalendarDate>> {
-//        val staysStructuredDatesWithMissingMonthsMap =
-//            mutableMapOf<CalendarMonthYear, PersistentList<EstadiaCalendarDate>>()
-//
-//        var currentDate = startDate.date()
-//        while (currentDate <= endDate.date()) {
-//            val calendarMonthYear = CalendarMonthYear(
-//                month = currentDate.monthValue,
-//                year = currentDate.year,
-//            )
-//
-//            staysStructuredDatesWithMissingMonthsMap.put(calendarMonthYear, persistentListOf())
-//            currentDate = currentDate.plusMonths(1)
-//        }
-//
-//        staysStructuredDatesWithMissingMonthsMap.keys.forEach { monthYear ->
-//            val stayDates = staysStructuredDatesMap[monthYear]
-//
-//            staysStructuredDatesWithMissingMonthsMap.put(
-//                monthYear,
-//                stayDates ?: persistentListOf()
-//            )
-//        }
-//
-//        return staysStructuredDatesWithMissingMonthsMap
-//            .toPersistentMap()
-//    }
 
     fun onYearChange(newSelectedYear: Int) {
         _selectedYear.update { newSelectedYear }

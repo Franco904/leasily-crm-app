@@ -18,8 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteHistoryItemUiState
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -32,7 +32,8 @@ fun ClienteDetailsHistoryPage(
 ) {
     val lazyListState = rememberLazyListState()
 
-    val currentYear = remember { AppDate.now().year }
+    val dateProvider = LocalAppDateProvider.current
+    val currentYear = remember { dateProvider.now().year }
 
     LazyColumn(
         state = lazyListState,

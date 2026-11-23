@@ -40,7 +40,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import com.fstengineering.leasilycrm.core.domain.valueObjects.CalendarMonthYear
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.OccupiedPeriodsEmptySection
@@ -51,13 +50,14 @@ import com.fstengineering.leasilycrm.core.presentation.composables.rememberHoriz
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.models.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
+import com.fstengineering.leasilycrm.core.presentation.utils.LocalAppDateProvider
 import com.fstengineering.leasilycrm.core.presentation.utils.capitalizeFirst
 import com.fstengineering.leasilycrm.core.presentation.utils.getMonthLabelByNumber
 import com.fstengineering.leasilycrm.core.presentation.utils.itemsIndexed
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.BottomSheetError
-import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.OccupiedPeriodDeleteSuccess
+import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.ShowError
+import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.FinishOccupiedPeriodDelete
 import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.RegisterCheckInSuccess
 import com.fstengineering.leasilycrm.occupiedPeriods.presentation.OccupiedPeriodsViewModel.UiEvent.RegisterCheckOutSuccess
 import com.fstengineering.leasilycrm.occupiedPeriods.presentation.composables.OccupiedPeriodCard
@@ -91,8 +91,9 @@ fun OccupiedPeriodsPage(
         )
     }
 
-    val currentMonth = remember { AppDate.now().month }
-    val currentYear = remember { AppDate.now().year }
+    val dateProvider = LocalAppDateProvider.current
+    val currentMonth = remember { dateProvider.now().month }
+    val currentYear = remember { dateProvider.now().year }
 
     val occupiedPeriods by viewModel.occupiedPeriods.collectAsStateWithLifecycle()
     val occupiedPeriodToDelete by viewModel.occupiedPeriodToDelete.collectAsStateWithLifecycle()
@@ -120,14 +121,14 @@ fun OccupiedPeriodsPage(
 
         viewModel.uiEvents.collect { uiEvent ->
             when (uiEvent) {
-                is BottomSheetError -> {
+                is ShowError -> {
                     val errorData = uiEvent.error.toBottomSheetData(
                         DefaultErrorBottomSheetDataPropertiesStrategy,
                     )
                     onUiEvent(UiEvent.ShowErrorBottomSheet(errorData))
                 }
 
-                is OccupiedPeriodDeleteSuccess -> {
+                is FinishOccupiedPeriodDelete -> {
                     if (occupiedPeriodToDelete == null) return@collect
 
                     val messageId =

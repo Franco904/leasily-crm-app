@@ -2,15 +2,15 @@ package com.fstengineering.leasilycrm.core.infra.stores
 
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.encrypted.EncryptedPreferences
-import com.fstengineering.leasilycrm.core.infra.dataSources.preferences.interfaces.PreferencesDataSource
+import com.fstengineering.leasilycrm.core.infra.localStorage.encrypted.EncryptedPreferences
+import com.fstengineering.leasilycrm.core.infra.localStorage.interfaces.LocalStorage
 import kotlinx.coroutines.flow.firstOrNull
 
 class UserSessionSharedStoreImpl(
-    private val encryptedPreferencesDataSource: PreferencesDataSource<EncryptedPreferences>,
+    private val encryptedLocalStorage: LocalStorage<EncryptedPreferences>,
 ) : UserSessionSharedStore {
     override suspend fun isSessionAlive(): Boolean {
-        return encryptedPreferencesDataSource.readPreferences()
+        return encryptedLocalStorage.readPreferences()
             .fold(
                 onError = { false },
                 onSuccess = { prefsFlow ->
@@ -21,7 +21,7 @@ class UserSessionSharedStoreImpl(
     }
 
     override suspend fun clearSessionState() {
-        encryptedPreferencesDataSource.savePreferences { prefs ->
+        encryptedLocalStorage.savePreferences { prefs ->
             prefs.copy(
                 sessionCookie = null,
                 name = null,

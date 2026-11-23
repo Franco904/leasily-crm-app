@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.Imovel
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
+import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelFile
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeProprietario
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -39,7 +40,7 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
     // region watchImoveis
 
     @Test
-    fun deveListarImoveisEmOrdemDeBairroSemOsExcluidosEComFotoPrincipal(): Unit =
+    fun deveListarImoveisEmOrdemDeBairroComFotoPrincipalQuandoHaImovelExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             val mainPictureUri = faker.random.nextUUID()
@@ -48,8 +49,8 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
                 id = 1L,
                 neighborhood = "Centro",
                 files = listOf(
-                    ImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true),
-                    ImovelFile(
+                    createFakeImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true),
+                    createFakeImovelFile(
                         id = null,
                         uriString = faker.random.nextUUID(),
                         isMainPicture = false
@@ -99,7 +100,7 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
     // region getImoveis
 
     @Test
-    fun deveListarApenasImoveisCujoBairroOuEnderecoContemOTextoBuscado(): Unit =
+    fun deveListarApenasImoveisCujoBairroOuEnderecoContemOTextoQuandoHaBusca(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             val centro = createFakeImovel(
@@ -155,7 +156,7 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
         }
 
     @Test
-    fun deveTratarPorcentagemDaBuscaComoTextoLiteral(): Unit =
+    fun deveTratarPorcentagemComoTextoLiteralQuandoBuscaContemPorcentagem(): Unit =
         runBlocking(Dispatchers.Default) {
             val proprietarioId = db.saveFakeProprietario()
             listOf(

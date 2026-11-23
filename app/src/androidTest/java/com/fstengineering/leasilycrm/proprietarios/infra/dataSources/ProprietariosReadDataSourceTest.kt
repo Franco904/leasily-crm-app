@@ -35,7 +35,7 @@ class ProprietariosReadDataSourceTest : IntegrationTest() {
     // region watchProprietarios
 
     @Test
-    fun deveListarProprietariosEmOrdemAlfabeticaSemOsExcluidos(): Unit =
+    fun deveListarProprietariosEmOrdemAlfabeticaQuandoHaProprietarioExcluido(): Unit =
         runBlocking(Dispatchers.Default) {
             val carla = ProprietarioReadModel(id = 1L, name = "Carla")
             val ana = ProprietarioReadModel(id = 2L, name = "Ana")

@@ -24,7 +24,7 @@ sealed interface ImovelUiState {
 
             return ImovelCardUiState(
                 id = id,
-                mainPictureUri = mainPicture?.uri,
+                mainPictureUriString = mainPicture?.uriString,
                 neighborhood = address.neighborhood,
                 streetAddressAndNumber = streetAddressAndNumber,
                 type = type,
