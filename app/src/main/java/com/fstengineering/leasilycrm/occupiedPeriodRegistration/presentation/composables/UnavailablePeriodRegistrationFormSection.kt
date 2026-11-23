@@ -223,28 +223,4 @@ fun UnavailablePeriodRegistrationFormSection(
             onDismiss = { mustShowStayDateRangePickerDialog = false },
         )
     }
-
-//    if (mustShowStayCheckInTimePickerDialog) {
-//        TimePickerDialog(
-//            title = stringResource(R.string.stay_registration_start_time_picker_dialog_title),
-//            onTimeSelect = {
-//                onFormChange(
-//                    form.copy(checkInHourMinute = Pair(it.hour, it.minute))
-//                )
-//            },
-//            onDismiss = { mustShowStayCheckInTimePickerDialog = false },
-//        )
-//    }
-//
-//    if (mustShowStayCheckOutTimePickerDialog) {
-//        TimePickerDialog(
-//            title = stringResource(R.string.stay_registration_end_time_picker_dialog_title),
-//            onTimeSelect = {
-//                onFormChange(
-//                    form.copy(checkOutHourMinute = Pair(it.hour, it.minute))
-//                )
-//            },
-//            onDismiss = { mustShowStayCheckOutTimePickerDialog = false },
-//        )
-//    }
 }

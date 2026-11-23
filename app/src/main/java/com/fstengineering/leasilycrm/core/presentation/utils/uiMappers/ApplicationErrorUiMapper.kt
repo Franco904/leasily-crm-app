@@ -52,17 +52,6 @@ fun ApplicationError.toBottomSheetData(
             )
         }
 
-//        ApplicationError.Infra.Unknown -> {
-//            ErrorBottomSheetData(
-//                title = imoveis.inconsistencyErrorTitle,
-//                description = imoveis.inconsistencyErrorDescription,
-//                secondaryActionLabel = R.string.contact_support_action_button_text,
-//                onSecondaryAction = { onErrorEvent ->
-//                    mailToSupportChannel { errorUiEvent -> onErrorEvent(errorUiEvent) }
-//                },
-//            )
-//        }
-
         ApplicationError.UserCancellation -> {
             ErrorBottomSheetData(
                 title = -1,
