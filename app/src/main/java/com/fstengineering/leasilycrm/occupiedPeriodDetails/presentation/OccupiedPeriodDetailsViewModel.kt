@@ -18,6 +18,7 @@ import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.O
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -52,7 +53,7 @@ class OccupiedPeriodDetailsViewModel(
 
     private fun watchOccupiedPeriod(stayId: Long) {
         viewModelScope.launch {
-            watchOccupiedPeriod.invoke(OccupiedPeriodArgs(stayId)).collect { result ->
+            watchOccupiedPeriod.invoke(OccupiedPeriodArgs(stayId)).collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                     .onSuccess { storedPeriod ->
@@ -70,7 +71,7 @@ class OccupiedPeriodDetailsViewModel(
     private fun watchCheckOutDialogPreference() {
         viewModelScope.launch {
             occupiedPeriodQueryRepository.watchMustNotShowCheckOutDialogAnymore()
-                .collect { result ->
+                .collectLatest { result ->
                     result.onSuccess { mustNotShowCheckOutDialog = it }
                 }
         }

@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.clientes.presentation.hospedes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
-import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesReadDataSource
+import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.clientes.presentation.mappers.toClienteListItemUiState
 import com.fstengineering.leasilycrm.clientes.presentation.models.ClienteListItemUiState
 import com.fstengineering.leasilycrm.clientes.presentation.models.HospedeFilterType
@@ -12,6 +12,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteOrderType
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -20,13 +21,13 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 class HospedesViewModel(
     private val clientesReadDataSource: ClientesReadDataSource,
@@ -98,7 +99,7 @@ class HospedesViewModel(
                         orderTypeId = order.id,
                     )
                 }
-                .collect { result ->
+                .collectLatest { result ->
                     result
                         .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                         .onSuccess { readModels ->

@@ -21,6 +21,7 @@ import com.fstengineering.leasilycrm.profile.presentation.models.ProfileUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -52,7 +53,7 @@ class ProfileViewModel(
 
     private fun watchUser() {
         viewModelScope.launch {
-            userQueryRepository.watch().collect { result ->
+            userQueryRepository.watch().collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                     .onSuccess { user -> _uiState.update { ProfileUiState.Loaded.fromReadModel(user) } }

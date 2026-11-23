@@ -10,6 +10,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -95,7 +96,7 @@ class DashboardViewModel(
 
     private fun watchGeneratedLeadsPerMonth() {
         viewModelScope.launch {
-            userAnalyticsRepository.watchGeneratedLeadsPerMonth().collect { result ->
+            userAnalyticsRepository.watchGeneratedLeadsPerMonth().collectLatest { result ->
                 result
                     .onSuccess { generatedLeadsPerMonth ->
                         _generatedLeadsPerMonth.update { generatedLeadsPerMonth }
@@ -106,7 +107,7 @@ class DashboardViewModel(
 
     private fun watchGeneratedLeadsPerTenantTagPerMonth() {
         viewModelScope.launch {
-            userAnalyticsRepository.watchGeneratedLeadsPerTenantTagPerMonth().collect { result ->
+            userAnalyticsRepository.watchGeneratedLeadsPerTenantTagPerMonth().collectLatest { result ->
                 result
                     .onSuccess { generatedLeadsPerTenantSegmentPerMonth ->
                         _generatedLeadsPerTenantTagPerMonth.update {
@@ -119,7 +120,7 @@ class DashboardViewModel(
 
     private fun watchLeadContactChannelDistribution() {
         viewModelScope.launch {
-            userAnalyticsRepository.watchLeadContactChannelDistribution().collect { result ->
+            userAnalyticsRepository.watchLeadContactChannelDistribution().collectLatest { result ->
                 result
                     .onSuccess { leadContactChannelDistribution ->
                         _leadContactChannelDistribution.update { leadContactChannelDistribution }
@@ -130,7 +131,7 @@ class DashboardViewModel(
 
     private fun watchNewStayBookingsPerMonth() {
         viewModelScope.launch {
-            userAnalyticsRepository.watchNewStayBookingsPerMonth().collect { result ->
+            userAnalyticsRepository.watchNewStayBookingsPerMonth().collectLatest { result ->
                 result
                     .onSuccess { newStayBookingsPerMonth ->
                         _newStayBookingsPerMonth.update { newStayBookingsPerMonth }
@@ -141,7 +142,7 @@ class DashboardViewModel(
 
     private fun watchNewStayBookingsPerTenantTagPerMonth() {
         viewModelScope.launch {
-            userAnalyticsRepository.watchNewStayBookingsPerTenantTagPerMonth().collect { result ->
+            userAnalyticsRepository.watchNewStayBookingsPerTenantTagPerMonth().collectLatest { result ->
                 result
                     .onSuccess { newStayBookingsPerTenantSegmentPerMonth ->
                         _newStayBookingsPerTenantTagPerMonth.update {
@@ -155,7 +156,7 @@ class DashboardViewModel(
     private fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth() {
         viewModelScope.launch {
             userAnalyticsRepository.watchNewStayBookingsPerTop3NeighborhoodsPerMonth()
-                .collect { result ->
+                .collectLatest { result ->
                     result
                         .onSuccess { newStayBookingsPerTop3NeighborhoodsPerMonth ->
                             _newStayBookingsPerTop3NeighborhoodsPerMonth.update {
@@ -168,7 +169,7 @@ class DashboardViewModel(
 
     private fun watchCommissionInvoicePerMonth() {
         viewModelScope.launch {
-            userAnalyticsRepository.watchCommissionInvoicePerMonth().collect { result ->
+            userAnalyticsRepository.watchCommissionInvoicePerMonth().collectLatest { result ->
                 result
                     .onSuccess { commissionInvoicePerMonth ->
                         _commissionInvoicePerMonth.update { commissionInvoicePerMonth }
@@ -180,7 +181,7 @@ class DashboardViewModel(
     private fun watchCommissionInvoicePerTenantTagPerMonth() {
         viewModelScope.launch {
             userAnalyticsRepository.watchCommissionInvoicePerTenantTagPerMonth()
-                .collect { result ->
+                .collectLatest { result ->
                     result
                         .onSuccess { commissionInvoicePerTenantSegmentPerMonth ->
                             _commissionInvoicePerTenantTagPerMonth.update {
@@ -194,7 +195,7 @@ class DashboardViewModel(
     private fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth() {
         viewModelScope.launch {
             userAnalyticsRepository.watchCommissionInvoicePerTop3NeighborhoodsPerMonth()
-                .collect { result ->
+                .collectLatest { result ->
                     result
                         .onSuccess { commissionInvoicePerTop3NeighborhoodsPerMonth ->
                             _commissionInvoicePerTop3NeighborhoodsPerMonth.update {
@@ -207,7 +208,7 @@ class DashboardViewModel(
 
     private fun watchAverageTicketPerMonth() {
         viewModelScope.launch {
-            userAnalyticsRepository.watchAverageTicketPerMonth().collect { result ->
+            userAnalyticsRepository.watchAverageTicketPerMonth().collectLatest { result ->
                 result
                     .onSuccess { averageTicketPerMonth ->
                         _averageTicketPerMonth.update { averageTicketPerMonth }

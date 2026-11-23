@@ -16,6 +16,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -45,7 +46,7 @@ class ClienteDetailsViewModel(
 
     private fun watchCliente() {
         watchJob = viewModelScope.launch {
-            clienteDetailsReadDataSource.watchCliente(route.clienteId).collect { result ->
+            clienteDetailsReadDataSource.watchCliente(route.clienteId).collectLatest { result ->
                 result
                     .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                     .onSuccess { readModel ->

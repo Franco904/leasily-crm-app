@@ -14,6 +14,7 @@ import com.fstengineering.leasilycrm.imovelOcupacao.presentation.models.ImovelPe
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
@@ -49,7 +50,7 @@ class ImovelOcupacaoViewModel(
                 .combine(selectedYear) { occupiedPeriodsResult, selectedYear ->
                     occupiedPeriodsResult to selectedYear
                 }
-                .collect { (result, selectedYear) ->
+                .collectLatest { (result, selectedYear) ->
                     result
                         .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
                         .onSuccess { storedOccupiedPeriods ->

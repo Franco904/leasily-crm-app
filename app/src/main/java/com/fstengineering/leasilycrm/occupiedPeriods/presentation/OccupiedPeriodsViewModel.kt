@@ -14,6 +14,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
 import com.fstengineering.leasilycrm.occupiedPeriods.application.models.dtos.OccupiedPeriodListReadModel
 import com.fstengineering.leasilycrm.occupiedPeriods.application.repositories.OccupiedPeriodQueryRepository
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -23,12 +24,12 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 class OccupiedPeriodsViewModel(
     private val registerStayCheckOutUseCase: RegisterStayCheckOutUseCase,
@@ -86,7 +87,7 @@ class OccupiedPeriodsViewModel(
     private fun watchMustNotShowCheckOutDialogAnymore() {
         viewModelScope.launch {
             occupiedPeriodQueryRepository.watchMustNotShowCheckOutDialogAnymore()
-                .collect { result ->
+                .collectLatest { result ->
                     result
                         .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                         .onSuccess { mustNotShowCheckOutDialogAnymore ->
@@ -106,7 +107,7 @@ class OccupiedPeriodsViewModel(
                     occupiedPeriodQueryRepository.watchAll()
                         .map { it to newFilter }
                 }
-                .collect { (watchAllResult, newFilter) ->
+                .collectLatest { (watchAllResult, newFilter) ->
                     watchAllResult
                         .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                         .onSuccess { stays ->
@@ -143,7 +144,7 @@ class OccupiedPeriodsViewModel(
     private fun watchTodayCheckInsAndCheckouts() {
         viewModelScope.launch {
             occupiedPeriodSharedQueryRepository.watchAllPastCheckInCheckOutNotDoneCounts()
-                .collect { result ->
+                .collectLatest { result ->
                     result
                         .onError { e -> _uiEvents.trySend(UiEvent.ShowError(e)) }
                         .onSuccess { (staysAbleToCheckInCount, staysAbleToCheckOutCount) ->
