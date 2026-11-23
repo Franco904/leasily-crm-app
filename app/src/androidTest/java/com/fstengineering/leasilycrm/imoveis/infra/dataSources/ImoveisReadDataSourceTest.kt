@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.Imovel
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
+import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelFile
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeProprietario
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -48,8 +49,8 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
                 id = 1L,
                 neighborhood = "Centro",
                 files = listOf(
-                    ImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true),
-                    ImovelFile(
+                    createFakeImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true),
+                    createFakeImovelFile(
                         id = null,
                         uriString = faker.random.nextUUID(),
                         isMainPicture = false

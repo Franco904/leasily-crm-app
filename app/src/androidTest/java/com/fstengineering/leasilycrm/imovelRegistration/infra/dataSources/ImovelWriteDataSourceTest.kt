@@ -10,6 +10,7 @@ import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFi
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
+import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelFile
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelPrice
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeProprietario
 import kotlinx.collections.immutable.persistentListOf
@@ -75,8 +76,8 @@ class ImovelWriteDataSourceTest : IntegrationTest() {
     fun devePersistirArquivosDoImovelQuandoDadosSaoValidos(): Unit =
         runBlocking(Dispatchers.Default) {
             val files = listOf(
-                ImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = true),
-                ImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = false),
+                createFakeImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = true),
+                createFakeImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = false),
             )
             val imovel = createFakeImovel(proprietarioId = db.saveFakeProprietario(), files = files)
 

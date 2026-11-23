@@ -24,6 +24,13 @@ fun ImovelDraftFormUiState.Loaded.toImovel(): AppResult<Imovel> {
         }
         .toPersistentList()
 
+    val files = files
+        .mapNotNull { file ->
+            file.toImovelFile()
+                .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
+        }
+        .toPersistentList()
+
     val imovel = Imovel.parse(
         id = id,
         createDateTime = createDateTime,
@@ -53,7 +60,7 @@ fun ImovelDraftFormUiState.Loaded.toImovel(): AppResult<Imovel> {
         cleaningServiceTax = cleaningServiceTax,
         hasCleaningServiceIncluded = hasCleaningServiceIncluded,
         prices = prices,
-        files = files.map { it.toImovelFile() }.toPersistentList(),
+        files = files,
         observations = observations,
     )
         .fold(onError = { errors.addAll(0, it.toDomainErrors()); null }, onSuccess = { it })
@@ -70,7 +77,7 @@ private fun ImovelPriceUiState.toImovelPrice() = ImovelPrice.parse(
     amount = amount,
 )
 
-private fun ImovelFileUiState.toImovelFile() = ImovelFile(
+private fun ImovelFileUiState.toImovelFile() = ImovelFile.parse(
     id = id,
     uriString = uri.toString(),
     isMainPicture = isMainPicture,

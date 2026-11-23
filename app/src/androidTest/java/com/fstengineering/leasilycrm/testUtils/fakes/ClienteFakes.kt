@@ -14,6 +14,7 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.testUtils.faker
+import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelFile
 import kotlinx.collections.immutable.toPersistentList
 import org.amshove.kluent.shouldBeInstanceOf
 
@@ -171,7 +172,7 @@ suspend fun AppDatabase.saveFakeImovelWithMainPicture(): Pair<Long, String> {
     val imovel = createFakeImovel(
         proprietarioId = saveFakeProprietario(),
         id = imovelId,
-        files = listOf(ImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true)),
+        files = listOf(createFakeImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true)),
     )
     imovelWriteDataSource().save(imovel).shouldBeInstanceOf<AppResult.Success<*>>()
     return imovelId to mainPictureUri

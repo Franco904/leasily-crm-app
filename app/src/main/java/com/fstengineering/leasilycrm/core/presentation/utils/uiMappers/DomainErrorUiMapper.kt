@@ -43,6 +43,11 @@ fun DomainError.toInlineMessage() = when (this) {
     DomainError.ImovelSeaProximityDistanceToSea.Required -> INLINE_REQUIRED
 
     DomainError.ImovelOtherFields.MoreThanOneMainPictureFile -> INLINE_GENERIC_INVALID_DATA
+    DomainError.ImovelFileUri.Required -> INLINE_GENERIC_INVALID_DATA
+    DomainError.StayFileUri.Required -> INLINE_GENERIC_INVALID_DATA
+    DomainError.StayFileName.Required -> INLINE_GENERIC_INVALID_DATA
+    DomainError.ProprietarioFileUri.Required -> INLINE_GENERIC_INVALID_DATA
+    DomainError.ProprietarioFileName.Required -> INLINE_GENERIC_INVALID_DATA
 
     DomainError.StayImovel.Required -> INLINE_REQUIRED
     DomainError.StayTenant.Required -> INLINE_REQUIRED

@@ -43,6 +43,26 @@ sealed interface DomainError : BaseError {
         IsOverlappingOtherPricePeriod,
     }
 
+    enum class ImovelFileUri : DomainError {
+        Required,
+    }
+
+    enum class StayFileUri : DomainError {
+        Required,
+    }
+
+    enum class StayFileName : DomainError {
+        Required,
+    }
+
+    enum class ProprietarioFileUri : DomainError {
+        Required,
+    }
+
+    enum class ProprietarioFileName : DomainError {
+        Required,
+    }
+
     enum class ImovelOtherFields : DomainError {
         MoreThanOneMainPictureFile,
     }
