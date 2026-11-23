@@ -86,6 +86,7 @@ private fun AtendimentoReadModel.toUiState(): AtendimentoUiState {
                 month = interacao.date.month,
             )
         }
+        .mapValues { (_, interacoes) -> interacoes.toPersistentList() }
         .toPersistentMap()
 
     val sortedSentImoveis = sentImoveis
