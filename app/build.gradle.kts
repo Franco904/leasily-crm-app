@@ -190,6 +190,7 @@ dependencies {
     testRuntimeOnly(libs.junit5.launcher)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kluent)
+    testImplementation(libs.konsist)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
     testImplementation(libs.ktor.mock)
@@ -197,4 +198,19 @@ dependencies {
     // Other
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+// O Konsist declara uma kotlin-stdlib mais nova que o compilador do projeto, e o compilador a rejeita
+// no classpath de teste. O pin deixa o compilador embutido do Konsist rodando sobre a stdlib do
+// projeto: uma regra que use API nova da stdlib pode falhar em runtime com NoSuchMethodError.
+// Remover o pin quando o Kotlin do projeto alcançar o do Konsist.
+configurations.matching {
+    it.name.endsWith("UnitTestCompileClasspath") || it.name.endsWith("UnitTestRuntimeClasspath")
+}.configureEach {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin-stdlib")) {
+            useVersion(libs.versions.kotlin.get())
+            because("O compilador do projeto rejeita a stdlib que o Konsist declara")
+        }
+    }
 }
