@@ -15,6 +15,7 @@
 .cxx
 local.properties
 gradle.properties
+!/ci/gradle.properties
 
 # Artefatos locais de agentes de IA
 /handoffs/
