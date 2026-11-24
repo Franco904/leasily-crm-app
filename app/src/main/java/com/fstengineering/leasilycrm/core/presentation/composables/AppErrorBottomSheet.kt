@@ -73,9 +73,7 @@ fun AppErrorBottomSheet(
                     onClick = {
                         onDismissRequest()
                         errorBottomSheetData.onSecondaryAction(context) { uiEvent ->
-                            onUiEvent(
-                                uiEvent
-                            )
+                            onUiEvent(uiEvent)
                         }
                     },
                     modifier = Modifier

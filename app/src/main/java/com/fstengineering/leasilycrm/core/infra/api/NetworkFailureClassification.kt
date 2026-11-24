@@ -18,9 +18,7 @@ fun HttpClientConfig<*>.classifyNetworkFailures(connectivityAdapter: Connectivit
             try {
                 proceed(request)
             } catch (exception: IOException) {
-                if (!connectivityAdapter.isDeviceConnectedToInternet()) throw NoInternetException(
-                    exception
-                )
+                if (!connectivityAdapter.isDeviceConnectedToInternet()) throw NoInternetException(exception)
                 throw exception
             }
         }

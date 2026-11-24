@@ -168,9 +168,7 @@ class AtendimentoRegistrationViewModelTest {
         fun `Deve persistir Atendimento do Cliente quando cadastrado, dado que os dados são válidos`() =
             runTest {
                 val sut = createSutWithNewForm { it.copy(adultsCount = 2) }
-                coEvery { atendimentoWriteDataSourceMock.save(any()) } returns AppResult.Success(
-                    Unit
-                )
+                coEvery { atendimentoWriteDataSourceMock.save(any()) } returns AppResult.Success(Unit)
 
                 sut.uiEvents.test {
                     sut.saveAtendimento()

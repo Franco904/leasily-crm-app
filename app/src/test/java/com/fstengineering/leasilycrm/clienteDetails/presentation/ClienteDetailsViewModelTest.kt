@@ -171,9 +171,7 @@ class ClienteDetailsViewModelTest {
         fun `Deve confirmar exclusão quando o Atendimento atual é excluído`() = runTest {
             val atendimentoId = faker.random.nextLong(bound = 9999)
             val sut = createSut()
-            coEvery { atendimentoSharedWriteDataSourceMock.delete(any()) } returns AppResult.Success(
-                Unit
-            )
+            coEvery { atendimentoSharedWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
 
             sut.uiEvents.test {
                 sut.deleteCurrentAtendimento(atendimentoId)

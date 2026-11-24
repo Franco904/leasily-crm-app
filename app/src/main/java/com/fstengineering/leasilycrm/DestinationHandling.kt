@@ -148,9 +148,7 @@ fun NavGraphBuilder.destinations(
                     },
                     onNewAtendimento = { clienteId ->
                         navController.navigate(
-                            newAtendimentoOf(
-                                clienteId
-                            )
+                            newAtendimentoOf(clienteId)
                         )
                     },
                     onNewStay = { clienteId -> navController.navigate(newStayOf(clienteId)) },
@@ -178,9 +176,7 @@ fun NavGraphBuilder.destinations(
                     },
                     onNewAtendimento = { clienteId ->
                         navController.navigate(
-                            newAtendimentoOf(
-                                clienteId
-                            )
+                            newAtendimentoOf(clienteId)
                         )
                     },
                     onNewStay = { clienteId -> navController.navigate(newStayOf(clienteId)) },
