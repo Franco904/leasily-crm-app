@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
+import com.fstengineering.leasilycrm.core.presentation.composables.cards.HomeNavCard
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.LeadContactChannelsDistributionPieChartCard
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyAverageTicketAnalyticsCard
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyCommissionInvoiceAnalyticsCard
@@ -34,7 +35,6 @@ import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyL
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsAnalyticsCard
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsPerTenantSegmentAnalyticsCard
 import com.fstengineering.leasilycrm.dashboard.presentation.composables.MonthlyNewStayBookingsPerTop3NeighborhoodsAnalyticsCard
-import com.fstengineering.leasilycrm.core.presentation.composables.cards.HomeNavCard
 
 @Composable
 fun DashboardPage(
@@ -193,5 +193,4 @@ fun DashboardPage(
 
         item { Spacer(modifier = Modifier.height(8.dp)) }
     }
-
 }

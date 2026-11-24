@@ -10,10 +10,10 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.fstengineering.leasilycrm.core.presentation.composables.NumberRedBadge
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.FilterConnectedButton
 import com.fstengineering.leasilycrm.core.presentation.models.FilterConnectedButtonPosition
 import com.fstengineering.leasilycrm.core.presentation.models.OccupiedPeriodFilterType
-import com.fstengineering.leasilycrm.core.presentation.composables.NumberRedBadge
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.mutate
 

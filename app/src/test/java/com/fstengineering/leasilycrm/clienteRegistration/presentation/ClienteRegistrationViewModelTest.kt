@@ -34,11 +34,11 @@ class ClienteRegistrationViewModelTest {
     @BeforeEach
     fun setUp() {
         coEvery { clienteRegistrationReadDataSourceMock.getTags() } returns
-                AppResult.Success(emptyList())
+            AppResult.Success(emptyList())
         coEvery { clienteRegistrationReadDataSourceMock.getCities() } returns
-                AppResult.Success(emptyList())
+            AppResult.Success(emptyList())
         coEvery { clienteRegistrationReadDataSourceMock.getContactOrigins() } returns
-                AppResult.Success(emptyList())
+            AppResult.Success(emptyList())
     }
 
     @Nested
@@ -49,7 +49,7 @@ class ClienteRegistrationViewModelTest {
             val clienteId = faker.random.nextLong(bound = 9999)
             val cliente = createClienteReadModel(id = clienteId)
             coEvery { clienteRegistrationReadDataSourceMock.getCliente(clienteId) } returns
-                    AppResult.Success(cliente)
+                AppResult.Success(cliente)
             val sut = createSut(route = Destinations.ClienteRegistration(clienteId))
 
             sut.draftFormUiState.test {
@@ -91,11 +91,11 @@ class ClienteRegistrationViewModelTest {
         fun `Deve sugerir etiquetas, cidades e Origens do contato já usadas quando a tela é aberta`() =
             runTest {
                 coEvery { clienteRegistrationReadDataSourceMock.getTags() } returns
-                        AppResult.Success(listOf("VIP"))
+                    AppResult.Success(listOf("VIP"))
                 coEvery { clienteRegistrationReadDataSourceMock.getCities() } returns
-                        AppResult.Success(listOf("Florianópolis"))
+                    AppResult.Success(listOf("Florianópolis"))
                 coEvery { clienteRegistrationReadDataSourceMock.getContactOrigins() } returns
-                        AppResult.Success(listOf("Instagram"))
+                    AppResult.Success(listOf("Instagram"))
                 val sut = createSut(route = Destinations.ClienteRegistration(clienteId = null))
 
                 sut.init()
@@ -109,7 +109,7 @@ class ClienteRegistrationViewModelTest {
         fun `Deve carregar o Cliente uma única vez quando a tela chama init novamente`() = runTest {
             val clienteId = faker.random.nextLong(bound = 9999)
             coEvery { clienteRegistrationReadDataSourceMock.getCliente(clienteId) } returns
-                    AppResult.Success(createClienteReadModel(id = clienteId))
+                AppResult.Success(createClienteReadModel(id = clienteId))
             val sut = createSut(route = Destinations.ClienteRegistration(clienteId))
 
             sut.init()
@@ -131,7 +131,7 @@ class ClienteRegistrationViewModelTest {
                     sut.saveCliente()
 
                     awaitItem() shouldBeEqualTo
-                            ClienteRegistrationViewModel.UiEvent.ScrollToField(ClienteField.Name)
+                        ClienteRegistrationViewModel.UiEvent.ScrollToField(ClienteField.Name)
                 }
                 sut.formErrors.value.errors[ClienteField.Name].shouldNotBeNull()
                 coVerify(exactly = 0) { clienteWriteDataSourceMock.save(any()) }
@@ -142,15 +142,15 @@ class ClienteRegistrationViewModelTest {
             runTest {
                 val sut = createSutWithNewForm(createValidForm())
                 coEvery { clienteWriteDataSourceMock.save(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
                     sut.saveCliente()
 
                     awaitItem() shouldBeEqualTo
-                            ClienteRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
-                                ApplicationError.Unknown
-                            )
+                        ClienteRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                            ApplicationError.Unknown
+                        )
                 }
             }
 
@@ -179,7 +179,7 @@ class ClienteRegistrationViewModelTest {
             runTest {
                 val clienteId = faker.random.nextLong(bound = 9999)
                 coEvery { clienteRegistrationReadDataSourceMock.getCliente(clienteId) } returns
-                        AppResult.Success(createClienteReadModel(id = clienteId))
+                    AppResult.Success(createClienteReadModel(id = clienteId))
                 val sut = createSut(route = Destinations.ClienteRegistration(clienteId))
                 sut.init()
 
@@ -199,7 +199,7 @@ class ClienteRegistrationViewModelTest {
                 val clienteId = faker.random.nextLong(bound = 9999)
                 val cliente = createClienteReadModel(id = clienteId, isLead = true)
                 coEvery { clienteRegistrationReadDataSourceMock.getCliente(clienteId) } returns
-                        AppResult.Success(cliente)
+                    AppResult.Success(cliente)
                 coEvery { clienteWriteDataSourceMock.save(any()) } returns AppResult.Success(Unit)
                 val sut = createSut(route = Destinations.ClienteRegistration(clienteId))
                 sut.init()
@@ -222,7 +222,7 @@ class ClienteRegistrationViewModelTest {
                 val clienteId = faker.random.nextLong(bound = 9999)
                 val cliente = createClienteReadModel(id = clienteId, isLead = false)
                 coEvery { clienteRegistrationReadDataSourceMock.getCliente(clienteId) } returns
-                        AppResult.Success(cliente)
+                    AppResult.Success(cliente)
                 coEvery { clienteWriteDataSourceMock.save(any()) } returns AppResult.Success(Unit)
                 val sut = createSut(route = Destinations.ClienteRegistration(clienteId))
                 sut.init()
@@ -263,7 +263,7 @@ class ClienteRegistrationViewModelTest {
                     sut.onExit()
 
                     awaitItem() shouldBeEqualTo
-                            ClienteRegistrationViewModel.UiEvent.ShowConfirmLeaveDialog
+                        ClienteRegistrationViewModel.UiEvent.ShowConfirmLeaveDialog
                 }
             }
     }

@@ -31,7 +31,8 @@ import org.junit.jupiter.api.Test
 @ViewModelCoroutineTest
 class ImoveisViewModelTest {
     private val imoveisReadDataSourceMock: ImoveisReadDataSource = mockk(relaxUnitFun = true)
-    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxUnitFun = true)
+    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource =
+        mockk(relaxUnitFun = true)
 
     @BeforeEach
     fun setUp() {
@@ -47,7 +48,7 @@ class ImoveisViewModelTest {
             val imovel1 = createImovelReadModel()
             val imovel2 = createImovelReadModel()
             every { imoveisReadDataSourceMock.watchImoveis() } returns
-                    flowOf(AppResult.Success(listOf(imovel1, imovel2)))
+                flowOf(AppResult.Success(listOf(imovel1, imovel2)))
 
             sut.uiState.test {
                 awaitItem() shouldBeEqualTo ImoveisUiState.Loading
@@ -65,7 +66,7 @@ class ImoveisViewModelTest {
             runTest {
                 val sut = createSut()
                 every { imoveisReadDataSourceMock.watchImoveis() } returns
-                        flowOf(AppResult.Success(listOf(createImovelReadModel())))
+                    flowOf(AppResult.Success(listOf(createImovelReadModel())))
 
                 sut.init()
                 sut.init()
@@ -78,13 +79,13 @@ class ImoveisViewModelTest {
             runTest {
                 val sut = createSut()
                 every { imoveisReadDataSourceMock.watchImoveis() } returns
-                        flowOf(AppResult.Error(ApplicationError.NoInternet))
+                    flowOf(AppResult.Error(ApplicationError.NoInternet))
 
                 sut.uiEvents.test {
                     sut.init()
 
                     awaitItem() shouldBeEqualTo
-                            ImoveisViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
+                        ImoveisViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
                 }
             }
     }
@@ -99,7 +100,7 @@ class ImoveisViewModelTest {
                 val matchingImovel = createImovelReadModel()
                 every { imoveisReadDataSourceMock.watchImoveis() } returns emptyFlow()
                 coEvery { imoveisReadDataSourceMock.getImoveis("cen") } returns
-                        AppResult.Success(listOf(matchingImovel))
+                    AppResult.Success(listOf(matchingImovel))
 
                 sut.uiState.test {
                     awaitItem() shouldBeEqualTo ImoveisUiState.Loading
@@ -109,7 +110,7 @@ class ImoveisViewModelTest {
                     advanceTimeBy(600)
 
                     awaitItem() shouldBeEqualTo
-                            ImoveisUiState.Loaded(imoveis = persistentListOf(matchingImovel.toCardUiState()))
+                        ImoveisUiState.Loaded(imoveis = persistentListOf(matchingImovel.toCardUiState()))
                 }
             }
     }
@@ -143,13 +144,13 @@ class ImoveisViewModelTest {
                 val imovel = createImovelCardUiState()
                 sut.onDeleteImovel(imovel)
                 coEvery { imovelSharedWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Error(ApplicationError.NoInternet)
+                    AppResult.Error(ApplicationError.NoInternet)
 
                 sut.uiEvents.test {
                     sut.deleteImovel()
 
                     awaitItem() shouldBeEqualTo
-                            ImoveisViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
+                        ImoveisViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
                 }
                 sut.imovelToDelete.value shouldBeEqualTo imovel
             }

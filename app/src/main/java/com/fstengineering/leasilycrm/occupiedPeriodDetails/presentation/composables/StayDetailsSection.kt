@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayCheckInCheckOutDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayCommissionDetailsItem
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayImovelDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayObservationsDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayPeriodDetailsItem
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayImovelDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayQtGuestsDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayTenantDetailsItem
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.items.StayTenantVehicleDataDetailsItem
@@ -36,8 +36,8 @@ fun StayDetailsSection(
     modifier: Modifier = Modifier,
 ) {
     val hasAnyVehicleData = stay.vehicleMake != null
-            || stay.vehicleColor != null
-            || stay.vehicleLicensePlate != null
+        || stay.vehicleColor != null
+        || stay.vehicleLicensePlate != null
 
     LazyColumn(
         modifier = modifier

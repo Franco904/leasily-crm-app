@@ -72,7 +72,11 @@ fun AppErrorBottomSheet(
                     label = stringResource(errorBottomSheetData.secondaryActionLabel),
                     onClick = {
                         onDismissRequest()
-                        errorBottomSheetData.onSecondaryAction(context) { uiEvent -> onUiEvent(uiEvent) }
+                        errorBottomSheetData.onSecondaryAction(context) { uiEvent ->
+                            onUiEvent(
+                                uiEvent
+                            )
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()

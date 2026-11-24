@@ -1,11 +1,11 @@
 package com.fstengineering.leasilycrm.core.di.modules
 
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AppDatabase
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
 import org.koin.dsl.module
 
 val daoModule = module {

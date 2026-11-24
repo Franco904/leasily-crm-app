@@ -23,7 +23,13 @@ class ProprietarioFile private constructor(
 
             if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 
-            return AppResult.Success(data = ProprietarioFile(id = id, uriString = uriString, name = name))
+            return AppResult.Success(
+                data = ProprietarioFile(
+                    id = id,
+                    uriString = uriString,
+                    name = name
+                )
+            )
         }
     }
 }

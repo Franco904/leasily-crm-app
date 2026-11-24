@@ -89,7 +89,9 @@ class Imovel private constructor(
 
             val seaProximityType = seaProximityTypeId?.let { typeId ->
                 ImovelSeaProximityType.parse(typeId, distanceToSea = distanceToSea)
-                    .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
+                    .fold(
+                        onError = { errors.addAll(it.toDomainErrors()); null },
+                        onSuccess = { it })
             }
 
             if (files.count { it.isMainPicture } > 1) {

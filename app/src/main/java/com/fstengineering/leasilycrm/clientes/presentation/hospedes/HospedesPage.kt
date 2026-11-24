@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
-import com.fstengineering.leasilycrm.clientes.presentation.models.HospedeFilterType
 import com.fstengineering.leasilycrm.clientes.presentation.hospedes.composables.HospedeFilterButtonGroup
-import com.fstengineering.leasilycrm.core.presentation.composables.HospedesEmptySection
+import com.fstengineering.leasilycrm.clientes.presentation.models.HospedeFilterType
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCircularProgressIndicator
+import com.fstengineering.leasilycrm.core.presentation.composables.HospedesEmptySection
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByMenuOption
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.OrderByTextButton
 import com.fstengineering.leasilycrm.core.presentation.composables.cards.ClienteCard
@@ -34,8 +34,8 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteOrderType
 import com.fstengineering.leasilycrm.core.presentation.models.ListState
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import kotlinx.collections.immutable.persistentListOf
 

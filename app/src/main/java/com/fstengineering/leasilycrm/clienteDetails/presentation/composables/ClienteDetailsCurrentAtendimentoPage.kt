@@ -31,8 +31,8 @@ import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.ite
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AtendimentoQuantityCharacteristicsDetailsItems
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.AtendimentoSearchedNeighborhoodsDetailsItem
 import com.fstengineering.leasilycrm.clienteDetails.presentation.composables.items.PreferredSeaProximityTypeDetailsItem
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AtendimentoUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppTonalButton
 
 @OptIn(ExperimentalMaterial3Api::class)

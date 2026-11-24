@@ -11,7 +11,6 @@ import androidx.core.net.toUri
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
 
-
 fun Context.openFileWithChooser(
     uriString: String?,
     onActivityNotFound: () -> Unit,

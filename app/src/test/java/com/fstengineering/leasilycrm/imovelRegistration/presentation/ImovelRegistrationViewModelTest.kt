@@ -6,7 +6,6 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ProprietarioReadModel
@@ -34,7 +33,8 @@ class ImovelRegistrationViewModelTest {
     private val imovelRegistrationReadDataSourceMock: ImovelRegistrationReadDataSource =
         mockk(relaxUnitFun = true)
     private val imovelWriteDataSourceMock: ImovelWriteDataSource = mockk(relaxUnitFun = true)
-    private val proprietarioReadDataSourceMock: ProprietarioReadDataSource = mockk(relaxUnitFun = true)
+    private val proprietarioReadDataSourceMock: ProprietarioReadDataSource =
+        mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("saveImovel")
@@ -48,9 +48,9 @@ class ImovelRegistrationViewModelTest {
                     sut.saveImovel()
 
                     awaitItem() shouldBeEqualTo
-                            ImovelRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
-                                ApplicationError.Unknown
-                            )
+                        ImovelRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                            ApplicationError.Unknown
+                        )
                 }
                 coVerify(exactly = 0) { imovelWriteDataSourceMock.save(any()) }
             }
@@ -60,15 +60,15 @@ class ImovelRegistrationViewModelTest {
             runTest {
                 val sut = createSutWithNewForm(createValidForm())
                 coEvery { imovelWriteDataSourceMock.save(any()) } returns
-                        AppResult.Error(ApplicationError.NoInternet)
+                    AppResult.Error(ApplicationError.NoInternet)
 
                 sut.uiEvents.test {
                     sut.saveImovel()
 
                     awaitItem() shouldBeEqualTo
-                            ImovelRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
-                                ApplicationError.NoInternet
-                            )
+                        ImovelRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                            ApplicationError.NoInternet
+                        )
                 }
             }
 
@@ -89,8 +89,8 @@ class ImovelRegistrationViewModelTest {
                 imovelWriteDataSourceMock.save(
                     match {
                         it.proprietarioId == form.proprietario?.id &&
-                                it.neighborhood == form.neighborhood &&
-                                it.streetAddress == form.streetAddress
+                            it.neighborhood == form.neighborhood &&
+                            it.streetAddress == form.streetAddress
                     },
                 )
             }
@@ -101,7 +101,7 @@ class ImovelRegistrationViewModelTest {
             val imovelId = faker.random.nextLong(bound = 9999)
             val storedImovel = createImovelReadModel(id = imovelId)
             coEvery { imovelRegistrationReadDataSourceMock.getImovel(imovelId) } returns
-                    AppResult.Success(storedImovel)
+                AppResult.Success(storedImovel)
             coEvery { imovelWriteDataSourceMock.save(any()) } returns AppResult.Success(Unit)
             val sut = createSut(imovelId = imovelId)
             sut.init()
@@ -132,7 +132,7 @@ class ImovelRegistrationViewModelTest {
     private fun createSut(imovelId: Long? = null): ImovelRegistrationViewModel {
         every { proprietarioReadDataSourceMock.watchProprietarios() } returns emptyFlow()
         coEvery { imovelRegistrationReadDataSourceMock.getNeighborhoodNames() } returns
-                AppResult.Success(emptyList())
+            AppResult.Success(emptyList())
 
         return ImovelRegistrationViewModel(
             route = Destinations.ImovelRegistration(imovelId = imovelId),

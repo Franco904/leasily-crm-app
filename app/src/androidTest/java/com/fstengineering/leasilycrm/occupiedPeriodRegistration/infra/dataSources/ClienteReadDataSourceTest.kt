@@ -36,7 +36,8 @@ class ClienteReadDataSourceTest : IntegrationTest() {
             val comEstadiaAtiva = db.saveFakeCliente(name = "Carlos")
             db.insertFakeEstadia(comEstadiaAtiva, db.saveFakeImovelId(), StayStatus.Upcoming)
 
-            val result = sut.getClientesWithoutEstadiaAtiva(matching = null, currentClienteId = null)
+            val result =
+                sut.getClientesWithoutEstadiaAtiva(matching = null, currentClienteId = null)
 
             result.shouldBeInstanceOf<AppResult.Success<*>>().data
                 .let { (it as List<*>).filterIsInstance<TenantReadModel>() }
@@ -66,6 +67,6 @@ class ClienteReadDataSourceTest : IntegrationTest() {
         val result = sut.getCliente(clienteId)
 
         result.shouldBeInstanceOf<AppResult.Success<*>>().data shouldBeEqualTo
-                TenantReadModel(id = clienteId, name = "Maria", city = "Palhoça")
+            TenantReadModel(id = clienteId, name = "Maria", city = "Palhoça")
     }
 }

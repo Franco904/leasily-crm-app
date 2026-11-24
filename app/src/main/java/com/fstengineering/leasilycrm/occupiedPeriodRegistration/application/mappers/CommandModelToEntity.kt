@@ -19,7 +19,9 @@ fun StayCommandModel.toEntity(): AppResult<Stay> {
     val files = files
         .mapNotNull { file ->
             file.toEntity()
-                .fold(onError = { fileErrors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
+                .fold(
+                    onError = { fileErrors.addAll(it.toDomainErrors()); null },
+                    onSuccess = { it })
         }
         .toPersistentList()
 

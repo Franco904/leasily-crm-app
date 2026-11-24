@@ -23,8 +23,8 @@ import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoa
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmDeleteImovelDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.OccupiedPeriodTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.ImovelDashboardViewModel.UiEvent.NavigateUp
 import com.fstengineering.leasilycrm.imovelDashboard.presentation.ImovelDashboardViewModel.UiEvent.ShowDeleteSuccessSnackbar

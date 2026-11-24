@@ -7,8 +7,8 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
-import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeAtendimento
 import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeEstadia
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeAtendimento
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeCliente
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelId
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelWithMainPicture
@@ -129,7 +129,11 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
             try {
                 withTimeout(2_000) { emissions.receive() }
 
-                db.saveFakeAtendimento(clienteId, id = atendimentoId, interacoesTitles = listOf("Ligação"))
+                db.saveFakeAtendimento(
+                    clienteId,
+                    id = atendimentoId,
+                    interacoesTitles = listOf("Ligação")
+                )
 
                 val cliente = withTimeout(2_000) { emissions.receive() }.shouldNotBeNull()
                 cliente.atendimentos.single().interacoes.map { it.title } shouldBeEqualTo
@@ -188,7 +192,8 @@ class ClienteDetailsReadDataSourceTest : IntegrationTest() {
             val clienteId = db.saveFakeCliente()
             val imovelId = db.saveFakeImovelId()
             val keptEstadiaId = db.insertFakeEstadia(clienteId, imovelId, StayStatus.CheckOutDone)
-            val deletedEstadiaId = db.insertFakeEstadia(clienteId, imovelId, StayStatus.CheckOutDone)
+            val deletedEstadiaId =
+                db.insertFakeEstadia(clienteId, imovelId, StayStatus.CheckOutDone)
             db.stayDao().delete(deletedEstadiaId)
 
             val cliente = watchCliente(clienteId)

@@ -26,16 +26,16 @@ import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.Confi
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmRegisterStayCheckOutDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
 import com.fstengineering.leasilycrm.core.presentation.utils.rememberNow
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.ShowError
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.NavigateUp
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.FinishOccupiedPeriodDelete
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.NavigateUp
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.RegisterCheckInSuccess
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.RegisterCheckOutSuccess
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.OccupiedPeriodDetailsViewModel.UiEvent.ShowError
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.StayDetailsFloatingActionButton
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.StayDetailsSection
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.composables.StayDetailsTopAppBar
@@ -66,14 +66,14 @@ fun OccupiedPeriodDetailsScreen(
     val now by rememberNow()
 
     val canRegisterCheckIn = loaded != null
-            && !loaded.isCheckInDone
-            && now.isAfter(loaded.checkInDateTime.toStartOfDay())
-            && !loaded.isUnavailablePeriod
+        && !loaded.isCheckInDone
+        && now.isAfter(loaded.checkInDateTime.toStartOfDay())
+        && !loaded.isUnavailablePeriod
 
     val canRegisterCheckOut = loaded != null
-            && !loaded.isCheckOutDone
-            && now.isAfter(loaded.checkOutDateTime.toStartOfDay())
-            && !loaded.isUnavailablePeriod
+        && !loaded.isCheckOutDone
+        && now.isAfter(loaded.checkOutDateTime.toStartOfDay())
+        && !loaded.isUnavailablePeriod
 
     var mustShowConfirmDeleteDialog by remember { mutableStateOf(false) }
     var mustShowConfirmRegisterStayCheckOutDialog by rememberSaveable { mutableStateOf(false) }

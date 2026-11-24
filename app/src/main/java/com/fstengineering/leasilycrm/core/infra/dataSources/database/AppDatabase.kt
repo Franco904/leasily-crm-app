@@ -8,7 +8,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoRegistrationReadDataSource
 import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.AtendimentoWriteDataSource
-import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.ImovelReadDataSource as AtendimentoRegistrationImovelReadDataSource
 import com.fstengineering.leasilycrm.clienteDetails.infra.dataSources.ClienteDetailsReadDataSource
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteRegistrationReadDataSource
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
@@ -21,16 +20,16 @@ import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayDa
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayFileDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.StayTransferDao
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.UserAnalyticsDao
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoImovelCharacteristicCrossRefOrm
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.InteracaoOrm
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoPreferredNeighborhoodOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoImovelEnviadoCrossRefOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoPreferredNeighborhoodOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ClienteOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelCharacteristicCrossRefOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelPriceOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.InteracaoOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
@@ -47,6 +46,7 @@ import com.fstengineering.leasilycrm.proprietarioDetails.infra.dataSources.Propr
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioRegistrationReadDataSource
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import com.fstengineering.leasilycrm.proprietarios.infra.dataSources.ProprietariosReadDataSource
+import com.fstengineering.leasilycrm.atendimentoRegistration.infra.dataSources.ImovelReadDataSource as AtendimentoRegistrationImovelReadDataSource
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ProprietarioReadDataSource as ImovelRegistrationProprietarioReadDataSource
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.infra.dataSources.ClienteReadDataSource as OccupiedPeriodDetailsClienteReadDataSource
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.infra.dataSources.ClienteReadDataSource as OccupiedPeriodRegistrationClienteReadDataSource
@@ -108,8 +108,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun occupiedPeriodDetailsClienteReadDataSource(): OccupiedPeriodDetailsClienteReadDataSource
 
     abstract fun imovelDao(): ImovelDao
-
-
 
     abstract fun proprietarioWriteDataSource(): ProprietarioWriteDataSource
 

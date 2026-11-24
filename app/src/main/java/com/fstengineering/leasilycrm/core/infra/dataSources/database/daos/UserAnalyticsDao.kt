@@ -46,7 +46,7 @@ interface UserAnalyticsDao {
     """
     )
     fun watchGeneratedLeadsPerTenantTagPerMonth():
-            Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>
+        Flow<List<GeneratedLeadsPerTenantTagPerMonthCompound>>
 
     @Query(
         """
@@ -95,7 +95,7 @@ interface UserAnalyticsDao {
     """
     )
     fun watchNewStayBookingsPerTenantTagPerMonth():
-            Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>
+        Flow<List<NewStayBookingsPerTenantTagPerMonthCompound>>
 
     @Query(
         """
@@ -115,7 +115,7 @@ interface UserAnalyticsDao {
     """
     )
     fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth():
-            Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>
+        Flow<List<NewStayBookingsPerTop3NeighborhoodsPerMonthCompound>>
 
     /*
      * Commission invoice
@@ -153,7 +153,7 @@ interface UserAnalyticsDao {
     """
     )
     fun watchCommissionInvoicePerTenantTagPerMonth():
-            Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>
+        Flow<List<CommissionInvoicePerTenantTagPerMonthCompound>>
 
     @Query(
         """
@@ -174,7 +174,7 @@ interface UserAnalyticsDao {
     """
     )
     fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth():
-            Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>
+        Flow<List<CommissionInvoicePerTop3NeighborhoodsPerMonthCompound>>
 
     @Query(
         """

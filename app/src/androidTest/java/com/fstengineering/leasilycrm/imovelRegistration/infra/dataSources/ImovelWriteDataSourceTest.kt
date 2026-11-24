@@ -6,7 +6,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimal
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.daos.ImovelDao
-import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
@@ -76,8 +75,16 @@ class ImovelWriteDataSourceTest : IntegrationTest() {
     fun devePersistirArquivosDoImovelQuandoDadosSaoValidos(): Unit =
         runBlocking(Dispatchers.Default) {
             val files = listOf(
-                createFakeImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = true),
-                createFakeImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = false),
+                createFakeImovelFile(
+                    id = null,
+                    uriString = faker.random.nextUUID(),
+                    isMainPicture = true
+                ),
+                createFakeImovelFile(
+                    id = null,
+                    uriString = faker.random.nextUUID(),
+                    isMainPicture = false
+                ),
             )
             val imovel = createFakeImovel(proprietarioId = db.saveFakeProprietario(), files = files)
 

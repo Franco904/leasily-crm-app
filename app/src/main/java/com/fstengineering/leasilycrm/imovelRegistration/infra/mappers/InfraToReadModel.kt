@@ -41,7 +41,12 @@ fun ImovelRegistrationProjection.toReadModel(): ImovelReadModel {
     return ImovelReadModel(
         id = requireNotNull(imovel.id),
         createDateTime = imovel.createDateTime,
-        proprietario = activeProprietario?.let { ProprietarioReadModel(id = it.id, name = it.name) },
+        proprietario = activeProprietario?.let {
+            ProprietarioReadModel(
+                id = it.id,
+                name = it.name
+            )
+        },
         type = requireNotNull(ImovelType.fromId(imovel.typeId)),
         neighborhood = imovel.neighborhood,
         streetAddress = imovel.streetAddress,

@@ -33,7 +33,7 @@ class AtendimentoRegistrationStep2ViewModelTest {
         @Test
         fun `Deve exibir Imóveis selecionáveis quando a etapa é aberta`() = runTest {
             coEvery { imovelReadDataSourceMock.getImoveis(null) } returns
-                    AppResult.Success(listOf(createImovel(id = 1L), createImovel(id = 2L)))
+                AppResult.Success(listOf(createImovel(id = 1L), createImovel(id = 2L)))
             val sut = createSut()
 
             sut.imoveis.test {
@@ -49,16 +49,16 @@ class AtendimentoRegistrationStep2ViewModelTest {
         fun `Deve informar falha quando a etapa é aberta, dado que o armazenamento local falha`() =
             runTest {
                 coEvery { imovelReadDataSourceMock.getImoveis(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
                 val sut = createSut()
 
                 sut.uiEvents.test {
                     sut.init()
 
                     awaitItem() shouldBeEqualTo
-                            AtendimentoRegistrationStep2ViewModel.UiEvent.ShowErrorBottomSheet(
-                                ApplicationError.Unknown,
-                            )
+                        AtendimentoRegistrationStep2ViewModel.UiEvent.ShowErrorBottomSheet(
+                            ApplicationError.Unknown,
+                        )
                 }
             }
     }
@@ -83,7 +83,7 @@ class AtendimentoRegistrationStep2ViewModelTest {
         @Test
         fun `Deve buscar Imóveis pelo texto digitado quando a digitação pausa`() = runTest {
             coEvery { imovelReadDataSourceMock.getImoveis("Campeche") } returns
-                    AppResult.Success(listOf(createImovel(id = 9L)))
+                AppResult.Success(listOf(createImovel(id = 9L)))
             val sut = createSut()
             sut.init()
 

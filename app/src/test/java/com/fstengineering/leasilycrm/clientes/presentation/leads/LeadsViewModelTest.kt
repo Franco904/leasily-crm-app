@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.clientes.presentation.leads
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
 import com.fstengineering.leasilycrm.clientes.application.models.ClienteReadModel
-import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesReadDataSource
+import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
@@ -40,13 +40,13 @@ class LeadsViewModelTest {
     @BeforeEach
     fun setUp() {
         coEvery { clientesLocalStorageMock.getLeadsOrderTypeId() } returns
-                AppResult.Success(ClienteOrderType.Name.id)
+            AppResult.Success(ClienteOrderType.Name.id)
         every { clientesReadDataSourceMock.watchClientes(any(), any(), any()) } returns
-                flowOf(AppResult.Success(emptyList()))
+            flowOf(AppResult.Success(emptyList()))
         coEvery { clientesLocalStorageMock.saveLeadsOrderTypeId(any()) } returns
-                AppResult.Success(Unit)
+            AppResult.Success(Unit)
         coEvery { clientesReadDataSourceMock.getLeads(any(), any()) } returns
-                AppResult.Success(emptyList())
+            AppResult.Success(emptyList())
     }
 
     @Nested
@@ -57,7 +57,7 @@ class LeadsViewModelTest {
             val sut = createSut()
             val lead = createClienteReadModel()
             coEvery { clientesLocalStorageMock.getLeadsOrderTypeId() } returns
-                    AppResult.Success(ClienteOrderType.LastUpdateDate.id)
+                AppResult.Success(ClienteOrderType.LastUpdateDate.id)
             every {
                 clientesReadDataSourceMock.watchClientes(
                     status = ClienteStatus.Lead,
@@ -78,13 +78,13 @@ class LeadsViewModelTest {
             runTest {
                 val sut = createSut()
                 every { clientesReadDataSourceMock.watchClientes(any(), any(), any()) } returns
-                        flowOf(AppResult.Error(ApplicationError.Unknown))
+                    flowOf(AppResult.Error(ApplicationError.Unknown))
 
                 sut.uiEvents.test {
                     sut.init()
 
                     awaitItem() shouldBeEqualTo
-                            LeadsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
+                        LeadsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
             }
 
@@ -140,13 +140,13 @@ class LeadsViewModelTest {
                 val leadId = faker.random.nextLong(bound = 9999)
                 sut.onDeleteLead(leadId)
                 coEvery { clienteWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
                     sut.deleteLead()
 
                     awaitItem() shouldBeEqualTo
-                            LeadsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
+                        LeadsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
                 sut.leadToDelete.value shouldBeEqualTo leadId
             }

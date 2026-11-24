@@ -110,7 +110,6 @@ fun StayRegistrationTopAppBar(
                                 modifier = Modifier
                                     .padding(start = 8.dp)
                             )
-
                         }
                     }
                 } else {

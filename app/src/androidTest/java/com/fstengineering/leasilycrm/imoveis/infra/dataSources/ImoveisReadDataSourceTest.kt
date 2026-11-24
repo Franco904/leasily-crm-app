@@ -6,7 +6,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ImovelSharedWriteDataSource
 import com.fstengineering.leasilycrm.imoveis.application.models.dtos.ImovelReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
@@ -49,7 +48,11 @@ class ImoveisReadDataSourceTest : IntegrationTest() {
                 id = 1L,
                 neighborhood = "Centro",
                 files = listOf(
-                    createFakeImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true),
+                    createFakeImovelFile(
+                        id = null,
+                        uriString = mainPictureUri,
+                        isMainPicture = true
+                    ),
                     createFakeImovelFile(
                         id = null,
                         uriString = faker.random.nextUUID(),

@@ -113,7 +113,7 @@ fun StayCheckInCheckOutDetailsItem(
                 isActive = when {
                     isUnavailablePeriod -> {
                         now.isAfter(checkInDateTimeStartOfDay)
-                                && now.isBefore(checkOutDateTimeStartOfDay)
+                            && now.isBefore(checkOutDateTimeStartOfDay)
                     }
 
                     else -> isCheckInDone && !isCheckOutDone

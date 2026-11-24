@@ -78,7 +78,8 @@ class AtendimentoRegistrationStep1ViewModel : ViewModel() {
             .onSuccess { _uiEvents.trySend(UiEvent.ValidateSuccess) }
             .onError { error ->
                 val distanceToSeaError =
-                    error.toDomainErrors().firstOrNull { it is DomainError.ImovelSeaProximityDistanceToSea }
+                    error.toDomainErrors()
+                        .firstOrNull { it is DomainError.ImovelSeaProximityDistanceToSea }
 
                 _formErrors.update {
                     val newErrors = it.errors.mutate { map ->

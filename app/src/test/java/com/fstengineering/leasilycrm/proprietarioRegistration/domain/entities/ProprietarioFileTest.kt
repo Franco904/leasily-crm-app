@@ -27,7 +27,8 @@ class ProprietarioFileTest {
 
         @Test
         fun `Deve aceitar arquivo quando registrado, dado que endereço e nome foram informados`() {
-            val result = ProprietarioFile.parse(uriString = "content://documento", name = "contrato.pdf")
+            val result =
+                ProprietarioFile.parse(uriString = "content://documento", name = "contrato.pdf")
 
             result.shouldBeInstanceOf<AppResult.Success<ProprietarioFile>>()
                 .data.name shouldBeEqualTo "contrato.pdf"

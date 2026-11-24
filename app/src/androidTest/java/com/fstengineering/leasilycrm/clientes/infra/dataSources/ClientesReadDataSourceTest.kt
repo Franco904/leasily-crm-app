@@ -52,7 +52,8 @@ class ClientesReadDataSourceTest : IntegrationTest() {
         runBlocking(Dispatchers.Default) {
             db.saveFakeCliente()
             val hospede = db.saveFakeCliente()
-            val estadiaId = db.insertFakeEstadia(hospede, db.saveFakeImovelId(), StayStatus.CheckInDone)
+            val estadiaId =
+                db.insertFakeEstadia(hospede, db.saveFakeImovelId(), StayStatus.CheckInDone)
             val hospedeAntigo = db.saveFakeCliente()
             db.insertFakeEstadia(hospedeAntigo, db.saveFakeImovelId(), StayStatus.CheckOutDone)
 

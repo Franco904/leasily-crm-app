@@ -3,12 +3,12 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
-import com.fstengineering.leasilycrm.testUtils.IntegrationTest
-import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelId
-import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeEstadia
 import com.fstengineering.leasilycrm.core.domain.valueObjects.StayStatus
+import com.fstengineering.leasilycrm.testUtils.IntegrationTest
+import com.fstengineering.leasilycrm.testUtils.fakes.insertFakeEstadia
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeAtendimento
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeCliente
+import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeImovelId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

@@ -107,14 +107,15 @@ class DashboardViewModel(
 
     private fun watchGeneratedLeadsPerTenantTagPerMonth() {
         viewModelScope.launch {
-            userAnalyticsRepository.watchGeneratedLeadsPerTenantTagPerMonth().collectLatest { result ->
-                result
-                    .onSuccess { generatedLeadsPerTenantSegmentPerMonth ->
-                        _generatedLeadsPerTenantTagPerMonth.update {
-                            generatedLeadsPerTenantSegmentPerMonth
+            userAnalyticsRepository.watchGeneratedLeadsPerTenantTagPerMonth()
+                .collectLatest { result ->
+                    result
+                        .onSuccess { generatedLeadsPerTenantSegmentPerMonth ->
+                            _generatedLeadsPerTenantTagPerMonth.update {
+                                generatedLeadsPerTenantSegmentPerMonth
+                            }
                         }
-                    }
-            }
+                }
         }
     }
 
@@ -142,14 +143,15 @@ class DashboardViewModel(
 
     private fun watchNewStayBookingsPerTenantTagPerMonth() {
         viewModelScope.launch {
-            userAnalyticsRepository.watchNewStayBookingsPerTenantTagPerMonth().collectLatest { result ->
-                result
-                    .onSuccess { newStayBookingsPerTenantSegmentPerMonth ->
-                        _newStayBookingsPerTenantTagPerMonth.update {
-                            newStayBookingsPerTenantSegmentPerMonth
+            userAnalyticsRepository.watchNewStayBookingsPerTenantTagPerMonth()
+                .collectLatest { result ->
+                    result
+                        .onSuccess { newStayBookingsPerTenantSegmentPerMonth ->
+                            _newStayBookingsPerTenantTagPerMonth.update {
+                                newStayBookingsPerTenantSegmentPerMonth
+                            }
                         }
-                    }
-            }
+                }
         }
     }
 

@@ -52,12 +52,12 @@ import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.com
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.composables.fields.stayDocumentsFormField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodField
 import com.fstengineering.leasilycrm.occupiedPeriodRegistration.presentation.models.OccupiedPeriodFormUiState
-import java.util.Calendar
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -211,7 +211,8 @@ fun StayRegistrationFormSection(
                 modifier = Modifier
                     .bringIntoViewRequester(bringIntoViewRequesters.getValue(OccupiedPeriodField.Period))
             ) {
-                val isPastCheckIn = form.checkInDateTime?.toDate()?.isBefore(dateProvider.now()) ?: true
+                val isPastCheckIn =
+                    form.checkInDateTime?.toDate()?.isBefore(dateProvider.now()) ?: true
                 val isEnabled = form.imovel != null && !isPastCheckIn
 
                 StayPeriodFormField(

@@ -79,7 +79,11 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-                    var errorBottomSheetData: ErrorBottomSheetUiState? by remember { mutableStateOf(null) }
+                    var errorBottomSheetData: ErrorBottomSheetUiState? by remember {
+                        mutableStateOf(
+                            null
+                        )
+                    }
                     val sheetState = rememberModalBottomSheetState()
                     val snackBarHostState = remember { SnackbarHostState() }
 

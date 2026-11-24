@@ -25,7 +25,8 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ProprietariosViewModelTest {
-    private val proprietariosReadDataSourceMock: ProprietariosReadDataSource = mockk(relaxUnitFun = true)
+    private val proprietariosReadDataSourceMock: ProprietariosReadDataSource =
+        mockk(relaxUnitFun = true)
     private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource =
         mockk(relaxUnitFun = true)
 
@@ -42,7 +43,7 @@ class ProprietariosViewModelTest {
             val proprietario1 = createProprietarioReadModel()
             val proprietario2 = createProprietarioReadModel()
             every { proprietariosReadDataSourceMock.watchProprietarios() } returns
-                    flowOf(AppResult.Success(listOf(proprietario1, proprietario2)))
+                flowOf(AppResult.Success(listOf(proprietario1, proprietario2)))
 
             sut.uiState.test {
                 awaitItem() shouldBeEqualTo ProprietariosUiState.Loading
@@ -68,7 +69,7 @@ class ProprietariosViewModelTest {
                 val proprietario = createProprietarioUiState()
                 sut.onDeleteProprietario(proprietario)
                 coEvery { proprietarioWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Success(Unit)
+                    AppResult.Success(Unit)
 
                 sut.uiEvents.test {
                     sut.deleteProprietario()
@@ -85,13 +86,13 @@ class ProprietariosViewModelTest {
                 val proprietario = createProprietarioUiState()
                 sut.onDeleteProprietario(proprietario)
                 coEvery { proprietarioWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
                     sut.deleteProprietario()
 
                     awaitItem() shouldBeEqualTo
-                            ProprietariosViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
+                        ProprietariosViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
                 sut.proprietarioToDelete.value shouldBeEqualTo proprietario
             }

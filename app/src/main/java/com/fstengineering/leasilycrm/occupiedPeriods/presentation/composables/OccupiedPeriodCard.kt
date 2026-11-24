@@ -63,12 +63,12 @@ fun OccupiedPeriodCard(
     val checkOutDateTimeStartOfDay = occupiedPeriod.checkOutDateTime.toStartOfDay()
 
     val canRegisterCheckIn = !occupiedPeriod.isCheckInDone
-            && now.isAfter(checkInDateTimeStartOfDay)
-            && !occupiedPeriod.isUnavailablePeriod
+        && now.isAfter(checkInDateTimeStartOfDay)
+        && !occupiedPeriod.isUnavailablePeriod
 
     val canRegisterCheckOut = !occupiedPeriod.isCheckOutDone
-            && now.isAfter(checkOutDateTimeStartOfDay)
-            && !occupiedPeriod.isUnavailablePeriod
+        && now.isAfter(checkOutDateTimeStartOfDay)
+        && !occupiedPeriod.isUnavailablePeriod
 
     var checkInChipWidthDp by remember(occupiedPeriod.isUnavailablePeriod) {
         mutableStateOf(Dp.Unspecified)
@@ -207,7 +207,7 @@ fun OccupiedPeriodCard(
                     isActive = when {
                         occupiedPeriod.isUnavailablePeriod -> {
                             now.isAfter(checkInDateTimeStartOfDay)
-                                    && now.isBefore(checkOutDateTimeStartOfDay)
+                                && now.isBefore(checkOutDateTimeStartOfDay)
                         }
 
                         else -> occupiedPeriod.isCheckInDone && !occupiedPeriod.isCheckOutDone

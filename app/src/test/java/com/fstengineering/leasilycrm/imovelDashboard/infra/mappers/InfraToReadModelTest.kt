@@ -24,12 +24,13 @@ class InfraToReadModelTest {
             val result = sut.toReadModel()
 
             result.proprietario shouldBeEqualTo
-                    ProprietarioReadModel(id = proprietario.id, name = proprietario.name)
+                ProprietarioReadModel(id = proprietario.id, name = proprietario.name)
         }
 
         @Test
         fun `Deve emitir o Imóvel sem Proprietário quando o Proprietário foi excluído`() {
-            val sut = createProjection(proprietario = createProprietarioProjection(isDeleted = true))
+            val sut =
+                createProjection(proprietario = createProprietarioProjection(isDeleted = true))
 
             val result = sut.toReadModel()
 

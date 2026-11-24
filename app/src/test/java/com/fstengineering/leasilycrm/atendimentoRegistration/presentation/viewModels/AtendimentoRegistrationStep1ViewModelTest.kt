@@ -243,7 +243,10 @@ class AtendimentoRegistrationStep1ViewModelTest {
     private fun createForm(
         seaProximityTypeId: Long?,
         distanceToSea: AppDecimal? = null,
-    ) = AtendimentoDraftFormUiState.Loaded.empty(clienteId = 1L, clienteName = faker.random.nextUUID())
+    ) = AtendimentoDraftFormUiState.Loaded.empty(
+        clienteId = 1L,
+        clienteName = faker.random.nextUUID()
+    )
         .copy(
             preferredSeaProximityTypeId = seaProximityTypeId,
             preferredDistanceToSea = distanceToSea,

@@ -8,32 +8,32 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserAnalyticsRepository {
     fun watchGeneratedLeadsPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>>>
+        Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>>>
 
     fun watchGeneratedLeadsPerTenantTagPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>>
+        Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>>
 
     fun watchLeadContactChannelDistribution():
-            Flow<AppResult<ImmutableMap<String?, Double>>>
+        Flow<AppResult<ImmutableMap<String?, Double>>>
 
     fun watchNewStayBookingsPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>>>
+        Flow<AppResult<ImmutableMap<CalendarMonthYear, Int>>>
 
     fun watchNewStayBookingsPerTenantTagPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>>
+        Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>>
 
     fun watchNewStayBookingsPerTop3NeighborhoodsPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>>
+        Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, Int>>>>
 
     fun watchCommissionInvoicePerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>>>
+        Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>>>
 
     fun watchCommissionInvoicePerTenantTagPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>>
+        Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>>
 
     fun watchCommissionInvoicePerTop3NeighborhoodsPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>>
+        Flow<AppResult<ImmutableMap<CalendarMonthYear, ImmutableMap<String, AppDecimal>>>>
 
     fun watchAverageTicketPerMonth():
-            Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>>>
+        Flow<AppResult<ImmutableMap<CalendarMonthYear, AppDecimal>>>
 }

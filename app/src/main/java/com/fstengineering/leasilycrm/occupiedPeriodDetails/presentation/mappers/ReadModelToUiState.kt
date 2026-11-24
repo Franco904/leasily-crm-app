@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.mappers
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCalendarOccupiedDateUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
-import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.ImovelReadModel
+import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.OccupiedPeriodReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.StayFileReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.application.models.dtos.TenantReadModel
 import com.fstengineering.leasilycrm.occupiedPeriodDetails.presentation.models.OccupiedPeriodDetailsUiState

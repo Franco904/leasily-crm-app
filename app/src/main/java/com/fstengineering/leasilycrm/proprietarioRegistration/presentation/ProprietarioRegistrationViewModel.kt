@@ -120,7 +120,9 @@ class ProprietarioRegistrationViewModel(
 
         viewModelScope.launch {
             val proprietario = form.toProprietario()
-                .fold(onError = { setFieldErrors(it.toDomainErrors()); return@launch }, onSuccess = { it })
+                .fold(
+                    onError = { setFieldErrors(it.toDomainErrors()); return@launch },
+                    onSuccess = { it })
 
             proprietarioWriteDataSource.save(proprietario)
                 .onError { error ->

@@ -31,9 +31,9 @@ object TodayCheckInCheckOutNotificationAlarm {
         val triggerAtMillis = now.withHourMinute(hour = 7, minute = 0)
 
         val triggerAtMillisAdjusted = (
-                triggerAtMillis.takeIf { it.isAfter(now) }
-                    ?: triggerAtMillis.plusDays(daysToAdd = 1)
-                )
+            triggerAtMillis.takeIf { it.isAfter(now) }
+                ?: triggerAtMillis.plusDays(daysToAdd = 1)
+            )
             .toEpochMillisLocalZone()
 
         alarmManager.cancel(pendingIntent)

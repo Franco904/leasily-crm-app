@@ -5,7 +5,6 @@ import androidx.test.filters.LargeTest
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelCharacteristic
 import com.fstengineering.leasilycrm.imovelRegistration.application.models.dtos.ImovelReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
@@ -44,7 +43,11 @@ class ImovelRegistrationReadDataSourceTest : IntegrationTest() {
             val characteristics = ImovelCharacteristic.entries.take(2)
             val price = createFakeImovelPrice()
             val file =
-                createFakeImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = true)
+                createFakeImovelFile(
+                    id = null,
+                    uriString = faker.random.nextUUID(),
+                    isMainPicture = true
+                )
             val imovel = createFakeImovel(
                 proprietarioId = proprietarioId,
                 id = 5L,

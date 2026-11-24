@@ -260,8 +260,8 @@ fun OccupiedDatesSection(
             val selectedDaysOfMonth = occupiedPeriods?.second?.map { it.dayOfMonth }
 
             val isToday = day.toIntOrNull() == now.dayOfMonth
-                    && month == now.month
-                    && year == now.year
+                && month == now.month
+                && year == now.year
 
             if (occupiedPeriods == null || day !in selectedDaysOfMonth!!) {
                 UnselectedCalendarDate(
@@ -431,7 +431,7 @@ fun CalendarDate(
         }
         if (selectedDate != null) {
             val isAllUnavailableDate = selectedDate.firstHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
-                    && selectedDate.secondHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
+                && selectedDate.secondHalfPeriodIndex == UNAVAILABLE_PERIOD_INDEX
 
             Box(
                 contentAlignment = Alignment.Center,
