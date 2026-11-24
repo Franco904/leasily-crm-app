@@ -93,6 +93,10 @@ são exatamente os pacotes de primeiro nível.
 Testes automatizados vivem em `app/src/test/` (unitários: JUnit 5 + MockK + kluent) e
 `app/src/androidTest/` (instrumentados: JUnit 4 + kluent, requerem device).
 
+Testes de arquitetura (Konsist) ficam em `app/src/test/.../architecture/` e rodam com os unitários.
+Eles leem a tabela de módulos de "Estrutura do Projeto" deste README (seção e primeira coluna entre
+crases são o contrato): ao renomear a seção ou mudar o formato da tabela, ajuste o teste junto.
+
 ---
 
 ## Arquitetura
@@ -190,7 +194,7 @@ make run                                                  # build + instala o AP
 make hooks                                                # ativa o hook de pre-commit versionado (.githooks/)
 make format                                               # formata o diff da branch: quebra de linha (IDE) + ktlint (higiene, indentação, espaçamento)
 make format FORMAT_IDE=off                                # idem, sem a IDE (é o que o CI roda)
-make lint                                                 # verifica o ktlint (spotlessCheck) no diff da branch
+make ci                                                   # make format + spotlessCheck (ktlint) + make test: o que o CI de PR verifica
 make test                                                 # testes unitários (JUnit 5, sem device)
 ./gradlew :app:testDevDebugUnitTest --tests "*.NomeTest"  # teste unitário específico
 make test-instrumented                                    # testes instrumentados (requer device)

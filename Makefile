@@ -55,8 +55,13 @@ FORMAT_IDE ?= on
 format:
 	FORMAT_IDE=$(FORMAT_IDE) scripts/format/format-pipeline.sh || [ $$? -eq 3 ]
 
-lint:
+# Espelha o CI de PR: formata, verifica o ktlint (spotlessCheck) e roda os testes unitários
+# .PHONY porque existe o diretório ci/ (template do gradle.properties do CI) e o make o tomaria por alvo pronto
+.PHONY: ci
+ci:
+	$(MAKE) format
 	./gradlew spotlessCheck
+	$(MAKE) test
 
 # Ativa os hooks versionados (pre-commit que formata os arquivos staged)
 hooks:
