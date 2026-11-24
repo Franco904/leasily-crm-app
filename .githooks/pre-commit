@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# Formata os .kt staged (layout pela IDE, higiene pelo ktlint) e re-stageia.
+# Formata os .kt staged (quebra de linha pela IDE; higiene, indentação e espaçamento pelo ktlint) e
+# re-stageia.
 # - arquivo staged sem alteração unstaged: formata e re-stageia;
 # - arquivo com staging parcial: aborta o commit listando os arquivos;
-# - sem Android Studio: aplica só a higiene (ktlint) e avisa.
+# - sem Android Studio: aplica só o ktlint e avisa.
 # Mudo no caminho feliz; o log do format.sh fica em .git/pre-commit-format.log.
 set -uo pipefail
 
@@ -41,5 +42,5 @@ fi
 git add -- "${files[@]}"
 
 if [ "$status" -eq 3 ]; then
-    echo "pre-commit: Android Studio não encontrado (STUDIO_BIN); só a higiene foi aplicada, o layout não" >&2
+    echo "pre-commit: Android Studio não encontrado (STUDIO_BIN); só o ktlint foi aplicado, a quebra de linha não" >&2
 fi

@@ -49,8 +49,9 @@ apk-release:
 
 FORMAT_IDE ?= on
 
-# Layout pela IDE (scripts/format/format.sh) e higiene pelo ktlint (Spotless), só no diff da branch.
-# Sem Android Studio, aplica só o ktlint. FORMAT_IDE=off pula a IDE de propósito (é o que o CI faz)
+# Quebra de linha pela IDE (scripts/format/format.sh); higiene, indentação e espaçamento pelo ktlint
+# (Spotless). Só no diff da branch.
+# Sem Android Studio, aplica só o ktlint. FORMAT_IDE=off pula a IDE de propósito (é o que o CI faz; só `off` é reconhecido)
 format:
 	FORMAT_IDE=$(FORMAT_IDE) scripts/format/format-pipeline.sh || [ $$? -eq 3 ]
 

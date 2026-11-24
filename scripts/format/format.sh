@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Formata o layout (indentação e quebra em 100 colunas, via .editorconfig) com o formatador do
+# Formata a quebra de linha (100 colunas, via .editorconfig) com o formatador do
 # Android Studio. Sem argumentos, formata só os .kt do diff da branch (scripts/format/ratchet-base.sh),
 # incluindo alterações não commitadas e arquivos novos; com argumentos, formata os arquivos dados.
 #

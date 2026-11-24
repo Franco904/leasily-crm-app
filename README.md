@@ -82,7 +82,7 @@ são exatamente os pacotes de primeiro nível.
 | `dashboard`                  | Relatórios Analíticos | KPIs e relatórios de desempenho do Usuário                                                                                                              |
 
 **CI** (`.github/workflows/pr.yml`, em todo PR): `make format FORMAT_IDE=off` + `git diff --exit-code`
-e `testDevDebugUnitTest assembleDevDebug`, com o `ci/gradle.properties` fictício. A quebra de linha
+e `testDevDebugUnitTest assembleDevDebug` (compila o APK, sem publicá-lo), com o `ci/gradle.properties` fictício. A quebra de linha
 e as 100 colunas só são formatadas localmente (IDE) e não são verificadas no CI.
 
 Testes vivem em `app/src/test/` (unitários: JUnit 5 + MockK + kluent) e `app/src/androidTest/`
@@ -182,9 +182,9 @@ projeto: README do repo.
 ```bash
 make run                                                  # build + instala o APK debug (flavor dev) e abre o app
 make hooks                                                # ativa o hook de pre-commit versionado (.githooks/)
-make format                                               # formata o diff da branch: layout (IDE) + higiene (ktlint)
-make format FORMAT_IDE=off                                # idem, sem a IDE (é o que o CI roda: higiene, indentação e espaçamento)
-make lint                                                 # verifica a higiene (spotlessCheck) no diff da branch
+make format                                               # formata o diff da branch: quebra de linha (IDE) + ktlint (higiene, indentação, espaçamento)
+make format FORMAT_IDE=off                                # idem, sem a IDE (é o que o CI roda)
+make lint                                                 # verifica o ktlint (spotlessCheck) no diff da branch
 make test                                                 # testes unitários (JUnit 5, sem device)
 ./gradlew :app:testDevDebugUnitTest --tests "*.NomeTest"  # teste unitário específico
 make test-instrumented                                    # testes instrumentados (requer device)

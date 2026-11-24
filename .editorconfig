@@ -17,7 +17,7 @@ max_line_length = 100
 # Layout: a IDE (scripts/format/format.sh) cuida da quebra de linha e das 100 colunas, e só roda
 # localmente. O ktlint roda também no CI e cobre higiene, indentação e espaçamento, que a IDE e o
 # ktlint formatam igual (0 divergências na base). Quebra de linha NÃO é verificada no CI.
-# Chamada não quebra argumentos sozinha (argumento único nunca vira `(\n arg\n)`); quebras manuais ficam
+# Chamada não quebra argumentos sozinha (argumento único nunca vira `(\n arg\n)`); quebras manuais ficam como estão
 ij_kotlin_call_parameters_wrap = off
 ktlint_code_style = intellij_idea
 ij_kotlin_packages_to_use_import_on_demand = unset
