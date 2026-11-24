@@ -93,6 +93,10 @@ são exatamente os pacotes de primeiro nível.
 Testes automatizados vivem em `app/src/test/` (unitários: JUnit 5 + MockK + kluent) e
 `app/src/androidTest/` (instrumentados: JUnit 4 + kluent, requerem device).
 
+Testes de arquitetura (Konsist) ficam em `app/src/test/.../architecture/` e rodam com os unitários.
+Eles leem a tabela de módulos de "Estrutura do Projeto" deste README (seção e primeira coluna entre
+crases são o contrato): ao renomear a seção ou mudar o formato da tabela, ajuste o teste junto.
+
 ---
 
 ## Arquitetura
