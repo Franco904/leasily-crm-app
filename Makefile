@@ -47,10 +47,12 @@ apk-release:
 	./gradlew assembleRelease
 	./gradlew bundleRelease
 
+FORMAT_IDE ?= on
+
 # Layout pela IDE (scripts/format/format.sh) e higiene pelo ktlint (Spotless), só no diff da branch.
-# Sem Android Studio, aplica só a higiene
+# Sem Android Studio, aplica só o ktlint. FORMAT_IDE=off pula a IDE de propósito (é o que o CI faz)
 format:
-	scripts/format/format-pipeline.sh || [ $$? -eq 3 ]
+	FORMAT_IDE=$(FORMAT_IDE) scripts/format/format-pipeline.sh || [ $$? -eq 3 ]
 
 lint:
 	./gradlew spotlessCheck

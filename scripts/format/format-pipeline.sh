@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Formata o diff da branch (ou os arquivos dados): layout pela IDE e higiene pelo ktlint, em dois
 # ciclos IDE -> ktlint, e verifica a convergência no fim.
-# Códigos de saída: 0 ok; 3 ok, mas sem Android Studio (só a higiene foi aplicada); outro, falha.
+# FORMAT_IDE=off pula a etapa da IDE de propósito (CI): só indentação, espaçamento e higiene.
+# Sem a variável e sem Android Studio, avisa e segue só com o ktlint.
+# Códigos de saída: 0 ok; 3 ok, mas sem Android Studio (só o ktlint foi aplicado); outro, falha.
 set -uo pipefail
 
 root="$(git rev-parse --show-toplevel)"
@@ -19,12 +21,14 @@ fi
 without_studio=false
 
 cycle() {
-    scripts/format/format.sh ${files[@]+"${files[@]}"}
-    local status=$?
-    if [ "$status" -eq 3 ]; then
-        without_studio=true
-    elif [ "$status" -ne 0 ]; then
-        return "$status"
+    if [ "${FORMAT_IDE:-on}" != "off" ]; then
+        scripts/format/format.sh ${files[@]+"${files[@]}"}
+        local status=$?
+        if [ "$status" -eq 3 ]; then
+            without_studio=true
+        elif [ "$status" -ne 0 ]; then
+            return "$status"
+        fi
     fi
     ./gradlew spotlessApply -q ${spotless_args[@]+"${spotless_args[@]}"}
 }
