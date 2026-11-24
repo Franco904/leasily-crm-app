@@ -1,9 +1,9 @@
 package com.fstengineering.leasilycrm.clienteDetails.infra.mappers
 
-import com.fstengineering.leasilycrm.clienteDetails.application.models.InteracaoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.AtendimentoReadModel
-import com.fstengineering.leasilycrm.clienteDetails.application.models.ImovelEnviadoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.ImovelEnviadoReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.InteracaoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.StayReadModel
 import com.fstengineering.leasilycrm.clienteDetails.infra.projections.AtendimentoProjection
 import com.fstengineering.leasilycrm.clienteDetails.infra.projections.ClienteDetailsProjection

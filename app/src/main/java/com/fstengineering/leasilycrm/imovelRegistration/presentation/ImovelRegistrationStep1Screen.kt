@@ -38,8 +38,8 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppComboBotto
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.ConfirmLeaveRegistrationDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.ImovelRegistrationFormSectionStep1
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.composables.ImovelRegistrationTopAppBar

@@ -76,7 +76,9 @@ class ProfileViewModel(
                 .onError { error ->
                     when (error) {
                         is ValidationErrors -> {
-                            _creciFieldError.update { error.errors.firstOrNull()?.toInlineMessage() }
+                            _creciFieldError.update {
+                                error.errors.firstOrNull()?.toInlineMessage()
+                            }
                         }
 
                         is DomainError -> _creciFieldError.update { error.toInlineMessage() }

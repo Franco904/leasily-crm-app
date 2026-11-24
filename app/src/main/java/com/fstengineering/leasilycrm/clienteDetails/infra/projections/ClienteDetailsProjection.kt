@@ -4,14 +4,14 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoOrm
+import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoImovelCharacteristicCrossRefOrm
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.InteracaoOrm
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoPreferredNeighborhoodOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoImovelEnviadoCrossRefOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.AtendimentoPreferredNeighborhoodOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.InteracaoOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 
 /**

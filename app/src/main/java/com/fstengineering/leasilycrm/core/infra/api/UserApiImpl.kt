@@ -2,13 +2,13 @@ package com.fstengineering.leasilycrm.core.infra.api
 
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
-import com.fstengineering.leasilycrm.core.infra.constants.SIGN_IN_ROUTE
-import com.fstengineering.leasilycrm.core.infra.constants.SIGN_OUT_ROUTE
-import com.fstengineering.leasilycrm.core.infra.constants.UPDATE_USER_ROUTE
 import com.fstengineering.leasilycrm.core.infra.api.interfaces.UserApi
 import com.fstengineering.leasilycrm.core.infra.api.requestDtos.user.SignInRequestDto
 import com.fstengineering.leasilycrm.core.infra.api.requestDtos.user.UpdateUserDto
 import com.fstengineering.leasilycrm.core.infra.api.responseDtos.user.SignInUserResponseDto
+import com.fstengineering.leasilycrm.core.infra.constants.SIGN_IN_ROUTE
+import com.fstengineering.leasilycrm.core.infra.constants.SIGN_OUT_ROUTE
+import com.fstengineering.leasilycrm.core.infra.constants.UPDATE_USER_ROUTE
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.http.HttpMethod

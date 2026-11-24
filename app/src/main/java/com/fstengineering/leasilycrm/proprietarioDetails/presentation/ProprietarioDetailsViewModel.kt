@@ -41,14 +41,15 @@ class ProprietarioDetailsViewModel(
         isLoaded = true
 
         watchProprietarioJob = viewModelScope.launch {
-            proprietarioDetailsReadDataSource.watchProprietario(proprietarioId).collectLatest { result ->
-                result
-                    .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
-                    .onSuccess { readModel ->
-                        readModel ?: return@onSuccess
-                        _uiState.update { readModel.toProprietarioUiState() }
-                    }
-            }
+            proprietarioDetailsReadDataSource.watchProprietario(proprietarioId)
+                .collectLatest { result ->
+                    result
+                        .onError { e -> _uiEvents.trySend(UiEvent.ShowErrorBottomSheet(e)) }
+                        .onSuccess { readModel ->
+                            readModel ?: return@onSuccess
+                            _uiState.update { readModel.toProprietarioUiState() }
+                        }
+                }
         }
     }
 

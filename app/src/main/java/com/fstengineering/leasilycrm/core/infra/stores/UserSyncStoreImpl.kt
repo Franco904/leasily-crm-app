@@ -6,10 +6,10 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.utils.onError
 import com.fstengineering.leasilycrm.core.domain.utils.onSuccess
-import com.fstengineering.leasilycrm.core.infra.localStorage.encrypted.EncryptedPreferences
-import com.fstengineering.leasilycrm.core.infra.localStorage.interfaces.LocalStorage
 import com.fstengineering.leasilycrm.core.infra.api.interfaces.UserApi
 import com.fstengineering.leasilycrm.core.infra.api.requestDtos.user.UpdateUserDto
+import com.fstengineering.leasilycrm.core.infra.localStorage.encrypted.EncryptedPreferences
+import com.fstengineering.leasilycrm.core.infra.localStorage.interfaces.LocalStorage
 import com.fstengineering.leasilycrm.core.infra.projections.SyncState
 import kotlinx.coroutines.flow.firstOrNull
 

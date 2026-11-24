@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelPriceUiState
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

@@ -32,8 +32,10 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 class WatchImovelUseCaseTest {
-    private val imovelDashboardReadDataSourceMock: ImovelDashboardReadDataSource = mockk(relaxUnitFun = true)
-    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource = mockk(relaxUnitFun = true)
+    private val imovelDashboardReadDataSourceMock: ImovelDashboardReadDataSource =
+        mockk(relaxUnitFun = true)
+    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource =
+        mockk(relaxUnitFun = true)
     private val dateProviderMock: AppDateProvider = mockk(relaxUnitFun = true)
 
     private val today = AppDate(LocalDate.of(2026, 3, 10))
@@ -66,13 +68,14 @@ class WatchImovelUseCaseTest {
         @Test
         fun `Deve compor o painel com o Imóvel, o Proprietário e as datas ocupadas com o nome do Hóspede quando há Estadia no mês corrente`() =
             runTest {
-                val currentMonthEstadia = periodoOcupado(id = estadiaId, tenantId = tenantId, checkIn = 12, checkOut = 15)
+                val currentMonthEstadia =
+                    periodoOcupado(id = estadiaId, tenantId = tenantId, checkIn = 12, checkOut = 15)
                 every { imovelDashboardReadDataSourceMock.watchImovel(imovel.id) } returns
-                        flowOf(AppResult.Success(imovel))
+                    flowOf(AppResult.Success(imovel))
                 every { imovelDashboardReadDataSourceMock.watchPeriodosOcupados(imovel.id) } returns
-                        flowOf(AppResult.Success(listOf(currentMonthEstadia)))
+                    flowOf(AppResult.Success(listOf(currentMonthEstadia)))
                 coEvery { clienteSharedReadDataSourceMock.getName(tenantId) } returns
-                        AppResult.Success(tenantName)
+                    AppResult.Success(tenantName)
                 val sut = createSut()
 
                 val result = sut(ImovelArgs(imovel.id)).first()
@@ -89,10 +92,19 @@ class WatchImovelUseCaseTest {
                     proprietario = imovel.proprietario,
                     currentMonthOccupiedPeriods = imovelReadModel.currentMonthOccupiedPeriods,
                 )
-                imovelReadModel.currentMonthOccupiedPeriods.first shouldBeEqualTo AppYearMonth.of(2026, 3)
+                imovelReadModel.currentMonthOccupiedPeriods.first shouldBeEqualTo AppYearMonth.of(
+                    2026,
+                    3
+                )
                 imovelReadModel.currentMonthOccupiedPeriods.second
-                    .map { Triple(it.date.date.dayOfMonth, it.periodId, it.tenantName) } shouldBeEqualTo
-                        (12..15).map { Triple(it, estadiaId, tenantName) }
+                    .map {
+                        Triple(
+                            it.date.date.dayOfMonth,
+                            it.periodId,
+                            it.tenantName
+                        )
+                    } shouldBeEqualTo
+                    (12..15).map { Triple(it, estadiaId, tenantName) }
             }
 
         @Test
@@ -101,9 +113,9 @@ class WatchImovelUseCaseTest {
                 id = estadiaId, tenantId = null, checkIn = 20, checkOut = 22, month = 4,
             )
             every { imovelDashboardReadDataSourceMock.watchImovel(imovel.id) } returns
-                    flowOf(AppResult.Success(imovel))
+                flowOf(AppResult.Success(imovel))
             every { imovelDashboardReadDataSourceMock.watchPeriodosOcupados(imovel.id) } returns
-                    flowOf(AppResult.Success(listOf(nextMonthEstadia)))
+                flowOf(AppResult.Success(listOf(nextMonthEstadia)))
             val sut = createSut()
 
             val result = sut(ImovelArgs(imovel.id)).first()
@@ -111,7 +123,7 @@ class WatchImovelUseCaseTest {
             val imovelReadModel = result.shouldBeInstanceOf<AppResult.Success<*>>().data
                 .shouldBeInstanceOf<ImovelReadModel>()
             imovelReadModel.currentMonthOccupiedPeriods.second shouldBeEqualTo
-                    persistentListOf()
+                persistentListOf()
         }
 
         @Test
@@ -126,13 +138,13 @@ class WatchImovelUseCaseTest {
                     id = estadiaId + 1, tenantId = otherTenantId, checkIn = 20, checkOut = 22,
                 )
                 every { imovelDashboardReadDataSourceMock.watchImovel(imovel.id) } returns
-                        flowOf(AppResult.Success(imovel))
+                    flowOf(AppResult.Success(imovel))
                 every { imovelDashboardReadDataSourceMock.watchPeriodosOcupados(imovel.id) } returns
-                        flowOf(AppResult.Success(listOf(firstEstadia, secondEstadia)))
+                    flowOf(AppResult.Success(listOf(firstEstadia, secondEstadia)))
                 coEvery { clienteSharedReadDataSourceMock.getName(tenantId) } returns
-                        AppResult.Success(tenantName)
+                    AppResult.Success(tenantName)
                 coEvery { clienteSharedReadDataSourceMock.getName(otherTenantId) } returns
-                        AppResult.Success(otherTenantName)
+                    AppResult.Success(otherTenantName)
                 val sut = createSut()
 
                 val result = sut(ImovelArgs(imovel.id)).first()
@@ -141,7 +153,7 @@ class WatchImovelUseCaseTest {
                     .shouldBeInstanceOf<ImovelReadModel>()
                 imovelReadModel.currentMonthOccupiedPeriods.second
                     .map { it.date.date.dayOfMonth to it.tenantName } shouldBeEqualTo
-                        (12..14).map { it to tenantName } + (20..22).map { it to otherTenantName }
+                    (12..14).map { it to tenantName } + (20..22).map { it to otherTenantName }
             }
 
         @Test
@@ -151,9 +163,9 @@ class WatchImovelUseCaseTest {
                     id = estadiaId, tenantId = null, checkIn = 5, checkOut = 7,
                 )
                 every { imovelDashboardReadDataSourceMock.watchImovel(imovel.id) } returns
-                        flowOf(AppResult.Success(imovel))
+                    flowOf(AppResult.Success(imovel))
                 every { imovelDashboardReadDataSourceMock.watchPeriodosOcupados(imovel.id) } returns
-                        flowOf(AppResult.Success(listOf(unavailablePeriod)))
+                    flowOf(AppResult.Success(listOf(unavailablePeriod)))
                 val sut = createSut()
 
                 val result = sut(ImovelArgs(imovel.id)).first()
@@ -161,53 +173,60 @@ class WatchImovelUseCaseTest {
                 val imovelReadModel = result.shouldBeInstanceOf<AppResult.Success<*>>().data
                     .shouldBeInstanceOf<ImovelReadModel>()
                 imovelReadModel.currentMonthOccupiedPeriods.second
-                    .map { Triple(it.date.date.dayOfMonth, it.periodId, it.tenantName) } shouldBeEqualTo
-                        (5..7).map { Triple(it, estadiaId, null) }
+                    .map {
+                        Triple(
+                            it.date.date.dayOfMonth,
+                            it.periodId,
+                            it.tenantName
+                        )
+                    } shouldBeEqualTo
+                    (5..7).map { Triple(it, estadiaId, null) }
             }
 
         @Test
         fun `Deve falhar quando a leitura dos Períodos Ocupados falha`() = runTest {
             every { imovelDashboardReadDataSourceMock.watchImovel(imovel.id) } returns
-                    flowOf(AppResult.Success(imovel))
+                flowOf(AppResult.Success(imovel))
             every { imovelDashboardReadDataSourceMock.watchPeriodosOcupados(imovel.id) } returns
-                    flowOf(AppResult.Error(ApplicationError.Unknown))
+                flowOf(AppResult.Error(ApplicationError.Unknown))
             val sut = createSut()
 
             val result = sut(ImovelArgs(imovel.id)).first()
 
             result.shouldBeInstanceOf<AppResult.Error>().error shouldBeEqualTo
-                    ApplicationError.Unknown
+                ApplicationError.Unknown
         }
 
         @Test
         fun `Deve falhar quando a leitura do Imóvel falha`() = runTest {
             every { imovelDashboardReadDataSourceMock.watchImovel(imovel.id) } returns
-                    flowOf(AppResult.Error(ApplicationError.Unknown))
+                flowOf(AppResult.Error(ApplicationError.Unknown))
             every { imovelDashboardReadDataSourceMock.watchPeriodosOcupados(imovel.id) } returns
-                    flowOf(AppResult.Success(emptyList()))
+                flowOf(AppResult.Success(emptyList()))
             val sut = createSut()
 
             val result = sut(ImovelArgs(imovel.id)).first()
 
             result.shouldBeInstanceOf<AppResult.Error>().error shouldBeEqualTo
-                    ApplicationError.Unknown
+                ApplicationError.Unknown
         }
 
         @Test
         fun `Deve falhar quando a leitura do nome do Hóspede falha`() = runTest {
-            val estadia = periodoOcupado(id = estadiaId, tenantId = tenantId, checkIn = 12, checkOut = 15)
+            val estadia =
+                periodoOcupado(id = estadiaId, tenantId = tenantId, checkIn = 12, checkOut = 15)
             every { imovelDashboardReadDataSourceMock.watchImovel(imovel.id) } returns
-                    flowOf(AppResult.Success(imovel))
+                flowOf(AppResult.Success(imovel))
             every { imovelDashboardReadDataSourceMock.watchPeriodosOcupados(imovel.id) } returns
-                    flowOf(AppResult.Success(listOf(estadia)))
+                flowOf(AppResult.Success(listOf(estadia)))
             coEvery { clienteSharedReadDataSourceMock.getName(tenantId) } returns
-                    AppResult.Error(ApplicationError.Unknown)
+                AppResult.Error(ApplicationError.Unknown)
             val sut = createSut()
 
             val result = sut(ImovelArgs(imovel.id)).first()
 
             result.shouldBeInstanceOf<AppResult.Error>().error shouldBeEqualTo
-                    ApplicationError.Unknown
+                ApplicationError.Unknown
         }
     }
 

@@ -36,7 +36,9 @@ class ImovelPrice private constructor(
                     endDate = endDate,
                     otherPeriods = otherPeriods,
                 )
-                    .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
+                    .fold(
+                        onError = { errors.addAll(it.toDomainErrors()); null },
+                        onSuccess = { it })
 
             if (errors.isNotEmpty()) return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 

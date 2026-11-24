@@ -47,10 +47,10 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
             val result = sut.watchAllPastCheckInCheckOutNotDoneCounts().first()
 
             result.shouldBeInstanceOf<AppResult.Success<*>>().data shouldBeEqualTo
-                    StayCheckInCheckOutCountsProjection(
-                        staysAbleToCheckInCount = 2,
-                        staysAbleToCheckOutCount = 0,
-                    )
+                StayCheckInCheckOutCountsProjection(
+                    staysAbleToCheckInCount = 2,
+                    staysAbleToCheckOutCount = 0,
+                )
         }
 
     @Test
@@ -79,10 +79,10 @@ class StayDatabaseDataSourceImplTest : IntegrationTest() {
             val result = sut.watchAllPastCheckInCheckOutNotDoneCounts().first()
 
             result.shouldBeInstanceOf<AppResult.Success<*>>().data shouldBeEqualTo
-                    StayCheckInCheckOutCountsProjection(
-                        staysAbleToCheckInCount = 0,
-                        staysAbleToCheckOutCount = 1,
-                    )
+                StayCheckInCheckOutCountsProjection(
+                    staysAbleToCheckInCount = 0,
+                    staysAbleToCheckOutCount = 1,
+                )
         }
 
     // endregion

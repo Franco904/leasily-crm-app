@@ -6,9 +6,9 @@ import com.fstengineering.leasilycrm.core.domain.utils.BaseError
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.presentation.models.ErrorBottomSheetUiState
-import com.fstengineering.leasilycrm.core.presentation.utils.strategies.ErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.mailToSupportChannel
 import com.fstengineering.leasilycrm.core.presentation.utils.openAddGoogleAccountSettingsApp
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.ErrorBottomSheetDataPropertiesStrategy
 
 /**
  * Dados do bottom sheet de qualquer [BaseError]. Erro de domínio ou de validação não chega à

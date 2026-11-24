@@ -107,4 +107,4 @@ fun <T> Flow<T>.catchException(
  */
 fun Exception.isFatal(): Boolean =
     this is SecurityException ||
-            (this is GeneralSecurityException && this !is KeyPermanentlyInvalidatedException)
+        (this is GeneralSecurityException && this !is KeyPermanentlyInvalidatedException)

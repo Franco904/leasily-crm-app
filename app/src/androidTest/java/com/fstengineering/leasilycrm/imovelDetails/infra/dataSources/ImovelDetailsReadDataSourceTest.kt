@@ -8,7 +8,6 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.imovelDetails.application.models.dtos.ImovelFileReadModel
 import com.fstengineering.leasilycrm.imovelDetails.application.models.dtos.ImovelPriceReadModel
 import com.fstengineering.leasilycrm.imovelDetails.application.models.dtos.ImovelReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
@@ -49,7 +48,11 @@ class ImovelDetailsReadDataSourceTest : IntegrationTest() {
             val characteristics = ImovelCharacteristic.entries.take(2)
             val price = createFakeImovelPrice()
             val file =
-                createFakeImovelFile(id = null, uriString = faker.random.nextUUID(), isMainPicture = true)
+                createFakeImovelFile(
+                    id = null,
+                    uriString = faker.random.nextUUID(),
+                    isMainPicture = true
+                )
             val imovel = createFakeImovel(
                 proprietarioId = db.saveFakeProprietario(),
                 id = 7L,

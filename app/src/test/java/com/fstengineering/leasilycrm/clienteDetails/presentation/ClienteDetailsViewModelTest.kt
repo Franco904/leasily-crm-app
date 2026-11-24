@@ -30,7 +30,8 @@ class ClienteDetailsViewModelTest {
     private val clienteDetailsReadDataSourceMock: ClienteDetailsReadDataSource =
         mockk(relaxUnitFun = true)
     private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxUnitFun = true)
-    private val atendimentoSharedWriteDataSourceMock: AtendimentoSharedWriteDataSource = mockk(relaxUnitFun = true)
+    private val atendimentoSharedWriteDataSourceMock: AtendimentoSharedWriteDataSource =
+        mockk(relaxUnitFun = true)
 
     private val clienteId = faker.random.nextLong(bound = 9999)
 
@@ -41,7 +42,7 @@ class ClienteDetailsViewModelTest {
         fun `Deve exibir o Cliente quando a tela de detalhes é aberta`() = runTest {
             val cliente = createClienteReadModel(isLead = true)
             every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
-                    flowOf(AppResult.Success(cliente))
+                flowOf(AppResult.Success(cliente))
             val sut = createSut()
 
             sut.init()
@@ -56,7 +57,7 @@ class ClienteDetailsViewModelTest {
         fun `Deve voltar à tela anterior quando a tela de detalhes é aberta, dado que o Cliente não existe mais`() =
             runTest {
                 every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
-                        flowOf(AppResult.Success(null))
+                    flowOf(AppResult.Success(null))
                 val sut = createSut()
 
                 sut.uiEvents.test {
@@ -70,21 +71,21 @@ class ClienteDetailsViewModelTest {
         fun `Deve informar falha quando a tela de detalhes é aberta, dado que o armazenamento local falha`() =
             runTest {
                 every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
-                        flowOf(AppResult.Error(ApplicationError.Unknown))
+                    flowOf(AppResult.Error(ApplicationError.Unknown))
                 val sut = createSut()
 
                 sut.uiEvents.test {
                     sut.init()
 
                     awaitItem() shouldBeEqualTo
-                            ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
+                        ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
             }
 
         @Test
         fun `Deve observar o Cliente uma única vez quando a tela chama init novamente`() = runTest {
             every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
-                    flowOf(AppResult.Success(createClienteReadModel(isLead = true)))
+                flowOf(AppResult.Success(createClienteReadModel(isLead = true)))
             val sut = createSut()
 
             sut.init()
@@ -106,7 +107,7 @@ class ClienteDetailsViewModelTest {
                 sut.onDeleteCliente()
 
                 awaitItem() shouldBeEqualTo
-                        ClienteDetailsViewModel.UiEvent.ShowClienteDeleteSnackbar(isLead = true)
+                    ClienteDetailsViewModel.UiEvent.ShowClienteDeleteSnackbar(isLead = true)
             }
             coVerify { clienteWriteDataSourceMock.delete(clienteId) }
         }
@@ -121,7 +122,7 @@ class ClienteDetailsViewModelTest {
                     sut.onDeleteCliente()
 
                     awaitItem() shouldBeEqualTo
-                            ClienteDetailsViewModel.UiEvent.ShowClienteDeleteSnackbar(isLead = false)
+                        ClienteDetailsViewModel.UiEvent.ShowClienteDeleteSnackbar(isLead = false)
                 }
             }
 
@@ -130,13 +131,13 @@ class ClienteDetailsViewModelTest {
             runTest {
                 val sut = createLoadedSut(createClienteReadModel(isLead = true))
                 coEvery { clienteWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
                     sut.onDeleteCliente()
 
                     awaitItem() shouldBeEqualTo
-                            ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
+                        ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
             }
 
@@ -145,7 +146,7 @@ class ClienteDetailsViewModelTest {
             runTest {
                 val sut = createLoadedSut(createClienteReadModel(isLead = true))
                 coEvery { clienteWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
 
                 sut.onDeleteCliente()
 
@@ -185,20 +186,20 @@ class ClienteDetailsViewModelTest {
             runTest {
                 val sut = createSut()
                 coEvery { atendimentoSharedWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
                     sut.deleteCurrentAtendimento(faker.random.nextLong(bound = 9999))
 
                     awaitItem() shouldBeEqualTo
-                            ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
+                        ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
             }
     }
 
     private fun createLoadedSut(cliente: ClienteReadModel): ClienteDetailsViewModel {
         every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
-                flowOf(AppResult.Success(cliente))
+            flowOf(AppResult.Success(cliente))
 
         return createSut().also { it.init() }
     }

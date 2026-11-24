@@ -92,7 +92,8 @@ fun ProprietarioRegistrationFormSection(
                     value = proprietarioForm.name ?: "",
                     onValueChange = { nameInput ->
                         onProprietarioFormChange(
-                            proprietarioForm.copy(name = nameInput.ifBlank { null }?.capitalizeFirst()),
+                            proprietarioForm.copy(name = nameInput.ifBlank { null }
+                                ?.capitalizeFirst()),
                         )
                     },
                     isInvalid = formErrors[ProprietarioField.Name] != null,

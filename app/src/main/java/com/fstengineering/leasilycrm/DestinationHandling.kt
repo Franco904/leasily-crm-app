@@ -146,9 +146,20 @@ fun NavGraphBuilder.destinations(
                     onViewLeadDetails = { clienteId ->
                         navController.navigate(Destinations.ClienteDetails(clienteId))
                     },
-                    onNewAtendimento = { clienteId -> navController.navigate(newAtendimentoOf(clienteId)) },
+                    onNewAtendimento = { clienteId ->
+                        navController.navigate(
+                            newAtendimentoOf(clienteId)
+                        )
+                    },
                     onNewStay = { clienteId -> navController.navigate(newStayOf(clienteId)) },
-                    onViewStay = { stayId -> navController.navigate(viewStayOf(stayId, cameFromCliente = true)) },
+                    onViewStay = { stayId ->
+                        navController.navigate(
+                            viewStayOf(
+                                stayId,
+                                cameFromCliente = true
+                            )
+                        )
+                    },
                     onUiEvent = onUiEvent,
                 )
             },
@@ -163,9 +174,20 @@ fun NavGraphBuilder.destinations(
                     onViewHospedeDetails = { clienteId ->
                         navController.navigate(Destinations.ClienteDetails(clienteId))
                     },
-                    onNewAtendimento = { clienteId -> navController.navigate(newAtendimentoOf(clienteId)) },
+                    onNewAtendimento = { clienteId ->
+                        navController.navigate(
+                            newAtendimentoOf(clienteId)
+                        )
+                    },
                     onNewStay = { clienteId -> navController.navigate(newStayOf(clienteId)) },
-                    onViewStay = { stayId -> navController.navigate(viewStayOf(stayId, cameFromCliente = true)) },
+                    onViewStay = { stayId ->
+                        navController.navigate(
+                            viewStayOf(
+                                stayId,
+                                cameFromCliente = true
+                            )
+                        )
+                    },
                     onUiEvent = onUiEvent,
                 )
             },

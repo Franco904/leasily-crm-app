@@ -10,7 +10,6 @@ import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSource
 import com.fstengineering.leasilycrm.imoveis.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.imoveis.presentation.models.ImoveisUiState
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class ImoveisViewModel(
     private val imoveisReadDataSource: ImoveisReadDataSource,

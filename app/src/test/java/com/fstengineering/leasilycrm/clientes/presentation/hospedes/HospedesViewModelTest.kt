@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.clientes.presentation.hospedes
 import app.cash.turbine.test
 import com.fstengineering.leasilycrm.clienteRegistration.infra.dataSources.ClienteWriteDataSource
 import com.fstengineering.leasilycrm.clientes.application.models.ClienteReadModel
-import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.clientes.infra.dataSources.ClientesReadDataSource
+import com.fstengineering.leasilycrm.clientes.infra.localStorage.ClientesLocalStorage
 import com.fstengineering.leasilycrm.clientes.presentation.models.HospedeFilterType
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
@@ -19,7 +19,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceTimeBy
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -28,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.milliseconds
 
 @ViewModelCoroutineTest
 class HospedesViewModelTest {
@@ -45,11 +45,11 @@ class HospedesViewModelTest {
     @BeforeEach
     fun setUp() {
         coEvery { clientesLocalStorageMock.getHospedesOrderTypeId() } returns
-                AppResult.Success(ClienteOrderType.Name.id)
+            AppResult.Success(ClienteOrderType.Name.id)
         every { clientesReadDataSourceMock.watchClientes(any(), any(), any()) } returns
-                flowOf(AppResult.Success(emptyList()))
+            flowOf(AppResult.Success(emptyList()))
         coEvery { clientesLocalStorageMock.saveHospedesOrderTypeId(any()) } returns
-                AppResult.Success(Unit)
+            AppResult.Success(Unit)
     }
 
     @Nested
@@ -80,15 +80,15 @@ class HospedesViewModelTest {
             runTest {
                 val sut = createSut()
                 every { clientesReadDataSourceMock.watchClientes(any(), any(), any()) } returns
-                        flowOf(AppResult.Error(ApplicationError.Unknown))
+                    flowOf(AppResult.Error(ApplicationError.Unknown))
 
                 sut.uiEvents.test {
                     sut.init()
-            advanceTimeBy(600.milliseconds)
-            runCurrent()
+                    advanceTimeBy(600.milliseconds)
+                    runCurrent()
 
                     awaitItem() shouldBeEqualTo
-                            HospedesViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
+                        HospedesViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
             }
     }
@@ -125,8 +125,8 @@ class HospedesViewModelTest {
             runTest {
                 val sut = createSut()
                 sut.init()
-            advanceTimeBy(600.milliseconds)
-            runCurrent()
+                advanceTimeBy(600.milliseconds)
+                runCurrent()
 
                 sut.onOrderTypeChange(ClienteOrderType.LastUpdateDate)
 
@@ -171,13 +171,13 @@ class HospedesViewModelTest {
                 val hospedeId = faker.random.nextLong(bound = 9999)
                 sut.onDeleteHospede(hospedeId)
                 coEvery { clienteWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
                     sut.deleteHospede()
 
                     awaitItem() shouldBeEqualTo
-                            HospedesViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
+                        HospedesViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
                 sut.hospedeToDelete.value shouldBeEqualTo hospedeId
             }

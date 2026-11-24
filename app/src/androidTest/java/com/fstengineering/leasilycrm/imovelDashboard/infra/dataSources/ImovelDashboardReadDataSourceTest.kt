@@ -9,14 +9,12 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.StayEntity
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ImovelSummaryReadModel
 import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.ProprietarioReadModel
-import com.fstengineering.leasilycrm.imovelRegistration.domain.entities.ImovelFile
 import com.fstengineering.leasilycrm.imovelRegistration.infra.dataSources.ImovelWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.IntegrationTest
 import com.fstengineering.leasilycrm.testUtils.faker
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovel
 import com.fstengineering.leasilycrm.testUtils.fakes.createFakeImovelFile
 import com.fstengineering.leasilycrm.testUtils.fakes.saveFakeProprietario
-import java.time.LocalDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
@@ -29,6 +27,7 @@ import org.amshove.kluent.shouldBeNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDateTime
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -56,7 +55,11 @@ class ImovelDashboardReadDataSourceTest : IntegrationTest() {
                 proprietarioId = proprietarioId,
                 id = 4L,
                 files = listOf(
-                    createFakeImovelFile(id = null, uriString = mainPictureUri, isMainPicture = true),
+                    createFakeImovelFile(
+                        id = null,
+                        uriString = mainPictureUri,
+                        isMainPicture = true
+                    ),
                     createFakeImovelFile(
                         id = null,
                         uriString = faker.random.nextUUID(),

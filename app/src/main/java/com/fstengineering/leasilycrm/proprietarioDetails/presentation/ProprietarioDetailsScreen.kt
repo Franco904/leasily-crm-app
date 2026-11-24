@@ -22,17 +22,17 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
-import com.fstengineering.leasilycrm.proprietarios.presentation.composables.ConfirmDeleteProprietarioDialog
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.NoAppToShowFileContentDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
 import com.fstengineering.leasilycrm.core.presentation.utils.openFileWithChooser
 import com.fstengineering.leasilycrm.core.presentation.utils.openPlayStoreApp
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.proprietarioDetails.presentation.composables.ProprietarioDetailsSection
 import com.fstengineering.leasilycrm.proprietarioDetails.presentation.composables.ProprietarioDetailsTopAppBar
 import com.fstengineering.leasilycrm.proprietarioDetails.presentation.models.ProprietarioUiState
+import com.fstengineering.leasilycrm.proprietarios.presentation.composables.ConfirmDeleteProprietarioDialog
 
 @Composable
 fun ProprietarioDetailsScreen(

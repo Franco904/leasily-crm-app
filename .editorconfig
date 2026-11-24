@@ -16,6 +16,8 @@ max_line_length = 100
 
 # Layout (indentação e quebra em 100 colunas) é da IDE (scripts/format/format.sh);
 # o ktlint aplica só a higiene abaixo.
+# Chamada não quebra argumentos sozinha (argumento único nunca vira `(\n arg\n)`); quebras manuais ficam
+ij_kotlin_call_parameters_wrap = off
 ktlint_code_style = intellij_idea
 ij_kotlin_packages_to_use_import_on_demand = unset
 ij_kotlin_name_count_to_use_star_import = 2147483647

@@ -12,8 +12,6 @@ import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
 import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.ClienteSharedReadDataSource
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
 import com.fstengineering.leasilycrm.testUtils.faker
@@ -35,17 +33,19 @@ import org.junit.jupiter.api.Test
 class AtendimentoRegistrationViewModelTest {
     private val atendimentoRegistrationReadDataSourceMock: AtendimentoRegistrationReadDataSource =
         mockk(relaxUnitFun = true)
-    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource = mockk(relaxUnitFun = true)
-    private val atendimentoWriteDataSourceMock: AtendimentoWriteDataSource = mockk(relaxUnitFun = true)
+    private val clienteSharedReadDataSourceMock: ClienteSharedReadDataSource =
+        mockk(relaxUnitFun = true)
+    private val atendimentoWriteDataSourceMock: AtendimentoWriteDataSource =
+        mockk(relaxUnitFun = true)
 
     private val clienteId = 7L
 
     @BeforeEach
     fun setUp() {
         coEvery { atendimentoRegistrationReadDataSourceMock.getNeighborhoodNames() } returns
-                AppResult.Success(emptyList())
+            AppResult.Success(emptyList())
         coEvery { clienteSharedReadDataSourceMock.getName(clienteId) } returns
-                AppResult.Success("Maria")
+            AppResult.Success("Maria")
     }
 
     @Nested
@@ -61,7 +61,7 @@ class AtendimentoRegistrationViewModelTest {
                 sut.init()
 
                 awaitItem() shouldBeEqualTo
-                        AtendimentoDraftFormUiState.Loaded.empty(clienteId, clienteName = "Maria")
+                    AtendimentoDraftFormUiState.Loaded.empty(clienteId, clienteName = "Maria")
             }
         }
 
@@ -69,7 +69,12 @@ class AtendimentoRegistrationViewModelTest {
         fun `Deve exibir Atendimento armazenado quando Atendimento é editado`() = runTest {
             val atendimentoId = 3L
             coEvery { atendimentoRegistrationReadDataSourceMock.getAtendimento(atendimentoId) } returns
-                    AppResult.Success(createAtendimentoReadModel(atendimentoId, observations = "Quer varanda"))
+                AppResult.Success(
+                    createAtendimentoReadModel(
+                        atendimentoId,
+                        observations = "Quer varanda"
+                    )
+                )
             val sut = createSut(atendimentoId = atendimentoId)
 
             sut.draftFormUiState.test {
@@ -88,16 +93,16 @@ class AtendimentoRegistrationViewModelTest {
             runTest {
                 val atendimentoId = 3L
                 coEvery { atendimentoRegistrationReadDataSourceMock.getAtendimento(atendimentoId) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
                 val sut = createSut(atendimentoId = atendimentoId)
 
                 sut.uiEvents.test {
                     sut.init()
 
                     awaitItem() shouldBeEqualTo
-                            AtendimentoRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
-                                ApplicationError.Unknown,
-                            )
+                        AtendimentoRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                            ApplicationError.Unknown,
+                        )
                 }
             }
 
@@ -135,9 +140,9 @@ class AtendimentoRegistrationViewModelTest {
                     sut.saveAtendimento()
 
                     awaitItem() shouldBeEqualTo
-                            AtendimentoRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
-                                ApplicationError.Unknown,
-                            )
+                        AtendimentoRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                            ApplicationError.Unknown,
+                        )
                 }
                 coVerify(exactly = 0) { atendimentoWriteDataSourceMock.save(any()) }
             }
@@ -147,15 +152,15 @@ class AtendimentoRegistrationViewModelTest {
             runTest {
                 val sut = createSutWithNewForm()
                 coEvery { atendimentoWriteDataSourceMock.save(any()) } returns
-                        AppResult.Error(ApplicationError.NoInternet)
+                    AppResult.Error(ApplicationError.NoInternet)
 
                 sut.uiEvents.test {
                     sut.saveAtendimento()
 
                     awaitItem() shouldBeEqualTo
-                            AtendimentoRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
-                                ApplicationError.NoInternet,
-                            )
+                        AtendimentoRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                            ApplicationError.NoInternet,
+                        )
                 }
             }
 
@@ -169,9 +174,9 @@ class AtendimentoRegistrationViewModelTest {
                     sut.saveAtendimento()
 
                     awaitItem() shouldBeEqualTo
-                            AtendimentoRegistrationViewModel.UiEvent.CloseScreenWithSnackbar(
-                                messageId = R.string.create_assistance_success_message,
-                            )
+                        AtendimentoRegistrationViewModel.UiEvent.CloseScreenWithSnackbar(
+                            messageId = R.string.create_assistance_success_message,
+                        )
                 }
                 coVerify {
                     atendimentoWriteDataSourceMock.save(
@@ -184,7 +189,7 @@ class AtendimentoRegistrationViewModelTest {
         fun `Deve persistir Atendimento quando editado, dado que os dados são válidos`() = runTest {
             val atendimentoId = 3L
             coEvery { atendimentoRegistrationReadDataSourceMock.getAtendimento(atendimentoId) } returns
-                    AppResult.Success(createAtendimentoReadModel(atendimentoId))
+                AppResult.Success(createAtendimentoReadModel(atendimentoId))
             coEvery { atendimentoWriteDataSourceMock.save(any()) } returns AppResult.Success(Unit)
             val sut = createSut(atendimentoId = atendimentoId)
             sut.init()
@@ -194,9 +199,9 @@ class AtendimentoRegistrationViewModelTest {
                 sut.saveAtendimento()
 
                 awaitItem() shouldBeEqualTo
-                        AtendimentoRegistrationViewModel.UiEvent.CloseScreenWithSnackbar(
-                            messageId = R.string.edit_assistance_success_message,
-                        )
+                    AtendimentoRegistrationViewModel.UiEvent.CloseScreenWithSnackbar(
+                        messageId = R.string.edit_assistance_success_message,
+                    )
             }
             coVerify {
                 atendimentoWriteDataSourceMock.save(
@@ -210,7 +215,7 @@ class AtendimentoRegistrationViewModelTest {
             runTest {
                 val atendimentoId = 3L
                 coEvery { atendimentoRegistrationReadDataSourceMock.getAtendimento(atendimentoId) } returns
-                        AppResult.Success(createAtendimentoReadModel(atendimentoId))
+                    AppResult.Success(createAtendimentoReadModel(atendimentoId))
                 val sut = createSut(atendimentoId = atendimentoId)
                 sut.init()
 
@@ -218,9 +223,9 @@ class AtendimentoRegistrationViewModelTest {
                     sut.saveAtendimento()
 
                     awaitItem() shouldBeEqualTo
-                            AtendimentoRegistrationViewModel.UiEvent.CloseScreenWithSnackbar(
-                                messageId = R.string.no_data_changed_success_message,
-                            )
+                        AtendimentoRegistrationViewModel.UiEvent.CloseScreenWithSnackbar(
+                            messageId = R.string.no_data_changed_success_message,
+                        )
                 }
                 coVerify(exactly = 0) { atendimentoWriteDataSourceMock.save(any()) }
             }
@@ -239,7 +244,7 @@ class AtendimentoRegistrationViewModelTest {
                     sut.onExit()
 
                     awaitItem() shouldBeEqualTo
-                            AtendimentoRegistrationViewModel.UiEvent.Exit(needConfirmation = true)
+                        AtendimentoRegistrationViewModel.UiEvent.Exit(needConfirmation = true)
                 }
             }
     }

@@ -1,14 +1,14 @@
 package com.fstengineering.leasilycrm.clienteDetails.presentation.mappers
 
-import com.fstengineering.leasilycrm.clienteDetails.application.models.InteracaoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.AtendimentoReadModel
-import com.fstengineering.leasilycrm.clienteDetails.application.models.ImovelEnviadoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.ClienteReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.ImovelEnviadoReadModel
+import com.fstengineering.leasilycrm.clienteDetails.application.models.InteracaoReadModel
 import com.fstengineering.leasilycrm.clienteDetails.application.models.StayReadModel
-import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.AtendimentoUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteDetailsUiState
 import com.fstengineering.leasilycrm.clienteDetails.presentation.models.ClienteHistoryItemUiState
+import com.fstengineering.leasilycrm.clienteDetails.presentation.models.InteracaoUiState
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppYearMonth
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
 import kotlinx.collections.immutable.ImmutableList

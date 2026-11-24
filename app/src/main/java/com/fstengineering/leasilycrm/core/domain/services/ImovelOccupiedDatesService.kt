@@ -32,7 +32,7 @@ object ImovelOccupiedDatesService {
             val isLast = occupiedPeriods.last() == occupiedPeriod
             val next = occupiedPeriods.getOrNull(i + 1)
             val isNextAdjacentToCurrentOne = occupiedPeriod.checkOutDateTime.toDate() ==
-                    next?.checkInDateTime?.toDate()
+                next?.checkInDateTime?.toDate()
 
             val nextIndex = when {
                 isLast || !isNextAdjacentToCurrentOne -> null
@@ -96,7 +96,7 @@ object ImovelOccupiedDatesService {
                     .map { occupiedDate ->
                         val isCheckInDate = occupiedDate == checkInDate
                         val isCheckOutDate = allOccupiedDates.size > 1
-                                && occupiedDate == checkOutDate
+                            && occupiedDate == checkOutDate
 
                         ImovelOccupiedDate(
                             date = occupiedDate,

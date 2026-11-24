@@ -4,7 +4,6 @@ import com.fstengineering.leasilycrm.core.domain.providers.AppDateProviderImpl
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
-import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldContainSame

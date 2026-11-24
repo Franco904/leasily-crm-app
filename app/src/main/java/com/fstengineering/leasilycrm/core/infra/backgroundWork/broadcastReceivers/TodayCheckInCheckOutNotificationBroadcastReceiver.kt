@@ -8,8 +8,8 @@ import androidx.core.app.NotificationManagerCompat
 import com.fstengineering.leasilycrm.core.application.repositories.OccupiedPeriodSharedQueryRepository
 import com.fstengineering.leasilycrm.core.application.stores.SettingsSharedStore
 import com.fstengineering.leasilycrm.core.application.stores.UserSessionSharedStore
-import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.domain.providers.interfaces.AppDateTimeProvider
+import com.fstengineering.leasilycrm.core.domain.utils.fold
 import com.fstengineering.leasilycrm.core.infra.notifications.TodayCheckInCheckOutNotification
 import com.fstengineering.leasilycrm.core.infra.utils.hasNotificationPermission
 import kotlinx.coroutines.CoroutineScope

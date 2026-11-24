@@ -145,7 +145,9 @@ class ClienteRegistrationViewModel(
 
         viewModelScope.launch {
             val cliente = form.toCliente()
-                .fold(onError = { setFieldErrors(it.toDomainErrors()); return@launch }, onSuccess = { it })
+                .fold(
+                    onError = { setFieldErrors(it.toDomainErrors()); return@launch },
+                    onSuccess = { it })
 
             clienteWriteDataSource.save(cliente)
                 .onError { error ->

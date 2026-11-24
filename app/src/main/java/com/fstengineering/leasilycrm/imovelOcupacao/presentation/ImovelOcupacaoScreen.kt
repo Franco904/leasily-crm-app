@@ -28,13 +28,13 @@ import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.presentation.composables.FullScreenLoadingIndicator
 import com.fstengineering.leasilycrm.core.presentation.composables.dialogs.OccupiedPeriodTypeDialog
 import com.fstengineering.leasilycrm.core.presentation.models.UiEvent
-import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.collectWithLifecycle
+import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultErrorBottomSheetDataPropertiesStrategy
 import com.fstengineering.leasilycrm.core.presentation.utils.uiMappers.toBottomSheetData
 import com.fstengineering.leasilycrm.imovelOcupacao.presentation.ImovelOcupacaoViewModel.UiEvent.NavigateUp
 import com.fstengineering.leasilycrm.imovelOcupacao.presentation.ImovelOcupacaoViewModel.UiEvent.ShowErrorBottomSheet
-import com.fstengineering.leasilycrm.imovelOcupacao.presentation.composables.ImovelOcupacaoTopAppBar
 import com.fstengineering.leasilycrm.imovelOcupacao.presentation.composables.ImovelOccupiedDatesSection
+import com.fstengineering.leasilycrm.imovelOcupacao.presentation.composables.ImovelOcupacaoTopAppBar
 import com.fstengineering.leasilycrm.imovelOcupacao.presentation.models.ImovelPeriodosOcupadosUiState
 
 @Composable

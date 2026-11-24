@@ -41,14 +41,14 @@ class ImovelOcupacaoViewModelTest {
             runTest {
                 val imovelId = faker.random.nextLong(bound = 9999)
                 coEvery { watchImovelOcupacaoMock(ImovelOcupacaoArgs(imovelId)) } returns
-                        flowOf(AppResult.Error(ApplicationError.NoInternet))
+                    flowOf(AppResult.Error(ApplicationError.NoInternet))
                 val sut = createSut(imovelId)
 
                 sut.uiEvents.test {
                     sut.init()
 
                     awaitItem() shouldBeEqualTo
-                            ImovelOcupacaoViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
+                        ImovelOcupacaoViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
                 }
             }
 
@@ -57,7 +57,7 @@ class ImovelOcupacaoViewModelTest {
             runTest {
                 val imovelId = faker.random.nextLong(bound = 9999)
                 coEvery { watchImovelOcupacaoMock(ImovelOcupacaoArgs(imovelId)) } returns
-                        flowOf(AppResult.Error(ApplicationError.NoInternet))
+                    flowOf(AppResult.Error(ApplicationError.NoInternet))
                 val sut = createSut(imovelId)
 
                 sut.init()

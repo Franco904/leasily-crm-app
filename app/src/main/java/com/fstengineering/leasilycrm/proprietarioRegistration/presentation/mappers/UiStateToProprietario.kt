@@ -16,7 +16,9 @@ fun ProprietarioDraftFormUiState.Loaded.toProprietario(): AppResult<Proprietario
     val parsedFiles = files
         .mapNotNull {
             ProprietarioFile.parse(id = it.id, uriString = it.uriString, name = it.name)
-                .fold(onError = { error -> fileErrors.addAll(error.toDomainErrors()); null }, onSuccess = { file -> file })
+                .fold(
+                    onError = { error -> fileErrors.addAll(error.toDomainErrors()); null },
+                    onSuccess = { file -> file })
         }
         .toPersistentList()
 
@@ -32,6 +34,7 @@ fun ProprietarioDraftFormUiState.Loaded.toProprietario(): AppResult<Proprietario
 
     if (fileErrors.isEmpty()) return proprietario
 
-    val errors = fileErrors + ((proprietario as? AppResult.Error)?.error?.toDomainErrors() ?: emptyList())
+    val errors =
+        fileErrors + ((proprietario as? AppResult.Error)?.error?.toDomainErrors() ?: emptyList())
     return AppResult.Error(ValidationErrors(errors.toPersistentList()))
 }

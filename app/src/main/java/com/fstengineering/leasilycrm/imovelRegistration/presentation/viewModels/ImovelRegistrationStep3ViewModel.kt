@@ -48,7 +48,7 @@ class ImovelRegistrationStep3ViewModel : ViewModel() {
         _priceFormErrors.update {
             val newErrors = it.errors.mutate { map ->
                 val hasDateRangeChanged = form?.startDate != imovelPriceForm.value?.startDate
-                        || form?.endDate != imovelPriceForm.value?.endDate
+                    || form?.endDate != imovelPriceForm.value?.endDate
                 if (hasDateRangeChanged) {
                     map[ImovelPriceField.Period] = null
                 }

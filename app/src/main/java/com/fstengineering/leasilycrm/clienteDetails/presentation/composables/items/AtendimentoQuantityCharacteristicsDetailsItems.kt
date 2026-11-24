@@ -196,7 +196,9 @@ fun HospedesDetailsItem(
             R.plurals.lead_tenant_assistance_details_baby_guests, qtBabyHospedes, qtBabyHospedes
         )
         val qtAnimalPlural = context.resources.getQuantityString(
-            R.plurals.lead_tenant_assistance_details_animal_guests, qtAnimalHospedes, qtAnimalHospedes
+            R.plurals.lead_tenant_assistance_details_animal_guests,
+            qtAnimalHospedes,
+            qtAnimalHospedes
         )
 
         persistentListOf(

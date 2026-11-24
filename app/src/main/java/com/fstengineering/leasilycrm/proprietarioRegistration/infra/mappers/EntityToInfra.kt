@@ -2,8 +2,8 @@ package com.fstengineering.leasilycrm.proprietarioRegistration.infra.mappers
 
 import com.fstengineering.leasilycrm.BuildConfig
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDateTime
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioFileOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ProprietarioOrm
 import com.fstengineering.leasilycrm.core.presentation.utils.normalizeEncoding
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.Proprietario
 import com.fstengineering.leasilycrm.proprietarioRegistration.domain.entities.ProprietarioFile

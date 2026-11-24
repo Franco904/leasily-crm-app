@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
-import android.provider.Settings as AndroidSettings
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +28,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.fstengineering.leasilycrm.R
 import com.fstengineering.leasilycrm.core.infra.utils.hasNotificationPermission
 import com.fstengineering.leasilycrm.settings.models.SettingsUiState
+import android.provider.Settings as AndroidSettings
 
 @Composable
 fun SettingsSection(

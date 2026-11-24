@@ -52,7 +52,9 @@ sealed class ImovelSeaProximityType(val id: Long) {
 
                 DISTANCE_TO_SEA_ID -> {
                     DistanceToSea.parse(distanceToSea)
-                        .fold(onError = { errors.addAll(it.toDomainErrors()); null }, onSuccess = { it })
+                        .fold(
+                            onError = { errors.addAll(it.toDomainErrors()); null },
+                            onSuccess = { it })
                 }
 
                 else -> {

@@ -35,8 +35,8 @@ import com.fstengineering.leasilycrm.core.presentation.composables.AppCard
 import com.fstengineering.leasilycrm.core.presentation.composables.AppMoreOptionsIconDropdownMenu
 import com.fstengineering.leasilycrm.core.presentation.composables.CharacteristicReadOnlyChip
 import com.fstengineering.leasilycrm.core.presentation.composables.buttons.AppPrimaryIconButton
-import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.models.ImovelCardUiState
+import com.fstengineering.leasilycrm.core.presentation.models.MoreOptionsMenuOptionUiState
 import com.fstengineering.leasilycrm.core.presentation.utils.presentationLabel
 import kotlinx.collections.immutable.persistentListOf
 

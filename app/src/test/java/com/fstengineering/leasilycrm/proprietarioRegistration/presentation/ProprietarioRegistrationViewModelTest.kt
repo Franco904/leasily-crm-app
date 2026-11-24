@@ -28,7 +28,8 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ProprietarioRegistrationViewModelTest {
-    private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource = mockk(relaxUnitFun = true)
+    private val proprietarioWriteDataSourceMock: ProprietarioWriteDataSource =
+        mockk(relaxUnitFun = true)
     private val proprietarioRegistrationReadDataSourceMock: ProprietarioRegistrationReadDataSource =
         mockk(relaxUnitFun = true)
     private val sharedStorageMock: SharedStorage = mockk(relaxUnitFun = true)
@@ -43,7 +44,7 @@ class ProprietarioRegistrationViewModelTest {
                 val proprietario = createProprietarioReadModel(id = proprietarioId)
                 val file = proprietario.files.single()
                 coEvery { proprietarioRegistrationReadDataSourceMock.getProprietario(proprietarioId) } returns
-                        AppResult.Success(proprietario)
+                    AppResult.Success(proprietario)
                 val sut = createSut(route = Destinations.ProprietarioRegistration(proprietarioId))
 
                 sut.draftFormUiState.test {
@@ -97,9 +98,9 @@ class ProprietarioRegistrationViewModelTest {
                     sut.saveProprietario()
 
                     awaitItem() shouldBeEqualTo
-                            ProprietarioRegistrationViewModel.UiEvent.ScrollToField(
-                                ProprietarioField.Name
-                            )
+                        ProprietarioRegistrationViewModel.UiEvent.ScrollToField(
+                            ProprietarioField.Name
+                        )
                 }
                 sut.formErrors.value.errors[ProprietarioField.Name].shouldNotBeNull()
                 coVerify(exactly = 0) { proprietarioWriteDataSourceMock.save(any()) }
@@ -110,15 +111,15 @@ class ProprietarioRegistrationViewModelTest {
             runTest {
                 val sut = createSutWithNewForm(createValidForm())
                 coEvery { proprietarioWriteDataSourceMock.save(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
 
                 sut.uiEvents.test {
                     sut.saveProprietario()
 
                     awaitItem() shouldBeEqualTo
-                            ProprietarioRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
-                                ApplicationError.Unknown
-                            )
+                        ProprietarioRegistrationViewModel.UiEvent.ShowErrorBottomSheet(
+                            ApplicationError.Unknown
+                        )
                 }
             }
 

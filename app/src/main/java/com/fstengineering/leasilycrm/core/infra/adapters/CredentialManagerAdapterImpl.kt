@@ -67,7 +67,7 @@ class CredentialManagerAdapterImpl(
 
             val credential = result.credential
             val isSupportedCredentialType = credential is CustomCredential
-                    && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+                && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 
             if (isSupportedCredentialType) {
                 GoogleIdTokenCredential.createFrom(credential.data).idToken

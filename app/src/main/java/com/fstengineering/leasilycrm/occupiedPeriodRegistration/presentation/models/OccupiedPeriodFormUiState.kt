@@ -41,22 +41,22 @@ sealed interface OccupiedPeriodFormUiState {
             override val observations: String?,
         ) : Loaded {
             override val isAnyFormFieldInitialized = imovel != null ||
-                    tenant != null ||
-                    vehicleMake != null ||
-                    vehicleColor != null ||
-                    vehicleLicensePlate != null ||
-                    checkInDateTime != null ||
-                    checkInTime.first != null ||
-                    checkInTime.second != null ||
-                    checkOutDateTime != null ||
-                    checkOutTime.first != null ||
-                    checkOutTime.second != null ||
-                    isAutoCheckIn ||
-                    isAutoCheckOut ||
-                    totalPrice != null ||
-                    commission != null ||
-                    files.isNotEmpty() ||
-                    observations != null
+                tenant != null ||
+                vehicleMake != null ||
+                vehicleColor != null ||
+                vehicleLicensePlate != null ||
+                checkInDateTime != null ||
+                checkInTime.first != null ||
+                checkInTime.second != null ||
+                checkOutDateTime != null ||
+                checkOutTime.first != null ||
+                checkOutTime.second != null ||
+                isAutoCheckIn ||
+                isAutoCheckOut ||
+                totalPrice != null ||
+                commission != null ||
+                files.isNotEmpty() ||
+                observations != null
 
             fun addFile(newFile: StayFileUiState) = copy(
                 files = (files + newFile).toPersistentList(),
@@ -72,9 +72,9 @@ sealed interface OccupiedPeriodFormUiState {
             override val observations: String?,
         ) : Loaded {
             override val isAnyFormFieldInitialized = imovel != null ||
-                    checkInDateTime != null ||
-                    checkOutDateTime != null ||
-                    observations != null
+                checkInDateTime != null ||
+                checkOutDateTime != null ||
+                observations != null
         }
     }
 }

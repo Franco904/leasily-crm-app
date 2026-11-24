@@ -3,8 +3,8 @@ package com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.c
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelCharacteristicCrossRefOrm
-import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelFileOrm
+import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelOrm
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.entities.ImovelPriceOrm
 
 data class ImovelCompound(

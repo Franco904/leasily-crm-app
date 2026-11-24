@@ -39,7 +39,7 @@ class ProprietarioDetailsViewModelTest {
             val proprietarioId = faker.random.nextLong(bound = 9999)
             val proprietario = createProprietarioReadModel()
             every { proprietarioDetailsReadDataSourceMock.watchProprietario(proprietarioId) } returns
-                    flowOf(AppResult.Success(proprietario))
+                flowOf(AppResult.Success(proprietario))
             val sut = createSut(proprietarioId = proprietarioId)
 
             sut.uiState.test {
@@ -76,7 +76,7 @@ class ProprietarioDetailsViewModelTest {
                 sut.deleteProprietario()
 
                 awaitItem() shouldBeEqualTo
-                        ProprietarioDetailsViewModel.UiEvent.ShowDeleteSuccessSnackbar
+                    ProprietarioDetailsViewModel.UiEvent.ShowDeleteSuccessSnackbar
             }
             coVerify { proprietarioWriteDataSourceMock.delete(proprietarioId) }
         }
@@ -86,16 +86,16 @@ class ProprietarioDetailsViewModelTest {
             runTest {
                 val proprietarioId = faker.random.nextLong(bound = 9999)
                 coEvery { proprietarioWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Error(ApplicationError.Unknown)
+                    AppResult.Error(ApplicationError.Unknown)
                 val sut = createSut(proprietarioId = proprietarioId)
 
                 sut.uiEvents.test {
                     sut.deleteProprietario()
 
                     awaitItem() shouldBeEqualTo
-                            ProprietarioDetailsViewModel.UiEvent.ShowErrorBottomSheet(
-                                ApplicationError.Unknown
-                            )
+                        ProprietarioDetailsViewModel.UiEvent.ShowErrorBottomSheet(
+                            ApplicationError.Unknown
+                        )
                 }
             }
     }

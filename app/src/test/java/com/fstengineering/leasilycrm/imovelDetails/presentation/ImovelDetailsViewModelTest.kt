@@ -27,8 +27,10 @@ import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class ImovelDetailsViewModelTest {
-    private val imovelDetailsReadDataSourceMock: ImovelDetailsReadDataSource = mockk(relaxUnitFun = true)
-    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource = mockk(relaxUnitFun = true)
+    private val imovelDetailsReadDataSourceMock: ImovelDetailsReadDataSource =
+        mockk(relaxUnitFun = true)
+    private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource =
+        mockk(relaxUnitFun = true)
 
     @Nested
     @DisplayName("init")
@@ -37,7 +39,7 @@ class ImovelDetailsViewModelTest {
         fun `Deve exibir os detalhes do Imóvel quando a tela é aberta`() = runTest {
             val imovel = createImovelReadModel()
             every { imovelDetailsReadDataSourceMock.watchImovel(imovel.id) } returns
-                    flowOf(AppResult.Success(imovel))
+                flowOf(AppResult.Success(imovel))
             val sut = createSut(imovelId = imovel.id)
 
             sut.imovel.test {
@@ -54,7 +56,7 @@ class ImovelDetailsViewModelTest {
             runTest {
                 val imovel = createImovelReadModel()
                 every { imovelDetailsReadDataSourceMock.watchImovel(imovel.id) } returns
-                        flowOf(AppResult.Success(imovel))
+                    flowOf(AppResult.Success(imovel))
                 val sut = createSut(imovelId = imovel.id)
 
                 sut.init()
@@ -68,14 +70,14 @@ class ImovelDetailsViewModelTest {
             runTest {
                 val imovelId = faker.random.nextLong(bound = 9999)
                 every { imovelDetailsReadDataSourceMock.watchImovel(imovelId) } returns
-                        flowOf(AppResult.Error(ApplicationError.NoInternet))
+                    flowOf(AppResult.Error(ApplicationError.NoInternet))
                 val sut = createSut(imovelId = imovelId)
 
                 sut.uiEvents.test {
                     sut.init()
 
                     awaitItem() shouldBeEqualTo
-                            ImovelDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
+                        ImovelDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
                 }
             }
     }
@@ -87,7 +89,7 @@ class ImovelDetailsViewModelTest {
         fun `Deve confirmar exclusão quando o Imóvel exibido é excluído`() = runTest {
             val imovel = createImovelReadModel()
             every { imovelDetailsReadDataSourceMock.watchImovel(imovel.id) } returns
-                    flowOf(AppResult.Success(imovel))
+                flowOf(AppResult.Success(imovel))
             coEvery { imovelSharedWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
             val sut = createSut(imovelId = imovel.id).also { it.init() }
 
@@ -104,16 +106,16 @@ class ImovelDetailsViewModelTest {
             runTest {
                 val imovel = createImovelReadModel()
                 every { imovelDetailsReadDataSourceMock.watchImovel(imovel.id) } returns
-                        flowOf(AppResult.Success(imovel))
+                    flowOf(AppResult.Success(imovel))
                 coEvery { imovelSharedWriteDataSourceMock.delete(any()) } returns
-                        AppResult.Error(ApplicationError.NoInternet)
+                    AppResult.Error(ApplicationError.NoInternet)
                 val sut = createSut(imovelId = imovel.id).also { it.init() }
 
                 sut.uiEvents.test {
                     sut.deleteImovel()
 
                     awaitItem() shouldBeEqualTo
-                            ImovelDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
+                        ImovelDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.NoInternet)
                 }
             }
 

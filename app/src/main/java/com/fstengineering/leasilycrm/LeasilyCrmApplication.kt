@@ -20,7 +20,10 @@ class LeasilyCrmApplication : Application(), KoinComponent {
 
         registerActivityLifecycleCallbacks(currentActivityTracker)
 
-        TodayCheckInCheckOutNotificationAlarm.schedule(applicationContext, now = dateTimeProvider.now())
+        TodayCheckInCheckOutNotificationAlarm.schedule(
+            applicationContext,
+            now = dateTimeProvider.now()
+        )
         TodayCheckInCheckOutNotification.createNotificationChannel(applicationContext)
     }
 }

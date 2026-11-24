@@ -37,8 +37,8 @@ fun ImovelLocationDetailsItem(
     val numberText = if (imovelAddress.number != null) ", ${imovelAddress.number}" else ""
 
     val hasApartmentSpecificCharacteristics = imovelAddress.parkingSpotNumber != null
-            || imovelAddress.parkingBasementLevelNumber != null
-            || imovelAddress.hobbyBoxNumber != null
+        || imovelAddress.parkingBasementLevelNumber != null
+        || imovelAddress.hobbyBoxNumber != null
 
     Column(
         modifier = modifier
