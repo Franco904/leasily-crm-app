@@ -47,6 +47,18 @@ apk-release:
 	./gradlew assembleRelease
 	./gradlew bundleRelease
 
+# Layout pela IDE (scripts/format.sh) e higiene pelo ktlint (Spotless), só no diff da branch.
+# Sem Android Studio, aplica só a higiene
+format:
+	scripts/format-pipeline.sh || [ $$? -eq 3 ]
+
+lint:
+	./gradlew spotlessCheck
+
+# Ativa os hooks versionados (pre-commit que formata os arquivos staged)
+hooks:
+	git config core.hooksPath .githooks
+
 test:
 	./gradlew :app:testDevDebugUnitTest
 
