@@ -19,7 +19,7 @@ fi
 without_studio=false
 
 cycle() {
-    scripts/format.sh ${files[@]+"${files[@]}"}
+    scripts/format/format.sh ${files[@]+"${files[@]}"}
     local status=$?
     if [ "$status" -eq 3 ]; then
         without_studio=true

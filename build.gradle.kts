@@ -9,15 +9,15 @@ plugins {
     alias(libs.plugins.spotless)
 }
 
-// Higiene de código (imports, espaços, ponto-e-vírgula): o layout é da IDE (scripts/format.sh).
-// Restrito ao que mudou desde o ref-base da branch (scripts/ratchet-base.sh); -PratchetFrom
+// Higiene de código (imports, espaços, ponto-e-vírgula): o layout é da IDE (scripts/format/format.sh).
+// Restrito ao que mudou desde o ref-base da branch (scripts/format/ratchet-base.sh); -PratchetFrom
 // sobrescreve. O ratchet só é resolvido quando uma task do Spotless foi pedida, para que
 // sync da IDE, run e test não dependam do estado do git.
 spotless {
     if (gradle.startParameter.taskNames.any { it.contains("spotless") }) {
         ratchetFrom(
             providers.gradleProperty("ratchetFrom").orElse(
-                providers.exec { commandLine("scripts/ratchet-base.sh") }
+                providers.exec { commandLine("scripts/format/ratchet-base.sh") }
                     .standardOutput.asText.map { it.trim() },
             ).get(),
         )

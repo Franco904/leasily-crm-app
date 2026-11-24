@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Formata o layout (indentação e quebra em 100 colunas, via .editorconfig) com o formatador do
-# Android Studio. Sem argumentos, formata só os .kt do diff da branch (scripts/ratchet-base.sh),
+# Android Studio. Sem argumentos, formata só os .kt do diff da branch (scripts/format/ratchet-base.sh),
 # incluindo alterações não commitadas e arquivos novos; com argumentos, formata os arquivos dados.
 #
 # Roda numa instância isolada da IDE (config, system, plugins e log em diretórios descartáveis),
@@ -46,7 +46,7 @@ if [ "$#" -gt 0 ]; then
         files+=("$file")
     done
 else
-    base="$("$root/scripts/ratchet-base.sh")"
+    base="$("$root/scripts/format/ratchet-base.sh")"
     while IFS= read -r file; do
         files+=("$file")
     done < <({

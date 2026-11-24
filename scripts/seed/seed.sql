@@ -5,7 +5,7 @@
 --
 -- Uso (app parado, Corretor já logado ao menos uma vez para o banco existir):
 --   make pull-db DB=qa/seed.db
---   sqlite3 qa/seed.db < scripts/seed.sql
+--   sqlite3 qa/seed.db < scripts/seed/seed.sql
 --   make push-db DB=qa/seed.db
 --
 -- Volume: 15 Proprietários, 40 Imóveis, 60 Clientes (45 com Estadias, 15 só Leads), ~49 Atendimentos,

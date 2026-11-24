@@ -47,10 +47,10 @@ apk-release:
 	./gradlew assembleRelease
 	./gradlew bundleRelease
 
-# Layout pela IDE (scripts/format.sh) e higiene pelo ktlint (Spotless), só no diff da branch.
+# Layout pela IDE (scripts/format/format.sh) e higiene pelo ktlint (Spotless), só no diff da branch.
 # Sem Android Studio, aplica só a higiene
 format:
-	scripts/format-pipeline.sh || [ $$? -eq 3 ]
+	scripts/format/format-pipeline.sh || [ $$? -eq 3 ]
 
 lint:
 	./gradlew spotlessCheck
