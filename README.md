@@ -72,7 +72,7 @@ são exatamente os pacotes de primeiro nível.
 | `proprietarios`              | Proprietários         | Listagem de Proprietários                                                                                                                               |
 | `proprietarioRegistration`   | Proprietários         | Cadastro e edição de Proprietários                                                                                                                      |
 | `proprietarioDetails`        | Proprietários         | Detalhes de um Proprietário                                                                                                                             |
-| `clientes`                   | Clientes              | Listagem de Clientes segmentada por status (Leads e Hóspedes)                                                                                         |
+| `clientes`                   | Clientes              | Listagem de Clientes segmentada por status (Leads e Hóspedes)                                                                                           |
 | `clienteRegistration`        | Clientes              | Cadastro e edição de Clientes                                                                                                                           |
 | `clienteDetails`             | Clientes              | SCV: visão centralizada do Cliente; exclusão de Atendimento e Cliente                                                                                   |
 | `atendimentoRegistration`    | Atendimento           | Cadastro e gestão de Atendimentos                                                                                                                       |
@@ -81,8 +81,17 @@ são exatamente os pacotes de primeiro nível.
 | `occupiedPeriodDetails`      | Períodos Ocupados     | Detalhes de Período Ocupado; check-in e check-out                                                                                                       |
 | `dashboard`                  | Relatórios Analíticos | KPIs e relatórios de desempenho do Usuário                                                                                                              |
 
-Testes vivem em `app/src/test/` (unitários: JUnit 5 + MockK + kluent) e `app/src/androidTest/`
-(instrumentados: JUnit 4 + kluent, requerem device).
+### CI
+
+**Workflow** `.github/workflows/pr.yml`, em todo PR: `make format FORMAT_IDE=off` + `git diff 
+--exit-code` e `testDevDebugUnitTest assembleDevDebug` (compila o APK, sem publicá-lo), com o
+`ci/gradle.properties` fictício. A quebra de linha e as 100 colunas só são formatadas localmente
+(IDE) e não são verificadas no CI.
+
+### Testes
+
+Testes automatizados vivem em `app/src/test/` (unitários: JUnit 5 + MockK + kluent) e
+`app/src/androidTest/` (instrumentados: JUnit 4 + kluent, requerem device).
 
 ---
 
@@ -149,23 +158,24 @@ método, função, variável e parâmetro, sem exceção; o código legado com t
 
 ## Convenções de Nomenclatura
 
-| Artefato                                | Sufixo / padrão                                                                                                                              |
-|-----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| Caso de uso                             | `<VerboInglês><TermoDeDomínio>UseCase` (ex: `RegisterCheckOutUseCase`, `WriteEstadiaUseCase`)                                                |
-| Repositório (sincronização)             | `<Agregado>SyncRepository` (classe concreta, sem `Impl`)                                             |
-| DataSource (só Room)                    | `@Dao abstract class <Contexto>WriteDataSource` / `<Contexto>ReadDataSource`                                             |
-| Erro                                    | `AppResult` com `DomainError`/`ValidationErrors` (regra de domínio) ou `ApplicationError` (falha de infra), todos `BaseError`; nunca `throw` |
-| ViewModel                               | `<Contexto>ViewModel`                                                                                                                        |
-| UiState                                 | `<Contexto>UiState`                                                                                                                          |
-| Composable (tela)                       | `<Contexto>Screen`                                                                                                                           |
-| Composable (componente)                 | `<Contexto>` ou nome descritivo sem sufixo                                                                                                   |
-| Arquivo de teste                        | `<ArquivoProducao>Test.kt` (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`)                                                                |
+| Artefato                    | Sufixo / padrão                                                                                                                              |
+|-----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| Caso de uso                 | `<VerboInglês><TermoDeDomínio>UseCase` (ex: `RegisterCheckOutUseCase`, `WriteEstadiaUseCase`)                                                |
+| Repositório (sincronização) | `<Agregado>SyncRepository` (classe concreta, sem `Impl`)                                                                                     |
+| DataSource (só Room)        | `@Dao abstract class <Contexto>WriteDataSource` / `<Contexto>ReadDataSource`                                                                 |
+| Erro                        | `AppResult` com `DomainError`/`ValidationErrors` (regra de domínio) ou `ApplicationError` (falha de infra), todos `BaseError`; nunca `throw` |
+| ViewModel                   | `<Contexto>ViewModel`                                                                                                                        |
+| UiState                     | `<Contexto>UiState`                                                                                                                          |
+| Composable (tela)           | `<Contexto>Screen`                                                                                                                           |
+| Composable (componente)     | `<Contexto>` ou nome descritivo sem sufixo                                                                                                   |
+| Arquivo de teste            | `<ArquivoProducao>Test.kt` (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`)                                                                |
 
 ---
 
 ## Skills de IA
 
-Fornecidas pelo plugin `fst` (marketplace `skills`, repo [Franco904/skills](https://github.com/Franco904/skills)).
+Fornecidas pelo plugin `fst` (marketplace `skills`,
+repo [Franco904/skills](https://github.com/Franco904/skills)).
 Comandos com prefixo `/fst:` (ex.: `/fst:grill-me`, `/fst:tdd`, `/fst:pr`). Instalação e contrato com o
 projeto: README do repo.
 
@@ -178,8 +188,9 @@ projeto: README do repo.
 ```bash
 make run                                                  # build + instala o APK debug (flavor dev) e abre o app
 make hooks                                                # ativa o hook de pre-commit versionado (.githooks/)
-make format                                               # formata o diff da branch: layout (IDE) + higiene (ktlint)
-make lint                                                 # verifica a higiene (spotlessCheck) no diff da branch
+make format                                               # formata o diff da branch: quebra de linha (IDE) + ktlint (higiene, indentação, espaçamento)
+make format FORMAT_IDE=off                                # idem, sem a IDE (é o que o CI roda)
+make lint                                                 # verifica o ktlint (spotlessCheck) no diff da branch
 make test                                                 # testes unitários (JUnit 5, sem device)
 ./gradlew :app:testDevDebugUnitTest --tests "*.NomeTest"  # teste unitário específico
 make test-instrumented                                    # testes instrumentados (requer device)

@@ -9,7 +9,8 @@ plugins {
     alias(libs.plugins.spotless)
 }
 
-// Higiene de código (imports, espaços, ponto-e-vírgula): o layout é da IDE (scripts/format/format.sh).
+// ktlint: higiene (imports, espaços, ponto-e-vírgula), indentação e espaçamento. A quebra de linha
+// é da IDE (scripts/format/format.sh) e não passa pelo Spotless.
 // Restrito ao que mudou desde o ref-base da branch (scripts/format/ratchet-base.sh); -PratchetFrom
 // sobrescreve. O ratchet só é resolvido quando uma task do Spotless foi pedida, para que
 // sync da IDE, run e test não dependam do estado do git.
