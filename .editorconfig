@@ -14,8 +14,9 @@ indent_style = space
 indent_size = 4
 max_line_length = 100
 
-# Layout (indentação e quebra em 100 colunas) é da IDE (scripts/format/format.sh);
-# o ktlint aplica só a higiene abaixo.
+# Layout: a IDE (scripts/format/format.sh) cuida da quebra de linha e das 100 colunas, e só roda
+# localmente. O ktlint roda também no CI e cobre higiene, indentação e espaçamento, que a IDE e o
+# ktlint formatam igual (0 divergências na base). Quebra de linha NÃO é verificada no CI.
 # Chamada não quebra argumentos sozinha (argumento único nunca vira `(\n arg\n)`); quebras manuais ficam
 ij_kotlin_call_parameters_wrap = off
 ktlint_code_style = intellij_idea
@@ -32,3 +33,35 @@ ktlint_standard_no-blank-line-before-rbrace = enabled
 ktlint_standard_comment-spacing = enabled
 ktlint_standard_no-semi = enabled
 ktlint_standard_no-trailing-spaces = enabled
+
+# Indentação e espaçamento (allowlist; todas com 0 violações na base)
+ktlint_standard_indent = enabled
+ktlint_standard_no-multi-spaces = enabled
+ktlint_standard_annotation-spacing = enabled
+ktlint_standard_colon-spacing = enabled
+ktlint_standard_comma-spacing = enabled
+ktlint_standard_curly-spacing = enabled
+ktlint_standard_dot-spacing = enabled
+ktlint_standard_double-colon-spacing = enabled
+ktlint_standard_function-start-of-body-spacing = enabled
+ktlint_standard_function-type-reference-spacing = enabled
+ktlint_standard_fun-keyword-spacing = enabled
+ktlint_standard_keyword-spacing = enabled
+ktlint_standard_modifier-list-spacing = enabled
+ktlint_standard_nullable-type-spacing = enabled
+ktlint_standard_paren-spacing = enabled
+ktlint_standard_range-spacing = enabled
+ktlint_standard_spacing-around-angle-brackets = enabled
+ktlint_standard_spacing-between-declarations-with-annotations = enabled
+ktlint_standard_spacing-between-declarations-with-comments = enabled
+ktlint_standard_spacing-between-function-name-and-opening-parenthesis = enabled
+ktlint_standard_string-template = enabled
+ktlint_standard_type-argument-list-spacing = enabled
+ktlint_standard_type-parameter-list-spacing = enabled
+ktlint_standard_unary-op-spacing = enabled
+ktlint_standard_operator-spacing = enabled
+ktlint_standard_no-empty-first-line-in-class-body = enabled
+ktlint_standard_no-empty-first-line-in-method-block = enabled
+ktlint_standard_no-line-break-after-else = enabled
+ktlint_standard_no-line-break-before-assignment = enabled
+ktlint_standard_no-blank-lines-in-chained-method-calls = enabled
