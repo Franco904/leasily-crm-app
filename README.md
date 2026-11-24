@@ -37,6 +37,7 @@ ubíqua e o mapa dos contextos delimitados do domínio.
 2. Abra no Android Studio e instancie um emulador de dispositivo Android
 3. Rode no terminal, na raiz do repositório: `make run`. O .apk da branch default (`main`) será
    gerado e instalado no dispositivo para uso
+4. Para começar a commitar, ative o hook de pre-commit: `make hooks`. Ele formata os `.kt` staged
 
 ---
 
@@ -176,6 +177,9 @@ projeto: README do repo.
 
 ```bash
 make run                                                  # build + instala o APK debug (flavor dev) e abre o app
+make hooks                                                # ativa o hook de pre-commit versionado (.githooks/)
+make format                                               # formata o diff da branch: layout (IDE) + higiene (ktlint)
+make lint                                                 # verifica a higiene (spotlessCheck) no diff da branch
 make test                                                 # testes unitários (JUnit 5, sem device)
 ./gradlew :app:testDevDebugUnitTest --tests "*.NomeTest"  # teste unitário específico
 make test-instrumented                                    # testes instrumentados (requer device)

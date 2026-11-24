@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Formata os .kt staged (layout pela IDE, higiene pelo ktlint) e re-stageia.
+# - arquivo staged sem alteração unstaged: formata e re-stageia;
+# - arquivo com staging parcial: aborta o commit listando os arquivos;
+# - sem Android Studio: aplica só a higiene (ktlint) e avisa.
+# Mudo no caminho feliz; o log do format.sh fica em .git/pre-commit-format.log.
+set -uo pipefail
+
+root="$(git rev-parse --show-toplevel)"
+cd "$root"
+log="$(git rev-parse --git-dir)/pre-commit-format.log"
+
+files=()
+while IFS= read -r file; do
+    files+=("$file")
+done < <(git diff --cached --name-only --diff-filter=ACMR -- ':(glob)app/src/**/*.kt')
+
+if [ "${#files[@]}" -eq 0 ]; then
+    exit 0
+fi
+
+partial=()
+while IFS= read -r file; do
+    partial+=("$file")
+done < <(git diff --name-only -- "${files[@]}")
+
+if [ "${#partial[@]}" -gt 0 ]; then
+    echo "pre-commit: staging parcial em arquivos .kt; faça stage do arquivo inteiro ou stash das alterações:" >&2
+    printf '  %s\n' "${partial[@]}" >&2
+    exit 1
+fi
+
+scripts/format/format-pipeline.sh "${files[@]}" > "$log" 2>&1
+status=$?
+if [ "$status" -ne 0 ] && [ "$status" -ne 3 ]; then
+    echo "pre-commit: a formatação falhou; log em $log" >&2
+    tail -n 20 "$log" >&2
+    exit 1
+fi
+
+git add -- "${files[@]}"
+
+if [ "$status" -eq 3 ]; then
+    echo "pre-commit: Android Studio não encontrado (STUDIO_BIN); só a higiene foi aplicada, o layout não" >&2
+fi
