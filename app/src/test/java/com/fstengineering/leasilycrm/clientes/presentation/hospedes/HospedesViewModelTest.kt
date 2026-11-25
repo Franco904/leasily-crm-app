@@ -36,12 +36,6 @@ class HospedesViewModelTest {
     private val clientesLocalStorageMock: ClientesLocalStorage =
         mockk(relaxUnitFun = true)
 
-    private fun createSut() = HospedesViewModel(
-        clientesReadDataSource = clientesReadDataSourceMock,
-        clienteWriteDataSource = clienteWriteDataSourceMock,
-        clientesLocalStorage = clientesLocalStorageMock,
-    )
-
     @BeforeEach
     fun setUp() {
         coEvery { clientesLocalStorageMock.getHospedesOrderTypeId() } returns
@@ -191,5 +185,11 @@ class HospedesViewModelTest {
         hospedesCount = null,
         hasUnfinishedStay = true,
         currentStayId = faker.random.nextLong(bound = 9999),
+    )
+
+    private fun createSut() = HospedesViewModel(
+        clientesReadDataSource = clientesReadDataSourceMock,
+        clienteWriteDataSource = clienteWriteDataSourceMock,
+        clientesLocalStorage = clientesLocalStorageMock,
     )
 }
