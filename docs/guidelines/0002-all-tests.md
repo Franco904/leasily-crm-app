@@ -20,6 +20,9 @@ Aplica-se a todos os níveis de teste neste projeto: unitário (`app/src/test/`)
   com espaço em `app/src/androidTest/` mesmo que o teste envolva Compose.
 - Basear-se em CAs da especificação quando fornecidos.
 - **Proibido mencionar nomes de tipos ou valores de implementação nas descrições** — não citar enums internos, estados internos ou nomes de classes de implementação. Use o termo de negócio.
+  O teste automatizado barra o que tem forma de código (`.`, `(`, `)`, `=`, `_` e maiúscula no meio
+  da palavra, como `estadiaDao.upsert` ou `OverbookingDetected`); o resto, como `Loading`, fica com
+  o reviewer.
 
 | Errado                                           | Correto                                                                      |
 |--------------------------------------------------|------------------------------------------------------------------------------|
@@ -50,6 +53,8 @@ Helpers ficam por último: quem abre o arquivo lê primeiro o contrato testado.
 - Uma classe de teste por arquivo, nomeada como o arquivo de produção sufixado com `Test`
   (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`), no **mesmo pacote** dele: o teste de
   `.../presentation/viewModels/FooViewModel.kt` mora em `.../presentation/viewModels/`.
+  Os testes de arquitetura (pacote `architecture`) não têm SUT em `main` e ficam fora desse
+  espelhamento.
 
 ## 2.1 Valores de entrada
 
@@ -90,7 +95,11 @@ fun `Deve persistir Estadia quando dados são válidos`() = runTest {
 Sinais de alerta:
 - Mockando colaboradores internos da mesma camada
 - Testando métodos privados
-- Verificando contagem/ordem de chamadas sem valor de negócio
+- Verificando contagem/ordem de chamadas sem valor de negócio: `atLeast`, `atMost`, `verifyOrder`
+  e `verifySequence` (e os `coVerify*`) não existem aqui; use `exactly = N` ou verifique o estado
+  observável
+- Reflection (`java.lang.reflect`, `kotlin.reflect.full`/`jvm`, `getDeclared*`, `setAccessible`):
+  teste pela interface pública
 - Teste quebra ao refatorar sem o comportamento ter mudado
 - Nome do teste descreve *como* em vez de *o quê*
 
