@@ -20,9 +20,6 @@ Aplica-se a todos os níveis de teste neste projeto: unitário (`app/src/test/`)
   com espaço em `app/src/androidTest/` mesmo que o teste envolva Compose.
 - Basear-se em CAs da especificação quando fornecidos.
 - **Proibido mencionar nomes de tipos ou valores de implementação nas descrições** — não citar enums internos, estados internos ou nomes de classes de implementação. Use o termo de negócio.
-  O teste automatizado barra o que tem forma de código (`.`, `(`, `)`, `=`, `_` e maiúscula no meio
-  da palavra, como `estadiaDao.upsert` ou `OverbookingDetected`); o resto, como `Loading`, fica com
-  o reviewer.
 
 | Errado                                           | Correto                                                                      |
 |--------------------------------------------------|------------------------------------------------------------------------------|
@@ -98,7 +95,7 @@ Sinais de alerta:
 - Verificando contagem/ordem de chamadas sem valor de negócio: `atLeast`, `atMost`, `verifyOrder`
   e `verifySequence` (e os `coVerify*`) não existem aqui; use `exactly = N` ou verifique o estado
   observável
-- Reflection (`java.lang.reflect`, `kotlin.reflect.full`/`jvm`, `getDeclared*`, `setAccessible`):
+- Não use Reflection (`java.lang.reflect`, `kotlin.reflect.full`/`jvm`, `getDeclared*`, `setAccessible`):
   teste pela interface pública
 - Teste quebra ao refatorar sem o comportamento ter mudado
 - Nome do teste descreve *como* em vez de *o quê*
