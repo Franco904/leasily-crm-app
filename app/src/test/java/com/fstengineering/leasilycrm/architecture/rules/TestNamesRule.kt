@@ -14,12 +14,12 @@ object TestNamesRule {
         .sorted()
 
     private fun violationsOf(function: KoFunctionDeclaration): List<String> {
-        val path = function.containingFile.path
-        val file = function.containingFile.nameWithExtension
+        val source = function.containingFile
+        val file = source.nameWithExtension
         val name = function.name
         return when {
-            "/src/test/" in path -> unitViolations(file, name)
-            "/src/androidTest/" in path -> instrumentedViolations(file, name)
+            TestSources.isUnit(source) -> unitViolations(file, name)
+            TestSources.isInstrumented(source) -> instrumentedViolations(file, name)
             else -> emptyList()
         }
     }
