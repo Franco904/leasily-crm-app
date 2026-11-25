@@ -12,6 +12,9 @@ object TestSources {
 
     fun isTest(file: KoFileDeclaration) = isUnit(file) || isInstrumented(file)
 
+    fun hasTests(file: KoFileDeclaration) =
+        file.functions().any { it.hasAnnotationWithName("Test") }
+
     /** Testes de arquitetura não têm SUT em `main`: ficam fora das regras de teste de unidade. */
     fun isArchitecture(file: KoFileDeclaration): Boolean {
         val pkg = file.packagee?.name.orEmpty()

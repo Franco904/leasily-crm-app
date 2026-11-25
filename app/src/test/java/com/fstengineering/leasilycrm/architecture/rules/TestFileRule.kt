@@ -11,7 +11,7 @@ object TestFileRule {
             .toSet()
 
         return scope.files
-            .filter { TestSources.isTest(it) && hasTests(it) && !TestSources.isArchitecture(it) }
+            .filter { TestSources.isTest(it) && TestSources.hasTests(it) && !TestSources.isArchitecture(it) }
             .flatMap { violationsOf(it, productionFiles) }
             .sorted()
     }
@@ -36,7 +36,4 @@ object TestFileRule {
             else -> emptyList()
         }
     }
-
-    private fun hasTests(file: KoFileDeclaration) =
-        file.functions().any { it.hasAnnotationWithName("Test") }
 }
