@@ -4,12 +4,12 @@ import com.lemonappdev.konsist.api.container.KoScope
 import com.lemonappdev.konsist.api.declaration.KoFunctionDeclaration
 
 object TestNamesRule {
-    private val unitTemplate = Regex("Deve .+ quando .+")
+    private val unitTemplate = Regex("""Deve \S.* quando \S.*""")
     private val instrumentedTemplate = Regex("deve[A-Z]\\w*Quando[A-Z]\\w*")
     private val codeInDescription = Regex("[._=()]|[a-zà-ú][A-Z]")
 
     fun violations(scope: KoScope): List<String> = scope.functions()
-        .filter { it.hasAnnotationWithName("Test") }
+        .filter { TestSources.isTestFunction(it) }
         .flatMap { violationsOf(it) }
         .sorted()
 

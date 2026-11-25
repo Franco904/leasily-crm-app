@@ -107,6 +107,36 @@ class TestNamesRuleTest {
         }
 
         @Test
+        fun `Deve reportar o teste quando ele é parametrizado ou repetido e o nome foge do template`(
+            @TempDir dir: File,
+        ) {
+            File(dir, "src/test/Planted.kt").also { it.parentFile.mkdirs() }.writeText(
+                "package p\n\nclass Planted {\n" +
+                    "    @org.junit.jupiter.params.ParameterizedTest\n    fun `a`() {}\n" +
+                    "    @org.junit.jupiter.api.RepeatedTest(2)\n    fun `b`() {}\n" +
+                    "    @org.junit.jupiter.api.TestFactory\n    fun `c`() {}\n" +
+                    "    @org.junit.jupiter.api.TestTemplate\n    fun `d`() {}\n}\n",
+            )
+
+            val result = TestNamesRule.violations(scopeOf(dir))
+
+            result shouldBeEqualTo listOf("a", "b", "c", "d").map {
+                "Planted.kt: `$it` foge do template `Deve [resultado] quando [ação]` de test/"
+            }
+        }
+
+        @Test
+        fun `Deve reportar o teste quando o resultado ou a condição são só espaços`(@TempDir dir: File) {
+            plantUnitTests(dir, "Deve   quando x", "Deve x quando   ")
+
+            val result = TestNamesRule.violations(scopeOf(dir))
+
+            result shouldBeEqualTo listOf("Deve   quando x", "Deve x quando   ").sorted().map {
+                "Planted.kt: `$it` foge do template `Deve [resultado] quando [ação]` de test/"
+            }
+        }
+
+        @Test
         fun `Deve ignorar a função quando ela não é um teste`(@TempDir dir: File) {
             File(dir, "src/test/Planted.kt").also { it.parentFile.mkdirs() }.writeText(
                 "package p\n\nclass Planted {\n    fun `nome livre`() {}\n}\n",

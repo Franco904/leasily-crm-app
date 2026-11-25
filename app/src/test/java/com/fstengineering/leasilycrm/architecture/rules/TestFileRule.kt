@@ -30,6 +30,9 @@ object TestFileRule {
             file.classes(includeNested = false).none { it.name == file.name } ->
                 listOf("$name: não declara a classe `${file.name}`")
 
+            file.classes(includeNested = false).count { TestSources.hasTests(it) } > 1 ->
+                listOf("$name: declara mais de uma classe de teste")
+
             pkg to subject !in productionFiles ->
                 listOf("$name: não existe `$subject.kt` em main no pacote `$pkg`")
 

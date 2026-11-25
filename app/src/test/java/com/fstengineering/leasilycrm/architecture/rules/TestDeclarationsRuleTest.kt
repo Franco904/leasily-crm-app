@@ -293,15 +293,17 @@ class TestDeclarationsRuleTest {
         }
 
         @Test
-        fun `Deve reportar o teste quando a instância do SUT não se chama sut`(@TempDir dir: File) {
+        fun `Deve reportar o teste quando a instância criada pelo helper do SUT não se chama sut`(
+            @TempDir dir: File,
+        ) {
             plant(
                 dir,
                 """
                 class FooTest {
                     @org.junit.jupiter.api.Test
                     fun `Deve fazer quando puder`() {
-                        val subject = Foo(1)
                         val other = createSut()
+                        val sut = createSut()
                     }
                 }
                 """.trimIndent(),
@@ -311,12 +313,11 @@ class TestDeclarationsRuleTest {
 
             result shouldBeEqualTo listOf(
                 "FooTest.kt: `other` é a instância do SUT e deve se chamar `sut`",
-                "FooTest.kt: `subject` é a instância do SUT e deve se chamar `sut`",
             )
         }
 
         @Test
-        fun `Deve aceitar o teste quando o sut é criado por construtor ou pelo helper`(
+        fun `Deve aceitar o teste quando outras instâncias do tipo testado são montagem do cenário`(
             @TempDir dir: File,
         ) {
             plant(
@@ -327,9 +328,91 @@ class TestDeclarationsRuleTest {
 
                     @org.junit.jupiter.api.Test
                     fun `Deve fazer quando puder`() {
-                        val sut = createSut()
+                        val expected = Foo(2)
                         val outra = FooBar(1)
                     }
+                }
+                """.trimIndent(),
+            )
+
+            val result = TestDeclarationsRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
+        fun `Deve aceitar o teste quando a preparação de classe vem antes dos testes`(@TempDir dir: File) {
+            plant(
+                dir,
+                """
+                class FooTest {
+                    @org.junit.jupiter.api.BeforeAll
+                    fun prepare() {}
+
+                    @org.junit.jupiter.api.AfterAll
+                    fun release() {}
+
+                    @org.junit.BeforeClass
+                    fun prepareClass() {}
+
+                    @org.junit.AfterClass
+                    fun releaseClass() {}
+
+                    @org.junit.jupiter.api.Test
+                    fun `Deve fazer quando puder`() {}
+                }
+                """.trimIndent(),
+            )
+
+            val result = TestDeclarationsRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
+        fun `Deve aceitar o teste quando o parametrizado vem junto dos testes`(@TempDir dir: File) {
+            plant(
+                dir,
+                """
+                class FooTest {
+                    @org.junit.jupiter.params.ParameterizedTest
+                    fun a() {}
+
+                    @org.junit.jupiter.api.RepeatedTest(2)
+                    fun b() {}
+
+                    @org.junit.jupiter.api.TestFactory
+                    fun c() {}
+
+                    @org.junit.jupiter.api.TestTemplate
+                    fun d() {}
+
+                    @org.junit.jupiter.api.Test
+                    fun `Deve fazer quando puder`() {}
+
+                    private fun helper() {}
+                }
+                """.trimIndent(),
+            )
+
+            val result = TestDeclarationsRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
+        fun `Deve classificar como auxiliar quando o inicializador só contém mockk dentro de outra chamada`(
+            @TempDir dir: File,
+        ) {
+            plant(
+                dir,
+                """
+                class FooTest {
+                    private lateinit var sut: Foo
+                    private val items = listOf(mockk<Dependency>())
+
+                    @org.junit.jupiter.api.Test
+                    fun `Deve fazer quando puder`() {}
                 }
                 """.trimIndent(),
             )

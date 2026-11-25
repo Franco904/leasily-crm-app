@@ -9,8 +9,12 @@ import com.lemonappdev.konsist.api.declaration.KoPropertyDeclaration
 import com.lemonappdev.konsist.api.provider.KoNameProvider
 
 object TestDeclarationsRule {
-    private val mockCreation = Regex("""\bmockk\s*[(<]""")
+    private val lifecycleAnnotations = listOf(
+        "BeforeEach", "AfterEach", "BeforeAll", "AfterAll", "Before", "After", "BeforeClass", "AfterClass",
+    )
+    private val mockCreation = Regex("""=\s*mockk\s*[(<]""")
     private val mockVariable = Regex("""\b(?:val|var)\s+(\w+)\s*(?::[^=\n]+)?=\s*mockk\s*[(<]""")
+    private val sutCreation = Regex("""\b(?:val|var)\s+(\w+)\s*(?::[^=\n]+)?=\s*createSut\(""")
 
     fun violations(scope: KoScope): List<String> = scope.files
         .filter { TestSources.isTest(it) && TestSources.hasTests(it) && !TestSources.isArchitecture(it) }
@@ -43,17 +47,13 @@ object TestDeclarationsRule {
             .map { "${file.nameWithExtension}: `$it` é um mock e deve terminar em `Mock`" }
             .toList()
 
-    private fun sutNameViolations(file: KoFileDeclaration): List<String> {
-        val subject = file.name.removeSuffix("Test")
-        val sutVariable =
-            Regex("""\b(?:val|var)\s+(\w+)\s*(?::[^=\n]+)?=\s*(?:${Regex.escape(subject)}|createSut)\(""")
-        return sutVariable.findAll(file.text)
+    private fun sutNameViolations(file: KoFileDeclaration): List<String> =
+        sutCreation.findAll(file.text)
             .map { it.groupValues[1] }
             .filterNot { it == "sut" }
             .distinct()
             .map { "${file.nameWithExtension}: `$it` é a instância do SUT e deve se chamar `sut`" }
             .toList()
-    }
 
     private fun categoryOf(declaration: KoBaseDeclaration): Category? = when (declaration) {
         is KoPropertyDeclaration -> when {
@@ -63,8 +63,8 @@ object TestDeclarationsRule {
         }
 
         is KoFunctionDeclaration -> when {
-            declaration.hasAnnotationWithName("Test") -> Category.TESTS
-            LIFECYCLE.any { declaration.hasAnnotationWithName(it) } -> Category.LIFECYCLE
+            TestSources.isTestFunction(declaration) -> Category.TESTS
+            lifecycleAnnotations.any { declaration.hasAnnotationWithName(it) } -> Category.LIFECYCLE
             else -> Category.HELPERS
         }
 
@@ -74,8 +74,6 @@ object TestDeclarationsRule {
         is KoNameProvider -> Category.HELPERS
         else -> null
     }
-
-    private val LIFECYCLE = listOf("BeforeEach", "AfterEach", "Before", "After")
 
     private enum class Category(val label: String) {
         MOCKS("mocks"),

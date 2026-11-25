@@ -110,6 +110,36 @@ class TestFileRuleTest {
         }
 
         @Test
+        fun `Deve reportar o teste quando o arquivo declara mais de uma classe de teste`(
+            @TempDir dir: File,
+        ) {
+            plant(dir, "main", "a.b", "Foo", "class Foo")
+            plant(
+                dir,
+                "test",
+                "a.b",
+                "FooTest",
+                "class FooTest { $TEST }\nclass OutraTest { $TEST }",
+            )
+
+            val result = TestFileRule.violations(scopeOf(dir))
+
+            result shouldBeEqualTo listOf("FooTest.kt: declara mais de uma classe de teste")
+        }
+
+        @Test
+        fun `Deve aceitar o teste quando o arquivo tem uma classe de teste e uma auxiliar`(
+            @TempDir dir: File,
+        ) {
+            plant(dir, "main", "a.b", "Foo", "class Foo")
+            plant(dir, "test", "a.b", "FooTest", "class FooTest { $TEST }\nclass Helper")
+
+            val result = TestFileRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
         fun `Deve reportar o teste instrumentado quando não existe arquivo de produção correspondente`(
             @TempDir dir: File,
         ) {

@@ -142,9 +142,7 @@ class TestApisRuleTest {
         }
 
         @Test
-        fun `Deve ignorar o arquivo quando ele está no pacote de testes de arquitetura`(
-            @TempDir dir: File,
-        ) {
+        fun `Deve reportar o teste quando ele está no pacote de testes de arquitetura`(@TempDir dir: File) {
             plant(
                 dir,
                 "src/test/Planted.kt",
@@ -154,7 +152,40 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
+            result shouldBeEqualTo listOf("Planted.kt: `verifyOrder` é proibido em testes")
+        }
+
+        @Test
+        fun `Deve ignorar a API quando ela só aparece em comentário ou texto`(@TempDir dir: File) {
+            plant(
+                dir,
+                "src/test/Planted.kt",
+                "// verifyOrder foi removido\n" +
+                    "/* mockkStatic\n   verifySequence */\n" +
+                    "/** atLeast = 1 */\n" +
+                    "class Planted {\n" +
+                    "    val a = \"mockkObject\"\n" +
+                    "    val b = \"\"\"\n        import java.lang.reflect.Field\n        verifyOrder { }\n    \"\"\"\n" +
+                    "    val c = \"aspas \\\" escapadas mockkStatic\"\n" +
+                    "}",
+            )
+
+            val result = TestApisRule.violations(scopeOf(dir))
+
             result.shouldBeEmpty()
+        }
+
+        @Test
+        fun `Deve reportar a API quando ela aparece depois de um texto na mesma linha`(@TempDir dir: File) {
+            plant(
+                dir,
+                "src/test/Planted.kt",
+                "class Planted { val a = \"texto\"; fun f() = verifyOrder { } }",
+            )
+
+            val result = TestApisRule.violations(scopeOf(dir))
+
+            result shouldBeEqualTo listOf("Planted.kt: `verifyOrder` é proibido em testes")
         }
 
         @Test
