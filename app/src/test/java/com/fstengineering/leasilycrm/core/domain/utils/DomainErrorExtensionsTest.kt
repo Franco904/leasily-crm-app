@@ -19,7 +19,7 @@ class DomainErrorExtensionsTest {
         }
 
         @Test
-        fun `Deve devolver a lista de violações quando é um ValidationErrors`() {
+        fun `Deve devolver a lista de violações quando são erros de validação acumulados`() {
             val violations = persistentListOf<DomainError>(
                 DomainError.Name.Required,
                 DomainError.Email.Invalid,

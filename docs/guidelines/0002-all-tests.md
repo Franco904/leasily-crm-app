@@ -47,9 +47,17 @@ Seguir esta ordem obrigatória nas declarações:
 O mecanismo de agrupamento varia: `@Nested` (JUnit 5 — unit/ViewModel) ou comentário de bloco (JUnit 4 — androidTest).
 Helpers ficam por último: quem abre o arquivo lê primeiro o contrato testado.
 
+- **Cada teste roda numa instância nova da classe** (JUnit 5 por método, JUnit 4 sempre): mocks e
+  SUT nascem novos a cada teste, sem estado compartilhado entre eles. Por isso `@BeforeAll`,
+  `@AfterAll`, `@BeforeClass`, `@AfterClass`, `@ClassRule` e `@TestInstance` não existem aqui, e o
+  mock é `val` inicializado na declaração (`private val xMock: X = mockk(relaxUnitFun = true)`),
+  nunca `lateinit var` ou `var` atribuído no `setUp`. `setUp` fica para o que depende de contexto
+  criado depois da construção da classe (ex.: o banco do `IntegrationTest`).
 - Uma classe de teste por arquivo, nomeada como o arquivo de produção sufixado com `Test`
   (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`), no **mesmo pacote** dele: o teste de
   `.../presentation/viewModels/FooViewModel.kt` mora em `.../presentation/viewModels/`.
+  Os testes de arquitetura (pacote `architecture`) não têm SUT em `main` e ficam fora desse
+  espelhamento.
 
 ## 2.1 Valores de entrada
 
@@ -90,7 +98,11 @@ fun `Deve persistir Estadia quando dados são válidos`() = runTest {
 Sinais de alerta:
 - Mockando colaboradores internos da mesma camada
 - Testando métodos privados
-- Verificando contagem/ordem de chamadas sem valor de negócio
+- Verificando contagem/ordem de chamadas sem valor de negócio: `atLeast`, `atMost`, `verifyOrder`
+  e `verifySequence` (e os `coVerify*`) não existem aqui; use `exactly = N` ou verifique o estado
+  observável
+- Não use Reflection (`java.lang.reflect`, `kotlin.reflect.full`/`jvm`, `getDeclared*`, `setAccessible`):
+  teste pela interface pública
 - Teste quebra ao refatorar sem o comportamento ter mudado
 - Nome do teste descreve *como* em vez de *o quê*
 

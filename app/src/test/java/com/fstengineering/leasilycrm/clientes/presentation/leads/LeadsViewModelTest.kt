@@ -31,12 +31,6 @@ class LeadsViewModelTest {
     private val clientesLocalStorageMock: ClientesLocalStorage =
         mockk(relaxUnitFun = true)
 
-    private fun createSut() = LeadsViewModel(
-        clientesReadDataSource = clientesReadDataSourceMock,
-        clienteWriteDataSource = clienteWriteDataSourceMock,
-        clientesLocalStorage = clientesLocalStorageMock,
-    )
-
     @BeforeEach
     fun setUp() {
         coEvery { clientesLocalStorageMock.getLeadsOrderTypeId() } returns
@@ -171,5 +165,11 @@ class LeadsViewModelTest {
         hospedesCount = 2,
         hasUnfinishedStay = false,
         currentStayId = null,
+    )
+
+    private fun createSut() = LeadsViewModel(
+        clientesReadDataSource = clientesReadDataSourceMock,
+        clienteWriteDataSource = clienteWriteDataSourceMock,
+        clientesLocalStorage = clientesLocalStorageMock,
     )
 }
