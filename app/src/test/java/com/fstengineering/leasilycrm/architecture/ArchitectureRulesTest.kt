@@ -3,9 +3,13 @@ package com.fstengineering.leasilycrm.architecture
 import com.fstengineering.leasilycrm.architecture.parsers.ReadmeModules
 import com.fstengineering.leasilycrm.architecture.rules.ModulePackagesRule
 import com.fstengineering.leasilycrm.architecture.rules.TestApisRule
+import com.fstengineering.leasilycrm.architecture.rules.TestDaoRule
 import com.fstengineering.leasilycrm.architecture.rules.TestDeclarationsRule
 import com.fstengineering.leasilycrm.architecture.rules.TestFileRule
+import com.fstengineering.leasilycrm.architecture.rules.TestGroupsRule
 import com.fstengineering.leasilycrm.architecture.rules.TestNamesRule
+import com.fstengineering.leasilycrm.architecture.rules.UnitTestApisRule
+import com.fstengineering.leasilycrm.architecture.rules.UnitTestImportsRule
 import com.lemonappdev.konsist.api.Konsist
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -48,6 +52,34 @@ class ArchitectureRulesTest {
     @Test
     fun `Deve manter as declarações dos testes na ordem da diretriz quando o código de teste evolui`() {
         val result = TestDeclarationsRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve agrupar os testes por método público do SUT quando o código de teste evolui`() {
+        val result = TestGroupsRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve manter os testes de unidade nas fronteiras de imports quando o código de teste evolui`() {
+        val result = UnitTestImportsRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve manter os testes de unidade sem bloqueio de coroutine e com mocks relaxados só em Unit quando o código de teste evolui`() {
+        val result = UnitTestApisRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve manter os Daos fora dos testes de unidade quando o código de teste evolui`() {
+        val result = TestDaoRule.violations(Konsist.scopeFromProject())
 
         result shouldBeEqualTo emptyList()
     }

@@ -29,11 +29,11 @@ object TestNamesRule {
 
     private fun unitViolations(file: String, name: String): List<String> = when {
         !unitTemplate.matches(name) -> listOf(
-            "$file: `$name` foge do template `Deve [resultado] quando [ação]` de test/",
+            "$file: `$name` deve seguir o template `Deve [resultado] quando [ação]` de test/",
         )
 
         codeInDescription.containsMatchIn(name) -> listOf(
-            "$file: `$name` tem código na descrição",
+            "$file: `$name` não deve ter código na descrição",
         )
 
         else -> emptyList()
@@ -43,6 +43,6 @@ object TestNamesRule {
         if (instrumentedTemplate.matches(name)) {
             emptyList()
         } else {
-            listOf("$file: `$name` foge do template `deve<Resultado>Quando<Condição>` de androidTest/")
+            listOf("$file: `$name` deve seguir o template `deve<Resultado>Quando<Condição>` de androidTest/")
         }
 }

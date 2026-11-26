@@ -9,7 +9,7 @@ object TestSources {
     private const val ARCHITECTURE_PACKAGE = "com.fstengineering.leasilycrm.architecture"
 
     private val commentsAndLiterals = Regex(
-        """\"\"\"[\s\S]*?\"\"\"|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\])'|/\*[\s\S]*?\*/|//[^\n]*""",
+        """\"\"\"[\s\S]*?\"\"\"|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\])'|/\*[\s\S]*?\*/|//[^\n]*|`[^`\n]*`""",
     )
 
     private val testAnnotations =
@@ -29,12 +29,12 @@ object TestSources {
     fun hasTests(declaration: KoClassDeclaration) =
         declaration.functions().any { isTestFunction(it) }
 
-    /** Testes de arquitetura não têm SUT em `main`: só ficam fora do espelhamento com a produção. */
+    /** Testes de arquitetura não têm SUT em `main`: devem ficar fora só do espelhamento. */
     fun isArchitecture(file: KoFileDeclaration): Boolean {
         val pkg = file.packagee?.name.orEmpty()
         return pkg == ARCHITECTURE_PACKAGE || pkg.startsWith("$ARCHITECTURE_PACKAGE.")
     }
 
-    /** Só código: comentário e literal de texto não usam a API, apenas a citam. */
+    /** Só código: comentário, literal de texto e nome entre crases não usam a API, apenas a citam. */
     fun code(file: KoFileDeclaration) = commentsAndLiterals.replace(file.text, " ")
 }

@@ -5,16 +5,17 @@ import com.fstengineering.leasilycrm.imovelDashboard.application.models.dtos.Pro
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.ImovelDashboardProjection
 import com.fstengineering.leasilycrm.imovelDashboard.infra.projections.ProprietarioProjection
 import com.fstengineering.leasilycrm.testUtils.faker
+import org.amshove.kluent.invoking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
+import org.amshove.kluent.shouldThrow
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class InfraToReadModelTest {
     @Nested
-    @DisplayName("ImovelDashboardProjection.toReadModel")
+    @DisplayName("toReadModel")
     inner class ToReadModelTests {
         @Test
         fun `Deve manter o Proprietário quando o Proprietário está ativo`() {
@@ -41,7 +42,7 @@ class InfraToReadModelTest {
         fun `Deve lançar quando a relação do Proprietário não veio, pois é violação da chave estrangeira`() {
             val sut = createProjection(proprietario = null)
 
-            assertThrows<IllegalArgumentException> { sut.toReadModel() }
+            invoking { sut.toReadModel() } shouldThrow IllegalArgumentException::class
         }
     }
 

@@ -21,7 +21,7 @@ object TestApisRule {
             bannedApis
                 .flatMap { api -> api.findAll(TestSources.code(file)).map { it.value } }
                 .distinct()
-                .map { "${file.nameWithExtension}: `$it` é proibido em testes" }
+                .map { "${file.nameWithExtension}: teste não deve usar `$it`" }
         }
         .sorted()
 }

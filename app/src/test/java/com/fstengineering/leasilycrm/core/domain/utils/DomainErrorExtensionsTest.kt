@@ -1,11 +1,12 @@
 package com.fstengineering.leasilycrm.core.domain.utils
 
 import kotlinx.collections.immutable.persistentListOf
+import org.amshove.kluent.invoking
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldThrow
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class DomainErrorExtensionsTest {
     @Nested
@@ -33,7 +34,7 @@ class DomainErrorExtensionsTest {
         fun `Deve falhar quando o erro não é de domínio, pois a factory nunca o devolve`() {
             val sut: BaseError = ApplicationError.Unknown
 
-            assertThrows<IllegalStateException> { sut.toDomainErrors() }
+            invoking { sut.toDomainErrors() } shouldThrow IllegalStateException::class
         }
     }
 }

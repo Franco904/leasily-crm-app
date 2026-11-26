@@ -7,14 +7,15 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
+import org.amshove.kluent.invoking
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeTrue
+import org.amshove.kluent.shouldThrow
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.io.IOException
 import java.security.GeneralSecurityException
 import javax.crypto.AEADBadTagException
@@ -68,14 +69,16 @@ class BoundaryUtilsTest {
         fun `Deve propagar a exceção quando ela é fatal`() {
             val exception = GeneralSecurityException()
 
-            val thrown = assertThrows<GeneralSecurityException> { onDatabase { throw exception } }
+            val thrown = invoking { onDatabase { throw exception } } shouldThrow
+                GeneralSecurityException::class
 
-            thrown shouldBe exception
+            thrown.exception shouldBe exception
         }
 
         @Test
         fun `Deve propagar o cancelamento quando a coroutine é cancelada`() {
-            assertThrows<CancellationException> { onDatabase { throw CancellationException() } }
+            invoking { onDatabase { throw CancellationException() } } shouldThrow
+                CancellationException::class
         }
     }
 

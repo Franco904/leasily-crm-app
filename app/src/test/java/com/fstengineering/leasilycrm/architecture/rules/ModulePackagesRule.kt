@@ -17,9 +17,9 @@ object ModulePackagesRule {
             .toSet()
 
         val undocumented = (actualModules - documentedModules).sorted()
-            .map { "Pacote `$it` não consta na tabela de módulos do README" }
+            .map { "Pacote `$it` deve constar na tabela de módulos do README" }
         val withoutPackage = (documentedModules - actualModules).sorted()
-            .map { "Módulo `$it` da tabela do README não tem pacote" }
+            .map { "Módulo `$it` da tabela do README deve ter um pacote" }
 
         return undocumented + withoutPackage
     }

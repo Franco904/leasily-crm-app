@@ -7,7 +7,7 @@ object ReadmeModules {
     fun parse(readme: String): Set<String> {
         val lines = readme.lines()
         val start = lines.indexOfFirst { it.trim() == SECTION_HEADING }
-        check(start >= 0) { "README sem a seção '$SECTION_HEADING'" }
+        check(start >= 0) { "README deve ter a seção '$SECTION_HEADING'" }
 
         return lines
             .drop(start + 1)

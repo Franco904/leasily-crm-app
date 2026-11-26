@@ -31,13 +31,13 @@ object TestFileRule {
                 listOf("$name: o nome do arquivo de teste deve terminar em `Test`")
 
             file.classes(includeNested = false).none { it.name == file.name } ->
-                listOf("$name: não declara a classe `${file.name}`")
+                listOf("$name: o arquivo deve declarar a classe `${file.name}`")
 
             file.classes(includeNested = false).count { TestSources.hasTests(it) } > 1 ->
-                listOf("$name: declara mais de uma classe de teste")
+                listOf("$name: o arquivo deve declarar uma única classe de teste")
 
             pkg to subject !in productionFiles && !TestSources.isArchitecture(file) ->
-                listOf("$name: não existe `$subject.kt` em main no pacote `$pkg`")
+                listOf("$name: `$subject.kt` deve existir em main no pacote `$pkg`")
 
             else -> emptyList()
         }

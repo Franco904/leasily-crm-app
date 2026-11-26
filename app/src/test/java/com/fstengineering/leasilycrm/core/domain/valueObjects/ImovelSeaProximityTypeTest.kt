@@ -14,8 +14,8 @@ import java.math.BigDecimal
 
 class ImovelSeaProximityTypeTest {
     @Nested
-    @DisplayName("DistanceToSea.parse")
-    inner class DistanceToSeaParseTests {
+    @DisplayName("parse")
+    inner class ParseTests {
         @Test
         fun `Deve manter a distância informada quando ela não é negativa`() {
             val distance = AppDecimal(BigDecimal.valueOf(faker.random.nextLong(bound = 999999), 2))

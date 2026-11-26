@@ -33,7 +33,7 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Planted.kt: `Salva Estadia quando dados são válidos` foge do template " +
+                "Planted.kt: `Salva Estadia quando dados são válidos` deve seguir o template " +
                     "`Deve [resultado] quando [ação]` de test/",
             )
         }
@@ -45,7 +45,7 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Planted.kt: `Deve salvar Estadia` foge do template " +
+                "Planted.kt: `Deve salvar Estadia` deve seguir o template " +
                     "`Deve [resultado] quando [ação]` de test/",
             )
         }
@@ -60,7 +60,7 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Planted.kt: `deveSalvarQuandoValido` foge do template " +
+                "Planted.kt: `deveSalvarQuandoValido` deve seguir o template " +
                     "`Deve [resultado] quando [ação]` de test/",
             )
         }
@@ -78,10 +78,10 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Planted.kt: `Deve chamar dao.upsert quando salva` tem código na descrição",
-                "Planted.kt: `Deve devolver erros quando é um ValidationErrors` tem código na descrição",
-                "Planted.kt: `Deve somar(a) quando a = b` tem código na descrição",
-                "Planted.kt: `Deve usar snake_case quando salva` tem código na descrição",
+                "Planted.kt: `Deve chamar dao.upsert quando salva` não deve ter código na descrição",
+                "Planted.kt: `Deve devolver erros quando é um ValidationErrors` não deve ter código na descrição",
+                "Planted.kt: `Deve somar(a) quando a = b` não deve ter código na descrição",
+                "Planted.kt: `Deve usar snake_case quando salva` não deve ter código na descrição",
             )
         }
 
@@ -101,13 +101,13 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Planted.kt: `Deve salvar Estadia quando ` foge do template " +
+                "Planted.kt: `Deve salvar Estadia quando ` deve seguir o template " +
                     "`Deve [resultado] quando [ação]` de test/",
             )
         }
 
         @Test
-        fun `Deve reportar o teste quando ele é parametrizado ou repetido e o nome foge do template`(
+        fun `Deve reportar o teste quando ele é parametrizado ou repetido e o nome deve seguir o template`(
             @TempDir dir: File,
         ) {
             File(dir, "src/test/Planted.kt").also { it.parentFile.mkdirs() }.writeText(
@@ -121,7 +121,7 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf("a", "b", "c", "d").map {
-                "Planted.kt: `$it` foge do template `Deve [resultado] quando [ação]` de test/"
+                "Planted.kt: `$it` deve seguir o template `Deve [resultado] quando [ação]` de test/"
             }
         }
 
@@ -132,7 +132,7 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf("Deve   quando x", "Deve x quando   ").sorted().map {
-                "Planted.kt: `$it` foge do template `Deve [resultado] quando [ação]` de test/"
+                "Planted.kt: `$it` deve seguir o template `Deve [resultado] quando [ação]` de test/"
             }
         }
 
@@ -163,7 +163,7 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Planted.kt: `Deve salvar Estadia quando dados são válidos` foge do template " +
+                "Planted.kt: `Deve salvar Estadia quando dados são válidos` deve seguir o template " +
                     "`deve<Resultado>Quando<Condição>` de androidTest/",
             )
         }
@@ -175,7 +175,7 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Planted.kt: `deveSalvarEstadia` foge do template " +
+                "Planted.kt: `deveSalvarEstadia` deve seguir o template " +
                     "`deve<Resultado>Quando<Condição>` de androidTest/",
             )
         }
@@ -187,7 +187,7 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Planted.kt: `deveSalvarQuando` foge do template " +
+                "Planted.kt: `deveSalvarQuando` deve seguir o template " +
                     "`deve<Resultado>Quando<Condição>` de androidTest/",
             )
         }
@@ -201,7 +201,7 @@ class TestNamesRuleTest {
             val result = TestNamesRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Planted.kt: `devesalvarQuandoValido` foge do template " +
+                "Planted.kt: `devesalvarQuandoValido` deve seguir o template " +
                     "`deve<Resultado>Quando<Condição>` de androidTest/",
             )
         }

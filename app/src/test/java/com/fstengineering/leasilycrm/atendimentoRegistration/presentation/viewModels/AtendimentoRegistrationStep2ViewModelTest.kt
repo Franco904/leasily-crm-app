@@ -61,11 +61,7 @@ class AtendimentoRegistrationStep2ViewModelTest {
                         )
                 }
             }
-    }
 
-    @Nested
-    @DisplayName("init (carga inicial)")
-    inner class InitialLoadTests {
         @Test
         fun `Deve exibir Imóveis sem esperar a digitação quando a etapa é aberta`() = runTest {
             val sut = createSut()

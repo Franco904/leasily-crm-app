@@ -1,10 +1,11 @@
 package com.fstengineering.leasilycrm.architecture.parsers
 
+import org.amshove.kluent.invoking
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldThrow
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class ReadmeModulesTest {
     @Nested
@@ -66,7 +67,8 @@ class ReadmeModulesTest {
 
         @Test
         fun `Deve falhar quando o README não tem a seção de estrutura do projeto`() {
-            assertThrows<IllegalStateException> { ReadmeModules.parse("## Outra seção") }
+            invoking { ReadmeModules.parse("## Outra seção") } shouldThrow
+                IllegalStateException::class
         }
     }
 }
