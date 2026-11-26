@@ -47,6 +47,12 @@ Seguir esta ordem obrigatória nas declarações:
 O mecanismo de agrupamento varia: `@Nested` (JUnit 5 — unit/ViewModel) ou comentário de bloco (JUnit 4 — androidTest).
 Helpers ficam por último: quem abre o arquivo lê primeiro o contrato testado.
 
+- **Cada teste roda numa instância nova da classe** (JUnit 5 por método, JUnit 4 sempre): mocks e
+  SUT nascem novos a cada teste, sem estado compartilhado entre eles. Por isso `@BeforeAll`,
+  `@AfterAll`, `@BeforeClass`, `@AfterClass`, `@ClassRule` e `@TestInstance` não existem aqui, e o
+  mock é `val` inicializado na declaração (`private val xMock: X = mockk(relaxUnitFun = true)`),
+  nunca `lateinit var` ou `var` atribuído no `setUp`. `setUp` fica para o que depende de contexto
+  criado depois da construção da classe (ex.: o banco do `IntegrationTest`).
 - Uma classe de teste por arquivo, nomeada como o arquivo de produção sufixado com `Test`
   (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`), no **mesmo pacote** dele: o teste de
   `.../presentation/viewModels/FooViewModel.kt` mora em `.../presentation/viewModels/`.
