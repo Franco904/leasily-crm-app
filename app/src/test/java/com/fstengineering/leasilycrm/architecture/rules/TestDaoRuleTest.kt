@@ -20,7 +20,7 @@ class TestDaoRuleTest {
 
             val result = TestDaoRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: `Foo` é @Dao; só se testa em androidTest")
+            result shouldBeEqualTo listOf("FooTest.kt: `Foo` é @Dao e deve ser testado só em androidTest")
         }
 
         @Test
@@ -30,7 +30,7 @@ class TestDaoRuleTest {
 
             val result = TestDaoRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: `Foo` é @Dao; só se testa em androidTest")
+            result shouldBeEqualTo listOf("FooTest.kt: `Foo` é @Dao e deve ser testado só em androidTest")
         }
 
         @Test
@@ -62,7 +62,7 @@ class TestDaoRuleTest {
 
             val result = TestDaoRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: `Foo` é @Dao; só se testa em androidTest")
+            result shouldBeEqualTo listOf("FooTest.kt: `Foo` é @Dao e deve ser testado só em androidTest")
         }
 
         @Test
@@ -74,7 +74,7 @@ class TestDaoRuleTest {
 
             val result = TestDaoRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: `Foo` é @Dao; só se testa em androidTest")
+            result shouldBeEqualTo listOf("FooTest.kt: `Foo` é @Dao e deve ser testado só em androidTest")
         }
 
         @Test
@@ -106,8 +106,8 @@ class TestDaoRuleTest {
             val result = TestDaoRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "AlfaTest.kt: `Alfa` é @Dao; só se testa em androidTest",
-                "ZetaTest.kt: `Zeta` é @Dao; só se testa em androidTest",
+                "AlfaTest.kt: `Alfa` é @Dao e deve ser testado só em androidTest",
+                "ZetaTest.kt: `Zeta` é @Dao e deve ser testado só em androidTest",
             )
         }
     }

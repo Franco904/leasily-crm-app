@@ -24,17 +24,17 @@ object UnitTestApisRule {
             .joinToString("\n")
 
         val blocking = if (blockingCall.containsMatchIn(code)) {
-            listOf("$name: `runBlocking` é proibido em test/; use `runTest`")
+            listOf("$name: teste de unidade não deve usar `runBlocking`; use `runTest`")
         } else {
             emptyList()
         }
         val relaxedMocks = if (relaxedMock.containsMatchIn(code)) {
-            listOf("$name: `relaxed = true` é proibido; use `mockk(relaxUnitFun = true)`")
+            listOf("$name: mock não deve usar `relaxed = true`; use `mockk(relaxUnitFun = true)`")
         } else {
             emptyList()
         }
         val strictMocks = if (mockkCalls(code).any { RELAX_UNIT_FUN !in it }) {
-            listOf("$name: toda criação de mock leva `relaxUnitFun = true`")
+            listOf("$name: toda criação de mock deve levar `relaxUnitFun = true`")
         } else {
             emptyList()
         }

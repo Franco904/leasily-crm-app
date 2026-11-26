@@ -35,7 +35,7 @@ class TestFileRuleTest {
             val result = TestFileRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: não existe `Foo.kt` em main no pacote `a.b`",
+                "FooTest.kt: `Foo.kt` deve existir em main no pacote `a.b`",
             )
         }
 
@@ -49,7 +49,7 @@ class TestFileRuleTest {
             val result = TestFileRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: não existe `Foo.kt` em main no pacote `a.b`",
+                "FooTest.kt: `Foo.kt` deve existir em main no pacote `a.b`",
             )
         }
 
@@ -72,7 +72,7 @@ class TestFileRuleTest {
 
             val result = TestFileRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: não declara a classe `FooTest`")
+            result shouldBeEqualTo listOf("FooTest.kt: o arquivo deve declarar a classe `FooTest`")
         }
 
         @Test
@@ -107,8 +107,8 @@ class TestFileRuleTest {
             val result = TestFileRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "BarTest.kt: não declara a classe `BarTest`",
-                "BazTest.kt: declara mais de uma classe de teste",
+                "BarTest.kt: o arquivo deve declarar a classe `BarTest`",
+                "BazTest.kt: o arquivo deve declarar uma única classe de teste",
                 "FooSpec.kt: o nome do arquivo de teste deve terminar em `Test`",
             )
         }
@@ -122,7 +122,7 @@ class TestFileRuleTest {
             val result = TestFileRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: não existe `Foo.kt` em main no pacote `$ROOT.architectureX`",
+                "FooTest.kt: `Foo.kt` deve existir em main no pacote `$ROOT.architectureX`",
             )
         }
 
@@ -141,7 +141,7 @@ class TestFileRuleTest {
 
             val result = TestFileRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: declara mais de uma classe de teste")
+            result shouldBeEqualTo listOf("FooTest.kt: o arquivo deve declarar uma única classe de teste")
         }
 
         @Test
@@ -165,7 +165,7 @@ class TestFileRuleTest {
             val result = TestFileRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: não existe `Foo.kt` em main no pacote `a.b`",
+                "FooTest.kt: `Foo.kt` deve existir em main no pacote `a.b`",
             )
         }
 
@@ -178,7 +178,7 @@ class TestFileRuleTest {
 
             val result = TestFileRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: não declara a classe `FooTest`")
+            result shouldBeEqualTo listOf("FooTest.kt: o arquivo deve declarar a classe `FooTest`")
         }
 
         @Test
@@ -189,8 +189,8 @@ class TestFileRuleTest {
             val result = TestFileRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "AlfaTest.kt: não existe `Alfa.kt` em main no pacote `a.b`",
-                "ZetaTest.kt: não existe `Zeta.kt` em main no pacote `a.b`",
+                "AlfaTest.kt: `Alfa.kt` deve existir em main no pacote `a.b`",
+                "ZetaTest.kt: `Zeta.kt` deve existir em main no pacote `a.b`",
             )
         }
     }

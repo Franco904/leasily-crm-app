@@ -30,7 +30,7 @@ class ModulePackagesRuleTest {
 
             val result = ModulePackagesRule.violations(scope, documentedModules = setOf("core"))
 
-            result shouldBeEqualTo listOf("Pacote `inventado` não consta na tabela de módulos do README")
+            result shouldBeEqualTo listOf("Pacote `inventado` deve constar na tabela de módulos do README")
         }
 
         @Test
@@ -40,7 +40,7 @@ class ModulePackagesRuleTest {
             val result =
                 ModulePackagesRule.violations(scope, documentedModules = setOf("core", "fantasma"))
 
-            result shouldBeEqualTo listOf("Módulo `fantasma` da tabela do README não tem pacote")
+            result shouldBeEqualTo listOf("Módulo `fantasma` da tabela do README deve ter um pacote")
         }
 
         @Test
@@ -79,8 +79,8 @@ class ModulePackagesRuleTest {
             val result = ModulePackagesRule.violations(scope, documentedModules = emptySet())
 
             result shouldBeEqualTo listOf(
-                "Pacote `alfa` não consta na tabela de módulos do README",
-                "Pacote `zeta` não consta na tabela de módulos do README",
+                "Pacote `alfa` deve constar na tabela de módulos do README",
+                "Pacote `zeta` deve constar na tabela de módulos do README",
             )
         }
     }

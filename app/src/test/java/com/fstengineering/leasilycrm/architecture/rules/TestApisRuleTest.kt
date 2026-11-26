@@ -47,7 +47,7 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo apis.map { "$it.kt: `$it` é proibido em testes" }.sorted()
+            result shouldBeEqualTo apis.map { "$it.kt: teste não deve usar `$it`" }.sorted()
         }
 
         @Test
@@ -59,7 +59,7 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo apis.map { "$it.kt: `$it` é proibido em testes" }.sorted()
+            result shouldBeEqualTo apis.map { "$it.kt: teste não deve usar `$it`" }.sorted()
         }
 
         @Test
@@ -69,7 +69,7 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo apis.map { "$it.kt: `$it` é proibido em testes" }.sorted()
+            result shouldBeEqualTo apis.map { "$it.kt: teste não deve usar `$it`" }.sorted()
         }
 
         @Test
@@ -85,7 +85,7 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo annotations.map { "${it.drop(1)}.kt: `$it` é proibido em testes" }
+            result shouldBeEqualTo annotations.map { "${it.drop(1)}.kt: teste não deve usar `$it`" }
                 .sorted()
         }
 
@@ -129,7 +129,7 @@ class TestApisRuleTest {
             val result = TestApisRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo imports.mapIndexed { index, import ->
-                "Planted$index.kt: `$import` é proibido em testes"
+                "Planted$index.kt: teste não deve usar `$import`"
             }
         }
 
@@ -143,7 +143,7 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("Planted.kt: `getDeclaredField` é proibido em testes")
+            result shouldBeEqualTo listOf("Planted.kt: teste não deve usar `getDeclaredField`")
         }
 
         @Test
@@ -152,7 +152,7 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("Planted.kt: `setAccessible` é proibido em testes")
+            result shouldBeEqualTo listOf("Planted.kt: teste não deve usar `setAccessible`")
         }
 
         @Test
@@ -172,7 +172,7 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("Planted.kt: `verifyOrder` é proibido em testes")
+            result shouldBeEqualTo listOf("Planted.kt: teste não deve usar `verifyOrder`")
         }
 
         @Test
@@ -197,7 +197,7 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("Planted.kt: `verifyOrder` é proibido em testes")
+            result shouldBeEqualTo listOf("Planted.kt: teste não deve usar `verifyOrder`")
         }
 
         @Test
@@ -230,7 +230,7 @@ class TestApisRuleTest {
 
             val result = TestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("Planted.kt: `verifyOrder` é proibido em testes")
+            result shouldBeEqualTo listOf("Planted.kt: teste não deve usar `verifyOrder`")
         }
 
         @Test
@@ -241,8 +241,8 @@ class TestApisRuleTest {
             val result = TestApisRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "Alfa.kt: `verifySequence` é proibido em testes",
-                "Zeta.kt: `verifyOrder` é proibido em testes",
+                "Alfa.kt: teste não deve usar `verifySequence`",
+                "Zeta.kt: teste não deve usar `verifyOrder`",
             )
         }
     }

@@ -29,7 +29,7 @@ object TestSources {
     fun hasTests(declaration: KoClassDeclaration) =
         declaration.functions().any { isTestFunction(it) }
 
-    /** Testes de arquitetura não têm SUT em `main`: só ficam fora do espelhamento com a produção. */
+    /** Testes de arquitetura não têm SUT em `main`: devem ficar fora só do espelhamento. */
     fun isArchitecture(file: KoFileDeclaration): Boolean {
         val pkg = file.packagee?.name.orEmpty()
         return pkg == ARCHITECTURE_PACKAGE || pkg.startsWith("$ARCHITECTURE_PACKAGE.")

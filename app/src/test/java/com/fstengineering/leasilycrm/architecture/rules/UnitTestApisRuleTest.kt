@@ -65,7 +65,7 @@ class UnitTestApisRuleTest {
 
             val result = UnitTestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: toda criação de mock leva `relaxUnitFun = true`")
+            result shouldBeEqualTo listOf("FooTest.kt: toda criação de mock deve levar `relaxUnitFun = true`")
         }
 
         @Test
@@ -79,9 +79,9 @@ class UnitTestApisRuleTest {
             val result = UnitTestApisRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "BarTest.kt: toda criação de mock leva `relaxUnitFun = true`",
-                "BazTest.kt: toda criação de mock leva `relaxUnitFun = true`",
-                "FooTest.kt: toda criação de mock leva `relaxUnitFun = true`",
+                "BarTest.kt: toda criação de mock deve levar `relaxUnitFun = true`",
+                "BazTest.kt: toda criação de mock deve levar `relaxUnitFun = true`",
+                "FooTest.kt: toda criação de mock deve levar `relaxUnitFun = true`",
             )
         }
 
@@ -92,7 +92,7 @@ class UnitTestApisRuleTest {
             val result = UnitTestApisRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: `relaxed = true` é proibido; use `mockk(relaxUnitFun = true)`",
+                "FooTest.kt: mock não deve usar `relaxed = true`; use `mockk(relaxUnitFun = true)`",
             )
         }
 
@@ -102,7 +102,7 @@ class UnitTestApisRuleTest {
 
             val result = UnitTestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: `runBlocking` é proibido em test/; use `runTest`")
+            result shouldBeEqualTo listOf("FooTest.kt: teste de unidade não deve usar `runBlocking`; use `runTest`")
         }
 
         @Test
@@ -152,7 +152,7 @@ class UnitTestApisRuleTest {
 
             val result = UnitTestApisRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: `runBlocking` é proibido em test/; use `runTest`")
+            result shouldBeEqualTo listOf("FooTest.kt: teste de unidade não deve usar `runBlocking`; use `runTest`")
         }
 
         @Test
@@ -163,8 +163,8 @@ class UnitTestApisRuleTest {
             val result = UnitTestApisRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "AlfaTest.kt: `runBlocking` é proibido em test/; use `runTest`",
-                "ZetaTest.kt: `runBlocking` é proibido em test/; use `runTest`",
+                "AlfaTest.kt: teste de unidade não deve usar `runBlocking`; use `runTest`",
+                "ZetaTest.kt: teste de unidade não deve usar `runBlocking`; use `runTest`",
             )
         }
     }

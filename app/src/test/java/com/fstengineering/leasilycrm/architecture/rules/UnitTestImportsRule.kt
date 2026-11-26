@@ -29,14 +29,16 @@ object UnitTestImportsRule {
         val name = file.nameWithExtension
         return when {
             isDomainTest(file) && isDomainBanned(import) ->
-                "$name: teste de domínio não importa `$import` " +
+                "$name: teste de domínio não deve importar `$import` " +
                     "(android, androidx, mockk, infra, application)"
 
             import.startsWith("androidx.room") || import.substringAfterLast('.') == "AppDatabase" ->
-                "$name: `$import` é Room; teste de unidade não toca banco (só androidTest)"
+                "$name: teste de unidade não deve importar `$import` " +
+                    "(banco só em androidTest)"
 
             isAssertionOutsideKluent(import) ->
-                "$name: `$import` fora de JUnit 5 e kluent"
+                "$name: teste de unidade não deve importar `$import` " +
+                    "(só JUnit 5 e kluent)"
 
             else -> null
         }

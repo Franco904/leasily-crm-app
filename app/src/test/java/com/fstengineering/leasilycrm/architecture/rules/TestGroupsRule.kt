@@ -43,7 +43,7 @@ object TestGroupsRule {
             .mapNotNull { displayName(it) }
             .groupingBy { it }.eachCount()
             .filterValues { it > 1 }.keys
-            .map { "$name: há mais de um grupo `@Nested` para o método `$it`" }
+            .map { "$name: o método `$it` deve ter um único grupo `@Nested`" }
 
         return looseTests + groupViolations + duplicated
     }
@@ -56,21 +56,21 @@ object TestGroupsRule {
         val method = displayName(group)
         return when {
             group.classes(includeNested = true).any { TestSources.hasTests(it) } ->
-                listOf("$file: `${group.name}` aninha outra classe de teste")
+                listOf("$file: `${group.name}` não deve aninhar outra classe de teste")
 
             !group.hasAnnotationWithName("Nested") ->
                 if (TestSources.hasTests(group)) {
-                    listOf("$file: `${group.name}` tem testes e não é `@Nested`")
+                    listOf("$file: `${group.name}` tem testes e deve ser `@Nested`")
                 } else {
                     emptyList()
                 }
 
             method == null ->
-                listOf("$file: `${group.name}` não tem `@DisplayName` com o nome do método")
+                listOf("$file: `${group.name}` deve ter `@DisplayName` com o nome do método")
 
             method !in members ->
                 listOf(
-                    "$file: `@DisplayName(\"$method\")` não é método nem propriedade pública do SUT",
+                    "$file: `@DisplayName(\"$method\")` deve nomear um método ou propriedade pública do SUT",
                 )
 
             group.name != groupName(method) ->

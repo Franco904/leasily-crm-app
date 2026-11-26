@@ -95,8 +95,8 @@ class TestGroupsRuleTest {
             val result = TestGroupsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: `@DisplayName(\"interno\")` não é método nem propriedade pública do SUT",
-                "FooTest.kt: `@DisplayName(\"segredo\")` não é método nem propriedade pública do SUT",
+                "FooTest.kt: `@DisplayName(\"interno\")` deve nomear um método ou propriedade pública do SUT",
+                "FooTest.kt: `@DisplayName(\"segredo\")` deve nomear um método ou propriedade pública do SUT",
             )
         }
 
@@ -129,7 +129,7 @@ class TestGroupsRuleTest {
 
             val result = TestGroupsRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: `BarTests` tem testes e não é `@Nested`")
+            result shouldBeEqualTo listOf("FooTest.kt: `BarTests` tem testes e deve ser `@Nested`")
         }
 
         @Test
@@ -140,7 +140,7 @@ class TestGroupsRuleTest {
             val result = TestGroupsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: `BarTests` não tem `@DisplayName` com o nome do método",
+                "FooTest.kt: `BarTests` deve ter `@DisplayName` com o nome do método",
             )
         }
 
@@ -160,10 +160,10 @@ class TestGroupsRuleTest {
             val result = TestGroupsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: `@DisplayName(\"Foo.bar\")` não é método nem propriedade pública do SUT",
-                "FooTest.kt: `@DisplayName(\"bar (caso feliz)\")` não é método nem propriedade pública do SUT",
-                "FooTest.kt: `@DisplayName(\"inexistente\")` não é método nem propriedade pública do SUT",
-                "FooTest.kt: `@DisplayName(\"oculto\")` não é método nem propriedade pública do SUT",
+                "FooTest.kt: `@DisplayName(\"Foo.bar\")` deve nomear um método ou propriedade pública do SUT",
+                "FooTest.kt: `@DisplayName(\"bar (caso feliz)\")` deve nomear um método ou propriedade pública do SUT",
+                "FooTest.kt: `@DisplayName(\"inexistente\")` deve nomear um método ou propriedade pública do SUT",
+                "FooTest.kt: `@DisplayName(\"oculto\")` deve nomear um método ou propriedade pública do SUT",
             )
         }
 
@@ -188,7 +188,7 @@ class TestGroupsRuleTest {
 
             result shouldBeEqualTo listOf(
                 "FooTest.kt: `OutroBarTests` deve se chamar `BarTests`",
-                "FooTest.kt: há mais de um grupo `@Nested` para o método `bar`",
+                "FooTest.kt: o método `bar` deve ter um único grupo `@Nested`",
             )
         }
 
@@ -202,7 +202,7 @@ class TestGroupsRuleTest {
 
             val result = TestGroupsRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: `BarTests` aninha outra classe de teste")
+            result shouldBeEqualTo listOf("FooTest.kt: `BarTests` não deve aninhar outra classe de teste")
         }
 
         @Test
@@ -240,7 +240,7 @@ class TestGroupsRuleTest {
 
             val result = TestGroupsRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooTest.kt: `BarTests` aninha outra classe de teste")
+            result shouldBeEqualTo listOf("FooTest.kt: `BarTests` não deve aninhar outra classe de teste")
         }
 
         @Test

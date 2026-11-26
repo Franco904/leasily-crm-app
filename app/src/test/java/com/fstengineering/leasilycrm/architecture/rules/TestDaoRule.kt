@@ -19,7 +19,7 @@ object TestDaoRule {
                         subject.interfaces(includeNested = true)
                             .any { it.hasAnnotationWithName("Dao") }
                 if (isDao) {
-                    "${test.nameWithExtension}: `${subject.name}` é @Dao; só se testa em androidTest"
+                    "${test.nameWithExtension}: `${subject.name}` é @Dao e deve ser testado só em androidTest"
                 } else {
                     null
                 }

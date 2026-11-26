@@ -44,9 +44,9 @@ class UnitTestImportsRuleTest {
             val result = UnitTestImportsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: teste de domínio não importa `android.net.Uri` (android, androidx, mockk, infra, application)",
-                "FooTest.kt: teste de domínio não importa `androidx.compose.ui.Modifier` (android, androidx, mockk, infra, application)",
-                "FooTest.kt: teste de domínio não importa `io.mockk.mockk` (android, androidx, mockk, infra, application)",
+                "FooTest.kt: teste de domínio não deve importar `android.net.Uri` (android, androidx, mockk, infra, application)",
+                "FooTest.kt: teste de domínio não deve importar `androidx.compose.ui.Modifier` (android, androidx, mockk, infra, application)",
+                "FooTest.kt: teste de domínio não deve importar `io.mockk.mockk` (android, androidx, mockk, infra, application)",
             )
         }
 
@@ -66,8 +66,8 @@ class UnitTestImportsRuleTest {
             val result = UnitTestImportsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: teste de domínio não importa `$ROOT.core.application.models.Bar` (android, androidx, mockk, infra, application)",
-                "FooTest.kt: teste de domínio não importa `$ROOT.imovelRegistration.infra.mappers.toReadModel` (android, androidx, mockk, infra, application)",
+                "FooTest.kt: teste de domínio não deve importar `$ROOT.core.application.models.Bar` (android, androidx, mockk, infra, application)",
+                "FooTest.kt: teste de domínio não deve importar `$ROOT.imovelRegistration.infra.mappers.toReadModel` (android, androidx, mockk, infra, application)",
             )
         }
 
@@ -109,8 +109,8 @@ class UnitTestImportsRuleTest {
             val result = UnitTestImportsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: `androidx.room.Room` é Room; teste de unidade não toca banco (só androidTest)",
-                "FooTest.kt: `$ROOT.core.infra.dataSources.database.AppDatabase` é Room; teste de unidade não toca banco (só androidTest)",
+                "FooTest.kt: teste de unidade não deve importar `androidx.room.Room` (banco só em androidTest)",
+                "FooTest.kt: teste de unidade não deve importar `$ROOT.core.infra.dataSources.database.AppDatabase` (banco só em androidTest)",
             )
         }
 
@@ -132,13 +132,13 @@ class UnitTestImportsRuleTest {
             val result = UnitTestImportsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: `com.google.common.truth.Truth` fora de JUnit 5 e kluent",
-                "FooTest.kt: `kotlin.test.assertEquals` fora de JUnit 5 e kluent",
-                "FooTest.kt: `org.assertj.core.api.Assertions` fora de JUnit 5 e kluent",
-                "FooTest.kt: `org.hamcrest.MatcherAssert` fora de JUnit 5 e kluent",
-                "FooTest.kt: `org.junit.Assert` fora de JUnit 5 e kluent",
-                "FooTest.kt: `org.junit.jupiter.api.Assertions` fora de JUnit 5 e kluent",
-                "FooTest.kt: `org.junit.jupiter.api.assertThrows` fora de JUnit 5 e kluent",
+                "FooTest.kt: teste de unidade não deve importar `com.google.common.truth.Truth` (só JUnit 5 e kluent)",
+                "FooTest.kt: teste de unidade não deve importar `kotlin.test.assertEquals` (só JUnit 5 e kluent)",
+                "FooTest.kt: teste de unidade não deve importar `org.assertj.core.api.Assertions` (só JUnit 5 e kluent)",
+                "FooTest.kt: teste de unidade não deve importar `org.hamcrest.MatcherAssert` (só JUnit 5 e kluent)",
+                "FooTest.kt: teste de unidade não deve importar `org.junit.Assert` (só JUnit 5 e kluent)",
+                "FooTest.kt: teste de unidade não deve importar `org.junit.jupiter.api.Assertions` (só JUnit 5 e kluent)",
+                "FooTest.kt: teste de unidade não deve importar `org.junit.jupiter.api.assertThrows` (só JUnit 5 e kluent)",
             )
         }
 
@@ -149,8 +149,8 @@ class UnitTestImportsRuleTest {
             val result = UnitTestImportsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: `org.junit.Test` fora de JUnit 5 e kluent",
-                "FooTest.kt: `org.junit.runner.RunWith` fora de JUnit 5 e kluent",
+                "FooTest.kt: teste de unidade não deve importar `org.junit.Test` (só JUnit 5 e kluent)",
+                "FooTest.kt: teste de unidade não deve importar `org.junit.runner.RunWith` (só JUnit 5 e kluent)",
             )
         }
 
@@ -194,7 +194,7 @@ class UnitTestImportsRuleTest {
 
             val result = UnitTestImportsRule.violations(scopeOf(dir))
 
-            result shouldBeEqualTo listOf("FooRuleTest.kt: `kotlin.test.assertTrue` fora de JUnit 5 e kluent")
+            result shouldBeEqualTo listOf("FooRuleTest.kt: teste de unidade não deve importar `kotlin.test.assertTrue` (só JUnit 5 e kluent)")
         }
 
         @Test
@@ -217,8 +217,8 @@ class UnitTestImportsRuleTest {
             val result = UnitTestImportsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "AlfaTest.kt: `kotlin.test.assertTrue` fora de JUnit 5 e kluent",
-                "ZetaTest.kt: `org.junit.Test` fora de JUnit 5 e kluent",
+                "AlfaTest.kt: teste de unidade não deve importar `kotlin.test.assertTrue` (só JUnit 5 e kluent)",
+                "ZetaTest.kt: teste de unidade não deve importar `org.junit.Test` (só JUnit 5 e kluent)",
             )
         }
     }
