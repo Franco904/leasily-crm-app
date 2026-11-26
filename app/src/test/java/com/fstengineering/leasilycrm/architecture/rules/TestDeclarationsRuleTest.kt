@@ -74,7 +74,7 @@ class TestDeclarationsRuleTest {
         }
 
         @Test
-        fun `Deve tratar como mock quando a propriedade só tem o sufixo Mock`(@TempDir dir: File) {
+        fun `Deve reportar o mock fora de ordem quando a propriedade só tem o sufixo Mock`(@TempDir dir: File) {
             plant(
                 dir,
                 """
@@ -96,7 +96,9 @@ class TestDeclarationsRuleTest {
         }
 
         @Test
-        fun `Deve tratar como mock quando a propriedade só é criada por mockk`(@TempDir dir: File) {
+        fun `Deve reportar o mock fora de ordem e sem sufixo quando a propriedade só é criada por mockk`(
+            @TempDir dir: File
+        ) {
             plant(
                 dir,
                 """
@@ -241,7 +243,7 @@ class TestDeclarationsRuleTest {
         }
 
         @Test
-        fun `Deve verificar a ordem quando o desvio está dentro da classe aninhada`(@TempDir dir: File) {
+        fun `Deve reportar a ordem quando o desvio está dentro da classe aninhada`(@TempDir dir: File) {
             plant(
                 dir,
                 """
@@ -428,7 +430,7 @@ class TestDeclarationsRuleTest {
         }
 
         @Test
-        fun `Deve classificar como auxiliar quando o inicializador só contém mockk dentro de outra chamada`(
+        fun `Deve aceitar a propriedade quando o mockk só aparece dentro de outra chamada`(
             @TempDir dir: File,
         ) {
             plant(
@@ -450,6 +452,23 @@ class TestDeclarationsRuleTest {
         }
 
         @Test
+        fun `Deve ignorar o mock e o sut quando só aparecem em comentário ou texto`(@TempDir dir: File) {
+            plant(
+                dir,
+                "class FooTest {\n" +
+                    "    // var other = mockk<Dependency>(); val x = createSut()\n" +
+                    "    private val text = \"var other = mockk<Dependency>(); val y = createSut()\"\n\n" +
+                    "    @org.junit.jupiter.api.Test\n" +
+                    "    fun `Deve fazer quando puder`() {}\n" +
+                    "}",
+            )
+
+            val result = TestDeclarationsRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
         fun `Deve ignorar o arquivo quando ele não tem teste`(@TempDir dir: File) {
             plant(dir, "class FooTest { private fun helper() {}\n    private val limit = 3 }")
 
@@ -459,7 +478,7 @@ class TestDeclarationsRuleTest {
         }
 
         @Test
-        fun `Deve ignorar o arquivo quando ele está no pacote de testes de arquitetura`(
+        fun `Deve reportar a ordem quando o arquivo está no pacote de testes de arquitetura`(
             @TempDir dir: File,
         ) {
             plant(
@@ -477,7 +496,10 @@ class TestDeclarationsRuleTest {
 
             val result = TestDeclarationsRule.violations(scopeOf(dir))
 
-            result.shouldBeEmpty()
+            result shouldBeEqualTo listOf(
+                "FooTest.kt: em `FooTest`, `Deve fazer quando puder` (testes) deve vir antes de " +
+                    "`helper` (auxiliares)",
+            )
         }
 
         @Test

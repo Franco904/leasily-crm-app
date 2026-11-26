@@ -5,6 +5,10 @@ import com.lemonappdev.konsist.api.container.KoScope
 object ModulePackagesRule {
     private const val ROOT_PACKAGE = "com.fstengineering.leasilycrm"
 
+    /**
+     * Mensagem estável por violação: pacotes sem módulo no README e depois módulos sem pacote, cada
+     * grupo em ordem alfabética; lista vazia = regra respeitada.
+     */
     fun violations(scope: KoScope, documentedModules: Set<String>): List<String> {
         val actualModules = scope.files
             .mapNotNull { it.packagee?.name }

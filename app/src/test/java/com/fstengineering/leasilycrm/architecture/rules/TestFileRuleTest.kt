@@ -85,7 +85,7 @@ class TestFileRuleTest {
         }
 
         @Test
-        fun `Deve ignorar o teste quando ele está no pacote de testes de arquitetura`(
+        fun `Deve aceitar o teste de arquitetura quando não existe arquivo de produção correspondente`(
             @TempDir dir: File,
         ) {
             plant(dir, "test", "$ROOT.architecture", "ArchitectureRulesTest", "class ArchitectureRulesTest { $TEST }")
@@ -94,6 +94,23 @@ class TestFileRuleTest {
             val result = TestFileRule.violations(scopeOf(dir))
 
             result.shouldBeEmpty()
+        }
+
+        @Test
+        fun `Deve reportar o teste de arquitetura quando o arquivo foge do nome ou declara mais de uma classe`(
+            @TempDir dir: File,
+        ) {
+            plant(dir, "test", "$ROOT.architecture", "FooSpec", "class FooSpec { $TEST }")
+            plant(dir, "test", "$ROOT.architecture", "BarTest", "class OutraTest { $TEST }")
+            plant(dir, "test", "$ROOT.architecture", "BazTest", "class BazTest { $TEST }\nclass QuxTest { $TEST }")
+
+            val result = TestFileRule.violations(scopeOf(dir))
+
+            result shouldBeEqualTo listOf(
+                "BarTest.kt: não declara a classe `BarTest`",
+                "BazTest.kt: declara mais de uma classe de teste",
+                "FooSpec.kt: o nome do arquivo de teste deve terminar em `Test`",
+            )
         }
 
         @Test

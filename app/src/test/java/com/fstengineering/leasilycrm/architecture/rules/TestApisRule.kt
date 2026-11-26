@@ -3,10 +3,6 @@ package com.fstengineering.leasilycrm.architecture.rules
 import com.lemonappdev.konsist.api.container.KoScope
 
 object TestApisRule {
-    private val commentsAndLiterals = Regex(
-        """\"\"\"[\s\S]*?\"\"\"|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\])'|/\*[\s\S]*?\*/|//[^\n]*""",
-    )
-
     private val bannedApis = listOf(
         Regex("""\b(un)?mockk(Static|Object|Constructor)\b"""),
         Regex("""\b(atLeast|atMost)(?=\s*=)"""),
@@ -16,16 +12,16 @@ object TestApisRule {
         Regex("""\b(getDeclared\w+|setAccessible)\b"""),
     )
 
+    /**
+     * Violações em ordem alfabética, uma mensagem estável por violação; lista vazia = regra respeitada.
+     */
     fun violations(scope: KoScope): List<String> = scope.files
         .filter { TestSources.isTest(it) }
         .flatMap { file ->
             bannedApis
-                .flatMap { api -> api.findAll(code(file.text)).map { it.value } }
+                .flatMap { api -> api.findAll(TestSources.code(file)).map { it.value } }
                 .distinct()
                 .map { "${file.nameWithExtension}: `$it` é proibido em testes" }
         }
         .sorted()
-
-    /** Só código: comentário e literal de texto não usam a API, apenas a citam. */
-    private fun code(text: String) = commentsAndLiterals.replace(text, " ")
 }

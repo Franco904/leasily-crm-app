@@ -19,8 +19,11 @@ object TestDeclarationsRule {
         Regex("""\bvar\s+(\w+)\s*(?::[^=\n]+)?=\s*mockk\s*[(<]""")
     private val sutCreation = Regex("""\b(?:val|var)\s+(\w+)\s*(?::[^=\n]+)?=\s*createSut\(""")
 
+    /**
+     * Violações em ordem alfabética, uma mensagem estável por violação; lista vazia = regra respeitada.
+     */
     fun violations(scope: KoScope): List<String> = scope.files
-        .filter { TestSources.isTest(it) && TestSources.hasTests(it) && !TestSources.isArchitecture(it) }
+        .filter { TestSources.isTest(it) && TestSources.hasTests(it) }
         .flatMap { file -> orderViolations(file) + mockNameViolations(file) + mockMutabilityViolations(file) + sutNameViolations(file) }
         .sorted()
 
@@ -43,7 +46,7 @@ object TestDeclarationsRule {
         }
 
     private fun mockNameViolations(file: KoFileDeclaration): List<String> =
-        mockVariable.findAll(file.text)
+        mockVariable.findAll(TestSources.code(file))
             .map { it.groupValues[1] }
             .filterNot { it.endsWith("Mock") }
             .distinct()
@@ -51,14 +54,16 @@ object TestDeclarationsRule {
             .toList()
 
     private fun mockMutabilityViolations(file: KoFileDeclaration): List<String> =
-        (mockVariableSuffixed.findAll(file.text) + mockVariableMutable.findAll(file.text))
+        TestSources.code(file).let { code ->
+            mockVariableSuffixed.findAll(code) + mockVariableMutable.findAll(code)
+        }
             .map { it.groupValues[1] }
             .distinct()
             .map { "${file.nameWithExtension}: `$it` é um mock e deve ser `val` inicializado na declaração" }
             .toList()
 
     private fun sutNameViolations(file: KoFileDeclaration): List<String> =
-        sutCreation.findAll(file.text)
+        sutCreation.findAll(TestSources.code(file))
             .map { it.groupValues[1] }
             .filterNot { it == "sut" }
             .distinct()

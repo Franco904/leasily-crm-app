@@ -94,8 +94,20 @@ class TestApisRuleTest {
             plant(
                 dir,
                 "src/test/Planted.kt",
-                "class Planted { @BeforeEach fun a() {} @AfterEach fun b() {} @Before fun c() {} @After fun d() {} " +
-                    "@BeforeAllCustom fun e() {} @TestInstanceCustom fun f() {} }",
+                "class Planted { @BeforeEach fun a() {} @AfterEach fun b() {} @Before fun c() {} @After fun d() {} }",
+            )
+
+            val result = TestApisRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
+        fun `Deve aceitar a anotação quando o nome só começa com o de uma proibida`(@TempDir dir: File) {
+            plant(
+                dir,
+                "src/test/Planted.kt",
+                "class Planted { @BeforeAllCustom fun a() {} @TestInstanceCustom fun b() {} }",
             )
 
             val result = TestApisRule.violations(scopeOf(dir))
@@ -173,7 +185,9 @@ class TestApisRuleTest {
         }
 
         @Test
-        fun `Deve reportar o teste quando ele está no pacote de testes de arquitetura`(@TempDir dir: File) {
+        fun `Deve reportar a API proibida quando o arquivo está no pacote de testes de arquitetura`(
+            @TempDir dir: File
+        ) {
             plant(
                 dir,
                 "src/test/Planted.kt",

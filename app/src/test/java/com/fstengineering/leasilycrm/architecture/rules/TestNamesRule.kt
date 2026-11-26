@@ -8,6 +8,9 @@ object TestNamesRule {
     private val instrumentedTemplate = Regex("deve[A-Z]\\w*Quando[A-Z]\\w*")
     private val codeInDescription = Regex("[._=()]|[a-zà-ú][A-Z]")
 
+    /**
+     * Violações em ordem alfabética, uma mensagem estável por violação; lista vazia = regra respeitada.
+     */
     fun violations(scope: KoScope): List<String> = scope.functions()
         .filter { TestSources.isTestFunction(it) }
         .flatMap { violationsOf(it) }
