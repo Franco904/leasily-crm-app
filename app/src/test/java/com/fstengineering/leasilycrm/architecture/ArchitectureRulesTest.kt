@@ -8,6 +8,7 @@ import com.fstengineering.leasilycrm.architecture.rules.TestDeclarationsRule
 import com.fstengineering.leasilycrm.architecture.rules.TestFileRule
 import com.fstengineering.leasilycrm.architecture.rules.TestGroupsRule
 import com.fstengineering.leasilycrm.architecture.rules.TestNamesRule
+import com.fstengineering.leasilycrm.architecture.rules.UnitTestImportsRule
 import com.lemonappdev.konsist.api.Konsist
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -57,6 +58,13 @@ class ArchitectureRulesTest {
     @Test
     fun `Deve agrupar os testes por método público do SUT quando o código de teste evolui`() {
         val result = TestGroupsRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve manter os testes de unidade nas fronteiras de imports quando o código de teste evolui`() {
+        val result = UnitTestImportsRule.violations(Konsist.scopeFromProject())
 
         result shouldBeEqualTo emptyList()
     }
