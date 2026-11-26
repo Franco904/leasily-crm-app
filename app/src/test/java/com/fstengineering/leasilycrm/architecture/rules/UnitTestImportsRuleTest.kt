@@ -44,14 +44,14 @@ class UnitTestImportsRuleTest {
             val result = UnitTestImportsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: teste de domínio não deve importar `android.net.Uri` (android, androidx, mockk, infra, application)",
-                "FooTest.kt: teste de domínio não deve importar `androidx.compose.ui.Modifier` (android, androidx, mockk, infra, application)",
-                "FooTest.kt: teste de domínio não deve importar `io.mockk.mockk` (android, androidx, mockk, infra, application)",
+                "FooTest.kt: teste de domínio não deve importar `android.net.Uri` (android, androidx, mockk, infra, application, presentation)",
+                "FooTest.kt: teste de domínio não deve importar `androidx.compose.ui.Modifier` (android, androidx, mockk, infra, application, presentation)",
+                "FooTest.kt: teste de domínio não deve importar `io.mockk.mockk` (android, androidx, mockk, infra, application, presentation)",
             )
         }
 
         @Test
-        fun `Deve reportar o teste de domínio quando importa as camadas infra ou application`(
+        fun `Deve reportar o teste de domínio quando importa as camadas infra, application ou presentation`(
             @TempDir dir: File,
         ) {
             plant(
@@ -59,6 +59,7 @@ class UnitTestImportsRuleTest {
                 imports = listOf(
                     "$ROOT.imovelRegistration.infra.mappers.toReadModel",
                     "$ROOT.core.application.models.Bar",
+                    "$ROOT.core.presentation.models.Baz",
                     "$ROOT.core.domain.utils.AppResult",
                 ),
             )
@@ -66,8 +67,9 @@ class UnitTestImportsRuleTest {
             val result = UnitTestImportsRule.violations(scopeOf(dir))
 
             result shouldBeEqualTo listOf(
-                "FooTest.kt: teste de domínio não deve importar `$ROOT.core.application.models.Bar` (android, androidx, mockk, infra, application)",
-                "FooTest.kt: teste de domínio não deve importar `$ROOT.imovelRegistration.infra.mappers.toReadModel` (android, androidx, mockk, infra, application)",
+                "FooTest.kt: teste de domínio não deve importar `$ROOT.core.application.models.Bar` (android, androidx, mockk, infra, application, presentation)",
+                "FooTest.kt: teste de domínio não deve importar `$ROOT.core.presentation.models.Baz` (android, androidx, mockk, infra, application, presentation)",
+                "FooTest.kt: teste de domínio não deve importar `$ROOT.imovelRegistration.infra.mappers.toReadModel` (android, androidx, mockk, infra, application, presentation)",
             )
         }
 

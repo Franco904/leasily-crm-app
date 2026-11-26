@@ -40,8 +40,8 @@ inner class InvokeTests {
 
 ## 2. Fronteiras lógicas
 
-- Testes de **domínio** (agregados, Value Objects, Domain Services): sem `android`, `androidx`,
-  `mockk`, `infra` nem `application`. Objetos Kotlin puros.
+- Testes de **domínio** (agregados, Value Objects, Domain Services) não devem importar `android`,
+  `androidx`, `mockk`, `infra`, `application` nem `presentation`. Objetos Kotlin puros.
 - Testes de **UseCase** e **ViewModel**: todas as dependências (Repositories, DataSources) são
   mockadas. Nunca acesse banco de dados real.
 - Testes de **infraestrutura** (Repository, DataSource): mockar dependências externas; DAOs que
