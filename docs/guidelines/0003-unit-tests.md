@@ -14,7 +14,14 @@ entrada, bons/maus testes, mocking): ver [0002-all-tests.md](0002-all-tests.md).
 
 - Cada método público do SUT deve ter uma classe `@Nested` própria.
 - Não criar uma `@Nested` englobando toda a classe — apenas por método público.
-- Padrão de nome: `@DisplayName("nomeDoMetodo")` na classe `@Nested`.
+- Padrão de nome: `@DisplayName("nomeDoMetodo")` na classe `@Nested` `<NomeDoMetodo>Tests`. O nome
+  é só o da função, sem receptor nem texto extra (`toBottomSheetData`, não
+  `BaseError.toBottomSheetData`); vale função pública de qualquer ponto do arquivo do SUT
+  (top-level, classe, `companion`, classe aninhada) ou, se o SUT só expõe propriedades, o nome da
+  propriedade pública. Um grupo por nome: sobrecargas e mesmo nome em classes distintas do arquivo
+  compartilham o grupo.
+- Todo `@Test` mora num desses grupos, sem aninhar outro grupo de teste. Os testes de arquitetura
+  (`…leasilycrm.architecture`) não têm SUT em `main` e ficam fora desta seção.
 - Cada teste representa um caminho possível no fluxo do método, seguindo a estratégia **"Todos os
   caminhos"**.
 - Evitar casos de borda muito improváveis ou sem valor de negócio.
@@ -38,7 +45,8 @@ inner class InvokeTests {
   mockadas. Nunca acesse banco de dados real.
 - Testes de **infraestrutura** (Repository, DataSource): mockar dependências externas; DAOs que
   tocam SQLite e código abrangido por transação são cobertos por testes instrumentados
-  ([0004-integration-tests.md](0004-integration-tests.md)).
+  ([0004-integration-tests.md](0004-integration-tests.md)). Teste de unidade não importa
+  `androidx.room` nem `AppDatabase` e não tem uma classe `@Dao` como SUT.
 - **Fronteira de contexto** (produção, `test/` e `androidTest/`): o módulo importa só o próprio
   módulo, os módulos do **mesmo contexto** (coluna "Contexto" da tabela de módulos do
   `README.md`), o `core` e, do pacote raiz, `Destinations`. Módulo sem contexto na tabela (`home`,
