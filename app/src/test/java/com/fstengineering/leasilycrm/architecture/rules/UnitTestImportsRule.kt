@@ -7,7 +7,7 @@ object UnitTestImportsRule {
     private const val ROOT = "com.fstengineering.leasilycrm"
 
     private val domainBannedPrefixes = listOf("android.", "androidx.", "io.mockk.")
-    private val domainBannedLayers = setOf("infra", "application")
+    private val domainBannedLayers = setOf("infra", "application", "presentation")
     private val otherJUnitAndAssertions = listOf(
         "org.junit.jupiter.api.Assertions",
         "kotlin.test.",
@@ -30,7 +30,7 @@ object UnitTestImportsRule {
         return when {
             isDomainTest(file) && isDomainBanned(import) ->
                 "$name: teste de domínio não deve importar `$import` " +
-                    "(android, androidx, mockk, infra, application)"
+                    "(android, androidx, mockk, infra, application, presentation)"
 
             import.startsWith("androidx.room") || import.substringAfterLast('.') == "AppDatabase" ->
                 "$name: teste de unidade não deve importar `$import` " +
