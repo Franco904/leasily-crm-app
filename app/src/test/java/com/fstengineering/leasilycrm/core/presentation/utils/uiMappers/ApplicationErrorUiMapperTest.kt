@@ -14,7 +14,7 @@ import com.fstengineering.leasilycrm.core.presentation.utils.strategies.DefaultE
 
 class ApplicationErrorUiMapperTest {
     @Nested
-    @DisplayName("BaseError.toBottomSheetData")
+    @DisplayName("toBottomSheetData")
     inner class ToBottomSheetDataTests {
         @Test
         fun `Deve usar os textos da strategy quando é um erro de infra`() {

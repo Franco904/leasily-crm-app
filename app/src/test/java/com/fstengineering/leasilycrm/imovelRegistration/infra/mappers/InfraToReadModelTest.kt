@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 
 class InfraToReadModelTest {
     @Nested
-    @DisplayName("ImovelRegistrationProjection.toReadModel")
+    @DisplayName("toReadModel")
     inner class ToReadModelTests {
         @Test
         fun `Deve manter o Proprietário quando o Proprietário está ativo`() {

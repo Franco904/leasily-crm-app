@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test
 
 class SignInErrorBottomSheetDataPropertiesStrategyTest {
     @Nested
-    @DisplayName("BaseError.toBottomSheetData")
-    inner class ToBottomSheetDataTests {
+    @DisplayName("noInternetErrorDescription")
+    inner class NoInternetErrorDescriptionTests {
         @Test
         fun `Deve usar a descrição de entrar quando falta internet na conta Google`() {
             val sut: BaseError = ApplicationError.NoInternet

@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 
 class InfraToReadModelTest {
     @Nested
-    @DisplayName("ImovelDashboardProjection.toReadModel")
+    @DisplayName("toReadModel")
     inner class ToReadModelTests {
         @Test
         fun `Deve manter o Proprietário quando o Proprietário está ativo`() {
