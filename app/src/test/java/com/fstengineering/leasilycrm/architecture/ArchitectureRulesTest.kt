@@ -3,6 +3,7 @@ package com.fstengineering.leasilycrm.architecture
 import com.fstengineering.leasilycrm.architecture.parsers.ReadmeModules
 import com.fstengineering.leasilycrm.architecture.rules.ModulePackagesRule
 import com.fstengineering.leasilycrm.architecture.rules.TestApisRule
+import com.fstengineering.leasilycrm.architecture.rules.TestDaoRule
 import com.fstengineering.leasilycrm.architecture.rules.TestDeclarationsRule
 import com.fstengineering.leasilycrm.architecture.rules.TestFileRule
 import com.fstengineering.leasilycrm.architecture.rules.TestGroupsRule
@@ -56,6 +57,13 @@ class ArchitectureRulesTest {
     @Test
     fun `Deve agrupar os testes por método público do SUT quando o código de teste evolui`() {
         val result = TestGroupsRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve manter os Daos fora dos testes de unidade quando o código de teste evolui`() {
+        val result = TestDaoRule.violations(Konsist.scopeFromProject())
 
         result shouldBeEqualTo emptyList()
     }
