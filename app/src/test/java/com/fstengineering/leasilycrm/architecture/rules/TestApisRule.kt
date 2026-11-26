@@ -12,6 +12,7 @@ object TestApisRule {
         Regex("""\b(atLeast|atMost)(?=\s*=)"""),
         Regex("""\b(co)?[vV]erify(Order|Sequence)\b"""),
         Regex("""import (java\.lang\.reflect|kotlin\.reflect\.(full|jvm))\.[\w.*]+"""),
+        Regex("""@(BeforeAll|AfterAll|BeforeClass|AfterClass|ClassRule|TestInstance)\b"""),
         Regex("""\b(getDeclared\w+|setAccessible)\b"""),
     )
 

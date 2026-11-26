@@ -73,6 +73,37 @@ class TestApisRuleTest {
         }
 
         @Test
+        fun `Deve reportar o teste quando compartilha estado entre testes pelo ciclo de classe`(
+            @TempDir dir: File,
+        ) {
+            val annotations = listOf(
+                "@BeforeAll", "@AfterAll", "@BeforeClass", "@AfterClass", "@ClassRule", "@TestInstance",
+            )
+            annotations.forEach {
+                plant(dir, "src/test/${it.drop(1)}.kt", "class Planted { $it fun f() {} }")
+            }
+
+            val result = TestApisRule.violations(scopeOf(dir))
+
+            result shouldBeEqualTo annotations.map { "${it.drop(1)}.kt: `$it` é proibido em testes" }
+                .sorted()
+        }
+
+        @Test
+        fun `Deve aceitar o teste quando usa a preparação por teste`(@TempDir dir: File) {
+            plant(
+                dir,
+                "src/test/Planted.kt",
+                "class Planted { @BeforeEach fun a() {} @AfterEach fun b() {} @Before fun c() {} @After fun d() {} " +
+                    "@BeforeAllCustom fun e() {} @TestInstanceCustom fun f() {} }",
+            )
+
+            val result = TestApisRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
         fun `Deve reportar o teste quando importa reflection`(@TempDir dir: File) {
             val imports = listOf(
                 "import java.lang.reflect.Field",

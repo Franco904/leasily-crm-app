@@ -80,7 +80,7 @@ class TestDeclarationsRuleTest {
                 """
                 class FooTest {
                     private lateinit var sut: Foo
-                    private lateinit var dependencyMock: Dependency
+                    private val dependencyMock: Dependency = createDependency()
 
                     @org.junit.jupiter.api.Test
                     fun `Deve fazer quando puder`() {}
@@ -266,6 +266,62 @@ class TestDeclarationsRuleTest {
         }
 
         @Test
+        fun `Deve reportar o teste quando o mock é lateinit ou var`(@TempDir dir: File) {
+            plant(
+                dir,
+                """
+                class FooTest {
+                    private lateinit var firstMock: Dependency
+                    private var secondMock: Dependency = mockk()
+
+                    @org.junit.jupiter.api.BeforeEach
+                    fun setUp() {
+                        firstMock = mockk()
+                    }
+
+                    @org.junit.jupiter.api.Test
+                    fun `Deve fazer quando puder`() {
+                        var thirdMock = mockk<Dependency>()
+                        var fourth = mockk<Dependency>()
+                    }
+                }
+                """.trimIndent(),
+            )
+
+            val result = TestDeclarationsRule.violations(scopeOf(dir))
+
+            result shouldBeEqualTo listOf(
+                "FooTest.kt: `firstMock` é um mock e deve ser `val` inicializado na declaração",
+                "FooTest.kt: `fourth` é um mock e deve ser `val` inicializado na declaração",
+                "FooTest.kt: `fourth` é um mock e deve terminar em `Mock`",
+                "FooTest.kt: `secondMock` é um mock e deve ser `val` inicializado na declaração",
+                "FooTest.kt: `thirdMock` é um mock e deve ser `val` inicializado na declaração",
+            )
+        }
+
+        @Test
+        fun `Deve aceitar o teste quando o mock é val inicializado na declaração`(@TempDir dir: File) {
+            plant(
+                dir,
+                """
+                class FooTest {
+                    private val dependencyMock: Dependency = mockk(relaxUnitFun = true)
+                    private lateinit var sut: Foo
+
+                    @org.junit.jupiter.api.Test
+                    fun `Deve fazer quando puder`() {
+                        val localMock = mockk<Dependency>()
+                    }
+                }
+                """.trimIndent(),
+            )
+
+            val result = TestDeclarationsRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
         fun `Deve reportar o teste quando o mock não termina em Mock`(@TempDir dir: File) {
             plant(
                 dir,
@@ -331,35 +387,6 @@ class TestDeclarationsRuleTest {
                         val expected = Foo(2)
                         val outra = FooBar(1)
                     }
-                }
-                """.trimIndent(),
-            )
-
-            val result = TestDeclarationsRule.violations(scopeOf(dir))
-
-            result.shouldBeEmpty()
-        }
-
-        @Test
-        fun `Deve aceitar o teste quando a preparação de classe vem antes dos testes`(@TempDir dir: File) {
-            plant(
-                dir,
-                """
-                class FooTest {
-                    @org.junit.jupiter.api.BeforeAll
-                    fun prepare() {}
-
-                    @org.junit.jupiter.api.AfterAll
-                    fun release() {}
-
-                    @org.junit.BeforeClass
-                    fun prepareClass() {}
-
-                    @org.junit.AfterClass
-                    fun releaseClass() {}
-
-                    @org.junit.jupiter.api.Test
-                    fun `Deve fazer quando puder`() {}
                 }
                 """.trimIndent(),
             )

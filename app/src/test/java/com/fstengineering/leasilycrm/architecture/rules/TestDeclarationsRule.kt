@@ -10,15 +10,18 @@ import com.lemonappdev.konsist.api.provider.KoNameProvider
 
 object TestDeclarationsRule {
     private val lifecycleAnnotations = listOf(
-        "BeforeEach", "AfterEach", "BeforeAll", "AfterAll", "Before", "After", "BeforeClass", "AfterClass",
+        "BeforeEach", "AfterEach", "Before", "After",
     )
     private val mockCreation = Regex("""=\s*mockk\s*[(<]""")
     private val mockVariable = Regex("""\b(?:val|var)\s+(\w+)\s*(?::[^=\n]+)?=\s*mockk\s*[(<]""")
+    private val mockVariableSuffixed = Regex("""\bvar\s+(\w+Mock)\b""")
+    private val mockVariableMutable =
+        Regex("""\bvar\s+(\w+)\s*(?::[^=\n]+)?=\s*mockk\s*[(<]""")
     private val sutCreation = Regex("""\b(?:val|var)\s+(\w+)\s*(?::[^=\n]+)?=\s*createSut\(""")
 
     fun violations(scope: KoScope): List<String> = scope.files
         .filter { TestSources.isTest(it) && TestSources.hasTests(it) && !TestSources.isArchitecture(it) }
-        .flatMap { file -> orderViolations(file) + mockNameViolations(file) + sutNameViolations(file) }
+        .flatMap { file -> orderViolations(file) + mockNameViolations(file) + mockMutabilityViolations(file) + sutNameViolations(file) }
         .sorted()
 
     private fun orderViolations(file: KoFileDeclaration): List<String> =
@@ -45,6 +48,13 @@ object TestDeclarationsRule {
             .filterNot { it.endsWith("Mock") }
             .distinct()
             .map { "${file.nameWithExtension}: `$it` é um mock e deve terminar em `Mock`" }
+            .toList()
+
+    private fun mockMutabilityViolations(file: KoFileDeclaration): List<String> =
+        (mockVariableSuffixed.findAll(file.text) + mockVariableMutable.findAll(file.text))
+            .map { it.groupValues[1] }
+            .distinct()
+            .map { "${file.nameWithExtension}: `$it` é um mock e deve ser `val` inicializado na declaração" }
             .toList()
 
     private fun sutNameViolations(file: KoFileDeclaration): List<String> =
