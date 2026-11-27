@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.architecture.rules.TestGroupsRule
 import com.fstengineering.leasilycrm.architecture.rules.TestNamesRule
 import com.fstengineering.leasilycrm.architecture.rules.UnitTestApisRule
 import com.fstengineering.leasilycrm.architecture.rules.UnitTestImportsRule
+import com.fstengineering.leasilycrm.architecture.rules.ViewModelChannelsRule
 import com.lemonappdev.konsist.api.Konsist
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -88,6 +89,13 @@ class ArchitectureRulesTest {
     @Test
     fun `Deve manter os Daos fora dos testes de unidade quando o código de teste evolui`() {
         val result = TestDaoRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve fechar os canais de cada tela no descarte quando o código de produção evolui`() {
+        val result = ViewModelChannelsRule.violations(Konsist.scopeFromProduction())
 
         result shouldBeEqualTo emptyList()
     }
