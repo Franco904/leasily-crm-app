@@ -36,8 +36,5 @@ object TestSources {
     }
 
     /** Só código: comentário, literal de texto e nome entre crases não usam a API, apenas a citam. */
-    fun code(file: KoFileDeclaration) = code(file.text)
-
-    /** Como [code], para o trecho de uma declaração. */
-    fun code(text: String) = commentsAndLiterals.replace(text, " ")
+    fun code(file: KoFileDeclaration) = commentsAndLiterals.replace(file.text, " ")
 }
