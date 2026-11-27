@@ -10,6 +10,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AtendimentoSharedWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
+import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -33,7 +35,19 @@ class ClienteDetailsViewModelTest {
     private val atendimentoSharedWriteDataSourceMock: AtendimentoSharedWriteDataSource =
         mockk(relaxUnitFun = true)
 
+    private lateinit var sut: ClienteDetailsViewModel
+
     private val clienteId = faker.random.nextLong(bound = 9999)
+
+    @BeforeEach
+    fun setUp() {
+        sut = ClienteDetailsViewModel(
+            route = Destinations.ClienteDetails(clienteId = clienteId),
+            clienteDetailsReadDataSource = clienteDetailsReadDataSourceMock,
+            clienteWriteDataSource = clienteWriteDataSourceMock,
+            atendimentoSharedWriteDataSource = atendimentoSharedWriteDataSourceMock,
+        )
+    }
 
     @Nested
     @DisplayName("init")
@@ -43,7 +57,6 @@ class ClienteDetailsViewModelTest {
             val cliente = createClienteReadModel(isLead = true)
             every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
                 flowOf(AppResult.Success(cliente))
-            val sut = createSut()
 
             sut.init()
 
@@ -58,7 +71,6 @@ class ClienteDetailsViewModelTest {
             runTest {
                 every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
                     flowOf(AppResult.Success(null))
-                val sut = createSut()
 
                 sut.uiEvents.test {
                     sut.init()
@@ -72,7 +84,6 @@ class ClienteDetailsViewModelTest {
             runTest {
                 every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
                     flowOf(AppResult.Error(ApplicationError.Unknown))
-                val sut = createSut()
 
                 sut.uiEvents.test {
                     sut.init()
@@ -86,7 +97,6 @@ class ClienteDetailsViewModelTest {
         fun `Deve observar o Cliente uma única vez quando a tela chama init novamente`() = runTest {
             every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
                 flowOf(AppResult.Success(createClienteReadModel(isLead = true)))
-            val sut = createSut()
 
             sut.init()
             sut.init()
@@ -100,7 +110,7 @@ class ClienteDetailsViewModelTest {
     inner class OnDeleteClienteTests {
         @Test
         fun `Deve excluir o Cliente e confirmar como Lead quando o Lead é excluído`() = runTest {
-            val sut = createLoadedSut(createClienteReadModel(isLead = true))
+            loadSut(createClienteReadModel(isLead = true))
             coEvery { clienteWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
 
             sut.uiEvents.test {
@@ -115,7 +125,7 @@ class ClienteDetailsViewModelTest {
         @Test
         fun `Deve excluir o Cliente e confirmar como Hospede quando o Hospede é excluído`() =
             runTest {
-                val sut = createLoadedSut(createClienteReadModel(isLead = false))
+                loadSut(createClienteReadModel(isLead = false))
                 coEvery { clienteWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
 
                 sut.uiEvents.test {
@@ -129,7 +139,7 @@ class ClienteDetailsViewModelTest {
         @Test
         fun `Deve informar falha quando o Cliente é excluído, dado que o armazenamento local falha`() =
             runTest {
-                val sut = createLoadedSut(createClienteReadModel(isLead = true))
+                loadSut(createClienteReadModel(isLead = true))
                 coEvery { clienteWriteDataSourceMock.delete(any()) } returns
                     AppResult.Error(ApplicationError.Unknown)
 
@@ -144,7 +154,7 @@ class ClienteDetailsViewModelTest {
         @Test
         fun `Deve voltar a observar o Cliente quando o Cliente é excluído, dado que o armazenamento local falha`() =
             runTest {
-                val sut = createLoadedSut(createClienteReadModel(isLead = true))
+                loadSut(createClienteReadModel(isLead = true))
                 coEvery { clienteWriteDataSourceMock.delete(any()) } returns
                     AppResult.Error(ApplicationError.Unknown)
 
@@ -156,8 +166,6 @@ class ClienteDetailsViewModelTest {
         @Test
         fun `Deve ignorar exclusão quando solicitada, dado que o Cliente ainda não foi carregado`() =
             runTest {
-                val sut = createSut()
-
                 sut.onDeleteCliente()
 
                 coVerify(exactly = 0) { clienteWriteDataSourceMock.delete(any()) }
@@ -170,7 +178,6 @@ class ClienteDetailsViewModelTest {
         @Test
         fun `Deve confirmar exclusão quando o Atendimento atual é excluído`() = runTest {
             val atendimentoId = faker.random.nextLong(bound = 9999)
-            val sut = createSut()
             coEvery { atendimentoSharedWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
 
             sut.uiEvents.test {
@@ -184,7 +191,6 @@ class ClienteDetailsViewModelTest {
         @Test
         fun `Deve informar falha quando o Atendimento atual é excluído, dado que o armazenamento local falha`() =
             runTest {
-                val sut = createSut()
                 coEvery { atendimentoSharedWriteDataSourceMock.delete(any()) } returns
                     AppResult.Error(ApplicationError.Unknown)
 
@@ -197,19 +203,23 @@ class ClienteDetailsViewModelTest {
             }
     }
 
-    private fun createLoadedSut(cliente: ClienteReadModel): ClienteDetailsViewModel {
+    @Nested
+    @DisplayName("onCleared")
+    inner class OnClearedTests {
+        @Test
+        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
+            sut.clearFromStore()
+
+            sut.uiEvents.test { awaitComplete() }
+        }
+    }
+
+    private fun loadSut(cliente: ClienteReadModel) {
         every { clienteDetailsReadDataSourceMock.watchCliente(clienteId) } returns
             flowOf(AppResult.Success(cliente))
 
-        return createSut().also { it.init() }
+        sut.init()
     }
-
-    private fun createSut() = ClienteDetailsViewModel(
-        route = Destinations.ClienteDetails(clienteId = clienteId),
-        clienteDetailsReadDataSource = clienteDetailsReadDataSourceMock,
-        clienteWriteDataSource = clienteWriteDataSourceMock,
-        atendimentoSharedWriteDataSource = atendimentoSharedWriteDataSourceMock,
-    )
 
     private fun createClienteReadModel(isLead: Boolean) = ClienteReadModel(
         id = clienteId,

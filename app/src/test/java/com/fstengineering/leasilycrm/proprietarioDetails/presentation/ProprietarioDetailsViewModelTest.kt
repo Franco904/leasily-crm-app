@@ -11,6 +11,7 @@ import com.fstengineering.leasilycrm.proprietarioDetails.presentation.models.Pro
 import com.fstengineering.leasilycrm.proprietarioDetails.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.proprietarioRegistration.infra.dataSources.ProprietarioWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
+import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -98,6 +99,19 @@ class ProprietarioDetailsViewModelTest {
                         )
                 }
             }
+    }
+
+    @Nested
+    @DisplayName("onCleared")
+    inner class OnClearedTests {
+        @Test
+        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
+            val sut = createSut(proprietarioId = faker.random.nextLong(bound = 9999))
+
+            sut.clearFromStore()
+
+            sut.uiEvents.test { awaitComplete() }
+        }
     }
 
     private fun createSut(proprietarioId: Long) = ProprietarioDetailsViewModel(

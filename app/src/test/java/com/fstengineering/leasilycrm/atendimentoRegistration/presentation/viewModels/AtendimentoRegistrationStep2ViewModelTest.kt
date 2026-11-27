@@ -7,6 +7,7 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
+import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -22,6 +23,10 @@ import org.junit.jupiter.api.Test
 class AtendimentoRegistrationStep2ViewModelTest {
     private val imovelReadDataSourceMock: ImovelReadDataSource = mockk(relaxUnitFun = true)
 
+    private val sut = AtendimentoRegistrationStep2ViewModel(
+        imovelReadDataSource = imovelReadDataSourceMock,
+    )
+
     @BeforeEach
     fun setUp() {
         coEvery { imovelReadDataSourceMock.getImoveis(any()) } returns AppResult.Success(emptyList())
@@ -34,7 +39,6 @@ class AtendimentoRegistrationStep2ViewModelTest {
         fun `Deve exibir Imóveis selecionáveis quando a etapa é aberta`() = runTest {
             coEvery { imovelReadDataSourceMock.getImoveis(null) } returns
                 AppResult.Success(listOf(createImovel(id = 1L), createImovel(id = 2L)))
-            val sut = createSut()
 
             sut.imoveis.test {
                 awaitItem() shouldBeEqualTo emptyList()
@@ -50,7 +54,6 @@ class AtendimentoRegistrationStep2ViewModelTest {
             runTest {
                 coEvery { imovelReadDataSourceMock.getImoveis(any()) } returns
                     AppResult.Error(ApplicationError.Unknown)
-                val sut = createSut()
 
                 sut.uiEvents.test {
                     sut.init()
@@ -64,8 +67,6 @@ class AtendimentoRegistrationStep2ViewModelTest {
 
         @Test
         fun `Deve exibir Imóveis sem esperar a digitação quando a etapa é aberta`() = runTest {
-            val sut = createSut()
-
             sut.init()
             advanceTimeBy(600)
 
@@ -80,7 +81,6 @@ class AtendimentoRegistrationStep2ViewModelTest {
         fun `Deve buscar Imóveis pelo texto digitado quando a digitação pausa`() = runTest {
             coEvery { imovelReadDataSourceMock.getImoveis("Campeche") } returns
                 AppResult.Success(listOf(createImovel(id = 9L)))
-            val sut = createSut()
             sut.init()
 
             sut.imoveis.test {
@@ -95,7 +95,6 @@ class AtendimentoRegistrationStep2ViewModelTest {
 
         @Test
         fun `Deve listar todos os Imóveis quando o texto digitado é apagado`() = runTest {
-            val sut = createSut()
             sut.init()
             sut.onSearchInputChange("Campeche")
             advanceTimeBy(600)
@@ -107,9 +106,16 @@ class AtendimentoRegistrationStep2ViewModelTest {
         }
     }
 
-    private fun createSut() = AtendimentoRegistrationStep2ViewModel(
-        imovelReadDataSource = imovelReadDataSourceMock,
-    )
+    @Nested
+    @DisplayName("onCleared")
+    inner class OnClearedTests {
+        @Test
+        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
+            sut.clearFromStore()
+
+            sut.uiEvents.test { awaitComplete() }
+        }
+    }
 
     private fun createImovel(id: Long) = AtendimentoSelectableImovelReadModel(
         id = id,

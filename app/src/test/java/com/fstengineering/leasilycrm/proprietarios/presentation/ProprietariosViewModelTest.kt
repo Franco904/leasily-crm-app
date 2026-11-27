@@ -9,6 +9,7 @@ import com.fstengineering.leasilycrm.proprietarios.application.models.Proprietar
 import com.fstengineering.leasilycrm.proprietarios.infra.dataSources.ProprietariosReadDataSource
 import com.fstengineering.leasilycrm.proprietarios.presentation.models.ProprietariosUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
+import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -106,6 +107,39 @@ class ProprietariosViewModelTest {
 
                 coVerify(exactly = 0) { proprietarioWriteDataSourceMock.delete(any()) }
             }
+    }
+
+    @Nested
+    @DisplayName("onDeleteProprietario")
+    inner class OnDeleteProprietarioTests {
+        @Test
+        fun `Deve selecionar o Proprietário quando a exclusão é solicitada`() = runTest {
+            val proprietario = createProprietarioUiState()
+
+            sut.onDeleteProprietario(proprietario)
+
+            sut.proprietarioToDelete.value shouldBeEqualTo proprietario
+        }
+
+        @Test
+        fun `Deve descartar a seleção quando a exclusão é cancelada`() = runTest {
+            sut.onDeleteProprietario(createProprietarioUiState())
+
+            sut.onDeleteProprietario(null)
+
+            sut.proprietarioToDelete.value.shouldBeNull()
+        }
+    }
+
+    @Nested
+    @DisplayName("onCleared")
+    inner class OnClearedTests {
+        @Test
+        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
+            sut.clearFromStore()
+
+            sut.uiEvents.test { awaitComplete() }
+        }
     }
 
     private fun createProprietarioUiState() = ProprietarioUiState(

@@ -9,25 +9,20 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimal
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
+import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @ViewModelCoroutineTest
 class AtendimentoRegistrationStep1ViewModelTest {
-    private lateinit var sut: AtendimentoRegistrationStep1ViewModel
-
-    @BeforeEach
-    fun setUp() {
-        sut = AtendimentoRegistrationStep1ViewModel()
-    }
+    private val sut = AtendimentoRegistrationStep1ViewModel()
 
     @Nested
     @DisplayName("validateAtendimentoStep1")
@@ -237,6 +232,39 @@ class AtendimentoRegistrationStep1ViewModelTest {
 
                 awaitItem().shouldBeNull()
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("onNeighborhoodChange")
+    inner class OnNeighborhoodChangeTests {
+        @Test
+        fun `Deve exibir o bairro informado quando o bairro é alterado`() = runTest {
+            val neighborhood = faker.random.nextUUID()
+
+            sut.onNeighborhoodChange(neighborhood)
+
+            sut.neighborhoodForm.value shouldBeEqualTo neighborhood
+        }
+
+        @Test
+        fun `Deve deixar o bairro vazio quando o bairro é apagado`() = runTest {
+            sut.onNeighborhoodChange(faker.random.nextUUID())
+
+            sut.onNeighborhoodChange(null)
+
+            sut.neighborhoodForm.value.shouldBeNull()
+        }
+    }
+
+    @Nested
+    @DisplayName("onCleared")
+    inner class OnClearedTests {
+        @Test
+        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
+            sut.clearFromStore()
+
+            sut.uiEvents.test { awaitComplete() }
         }
     }
 
