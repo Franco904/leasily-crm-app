@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.architecture
 
 import com.fstengineering.leasilycrm.architecture.parsers.ReadmeModules
+import com.fstengineering.leasilycrm.architecture.rules.CompositionRootRule
 import com.fstengineering.leasilycrm.architecture.rules.MissingTestGroupsRule
 import com.fstengineering.leasilycrm.architecture.rules.ModulePackagesRule
 import com.fstengineering.leasilycrm.architecture.rules.TestApisRule
@@ -88,6 +89,13 @@ class ArchitectureRulesTest {
     @Test
     fun `Deve manter os Daos fora dos testes de unidade quando o código de teste evolui`() {
         val result = TestDaoRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve manter a raiz de composição nos membros e imports do seu papel quando o código evolui`() {
+        val result = CompositionRootRule.violations(Konsist.scopeFromProject())
 
         result shouldBeEqualTo emptyList()
     }
