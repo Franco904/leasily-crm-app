@@ -34,6 +34,11 @@ class ImoveisViewModelTest {
     private val imovelSharedWriteDataSourceMock: ImovelSharedWriteDataSource =
         mockk(relaxUnitFun = true)
 
+    private val sut = ImoveisViewModel(
+        imoveisReadDataSource = imoveisReadDataSourceMock,
+        imovelSharedWriteDataSource = imovelSharedWriteDataSourceMock,
+    )
+
     @BeforeEach
     fun setUp() {
         coEvery { imoveisReadDataSourceMock.getImoveis(any()) } returns AppResult.Success(emptyList())
@@ -44,7 +49,6 @@ class ImoveisViewModelTest {
     inner class InitTests {
         @Test
         fun `Deve exibir Imóveis quando a listagem é aberta`() = runTest {
-            val sut = createSut()
             val imovel1 = createImovelReadModel()
             val imovel2 = createImovelReadModel()
             every { imoveisReadDataSourceMock.watchImoveis() } returns
@@ -64,7 +68,6 @@ class ImoveisViewModelTest {
         @Test
         fun `Deve carregar Imóveis uma única vez quando a tela é aberta mais de uma vez`() =
             runTest {
-                val sut = createSut()
                 every { imoveisReadDataSourceMock.watchImoveis() } returns
                     flowOf(AppResult.Success(listOf(createImovelReadModel())))
 
@@ -77,7 +80,6 @@ class ImoveisViewModelTest {
         @Test
         fun `Deve informar falha quando a listagem é aberta, dado que o armazenamento local falha`() =
             runTest {
-                val sut = createSut()
                 every { imoveisReadDataSourceMock.watchImoveis() } returns
                     flowOf(AppResult.Error(ApplicationError.NoInternet))
 
@@ -96,7 +98,6 @@ class ImoveisViewModelTest {
         @Test
         fun `Deve exibir apenas Imóveis que correspondem ao texto quando a busca é digitada`() =
             runTest {
-                val sut = createSut()
                 val matchingImovel = createImovelReadModel()
                 every { imoveisReadDataSourceMock.watchImoveis() } returns emptyFlow()
                 coEvery { imoveisReadDataSourceMock.getImoveis("cen") } returns
@@ -121,7 +122,6 @@ class ImoveisViewModelTest {
         @Test
         fun `Deve confirmar exclusão e descartar a seleção quando Imóvel selecionado é excluído`() =
             runTest {
-                val sut = createSut()
                 val imovel = createImovelCardUiState()
                 sut.onDeleteImovel(imovel)
                 coEvery { imovelSharedWriteDataSourceMock.delete(any()) } returns AppResult.Success(
@@ -140,7 +140,6 @@ class ImoveisViewModelTest {
         @Test
         fun `Deve exibir falha e manter a seleção quando Imóvel selecionado é excluído, dado que o armazenamento local falha`() =
             runTest {
-                val sut = createSut()
                 val imovel = createImovelCardUiState()
                 sut.onDeleteImovel(imovel)
                 coEvery { imovelSharedWriteDataSourceMock.delete(any()) } returns
@@ -158,7 +157,6 @@ class ImoveisViewModelTest {
         @Test
         fun `Deve ignorar exclusão quando solicitada, dado que nenhum Imóvel está selecionado`() =
             runTest {
-                val sut = createSut()
                 sut.onDeleteImovel(null)
 
                 sut.deleteImovel()
@@ -167,10 +165,27 @@ class ImoveisViewModelTest {
             }
     }
 
-    private fun createSut() = ImoveisViewModel(
-        imoveisReadDataSource = imoveisReadDataSourceMock,
-        imovelSharedWriteDataSource = imovelSharedWriteDataSourceMock,
-    )
+    @Nested
+    @DisplayName("onDeleteImovel")
+    inner class OnDeleteImovelTests {
+        @Test
+        fun `Deve selecionar o Imóvel quando a exclusão é solicitada`() = runTest {
+            val imovel = createImovelCardUiState()
+
+            sut.onDeleteImovel(imovel)
+
+            sut.imovelToDelete.value shouldBeEqualTo imovel
+        }
+
+        @Test
+        fun `Deve descartar a seleção quando a exclusão é cancelada`() = runTest {
+            sut.onDeleteImovel(createImovelCardUiState())
+
+            sut.onDeleteImovel(null)
+
+            sut.imovelToDelete.value.shouldBeNull()
+        }
+    }
 
     private fun createImovelReadModel() = ImovelReadModel(
         id = faker.random.nextLong(bound = 9999),

@@ -18,13 +18,21 @@ object TestDeclarationsRule {
     private val mockVariableMutable =
         Regex("""\bvar\s+(\w+)\s*(?::[^=\n]+)?=\s*mockk\s*[(<]""")
     private val sutCreation = Regex("""\b(?:val|var)\s+(\w+)\s*(?::[^=\n]+)?=\s*createSut\(""")
+    private val sutHelperName = Regex("""create\w*Sut\w*""")
 
     /**
-     * Violações em ordem alfabética, uma mensagem estável por violação; lista vazia = regra respeitada.
+     * Ordem das declarações, nome e imutabilidade dos mocks, nome `sut` e proibição de helper
+     * `create…Sut…` sem parâmetro. O critério do helper é o nome: `buildSut()` escapa.
+     *
+     * Violações em ordem alfabética, uma mensagem estável por violação; lista vazia = regra
+     * respeitada.
      */
     fun violations(scope: KoScope): List<String> = scope.files
         .filter { TestSources.isTest(it) && TestSources.hasTests(it) }
-        .flatMap { file -> orderViolations(file) + mockNameViolations(file) + mockMutabilityViolations(file) + sutNameViolations(file) }
+        .flatMap { file ->
+            orderViolations(file) + mockNameViolations(file) + mockMutabilityViolations(file) +
+                sutNameViolations(file) + sutHelperViolations(file)
+        }
         .sorted()
 
     private fun orderViolations(file: KoFileDeclaration): List<String> =
@@ -69,6 +77,15 @@ object TestDeclarationsRule {
             .distinct()
             .map { "${file.nameWithExtension}: `$it` é a instância do SUT e deve se chamar `sut`" }
             .toList()
+
+    private fun sutHelperViolations(file: KoFileDeclaration): List<String> =
+        file.functions(includeNested = true, includeLocal = false)
+            .filter { sutHelperName.matches(it.name) && it.parameters.isEmpty() }
+            .map {
+                "${file.nameWithExtension}: `${it.name}` sem parâmetro não deve existir: o " +
+                    "`sut` deve ser declarado já construído ou montado no `@BeforeEach` " +
+                    "(`@Before` no instrumentado)"
+            }
 
     private fun categoryOf(declaration: KoBaseDeclaration): Category? = when (declaration) {
         is KoPropertyDeclaration -> when {

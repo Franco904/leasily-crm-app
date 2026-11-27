@@ -233,8 +233,7 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   tela) são emitidos do ViewModel via `Channel(Channel.BUFFERED)` e escutados no Composable com
   `collectWithLifecycle` (`core/presentation/utils/FlowExtensions.kt`) — coleta só com a tela ao
   menos em `STARTED`, sem entregar evento com a tela em segundo plano. Nunca `.collectLatest` em
-  evento, que pode descartar eventos emitidos em rajada durante uma recomposição. O `Channel` é
-  fechado em `onCleared()`.
+  evento, que pode descartar eventos emitidos em rajada durante uma recomposição.
 
   ```kotlin
   // ViewModel
@@ -244,8 +243,6 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   fun onOverbookingDetected() {
       _uiEvents.trySend(UiEvent.ShowOverbookingDialog)
   }
-
-  // onCleared() é o ÚLTIMO método do ViewModel (ver abaixo)
 
   // Composable
   val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -269,11 +266,6 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   negócio (ex.: botão de voltar da toolbar chamando `onBack: () -> Unit` passado pela Activity), fica
   como callback direto.
 
-- **`onCleared()` é declarado como o último método do ViewModel** — depois de `init()`, das funções
-  públicas de interação e dos auxiliares privados, imediatamente antes da `sealed interface
-  UiEvent`. É o encerramento do ciclo de vida; mantê-lo no fim deixa o topo da classe focado no
-  contrato (estado exposto, eventos, ações).
-
 - **`companion object`, se existir, é sempre o último componente da classe** — depois da `sealed
   interface UiEvent`, não antes. Convenção geral de Kotlin, não específica de ViewModel: o
   `companion object` é metadado estático da classe (constantes, factory), não parte do contrato de
@@ -293,12 +285,6 @@ Convenções para a camada `presentation/`: telas novas em Compose seguindo MVVM
   ```kotlin
   class PeriodoOcupadoRegistrationViewModel : ViewModel() {
       // ... estado, init(), funções ...
-
-      override fun onCleared() {
-          _uiEvents.close()
-
-          super.onCleared()
-      }
 
       sealed interface UiEvent {
           data object CloseScreen : UiEvent

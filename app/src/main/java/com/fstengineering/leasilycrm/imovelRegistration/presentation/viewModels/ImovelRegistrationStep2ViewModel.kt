@@ -79,12 +79,6 @@ class ImovelRegistrationStep2ViewModel : ViewModel() {
         }
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data class ScrollToField(val field: ImovelStep2Field) : UiEvent
         data object ValidateSuccess : UiEvent

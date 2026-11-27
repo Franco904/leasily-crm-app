@@ -80,9 +80,9 @@ object TestGroupsRule {
         }
     }
 
-    private fun groupName(method: String) = method.replaceFirstChar { it.uppercase() } + "Tests"
+    fun groupName(method: String) = method.replaceFirstChar { it.uppercase() } + "Tests"
 
-    private fun displayName(group: KoClassDeclaration): String? = group.annotations
+    fun displayName(group: KoClassDeclaration): String? = group.annotations
         .firstOrNull { it.name == "DisplayName" }
         ?.arguments?.firstOrNull()?.value?.toString()
 }

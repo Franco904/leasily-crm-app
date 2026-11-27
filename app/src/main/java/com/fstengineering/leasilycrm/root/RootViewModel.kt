@@ -40,12 +40,6 @@ class RootViewModel(
         }
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data class NavigateToFirstDestination(val isSessionAlive: Boolean) : UiEvent
     }

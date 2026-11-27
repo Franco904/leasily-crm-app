@@ -16,6 +16,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
@@ -30,6 +31,12 @@ class LeadsViewModelTest {
     private val clienteWriteDataSourceMock: ClienteWriteDataSource = mockk(relaxUnitFun = true)
     private val clientesLocalStorageMock: ClientesLocalStorage =
         mockk(relaxUnitFun = true)
+
+    private val sut = LeadsViewModel(
+        clientesReadDataSource = clientesReadDataSourceMock,
+        clienteWriteDataSource = clienteWriteDataSourceMock,
+        clientesLocalStorage = clientesLocalStorageMock,
+    )
 
     @BeforeEach
     fun setUp() {
@@ -48,7 +55,6 @@ class LeadsViewModelTest {
     inner class InitTests {
         @Test
         fun `Deve exibir Leads na ordem preferida quando a listagem é aberta`() = runTest {
-            val sut = createSut()
             val lead = createClienteReadModel()
             coEvery { clientesLocalStorageMock.getLeadsOrderTypeId() } returns
                 AppResult.Success(ClienteOrderType.LastUpdateDate.id)
@@ -70,7 +76,6 @@ class LeadsViewModelTest {
         @Test
         fun `Deve informar falha quando a listagem é aberta, dado que o armazenamento local falha`() =
             runTest {
-                val sut = createSut()
                 every { clientesReadDataSourceMock.watchClientes(any(), any(), any()) } returns
                     flowOf(AppResult.Error(ApplicationError.Unknown))
 
@@ -84,7 +89,6 @@ class LeadsViewModelTest {
 
         @Test
         fun `Deve observar Leads uma única vez quando a tela chama init novamente`() = runTest {
-            val sut = createSut()
             sut.init()
             sut.init()
 
@@ -98,7 +102,6 @@ class LeadsViewModelTest {
         @Test
         fun `Deve guardar a preferência de ordenação dos Leads quando a ordenação é trocada`() =
             runTest {
-                val sut = createSut()
                 sut.init()
 
                 sut.onOrderTypeChange(ClienteOrderType.LastUpdateDate)
@@ -113,7 +116,6 @@ class LeadsViewModelTest {
         @Test
         fun `Deve confirmar exclusão e descartar a seleção quando Lead selecionado é excluído`() =
             runTest {
-                val sut = createSut()
                 val leadId = faker.random.nextLong(bound = 9999)
                 sut.onDeleteLead(leadId)
                 coEvery { clienteWriteDataSourceMock.delete(any()) } returns AppResult.Success(Unit)
@@ -130,7 +132,6 @@ class LeadsViewModelTest {
         @Test
         fun `Deve exibir falha e manter a seleção quando Lead selecionado é excluído, dado que o armazenamento local falha`() =
             runTest {
-                val sut = createSut()
                 val leadId = faker.random.nextLong(bound = 9999)
                 sut.onDeleteLead(leadId)
                 coEvery { clienteWriteDataSourceMock.delete(any()) } returns
@@ -148,13 +149,76 @@ class LeadsViewModelTest {
         @Test
         fun `Deve ignorar exclusão quando solicitada, dado que nenhum Lead está selecionado`() =
             runTest {
-                val sut = createSut()
                 sut.onDeleteLead(null)
 
                 sut.deleteLead()
 
                 coVerify(exactly = 0) { clienteWriteDataSourceMock.delete(any()) }
             }
+    }
+
+    @Nested
+    @DisplayName("onSearchInputChange")
+    inner class OnSearchInputChangeTests {
+        @Test
+        fun `Deve listar os Leads que correspondem à busca quando o texto é digitado`() = runTest {
+            val searchInput = faker.random.nextUUID()
+            val lead = createClienteReadModel()
+            coEvery {
+                clientesReadDataSourceMock.getLeads(
+                    matching = searchInput,
+                    orderTypeId = ClienteOrderType.Name.id,
+                )
+            } returns AppResult.Success(listOf(lead))
+            sut.init()
+            advanceTimeBy(600)
+
+            sut.onSearchInputChange(searchInput)
+            advanceTimeBy(600)
+
+            sut.leads.value.single().cliente.id shouldBeEqualTo lead.id
+        }
+
+        @Test
+        fun `Deve listar sem filtro de texto quando a busca é apagada`() = runTest {
+            val lead = createClienteReadModel()
+            coEvery {
+                clientesReadDataSourceMock.getLeads(
+                    matching = null,
+                    orderTypeId = ClienteOrderType.Name.id,
+                )
+            } returns AppResult.Success(listOf(lead))
+            sut.init()
+            sut.onSearchInputChange(faker.random.nextUUID())
+            advanceTimeBy(600)
+
+            sut.onSearchInputChange("")
+            advanceTimeBy(600)
+
+            sut.leads.value.single().cliente.id shouldBeEqualTo lead.id
+        }
+    }
+
+    @Nested
+    @DisplayName("onDeleteLead")
+    inner class OnDeleteLeadTests {
+        @Test
+        fun `Deve selecionar o Lead quando a exclusão é solicitada`() = runTest {
+            val id = faker.random.nextLong(bound = 9999)
+
+            sut.onDeleteLead(id)
+
+            sut.leadToDelete.value shouldBeEqualTo id
+        }
+
+        @Test
+        fun `Deve descartar a seleção quando a exclusão é cancelada`() = runTest {
+            sut.onDeleteLead(faker.random.nextLong(bound = 9999))
+
+            sut.onDeleteLead(null)
+
+            sut.leadToDelete.value.shouldBeNull()
+        }
     }
 
     private fun createClienteReadModel() = ClienteReadModel(
@@ -165,11 +229,5 @@ class LeadsViewModelTest {
         hospedesCount = 2,
         hasUnfinishedStay = false,
         currentStayId = null,
-    )
-
-    private fun createSut() = LeadsViewModel(
-        clientesReadDataSource = clientesReadDataSourceMock,
-        clienteWriteDataSource = clienteWriteDataSourceMock,
-        clientesLocalStorage = clientesLocalStorageMock,
     )
 }

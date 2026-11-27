@@ -21,11 +21,15 @@ object TestSubjects {
     /**
      * Nomes dos métodos públicos do SUT, em qualquer profundidade do arquivo (top-level, classe,
      * companion, classe aninhada) cuja cadeia de classes também é pública; sobrecargas e mesmo
-     * nome em classes distintas contam uma vez.
+     * nome em classes distintas contam uma vez. Override `protected` conta, declarado ou herdado:
+     * o Konsist não resolve a visibilidade herdada, e escrevê-la não pode mudar o resultado.
      */
     fun publicMethods(subject: KoFileDeclaration): Set<String> = subject
         .functions(includeNested = true, includeLocal = false)
-        .filter { it.hasPublicOrDefaultModifier && isReachable(it.containingDeclaration) }
+        .filter {
+            it.hasPublicOrDefaultModifier || (it.hasProtectedModifier && it.hasOverrideModifier)
+        }
+        .filter { isReachable(it.containingDeclaration) }
         .map { it.name }
         .toSet()
 

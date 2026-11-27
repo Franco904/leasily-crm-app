@@ -17,8 +17,10 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -268,11 +270,83 @@ class ClienteRegistrationViewModelTest {
             }
     }
 
+    @Nested
+    @DisplayName("onClienteFormChange")
+    inner class OnClienteFormChangeTests {
+        @Test
+        fun `Deve exibir os dados informados quando o formulário é alterado`() = runTest {
+            val sut = createSutWithNewForm(createValidForm())
+            val form = createValidForm()
+
+            sut.onClienteFormChange(form)
+
+            sut.draftFormUiState.value shouldBeEqualTo form
+        }
+
+        @Test
+        fun `Deve limpar só o erro de nome quando ele é alterado, dado que há erros`() = runTest {
+            val form = createInvalidForm()
+            val sut = createSutWithNewForm(form)
+            sut.saveCliente()
+            advanceTimeBy(200)
+
+            sut.onClienteFormChange(form.copy(name = faker.random.nextUUID()))
+
+            sut.formErrors.value.errors[ClienteField.Name].shouldBeNull()
+            sut.formErrors.value.errors[ClienteField.Phone].shouldNotBeNull()
+            sut.formErrors.value.errors[ClienteField.Email].shouldNotBeNull()
+        }
+
+        @Test
+        fun `Deve limpar só o erro de telefone quando ele é alterado, dado que há erros`() =
+            runTest {
+                val form = createInvalidForm()
+                val sut = createSutWithNewForm(form)
+                sut.saveCliente()
+                advanceTimeBy(200)
+
+                sut.onClienteFormChange(form.copy(phone = faker.random.nextUUID()))
+
+                sut.formErrors.value.errors[ClienteField.Phone].shouldBeNull()
+                sut.formErrors.value.errors[ClienteField.Name].shouldNotBeNull()
+                sut.formErrors.value.errors[ClienteField.Email].shouldNotBeNull()
+            }
+
+        @Test
+        fun `Deve limpar só o erro de e-mail quando ele é alterado, dado que há erros`() = runTest {
+            val form = createInvalidForm()
+            val sut = createSutWithNewForm(form)
+            sut.saveCliente()
+            advanceTimeBy(200)
+
+            sut.onClienteFormChange(form.copy(email = faker.random.nextUUID()))
+
+            sut.formErrors.value.errors[ClienteField.Email].shouldBeNull()
+            sut.formErrors.value.errors[ClienteField.Name].shouldNotBeNull()
+            sut.formErrors.value.errors[ClienteField.Phone].shouldNotBeNull()
+        }
+
+        @Test
+        fun `Deve ignorar a alteração quando o formulário ainda não foi carregado`() = runTest {
+            val sut = createSut(route = Destinations.ClienteRegistration(clienteId = null))
+
+            sut.onClienteFormChange(createValidForm())
+
+            sut.draftFormUiState.value shouldBeEqualTo ClienteDraftFormUiState.Loading
+        }
+    }
+
     private fun createSutWithNewForm(form: ClienteDraftFormUiState.Loaded) =
         createSut(route = Destinations.ClienteRegistration(clienteId = null)).also {
             it.init()
             it.onClienteFormChange(form)
         }
+
+    private fun createInvalidForm() = createValidForm().copy(
+        name = null,
+        phone = "9".repeat(21),
+        email = "invalido",
+    )
 
     private fun createValidForm() = ClienteDraftFormUiState.Loaded(
         name = faker.random.nextUUID(),

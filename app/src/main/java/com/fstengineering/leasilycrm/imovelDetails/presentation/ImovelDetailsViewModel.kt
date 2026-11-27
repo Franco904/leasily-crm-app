@@ -71,12 +71,6 @@ class ImovelDetailsViewModel(
         }
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
 

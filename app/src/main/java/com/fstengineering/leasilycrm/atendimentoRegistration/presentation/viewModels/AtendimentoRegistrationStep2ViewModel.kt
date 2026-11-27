@@ -70,12 +70,6 @@ class AtendimentoRegistrationStep2ViewModel(
         _searchInput.update { searchInput?.ifBlank { null } }
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
     }

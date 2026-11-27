@@ -1,6 +1,9 @@
 package com.fstengineering.leasilycrm.architecture
 
 import com.fstengineering.leasilycrm.architecture.parsers.ReadmeModules
+import com.fstengineering.leasilycrm.architecture.rules.CompositionRootRule
+import com.fstengineering.leasilycrm.architecture.rules.ContextBoundaryRule
+import com.fstengineering.leasilycrm.architecture.rules.MissingTestGroupsRule
 import com.fstengineering.leasilycrm.architecture.rules.ModulePackagesRule
 import com.fstengineering.leasilycrm.architecture.rules.TestApisRule
 import com.fstengineering.leasilycrm.architecture.rules.TestDaoRule
@@ -22,7 +25,7 @@ class ArchitectureRulesTest {
 
         val result = ModulePackagesRule.violations(
             scope = Konsist.scopeFromProduction(),
-            documentedModules = ReadmeModules.parse(readme),
+            documentedModules = ReadmeModules.parse(readme).keys,
         )
 
         result shouldBeEqualTo emptyList()
@@ -64,6 +67,13 @@ class ArchitectureRulesTest {
     }
 
     @Test
+    fun `Deve cobrir cada método público do SUT com um grupo de testes quando o código de teste evolui`() {
+        val result = MissingTestGroupsRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
     fun `Deve manter os testes de unidade nas fronteiras de imports quando o código de teste evolui`() {
         val result = UnitTestImportsRule.violations(Konsist.scopeFromProject())
 
@@ -80,6 +90,25 @@ class ArchitectureRulesTest {
     @Test
     fun `Deve manter os Daos fora dos testes de unidade quando o código de teste evolui`() {
         val result = TestDaoRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve manter cada módulo na fronteira do seu contexto quando o código evolui`() {
+        val readme = File(Konsist.projectRootPath, "README.md").readText()
+
+        val result = ContextBoundaryRule.violations(
+            scope = Konsist.scopeFromProject(),
+            contexts = ReadmeModules.parse(readme),
+        )
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve manter a raiz de composição nos membros e imports do seu papel quando o código evolui`() {
+        val result = CompositionRootRule.violations(Konsist.scopeFromProject())
 
         result shouldBeEqualTo emptyList()
     }

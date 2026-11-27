@@ -37,7 +37,7 @@ class TestDeclarationsRuleTest {
                         private fun helper() {}
                     }
 
-                    private fun createSut() = Foo()
+                    private fun createSut(id: Int) = Foo(id)
 
                     private companion object {
                         const val ANY = 1
@@ -503,6 +503,79 @@ class TestDeclarationsRuleTest {
         }
 
         @Test
+        fun `Deve reportar o helper do SUT quando ele não tem parâmetro`(@TempDir dir: File) {
+            plant(
+                dir,
+                """
+                class FooTest {
+                    @org.junit.jupiter.api.Test
+                    fun `Deve fazer quando puder`() {}
+
+                    private fun createSut() = Foo()
+
+                    private fun createLoadedSut(): Foo = createSut()
+                }
+                """.trimIndent(),
+            )
+
+            val result = TestDeclarationsRule.violations(scopeOf(dir))
+
+            result shouldBeEqualTo listOf(
+                parameterless("createLoadedSut"),
+                parameterless("createSut"),
+            )
+        }
+
+        @Test
+        fun `Deve reportar o helper do SUT quando ele está no grupo de um método`(
+            @TempDir dir: File,
+        ) {
+            plant(
+                dir,
+                """
+                class FooTest {
+                    @org.junit.jupiter.api.Nested
+                    inner class InvokeTests {
+                        @org.junit.jupiter.api.Test
+                        fun `Deve fazer quando puder`() {}
+
+                        private fun createSut() = Foo()
+                    }
+                }
+                """.trimIndent(),
+            )
+
+            val result = TestDeclarationsRule.violations(scopeOf(dir))
+
+            result shouldBeEqualTo listOf(parameterless("createSut"))
+        }
+
+        @Test
+        fun `Deve aceitar o helper do SUT quando a montagem varia por parâmetro`(
+            @TempDir dir: File,
+        ) {
+            plant(
+                dir,
+                """
+                class FooTest {
+                    @org.junit.jupiter.api.Test
+                    fun `Deve fazer quando puder`() {}
+
+                    private fun createSut(id: Long? = null) = Foo(id)
+
+                    private fun createLoadedSut(name: String) = Foo(name)
+
+                    private fun createForm() = Form()
+                }
+                """.trimIndent(),
+            )
+
+            val result = TestDeclarationsRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
         fun `Deve ignorar o arquivo quando ele não é de teste`(@TempDir dir: File) {
             plant(
                 dir,
@@ -515,6 +588,10 @@ class TestDeclarationsRuleTest {
             result.shouldBeEmpty()
         }
     }
+
+    private fun parameterless(name: String) =
+        "FooTest.kt: `$name` sem parâmetro não deve existir: o `sut` deve ser declarado já " +
+            "construído ou montado no `@BeforeEach` (`@Before` no instrumentado)"
 
     private fun scopeOf(dir: File) = Konsist.scopeFromExternalDirectory(dir.absolutePath)
 

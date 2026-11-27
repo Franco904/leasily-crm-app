@@ -21,6 +21,8 @@ entrada, bons/maus testes, mocking): ver [0002-all-tests.md](0002-all-tests.md).
   propriedade pública.
 - Cada nome deve ter um único grupo: sobrecargas e mesmo nome em classes distintas do arquivo devem
   compartilhá-lo.
+- O grupo deve ter ao menos um `@Test`.
+- Override também conta, inclusive o de método `protected`. Propriedade não exige grupo.
 - Todo `@Test` deve ficar num desses grupos, e um grupo não deve aninhar outro grupo de teste. Os
   testes de arquitetura (`…leasilycrm.architecture`) não têm SUT em `main` e ficam fora desta seção.
 - Cada teste representa um caminho possível no fluxo do método, seguindo a estratégia **"Todos os
@@ -50,8 +52,10 @@ inner class InvokeTests {
   importar `androidx.room` nem `AppDatabase`, nem ter uma classe `@Dao` como SUT.
 - **Fronteira de contexto** (produção, `test/` e `androidTest/`): o módulo importa só o próprio
   módulo, os módulos do **mesmo contexto** (coluna "Contexto" da tabela de módulos do
-  `README.md`), o `core` e, do pacote raiz, `Destinations`. Módulo sem contexto na tabela (`home`,
-  `settings`, `root`) é contexto próprio.
+  `README.md`), o `core` e, do pacote raiz, `Destinations` (e os gerados `R` e `BuildConfig`).
+  Módulo sem contexto na tabela (`home`, `settings`, `root`) é contexto próprio. O pacote
+  `testUtils` de `test/` e `androidTest/` é infra de teste: importa qualquer módulo e qualquer
+  teste o importa.
 - **Raiz de composição**, por papel, pode importar qualquer módulo: o pacote raiz
   (`DestinationHandling.kt`, `Destinations.kt`, `MainActivity.kt`, `LeasilyCrmApplication.kt`),
   `core/di/**` (só pacotes `.di`) e a classe `@Database` (só classes `@Dao`). O `core` não

@@ -4,7 +4,9 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.DomainError
 import com.fstengineering.leasilycrm.core.domain.utils.ValidationErrors
 import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDate
+import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -101,6 +103,55 @@ class ImovelPricePeriodTest {
             )
 
             result.shouldBeInstanceOf<AppResult.Success<*>>()
+        }
+    }
+
+    @Nested
+    @DisplayName("overlaps")
+    inner class OverlapsTests {
+        @Test
+        fun `Deve indicar sobreposição quando um período começa antes de o outro terminar`() {
+            val sut = period(start = d1, end = d10)
+
+            val result = sut.overlaps(period(start = d5, end = d15))
+
+            result.shouldBeTrue()
+        }
+
+        @Test
+        fun `Deve indicar sobreposição quando um período está contido no outro`() {
+            val sut = period(start = d1, end = d20)
+
+            val result = sut.overlaps(period(start = d5, end = d15))
+
+            result.shouldBeTrue()
+        }
+
+        @Test
+        fun `Deve descartar sobreposição quando um período começa no dia em que o outro termina`() {
+            val sut = period(start = d1, end = d10)
+
+            val result = sut.overlaps(period(start = d10, end = d20))
+
+            result.shouldBeFalse()
+        }
+
+        @Test
+        fun `Deve descartar sobreposição quando um período termina no dia em que o outro começa`() {
+            val sut = period(start = d10, end = d20)
+
+            val result = sut.overlaps(period(start = d1, end = d10))
+
+            result.shouldBeFalse()
+        }
+
+        @Test
+        fun `Deve descartar sobreposição quando os períodos são distantes`() {
+            val sut = period(start = d1, end = d5)
+
+            val result = sut.overlaps(period(start = d15, end = d20))
+
+            result.shouldBeFalse()
         }
     }
 

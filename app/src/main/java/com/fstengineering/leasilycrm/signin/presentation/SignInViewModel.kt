@@ -48,12 +48,6 @@ class SignInViewModel(
             .onSuccess { _uiEvents.trySend(UiEvent.FinishSignIn) }
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data class ShowError(val error: BaseError) : UiEvent
         data object CloseSignInAttempt : UiEvent

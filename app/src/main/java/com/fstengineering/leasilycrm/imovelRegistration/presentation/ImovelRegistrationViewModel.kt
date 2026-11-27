@@ -152,15 +152,15 @@ class ImovelRegistrationViewModel(
     }
 
     fun onExit() {
-        val needConfirmation = formToEdit != draftFormUiState.value
+        val needConfirmation = when (val form = draftFormUiState.value) {
+            is ImovelDraftFormUiState.Loading -> false
+            is ImovelDraftFormUiState.Loaded -> {
+                if (formToEdit != null) formToEdit != form
+                else form != ImovelDraftFormUiState.Loaded.Empty
+            }
+        }
 
         _uiEvents.trySend(UiEvent.Exit(needConfirmation))
-    }
-
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
     }
 
     sealed interface UiEvent {

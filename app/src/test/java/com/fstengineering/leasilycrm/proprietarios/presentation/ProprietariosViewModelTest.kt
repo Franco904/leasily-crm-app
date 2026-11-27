@@ -108,6 +108,28 @@ class ProprietariosViewModelTest {
             }
     }
 
+    @Nested
+    @DisplayName("onDeleteProprietario")
+    inner class OnDeleteProprietarioTests {
+        @Test
+        fun `Deve selecionar o Proprietário quando a exclusão é solicitada`() = runTest {
+            val proprietario = createProprietarioUiState()
+
+            sut.onDeleteProprietario(proprietario)
+
+            sut.proprietarioToDelete.value shouldBeEqualTo proprietario
+        }
+
+        @Test
+        fun `Deve descartar a seleção quando a exclusão é cancelada`() = runTest {
+            sut.onDeleteProprietario(createProprietarioUiState())
+
+            sut.onDeleteProprietario(null)
+
+            sut.proprietarioToDelete.value.shouldBeNull()
+        }
+    }
+
     private fun createProprietarioUiState() = ProprietarioUiState(
         id = faker.random.nextInt(bound = 9999).toLong(),
         name = faker.random.nextUUID(),

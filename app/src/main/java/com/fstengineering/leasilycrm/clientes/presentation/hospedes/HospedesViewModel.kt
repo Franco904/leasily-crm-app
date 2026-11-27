@@ -151,12 +151,6 @@ class HospedesViewModel(
         }
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
         data object ShowDeleteSuccessSnackbar : UiEvent
