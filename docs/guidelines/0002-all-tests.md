@@ -51,8 +51,15 @@ Helpers ficam por último: quem abre o arquivo lê primeiro o contrato testado.
   SUT nascem novos a cada teste, sem estado compartilhado entre eles. Por isso `@BeforeAll`,
   `@AfterAll`, `@BeforeClass`, `@AfterClass`, `@ClassRule` e `@TestInstance` não existem aqui, e o
   mock é `val` inicializado na declaração (`private val xMock: X = mockk(relaxUnitFun = true)`),
-  nunca `lateinit var` ou `var` atribuído no `setUp`. `setUp` fica para o que depende de contexto
-  criado depois da construção da classe (ex.: o banco do `IntegrationTest`).
+  nunca `lateinit var` ou `var` atribuído no `setUp`.
+- **Construção do SUT**: por padrão, o `sut` deve ser declarado já construído
+  (`private val sut = …`), sem repetir a montagem em cada teste: cada teste roda numa instância
+  nova. Ele só deve ser `private lateinit var` montado no `@BeforeEach` (`@Before` no
+  instrumentado) quando a construção depende de algo preparado depois: constante declarada abaixo
+  dele, stub que o construtor consome ou contexto criado depois da classe (ex.: o banco do
+  `IntegrationTest`). No `setUp` ficam os stubs comuns. Quando a montagem varia entre os testes,
+  um `createSut(…)` deve receber o que varia: helper `create…Sut…` sem parâmetro (nome com
+  `create` seguido de `Sut`) não existe.
 - Uma classe de teste por arquivo, nomeada como o arquivo de produção sufixado com `Test`
   (ex: `PeriodoOcupadoRegistrationViewModelTest.kt`), no **mesmo pacote** dele: o teste de
   `.../presentation/viewModels/FooViewModel.kt` mora em `.../presentation/viewModels/`.

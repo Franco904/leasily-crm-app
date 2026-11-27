@@ -21,7 +21,9 @@ import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTes
 @ViewModelCoroutineTest
 class PeriodoOcupadoRegistrationViewModelTest {
     private val registerEstadiaUseCaseMock: RegisterEstadiaUseCase = mockk(relaxUnitFun = true)
-    private val sut = PeriodoOcupadoRegistrationViewModel(registerEstadiaUseCase = registerEstadiaUseCaseMock)
+    private val sut = PeriodoOcupadoRegistrationViewModel(
+        registerEstadiaUseCase = registerEstadiaUseCaseMock,
+    )
 
     @Nested
     @DisplayName("registerEstadia")
