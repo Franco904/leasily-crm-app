@@ -11,7 +11,6 @@ import com.fstengineering.leasilycrm.imovelDetails.infra.dataSources.ImovelDetai
 import com.fstengineering.leasilycrm.imovelDetails.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.imovelDetails.presentation.models.ImovelUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -129,19 +128,6 @@ class ImovelDetailsViewModelTest {
 
                 coVerify(exactly = 0) { imovelSharedWriteDataSourceMock.delete(any()) }
             }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            val sut = createSut(imovelId = faker.random.nextLong(bound = 9999))
-
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
-        }
     }
 
     private fun createSut(imovelId: Long) = ImovelDetailsViewModel(

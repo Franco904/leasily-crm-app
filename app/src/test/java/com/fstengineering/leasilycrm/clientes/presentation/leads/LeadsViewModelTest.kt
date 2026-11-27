@@ -10,7 +10,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ClienteStatus
 import com.fstengineering.leasilycrm.core.presentation.models.ClienteOrderType
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -219,17 +218,6 @@ class LeadsViewModelTest {
             sut.onDeleteLead(null)
 
             sut.leadToDelete.value.shouldBeNull()
-        }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
         }
     }
 

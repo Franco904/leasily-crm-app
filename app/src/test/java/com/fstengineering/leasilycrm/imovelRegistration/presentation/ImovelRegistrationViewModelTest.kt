@@ -17,7 +17,6 @@ import com.fstengineering.leasilycrm.imovelRegistration.presentation.mappers.toU
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ImovelDraftFormUiState
 import com.fstengineering.leasilycrm.imovelRegistration.presentation.models.ProprietarioUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -337,19 +336,6 @@ class ImovelRegistrationViewModelTest {
                         ImovelRegistrationViewModel.UiEvent.Exit(needConfirmation = false)
                 }
             }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            val sut = createSut()
-
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
-        }
     }
 
     private fun createSutWithNewForm(form: ImovelDraftFormUiState.Loaded) =

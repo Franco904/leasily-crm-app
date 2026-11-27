@@ -10,7 +10,6 @@ import com.fstengineering.leasilycrm.imoveis.application.models.dtos.ImovelReadM
 import com.fstengineering.leasilycrm.imoveis.infra.dataSources.ImoveisReadDataSource
 import com.fstengineering.leasilycrm.imoveis.presentation.models.ImoveisUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -185,17 +184,6 @@ class ImoveisViewModelTest {
             sut.onDeleteImovel(null)
 
             sut.imovelToDelete.value.shouldBeNull()
-        }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
         }
     }
 

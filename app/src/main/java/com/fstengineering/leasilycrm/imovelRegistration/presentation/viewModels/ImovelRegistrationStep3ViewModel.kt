@@ -120,12 +120,6 @@ class ImovelRegistrationStep3ViewModel : ViewModel() {
         _imovelPriceToDelete.update { price }
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data object FinishImovelPriceValidation : UiEvent
     }

@@ -14,7 +14,6 @@ import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.model
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioField
 import com.fstengineering.leasilycrm.proprietarioRegistration.presentation.models.ProprietarioFileUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -359,20 +358,6 @@ class ProprietarioRegistrationViewModelTest {
                         ProprietarioRegistrationViewModel.UiEvent.ShowConfirmLeaveDialog
                 }
             }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            val sut =
-                createSut(route = Destinations.ProprietarioRegistration(proprietarioId = null))
-
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
-        }
     }
 
     private fun createSutWithNewForm(form: ProprietarioDraftFormUiState.Loaded) =

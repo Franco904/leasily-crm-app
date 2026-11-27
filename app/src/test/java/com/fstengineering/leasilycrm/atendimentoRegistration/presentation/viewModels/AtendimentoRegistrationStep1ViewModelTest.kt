@@ -9,7 +9,6 @@ import com.fstengineering.leasilycrm.core.domain.valueObjects.AppDecimal
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelSeaProximityType
 import com.fstengineering.leasilycrm.core.domain.valueObjects.toDecimal
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
@@ -254,17 +253,6 @@ class AtendimentoRegistrationStep1ViewModelTest {
             sut.onNeighborhoodChange(null)
 
             sut.neighborhoodForm.value.shouldBeNull()
-        }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
         }
     }
 

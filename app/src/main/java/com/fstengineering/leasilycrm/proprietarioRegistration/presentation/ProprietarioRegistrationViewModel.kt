@@ -174,12 +174,6 @@ class ProprietarioRegistrationViewModel(
         _uiEvents.trySend(if (needConfirmation) UiEvent.ShowConfirmLeaveDialog else UiEvent.CloseScreen)
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data class ShowErrorBottomSheet(val error: BaseError) : UiEvent
 

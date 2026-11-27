@@ -14,7 +14,6 @@ import com.fstengineering.leasilycrm.imovelOcupacao.application.useCases.WatchIm
 import com.fstengineering.leasilycrm.imovelOcupacao.presentation.mappers.toUiState
 import com.fstengineering.leasilycrm.imovelOcupacao.presentation.models.ImovelPeriodosOcupadosUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -109,19 +108,6 @@ class ImovelOcupacaoViewModelTest {
             loaded.selected[chosenYearMonth] shouldBeEqualTo
                 persistentListOf(chosenDate.toUiState())
             loaded.selected[currentYearMonth] shouldBeEqualTo persistentListOf()
-        }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            val sut = createSut(imovelId = faker.random.nextLong(bound = 9999))
-
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
         }
     }
 

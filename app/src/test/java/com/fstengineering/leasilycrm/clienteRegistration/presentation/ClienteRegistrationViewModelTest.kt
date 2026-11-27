@@ -12,7 +12,6 @@ import com.fstengineering.leasilycrm.core.domain.providers.AppDateTimeProviderIm
 import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -334,19 +333,6 @@ class ClienteRegistrationViewModelTest {
             sut.onClienteFormChange(createValidForm())
 
             sut.draftFormUiState.value shouldBeEqualTo ClienteDraftFormUiState.Loading
-        }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            val sut = createSut(route = Destinations.ClienteRegistration(clienteId = null))
-
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
         }
     }
 

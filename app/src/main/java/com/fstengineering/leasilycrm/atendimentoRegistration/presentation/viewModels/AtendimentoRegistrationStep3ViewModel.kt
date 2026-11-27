@@ -125,12 +125,6 @@ class AtendimentoRegistrationStep3ViewModel : ViewModel() {
         _formErrors.update { InteracaoErrorUiState() }
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data object FinishInteracaoCreate : UiEvent
 

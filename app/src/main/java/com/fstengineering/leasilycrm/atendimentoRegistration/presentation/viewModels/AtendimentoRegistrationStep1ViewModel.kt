@@ -116,12 +116,6 @@ class AtendimentoRegistrationStep1ViewModel : ViewModel() {
         _neighborhoodFormError.update { null }
     }
 
-    override fun onCleared() {
-        _uiEvents.close()
-
-        super.onCleared()
-    }
-
     sealed interface UiEvent {
         data class ScrollToField(val field: AtendimentoStep1Field) : UiEvent
 

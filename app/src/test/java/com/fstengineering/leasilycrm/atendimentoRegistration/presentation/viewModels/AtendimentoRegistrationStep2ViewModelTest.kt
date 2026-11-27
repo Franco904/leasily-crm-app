@@ -7,7 +7,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.domain.valueObjects.ImovelType
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -103,17 +102,6 @@ class AtendimentoRegistrationStep2ViewModelTest {
             advanceTimeBy(600)
 
             coVerify(exactly = 2) { imovelReadDataSourceMock.getImoveis(null) }
-        }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
         }
     }
 

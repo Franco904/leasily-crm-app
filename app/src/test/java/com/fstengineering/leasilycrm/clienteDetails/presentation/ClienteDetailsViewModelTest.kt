@@ -10,7 +10,6 @@ import com.fstengineering.leasilycrm.core.domain.utils.AppResult
 import com.fstengineering.leasilycrm.core.domain.utils.ApplicationError
 import com.fstengineering.leasilycrm.core.infra.dataSources.database.AtendimentoSharedWriteDataSource
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -201,17 +200,6 @@ class ClienteDetailsViewModelTest {
                         ClienteDetailsViewModel.UiEvent.ShowErrorBottomSheet(ApplicationError.Unknown)
                 }
             }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
-        }
     }
 
     private fun loadSut(cliente: ClienteReadModel) {

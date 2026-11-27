@@ -9,7 +9,6 @@ import com.fstengineering.leasilycrm.proprietarios.application.models.Proprietar
 import com.fstengineering.leasilycrm.proprietarios.infra.dataSources.ProprietariosReadDataSource
 import com.fstengineering.leasilycrm.proprietarios.presentation.models.ProprietariosUiState
 import com.fstengineering.leasilycrm.testUtils.annotations.ViewModelCoroutineTest
-import com.fstengineering.leasilycrm.testUtils.clearFromStore
 import com.fstengineering.leasilycrm.testUtils.faker
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -128,17 +127,6 @@ class ProprietariosViewModelTest {
             sut.onDeleteProprietario(null)
 
             sut.proprietarioToDelete.value.shouldBeNull()
-        }
-    }
-
-    @Nested
-    @DisplayName("onCleared")
-    inner class OnClearedTests {
-        @Test
-        fun `Deve encerrar os eventos da tela quando ela é descartada`() = runTest {
-            sut.clearFromStore()
-
-            sut.uiEvents.test { awaitComplete() }
         }
     }
 
