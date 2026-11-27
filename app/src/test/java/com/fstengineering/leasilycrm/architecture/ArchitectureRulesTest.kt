@@ -2,6 +2,7 @@ package com.fstengineering.leasilycrm.architecture
 
 import com.fstengineering.leasilycrm.architecture.parsers.ReadmeModules
 import com.fstengineering.leasilycrm.architecture.rules.CompositionRootRule
+import com.fstengineering.leasilycrm.architecture.rules.ContextBoundaryRule
 import com.fstengineering.leasilycrm.architecture.rules.MissingTestGroupsRule
 import com.fstengineering.leasilycrm.architecture.rules.ModulePackagesRule
 import com.fstengineering.leasilycrm.architecture.rules.TestApisRule
@@ -89,6 +90,18 @@ class ArchitectureRulesTest {
     @Test
     fun `Deve manter os Daos fora dos testes de unidade quando o código de teste evolui`() {
         val result = TestDaoRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve manter cada módulo na fronteira do seu contexto quando o código evolui`() {
+        val readme = File(Konsist.projectRootPath, "README.md").readText()
+
+        val result = ContextBoundaryRule.violations(
+            scope = Konsist.scopeFromProject(),
+            contexts = ReadmeModules.parse(readme),
+        )
 
         result shouldBeEqualTo emptyList()
     }

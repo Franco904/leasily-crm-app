@@ -49,8 +49,9 @@ planejada (ex.: `occupiedPeriodRegistration` → `periodoOcupadoRegistration`). 
 são exatamente os pacotes de primeiro nível.
 
 **Fronteira de contexto:** o módulo importa só o próprio módulo, os módulos do mesmo contexto, o
-`core` e, do pacote raiz, `Destinations`. Módulo sem contexto próprio na tabela (`home`,
-`settings`, `root`) conta como contexto à parte.
+`core` e, do pacote raiz, `Destinations` (e os gerados `R` e `BuildConfig`). Módulo sem contexto
+próprio na tabela (`home`, `settings`, `root`) conta como contexto à parte. Nos testes, o
+`testUtils` é infra de teste: importa qualquer módulo e qualquer teste o importa.
 
 **Raiz de composição**, por papel, é o que pode importar qualquer módulo: o pacote raiz
 (`DestinationHandling.kt`, `Destinations.kt`, `MainActivity.kt`, `LeasilyCrmApplication.kt`),
