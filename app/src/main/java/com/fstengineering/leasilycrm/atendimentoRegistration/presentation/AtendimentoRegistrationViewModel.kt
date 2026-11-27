@@ -132,7 +132,16 @@ class AtendimentoRegistrationViewModel(
     }
 
     fun onExit() {
-        val needConfirmation = formToEdit != draftFormUiState.value
+        val needConfirmation = when (val form = draftFormUiState.value) {
+            is AtendimentoDraftFormUiState.Loading -> false
+            is AtendimentoDraftFormUiState.Loaded -> {
+                if (formToEdit != null) formToEdit != form
+                else form != AtendimentoDraftFormUiState.Loaded.empty(
+                    clienteId = form.clienteId,
+                    clienteName = form.clienteName,
+                )
+            }
+        }
 
         _uiEvents.trySend(UiEvent.Exit(needConfirmation))
     }

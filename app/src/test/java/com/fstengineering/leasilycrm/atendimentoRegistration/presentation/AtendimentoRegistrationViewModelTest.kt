@@ -247,6 +247,70 @@ class AtendimentoRegistrationViewModelTest {
                         AtendimentoRegistrationViewModel.UiEvent.Exit(needConfirmation = true)
                 }
             }
+
+        @Test
+        fun `Deve sair sem confirmação quando a saída ocorre, dado que o novo cadastro está vazio`() =
+            runTest {
+                val sut = createSut()
+                sut.init()
+
+                sut.uiEvents.test {
+                    sut.onExit()
+
+                    awaitItem() shouldBeEqualTo
+                        AtendimentoRegistrationViewModel.UiEvent.Exit(needConfirmation = false)
+                }
+            }
+
+        @Test
+        fun `Deve sair sem confirmação quando a saída ocorre, dado que o formulário ainda não foi carregado`() =
+            runTest {
+                val sut = createSut()
+
+                sut.uiEvents.test {
+                    sut.onExit()
+
+                    awaitItem() shouldBeEqualTo
+                        AtendimentoRegistrationViewModel.UiEvent.Exit(needConfirmation = false)
+                }
+            }
+
+        @Test
+        fun `Deve sair sem confirmação quando a saída ocorre, dado que o Atendimento editado não mudou`() =
+            runTest {
+                val atendimentoId = faker.random.nextLong(bound = 9999)
+                coEvery { atendimentoRegistrationReadDataSourceMock.getAtendimento(atendimentoId) } returns
+                    AppResult.Success(createAtendimentoReadModel(atendimentoId))
+                val sut = createSut(atendimentoId = atendimentoId)
+                sut.init()
+
+                sut.uiEvents.test {
+                    sut.onExit()
+
+                    awaitItem() shouldBeEqualTo
+                        AtendimentoRegistrationViewModel.UiEvent.Exit(needConfirmation = false)
+                }
+            }
+
+        @Test
+        fun `Deve pedir confirmação quando a saída ocorre, dado que o Atendimento editado mudou`() =
+            runTest {
+                val atendimentoId = faker.random.nextLong(bound = 9999)
+                coEvery { atendimentoRegistrationReadDataSourceMock.getAtendimento(atendimentoId) } returns
+                    AppResult.Success(createAtendimentoReadModel(atendimentoId))
+                val sut = createSut(atendimentoId = atendimentoId)
+                sut.init()
+                sut.onAtendimentoFormChange(
+                    sut.loadedForm().copy(observations = faker.random.nextUUID())
+                )
+
+                sut.uiEvents.test {
+                    sut.onExit()
+
+                    awaitItem() shouldBeEqualTo
+                        AtendimentoRegistrationViewModel.UiEvent.Exit(needConfirmation = true)
+                }
+            }
     }
 
     @Nested
