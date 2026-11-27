@@ -23,7 +23,7 @@ class ArchitectureRulesTest {
 
         val result = ModulePackagesRule.violations(
             scope = Konsist.scopeFromProduction(),
-            documentedModules = ReadmeModules.parse(readme),
+            documentedModules = ReadmeModules.parse(readme).keys,
         )
 
         result shouldBeEqualTo emptyList()

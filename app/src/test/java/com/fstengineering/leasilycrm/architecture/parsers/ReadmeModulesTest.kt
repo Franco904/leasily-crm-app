@@ -12,7 +12,7 @@ class ReadmeModulesTest {
     @DisplayName("parse")
     inner class ParseTests {
         @Test
-        fun `Deve extrair os módulos quando lê a tabela da seção de estrutura do projeto`() {
+        fun `Deve extrair os módulos e seus contextos quando lê a tabela da seção de estrutura do projeto`() {
             val readme = """
                 ## Estrutura do Projeto
 
@@ -28,7 +28,24 @@ class ReadmeModulesTest {
 
             val result = ReadmeModules.parse(readme)
 
-            result shouldBeEqualTo setOf("core", "occupiedPeriodRegistration")
+            result shouldBeEqualTo mapOf(
+                "core" to "Compartilhado",
+                "occupiedPeriodRegistration" to "Períodos Ocupados",
+            )
+        }
+
+        @Test
+        fun `Deve deixar o módulo sem contexto quando a coluna de contexto começa com travessão`() {
+            val readme = """
+                ## Estrutura do Projeto
+
+                | `root` | —         | Inicialização |
+                | `home` | — (shell) | Tela inicial  |
+            """.trimIndent()
+
+            val result = ReadmeModules.parse(readme)
+
+            result shouldBeEqualTo mapOf("root" to null, "home" to null)
         }
 
         @Test
@@ -46,7 +63,7 @@ class ReadmeModulesTest {
 
             val result = ReadmeModules.parse(readme)
 
-            result shouldBeEqualTo setOf("core")
+            result shouldBeEqualTo mapOf("core" to "Compartilhado")
         }
 
         @Test
@@ -62,13 +79,24 @@ class ReadmeModulesTest {
 
             val result = ReadmeModules.parse(readme)
 
-            result shouldBeEqualTo setOf("core")
+            result shouldBeEqualTo mapOf("core" to "Compartilhado")
         }
 
         @Test
         fun `Deve falhar quando o README não tem a seção de estrutura do projeto`() {
             invoking { ReadmeModules.parse("## Outra seção") } shouldThrow
                 IllegalStateException::class
+        }
+
+        @Test
+        fun `Deve falhar quando a linha do módulo não tem a coluna de contexto`() {
+            val readme = """
+                ## Estrutura do Projeto
+
+                | `core` |
+            """.trimIndent()
+
+            invoking { ReadmeModules.parse(readme) } shouldThrow IllegalStateException::class
         }
     }
 }
