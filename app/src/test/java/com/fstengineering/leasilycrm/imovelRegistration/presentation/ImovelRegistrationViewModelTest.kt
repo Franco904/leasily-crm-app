@@ -261,6 +261,48 @@ class ImovelRegistrationViewModelTest {
     @DisplayName("onExit")
     inner class OnExitTests {
         @Test
+        fun `Deve pedir confirmação quando a saída ocorre, dado que o novo cadastro foi preenchido`() =
+            runTest {
+                val sut = createSut()
+                sut.init()
+                sut.onImovelFormChange(createValidForm())
+
+                sut.uiEvents.test {
+                    sut.onExit()
+
+                    awaitItem() shouldBeEqualTo
+                        ImovelRegistrationViewModel.UiEvent.Exit(needConfirmation = true)
+                }
+            }
+
+        @Test
+        fun `Deve sair sem confirmação quando a saída ocorre, dado que o novo cadastro está vazio`() =
+            runTest {
+                val sut = createSut()
+                sut.init()
+
+                sut.uiEvents.test {
+                    sut.onExit()
+
+                    awaitItem() shouldBeEqualTo
+                        ImovelRegistrationViewModel.UiEvent.Exit(needConfirmation = false)
+                }
+            }
+
+        @Test
+        fun `Deve sair sem confirmação quando a saída ocorre, dado que o formulário ainda não foi carregado`() =
+            runTest {
+                val sut = createSut()
+
+                sut.uiEvents.test {
+                    sut.onExit()
+
+                    awaitItem() shouldBeEqualTo
+                        ImovelRegistrationViewModel.UiEvent.Exit(needConfirmation = false)
+                }
+            }
+
+        @Test
         fun `Deve pedir confirmação quando a saída ocorre, dado que o Imóvel editado mudou`() =
             runTest {
                 val storedImovel = createImovelReadModel(id = faker.random.nextLong(bound = 9999))
