@@ -21,6 +21,9 @@ entrada, bons/maus testes, mocking): ver [0002-all-tests.md](0002-all-tests.md).
   propriedade pública.
 - Cada nome deve ter um único grupo: sobrecargas e mesmo nome em classes distintas do arquivo devem
   compartilhá-lo.
+- O grupo deve ter ao menos um `@Test`.
+- Override também conta, inclusive o de método `protected` como `onCleared` (acione-o pelo
+  `clearFromStore()` de `testUtils/`). Propriedade não exige grupo.
 - Todo `@Test` deve ficar num desses grupos, e um grupo não deve aninhar outro grupo de teste. Os
   testes de arquitetura (`…leasilycrm.architecture`) não têm SUT em `main` e ficam fora desta seção.
 - Cada teste representa um caminho possível no fluxo do método, seguindo a estratégia **"Todos os

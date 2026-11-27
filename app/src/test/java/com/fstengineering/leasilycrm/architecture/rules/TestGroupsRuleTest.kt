@@ -53,6 +53,18 @@ class TestGroupsRuleTest {
         }
 
         @Test
+        fun `Deve aceitar o teste quando o grupo nomeia um método sobrescrito com proteção`(
+            @TempDir dir: File,
+        ) {
+            plantSubject(dir, "class Foo : Base() { protected override fun bar() {} }")
+            plantTest(dir, group("bar", "BarTests"))
+
+            val result = TestGroupsRule.violations(scopeOf(dir))
+
+            result.shouldBeEmpty()
+        }
+
+        @Test
         fun `Deve aceitar o teste quando o grupo nomeia uma propriedade pública do SUT`(
             @TempDir dir: File,
         ) {

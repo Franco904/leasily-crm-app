@@ -1,6 +1,7 @@
 package com.fstengineering.leasilycrm.architecture
 
 import com.fstengineering.leasilycrm.architecture.parsers.ReadmeModules
+import com.fstengineering.leasilycrm.architecture.rules.MissingTestGroupsRule
 import com.fstengineering.leasilycrm.architecture.rules.ModulePackagesRule
 import com.fstengineering.leasilycrm.architecture.rules.TestApisRule
 import com.fstengineering.leasilycrm.architecture.rules.TestDaoRule
@@ -59,6 +60,13 @@ class ArchitectureRulesTest {
     @Test
     fun `Deve agrupar os testes por método público do SUT quando o código de teste evolui`() {
         val result = TestGroupsRule.violations(Konsist.scopeFromProject())
+
+        result shouldBeEqualTo emptyList()
+    }
+
+    @Test
+    fun `Deve cobrir cada método público do SUT com um grupo de testes quando o código de teste evolui`() {
+        val result = MissingTestGroupsRule.violations(Konsist.scopeFromProject())
 
         result shouldBeEqualTo emptyList()
     }
